@@ -33,6 +33,9 @@ public enum AppFeature implements Feature {
     @Label("Indica si esta habilitado el modulo de Guardia")
     HABILITAR_MODULO_GUARDIA,
 
+    @Label("Indica si esta habilitado el módulo de Portal de Paciente")
+    HABILITAR_MODULO_PORTAL_PACIENTE,
+
     @Label("Indica si esta habilitado el menu configuracion")
     HABILITAR_CONFIGURACION;
 

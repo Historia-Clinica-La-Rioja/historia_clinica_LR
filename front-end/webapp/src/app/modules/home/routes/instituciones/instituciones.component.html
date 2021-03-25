@@ -33,16 +33,18 @@
 		</mat-action-list>
 	</mat-card>
 	<div class="space"></div>
-	<mat-card *ngIf="patientPortalAccess">
-		<mat-card-header>
-			<mat-card-title>Acceso como paciente</mat-card-title>
-		</mat-card-header>
-		<mat-action-list role="list">
-			<mat-list-item role="listitem" (click)="ingresarPortalPaciente()">
-				<div mat-subheader>
-					<span>Ingrese aquí para ver su historia clínica</span>
-				</div>
-			</mat-list-item>
-		</mat-action-list>
-	</mat-card>
+	<ng-container *ngIf="patientPortalEnabled">
+		<mat-card *ngIf="patientPortalAccess">
+			<mat-card-header>
+				<mat-card-title>Acceso como paciente</mat-card-title>
+			</mat-card-header>
+			<mat-action-list role="list">
+				<mat-list-item role="listitem" (click)="ingresarPortalPaciente()">
+					<div mat-subheader>
+						<span>Ingrese aquí para ver su historia clínica</span>
+					</div>
+				</mat-list-item>
+			</mat-action-list>
+		</mat-card>
+	</ng-container>
 </app-content>

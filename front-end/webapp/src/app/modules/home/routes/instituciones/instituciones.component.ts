@@ -2,8 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {LoggedUserService} from '../../../auth/services/logged-user.service';
 import { RoleAssignment } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import {Router} from '@angular/router';
 import {InstitutionService} from '@api-rest/services/institution.service';
+import {FeatureFlagService} from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-instituciones',
@@ -12,6 +14,7 @@ import {InstitutionService} from '@api-rest/services/institution.service';
 })
 export class InstitucionesComponent implements OnInit {
 	institutions: { id: number, name: string }[] = null;
+	patientPortalEnabled: boolean;
 	webappInstitutionsAccess: boolean;
 	backofficeAccess: boolean;
 	patientPortalAccess: boolean;
@@ -19,6 +22,7 @@ export class InstitucionesComponent implements OnInit {
 	constructor(
 		loggedUserService: LoggedUserService,
 		institutionService: InstitutionService,
+		private featureFlagService: FeatureFlagService,
 		private router: Router,
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {
@@ -43,6 +47,8 @@ export class InstitucionesComponent implements OnInit {
 				this.institutions = institutions;
 			});
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE).subscribe(isOn => this.patientPortalEnabled = isOn);
 	}
 
 	ngOnInit(): void {
