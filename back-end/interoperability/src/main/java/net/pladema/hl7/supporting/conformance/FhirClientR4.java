@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
@@ -73,14 +74,18 @@ public class FhirClientR4 {
         parameters.addParameter(new Parameters.ParametersParameterComponent()
                 .setName(Patient.SP_IDENTIFIER)
                 .setValue(id));
-        return testClient
-                .operation()
-                .onType(Patient.class)
-                .named("patient-location")
-                .withParameters(parameters)
-                .useHttpGet()
-                .returnResourceType(Bundle.class)
-                .execute();
+        try {
+            return testClient
+                    .operation()
+                    .onType(Patient.class)
+                    .named("patient-location")
+                    .withParameters(parameters)
+                    .useHttpGet()
+                    .returnResourceType(Bundle.class)
+                    .execute();
+        } catch(InternalErrorException ex){
+            return new Bundle();
+        }
     }
 
     public Bundle getResourceById(IdType id){
