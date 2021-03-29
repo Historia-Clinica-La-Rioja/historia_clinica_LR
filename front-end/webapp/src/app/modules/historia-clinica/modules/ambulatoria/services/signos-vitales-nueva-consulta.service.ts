@@ -119,7 +119,9 @@ export class SignosVitalesNuevaConsultaService {
 	}
 
 	private getEffectiveClinicalObservationDto(controlValue: any): EffectiveClinicalObservationDto {
-		return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
+		return controlValue.value || controlValue.value === 0 ?
+			{ value: controlValue.value, effectiveTime: controlValue.effectiveTime }
+			: undefined;
 	}
 
 	get heartRateError$(): Observable<string> {
