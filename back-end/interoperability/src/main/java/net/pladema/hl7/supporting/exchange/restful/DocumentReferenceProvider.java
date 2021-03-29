@@ -6,12 +6,13 @@ import ca.uhn.fhir.rest.annotation.Search;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirParam;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.documents.BundleResource;
 import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/fhir")
-@ConditionalOnProperty(value="ws.federar.enabled", havingValue = "true")
+@Conditional(InteroperabilityCondition.class)
 public class DocumentReferenceProvider implements IResourceProvider {
 
 

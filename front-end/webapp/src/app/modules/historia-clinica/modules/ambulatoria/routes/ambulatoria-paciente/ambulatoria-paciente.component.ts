@@ -11,10 +11,12 @@ import {DockPopupRef} from '@presentation/services/dock-popup-ref';
 import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
 import {HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
 import {BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from '@api-rest/api-model';
+import {AppFeature} from '@api-rest/api-model';
 import {InteroperabilityBusService} from '@api-rest/services/interoperability-bus.service';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { MedicacionesService } from '../../services/medicaciones.service';
+import {MatTabChangeEvent} from '@angular/material/tabs';
+import {MedicacionesService} from '../../services/medicaciones.service';
+import {FeatureFlagService} from '@core/services/feature-flag.service';
 
 
 const RESUMEN_INDEX = 0;
@@ -34,6 +36,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;
 	public showOrders: boolean;
+	public externalInstitutionsEnabled: boolean;
 	public externalInstitutions: OrganizationDto[];
 	public patientExternalSummary: PatientSummaryDto;
 	public externalInstitutionPlaceholder = 'Ninguna';
@@ -50,6 +53,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly interoperabilityBusService: InteroperabilityBusService,
 		private readonly snackBarService: SnackBarService,
 		private medicacionesService: MedicacionesService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {}
 
 	ngOnInit(): void {
@@ -64,6 +68,9 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.patientService.getPatientPhoto(this.patientId)
 				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD)
+			.subscribe(isOn => this.externalInstitutionsEnabled = isOn);
 
 	}
 

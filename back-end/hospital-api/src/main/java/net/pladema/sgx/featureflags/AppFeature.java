@@ -37,7 +37,10 @@ public enum AppFeature implements Feature {
     HABILITAR_MODULO_PORTAL_PACIENTE,
 
     @Label("Indica si esta habilitado el menu configuracion")
-    HABILITAR_CONFIGURACION;
+    HABILITAR_CONFIGURACION,
+
+    @Label("Indica si está habilitado el Bus de Interoperabilidad")
+    HABILITAR_BUS_INTEROPERABILIDAD;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

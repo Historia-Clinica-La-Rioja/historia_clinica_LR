@@ -8,7 +8,13 @@ public class InteroperabilityCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata annotatedTypeMetadata) {
-        Boolean enabled = context.getEnvironment().getProperty("ws.federar.enabled", Boolean.class);
+        Boolean interoperabilityFFEnabled = isPropertyEnabled(context, "app.feature.HABILITAR_BUS_INTEROPERABILIDAD");
+        Boolean federarEnabled = isPropertyEnabled(context, "ws.federar.enabled");
+        return interoperabilityFFEnabled && federarEnabled;
+    }
+
+    private boolean isPropertyEnabled(ConditionContext context, String propertyName) {
+        Boolean enabled = context.getEnvironment().getProperty(propertyName, Boolean.class);
         if (enabled != null){
             return enabled;
         }
