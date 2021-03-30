@@ -11,7 +11,7 @@ import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {HceImmunizationService} from '@api-rest/services/hce-immunization.service';
 import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
-import {VACUNAS} from 'src/app/modules/historia-clinica/constants/summaries';
+import {VACUNAS} from '@historia-clinica/constants/summaries';
 
 @Component({
 	selector: 'app-aplicar-vacuna',

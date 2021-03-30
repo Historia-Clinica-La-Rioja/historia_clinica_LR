@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { BedManagementFacadeService } from 'src/app/modules/institucion/services/bed-management-facade.service';
+import { BedManagementFacadeService } from '@institucion/services/bed-management-facade.service';
 
 @Component({
 	selector: 'app-home',

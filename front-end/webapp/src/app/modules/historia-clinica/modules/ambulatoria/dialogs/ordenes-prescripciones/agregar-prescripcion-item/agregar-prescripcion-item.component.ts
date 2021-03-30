@@ -6,7 +6,7 @@ import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { SEMANTICS_CONFIG } from 'src/app/modules/historia-clinica/constants/snomed-semantics';
+import { SEMANTICS_CONFIG } from '@historia-clinica/constants/snomed-semantics';
 import { hasError } from '@core/utils/form.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 

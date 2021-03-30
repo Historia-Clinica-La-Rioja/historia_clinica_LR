@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { Problema, ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';

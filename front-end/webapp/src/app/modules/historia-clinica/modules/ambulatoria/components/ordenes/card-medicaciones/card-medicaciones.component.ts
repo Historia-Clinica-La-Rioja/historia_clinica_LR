@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationInfoDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ORDENES_MEDICACION } from 'src/app/modules/historia-clinica/constants/summaries';
+import { ORDENES_MEDICACION } from '@historia-clinica/constants/summaries';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import {
 	NewPrescription,

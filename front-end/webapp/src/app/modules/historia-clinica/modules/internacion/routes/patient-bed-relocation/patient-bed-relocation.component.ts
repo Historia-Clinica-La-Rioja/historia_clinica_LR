@@ -28,7 +28,7 @@ import { BedService } from '@api-rest/services/bed.service';
 import { newMoment, momentFormat, DateFormat, momentParseDateTime, momentParseDate, dateToMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { PersonService } from '@api-rest/services/person.service';
-import { BedAssignmentComponent } from 'src/app/modules/historia-clinica/dialogs/bed-assignment/bed-assignment.component';
+import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 

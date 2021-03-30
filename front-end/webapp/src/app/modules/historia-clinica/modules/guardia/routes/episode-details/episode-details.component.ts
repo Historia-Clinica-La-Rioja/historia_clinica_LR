@@ -11,7 +11,7 @@ import { PersonService } from '@api-rest/services/person.service';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { Observable } from 'rxjs';
-import { SearchPatientComponent } from 'src/app/modules/pacientes/component/search-patient/search-patient.component';
+import { SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
 import { TriageService } from '@api-rest/services/triage.service';
 import { Triage } from '../../components/triage-details/triage-details.component';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';

@@ -28,6 +28,15 @@
 			"@presentation/*": [
 				"src/app/modules/presentation/*"
 			],
+			"@historia-clinica/*": [
+				"src/app/modules/historia-clinica/*"
+			],
+			"@institucion/*": [
+				"src/app/modules/institucion/*"
+			],
+			"@pacientes/*": [
+				"src/app/modules/pacientes/*"
+			]
 		}
 	},
 	"angularCompilerOptions": {

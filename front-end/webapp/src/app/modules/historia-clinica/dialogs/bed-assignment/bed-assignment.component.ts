@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BedManagementFacadeService } from 'src/app/modules/institucion/services/bed-management-facade.service';
+import { BedManagementFacadeService } from '@institucion/services/bed-management-facade.service';
 import { BedInfoDto } from '@api-rest/api-model';
 import { tap } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';

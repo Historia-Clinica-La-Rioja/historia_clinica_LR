@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { INDICACIONES } from 'src/app/modules/historia-clinica/constants/summaries';
+import { INDICACIONES } from '@historia-clinica/constants/summaries';
 
 @Component({
   selector: 'app-card-indicaciones',

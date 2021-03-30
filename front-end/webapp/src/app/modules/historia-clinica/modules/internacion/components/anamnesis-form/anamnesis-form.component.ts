@@ -16,7 +16,7 @@ import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
-import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
 
 @Component({
 	selector: 'app-anamnesis-form',

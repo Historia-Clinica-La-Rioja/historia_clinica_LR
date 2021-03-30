@@ -14,8 +14,8 @@ import { DateFormat, dateToMoment, momentFormat, newMoment } from '@core/utils/m
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/internal/operators/map';
-import { SnomedService } from 'src/app/modules/historia-clinica/services/snomed.service';
+import { map } from 'rxjs/operators';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 

@@ -4,12 +4,12 @@ import { HceGeneralStateService } from '@api-rest/services/hce-general-state.ser
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AplicarVacunaComponent } from '../../dialogs/aplicar-vacuna/aplicar-vacuna.component';
-import { AddInmunizationComponent, Immunization } from 'src/app/modules/historia-clinica/dialogs/add-inmunization/add-inmunization.component';
+import { AddInmunizationComponent, Immunization } from '@historia-clinica/dialogs/add-inmunization/add-inmunization.component';
 import { TableModel } from '@presentation/components/table/table.component';
 import { momentFormat, momentParseDate, DateFormat } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
-import { VACUNAS } from 'src/app/modules/historia-clinica/constants/summaries';
+import { VACUNAS } from '@historia-clinica/constants/summaries';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 @Component({
