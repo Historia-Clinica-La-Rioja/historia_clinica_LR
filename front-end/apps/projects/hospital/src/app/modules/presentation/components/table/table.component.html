@@ -1,0 +1,40 @@
+<div *ngIf="model">
+	<mat-form-field *ngIf="filterEnabled">
+		<mat-label>Filtro</mat-label>
+		<input matInput (keyup)="applyFilter($event)">
+	</mat-form-field>
+	<table mat-table [dataSource]="dataSource" class="{{mainStyle}}" [ngClass]="{ 'mat-elevation-z8': mainStyle === TableStyles.PRIMARY }" aria-hidden="true">
+		<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+			<th mat-header-cell *matHeaderCellDef [ngClass]="{'actions': !!column.action}" class="capitalize-first-letter">
+				{{ column.header | translate }}
+			</th>
+			<td mat-cell [ngClass]="{'actions': !!column.action}" class="capitalize-first-letter" *matCellDef="let row">
+				<ng-container *ngIf="column.action else default">
+					<ng-container *ngIf="column.action.displayType === ActionDisplays.ICON else button">
+						<button mat-icon-button color="{{column.action.matColor}}" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
+							<mat-icon fontSet="material-icons-outlined">{{column.action.display}}</mat-icon>
+						</button>
+					</ng-container>
+					<ng-template #button>
+						<button mat-flat-button color="{{column.action.matColor}}" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
+							<span>{{ column.action.display | translate }}</span>
+						</button>
+					</ng-template>
+				</ng-container>
+				<ng-template #default>
+					<span *ngIf="column.text">{{ column.text(row)  | translate }}</span>
+				</ng-template>
+			</td>
+		</ng-container>
+		<div *ngIf="showTableHeader">
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		</div>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	</table>
+	<mat-paginator *ngIf="(paginationEnabled) && (dataSource?.data?.length !== 0)"
+				   class="{{mainStyle}}"
+				   [pageSizeOptions]="pageSizeOptions"
+				   showFirstLastButtons>
+	</mat-paginator>
+	<app-no-data class="{{mainStyle}}" *ngIf="dataSource?.data?.length === 0"></app-no-data>
+</div>

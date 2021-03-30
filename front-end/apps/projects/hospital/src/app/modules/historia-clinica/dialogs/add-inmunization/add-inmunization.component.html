@@ -1,0 +1,54 @@
+<div mat-dialog-title>
+	<div class="mat-h2" [translate]="'internaciones.internacion-paciente.vacunas-summary.ADD'"></div>
+</div>
+
+<div class="spinner" *ngIf="loading else addInmunization">
+	<mat-spinner color="primary"></mat-spinner>
+</div>
+
+<ng-template #addInmunization>
+	<div mat-dialog-content>
+		<app-concepts-search *ngIf="!snomedConcept else inmunizationForm"
+							 [label]="'internaciones.anamnesis.vacunas.INMUNIZATION'"
+							 (search)=onSearch($event)>
+		</app-concepts-search>
+
+		<div class="spinner">
+			<mat-spinner diameter="70" color="primary" *ngIf="searching"></mat-spinner>
+		</div>
+
+		<app-table *ngIf="!searching && !snomedConcept" [model]="conceptsResultsTable"
+				   [mainStyle]="'secondary'"></app-table>
+
+		<ng-template #inmunizationForm>
+			<form [formGroup]="form" (ngSubmit)="submit()">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.internacion-paciente.vacunas-summary.INMUNIZATION'"></mat-label>
+					<input matInput type="text" formControlName="snomed" name="snomed" readonly>
+					<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+							(click)="resetForm()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.internacion-paciente.vacunas-summary.REGISTRY_DATE'">
+					</mat-label>
+					<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
+						   [max]="this.today">
+					<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+					<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+									(monthSelected)="chosenMonthHandler($event)">
+					</mat-datepicker>
+				</mat-form-field>
+			</form>
+		</ng-template>
+	</div>
+	<mat-dialog-actions align="end">
+		<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
+		</button>
+		<button *ngIf="snomedConcept" mat-raised-button color="primary" (click)="submit()">
+			<span [translate]="'buttons.ADD'"></span>
+		</button>
+	</mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,227 @@
+{
+	"guardia": {
+		"new-episode": {
+			"TITLE": "Nuevo episodio",
+			"SUB_TITLE": "Complete los datos solicitados para continuar",
+			"ADM_TRIAGE": "Triage",
+			"SUCCESS": "El episodio fue creado exitosamente",
+			"ERROR": "Ocurrió un error al crear el episodio"
+		},
+		"triage": {
+			"APPEARANCE": "Apariencia",
+			"BREATH": "Respiración",
+			"CIRCULATION": "Circulación",
+			"CONFIRM": "Confirmar triage",
+			"CRYING_EXCESSIVE": "Llanto sin consuelo",
+			"DIASTOLIC_BLOOD": "Tensión arterial diastólica",
+			"EVALUATION": "Evaluación",
+			"HEART_RATE": "Frecuencia cardíaca (/min)",
+			"LEVEL": "Nivel de urgencia",
+			"MUSCLE_HYPERTONIA": "Tono muscular",
+			"NEW_TRIAGE_CONFIRMATION_MSG": "Triage agregado correctamente",
+			"NEW_TRIAGE_ERROR_MSG": "No fue posible agregar el triage",
+			"OXYGEN_SATURATION": "Saturación de oxígeno (%)",
+			"PERFUSION": "Perfusión",
+			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
+			"RESPIRATORY_RETRACTION": "Respiración con tiraje",
+			"TRIAGE_ROOM": "Zona de Triage",
+			"TRIAGE_ROOM_DESCRIPTION": "Lugar físico en el que se realiza el Triage",
+			"STRIDOR": "Respiración con estridor",
+			"SYSTOLIC_BLOOD": "Tensión arterial sistólica",
+			"VITAL_SIGNS": "Signos vitales",
+			"TEMPERATURE": "Temperatura",
+			"TITLE": "Nuevo triage"
+		},
+		"administrative_admision": {
+			"TITLE": "Nuevo episodio",
+			"SUBTITLE": "Complete datos solicitados para continuar",
+			"PATIENT": "Paciente",
+			"SEARCH_PATIENT": "Buscar Paciente",
+			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
+			"UPDATE_MEDICAL_COVERAGE": "Actualizar Cobertura",
+			"motivo": {
+				"TITLE": "Detalle del episodio",
+				"MOTIVO": "motivo",
+				"ADD": "Agregar motivo",
+				"table": {
+					"TITLE": "Motivos registrados",
+					"columns": {
+						"MOTIVO": "Motivos"
+					}
+				},
+				"DIAGNOSIS": "Diagnóstico"
+			},
+			"form": {
+				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
+				"EMERGENCY_CARE_ENTRANCE_TYPE": "Forma de ingreso",
+				"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
+				"waiting_room": {
+					"PLACEHOLDER" : "Sala de espera",
+					"DESCRIPTION" : "Lugar físico donde el paciente esperará a ser atendido"
+				},
+				"police_intervention": {
+					"CALL_DETAIL": "Detalle del llamado",
+					"DATE": "Fecha",
+					"TIME": "Hora",
+					"police_officer": {
+						"TITLE": "Detalle del oficial policial",
+						"PLATE_NUMBER": "Nro de placa",
+						"NAME": "Nombre",
+						"LAST_NAME": "Apellido"
+					}
+				}
+			}
+		},
+		"home": {
+			"episodes": {
+				"episode": {
+					"actions": {
+						"atender": {
+							"TITLE": "Atender",
+							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",
+							"ERROR": "Error al actualizar estado de episodio a En atención"
+						},
+						"finalizar_ausencia": {
+							"TITLE": "Finalizar por ausencia",
+							"CONFIRM": "¿Está seguro que desea finalizar por ausencia el episodio?",
+							"SUCCESS": "Episodio finalizado por ausencia exitosamente",
+							"ERROR": "Error al finalizar por ausencia el episodio"
+						},
+						"NUEVO_TRIAGE": "Nuevo triage"
+					},
+					"patient": {
+						"ID": "ID Paciente",
+						"NO_INFO": "Sin información",
+						"TEMPORAL": "Paciente temporal"
+					}
+				},
+				"filters": {
+					"FILTER_BY_PATIENT": "Filtrar por paciente",
+					"FIRST_NAME": "Nombre",
+					"IDENTIFICATION_NUMBER": "Nro de documento",
+					"LAST_NAME": "Apellido",
+					"NO_PATIENT": "Paciente sin definir",
+					"PATIENT_ID": "ID de paciente",
+					"RESULTS": "Resultado: {{amount}} episodios",
+					"RESULT_ONE_EPISODE": "Resultado: 1 episodio",
+					"TEMPORAL_PATIENT": "Paciente temporal",
+					"TYPE": "Tipo de guardia",
+					"URGENCY": "Nivel de urgencia"
+
+				},
+				"NEW_EPISODE": "Nuevo episodio",
+				"NO_DATA": "No existen episodios activos",
+				"NO_DATA_FOR_FILTER": "No existen episodios activos para la búsqueda seleccionada",
+				"TITLE": "Episodios de guardia"
+			},
+			"TITLE": "Guardia de emergencia"
+		},
+		"episode": {
+			"TITLE": "Episodio de guardia",
+			"CANCEL_ATTENTION": "Cancelar atención",
+			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
+			"cancel_attention": {
+				"SUCCESS": "La atención fue cancelada exitosamente",
+				"ERROR": "Ocurrio un error al cancelar la atención"
+			},
+			"administrative": {
+				"EPISODE": "Episodio",
+				"REASONS": "Motivos de consulta",
+				"ENTRANCE": "Ingreso",
+				"POLICE_INTERVENTION": "Intervención policial",
+				"UBICACION" : "Ubicación"
+			},
+			"administrative_discharge": {
+				"TITLE":"Alta Administrativa",
+				"medical_discharge_card": {
+					"DATE_TIME": "Fecha y hora",
+					"PROBLEMS": "Problemas",
+					"DISCHARGE_TYPE": "Tipo de egreso",
+					"AUTHORIZE_AUTOPSY": "Autopsia autorizada"
+				},
+				"form": {
+					"TITLE": "Formulario de alta administrativa",
+					"DATE": "Fecha",
+					"TIME":"Hora",
+					"AMBULANCE_COMPANY_ID":"ID Compañia ambulancia",
+					"TIME_LIMIT": "La hora debe ser posterior a la del alta medica"
+				},
+				"messages": {
+					"SUCCESS":"El alta administrativa se guardó exitosamente",
+					"ERROR": "Ocurrió un error al intentar guardar el alta administrativa"
+				},
+				"autopsy": {
+					"YES": "Si",
+					"NO": "No",
+					"NO_INFORMATION": "Sin información"
+				}
+			},
+			"medical_discharge": {
+				"TITLE": "Alta Médica",
+				"PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
+				"form": {
+					"DATE": "Fecha",
+					"TIME":"Hora",
+					"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
+					"AUTOPSY": "Autopsia autorizada",
+					"DISCHARGE_TYPE": "Tipo de egreso"
+				},
+				"REQUIRED_PROBLEM": "Debe ingresar al menos un problema",
+				"messages": {
+					"SUCCESS": "El alta médica se guardó exitosamente",
+					"ERROR": "Ocurrió un error al intentar guardar el alta médica"
+				},
+				"problems": {
+					"buttons": {
+						"ADD": "Agregar problema"
+					},
+					"CONCEPT_LABEL": "Problema",
+					"CRONICO": "Crónico",
+					"errors": {
+						"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio"
+					},
+					"FECHA_FIN": "Fecha fin",
+					"FECHA_INICIO": "Fecha inicio",
+					"TABLE_TITLE": "Problemas registrados",
+					"TITLE": "Problema"
+				}
+			},
+			"triage": {
+				"HISTORIAL": "Historial de triages",
+				"NUEVO": "Nuevo triage",
+				"ultimo": {
+					"TITLE": "Último triage",
+					"NIVEL": "Nivel de urgencia",
+					"REALIZADO_POR": "Realizado por",
+					"UBICACION": "Zona de Triage",
+					"APARIENCIA_RESPIRACION_CIRCULACION": "Apariencia, respiración y circulación",
+					"TEMPERATURA": "Temperatura",
+					"LLANTO_SIN_CONSUELO": "Llanto sin consuelo",
+					"TONO_MUSCULAR": "Tono muscular",
+					"RESPIRACION_TIRAJE": "Respiración con tiraje",
+					"RESPIRACION_ESTRIDOR": "Respiración con estridor",
+					"PERFUSION": "Perfusión",
+					"SIGNOS_VITALES": "Signos vitales",
+					"EVALUACION": "Evaluación",
+					"SI": "Si",
+					"NO": "No"
+				}
+			},
+			"search_patient": {
+				"CONFIRM": "Confirmar Paciente",
+				"update": {
+					"ERROR": "Ocurrio un error al actualizar el paciente",
+					"SUCCESS":"El paciente fue actualizado correctamente"
+				}
+			}
+		},
+		"select_consultorio": {
+			"ATENDER": "Atender",
+			"CONSULTORIO": "Consultorio",
+			"SUBTITLE": "Consultorio destino para el paciente"
+		},
+		"NO_INFO": "Sin información",
+		"NO": "No",
+		"SI": "Si"
+	}
+}

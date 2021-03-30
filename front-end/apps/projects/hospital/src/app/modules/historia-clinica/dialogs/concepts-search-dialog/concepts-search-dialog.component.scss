@@ -1,0 +1,10 @@
+@import '../../../../../assets/styles/mixins';
+
+div.spinner {
+	@include centered-spinner;
+}
+
+span.warning{
+	font-style: italic;
+	color: grey;
+}

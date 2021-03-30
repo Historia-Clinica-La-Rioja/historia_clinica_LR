@@ -1,0 +1,65 @@
+<h2 class="mat-h2" [translate]="title"></h2>
+<mat-card>
+	<mat-card-content>
+		<app-concepts-search *ngIf="!snomedConcept else medicacionForm"
+			[label]="title"
+		 	(search)="openSearchDialog($event)">
+		</app-concepts-search>
+		<ng-template #medicacionForm>
+			<form [formGroup]="form" (ngSubmit)="addToList()">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="title">
+					</mat-label>
+					<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
+					<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+						(click)="resetForm()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.medicacion.form.NOTE'"></mat-label>
+					<textarea matInput type="text" id="note" name="note" formControlName="note"
+						placeholder="{{'internaciones.anamnesis.observations.DESCRIPTION' | translate }}">
+						</textarea>
+				</mat-form-field>
+
+				<div class="margin-bottom" *ngIf="!hideSuspended">
+					<mat-checkbox formControlName="suspended">
+						<span [translate]="'internaciones.anamnesis.medicacion.form.SUSPENDED'"></span>
+					</mat-checkbox>
+				</div>
+
+				<div align="end">
+					<button class="uppercase" mat-raised-button color="primary" type="submit">
+						<span [translate]="'internaciones.anamnesis.medicacion.ADD'"></span>
+					</button>
+				</div>
+			</form>
+		</ng-template>
+	</mat-card-content>
+</mat-card>
+
+<section>
+	<h3 class="mat-body-2" [translate]="'internaciones.anamnesis.medicacion.table.TITLE'"></h3>
+	<table mat-table [dataSource]="medications" class="secondary">
+
+		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
+			<th *matHeaderCellDef>{{ column.header | translate }}</th>
+			<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="remove">
+			<th mat-header-cell *matHeaderCellDef></th>
+			<td mat-cell class="actions" *matCellDef="let element; index as i">
+				<button mat-icon-button color="warn" (click)="remove(i)">
+					<mat-icon>delete_outline</mat-icon>
+				</button>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+	<app-no-data class="secondary" *ngIf="medications.length === 0"></app-no-data>
+</section>

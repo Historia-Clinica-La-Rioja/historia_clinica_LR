@@ -1,0 +1,29 @@
+<div mat-dialog-title>
+	{{ data.title | translate }}
+</div>
+<span class="mat-typography">{{'guardia.select_consultorio.SUBTITLE' | translate}}</span>
+<form [formGroup]="form" (ngSubmit)="submit()">
+	<div mat-dialog-content>
+		<mat-form-field fxFlex="100%" appearance="outline">
+			<mat-label [translate]="'guardia.select_consultorio.CONSULTORIO'"></mat-label>
+			<mat-select formControlName="consultorio">
+				<mat-option id="consultorio_{{consultorio.id}}"
+							*ngFor="let consultorio of consultorios$ | async"
+							[value]="consultorio"
+				>
+					{{consultorio.description}}
+				</mat-option>
+			</mat-select>
+			<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+		</mat-form-field>
+	</div>
+
+	<div mat-dialog-actions style="justify-content: flex-end">
+		<button mat-button mat-dialog-close class="uppercase">
+			{{ 'buttons.CANCEL' | translate }}
+		</button>
+		<button mat-raised-button color="primary" class="uppercase">
+			{{ 'buttons.CONFIRM' | translate }}
+		</button>
+	</div>
+</form>

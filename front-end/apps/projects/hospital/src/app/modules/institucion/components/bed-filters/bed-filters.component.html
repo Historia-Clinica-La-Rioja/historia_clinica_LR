@@ -1,0 +1,54 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+        <mat-label [translate]="'gestion-camas.filters.FREE_BEDS'"></mat-label>
+        <mat-slide-toggle formControlName="filled" (change)="sendAllFiltersOnFilterChange()"></mat-slide-toggle>
+    </div>
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'gestion-camas.filters.SECTOR'"></mat-label>
+        <mat-select formControlName="sector" (selectionChange)="sendAllFiltersOnFilterChange()" name="sector">
+            <mat-option *ngFor="let sector of sectors" [value]="sector.sectorId">
+                {{sector.sectorDescription | translate}}
+            </mat-option>
+        </mat-select>
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.sector.value" matSuffix color="warn"
+            mat-icon-button (click)="clear(form.controls.sector); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'gestion-camas.filters.SPECIALITY'"></mat-label>
+        <mat-select formControlName="speciality" (selectionChange)="sendAllFiltersOnFilterChange()" name="speciality">
+            <mat-option *ngFor="let speciality of specialities" [value]="speciality.specialityId">
+                {{speciality.specialityDescription | translate}}
+            </mat-option>
+        </mat-select>
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.speciality.value" matSuffix
+            color="warn" mat-icon-button (click)="clear(form.controls.speciality); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'gestion-camas.filters.BED_CATEGORY'"></mat-label>
+        <mat-select formControlName="category" (selectionChange)="sendAllFiltersOnFilterChange()" name="category">
+            <mat-option *ngFor="let category of categories" [value]="category.categoryId">
+                {{category.categoryDescription | translate}}
+            </mat-option>
+        </mat-select>
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.category.value" matSuffix color="warn"
+            mat-icon-button (click)="clear(form.controls.category); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'gestion-camas.filters.PROBABLE_DISCHARGE_DATE'"></mat-label>
+        <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="sendAllFiltersOnFilterChange()">
+        <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.probableDischargeDate.value" matDatepickerToggleIcon 
+            (click)="clear(form.controls.probableDischargeDate); $event.stopPropagation()" color="warn">close</mat-icon>
+        <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #myDatepicker></mat-datepicker>
+    </mat-form-field>
+</form>

@@ -1,0 +1,12 @@
+<app-summary-card [header]="antropometricosSummary"
+                  [tooltip]="'historia-clinica.summary-card.datos-antropometricos.TOOLTIP'"
+				  [canEdit]="['ENFERMERO', 'ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']"
+				  [editable]="editable"
+				  (openInNew)="openDialog()">
+	<mat-card-content class="flex-row" *ngIf="details.length > 0 else noInfo">
+		<app-detail-box *ngFor="let detail of details" [detail]="detail"></app-detail-box>
+	</mat-card-content>
+	<ng-template #noInfo>
+		<app-no-data></app-no-data>
+	</ng-template>
+</app-summary-card>

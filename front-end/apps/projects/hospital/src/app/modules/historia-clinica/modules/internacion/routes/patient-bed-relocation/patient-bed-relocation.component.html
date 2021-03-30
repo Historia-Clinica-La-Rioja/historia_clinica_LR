@@ -1,0 +1,109 @@
+<app-content width="full">
+	<section class="page">
+		<h2 class="page-title" [translate]="'internaciones.bed-relocation.TITLE'"></h2>
+		<div fxLayout="row" fxLayoutGap="20px" class="section-container">
+			<section  class="page parent-section">
+				<mat-card class="mat-typography">
+					<form [formGroup]="form" (ngSubmit)="save()">
+						<section>
+							<h2 [translate]="'internaciones.bed-relocation.SECTION_ORIGIN'"></h2>
+							<div class="form-row">
+								<span [translate]="'internaciones.bed-relocation.form.ORIGIN_BED'"></span>
+							</div>
+							<div class="form-row" *ngIf="form.controls.originBedId">
+								<mat-form-field appearance="outline">
+									<input id="originBedId" name="originBedId" formControlName="originBedId" matInput>
+								</mat-form-field>
+							</div>
+						</section>
+						<section>
+							<h2 [translate]="'internaciones.bed-relocation.SECTION_DESTINATION'"></h2>
+							<div class="bed-assignment">
+								<h4 class="page-title" *ngIf="!selectedBedInfo" [translate]="'internaciones.bed-relocation.BED_ASSIGNMENT'"></h4>
+								<mat-list content *ngIf="selectedBedInfo">
+									<mat-list-item>
+										<h2 [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: selectedBedInfo.bed.bedNumber }"></h2>
+									</mat-list-item>
+									<mat-list-item>
+										<div fxLayout="column wrap">
+											<span class="mat-body-1" [translate]="'gestion-camas.detail.SECTOR'"></span>
+											<span class="mat-body-2">
+												{{selectedBedInfo.bed.room.sector.description}}
+											</span>
+										</div>
+									</mat-list-item>
+									<mat-list-item>
+										<div fxLayout="column wrap">
+											<span class="mat-body-1" [translate]="'gestion-camas.detail.CATEGORY'"></span>
+											<span class="mat-body-2">
+												{{selectedBedInfo.bed.bedCategory.description}}
+											</span>
+										</div>
+									</mat-list-item>
+									<mat-list-item>
+										<div fxLayout="column wrap">
+											<span class="mat-body-1" [translate]="'gestion-camas.detail.ROOM'"></span>
+											<span class="mat-body-2">
+												{{selectedBedInfo.bed.room.description}}
+											</span>
+										</div>
+									</mat-list-item>
+								</mat-list>
+								<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+									<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="selectedBedInfo">
+										{{'buttons.EDIT' | translate | uppercase }}
+									</button>
+									<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="!selectedBedInfo">
+										<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
+									</button>
+								</div>
+							</div>
+						</section>
+						<section>
+							<h2 [translate]="'internaciones.bed-relocation.SECTION_DATE'"></h2>
+							<div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="20px" *ngIf="minDate" class="form-row">
+								<mat-form-field appearance="outline">
+									<mat-label>Fecha</mat-label>
+									<input matInput id="relocationDate" [matDatepicker]="relocationDatePicker"
+										formControlName="relocationDate" [min]="minDate" [max]="today">
+									<mat-datepicker-toggle matSuffix [for]="relocationDatePicker"></mat-datepicker-toggle>
+									<mat-datepicker #relocationDatePicker>
+									</mat-datepicker>
+									<mat-error *ngIf="hasError(form, 'required', 'relocationDate')"
+										[translate]="'forms.REQUIRED'"></mat-error>
+								</mat-form-field>
+								<mat-form-field appearance="outline">
+									<mat-label>Hora</mat-label>
+									<input matInput id="relocationTime" type="text" formControlName="relocationTime">
+									<mat-error *ngIf="hasError(form, 'required', 'relocationTime')"
+										[translate]="'forms.REQUIRED'"></mat-error>
+									<mat-error *ngIf="hasError(form, 'pattern', 'relocationTime')" [translate]="'forms.TIME_FORMAT'"></mat-error>
+									<mat-error *ngIf="hasError(form, 'futureTime', 'relocationTime')" [translate]="'forms.MAX_TIME_ERROR'"></mat-error>
+									<mat-error *ngIf="hasError(form, 'previousTime', 'relocationTime')" [translate]="'forms.MIN_TIME_ERROR'"
+										[translateParams]="{ minTime: minTimeStr }"></mat-error>
+								</mat-form-field>
+							</div>
+						</section>
+
+						<section>
+							<button id="btnGenerate" name="btnGenerate" *hasRole="['ADMINISTRATIVO']" mat-raised-button color="primary" type="submit">
+								<span [translate]="'buttons.GENERATE'"></span>
+							</button>
+						</section>
+					</form>
+				</mat-card>
+			</section>
+			<section class="parent-section">
+				<div class="profile-card">
+					<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto">
+						<div content>
+							<app-personal-information [personalInformation]="personalInformation"
+							                          [patientMedicalCoverage]="patientMedicalCoverage">
+							</app-personal-information>
+						</div>
+					</app-patient-card>
+				</div>
+			</section>
+		</div>
+	</section>
+</app-content>

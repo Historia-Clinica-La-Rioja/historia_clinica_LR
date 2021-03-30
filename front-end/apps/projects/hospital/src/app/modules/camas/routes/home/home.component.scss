@@ -1,0 +1,26 @@
+@import '../../../../../assets/styles/mixins';
+
+div.spinner {
+	@include centered-spinner;
+}
+
+.filter-panel{
+    min-width: 30%;
+    background-color: #f3efef8e;
+    padding: 20px;
+}
+
+.mat-card {
+    padding: 0px;
+}
+
+section.beds {
+    width: 70%;
+    padding: 20px;
+    margin-top: 0px;
+}
+
+#bed-management-card {
+    min-width: 60%;
+    width: 100%;
+}

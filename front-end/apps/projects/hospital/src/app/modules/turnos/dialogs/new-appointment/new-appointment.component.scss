@@ -1,0 +1,35 @@
+@import '../../../../../assets/styles/mixins';
+
+.mat-card {
+	margin-top: 15px;
+
+	mat-card-content {
+		@include card-content;
+	}
+
+	.mat-radio-button {
+		@include form-radio-button;
+	}
+
+	.mat-form-field {
+		width: 100%;
+	}
+
+	::ng-deep mat-list-item.patient-data-list {
+		.mat-list-item-content {
+			padding: 0;
+		}
+	}
+
+}
+::ng-deep .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+}
+
+.padding-bottom{
+	padding-bottom: 10px
+}
+
+.update-medical-coverage {
+	width: 100%;
+}

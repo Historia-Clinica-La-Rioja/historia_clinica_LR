@@ -1,0 +1,434 @@
+{
+	"internaciones": {
+		"anamnesis": {
+			"TITLE": "Evaluación de ingreso",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"SEARCH": "Buscar {{ conceptLabel }}",
+			"alergias": {
+				"TITLE": "Alergias",
+				"ADD": "Agregar alergia",
+				"ALLERGY": "Alergia",
+				"form": {
+					"REGISTRY_DATE": "Fecha registro"
+				},
+				"table": {
+					"TITLE": "Alergias seleccionadas",
+					"columns": {
+						"ALLERGY": "Alergia",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
+			"antecedentes-personales": {
+				"TITLE": "Antecedentes personales",
+				"ADD": "Agregar antecedente",
+				"PERSONAL_HISTORY": "Antecedente personal",
+				"table": {
+					"TITLE": "Antecedentes personales seleccionados",
+					"columns": {
+						"PERSONAL_HISTORY": "Antecedente personal"
+					}
+				}
+			},
+			"antecedentes-familiares": {
+				"TITLE": "Antecedentes familiares",
+				"ADD": "Agregar antecedente",
+				"FAMILY_HISTORY": "Antecedente familiar",
+				"table": {
+					"TITLE": "Antecedentes familiares seleccionados",
+					"columns": {
+						"FAMILY_HISTORY": "Antecedente familiar"
+					}
+				}
+			},
+			"buttons": {
+				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"SAVE_DRAFT": "Guardar borrador",
+				"CONFIRM": "Confirmar"
+			},
+			"datos-antropometricos": {
+				"TITLE": "Datos antropométricos",
+				"BLOOD_TYPE": "Grupo y factor sanguíneo",
+				"HEIGHT": "Talla (cm)",
+				"WEIGHT": "Peso (kg)"
+			},
+			"diagnosticos": {
+				"TITLE_PRINCIPAL": "Diagnóstico principal",
+				"TITLE": "Otros Diagnósticos",
+				"ADD": "Agregar diagnóstico",
+				"DIAGNOSIS": "Diagnóstico",
+				"PRESUMPTIVE": "Presuntivo",
+				"table": {
+					"TITLE": "Diagnósticos seleccionados",
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado"
+					}
+				}
+			},
+			"vacunas": {
+				"TITLE": "Vacunas",
+				"ADD": "Agregar vacuna",
+				"INMUNIZATION": "Vacuna",
+				"form": {
+					"REGISTRY_DATE": "Fecha de vacunación"
+				},
+				"table": {
+					"TITLE": "Vacunas seleccionadas",
+					"columns": {
+						"INMUNIZATION": "Vacuna",
+						"REGISTRY_DATE": "Fecha de vacunación"
+					}
+				}
+			},
+			"medicacion": {
+				"TITLE": "Medicación habitual",
+				"ADD": "Agregar medicación",
+				"MEDICATION": "Medicación",
+				"form": {
+					"CLINICAL_STATUS": "Estado clínico",
+					"SUSPENDED": "Suspendido",
+					"NOTE": "Notas"
+				},
+				"table": {
+					"TITLE": "Medicaciones seleccionadas",
+					"columns": {
+						"NOTE": "Notas",
+						"STATUS": "Estado",
+						"MEDICATION": "Medicación"
+					}
+				}
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento de evaluación de ingreso",
+				"SUCCESS": "El documento de evaluación de ingreso se guardó exitosamente"
+			},
+			"vital-signs": {
+				"form": {
+					"TITLE": "Signos vitales",
+					"HEART_RATE": "Frecuencia cardíaca (/min)",
+					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
+					"TEMPERATURE": "Temperatura corporal",
+					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
+					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
+					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
+				}
+			},
+			"observations": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			},
+			"procedimientos": {
+				"buttons": {
+					"ADD": "Agregar procedimiento"
+				},
+				"FECHA": "Fecha",
+				"TABLE_TITLE": "Procedimientos registrados",
+				"TITLE": "Procedimiento",
+				"TIPO": "Tipo de procedimiento",
+				"PROCEDIMIENTO": "Procedimiento",
+				"PROCEDIMIENTOS": "Procedimientos"
+			}
+		},
+		"epicrisis": {
+			"TITLE": "Epicrisis",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"alergias": {
+				"TITLE": "Alergias",
+				"table": {
+					"TITLE": "Alergias registradas",
+					"columns": {
+						"ALLERGY": "Alergia",
+						"REGISTRY_DATE": "Fecha registro"
+					}
+				}
+			},
+			"antecedentes-personales": {
+				"TITLE": "Antecedentes personales",
+				"table": {
+					"TITLE": "Antecedentes personales registrados",
+					"columns": {
+						"PERSONAL_HISTORY": "Antecedente personal"
+					}
+				}
+			},
+			"antecedentes-familiares": {
+				"TITLE": "Antecedentes familiares",
+				"table": {
+					"TITLE": "Antecedentes familiares registrados",
+					"columns": {
+						"FAMILY_HISTORY": "Antecedente familiar"
+					}
+				}
+			},
+			"buttons": {
+				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"SAVE_DRAFT": "Guardar borrador",
+				"CONFIRM": "Confirmar"
+			},
+			"diagnosticos": {
+				"TITLE": "Diagnósticos",
+				"TITLE_PRINCIPAL": "Diagnóstico principal",
+				"DIAGNOSIS": "Diagnóstico",
+				"PRESUMPTIVE": "Presuntivo",
+				"table": {
+					"TITLE": "Diagnósticos registrados",
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación"
+					}
+				}
+			},
+			"vacunas": {
+				"TITLE": "Vacunas",
+				"table": {
+					"TITLE": "Vacunas registradas",
+					"columns": {
+						"INMUNIZATION": "Vacuna",
+						"REGISTRY_DATE": "Fecha de vacunación"
+					}
+				}
+			},
+			"medicacion": {
+				"TITLE": "Medicación ambulatoria",
+				"table": {
+					"TITLE": "Medicaciones registradas",
+					"columns": {
+						"NOTE": "Notas",
+						"STATUS": "Estado",
+						"MEDICATION": "Medicación"
+					}
+				}
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento de epicrisis",
+				"SUCCESS": "El documento de epicrisis se guardó exitosamente"
+			},
+			"observations": {
+				"TITLE": "Evaluación clínica",
+				"EVOLUTION_NOTE": "Evolución",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_SUMMARY": "Resumen de estudios y procedimientos realizados",
+				"INDICATIONS_NOTE": "Indicaciones al alta",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			}
+		},
+		"clinical-assessment-diagnosis": {
+			"TITLE": "Evaluación clínica de diagnósticos",
+			"SUBTITLE": "Completá los siguientes datos.",
+			"diagnostics": {
+				"TITLE": "Seleccione los diagnósticos",
+				"table": {
+					"columns": {
+						"DIAGNOSIS": "Diagnóstico",
+						"STATUS": "Estado",
+						"VERIFICATION": "Verificación",
+						"MAIN": "Principal"
+					}
+				}
+			},
+			"notes": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento de evaluación clínica de diagnósticos",
+				"SUCCESS": "El documento con la evaluación clínica de diagnósticos se guardó exitosamente"
+			}
+		},
+		"change-main-diagnosis": {
+			"TITLE": "Cambiar diagnóstico principal",
+			"SUBTITLE": "Seleccione el diagnóstico principal a partir de un diagnóstico registrado o ingresando uno nuevo.",
+			"current-main": {
+				"TITLE": "Diagnóstico principal actual"
+			},
+			"select-new-main": {
+				"TITLE": "Seleccionar nuevo diagnóstico principal",
+				"panels": {
+					"new-diagnosis": {
+						"TITLE": "Nuevo diagnóstico",
+						"DESCRIPTION": "Elegir un diagnóstico nuevo"
+					},
+					"promote-diagnosis": {
+						"TITLE": "Diagnósticos registrados",
+						"DESCRIPTION": "Elegir un diagnóstico registrado del paciente"
+					}
+				}
+			},
+			"notes": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+				"DESCRIPTION": "Descripción"
+			},
+			"messages": {
+				"ERROR": "Error al guardar documento para el cambio de diagnóstico principal",
+				"SUCCESS": "El documento con el cambio del diagnóstico principal se guardó exitosamente"
+			}
+		},
+		"documents-summary": {
+			"search-fields": {
+				"DIAGNOSIS": "Diagnóstico",
+				"DOCTOR": "Médico",
+				"CREATEDON": "Fecha",
+				"ALL": "Todos"
+			}
+		},
+		"nota-evolucion": {
+			"TITLE": "Nota de evolución",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"messages": {
+				"ERROR": "Error al guardar documento de nota de evolución",
+				"SUCCESS": "El documento de nota de evolución se guardó exitosamente"
+			}
+		},
+		"internados-table": {
+			"TITLE": "Búsqueda de pacientes"
+		},
+		"internacion-paciente": {
+			"TITLE": "Internación",
+			"confirmacion": "¿Está seguro que desea crear una nueva internación para el paciente con ID ",
+			"actions": {
+				"ADD_EPICRISIS": "Generar epicrisis",
+				"ADD_EVAL_INGRESO": "Generar evaluación de ingreso",
+				"ADD_NOTA_EVOLUCION": "Agregar nota de evolución",
+				"ADMINISTRATIVE_DISCHARGE": "Alta administrativa",
+				"MEDICAL_DISCHARGE": "Alta médica",
+				"PROBABLE_DISCHARGE": "Alta probable",
+				"RELOCATE_PATIENT_BED": "Generar pase de cama",
+				"EDIT_PATIENT": "Editar paciente"
+			},
+			"alergias-summary": {
+				"ADD": "Agregar alergia",
+				"save": {
+					"SUCCESS": "Una nueva alergia se guardó exitosamente",
+					"ERROR": "Error al guardar nueva alergia"
+				}
+			},
+			"anthropometric-summary": {
+				"ADD": "Agregar información antropométrica",
+				"save": {
+					"SUCCESS": "La información antropométrica se actualizó exitosamente",
+					"ERROR": "Error al actualizar información antropométrica"
+				}
+			},
+			"card": {
+				"DAYS_INTERNED": "{{days}} días internado",
+				"ONE_DAY": "1 día internado",
+				"ADMISSION": "Ingreso: {{datetime}}",
+				"PROBABLE_DISCHARGE": "Fecha probable de alta: {{datetime}}",
+				"probable_discharge_dialog": {
+					"TITLE": "Actualizar fecha de alta probable",
+					"PLACEHOLDER": "Fecha de alta probable",
+					"SUCCESS": "La fecha de alta probable se actualizó correctamente",
+					"ERROR": "Error al guardar nueva fecha de alta probable"
+				}
+			},
+			"main-diagnosis": {
+				"TITLE": "Diagnóstico principal",
+				"actions": {
+					"ADD_CLINICAL_ASSESTMENT": "Agregar evaluación clínica",
+					"CHANGE": "Cambiar diagnóstico principal"
+				}
+			},
+			"remove-diagnosis-dialog": {
+				"TITLE": "Eliminar diagnóstico",
+				"VERIFICATION_SELECT": "Motivo",
+				"STATUS_SELECT": "Estado clínico",
+				"CONFIRM_BUTTON": "Crear nota de evolución"
+			},
+			"vacunas-summary": {
+				"ADD": "Agregar vacuna",
+				"INMUNIZATION": "Vacuna",
+				"REGISTRY_DATE": "Fecha de vacunación",
+				"save": {
+					"SUCCESS": "Una nueva vacuna se guardó exitosamente",
+					"ERROR": "Error al guardar nueva vacuna"
+				}
+			},
+			"vital-signs-summary": {
+				"UPDATE": "Actualizar signos vitales",
+				"save": {
+					"SUCCESS": "Los signos vitales se actualizaron exitosamente",
+					"ERROR": "Error al actualizar signos vitales"
+				}
+			}
+		},
+		"new-internment": {
+			"TITLE": "Nueva internación",
+			"SUBTITLE": "Complete los siguientes datos",
+			"SECTION_SERVICE": "Especialidad / Servicio",
+			"SECTION_BED": "Asignación de cama",
+			"SECTION_CONTACT": "Contacto responsable",
+			"SECTION_DOCTOR": "Médico responsable",
+			"BED_ASSIGNMENT": "Asigne una cama para la nueva internación",
+			"BED_ASSIGNMENT_BUTTON": "ASIGNAR CAMA",
+			"messages": {
+				"ERROR": "Error al crear una nueva internacion",
+				"ERROR_BED_ASSIGNMENT": "Asigne una cama para continuar",
+				"SUCCESS": "La internación se guardó exitosamente"
+			}
+		},
+		"snomed-search": {
+			"modal": {
+				"TITLE": "Búsqueda de conceptos",
+				"SUBTITLE": "Se encontraron {{resultsLength}} resultados en la búsqueda para: ",
+				"LIMIT_WARNING": "Si no se encuentra el resultado esperado, por favor refine la búsqueda"
+			}
+		},
+		"discharge": {
+			"TITLE": "Alta Administrativa",
+			"MEDICAL_DISCHARGE": "Alta médica",
+			"DISCHARGE_DATE": "Fecha de egreso",
+			"DISCHARGE_TYPE": "Tipo de egreso",
+			"messages": {
+				"ERROR": "No se pudo dar el alta administrativa del paciente",
+				"SUCCESS": "El alta administrativa se guardó exitosamente",
+				"MEDICAL_DISCHARGE_ERROR": "No se pudo dar el alta médica del paciente",
+				"MEDICAL_DISCHARGE_SUCCESS": "El alta médica se guardó exitosamente"
+			}
+		},
+		"alerta-covid": {
+			"TITLE": "Diagnóstico presuntivo Covid",
+			"messages": {
+				"ERROR": "Error al guardar diagnóstico presuntivo de Covid",
+				"SUCCESS": "El diagnóstico presuntivo de Covid se guardó exitosamente"
+			}
+		},
+		"bed-relocation": {
+			"TITLE": "Generación pase de cama",
+			"SECTION_ORIGIN": "Datos cama origen",
+			"SECTION_DESTINATION": "Datos cama destino",
+			"SECTION_DATE": "Fecha de pase",
+			"BED_ASSIGNMENT": "Asigne una nueva cama para esta internación",
+			"form": {
+				"DESTINATION_SPECIALTY": "Servicio/Especialidad destino",
+				"ORIGIN_BED": "N° de cama origen",
+				"DESTINATION_BED": "N° de cama destino"
+			},
+			"messages": {
+				"CONFIRMACION": "¿Está seguro que desea realizar el pase de cama? ",
+				"ERROR": "Error al generar pase de cama",
+				"SUCCESS": "El pase de cama se guardó exitosamente"
+			}
+		}
+	}
+}

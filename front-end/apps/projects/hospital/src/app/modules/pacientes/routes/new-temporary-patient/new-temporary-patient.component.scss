@@ -1,0 +1,33 @@
+@import '../../../../../assets/styles/mixins';
+@import '../../../../../assets/styles/mat-mixins';
+
+form {
+
+	@include mat-form-field-background-white;
+
+	.form-row {
+		@include form-row;
+	}
+
+}
+
+.mat-radio-button {
+    @include form-radio-button;
+}
+
+mat-form-field{
+    margin-right: 20px;
+}
+
+div.form-buttons {
+	margin: 20px 0;
+	button {
+		margin-right: 10px;
+	}
+}
+
+button.medical-coverage {
+	width: 202px;
+	margin-bottom: 13px;
+	text-transform: uppercase;
+}

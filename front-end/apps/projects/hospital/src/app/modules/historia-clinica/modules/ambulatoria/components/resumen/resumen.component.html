@@ -1,0 +1,81 @@
+<app-content width="full">
+	<section>
+		<h2 [translate]="'ambulatoria.paciente.resumen.TITLE'"></h2>
+		<div fxLayout="column" fxLayoutGap="20px">
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
+					<app-antecedentes-personales-summary [personalHistory]="personalHistory$ | async"
+						[personalHistoriesHeader]="personalProblemsHeader">
+					</app-antecedentes-personales-summary>
+					<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
+						<app-table [showTableHeader]="false" [model]="this.healthConditionsTable"
+								   *ngIf="healthConditionsTable?.data?.length > 0 else noInfo"></app-table>
+						<ng-template #noInfo>
+							<app-no-data></app-no-data>
+						</ng-template>
+					</app-external-summary-card>
+				</div>
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
+					<ng-container
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						<app-antecedentes-familiares-summary [familyHistories]="familyHistories$ | async"
+							[familyHistoriesHeader]="familyHistoriesHeader">
+						</app-antecedentes-familiares-summary>
+						<app-external-summary-card *ngIf="loadExternal" [header]="this.patientExternalSummary.organization.name">
+							<app-table [showTableHeader]="false" [model]="this.familyHistoriesTable"
+									   *ngIf="familyHistoriesTable?.data?.length > 0 else noInfo"></app-table>
+							<ng-template #noInfo>
+								<app-no-data></app-no-data>
+							</ng-template>
+						</app-external-summary-card>
+					</ng-container>
+				</div>
+			</div>
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
+					<ng-container
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						<app-medicacion-summary [medications]="medications$ | async"></app-medicacion-summary>
+						<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
+							<app-table class="mante" [showTableHeader]="true" [model]="this.medicationsTable"
+									   *ngIf="medicationsTable?.data?.length > 0 else noInfo"></app-table>
+							<ng-template #noInfo>
+								<app-no-data></app-no-data>
+							</ng-template>
+						</app-external-summary-card>
+					</ng-container>
+				</div>
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
+					<ng-container
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						<app-alergias-summary [allergies]="allergies$ | async">
+						</app-alergias-summary>
+						<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
+							<app-table [showTableHeader]="false" [model]="this.allergiesTable"
+									   *ngIf="allergiesTable?.data?.length > 0 else noInfo"></app-table>
+							<ng-template #noInfo>
+								<app-no-data></app-no-data>
+							</ng-template>
+						</app-external-summary-card>
+					</ng-container>
+				</div>
+			</div>
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<ng-container
+						*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						<app-antropometricos-summary [anthropometricData$]="anthropometricData$">
+						</app-antropometricos-summary>
+					</ng-container>
+				</div>
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<ng-container
+						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						<app-signos-vitales-summary [editable]="false" [vitalSigns$]="vitalSigns$">
+						</app-signos-vitales-summary>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</section>
+</app-content>

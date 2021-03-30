@@ -1,0 +1,49 @@
+<h2 class="title">
+	<span *ngFor="let urlSegment of urlSegments; let last = last;">
+		<span class="base" *ngIf="!last">{{urlSegment}} / </span>
+		<span class="last" *ngIf="last">{{urlSegment}}</span>
+	</span>
+</h2>
+<div class="loads" *ngIf="loads && loads.length > 0">
+	<mat-card *ngFor="let load of loads">
+		<mat-card-title>{{load.name}}</mat-card-title>
+		<mat-card-subtitle>
+			<div>
+				<code>{{load.method}}</code>
+				{{load.path}}
+			</div>
+			<div class="roles">
+				{{load.roles}}
+			</div>
+		</mat-card-subtitle>
+		<mat-card-content style="white-space: pre;">
+			{{load.body | json}}
+		</mat-card-content>
+		<mat-card-content style="white-space: pre;">
+			{{load.fetch | json}}
+		</mat-card-content>
+		<mat-card-footer>
+			{{load.comments}}
+		</mat-card-footer>
+	</mat-card>
+</div>
+
+<div class="actions" *ngIf="actions && actions.length > 0" >
+	<mat-card>
+		<mat-card-title>
+			Navegación
+		</mat-card-title>
+		<mat-action-list >
+			<mat-list-item mat-list-item *ngFor="let action of actions" [routerLink]="action.navigate">
+				<h3 matLine> {{action.name}} </h3>
+				<p matLine>
+					<span *ngIf="action.rol">[{{action.rol}}] </span>
+					<code> {{action.navigate}} </code>
+				</p>
+				<button mat-icon-button >
+					<mat-icon>arrow_forward</mat-icon>
+				</button>
+			</mat-list-item>
+		</mat-action-list>
+	</mat-card>
+</div>

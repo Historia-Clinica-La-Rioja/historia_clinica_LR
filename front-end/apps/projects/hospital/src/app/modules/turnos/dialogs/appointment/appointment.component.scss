@@ -1,0 +1,95 @@
+@import "../../../../../assets/styles/mixins.scss";
+
+.appointment-information {
+	height: auto;
+}
+
+.assigned-appointment {
+	padding: 20px;
+	color: #545454;
+	line-height: 14px;
+}
+
+.patient-info {
+	color: #545454;
+	line-height: 17px;
+	max-height: 24px;
+}
+
+mat-icon {
+	font-size: 20px;
+}
+
+.appointment-actions {
+
+	margin-top: 10px;
+
+	button {
+		border: 1px solid #979797;
+		height: 48px;
+		width: 48px;
+	}
+
+	.mat-icon.mat-primary {
+		color: #979797;
+	}
+
+	mat-icon {
+		font-size: 25px;
+	}
+
+	.selected {
+		.mat-icon.mat-primary {
+			color: white;
+		}
+	}
+
+	.assigned {
+		background-color: #009B68;
+	}
+
+	.confirmed {
+		background-color: #FF5C00;
+	}
+
+	.absent {
+		background-color: #D34444;
+	}
+
+	.served {
+		background-color: #2687C5;
+	}
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+section {
+	margin: 0;
+}
+
+
+.hide-borders{
+	border-top-style: hidden;
+	border-left-style: hidden;
+	border-right-style: hidden;
+	outline: none;
+	margin-left: 3px;
+}
+
+.phone-text{
+	margin-left: 3px;
+}
+
+.mat-icon-button ::ng-deep .mat-button-focus-overlay {
+    display: none;
+}
+
+.coverage-text {
+	display: inline-block;
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}

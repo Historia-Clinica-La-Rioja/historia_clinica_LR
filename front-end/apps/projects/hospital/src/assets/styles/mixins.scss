@@ -1,0 +1,56 @@
+@import "variables";
+
+@mixin form-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+@mixin card-properties {
+	width: 50%;
+}
+
+@mixin card-centered {
+	max-width: 400px;
+	margin: 15vh auto;
+}
+
+@mixin card-content {
+	margin: 0 16px;
+}
+
+@mixin form-radio-button {
+	margin: 5px 10px;
+}
+
+@mixin form-field {
+	margin-left: 10px;
+}
+
+@mixin form-buttons {
+	margin: 20px 0;
+	button {
+		margin-right: 10px;
+	}
+}
+
+@mixin centered-spinner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+@mixin info-primary {
+	font-weight: 500;
+	line-height: 20px;
+	font-size: 14px;
+}
+
+@mixin info-secondary {
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 14px;
+}

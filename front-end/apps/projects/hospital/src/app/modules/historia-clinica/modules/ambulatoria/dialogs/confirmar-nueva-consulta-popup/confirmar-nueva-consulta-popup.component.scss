@@ -1,0 +1,19 @@
+.cosas-completas {
+	text-decoration:line-through;
+	color: gray;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.cosas-faltantes {
+	color: red;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.mat-dialog-content, .mat-dialog-title {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	text-align: center;
+}

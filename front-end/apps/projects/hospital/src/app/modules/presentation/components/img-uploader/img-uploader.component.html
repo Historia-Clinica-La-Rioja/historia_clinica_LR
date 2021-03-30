@@ -1,0 +1,11 @@
+<div>
+    <button (click)="fileInput.click()" mat-raised-button color="primary">
+        <mat-icon>{{ icon }}</mat-icon>
+        {{ buttonLabel | translate }}
+    </button>
+    <span [hidden]="true">
+        <input type="file" #fileInput 
+                [accept]="validations?.acceptFormat.length ? validations.acceptFormat : undefined"
+                (change)="onSelectFile($event)"/>
+    </span>
+</div>

@@ -1,0 +1,32 @@
+<app-content width="full">
+	<section>
+		<div *hasRole="['ADMINISTRATIVO']">
+			<button *ngIf="internmentEpisode?.id" mat-raised-button color="primary" (click)="goInternmentEpisode()">
+				<span class="uppercase">Ver internación</span>
+			</button>
+			<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary"
+				(click)="goNewInternment()">
+				<span class="uppercase">Iniciar internación</span>
+			</button>
+		</div>
+		<div class="profile-card">
+			<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto">
+				<div header class="header">
+					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
+					<ng-container>
+						<button mat-icon-button color="primary" *hasRole="['ADMINISTRATIVO']" (click)="goToEditProfile()">
+							<mat-icon>edit</mat-icon>
+						</button>
+					</ng-container>
+				</div>
+				<div content>
+					<app-personal-information [personalInformation]="personalInformation"
+					                          [patientMedicalCoverage]="patientMedicalCoverage">
+					</app-personal-information>
+				</div>
+			</app-patient-card>
+		</div>
+	</section>
+	<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress">El paciente se encuentra internado en otra
+		institución.</em>
+</app-content>

@@ -1,0 +1,47 @@
+@import "../../../../../assets/styles/variables";
+@import "../../../../../assets/styles/mixins";
+
+.bold {
+	font-weight: bold;
+}
+
+mat-icon {
+	margin-right: 5px;
+}
+
+span {
+	float: left;
+	clear: left;
+}
+
+.form-row {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.noInformation{
+	color: #A8A8A8;
+	line-height: 20px;
+	font-size: 14px;
+}
+
+mat-expansion-panel-header {
+	div {
+		width: 100%;
+	}
+	.medical-coverage-acronym-name {
+		display: inline-block;
+		max-width: 50%;
+		overflow: hidden !important;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+}
+
+.info-title {
+	@include info-secondary;
+}
+
+.info-content {
+	@include info-primary;
+}

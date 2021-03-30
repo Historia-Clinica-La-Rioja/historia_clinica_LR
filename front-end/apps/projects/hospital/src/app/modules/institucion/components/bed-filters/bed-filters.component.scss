@@ -1,0 +1,18 @@
+@import '../../../../../assets/styles/mat-mixins';
+
+form {
+
+	@include mat-form-field-background-white;
+
+}
+
+#date {
+	max-width: 85%;
+}
+
+#clear-probable-discharge-date {
+	position: relative;
+	float: right;
+	top: -6px;
+	cursor: pointer;
+}

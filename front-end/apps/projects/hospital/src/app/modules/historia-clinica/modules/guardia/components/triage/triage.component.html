@@ -1,0 +1,22 @@
+<form [formGroup]="triageForm" class="page" fxLayout="column" fxFlex="grow shrink initial">
+	<mat-form-field class="simple-form-field" appearance="outline">
+		<mat-label [translate]="'guardia.triage.LEVEL'"></mat-label>
+		<mat-select formControlName="triageCategoryId">
+			<mat-option id="triageCategoryId"
+			            *ngFor="let triageCategory of triageCategories" [value]="triageCategory.id"
+			            (onSelectionChange)="selectTriageCategoryId($event, triageCategory.id)">
+				{{triageCategory.description}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+	<mat-form-field class="simple-form-field" appearance="outline">
+		<mat-label [translate]="'guardia.triage.TRIAGE_ROOM'"></mat-label>
+		<mat-select matTooltip="{{'guardia.triage.TRIAGE_ROOM_DESCRIPTION' | translate}}" formControlName="doctorsOfficeId">
+			<mat-option id="doctorsOfficeId"
+			            *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id"
+			            (onSelectionChange)="selectDoctorsOfficeId($event, office.id)">
+				{{office.description}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+</form>

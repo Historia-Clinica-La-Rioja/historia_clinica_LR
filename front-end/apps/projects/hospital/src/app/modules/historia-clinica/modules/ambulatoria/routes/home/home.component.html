@@ -1,0 +1,142 @@
+<app-content width="full">
+    <section>
+		<h2 class="page-title" [translate]="'ambulatoria.home.TITLE'"></h2>
+		<h4 class="page-title" [translate]="'ambulatoria.home.SUBTITLE'"></h4>
+		<em class="text-danger" *ngIf="requiringValues" translate="forms.REQUIRING_FIELD_FOR_SEARCH"></em>
+		<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()">
+			<div class="form-row">
+				<div>
+					<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
+					<br>
+					<mat-form-field appearance="outline">
+						<mat-select id="identificationTypeId"
+									name="identificationTypeId"
+									formControlName="identificationTypeId"
+									placeholder="{{'pacientes.form.SELECT' | translate}}">
+							<mat-option *ngFor="let identificationType of identificationTypeList"
+										[value]="identificationType.id">
+								{{identificationType.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div>
+					<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
+					<br>
+					<mat-form-field appearance="outline">
+						<input id="identificationNumber"
+								name="identificationNumber"
+								formControlName="identificationNumber"
+								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
+								matInput>
+						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'identificationNumber')"
+							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.identificationNumber}">
+						</mat-error>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div>
+				<div>
+					<span [translate]="'pacientes.form.GENDER'"></span>
+				</div>
+				<mat-radio-group formControlName="genderId">
+					<mat-radio-button *ngFor="let gender of genders"
+										[value]="gender.id">{{gender.description}}</mat-radio-button>
+				</mat-radio-group>
+			</div>
+			<br>
+
+			<div>
+				<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
+			</div>
+			<div class="form-row">
+				<div>
+					<mat-form-field appearance="outline">
+						<input id="firstName"
+								name="firstName"
+								formControlName="firstName"
+								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+								matInput>
+						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'firstName')"
+							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.firstName}">
+						</mat-error>
+					</mat-form-field>
+				</div>
+
+				<mat-form-field appearance="outline">
+					<input id="middleNames"
+							name="middleNames"
+							formControlName="middleNames"
+							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
+							matInput>
+					<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'middleNames')"
+						translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.middleNames}">
+					</mat-error>
+				</mat-form-field>
+			</div>
+
+			<div class="form-row">
+				<div>
+					<div>
+						<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
+					</div>
+					<mat-form-field appearance="outline">
+						<input id="lastName"
+								name="lastName"
+								formControlName="lastName"
+								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+								matInput>
+						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'lastName')"
+							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.lastName}">
+						</mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline">
+						<input id="otherLastNames"
+								name="otherLastNames"
+								formControlName="otherLastNames"
+								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+								matInput>
+						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'otherLastNames')"
+							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.otherLastNames}">
+						</mat-error>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'pacientes.form.BIRTH_DATE'"></mat-label>
+					<input formControlName="birthDate" id="birthDate" matInput [max]="today"
+							[matDatepicker]="picker2">
+					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+					<mat-datepicker #picker2></mat-datepicker>
+					<mat-error translate="forms.INVALID_DATE"></mat-error>
+				</mat-form-field>
+			</div>
+
+			<button mat-raised-button color="primary" type="submit">
+				<span [translate]="'buttons.SEARCH'"></span>
+			</button>
+
+		</form>
+	</section>
+
+	<section id="searchResults" *ngIf="formSubmitted">
+		<h2 class="page-title" translate="forms.SEARCH_RESULTS"></h2>
+
+		<mat-card id="search_limit" name="search_limit" *ngIf="tableModel && patientResultsLength > 1">
+			<span class="mat-body-1" [translate]="'ambulatoria.home.search_limit.TITLE'" style="display:block;"
+				[translateParams]="{ resultsLength: patientResultsLength }">
+			</span>
+			<span class="mat-body-1 warning" *ngIf="patientResultsLength > MAX_RESULT_SIZE "
+				[translate]="'ambulatoria.home.search_limit.WARNING'">
+			</span>
+		</mat-card>
+
+		<app-table id="resultTable" [model]="tableModel"  *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
+		<ng-template #noInfo>
+			<app-no-data></app-no-data>
+		</ng-template>
+	</section>
+</app-content>

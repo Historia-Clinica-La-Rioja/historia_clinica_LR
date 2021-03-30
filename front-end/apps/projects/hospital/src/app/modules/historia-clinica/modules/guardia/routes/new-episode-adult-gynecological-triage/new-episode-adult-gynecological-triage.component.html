@@ -1,0 +1,14 @@
+<app-content width="full">
+	<section fxLayout="column" fxLayoutGap="50px">
+		<div>
+			<h2 class="page-title" [translate]="'guardia.new-episode.TITLE'"></h2>
+			<h4 [translate]="'guardia.new-episode.SUB_TITLE'"></h4>
+		</div>
+		<div>
+			<h3 [translate]="'guardia.new-episode.ADM_TRIAGE'"></h3>
+			<app-adult-gynecological-triage (confirm)="confirmEvent($event)"
+											(cancel)="cancelEvent()"></app-adult-gynecological-triage>
+		</div>
+	</section>
+</app-content>
+

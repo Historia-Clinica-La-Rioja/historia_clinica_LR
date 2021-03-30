@@ -1,0 +1,23 @@
+@import "../../../../../../../assets/styles/mixins";
+
+section {
+	margin: 0;
+}
+
+.info {
+	& > span:first-child {
+		@include info-secondary;
+	}
+
+	& > span:last-child {
+		@include info-primary;
+	}
+}
+
+.padding-to-align-chip {
+	padding: 1.5px 0;
+}
+
+.subtitle-weight {
+	font-weight: 500;
+}

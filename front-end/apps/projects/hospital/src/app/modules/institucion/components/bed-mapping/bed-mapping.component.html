@@ -1,0 +1,26 @@
+<div fxLayout="column" *ngFor="let sector of bedManagementList">
+    <div id="title">
+        <h2 class="mat-h2 page-title">{{sector.sectorDescription}}</h2>
+    </div>
+
+	<div class="sector-characteristic-block">
+		<h2 class="sector-characteristic-label mat-h2" id="organization-type-label">{{sector.organizationType}}</h2>
+		<h2 class="sector-characteristic-label mat-h2" id="care-type-label">{{sector.careType}}</h2>
+		<h2 class="sector-characteristic-label mat-h2" id="age-group-label">{{sector.ageGroup}}</h2>
+	</div>
+
+	<div fxLayout="row wrap" fxLayout.sm="column">
+		<span *ngFor="let specialty of sector.specialties" class="speciality-label">{{specialty.specialtyName}}</span>
+	</div>
+
+	<div fxLayout="row wrap">
+		<div *ngFor="let bed of sector.beds">
+			<button mat-raised-button [ngClass]="{'free': bed.free}"
+					(click)="selectBed(bed.bedId)">
+				{{bed.bedNumber}}
+			</button>
+		</div>
+	</div>
+
+    <mat-divider id="mat-divider" inset></mat-divider>
+</div>

@@ -1,0 +1,35 @@
+<div mat-dialog-title>
+    <h2 class="mat-h2 page-title" [translate]="'gestion-camas.home.TITLE'"></h2>
+</div>
+
+<div mat-dialog-content>
+    <div fxLayout="column">
+
+        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
+            <mat-card id="bed-management-card">
+                <mat-card-content>
+                    <div fxLayout="row">
+                        <div id="filters" class="filter-panel">
+                            <h2 class="mat-h2 page-title" [translate]="'gestion-camas.home.SUBTITLE'"></h2>
+                            <mat-card-subtitle>
+                                <span *ngIf="existBedManagementList" id="bed_id">Resultado: {{bedsAmount}} camas</span>
+                            </mat-card-subtitle>
+                            <app-bed-filters></app-bed-filters>
+                        </div>
+                        <div class="spinner" *ngIf="!existBedManagementList">
+                            <mat-spinner color="primary"></mat-spinner>
+                        </div>
+                        <section class="beds" id="bed-mapping" *ngIf="existBedManagementList && bedsAmount">
+                            <app-bed-mapping (selectedBed)="onSelectBed($event)"></app-bed-mapping>
+                        </section>
+                        <section class="beds" *ngIf="existBedManagementList && !bedsAmount" fxLayout="column" fxLayoutAlign="space-around center">
+                            <h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
+                        </section>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <app-bed-detail [bedId]="selectedBed" [bedAssign]="true" (assignedBed)="onAssignedBed($event)"></app-bed-detail>
+        </div>
+
+    </div>
+</div>

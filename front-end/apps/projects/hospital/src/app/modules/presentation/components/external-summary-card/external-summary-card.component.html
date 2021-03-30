@@ -1,0 +1,18 @@
+<mat-card external-summary-card class="box">
+	<mat-card-header>
+		<mat-card-title>
+			<div fxLayoutAlign="baseline center">
+				<button *ngIf="minimized" id="minimize" mat-icon-button (click)="toggle()">
+					<mat-icon >maximize</mat-icon>
+				</button>
+				<button *ngIf="!minimized" id="maximize" mat-icon-button (click)="toggle()">
+					<mat-icon >minimize</mat-icon>
+				</button>
+				<span>{{header}}</span>
+			</div>
+		</mat-card-title>
+	</mat-card-header>
+	<div *ngIf="!minimized">
+		<ng-content class="externalContent"> </ng-content>
+	</div>
+</mat-card>

@@ -1,0 +1,10 @@
+@import '../../../../../assets/styles/mixins';
+
+div.spinner {
+	@include centered-spinner;
+}
+
+mat-form-field {
+	font-size: 14px;
+	width: 100%;
+}

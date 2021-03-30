@@ -1,0 +1,17 @@
+<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+	<div>{{fieldName| translate}}:</div>
+	<div *ngIf="!editMode" fxLayout="row" fxLayoutAlign="start center">
+		<span>{{value}}</span>
+		<button mat-icon-button color="primary" (click)="editMode = true">
+			<mat-icon>edit</mat-icon>
+		</button>
+	</div>
+	<div *ngIf="editMode" fxLayout="row" fxLayoutAlign="start center">
+		<form [formGroup]="form" (submit)="updateFieldValue()">
+			<input class="hide-borders" formControlName="field">
+			<button mat-icon-button class="check-circle">
+				<mat-icon matListIcon>check_circle</mat-icon>
+			</button>
+		</form>
+	</div>
+</div>

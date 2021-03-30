@@ -1,0 +1,40 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+    <h3 mat-line class="primary bold mat-subheading-2 element-margin">
+        {{prescriptionItemData.prescriptionStatus}}
+    </h3>
+
+    <div>
+        <ng-content select="[actions]"></ng-content>
+    </div>
+</div>
+
+<div class="element-margin" fxLayout="column-reverse" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
+    <span class="mat-subheading-2 capitalize-first-letter" style="margin: 0" fxFlex="70%">
+        {{prescriptionItemData.prescriptionPt}}
+    </span>
+
+    <ng-content select="[prescription-number]"></ng-content>
+</div>
+
+<ng-content select="[dosage]"></ng-content>
+
+<div class="element-margin">
+    <h3 mat-line class="primary bold mat-subheading-2 capitalize-first-letter">
+        {{prescriptionItemData.problemPt}}
+    </h3>
+</div>
+
+<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
+    <span mat-line class="mat-body capitalize-first-letter element-light-color">
+        {{prescriptionItemData.doctor.firstName }} {{prescriptionItemData.doctor.lastName }}
+    </span>
+    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="prescriptionItemData.totalDays == 0"
+        [translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">
+    </span>
+    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="prescriptionItemData.totalDays == 1"
+        [translate]="'ambulatoria.paciente.ordenes_prescripciones.UN_DIA'">
+    </span>
+    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="prescriptionItemData.totalDays > 1">
+        Hace {{prescriptionItemData.totalDays }} días
+    </span>
+</div>

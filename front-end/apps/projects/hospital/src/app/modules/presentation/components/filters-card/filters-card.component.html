@@ -1,0 +1,22 @@
+<mat-card id="filters_card" class="filters-card">
+	<mat-card-content>
+		<div fxLayout="row">
+
+			<div id="filters" class="filter-panel padding">
+				<h2 class="mat-h2" [translate]="cardTitle"></h2>
+				<mat-card-subtitle id="results-amount">
+					<ng-content select="[results-amount]"></ng-content>
+				</mat-card-subtitle>
+				<ng-content select="[filters]"></ng-content>
+			</div>
+
+			<div class="spinner" *ngIf="filtering">
+				<mat-spinner id="spinner" color="primary"></mat-spinner>
+			</div>
+
+			<div id="results" class="results-panel padding">
+				<ng-content select="[results]"></ng-content>
+			</div>
+		</div>
+	</mat-card-content>
+</mat-card>

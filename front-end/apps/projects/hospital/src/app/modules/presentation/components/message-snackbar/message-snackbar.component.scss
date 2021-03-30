@@ -1,0 +1,26 @@
+@import '../../../../../assets/styles/variables.scss';
+
+
+::ng-deep .mat-snack-bar-container {
+
+	&.error {
+		background-color: $error-color;
+		color: white;
+	}
+
+	&.success {
+		background-color: $success-color;
+		color: white;
+	}
+	min-width: 50px;
+}
+
+.flex-layout {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+
+	span {
+		margin-left: 5px;
+	}
+}

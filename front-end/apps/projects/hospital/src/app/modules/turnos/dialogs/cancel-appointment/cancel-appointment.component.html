@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>{{ 'turnos.cancel.TITLE' | translate}}</h1>
+<form [formGroup]="formMotivo" (ngSubmit)="cancel()">
+	<div mat-dialog-content>
+		<span class="mat-body" [translate]="'turnos.cancel.CONFIRM'"></span>
+
+		<div style="margin-top: 10px">
+			<mat-form-field style="width: 100%" [floatLabel]="'never'" appearance="outline">
+				<mat-label>Motivo</mat-label>
+				<textarea formControlName="motivo"
+						  placeholder="Describa el motivo"
+						  matInput
+						  type="text"
+						  id="motivo"
+				></textarea>
+				<mat-error>El motivo es requerido</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div mat-dialog-actions align="end">
+		<button mat-raised-button type="button" class="uppercase" translate="buttons.CANCEL" id="cancel-button"
+				name="cancel-button" (click)="dialogRef.close()"></button>
+		<button mat-raised-button type="submit" [color]="'primary'" class="uppercase"
+				id="okButton-button" name="okButton-button">{{ 'buttons.CONFIRM' | translate}}</button>
+	</div>
+</form>

@@ -1,0 +1,11 @@
+div {
+	&.full {
+		margin: 3%;
+		max-width: 1250px;
+	}
+
+	&.narrow {
+		max-width: 800px;
+		margin: 20px auto;
+	}
+}

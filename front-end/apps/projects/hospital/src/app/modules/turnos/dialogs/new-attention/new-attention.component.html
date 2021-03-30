@@ -1,0 +1,58 @@
+
+<div mat-dialog-title *ngIf="!data.isEdit else edit">
+	<div class="mat-h2" translate="turnos.agenda-setup.dialog.TITLE"></div>
+</div>
+<ng-template #edit>
+	<div align="end">
+		<button mat-icon-button color="warn" (click)="removeAttention()">
+			<mat-icon>delete_outline</mat-icon>
+		</button>
+	</div>
+
+	<div mat-dialog-title >
+		<div class="mat-h2" translate="turnos.agenda-setup.dialog.EDIT"></div>
+	</div>
+</ng-template>
+
+<div>{{data.start | dayTimeRange: data.end }}</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+	<div fxLayout="column">
+		<div>
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'turnos.agenda-setup.MEDICAL_ATTENTION_TYPE'"></mat-label>
+				<mat-select formControlName="medicalAttentionType" name="medical_attention_type" id="medical_attention_type"
+					(selectionChange)="onSelectionChanged()">
+					<mat-option *ngFor="let medicalAttentionType of medicalAttentionTypes"
+						[value]="medicalAttentionType">
+						{{ medicalAttentionType.description}}
+					</mat-option>
+				</mat-select>
+				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+			</mat-form-field>
+		</div>
+
+	</div>
+
+	<div fxLayout="column" *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS ">
+		<div translate="turnos.agenda-setup.OVERTURN_COUNT"></div>
+		<div>
+			<mat-form-field floatLabel="never" appearance="outline">
+				<input id="overturnCount" name="overturnCount" formControlName="overturnCount" matInput placeholder="0"
+					type="number">
+			</mat-form-field>
+		</div>
+	</div>
+
+
+	<mat-dialog-actions align="end">
+		<button id="cancel_button" name="cancel_button" mat-stroked-button color="primary" mat-dialog-close
+			(click)="closeDialog()">
+			<span [translate]="'buttons.CANCEL'"></span>
+		</button>
+		<button id="confirm_button" name="confirm_button" mat-raised-button color="primary">
+			<span [translate]="'buttons.CONFIRM'"></span>
+		</button>
+	</mat-dialog-actions>
+
+</form>

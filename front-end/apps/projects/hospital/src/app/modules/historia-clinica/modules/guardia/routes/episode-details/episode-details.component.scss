@@ -1,0 +1,34 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 20px;
+
+
+	.grid-title {
+		@include info-secondary;
+	}
+
+	.content-primary {
+		@include info-primary;
+	}
+
+	.content-secondary {
+		@include info-secondary;
+	}
+
+}
+
+.triage-subtitle-weight {
+	font-weight: 500;
+}
+
+mat-divider.margin {
+	margin-bottom: 20px !important;
+}
+
+.triage-list-item {
+	box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
+	line-height: 14px;
+}

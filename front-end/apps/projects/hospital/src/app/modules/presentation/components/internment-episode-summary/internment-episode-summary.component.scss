@@ -1,0 +1,17 @@
+@import "../../../../../assets/styles/variables";
+
+.flex-container, .mat-line.flex-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+span {
+	font-size: $font-size-sm;
+	white-space: pre;
+}
+noAgendaForProfessionalAndSpecialty
+mat-icon.mat-icon-inline {
+	font-size: $font-size-lg;
+}
+

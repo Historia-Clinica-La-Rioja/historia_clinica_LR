@@ -1,0 +1,13 @@
+@import '../../../../../assets/styles/mixins';
+
+.mat-card {
+
+	mat-card-content {
+		@include card-content;
+	}
+
+	.mat-radio-button {
+		@include form-radio-button;
+	}
+
+}

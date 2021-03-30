@@ -1,0 +1,12 @@
+@import '../../../../../../../../assets/styles/mixins';
+
+div.spinner {
+	@include centered-spinner;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+input[type=number] { -moz-appearance:textfield; }

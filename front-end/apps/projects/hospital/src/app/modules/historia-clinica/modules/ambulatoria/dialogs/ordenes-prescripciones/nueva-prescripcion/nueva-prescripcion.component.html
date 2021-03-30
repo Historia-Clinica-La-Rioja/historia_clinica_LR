@@ -1,0 +1,66 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+    <h1 mat-dialog-title>{{ data.titleLabel | translate}}</h1>
+    <button id="close-modal" mat-button color="warn" mat-icon-button aria-label="close" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <form [formGroup]="prescriptionForm" class="form">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}</mat-label>
+                <mat-select formControlName="patientMedicalCoverage">
+                    <mat-option
+                        id="medicalCoverage"
+                        name="medicalCoverage"
+                        *ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
+                        {{getFullMedicalCoverageText(patientMedicalCoverage)}}
+					</mat-option>
+					<mat-divider></mat-divider>
+					<mat-option (click)="openMedicalCoverageDialog()">
+						<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
+					</mat-option>
+                </mat-select>
+			</mat-form-field>
+
+            <div class="margin-checkbox" *ngIf="isMedication()">
+                <mat-checkbox formControlName="withoutRecipe">
+                    <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
+                </mat-checkbox>
+            </div>
+        </div>
+    </form>
+
+    <div *ngFor="let prescriptionItem of prescriptionItems" class="item-container">
+        <div fxLayout="column" fxLayoutGap="10px" class="item-information">
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <h3 fxFlex="80%" id="prescriptionItemName" class="mat-subheading-2 capitalize-first-letter">{{prescriptionItem.snomed.pt}}</h3>
+
+                <div fxFlex="20%" fxLayoutAlign="end start">
+                    <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showStudyCategory">{{prescriptionItem.studyCategory.description}}</span>
+            <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showDosage && isDailyMedication(prescriptionItem)">{{getDosage(prescriptionItem)}}</span>
+            <h3 class="mat-subheading-2 capitalize-first-letter color-primary">{{prescriptionItem.healthProblem.description}}</h3>
+            <span class="mat-body-1" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
+        </div>
+        <mat-divider></mat-divider>
+    </div>
+
+    <button mat-stroked-button color="primary" (click)="openPrescriptionItemDialog()" fxFlexFill.xs>
+        <span class="uppercase">{{data.addLabel | translate}}</span>
+    </button>
+</div>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs>
+        <span class="uppercase">{{'buttons.CONFIRM' | translate}}</span>
+    </button>
+</mat-dialog-actions>

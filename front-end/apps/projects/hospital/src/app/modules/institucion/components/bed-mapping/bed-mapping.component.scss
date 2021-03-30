@@ -1,0 +1,33 @@
+@import "../../../../../assets/styles/variables";
+
+.mat-raised-button{
+    color: white;
+    margin: 5px;
+    padding: 0 5px;
+    background-color: $occupied-bed;
+}
+
+.free{
+    background-color: $free-bed;
+    text-decoration: underline;
+}
+
+#mat-divider{
+    margin: 10px 0px 10px 0px;
+}
+
+.sector-characteristic-block {
+	margin-bottom: 10px;
+}
+
+.sector-characteristic-label {
+	margin: 0px;
+}
+
+.speciality-label {
+	margin-right: 10px;
+}
+
+#speciality-block {
+    margin: 5px 0px 5px 0px;
+}

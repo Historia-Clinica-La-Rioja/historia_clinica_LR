@@ -1,0 +1,9 @@
+@import '../../../../../assets/styles/mixins';
+
+mat-form-field {
+	width: 100%;
+}
+
+div.spinner {
+	@include centered-spinner;
+}

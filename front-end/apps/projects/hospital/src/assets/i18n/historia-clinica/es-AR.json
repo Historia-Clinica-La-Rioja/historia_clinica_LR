@@ -1,0 +1,27 @@
+{
+  "historia-clinica": {
+	"summary-card": {
+		"evolution-notes-filter": {
+			"filterFieldIsRequiredWhenInputIsSet": "Debe seleccionar un tipo de filtro",
+			"filterInputIsRequiredWhenDateIsSelected": "Debe seleccionar una fecha",
+			"generalDateError":  "La fecha ingresada no es válida"
+		},
+      "alergias": {
+        "TOOLTIP": "Agregar alergia"
+      },
+      "signos-vitales": {
+        "TOOLTIP": "Actualizar signos vitales"
+      },
+      "datos-antropometricos": {
+        "TOOLTIP": "Agregar información antropométrica"
+      },
+      "vacunas": {
+        "TOOLTIP": "Agregar vacuna"
+	  }
+	},
+	"procedimientos": {
+		"FECHA": "Fecha",
+		"PROCEDIMIENTO": "Procedimiento"
+	}
+  }
+}

@@ -1,0 +1,44 @@
+<div class="spinner" *ngIf="loading else removeDialog">
+	<mat-spinner color="primary"></mat-spinner>
+</div>
+<ng-template #removeDialog>
+	<div mat-dialog-title>
+		<div class="icon">
+			<mat-icon inline color="primary">error_outline</mat-icon>
+		</div>
+		<h4 [translate]="'internaciones.internacion-paciente.remove-diagnosis-dialog.TITLE'"></h4>
+	</div>
+	<form [formGroup]="removeForm" (ngSubmit)="createEvolutionNote()">
+		<div mat-dialog-content>
+			<section class="mat-typography">
+				<h1 class="primary mat-h1 capitalize-first-letter">{{ diagnosis?.snomed.pt }}</h1>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'internaciones.internacion-paciente.remove-diagnosis-dialog.VERIFICATION_SELECT'"></mat-label>
+					<mat-select formControlName="verificationId" name="verificationId">
+						<mat-option *ngFor="let verification of verifications" [value]="verification.id">
+							{{verification.description}}
+						</mat-option>
+					</mat-select>
+					<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="outline" *ngIf="removeForm.controls.verificationId.value === DESCARTADO">
+					<mat-label [translate]="'internaciones.internacion-paciente.remove-diagnosis-dialog.STATUS_SELECT'"></mat-label>
+					<mat-select formControlName="statusId" name="statusId">
+						<mat-option *ngFor="let status of clinicalStatus" [value]="status.id">
+							{{status.description}}
+						</mat-option>
+					</mat-select>
+					<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+				</mat-form-field>
+			</section>
+		</div>
+		<div mat-dialog-actions align="end">
+			<button mat-stroked-button color="primary" cdkFocusInitial mat-dialog-close>
+				<span [translate]="'buttons.CANCEL'"></span>
+			</button>
+			<button mat-raised-button color="primary" id="confirm_button">
+				<span [translate]="'internaciones.internacion-paciente.remove-diagnosis-dialog.CONFIRM_BUTTON'"></span>
+			</button>
+		</div>
+	</form>
+</ng-template>

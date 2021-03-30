@@ -1,0 +1,25 @@
+@import 'mat-mixins';
+@import 'palettes';
+@import '~@angular/cdk/overlay-prebuilt.css';
+
+@include mat-core();
+
+$primary: mat-palette($primary-palette, 400);
+$accent:  mat-palette($accent-palette);
+
+$theme: mat-light-theme($primary, $accent);
+
+@include angular-material-theme($theme);
+
+@include mat-nav-list($theme);
+@include mat-selection-list($theme);
+@include mat-table($theme);
+@include mat-card-box($theme);
+@include signos-vitales-box($theme);
+@include detail-box($theme);
+@include mat-dialog($theme);
+@include mat-button($theme);
+@include no-data($theme);
+@include general($theme);
+@include header($theme);
+@include mat-theme-color($theme)

@@ -1,0 +1,19 @@
+@import '../../../../../../../assets/styles/mat-mixins';
+
+form {
+	@include mat-form-field-background-white;
+}
+
+h4 {
+	font-weight: 500;
+	font-size: medium;
+}
+
+.page {
+	width: 100%;
+	max-width: 500px;
+}
+
+section {
+	margin: 1.5vh 0;
+}

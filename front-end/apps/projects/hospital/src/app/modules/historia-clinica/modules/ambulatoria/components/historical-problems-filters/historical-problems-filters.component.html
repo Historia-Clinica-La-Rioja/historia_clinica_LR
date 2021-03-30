@@ -1,0 +1,51 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="10px">
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'ambulatoria.paciente.problemas.historical-filters.SPECIALITY'"></mat-label>
+        <mat-select formControlName="specialty" (selectionChange)="sendAllFiltersOnFilterChange()" name="specialty">
+            <mat-option *ngFor="let specialty of specialties" [value]="specialty.id">
+                {{specialty.name}}
+            </mat-option>
+        </mat-select>
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.specialty.value" matSuffix
+            color="warn" mat-icon-button (click)="clear(form.controls.specialty); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'ambulatoria.paciente.problemas.historical-filters.PROFESSIONAL'"></mat-label>
+        <mat-select formControlName="professional" (selectionChange)="sendAllFiltersOnFilterChange()" name="professional">
+            <mat-option *ngFor="let professional of professionals" [value]="professional.professionalId">
+                {{professional.professionalDescription}}
+            </mat-option>
+        </mat-select>
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.professional.value" matSuffix color="warn"
+            mat-icon-button (click)="clear(form.controls.professional); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'ambulatoria.paciente.problemas.historical-filters.PROBLEM'"></mat-label>
+        <mat-select formControlName="problem" (selectionChange)="sendAllFiltersOnFilterChange()" name="problem">
+            <mat-option *ngFor="let problem of problems" [value]="problem.problemId">
+                {{problem.problemDescription}}
+            </mat-option>
+        </mat-select>
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.problem.value" matSuffix color="warn"
+            mat-icon-button (click)="clear(form.controls.problem); $event.stopPropagation()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label [translate]="'ambulatoria.paciente.problemas.historical-filters.CONSULTATION_DATE'"></mat-label>
+        <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="consultationDate" (dateChange)="sendAllFiltersOnFilterChange()">
+        <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.consultationDate.value" matDatepickerToggleIcon 
+            (click)="clear(form.controls.consultationDate); $event.stopPropagation()" color="warn">close</mat-icon>
+        <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #myDatepicker></mat-datepicker>
+    </mat-form-field>
+    
+</form>

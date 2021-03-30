@@ -1,0 +1,21 @@
+<app-content width="full">
+	<section>
+		<h2 class="page-title" [translate]="'pacientes.home.TITLE'"></h2>
+		<div  fxLayout="row">
+			<app-search-create
+				fxFlex.xs="100%"
+				fxFlex.sm="80%"
+				fxFlex.md="60%"
+				fxFlex.lg="50%"
+				fxFlex.xl="40%"
+			></app-search-create>
+		</div>
+	</section>
+	<section >
+		<h2 class="page-title" [translate]="'pacientes.home.TITLE_SEARCH'"></h2>
+		<div fxLayout="row">
+			<app-pacientes-table fxFlex="100%"></app-pacientes-table>
+		</div>
+	</section>
+</app-content>
+

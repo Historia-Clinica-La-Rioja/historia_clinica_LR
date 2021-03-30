@@ -1,0 +1,30 @@
+<app-content width="full">
+	<mat-icon color="primary" >error_outline</mat-icon>
+	<section>
+		<h2 class="page-title" [translate]="'Se descartará la búsqueda y se abrirán los datos de empadronamiento de:'"></h2>
+	</section>
+	<div class="sticky">
+		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personPhoto]="personPhoto">
+			<div content align="center">
+				<mat-card-subtitle>
+					<p>
+						Fecha de Nacimiento: {{ patient.birthDate }}
+					</p>
+					<p>
+						{{ patient.identificationTypeId }} : {{ patient.identificationNumber }}
+					</p>
+				</mat-card-subtitle>
+			</div>
+		</app-patient-card>
+	</div>
+	<div class="action" align="center">
+		<mat-action-row>
+			<button mat-stroked-button (click)="back()">
+				<span [translate]="'Volver'"></span>
+			</button>
+			<button mat-raised-button color="primary" matBadgeColor="accent" (click)="goToProfile()" >
+				<span [translate]="'Confirmar'"></span>
+			</button>
+		</mat-action-row>
+	</div>
+</app-content>

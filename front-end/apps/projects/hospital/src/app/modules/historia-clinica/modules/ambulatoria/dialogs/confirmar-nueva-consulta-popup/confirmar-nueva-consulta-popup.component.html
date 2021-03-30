@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{ 'ambulatoria.paciente.nueva-consulta.CAMPOS_SUGERIDOS' | translate}}</h1>
+<div mat-dialog-content>
+
+	<ul class="cosas-completas">
+		<li *ngFor="let presente of this.elementosPresentes">
+			{{presente}}
+		</li>
+	</ul>
+
+	<ul class="cosas-faltantes">
+		<li *ngFor="let faltante of this.elementosFaltantes">
+			{{faltante}}
+		</li>
+	</ul>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="center">
+	<button mat-stroked-button [mat-dialog-close]=false class="uppercase" id="cancel-button" name="cancel-button">
+		{{'ambulatoria.paciente.nueva-consulta.REGRESAR' | translate}}</button>
+	<button mat-raised-button color="primary" [mat-dialog-close]=true class="uppercase" id="okButton-button" name="okButton-button">
+		{{'ambulatoria.paciente.nueva-consulta.CONFIRMAR' | translate}}</button>
+</div>

@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+	<mat-form-field fxFlex=100% appearance="outline" class="typeahead-input">
+		<input type="text"
+			   placeholder="{{ placeholder | translate }}"
+			   formControlName="searchValue"
+			   #trigger="matAutocompleteTrigger"
+			   matInput
+			   [matAutocomplete]="auto">
+		<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+			<mat-option *ngFor="let option of optionsFiltered"
+						[value]="option.viewValue ? option.viewValue : option.compareValue"
+						(onSelectionChange)="select($event, option)"
+			>
+				<span class="mat-body">{{ option.viewValue ? option.viewValue : option.compareValue }}</span>
+			</mat-option>
+		</mat-autocomplete>
+
+		<button *ngIf="form.value?.searchValue?.length" id="clear" type="button" mat-icon-button matSuffix (click)="clear($event, trigger)">
+			<mat-icon>close</mat-icon>
+		</button>
+
+	</mat-form-field>
+</form>

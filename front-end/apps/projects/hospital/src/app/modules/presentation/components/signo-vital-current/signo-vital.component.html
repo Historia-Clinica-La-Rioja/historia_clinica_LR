@@ -1,0 +1,22 @@
+<mat-card *ngIf="!!vitalSign">
+	<div class="flex-column">
+		<div class="flex-row">
+			<div class="flex-column">
+				<span class="mat-body-2">
+					{{ description }}
+				</span>
+				<span class="mat-caption">Último resultado</span>
+			</div>
+			<div class="current-value">
+				<mat-icon *ngIf="vitalSign?.effectiveTime" inline color="accent"
+						  matTooltip="{{ vitalSign?.effectiveTime | date: 'dd/MM/yy - HH:mm' }} hs">
+					access_time
+				</mat-icon>
+				<span class="value">
+					{{ vitalSign?.value || '-' }}
+				</span>
+			</div>
+		</div>
+		<ng-content></ng-content>
+	</div>
+</mat-card>

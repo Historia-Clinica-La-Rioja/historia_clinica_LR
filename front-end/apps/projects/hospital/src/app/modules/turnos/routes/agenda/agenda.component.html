@@ -1,0 +1,154 @@
+<div class="spinner" *ngIf="loading else calendar">
+	<mat-spinner color="primary"></mat-spinner>
+</div>
+
+<ng-template #calendar>
+	<section class="turnos" id="calendar">
+		<div class="header" id="header" fxLayout="row" fxLayoutAlign="space-between center">
+			<mat-button-toggle-group>
+				<mat-button-toggle id="previous" class="navigation"
+								   mwlCalendarPreviousView
+								   [view]=view
+								   [(viewDate)]="viewDate"
+				>
+					Anterior
+				</mat-button-toggle>
+				<mat-button-toggle id="today" class="today"
+								   mwlCalendarToday
+								   [(viewDate)]="viewDate"
+				>
+					Hoy
+				</mat-button-toggle>
+				<mat-button-toggle id="next" class="navigation"
+								   mwlCalendarNextView
+								   [view]=view
+								   [(viewDate)]="viewDate"
+				>
+					Próximo
+				</mat-button-toggle>
+			</mat-button-toggle-group>
+
+			<div id="view_date">
+				<span class="mat-h2">
+					{{ viewDate | calendarDate:(view + 'ViewTitle'): undefined : MONDAY }}
+				</span>
+			</div>
+
+			<div>
+				<mat-button-toggle-group class="toggle-view" [(value)]="view">
+					<mat-button-toggle value="{{calendarViewEnum.Month}}">Mes</mat-button-toggle>
+					<mat-button-toggle value="{{calendarViewEnum.Week}}">Semana</mat-button-toggle>
+					<mat-button-toggle value="{{calendarViewEnum.Day}}">Día</mat-button-toggle>
+				</mat-button-toggle-group>
+			</div>
+
+		</div>
+
+		<div [ngSwitch]="view">
+
+			<mwl-calendar-month-view class="title-black"
+									 *ngSwitchCase="calendarViewEnum.Month"
+									 [viewDate]="viewDate"
+									 [events]="appointments"
+									 [weekStartsOn]="MONDAY"
+									 [cellTemplate]="customCellTemplate"
+									 (beforeViewRender)="loadDailyAmounts($event)"
+									 (dayClicked)="goToDayViewOn($event.day.date)"
+			>
+			</mwl-calendar-month-view>
+
+			<mwl-calendar-week-view class="title-black"
+									*ngSwitchCase="calendarViewEnum.Week"
+									[viewDate]="viewDate"
+									[events]="appointments"
+									[dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
+									[hourSegmentTemplate]="hourSegmentTemplate"
+									[headerTemplate]="headerTemplate"
+									[hourSegments]="hourSegments"
+									[weekStartsOn]="MONDAY"
+									(beforeViewRender)="loadCalendar($event)"
+									(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
+									(eventClicked)="viewAppointment($event.event)"
+			>
+			</mwl-calendar-week-view>
+
+			<mwl-calendar-day-view class="title-black"
+								   *ngSwitchCase="calendarViewEnum.Day"
+								   [viewDate]="viewDate"
+								   [events]="appointments"
+								   [hourSegments]="hourSegments"
+								   [hourSegmentTemplate]="hourSegmentTemplate"
+								   [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
+								   (beforeViewRender)="loadCalendar($event)"
+								   (hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
+								   (eventClicked)="viewAppointment($event.event)"
+			>
+			</mwl-calendar-day-view>
+		</div>
+
+
+		<ng-template #hourSegmentTemplate let-segment="segment" let-locale="locale"
+					 let-segmentHeight="segmentHeight" let-isTimeLabel="isTimeLabel">
+			<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
+				 [class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
+				 [ngClass]="segment.cssClass">
+				<div class="cal-time" *ngIf="isTimeLabel">
+					{{ segment.date | calendarDate:'weekViewHour':locale }}
+				</div>
+			</div>
+		</ng-template>
+
+		<ng-template #headerTemplate let-days="days" let-locale="locale">
+			<div class="cal-day-headers">
+				<div style="cursor: pointer" class="cal-header" (click)="goToDayViewOn(day.date)"
+					 *ngFor="let day of days">
+					<strong>
+						{{ day.date | calendarDate:'weekViewColumnHeader':locale | titlecase}}
+					</strong>
+					<br>
+					<span> {{ day.date | calendarDate: 'weekViewColumnSubHeader'}}</span>
+				</div>
+			</div>
+		</ng-template>
+
+		<ng-template #customCellTemplate let-day="day" let-locale="locale">
+			<div>
+				<span class="cal-day-number darker-color">
+					{{ day.date | calendarDate:'monthViewDayNumber':locale }}
+				</span>
+			</div>
+
+			<div class="daily-amounts">
+				<div fxLayout="column" fxLayoutGap="2px">
+
+					<div *ngIf="day.meta?.amount?.spontaneous || day.meta?.amount?.spontaneous === 0" class="espontanea"
+						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						<div class="count-border" fxLayoutAlign="center center">
+							<span>{{day.meta?.amount?.spontaneous}}</span>
+						</div>
+						<span>Turnos asignados</span>
+					</div>
+
+					<div *ngIf="day.meta?.amount?.programmed || day.meta?.amount?.programmed === 0" class="programada-asignados"
+						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						<div class="count-border" fxLayoutAlign="center center">
+							<span>{{day.meta?.amount?.programmed}}</span>
+						</div>
+						<span>Turnos asignados</span>
+					</div>
+
+					<div *ngIf="day.meta?.amount?.programmedAvailable" class="programada-disponibles"
+						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						<div class="count-border" fxLayoutAlign="center center">
+							<span>{{day.meta?.amount?.programmedAvailable}}</span>
+						</div>
+						<span>Turnos disponibles</span>
+					</div>
+
+					<div *ngIf="day.meta?.amount?.programmedAvailable === 0" class="no-disponibles">No existen turnos disponibles</div>
+				</div>
+			</div>
+		</ng-template>
+
+	</section>
+</ng-template>
