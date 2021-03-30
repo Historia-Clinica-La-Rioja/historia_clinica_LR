@@ -198,7 +198,7 @@ export class SearchComponent implements OnInit {
 			middleNames: [params.middleNames],
 			lastName: [params.lastName, Validators.required],
 			otherLastNames: [params.otherLastNames],
-			genderId: [Number(params.genderId), Validators.required],
+			genderId: [Number(params.genderId) ? Number(params.genderId) : undefined, Validators.required],
 			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined, Validators.required]
 		});
 		this.lockFormField(params);
@@ -212,7 +212,7 @@ export class SearchComponent implements OnInit {
 			middleNames: [params.middleNames],
 			lastName: [params.lastName],
 			otherLastNames: [params.otherLastNames],
-			genderId: [Number(params.genderId)],
+			genderId: [Number(params.genderId) ? Number(params.genderId) : undefined],
 			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined]
 		});
 		this.lockFormField(params);
