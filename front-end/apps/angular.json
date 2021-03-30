@@ -1,0 +1,145 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false,
+    "packageManager": "yarn"
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "hospital": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/hospital",
+      "sourceRoot": "projects/hospital/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "angular-calendar",
+              "file-saver",
+              "@mattlewis92/dom-autoscroller"
+            ],
+            "outputPath": "dist/hospital",
+            "index": "projects/hospital/src/index.html",
+            "main": "projects/hospital/src/main.ts",
+            "polyfills": "projects/hospital/src/polyfills.ts",
+            "tsConfig": "projects/hospital/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/hospital/src/robots.txt",
+              "projects/hospital/src/favicon.ico",
+              "projects/hospital/src/assets",
+              "projects/hospital/src/manifest.webmanifest"
+            ],
+            "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "projects/hospital/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/hospital/src/environments/environment.ts",
+                  "with": "projects/hospital/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "hospital:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "hospital:build:production",
+              "proxyConfig": "src/proxy.conf.json"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "hospital:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/hospital/src/test.ts",
+            "polyfills": "projects/hospital/src/polyfills.ts",
+            "tsConfig": "projects/hospital/tsconfig.spec.json",
+            "karmaConfig": "projects/hospital/karma.conf.js",
+            "assets": [
+              "projects/hospital/src/favicon.ico",
+              "projects/hospital/src/assets",
+              "projects/hospital/src/manifest.webmanifest"
+            ],
+            "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "projects/hospital/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/hospital/tsconfig.app.json",
+              "projects/hospital/tsconfig.spec.json",
+              "projects/hospital/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/hospital/e2e/protractor.conf.js",
+            "devServerTarget": "hospital:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "hospital:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "hospital"
+}

@@ -1,0 +1,46 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"baseUrl": "./",
+		"outDir": "./dist/out-tsc",
+		"sourceMap": true,
+		"declaration": false,
+		"downlevelIteration": true,
+		"experimentalDecorators": true,
+		"moduleResolution": "node",
+		"importHelpers": true,
+		"target": "es2015",
+		"module": "esnext",
+		"lib": [
+			"es2018",
+			"dom"
+		],
+    "paths": {
+      "@environments/*": [
+        "projects/hospital/src/environments/*"
+      ],
+      "@core/*": [
+        "projects/hospital/src/app/modules/core/*"
+      ],
+      "@api-rest/*": [
+        "projects/hospital/src/app/modules/api-rest/*"
+      ],
+      "@presentation/*": [
+        "projects/hospital/src/app/modules/presentation/*"
+      ],
+      "@historia-clinica/*": [
+        "projects/hospital/src/app/modules/historia-clinica/*"
+      ],
+      "@institucion/*": [
+        "projects/hospital/src/app/modules/institucion/*"
+      ],
+      "@pacientes/*": [
+        "projects/hospital/src/app/modules/pacientes/*"
+      ]
+    }
+	},
+	"angularCompilerOptions": {
+		"fullTemplateTypeCheck": true,
+		"strictInjectionParameters": true
+	}
+}
