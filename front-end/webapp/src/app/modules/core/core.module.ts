@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppMaterialModule } from 'src/app/modules/material/app.material.module';
+import { AppMaterialModule } from '@material/app.material.module';
 
 import { ContentComponent } from './components/content/content.component';
 import { HttpClientModule } from '@angular/common/http';

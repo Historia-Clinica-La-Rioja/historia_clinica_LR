@@ -19,7 +19,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ContextService } from '@core/services/context.service';
-import { TableCheckbox } from 'src/app/modules/material/model/table.model';
+import { TableCheckbox } from '@material/model/table.model';
 import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';

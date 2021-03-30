@@ -36,6 +36,15 @@
 			],
 			"@pacientes/*": [
 				"src/app/modules/pacientes/*"
+			],
+			"@camas/*": [
+				"src/app/modules/camas/*"
+			],
+			"@material/*": [
+				"src/app/modules/material/*"
+			],
+			"@turnos/*": [
+				"src/app/modules/turnos/*"
 			]
 		}
 	},

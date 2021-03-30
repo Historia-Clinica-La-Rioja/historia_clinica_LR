@@ -7,7 +7,7 @@ import { Moment } from 'moment';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { ActionDisplays, TableModel } from 'src/app/modules/presentation/components/table/table.component';
+import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { DateFormat, momentFormat, momentParseDate, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';

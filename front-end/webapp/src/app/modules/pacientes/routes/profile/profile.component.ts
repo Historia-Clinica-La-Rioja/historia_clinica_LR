@@ -4,7 +4,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PersonService } from '@api-rest/services/person.service';
-import { PatientBasicData } from 'src/app/modules/presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { ContextService } from '@core/services/context.service';

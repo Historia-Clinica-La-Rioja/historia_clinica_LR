@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { TableModel, ActionDisplays } from 'src/app/modules/presentation/components/table/table.component';
+import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { Router } from '@angular/router';
 import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';

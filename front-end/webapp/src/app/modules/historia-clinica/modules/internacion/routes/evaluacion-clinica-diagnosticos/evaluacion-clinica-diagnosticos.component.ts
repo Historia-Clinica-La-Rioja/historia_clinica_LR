@@ -30,7 +30,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 
-import { TableCheckbox } from 'src/app/modules/material/model/table.model';
+import { TableCheckbox } from '@material/model/table.model';
 import { HEALTH_CLINICAL_STATUS } from '../../constants/ids';
 import { ROLES_FOR_ACCESS_MAIN } from '../../constants/permissions';
 

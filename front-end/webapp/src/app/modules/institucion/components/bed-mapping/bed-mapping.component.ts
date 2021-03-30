@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { BedManagement } from 'src/app/modules/camas/routes/home/home.component';
+import { BedManagement } from '@camas/routes/home/home.component';
 import { Subscription } from 'rxjs';
 import { MapperService } from '@presentation/services/mapper.service';
 import { BedManagementFacadeService } from '../../services/bed-management-facade.service';

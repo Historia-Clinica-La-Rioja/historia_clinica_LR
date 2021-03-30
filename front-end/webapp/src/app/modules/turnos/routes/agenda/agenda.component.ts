@@ -21,7 +21,7 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../constants/appointment';
-import { AppointmentsFacadeService } from 'src/app/modules/turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { map, take } from 'rxjs/operators';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
