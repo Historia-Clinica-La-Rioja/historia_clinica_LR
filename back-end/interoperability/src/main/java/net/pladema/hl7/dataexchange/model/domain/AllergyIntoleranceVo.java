@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import net.pladema.hl7.dataexchange.model.adaptor.Cast;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.foundation.lifecycle.ResourceStatus;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -41,14 +43,17 @@ public class AllergyIntoleranceVo {
         criticalityCoding.put((short)3, "unable-to-assess");
     }
 
-    public AllergyIntoleranceVo(Object[] tuple){
+    public AllergyIntoleranceVo(Integer id, String sctidCode, String sctidTerm,
+                                String clinicalStatus, String verificationStatus,
+                                String category, Date startDate){
         this();
-        int index=0;
-        setId(Cast.toString(tuple[index++]));
-        setSctidCode(Cast.toString(tuple[index++]));
-        setSctidTerm(Cast.toString(tuple[index++]));
-        setClinicalStatus(Cast.toString(tuple[index++]));
-        setVerificationStatus(Cast.toString(tuple[index]));
+        setId(Cast.toString(id));
+        setSctidCode(sctidCode);
+        setSctidTerm(sctidTerm);
+        setClinicalStatus(Cast.toString(clinicalStatus));
+        setVerificationStatus(Cast.toString(verificationStatus));
+        setCategories(category);
+        setStartDate(FhirDateMapper.toLocalDate(startDate));
     }
 
     private String id;
@@ -77,6 +82,10 @@ public class AllergyIntoleranceVo {
     public Set<String> setCategories(Set<String> categories){
         categories.forEach(c-> categories.add(categoryCoding.get(c)));
         return categories;
+    }
+
+    private void setCategories(String category){
+        categories.add(categoryCoding.get(category));
     }
 
     public boolean noInformationAboutCategories(){

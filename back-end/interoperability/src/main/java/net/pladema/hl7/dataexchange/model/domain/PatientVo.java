@@ -2,8 +2,8 @@ package net.pladema.hl7.dataexchange.model.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.hl7.dataexchange.model.adaptor.Cast;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -25,18 +25,19 @@ public class PatientVo {
         genderCoding.put((short)2, "male");
     }
 
-    public PatientVo(Object[] tuple){
+    public PatientVo(String firstname, String middlenames, String lastname, String otherLastName,
+                     String mothersLastName, String identificationNumber, Short genderId,
+                     String birthDate, String phoneNumber, Integer addressId){
         this();
-        int index = 0;
-        setFirstname(Cast.toString(tuple[index++]));
-        setMiddlenames(Cast.toString(tuple[index++]));
-        setLastname(Cast.toString(tuple[index++]));
-        setOtherLastName(Cast.toString(tuple[index++]), Cast.toString(tuple[index++]));
-        setIdentificationNumber(Cast.toString(tuple[index++]));
-        Short genderCode = Cast.toShort(tuple[index++]);
-        setGender(genderCoding.getOrDefault(genderCode, null));
-        setBirthdate(Cast.toLocalDate(tuple[index++]));
-        setPhoneNumber(Cast.toString(tuple[index]));
+        setFirstname(firstname);
+        setMiddlenames(middlenames);
+        setLastname(lastname);
+        setOtherLastName(otherLastName, mothersLastName);
+        setIdentificationNumber(identificationNumber);
+        setGender(genderCoding.getOrDefault(genderId, null));
+        setBirthdate(FhirDateMapper.toLocalDate(birthDate));
+        setPhoneNumber(phoneNumber);
+        setAddressId(addressId);
     }
 
     private String identificationNumber;
@@ -52,6 +53,7 @@ public class PatientVo {
     //Second name
     private String middlenames;
 
+    private Integer addressId;
     private FhirAddress fullAddress;
 
     //phone

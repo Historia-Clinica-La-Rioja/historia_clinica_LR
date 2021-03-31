@@ -3,7 +3,6 @@ package net.pladema.hl7.dataexchange.model.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.hl7.dataexchange.model.adaptor.Cast;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 
 @Getter
@@ -11,11 +10,11 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 @NoArgsConstructor
 public class OrganizationVo {
 
-    public OrganizationVo(Object[] tuple) {
-        int index=0;
-        setId(Cast.toString(tuple[index++]));
-        setName(Cast.toString(tuple[index++]));
-        setPhoneNumber(Cast.toString(tuple[index]));
+    public OrganizationVo(String sisaCode, String name, String phoneNumber, Integer addressId) {
+        setId(sisaCode);
+        setName(name);
+        setPhoneNumber(phoneNumber);
+        setAddressId(addressId);
     }
 
     private String id;
@@ -24,6 +23,7 @@ public class OrganizationVo {
 
     private String phoneNumber;
 
+    private Integer addressId;
     private FhirAddress fullAddress;
 
     public boolean hasPhoneNumber() {

@@ -29,16 +29,16 @@ public class BundleVo {
     @Getter(AccessLevel.NONE)
     private boolean hasDocuments = false;
 
-    public BundleVo(Object[] tuple) {
-        int index=0;
+    public BundleVo(Integer id, String firstName, String middleNames,
+                    String lastName, boolean hasDocuments) {
         PatientVo patientData = new PatientVo();
-        patientData.setId(Cast.toString(tuple[index++]));
-        patientData.setFirstname(Cast.toString(tuple[index++]));
-        patientData.setMiddlenames(Cast.toString(tuple[index++]));
-        patientData.setLastname(Cast.toString(tuple[index++]));
+        patientData.setId(Cast.toString(id));
+        patientData.setFirstname(firstName);
+        patientData.setMiddlenames(middleNames);
+        patientData.setLastname(lastName);
         this.patient = patientData;
         setId(patientData.getId());
-        setHasDocuments(Cast.toBoolean(tuple[index]));
+        setHasDocuments(hasDocuments);
     }
 
     public void setLastUpdated(LocalDate date){

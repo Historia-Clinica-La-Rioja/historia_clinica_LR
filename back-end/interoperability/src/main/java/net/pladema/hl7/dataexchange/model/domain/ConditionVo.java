@@ -10,6 +10,7 @@ import org.hl7.fhir.r4.model.Condition;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,16 +27,16 @@ public class ConditionVo {
         severityCoding.put("LA6750-9", "severe");
     }
 
-    public ConditionVo(Object[] tuple){
+    public ConditionVo(Integer id, String sctidCode, String sctidTerm, String clinicalStatus,
+                       String verificationStatus, Date startDate, Date createdOn){
         this();
-        int index=0;
-        setId(Cast.toString(tuple[index++]));
-        setSctidCode(Cast.toString(tuple[index++]));
-        setSctidTerm(Cast.toString(tuple[index++]));
-        setClinicalStatus(Cast.toString(tuple[index++]));
-        setVerificationStatus(Cast.toString(tuple[index++]));
-        setStartDate(FhirDateMapper.toLocalDate(Cast.toSqlDate(tuple[index++])));
-        setCreatedOn(FhirDateMapper.toLocalDateTime(Cast.toSqlTimestamp(tuple[index])));
+        setId(Cast.toString(id));
+        setSctidCode(sctidCode);
+        setSctidTerm(sctidTerm);
+        setClinicalStatus(clinicalStatus);
+        setVerificationStatus(verificationStatus);
+        setStartDate(FhirDateMapper.toLocalDate(startDate));
+        setCreatedOn(FhirDateMapper.toLocalDateTime(createdOn));
     }
 
     private String id;
