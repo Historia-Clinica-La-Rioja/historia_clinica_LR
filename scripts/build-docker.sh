@@ -7,7 +7,7 @@ rm ci/docker/nginx-jar/*.jar || true
 cp *.jar ci/docker/nginx-jar/
 
 rm -r ci/docker/nginx-jar/front-end-dist 2> /dev/null || true
-cp -r front-end/webapp/dist/ ci/docker/nginx-jar/front-end-dist
+cp -r front-end/apps/dist/ ci/docker/nginx-jar/front-end-dist
 
 rm -r ci/docker/nginx-jar/backoffice-dist 2> /dev/null || true
 cp -r front-end/backoffice/build/ ci/docker/nginx-jar/backoffice-dist

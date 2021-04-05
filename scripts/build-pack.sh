@@ -4,8 +4,9 @@ set -o errexit
 BASEDIR=$(dirname "$0")"/.."
 cd "$BASEDIR"
 
-cd front-end/webapp
+cd front-end/apps
 npm install
+yarn install
 npm run lint
 npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
 npm run build:prod

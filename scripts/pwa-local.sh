@@ -7,8 +7,8 @@
 set -o errexit
 BASEDIR=$(dirname "$0")"/.."
 
-WEBAPP_PROJECT_FOLDER=${BASEDIR}"/front-end/webapp"
-WEBAPP_DIST_FOLDER="dist/sgh"
+WEBAPP_PROJECT_FOLDER=${BASEDIR}"/front-end/apps"
+WEBAPP_DIST_FOLDER="dist/hospital"
 
 cd ${WEBAPP_PROJECT_FOLDER}
 
