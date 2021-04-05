@@ -13,7 +13,7 @@
     <named-native-query name="HCE.findAllMedications" result-set-mapping="HCE.findAllMedicationsResult">
         <query>with temporal as (
             SELECT DISTINCT
-            ms.id, ms.sctid_code, ms.status_id, ms.updated_on,
+            ms.id, ms.snomed_id, ms.status_id, ms.updated_on,
             row_number() OVER (PARTITION by ms.sctid_code ORDER BY ms.updated_on desc) AS rw
             FROM document d
             JOIN document_medicamention_statement dms ON d.id = dms.document_id
@@ -22,9 +22,9 @@
             AND d.type_id = :documentTypeId
             AND d.status_id = :documentStatusId
             )
-            SELECT t.id AS id , s.id AS sctidCode, s.pt AS sctidTerm, status_id AS status
+            SELECT t.id AS id , s.sctid AS sctidCode, s.pt AS sctidTerm, status_id AS status
             FROM temporal t
-            JOIN snomed s ON t.sctid_code = s.sctid
+            JOIN snomed s ON t.snomed_id = s.id
             WHERE rw = 1 AND NOT status_id = :statusId
             ORDER BY t.updated_on
         </query>
@@ -99,7 +99,7 @@
     <named-native-query name="HCE.findAllCondition" result-set-mapping="HCE.findAllConditionResult">
         <query>
             WITH t AS(
-             SELECT hc.id, sctid_code, hc.status_id, verification_status_id, start_date, hc.created_on, hc.updated_on,
+             SELECT hc.id, snomed_id, hc.status_id, verification_status_id, start_date, hc.created_on, hc.updated_on,
              row_number() over (partition by sctid_code order by hc.updated_on desc) as rw
              FROM document d
              JOIN document_health_condition dhc on d.id = dhc.document_id
@@ -109,10 +109,10 @@
              AND hc.patient_id = :patientId
              AND NOT hc.problem_id = :diagnosisId
             )
-             SELECT t.id as id, s.id as code, s.pt as term, status_id as clinical_status,
+             SELECT t.id as id, s.sctid as code, s.pt as term, status_id as clinical_status,
              verification_status_id, start_date, created_on
              FROM t
-             JOIN snomed s ON sctid_code = s.sctid
+             JOIN snomed s ON snomed_id = s.id
              WHERE rw = 1
              AND NOT verification_status_id = :statusId
         </query>
@@ -132,7 +132,7 @@
     <named-native-query name="HCE.findAllImmunizations" result-set-mapping="HCE.findAllImmunizationsResult">
         <query>
             WITH t AS (
-               SELECT inm.id, sctid_code, inm.status_id, administration_date, expiration_date, inm.created_on, inm.updated_on,
+               SELECT inm.id, snomed_id, inm.status_id, administration_date, expiration_date, inm.created_on, inm.updated_on,
                row_number() over (partition by sctid_code, administration_date order by inm.updated_on desc) as rw
                FROM document d
                JOIN document_inmunization di on d.id = di.document_id
@@ -141,9 +141,9 @@
                AND d.type_id = :documentTypeId
                AND inm.patient_id = :patientId
             )
-            SELECT t.id as id, s.id as code, s.pt as term, status_id, administration_date, created_on, expiration_date
+            SELECT t.id as id, s.sctid as code, s.pt as term, status_id, administration_date, created_on, expiration_date
             FROM t
-            JOIN snomed s ON sctid_code = s.sctid
+            JOIN snomed s ON t.snomed_id = s.id
             WHERE rw = 1
             AND NOT status_id = :statusId
             ORDER BY t.updated_on DESC
@@ -164,7 +164,7 @@
     <named-native-query name="HCE.findAllAllergies" result-set-mapping="HCE.findAllAllergiesResult">
         <query>
             with temporal as (
-            SELECT DISTINCT ai.id, ai.sctid_code, ai.status_id, ai.verification_status_id,
+            SELECT DISTINCT ai.id, ai.snomed_id, ai.status_id, ai.verification_status_id,
              ai.category_id, ai.start_date, ai.updated_on,
              row_number() over (partition by ai.sctid_code order by ai.updated_on desc) as rw
              FROM document d
@@ -174,10 +174,10 @@
              AND d.status_id = :documentStatusId
              AND ai.patient_id = :patientId
              )
-             SELECT t.id AS id, s.id AS code, s.pt as term, t.status_id, t.verification_status_id,
+             SELECT t.id AS id, s.sctid AS code, s.pt as term, t.status_id, t.verification_status_id,
              t.category_id, t.start_date
              FROM temporal t
-             JOIN snomed s ON t.sctid_code = s.sctid
+             JOIN snomed s ON t.snomed_id = s.id
              WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus
              ORDER BY t.updated_on desc
         </query>
