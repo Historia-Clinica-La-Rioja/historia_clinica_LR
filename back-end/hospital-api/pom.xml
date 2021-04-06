@@ -40,6 +40,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>ar.lamansys</groupId>
+			<artifactId>sgx-dashboards</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
@@ -202,7 +208,7 @@
 			<version>2.6.1.Final</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<profiles>
 		<profile>
