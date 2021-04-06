@@ -1,5 +1,6 @@
 package net.pladema.patient.repository;
 
+import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.domain.PatientSearch;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -34,4 +36,10 @@ public interface PatientRepository extends JpaRepository<Patient, Integer>, Pati
 			"FROM User u " +
 			"WHERE u.id = :userId")
 	public Optional<Integer> getPersonIdByUser(@Param("userId") Integer userId);
+
+	@Query(value = "SELECT new net.pladema.patient.repository.domain.PatientPersonVo(patient, person) " +
+			"FROM Patient patient " +
+			"JOIN Person person ON patient.personId = person.id " +
+			"WHERE patient.typeId = :patientTypeId ")
+	List<PatientPersonVo> getAllByPatientType(@Param("patientTypeId") Short patientTypeId);
 }

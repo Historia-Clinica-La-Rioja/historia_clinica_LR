@@ -1,8 +1,12 @@
 package net.pladema.person.repository.entity;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.Period;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.patient.repository.domain.PatientPersonVo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Table(name = "person")
@@ -58,6 +61,17 @@ public class Person implements Serializable {
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
+
+    public Person(PatientPersonVo patientPersonVo) {
+        this.id = patientPersonVo.getPersonId();
+        this.firstName = patientPersonVo.getFirstName();
+        this.middleNames = patientPersonVo.getMiddleNames();
+        this.lastName = patientPersonVo.getLastName();
+        this.otherLastNames = patientPersonVo.getOtherLastNames();
+        this.identificationTypeId = patientPersonVo.getIdentificationTypeId();
+        this.genderId = patientPersonVo.getGenderId();
+        this.birthDate = patientPersonVo.getBirthDate();
+    }
 
     @JsonIgnore
     public Short getAge(){

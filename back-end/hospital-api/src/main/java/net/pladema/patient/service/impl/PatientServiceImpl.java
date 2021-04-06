@@ -6,6 +6,7 @@ import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
+import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
@@ -106,10 +107,11 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Async
-	public void federatePatient(Patient patient, Person person) {
+	public boolean federatePatient(Patient patient, Person person) {
 		LOG.debug("Going to federate Patient => {} /n with Person => {}", patient, person);
 		Optional<LocalIdSearchResponse> federarResponse = federarService.federatePatient(person, patient);
 		federarResponse.ifPresent(updatePatientPermanent(patient));
+		return federarResponse.isPresent();
 	}
 
 	private Consumer<LocalIdSearchResponse> updatePatientPermanent(Patient patient) {
@@ -119,6 +121,18 @@ public class PatientServiceImpl implements PatientService {
 			patientRepository.save(patient);
 			LOG.debug("Successful federated patient with nationalId => {}", nationalId);
 		});
+	}
+
+	@Override
+	public void federateAllValidatedPatients() {
+		LOG.debug("Federating all validated patients");
+		List<PatientPersonVo> validatedPatients = patientRepository.getAllByPatientType(PatientType.VALIDATED);
+		Integer validatedCount = validatedPatients.size();
+		Long federatedCount = validatedPatients.stream()
+				.map(p -> federatePatient(new Patient(p), new Person(p)))
+				.filter(Boolean::booleanValue)
+				.count();
+		LOG.debug("Finished federating patients. {} out of {} validated patients were federated.", federatedCount, validatedCount);
 	}
 
 }
