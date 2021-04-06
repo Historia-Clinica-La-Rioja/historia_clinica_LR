@@ -384,7 +384,7 @@
 						<pattern>net.pladema.hl7.**.dto.**Dto</pattern>
 					</classPatterns>
 					<outputKind>module</outputKind>
-					<outputFile>../../front-end/webapp/src/app/modules/api-rest/api-model.d.ts</outputFile>
+					<outputFile>../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-model.d.ts</outputFile>
 					<optionalAnnotations>
 						<annotation>javax.annotation.Nullable</annotation>
 					</optionalAnnotations>
