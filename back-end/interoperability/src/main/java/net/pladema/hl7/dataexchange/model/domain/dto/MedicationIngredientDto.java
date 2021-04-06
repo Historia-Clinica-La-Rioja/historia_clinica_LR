@@ -15,9 +15,9 @@ public class MedicationIngredientDto {
         this.sctidTerm = medicationIngredientVo.getSctidTerm();
         this.active = medicationIngredientVo.isActive();
         this.unitMeasure = medicationIngredientVo.getUnitMeasure();
-        this.unitValue = medicationIngredientVo.getUnitValue();
+        this.unitValue = BigDecimal.valueOf(medicationIngredientVo.getUnitValue());
         this.presentationUnit = medicationIngredientVo.getPresentationUnit();
-        this.presentationValue = medicationIngredientVo.getPresentationValue();
+        this.presentationValue = BigDecimal.valueOf(medicationIngredientVo.getPresentationValue());
     }
     private String sctidCode;
 

@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 @Component
@@ -129,11 +128,13 @@ public abstract class IResourceFhir {
     }
 
     public static CodeableConcept newCodeableConcept(String system, FhirCode code) {
-        return newCodeableConcept(new Coding()
-                .setSystem(system)
-                .setCode(code.getTheCode())
-                .setDisplay(code.getTheDisplay())
-        );
+        if(code.hasCode())
+            return newCodeableConcept(new Coding()
+                    .setSystem(system)
+                    .setCode(code.getTheCode())
+                    .setDisplay(code.getTheDisplay())
+            );
+        return null;
     }
 
     public static CodeableConcept newCodeableConcept(Coding coding){
@@ -184,11 +185,11 @@ public abstract class IResourceFhir {
         return newReferenceAsIdentifier(system, value, "");
     }
 
-    public static Quantity newQuantity(String unit, BigDecimal value){
+    public static Quantity newQuantity(String unit, Double value){
         return new Quantity().setUnit(unit).setValue(value);
     }
 
-    public static Quantity newQuantity(String system, String code, String unit, BigDecimal value){
+    public static Quantity newQuantity(String system, String code, String unit, Double value){
         return newQuantity(unit, value)
                 .setSystem(system)
                 .setCode(code);

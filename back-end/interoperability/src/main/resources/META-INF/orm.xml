@@ -13,16 +13,19 @@
     <named-native-query name="HCE.findAllMedications" result-set-mapping="HCE.findAllMedicationsResult">
         <query>with temporal as (
             SELECT DISTINCT
-            ms.id, ms.snomed_id, ms.status_id, ms.updated_on,
+            ms.id as medicationStatementId, ms.snomed_id, ms.status_id, ms.updated_on,
+            dsg.*,
             row_number() OVER (PARTITION by ms.sctid_code ORDER BY ms.updated_on desc) AS rw
             FROM document d
             JOIN document_medicamention_statement dms ON d.id = dms.document_id
             JOIN medication_statement ms ON dms.medication_statement_id = ms.id
+            LEFT JOIN dosage dsg ON ms.dosage_id = dsg.id
             WHERE ms.patient_id = :patientId
             AND d.type_id = :documentTypeId
             AND d.status_id = :documentStatusId
             )
-            SELECT t.id AS id , s.sctid AS sctidCode, s.pt AS sctidTerm, status_id AS status
+            SELECT  t.medicationStatementId AS id , s.sctid AS sctidCode, s.pt AS sctidTerm, status_id AS status,
+                    t.sequence, t.count, t.duration, t.duration_unit, t.frequency, t.period_unit
             FROM temporal t
             JOIN snomed s ON t.snomed_id = s.id
             WHERE rw = 1 AND NOT status_id = :statusId
@@ -30,12 +33,17 @@
         </query>
     </named-native-query>
     <sql-result-set-mapping name="HCE.findAllMedicationsResult">
-        <constructor-result
-            target-class="net.pladema.hl7.dataexchange.model.domain.MedicationVo">
-                <column name="id" class="java.lang.Integer"/>
-                <column name="sctidCode" class="java.lang.String"/>
-                <column name="sctidTerm" class="java.lang.String"/>
-                <column name="status" class="java.lang.String"/>
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="sctidCode" class="java.lang.String"/>
+            <column name="sctidTerm" class="java.lang.String"/>
+            <column name="status" class="java.lang.String"/>
+            <column name="sequence" class="java.lang.Integer"/>
+            <column name="count" class="java.lang.Integer"/>
+            <column name="duration" class="java.lang.Double"/>
+            <column name="duration_unit" class="java.lang.String"/>
+            <column name="frequency" class="java.lang.Integer"/>
+            <column name="period_unit" class="java.lang.String"/>
         </constructor-result>
     </sql-result-set-mapping>
 

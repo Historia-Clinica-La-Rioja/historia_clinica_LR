@@ -23,4 +23,8 @@ public class FhirCode implements Serializable {
         this.theDisplay=theDisplay;
     }
 
+    public boolean hasCode(){
+        return theCode != null || theDisplay != null;
+    }
+
 }

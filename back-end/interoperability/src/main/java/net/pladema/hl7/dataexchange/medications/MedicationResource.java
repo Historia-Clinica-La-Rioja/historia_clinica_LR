@@ -89,12 +89,12 @@ public class MedicationResource extends IResourceFhir {
                 if(ingredient.getStrength().hasNumerator()){
                     Quantity numerator = ingredient.getStrength().getNumerator();
                     ingredientData.setUnitMeasure(numerator.getUnit());
-                    ingredientData.setUnitValue(numerator.getValue());
+                    ingredientData.setUnitValue(numerator.getValue().doubleValue());
                 }
                 if(ingredient.getStrength().hasNumerator()){
                     Quantity denominator = ingredient.getStrength().getDenominator();
                     ingredientData.setPresentationUnit(denominator.getUnit());
-                    ingredientData.setPresentationValue(denominator.getValue());
+                    ingredientData.setPresentationValue(denominator.getValue().doubleValue());
                 }
             }
             ingredientData.setActive(ingredient.getIsActive());

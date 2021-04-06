@@ -2,6 +2,7 @@ package net.pladema.hl7.dataexchange.model.domain.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.pladema.hl7.dataexchange.model.domain.DosageVo;
 import net.pladema.hl7.dataexchange.model.domain.MedicationVo;
 
 import java.math.BigDecimal;
@@ -24,13 +25,15 @@ public class MedicationInteroperabilityDto {
         );
 
         this.statementId = medicationVo.getStatementId();
-        this.routeCode = medicationVo.getRouteCode();
-        this.routeTerm = medicationVo.getRouteTerm();
+
+        DosageVo dosage = medicationVo.getDosage();
+        this.routeCode = dosage.getRouteCode();
+        this.routeTerm = dosage.getRouteTerm();
         this.status = medicationVo.getStatus();
-        this.unitTime = medicationVo.getUnitTime();
-        this.doseQuantityCode = medicationVo.getDoseQuantityCode();
-        this.doseQuantityValue = medicationVo.getDoseQuantityValue();
-        this.doseQuantityUnit = medicationVo.getDoseQuantityUnit();
+        this.unitTime = dosage.getPeriodUnit();
+        this.doseQuantityCode = dosage.getDoseQuantityCode();
+        this.doseQuantityValue = BigDecimal.valueOf(dosage.getDoseQuantityValue());
+        this.doseQuantityUnit = dosage.getDoseQuantityUnit();
         this.effectiveTime = medicationVo.getEffectiveTime();
 
     }

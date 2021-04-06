@@ -11,6 +11,7 @@ package net.pladema.hl7.dataexchange.medications;
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.dataexchange.model.domain.DosageVo;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
@@ -72,7 +73,7 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
             resource.setStatus(MedicationStatement.MedicationStatementStatus.fromCode(medication.getStatus()))
                     .setSubject(references.get(ResourceType.Patient));
             resource.getEffectivePeriod().setStart(FhirDateMapper.toDate(medication.getEffectiveTime()));
-            resource.addDosage(buildDosage(medication));
+            resource.addDosage(buildDosage(medication.getDosage()));
 
             Medication medicament = medicationResource.fetch(medication);
             resource.setMedication(new Reference(fullDomainUrl(medicament)));
@@ -97,20 +98,36 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
         return resource;
     }
 
-    private Dosage buildDosage(MedicationVo medication){
-        Dosage dosage = new Dosage()
-                .setRoute(newCodeableConcept(CodingSystem.SNOMED, medication.getRoute()))
-                .setTiming(new Timing().setRepeat(new Timing.TimingRepeatComponent()
-                        .setCount(1)
-                        .setPeriodUnit(Timing.UnitsOfTime.fromCode(medication.getUnitTime()))
-                ));
-        dosage.addDoseAndRate()
-                .setType(newCodeableConcept(CodingSystem.MedicationStatement.DOSE, CodingCode.Medication.DOSE))
-                .setDose(newQuantity(CodingSystem.SNOMED,
-                        medication.getDoseQuantityCode(),
-                        medication.getDoseQuantityUnit(),
-                        medication.getDoseQuantityValue()));
-        return dosage;
+    private Dosage buildDosage(DosageVo dosage){
+        Dosage resource = new Dosage()
+                .setRoute(newCodeableConcept(CodingSystem.SNOMED, dosage.getRoute()));
+
+        if (dosage.hasSequence())
+            resource.setSequence(dosage.getSequence());
+
+        if (dosage.hasTimingRepeat()) {
+             Timing.TimingRepeatComponent timingRepeat = new Timing.TimingRepeatComponent()
+                     .setPeriodUnit(Timing.UnitsOfTime.fromCode(dosage.getPeriodUnit()))
+                     .setDurationUnit(Timing.UnitsOfTime.fromCode(dosage.getDurationUnit()));
+
+             if(dosage.getCount() != null)
+                 timingRepeat.setCount(dosage.getCount());
+             if(dosage.getFrequency() != null)
+                 timingRepeat.setFrequency(dosage.getFrequency());
+
+            if (dosage.hasDuration())
+                timingRepeat.setDuration(dosage.getDuration());
+
+            resource.setTiming(new Timing().setRepeat(timingRepeat));
+        }
+
+        if (dosage.hasQuantity())
+            resource.addDoseAndRate()
+                    .setType(newCodeableConcept(CodingSystem.MedicationStatement.DOSE, CodingCode.Medication.DOSE))
+                    .setDose(newQuantity(CodingSystem.SNOMED,
+                            dosage.getDoseQuantityCode(), dosage.getDoseQuantityUnit(), dosage.getDoseQuantityValue()));
+
+        return resource;
     }
 
     @Override
@@ -132,24 +149,26 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
         data.setStatementId(resource.getId());
         if(resource.hasDosage()) {
             Dosage dosage = resource.getDosage().get(0);
+            DosageVo dosageVo = new DosageVo();
             if (dosage.hasRoute()) {
                 Pair<String,String> route = decodeCoding(dosage.getRoute());
-                data.setRouteCode(route.getKey());
-                data.setRouteTerm(route.getValue());
+                dosageVo.setRouteCode(route.getKey());
+                dosageVo.setRouteTerm(route.getValue());
             }
             if (dosage.hasTiming()) {
                 Timing.TimingRepeatComponent repeat = dosage.getTiming().getRepeat();
-                data.setUnitTime(repeat.getPeriodUnit().getDisplay());
+                dosageVo.setPeriodUnit(repeat.getPeriodUnit().getDisplay());
             }
             if (dosage.hasDoseAndRate()) {
                 Dosage.DosageDoseAndRateComponent doseAndRate = dosage.getDoseAndRate().get(0);
                 if(doseAndRate.hasDoseQuantity()) {
                     Quantity quantity = doseAndRate.getDoseQuantity();
-                    data.setDoseQuantityCode(quantity.getCode());
-                    data.setDoseQuantityUnit(quantity.getUnit());
-                    data.setDoseQuantityValue(quantity.getValue());
+                    dosageVo.setDoseQuantityCode(quantity.getCode());
+                    dosageVo.setDoseQuantityUnit(quantity.getUnit());
+                    dosageVo.setDoseQuantityValue(quantity.getValue().doubleValue());
                 }
             }
+            data.setDosage(dosageVo);
         }
         if(resource.hasStatus())
             data.setStatus(resource.getStatus().getDisplay());

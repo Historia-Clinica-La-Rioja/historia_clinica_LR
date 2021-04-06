@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -20,10 +19,10 @@ public class MedicationIngredientVo implements Serializable {
     private boolean active;
 
     private String unitMeasure;
-    private BigDecimal unitValue;
+    private Double unitValue;
 
     private String presentationUnit;
-    private BigDecimal presentationValue;
+    private Double presentationValue;
 
     public FhirCode get() {
         return new FhirCode(sctidCode, sctidTerm);
