@@ -58,7 +58,7 @@ public class DosageVo implements Serializable {
     }
 
     public boolean hasRoute(){
-        return routeCode != null && routeCode.isBlank() && routeTerm != null && routeTerm.isBlank();
+        return FhirString.hasText(routeCode) && FhirString.hasText(routeTerm);
     }
 
     public boolean hasTimingRepeat(){
@@ -67,10 +67,10 @@ public class DosageVo implements Serializable {
     }
 
     public boolean hasDuration(){
-        return duration != null && durationUnit != null && !durationUnit.isBlank();
+        return duration != null && FhirString.hasText(durationUnit);
     }
 
     public boolean hasQuantity(){
-        return doseQuantityValue != null && doseQuantityUnit != null && !doseQuantityUnit.isBlank();
+        return doseQuantityValue != null && FhirString.hasText(doseQuantityUnit);
     }
 }

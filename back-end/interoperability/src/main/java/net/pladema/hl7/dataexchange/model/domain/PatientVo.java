@@ -88,11 +88,7 @@ public class PatientVo {
     }
 
     public boolean hasOtherLastName() {
-        return otherLastName != null && !otherLastName.isBlank();
-    }
-
-    public boolean hasPhoneNumber(){
-        return phoneNumber != null && !phoneNumber.isBlank();
+        return FhirString.hasText(otherLastName);
     }
 
     public boolean hasBirthDateData() {
@@ -104,7 +100,7 @@ public class PatientVo {
     }
 
     public boolean hasMiddlenamesData(){
-        return middlenames != null && !middlenames.isBlank();
+        return FhirString.hasText(middlenames);
     }
 
     public String getSummary(){

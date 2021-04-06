@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
 
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class OrganizationVo {
     private FhirAddress fullAddress;
 
     public boolean hasPhoneNumber() {
-        return phoneNumber != null && !phoneNumber.isBlank();
+        return FhirString.hasText(phoneNumber);
     }
 
     public boolean hasAddress() {

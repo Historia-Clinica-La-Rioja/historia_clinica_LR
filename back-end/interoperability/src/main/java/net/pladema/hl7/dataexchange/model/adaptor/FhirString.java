@@ -14,7 +14,11 @@ public class FhirString {
 
     public static String joining(Character delimiter, String...args){
         return Stream.of(args)
-                .filter(data-> data != null && !data.isBlank())
+                .filter(FhirString::hasText)
                 .collect(Collectors.joining(delimiter.toString()));
+    }
+
+    public static boolean hasText(String arg){
+        return arg != null && !arg.isBlank();
     }
 }

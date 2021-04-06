@@ -2,6 +2,7 @@ package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
@@ -107,7 +108,7 @@ public class PatientResource extends ISingleResourceFhir {
                         .map(e -> e.getValue().toString())
                         .filter(e -> !e.equals(data.getLastname()))
                         .collect(Collectors.joining(" "));
-                if(!otherLastNames.isBlank())
+                if(FhirString.hasText(otherLastNames))
                     data.setOtherLastName(otherLastNames);
             }
         }
