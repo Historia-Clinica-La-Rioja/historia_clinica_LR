@@ -21,7 +21,8 @@
 		<module>hospital-api</module>
 		<module>sgx-dashboards</module>
 		<module>sgx-shared</module>
-	</modules>
+        <module>odontology</module>
+    </modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
