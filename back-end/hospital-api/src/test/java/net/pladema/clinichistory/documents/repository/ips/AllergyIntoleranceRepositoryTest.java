@@ -57,7 +57,7 @@ public class AllergyIntoleranceRepositoryTest extends UnitRepository {
 		allergy.setSnomedId(1);
 		allergy.setStatusId("status");
 		allergy.setVerificationStatusId("verification");
-		allergy.setCategoryId("category");
+		allergy.setCategoryId(null);
 		return allergy;
 	}
 }

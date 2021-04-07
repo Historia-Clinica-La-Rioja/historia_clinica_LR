@@ -59,6 +59,9 @@ public class HealthCondition extends SGXAuditableEntity implements Cloneable{
 	@Column(name = "problem_id", length = 20, nullable = false)
 	private String problemId;
 
+	@Column(name = "severity", length = 10)
+	private String severity;
+
 	public void setVerificationStatusId(String verificationId) {
 		this.verificationStatusId = verificationId;
 		if (verificationId == null)
@@ -92,7 +95,8 @@ public class HealthCondition extends SGXAuditableEntity implements Cloneable{
 					this.getSnomedId(), this.getCie10Codes(),
 					this.getStatusId(), this.getVerificationStatusId(),
 					this.getStartDate(), this.getInactivationDate(), this.getMain(),
-					this.getNoteId(), this.getProblemId()
+					this.getNoteId(), this.getProblemId(),
+					this.getSeverity()
 			);
 		}
 		return result;

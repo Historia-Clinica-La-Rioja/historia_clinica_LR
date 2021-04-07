@@ -11,7 +11,7 @@ import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 @ToString
 public class AllergyConditionDto extends HealthConditionDto {
 
-    private String categoryId;
+    private Short categoryId;
 
     private String severity;
 

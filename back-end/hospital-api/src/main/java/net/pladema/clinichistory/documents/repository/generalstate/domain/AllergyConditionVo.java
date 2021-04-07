@@ -17,14 +17,14 @@ public class AllergyConditionVo extends ClinicalTermVo {
 
     private String verification;
 
-    private String categoryId;
+    private Short categoryId;
 
     private String severityId;
 
     private LocalDate date;
 
     public AllergyConditionVo(Integer id, Snomed snomed, String statusId, String verificationId,
-                             String categoryId, LocalDate date) {
+                             Short categoryId, LocalDate date) {
         super(id, snomed, statusId);
         this.verificationId = verificationId;
         this.severityId = null;
@@ -34,7 +34,7 @@ public class AllergyConditionVo extends ClinicalTermVo {
 
 	public AllergyConditionVo(Integer id, Snomed snomed, String statusId, String status,
 							  String verificationId, String verification,
-							  String categoryId, LocalDate date) {
+							  Short categoryId, LocalDate date) {
 		this(id, snomed, statusId,verificationId, categoryId, date);
 		this.setStatus(status);
 		this.setVerification(verification);

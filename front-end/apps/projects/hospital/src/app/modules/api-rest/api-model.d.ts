@@ -92,7 +92,7 @@ export interface AdministrativeDischargeDto {
 }
 
 export interface AllergyConditionDto extends HealthConditionDto {
-    categoryId: string;
+    categoryId: number;
     date: string;
     severity: string;
 }

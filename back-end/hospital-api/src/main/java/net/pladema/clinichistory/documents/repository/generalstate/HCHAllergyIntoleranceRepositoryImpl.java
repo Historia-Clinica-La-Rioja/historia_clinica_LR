@@ -62,7 +62,7 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                     new Snomed((String)a[1], (String)a[2], null, null),
                     (String)a[3],
                     (String)a[4],
-                    (String)a[5],
+                    (Short)a[5],
                     a[6] != null ? ((Date)a[6]).toLocalDate() : null
             ))
         );

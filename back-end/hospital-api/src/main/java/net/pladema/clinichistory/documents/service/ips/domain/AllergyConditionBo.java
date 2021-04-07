@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AllergyConditionBo extends HealthConditionBo {
 
-    private String categoryId;
+    private Short categoryId;
 
     private String severityId;
 

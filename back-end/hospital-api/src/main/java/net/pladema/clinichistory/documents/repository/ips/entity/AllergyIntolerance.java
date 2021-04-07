@@ -47,17 +47,23 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 	@Column(name = "verification_status_id", length = 20, nullable = false)
 	private String verificationStatusId = AllergyIntoleranceVerificationStatus.CONFIRMED;
 
-	@Column(name = "category_id", length = 20)
-	private String categoryId;
-
 	@Column(name = "start_date")
 	private LocalDate startDate;
 
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "category_id")
+	private Short categoryId;
+
+	@Column(name = "type")
+	private Short type;
+
+	@Column(name = "criticality")
+	private Short criticality;
+
 	public AllergyIntolerance(Integer patientId, Integer snomedId, String cie10Codes, String statusId,
-							  String verificationId, String categoryId, LocalDate startDate){
+							  String verificationId, Short categoryId, LocalDate startDate){
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
