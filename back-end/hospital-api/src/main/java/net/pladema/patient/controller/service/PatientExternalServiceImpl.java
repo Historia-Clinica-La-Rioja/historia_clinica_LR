@@ -86,4 +86,10 @@ public class PatientExternalServiceImpl implements PatientExternalService {
         return result;
     }
 
+    @Override
+    public void federateAllValidatedPatients() {
+        LOG.debug("federateAllValidatedPatients — No input parameters");
+        patientService.federateAllValidatedPatients();
+    }
+
 }
