@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,18 @@ public class SwaggerAPIIntegrationTest {
 	public void contextLoads() throws Exception {
 		// @formatter:off
 		String swaggerJson = mockMvc
-	            .perform(get("/v2/api-docs")
-	                .accept(MediaType.APPLICATION_JSON))
-	            .andExpect(status().isOk())
-	            .andReturn()
-	            .getResponse().getContentAsString();
+				.perform(
+						get("/v2/api-docs")
+						.accept(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isOk())
+				.andReturn()
+				.getResponse().getContentAsString();
 
 		try (Writer writer = new FileWriter(new File("target/generated-sources/swagger.json"))) {
-            IOUtils.write(swaggerJson, writer);
-        }
-		// @formatter:on
+			JSONObject json = new JSONObject(swaggerJson); // Convert text to object
+			IOUtils.write(json.toString(4), writer);
+		}
+			// @formatter:on
 	}
 }

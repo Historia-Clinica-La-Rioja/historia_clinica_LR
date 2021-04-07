@@ -26,6 +26,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String PUBLIC = "/public";
 
+	private static final String[] SWAGGER_RESOURCES = {
+			"/v2/**",
+			"/swagger-ui.html",
+			"/swagger-resources/**",
+			"/webjars/springfox-swagger-ui/**"
+	};
+
 	@Value("${api.user}")
 	protected String apiUser;
 
@@ -65,7 +72,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/actuator/health").permitAll()
 		.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 		.antMatchers(apiAuth + "/**").permitAll()
-		.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
+		.antMatchers(SWAGGER_RESOURCES).permitAll()
 		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
 				ERole.ROOT.getValue(),
 				ERole.ADMINISTRADOR.getValue(),

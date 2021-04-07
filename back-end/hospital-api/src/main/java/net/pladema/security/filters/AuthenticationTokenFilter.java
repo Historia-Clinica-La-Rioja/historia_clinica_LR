@@ -36,7 +36,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
 
-		Optional<String> authToken = Optional.ofNullable(request.getHeader(tokenHeader));
+		Optional<String> authToken = extractToken(request);
 		authToken.ifPresent(token -> {
 			if (securityService.validateCredentials(token))
 				securityService.getAppAuthentication(token)
@@ -46,4 +46,9 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 		LOG.debug("{}", response);
 		chain.doFilter(request, response);
 	}
+
+	protected Optional<String> extractToken(HttpServletRequest request) {
+		return Optional.ofNullable(request.getHeader(tokenHeader));
+	}
+
 }
