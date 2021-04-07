@@ -1,7 +1,7 @@
 package net.pladema.hl7.supporting.terminology.support;
 
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
-import net.pladema.hl7.supporting.terminology.coding.CodingCode;
+
 import org.hl7.fhir.r4.model.CodeSystem;
 import org.hl7.fhir.r4.model.ElementDefinition;
 import org.hl7.fhir.r4.model.Enumerations;

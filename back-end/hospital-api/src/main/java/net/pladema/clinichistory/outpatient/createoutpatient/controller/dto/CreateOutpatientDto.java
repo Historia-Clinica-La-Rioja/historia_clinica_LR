@@ -7,7 +7,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.constrai
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 

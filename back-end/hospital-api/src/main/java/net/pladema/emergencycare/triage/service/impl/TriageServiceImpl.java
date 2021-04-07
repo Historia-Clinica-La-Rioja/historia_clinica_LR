@@ -2,7 +2,6 @@ package net.pladema.emergencycare.triage.service.impl;
 
 import io.jsonwebtoken.lang.Assert;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
-import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.repository.TriageDetailsRepository;

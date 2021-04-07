@@ -8,11 +8,10 @@ import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
-import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;

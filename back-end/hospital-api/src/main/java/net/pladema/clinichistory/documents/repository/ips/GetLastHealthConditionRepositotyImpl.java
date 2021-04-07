@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.documents.repository.ips;
 
-import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

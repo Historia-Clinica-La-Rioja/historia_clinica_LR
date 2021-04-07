@@ -8,14 +8,12 @@ package net.pladema.hl7.dataexchange.model.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import org.apache.commons.text.WordUtils;
 import org.hl7.fhir.r4.model.Coding;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;

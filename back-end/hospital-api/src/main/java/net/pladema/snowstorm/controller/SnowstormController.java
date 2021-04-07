@@ -2,7 +2,6 @@ package net.pladema.snowstorm.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.SnowstormService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 @RequiredArgsConstructor

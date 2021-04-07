@@ -10,7 +10,6 @@ import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.ImmunizationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

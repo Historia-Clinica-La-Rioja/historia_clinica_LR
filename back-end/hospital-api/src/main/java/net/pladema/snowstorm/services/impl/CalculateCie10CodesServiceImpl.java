@@ -1,7 +1,6 @@
 package net.pladema.snowstorm.services.impl;
 
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.snowstorm.services.Cie10RuleChecker;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.SnowstormService;

@@ -15,7 +15,6 @@ import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class HealthConditionServiceImpl implements HealthConditionService {

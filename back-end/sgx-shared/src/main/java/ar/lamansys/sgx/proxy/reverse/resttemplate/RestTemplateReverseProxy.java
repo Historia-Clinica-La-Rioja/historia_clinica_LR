@@ -4,7 +4,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.Map;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
