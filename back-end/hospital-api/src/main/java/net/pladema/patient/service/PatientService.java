@@ -22,7 +22,7 @@ public interface PatientService {
     
     Patient addPatient(Patient patientToSave);
     
-    boolean federatePatient(Patient patient, Person person);
+    void federatePatient(Patient patient, Person person);
 
     void federateAllValidatedPatients();
 }

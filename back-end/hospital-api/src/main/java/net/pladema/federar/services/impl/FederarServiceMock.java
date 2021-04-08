@@ -1,17 +1,15 @@
 package net.pladema.federar.services.impl;
 
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
 import net.pladema.federar.services.FederarService;
 import net.pladema.federar.services.domain.LocalIdSearchResponse;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.person.repository.entity.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @ConditionalOnProperty(
@@ -30,7 +28,6 @@ public class FederarServiceMock implements FederarService{
 
 
 	@Override
-	@Async
 	public Optional<LocalIdSearchResponse> federatePatient(Person person, Patient patient) {
 		LOG.debug("FEDERAR mocked: Patient {} won't federate", patient);
 		return Optional.empty();

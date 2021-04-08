@@ -107,11 +107,10 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Async
-	public boolean federatePatient(Patient patient, Person person) {
+	public void federatePatient(Patient patient, Person person) {
 		LOG.debug("Going to federate Patient => {} /n with Person => {}", patient, person);
 		Optional<LocalIdSearchResponse> federarResponse = federarService.federatePatient(person, patient);
 		federarResponse.ifPresent(updatePatientPermanent(patient));
-		return federarResponse.isPresent();
 	}
 
 	private Consumer<LocalIdSearchResponse> updatePatientPermanent(Patient patient) {
@@ -127,12 +126,8 @@ public class PatientServiceImpl implements PatientService {
 	public void federateAllValidatedPatients() {
 		LOG.debug("Federating all validated patients");
 		List<PatientPersonVo> validatedPatients = patientRepository.getAllByPatientType(PatientType.VALIDATED);
-		Integer validatedCount = validatedPatients.size();
-		Long federatedCount = validatedPatients.stream()
-				.map(p -> federatePatient(new Patient(p), new Person(p)))
-				.filter(Boolean::booleanValue)
-				.count();
-		LOG.debug("Finished federating patients. {} out of {} validated patients were federated.", federatedCount, validatedCount);
+		validatedPatients.forEach(p -> federatePatient(new Patient(p), new Person(p)));
+		LOG.debug("Finished federating patients.");
 	}
 
 }

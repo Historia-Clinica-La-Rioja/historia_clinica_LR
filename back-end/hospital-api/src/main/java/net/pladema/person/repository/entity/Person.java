@@ -69,6 +69,7 @@ public class Person implements Serializable {
         this.lastName = patientPersonVo.getLastName();
         this.otherLastNames = patientPersonVo.getOtherLastNames();
         this.identificationTypeId = patientPersonVo.getIdentificationTypeId();
+        this.identificationNumber = patientPersonVo.getIdentificationNumber();
         this.genderId = patientPersonVo.getGenderId();
         this.birthDate = patientPersonVo.getBirthDate();
     }
