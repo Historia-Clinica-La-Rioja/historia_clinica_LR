@@ -44,6 +44,6 @@ public class SwaggerAPIIntegrationTest {
 			JSONObject json = new JSONObject(swaggerJson); // Convert text to object
 			IOUtils.write(json.toString(4), writer);
 		}
-			// @formatter:on
+		// @formatter:on
 	}
 }

@@ -48,7 +48,9 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 	}
 
 	protected Optional<String> extractToken(HttpServletRequest request) {
-		return Optional.ofNullable(request.getHeader(tokenHeader));
+		return Optional.ofNullable(request.getHeader(tokenHeader))
+				.or(() -> Optional.ofNullable(request.getHeader("Authorization")))
+				.map(token -> token.replaceFirst("^Bearer ", ""));
 	}
 
 }

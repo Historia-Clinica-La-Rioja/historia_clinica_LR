@@ -19,5 +19,5 @@ export const canRefreshToken = (token: string): boolean => {
 };
 
 export const addToken = (req: HttpRequest<any>, token: string): HttpRequest<any> => {
-	return token ? req.clone({headers: req.headers.append('X-Auth-Token', token)}) : req;
+	return token ? req.clone({headers: req.headers.append('Authorization', `Bearer ${token}`)}) : req;
 };
