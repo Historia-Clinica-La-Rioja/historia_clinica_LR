@@ -29,6 +29,7 @@ import { PatientBasicData } from '@presentation/components/patient-card/patient-
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -132,7 +133,7 @@ export class PatientDischargeComponent implements OnInit {
 	private setMinimumDateForDischarge() {
 		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
 				.subscribe ( minDischargeDate => {
-					this.minDischargeDate = minDischargeDate;
+					this.minDischargeDate = dateDtoToDate(minDischargeDate);
 					this.dischargeForm.controls.dischargeDate.setValue(moment(this.minDischargeDate));
 				});
 	}

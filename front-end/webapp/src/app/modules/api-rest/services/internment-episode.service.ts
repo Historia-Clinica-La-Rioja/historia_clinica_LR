@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
-import { InternmentEpisodeBMDto, PatientDischargeDto, ProbableDischargeDateDto } from '@api-rest/api-model';
+import { DateDto, DateTimeDto, InternmentEpisodeBMDto, PatientDischargeDto, ProbableDischargeDateDto } from '@api-rest/api-model';
 
 const BASIC_URL_PREFIX = '/institutions';
 const BASIC_URL_SUFIX = '/internments';
@@ -33,9 +33,9 @@ export class InternmentEpisodeService {
 		return this.http.get<InternmentEpisodeBMDto>(url);
 	}
 
-	getMinDischargeDate(internmentId: number): Observable<Date> {
+	getMinDischargeDate(internmentId: number): Observable<DateDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/minDischargeDate`;
-		return this.http.get<Date>(url);
+		return this.http.get<DateDto>(url);
 	}
 
 	medicalDischargeInternmentEpisode(discharge: PatientDischargeDto, internmentEpisodeId: number): Observable<PatientDischargeDto> {
@@ -48,13 +48,13 @@ export class InternmentEpisodeService {
 		return this.http.get<PatientDischargeDto>(url);
 	}
 
-	getLastUpdateDateOfInternmentEpisode(internmentEpisodeId: number): Observable<Date> {
+	getLastUpdateDateOfInternmentEpisode(internmentEpisodeId: number): Observable<DateDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/lastupdatedate`;
-		return this.http.get<Date>(url);
+		return this.http.get<DateDto>(url);
 	}
 
-	updateProbableDischargeDate(probableDischargeDateDto: ProbableDischargeDateDto, internmentEpisodeId: number): Observable<Date> {
+	updateProbableDischargeDate(probableDischargeDateDto: ProbableDischargeDateDto, internmentEpisodeId: number): Observable<DateTimeDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/probabledischargedate`;
-		return this.http.put<Date>(url, probableDischargeDateDto);
+		return this.http.put<DateTimeDto>(url, probableDischargeDateDto);
 	}
 }

@@ -17,6 +17,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -90,7 +91,7 @@ export class MedicalDischargeComponent implements OnInit {
 			}
 		);
 		this.intermentEpisodeService.getLastUpdateDateOfInternmentEpisode(this.internmentId)
-			.subscribe(lastUpdateDate => this.minMedicalDischargeDate = lastUpdateDate);
+			.subscribe(lastUpdateDate => this.minMedicalDischargeDate = dateDtoToDate(lastUpdateDate));
 
 
 	}
