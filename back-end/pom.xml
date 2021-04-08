@@ -17,11 +17,11 @@
 	<packaging>pom</packaging>
 	<inceptionYear>2020</inceptionYear>
 	<modules>
-		<module>interoperability</module>
-		<module>hospital-api</module>
-		<module>sgx-dashboards</module>
 		<module>sgx-shared</module>
+		<module>sgx-dashboards</module>
+		<module>interoperability</module>
         <module>odontology</module>
+		<module>hospital-api</module>
     </modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
