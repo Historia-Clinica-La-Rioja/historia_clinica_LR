@@ -16,5 +16,7 @@ public interface  EmergencyCareEpisodeService {
 
     EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId);
 
+    Integer updateAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId);
+
     Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId);
 }

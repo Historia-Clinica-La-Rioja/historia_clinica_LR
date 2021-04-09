@@ -7,6 +7,7 @@ import net.pladema.emergencycare.repository.PoliceInterventionRepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReason;
+import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.HistoricEmergencyEpisodeService;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,6 +124,35 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     @Override
     public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId) {
         return createEpisode(newEmergencyCare, institutionId, pediatricTriageSaveFunction());
+    }
+
+    private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
+        if (persisted.getPatientId() != null && toUpdate.getPatient().getId() == null)
+            throw new ValidationException("care-episode.patient.invalid.update");
+        if (persisted.getEmergencyCareEntranceTypeId() != null && toUpdate.getEmergencyCareEntranceId() == null)
+            throw new ValidationException("care-episode.entrance.invalid.update");
+        if (persisted.getEmergencyCareTypeId() != null && toUpdate.getEmergencyCareTypeId() == null)
+            throw new ValidationException("care-episode.type.invalid.update");
+        if (persisted.getHasPoliceIntervention() != null && toUpdate.getHasPoliceIntervention() == null)
+            throw new ValidationException("care-episode.police.intervention.invalid.update");
+    }
+
+    @Override
+    public Integer updateAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId){
+        EmergencyCareEpisode e = emergencyCareEpisodeRepository
+                .findById(newEmergencyCare.getId())
+                .orElseThrow(()->new NotFoundException("ECEpisode.not.found", "ECEpisode not found"));
+            validateUpdate(e, newEmergencyCare);
+            e.setPatientId(newEmergencyCare.getPatient().getId());
+            e.setEmergencyCareTypeId(newEmergencyCare.getEmergencyCareTypeId());
+            e.setEmergencyCareEntranceTypeId(newEmergencyCare.getEmergencyCareEntranceId());
+            e.setTriageCategoryId(newEmergencyCare.getTriage().getCategoryId());
+            if (e.getEmergencyCareStateId() != EmergencyCareState.EN_ESPERA)
+                e.setDoctorsOfficeId(newEmergencyCare.getDoctorsOfficeId());
+            EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
+            EmergencyCareBo emergencyCareEpisodeBo = new EmergencyCareBo(saved);
+            LOG.debug(OUTPUT, saved);;
+        return 0;
     }
 
     private void validPatient(PatientECEBo patient, Integer institutionId) {

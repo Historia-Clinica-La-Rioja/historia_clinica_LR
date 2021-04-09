@@ -24,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,6 +98,24 @@ public class EmergencyCareEpisodeController {
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
+        LOG.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @Transactional
+    @PutMapping("/{emergencyCareEpisodeId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    public ResponseEntity<Integer> updateAdministrative(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "emergencyCareEpisodeId") Integer emergencyCareEpisodeId,
+            @Valid @RequestBody ECAdministrativeDto body) {
+        LOG.debug("Update emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
+        EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
+        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
+        newEmergencyCare.setInstitutionId(institutionId);
+        newEmergencyCare.setId(emergencyCareEpisodeId);
+        Integer result = emergencyCareEpisodeService.updateAdministrative(newEmergencyCare, institutionId);
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
