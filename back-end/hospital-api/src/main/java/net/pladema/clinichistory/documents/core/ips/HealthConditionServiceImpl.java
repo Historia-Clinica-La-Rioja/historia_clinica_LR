@@ -18,6 +18,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Prob
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -218,7 +219,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         Integer snomedId = snomedService.getSnomedId(info.getSnomed())
                 .orElseGet(() -> snomedService.createSnomedTerm(info.getSnomed()));
-        String cie10Codes = calculateCie10CodesService.execute(info.getSnomed().getSctid(), patientInfo);
+        String cie10Codes = calculateCie10CodesService.execute(info.getSnomed().getSctid(),
+                new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         HealthCondition healthCondition = new HealthCondition();
         healthCondition.setPatientId(patientInfo.getId());
         healthCondition.setSnomedId(snomedId);

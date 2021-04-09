@@ -15,6 +15,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,8 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
         medications.forEach(medication -> {
             Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(medication.getSnomed().getSctid(), patientInfo);
+            String cie10Codes = calculateCie10CodesService.execute(medication.getSnomed().getSctid(),
+                    new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
             MedicationStatement medicationStatement = saveMedicationStatement(patientInfo.getId(), medication, snomedId, cie10Codes);
 
             medication.setId(medicationStatement.getId());

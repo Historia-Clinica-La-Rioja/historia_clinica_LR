@@ -9,6 +9,7 @@ import net.pladema.clinichistory.documents.service.ips.DiagnosticReportService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,8 @@ public class DiagnosticReportServiceImpl implements DiagnosticReportService {
 
         Integer snomedId = snomedService.getSnomedId(diagnosticReportBo.getSnomed())
                 .orElseGet(() -> snomedService.createSnomedTerm(diagnosticReportBo.getSnomed()));
-        String cie10Codes = calculateCie10CodesService.execute(diagnosticReportBo.getSnomed().getSctid(), patientInfo);
+        String cie10Codes = calculateCie10CodesService.execute(diagnosticReportBo.getSnomed().getSctid(),
+                new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
 
         result.setPatientId(patientInfo.getId());
 

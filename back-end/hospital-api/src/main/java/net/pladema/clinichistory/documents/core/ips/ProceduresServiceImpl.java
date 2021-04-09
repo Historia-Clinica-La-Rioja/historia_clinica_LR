@@ -10,6 +10,7 @@ import net.pladema.clinichistory.documents.service.ips.ProceduresService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,8 @@ public class ProceduresServiceImpl implements ProceduresService {
         procedures.forEach(p -> {
             Integer snomedId = snomedService.getSnomedId(p.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(p.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(p.getSnomed().getSctid(), patientInfo);
+            String cie10Codes = calculateCie10CodesService.execute(p.getSnomed().getSctid(),
+                    new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
             Procedure procedure = saveProcedure(patientInfo.getId(), p, snomedId, cie10Codes);
 
             p.setId(procedure.getId());

@@ -12,6 +12,7 @@ import net.pladema.clinichistory.documents.service.ips.AllergyService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,8 @@ public class AllergyServiceImpl implements AllergyService {
         allergies.forEach(allergy -> {
             Integer snomedId = snomedService.getSnomedId(allergy.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(allergy.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(allergy.getSnomed().getSctid(), patientInfo);
+            String cie10Codes = calculateCie10CodesService.execute(allergy.getSnomed().getSctid(),
+                    new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
             AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientInfo, allergy, snomedId, cie10Codes);
 
             allergy.setId(allergyIntolerance.getId());

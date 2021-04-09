@@ -15,6 +15,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservati
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EObservationLab;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -161,7 +162,8 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
         LOG.debug("Input parameters -> patientInfo {}, ClinicalObservation {}, eVitalSign {}", patientInfo, observation, eVitalSign);
         Integer snomedId = snomedService.getLatestIdBySctid(eVitalSign.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
-        String cie10Codes = calculateCie10CodesService.execute(eVitalSign.getSctidCode(), patientInfo);
+        String cie10Codes = calculateCie10CodesService.execute(eVitalSign.getSctidCode(),
+                new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         ObservationVitalSign observationVitalSign = observationVitalSignRepository.save(
                 new ObservationVitalSign(patientInfo.getId(), observation.getValue(), snomedId, cie10Codes, eVitalSign, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationVitalSign);
@@ -172,7 +174,8 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
         LOG.debug("Input parameters -> patientInfo {}, ClinicalObservation {}, eLab {}", patientInfo, observation, eObservationLab);
         Integer snomedId = snomedService.getLatestIdBySctid(eObservationLab.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
-        String cie10Codes = calculateCie10CodesService.execute(eObservationLab.getSctidCode(), patientInfo);
+        String cie10Codes = calculateCie10CodesService.execute(eObservationLab.getSctidCode(),
+                new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         ObservationLab observationLab = observationLabRepository.save(
                 new ObservationLab(patientInfo.getId(), observation.getValue(), snomedId, cie10Codes, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationLab);

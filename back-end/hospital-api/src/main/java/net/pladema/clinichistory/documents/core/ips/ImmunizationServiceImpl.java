@@ -11,6 +11,7 @@ import net.pladema.clinichistory.documents.service.ips.ImmunizationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,8 @@ public class ImmunizationServiceImpl implements ImmunizationService {
         immunizations.forEach(i -> {
             Integer snomedId = snomedService.getSnomedId(i.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(i.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(i.getSnomed().getSctid(), patientInfo);
+            String cie10Codes = calculateCie10CodesService.execute(i.getSnomed().getSctid(),
+                    new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
 
             AtomicReference<Long> noteId = new AtomicReference<>(null);
             Optional.ofNullable(i.getNote()).ifPresent(n ->
