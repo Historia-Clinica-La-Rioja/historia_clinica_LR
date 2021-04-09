@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
+import { Label } from '../label/label.component';
 
 export interface MenuItem {
-	text: string;
+	label: Label;
 	icon: string;
 	url: string;
 	id: string;
@@ -9,7 +10,7 @@ export interface MenuItem {
 }
 
 export const defToMenuItem = ({text, icon, url, id, options}): MenuItem =>
-	({text, icon, url, id, options});
+	({label: {text}, icon, url, id, options});
 
 @Component({
 	selector: 'app-menu',

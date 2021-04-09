@@ -17,6 +17,7 @@ import { MessageSnackbarComponent } from './components/message-snackbar/message-
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { BarComponent } from './components/bar/bar.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { LabelComponent } from './components/label/label.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MockComponent } from './components/mock/mock.component';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
@@ -48,6 +49,7 @@ import { SignoVitalComponent } from './components/signo-vital-current/signo-vita
 		MessageSnackbarComponent,
 		MainLayoutComponent,
 		MenuComponent,
+		LabelComponent,
 		FooterComponent,
 		MockComponent,
 		DayTimeRangePipe,
@@ -83,6 +85,7 @@ import { SignoVitalComponent } from './components/signo-vital-current/signo-vita
 		PatientTypeLogoComponent,
 		MainLayoutComponent,
 		MenuComponent,
+		LabelComponent,
 		FlexModule,
 		FlexLayoutModule,
 		DayTimeRangePipe,
