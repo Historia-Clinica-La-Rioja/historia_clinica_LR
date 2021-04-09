@@ -12,7 +12,6 @@
 	<artifactId>hospital-managment-frontend</artifactId>
 	<packaging>pom</packaging>
 	<modules>
-		<module>webapp</module>
 		<module>backoffice</module>
 	</modules>
 
