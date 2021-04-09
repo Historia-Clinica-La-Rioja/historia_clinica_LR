@@ -13,7 +13,7 @@ import net.pladema.federar.services.domain.LocalIdSearchResponse;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.Person;
-import net.pladema.sgx.restclient.services.RestClient;
+import ar.lamansys.sgx.restclient.services.RestClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 @Service
 @ConditionalOnProperty(

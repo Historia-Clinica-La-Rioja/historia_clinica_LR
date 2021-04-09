@@ -1,6 +1,5 @@
 package net.pladema.federar.services;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,9 +9,10 @@ import net.pladema.federar.services.domain.FederarLoginPayload;
 import net.pladema.federar.services.domain.FederarLoginResponse;
 import net.pladema.federar.services.domain.FederarValidateTokenPayload;
 import net.pladema.federar.services.domain.FederarValidateTokenResponse;
-import net.pladema.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
-import net.pladema.sgx.restclient.services.AuthService;
-import net.pladema.sgx.restclient.services.domain.WSResponseException;
+import ar.lamansys.sgx.restclient.configuration.interceptors.LoggingRequestInterceptor;
+import ar.lamansys.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
+import ar.lamansys.sgx.restclient.services.AuthService;
+import ar.lamansys.sgx.restclient.services.domain.WSResponseException;
 
 @Service
 public class FederarAuthService extends AuthService<FederarLoginResponse> {
@@ -21,8 +21,8 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 
 	public FederarAuthService(
 			@Value("${ws.federar.url.login:/bus-auth/auth}") String relUrl,
-			@Qualifier("baseRestTemplate") RestTemplateSSL restTemplateSSL, FederarWSConfig wsConfig) {
-		super(relUrl, restTemplateSSL, wsConfig);
+			FederarWSConfig wsConfig) throws Exception {
+		super(relUrl, new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
 		federarWSConfig = wsConfig;
 	}
 

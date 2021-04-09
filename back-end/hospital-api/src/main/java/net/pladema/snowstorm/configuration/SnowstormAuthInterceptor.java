@@ -3,8 +3,9 @@ package net.pladema.snowstorm.configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.http.HttpHeaders;
 
-import net.pladema.sgx.restclient.configuration.TokenHolder;
-import net.pladema.sgx.restclient.configuration.interceptors.AuthInterceptor;
+import ar.lamansys.sgx.restclient.configuration.TokenHolder;
+import ar.lamansys.sgx.restclient.configuration.interceptors.AuthInterceptor;
+
 import net.pladema.snowstorm.services.SnowstormAuthService;
 import net.pladema.snowstorm.services.domain.SnowstormLoginResponse;
 

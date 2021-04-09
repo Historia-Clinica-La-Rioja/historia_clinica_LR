@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.sgx.restclient.configuration.WSConfig;
+import ar.lamansys.sgx.restclient.configuration.WSConfig;
 
 @Component
 @ConfigurationProperties(prefix="ws.federar")

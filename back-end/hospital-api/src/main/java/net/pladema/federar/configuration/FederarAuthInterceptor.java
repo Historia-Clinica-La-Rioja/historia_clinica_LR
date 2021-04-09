@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import net.pladema.federar.services.FederarAuthService;
 import net.pladema.federar.services.domain.FederarLoginResponse;
-import net.pladema.sgx.restclient.configuration.TokenHolder;
-import net.pladema.sgx.restclient.configuration.interceptors.AuthInterceptor;
+import ar.lamansys.sgx.restclient.configuration.TokenHolder;
+import ar.lamansys.sgx.restclient.configuration.interceptors.AuthInterceptor;
 
 @Component
 public class FederarAuthInterceptor extends AuthInterceptor<FederarLoginResponse,FederarAuthService> {

@@ -1,6 +1,6 @@
 package net.pladema.snowstorm.services.impl;
 
-import net.pladema.sgx.restclient.services.RestClient;
+import ar.lamansys.sgx.restclient.services.RestClient;
 import net.pladema.snowstorm.configuration.SnowstormRestTemplateAuth;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
 import net.pladema.snowstorm.services.SnowstormService;

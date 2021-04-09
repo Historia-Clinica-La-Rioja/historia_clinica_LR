@@ -3,12 +3,12 @@ package net.pladema.renaper.services;
 import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.domain.RenaperLoginPayload;
 import net.pladema.renaper.services.domain.RenaperLoginResponse;
-import net.pladema.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
-import net.pladema.sgx.restclient.services.AuthService;
-import net.pladema.sgx.restclient.services.domain.WSResponseException;
+import ar.lamansys.sgx.restclient.configuration.interceptors.LoggingRequestInterceptor;
+import ar.lamansys.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
+import ar.lamansys.sgx.restclient.services.AuthService;
+import ar.lamansys.sgx.restclient.services.domain.WSResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,8 @@ public class RenaperAuthService extends AuthService<RenaperLoginResponse> {
 
 	public RenaperAuthService(
 			@Value("${ws.renaper.url.login:/usuarios/aplicacion/login}") String relUrl,
-			@Qualifier("baseRestTemplate") RestTemplateSSL restTemplateSSL, RenaperWSConfig wsConfig) {
-		super(relUrl, restTemplateSSL, wsConfig);
+			RenaperWSConfig wsConfig) throws Exception {
+		super(relUrl, new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
 		renaperWSConfig = wsConfig;
 	}
 
