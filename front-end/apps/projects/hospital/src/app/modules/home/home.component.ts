@@ -7,10 +7,10 @@ import { AccountService } from '@api-rest/services/account.service';
 import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { LoggedUserService } from '../auth/services/logged-user.service';
 import { RoleAssignment } from '@api-rest/api-model';
-import { MenuItem } from '@core/core-model';
+import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
 
 @Component({
 	selector: 'app-home',
@@ -38,7 +38,8 @@ export class HomeComponent implements OnInit {
 			const menuItemDefs = this.userHasAnyRole(roleAssignment)? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
 			this.menuItems$ = this.featureFlagService.filterItems$(menuItemDefs)
 				.pipe(
-					switchMap(menu => this.permissionsService.filterItems$(menu))
+					switchMap(menu => this.permissionsService.filterItems$(menu)),
+					map(menu => menu.map(defToMenuItem)),
 				);
 		});
 

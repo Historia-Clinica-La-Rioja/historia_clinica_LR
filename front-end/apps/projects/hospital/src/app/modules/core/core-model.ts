@@ -1,6 +1,6 @@
 import { AppFeature, ERole } from '@api-rest/api-model';
 
-export class MenuItem {
+export class MenuItemDef {
 	text: string;
 	icon: string;
 	id: string;

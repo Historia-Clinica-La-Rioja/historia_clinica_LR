@@ -1,6 +1,6 @@
-import { MenuItem } from '@core/core-model';
+import { MenuItemDef } from '@core/core-model';
 
-export const ROLES_USER_SIDEBAR_MENU: MenuItem[] = [
+export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 	{
 		text: 'app.menu.INSTITUCIONES',
 		icon: 'home',
@@ -29,7 +29,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItem[] = [
 	},
 ];
 
-export const NO_ROLES_USER_SIDEBAR_MENU: MenuItem[] = [
+export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 	{
 		text: 'app.menu.MI_HISTORIA_CLINICA',
 		icon: 'switch_account',

@@ -1,5 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { MenuItem } from '@core/core-model';
+
+export interface MenuItem {
+	text: string;
+	icon: string;
+	url: string;
+	id: string;
+	options?: any;
+}
+
+export const defToMenuItem = ({text, icon, url, id, options}): MenuItem =>
+	({text, icon, url, id, options});
 
 @Component({
 	selector: 'app-menu',

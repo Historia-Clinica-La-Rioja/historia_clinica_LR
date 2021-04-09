@@ -5,7 +5,8 @@ import { RoleAssignment } from '@api-rest/api-model';
 import { LoggedUserService } from '../auth/services/logged-user.service';
 import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { AccountService } from '@api-rest/services/account.service';
-import { MenuItem } from '@core/core-model';
+import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
+
 
 @Component({
 	selector: 'app-portal-paciente',
@@ -25,7 +26,8 @@ export class PortalPacienteComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.loggedUserService.assignments$.subscribe(roleAssignment => {
-			this.menuItems = this.userHasAnyRole(roleAssignment)? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
+			const menuItemDefs = this.userHasAnyRole(roleAssignment)? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
+			this.menuItems = menuItemDefs.map(defToMenuItem);
 		});
 		this.accountService.getInfo()
 			.subscribe(userInfo => {

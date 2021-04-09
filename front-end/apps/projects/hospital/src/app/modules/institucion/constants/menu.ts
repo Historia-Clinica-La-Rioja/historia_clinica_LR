@@ -1,7 +1,7 @@
-import { MenuItem } from '@core/core-model';
+import { MenuItemDef } from '@core/core-model';
 import { AppFeature, ERole } from '@api-rest/api-model';
 
-export const SIDEBAR_MENU: MenuItem[] = [
+export const SIDEBAR_MENU: MenuItemDef[] = [
 	{
 		text: 'app.menu.INSTITUCIONES',
 		icon: 'home',

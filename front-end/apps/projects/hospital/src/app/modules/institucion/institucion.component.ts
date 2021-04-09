@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 import { ContextService } from '@core/services/context.service';
-import { MenuItem } from '@core/core-model';
 
 import { SIDEBAR_MENU } from './constants/menu';
 import { PermissionsService } from '../core/services/permissions.service';
@@ -14,6 +13,7 @@ import { InstitutionDto } from '@api-rest/api-model';
 import { AccountService } from '@api-rest/services/account.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
+import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
 
 @Component({
 	selector: 'app-institucion',
@@ -43,6 +43,7 @@ export class InstitucionComponent implements OnInit {
 			this.menuItems$ = this.featureFlagService.filterItems$(SIDEBAR_MENU)
 				.pipe(
 					switchMap(menu => this.permissionsService.filterItems$(menu)),
+					map(menuItems => menuItems.map(defToMenuItem)),
 				);
 
 			this.institutionService.getInstitutions(Array.of(institutionId))
