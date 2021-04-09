@@ -112,6 +112,12 @@
             <version>0.9.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>sgx-shared</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
