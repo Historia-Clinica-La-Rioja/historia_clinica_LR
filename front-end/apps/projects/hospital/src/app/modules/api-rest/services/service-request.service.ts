@@ -1,15 +1,15 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {ContextService} from '@core/services/context.service';
-import {environment} from '@environments/environment';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ContextService } from '@core/services/context.service';
+import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
 import {
 	CompleteRequestDto,
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto
 } from '@api-rest/api-model';
-import {flatMap} from 'rxjs/operators';
 import { saveAs } from 'file-saver';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -28,7 +28,7 @@ export class ServiceRequestService {
 		queryParams = categoryId ? queryParams.append('category', categoryId) : queryParams;
 		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/`;
-		return this.http.get<DiagnosticReportInfoDto[]>(url, {params: queryParams});
+		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
@@ -43,7 +43,7 @@ export class ServiceRequestService {
 		const filesFormdata = new FormData();
 		Array.from(files).forEach(file => filesFormdata.append('files', file));
 		return this.http.post<number[]>(uploadFileUrl, filesFormdata).pipe(
-			flatMap(fileIds => {
+			switchMap(fileIds => {
 				completeRequestDto.fileIds = fileIds;
 				return this.http.put<void>(completeUrl, completeRequestDto);
 			}));

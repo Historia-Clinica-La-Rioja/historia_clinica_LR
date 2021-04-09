@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
 import { ROLES_USER_SIDEBAR_MENU, NO_ROLES_USER_SIDEBAR_MENU } from '../portal-paciente/constants/menu';
-import {RoleAssignment} from '@api-rest/api-model';
-import {LoggedUserService} from '../auth/services/logged-user.service';
-import {mapToFullName} from '@api-rest/mapper/user-person-dto.mapper';
-import {AccountService} from '@api-rest/services/account.service';
+import { RoleAssignment } from '@api-rest/api-model';
+import { LoggedUserService } from '../auth/services/logged-user.service';
+import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
+import { AccountService } from '@api-rest/services/account.service';
+import { MenuItem } from '@core/core-model';
 
 @Component({
 	selector: 'app-portal-paciente',
@@ -13,8 +14,8 @@ import {AccountService} from '@api-rest/services/account.service';
 })
 export class PortalPacienteComponent implements OnInit {
 
-	menuItems;
-	menuFooterItems: MenuFooter = {user: {}};
+	menuItems: MenuItem[];
+	menuFooterItems: MenuFooter = { user: {} };
 
 	constructor(
 		private readonly loggedUserService: LoggedUserService,
@@ -24,17 +25,13 @@ export class PortalPacienteComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.loggedUserService.assignments$.subscribe(roleAssignment => {
-			if (this.userHasAnyRole(roleAssignment)) {
-				this.menuItems = ROLES_USER_SIDEBAR_MENU;
-			} else {
-				this.menuItems = NO_ROLES_USER_SIDEBAR_MENU;
-			}
+			this.menuItems = this.userHasAnyRole(roleAssignment)? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
 		});
 		this.accountService.getInfo()
-			.subscribe( userInfo => {
-					this.menuFooterItems.user.userName = userInfo.email;
-					this.menuFooterItems.user.fullName = mapToFullName(userInfo.personDto);
-				}
+			.subscribe(userInfo => {
+				this.menuFooterItems.user.userName = userInfo.email;
+				this.menuFooterItems.user.fullName = mapToFullName(userInfo.personDto);
+			}
 			);
 	}
 

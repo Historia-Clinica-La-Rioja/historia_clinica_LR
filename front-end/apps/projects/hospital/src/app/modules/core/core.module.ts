@@ -6,7 +6,6 @@ import { ContentComponent } from './components/content/content.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
@@ -20,7 +19,6 @@ import { FlexModule } from '@angular/flex-layout';
 @NgModule({
 	declarations: [
 		ContentComponent,
-		SidenavComponent,
 		ConfirmDialogComponent,
 		HasRoleDirective,
 		FeatureFlagDirective,
@@ -52,7 +50,6 @@ import { FlexModule } from '@angular/flex-layout';
 		RecaptchaModule,
 		RecaptchaFormsModule,
 		RouterModule,
-		SidenavComponent,
 		TranslateModule,
 		TypeaheadComponent,
 	],

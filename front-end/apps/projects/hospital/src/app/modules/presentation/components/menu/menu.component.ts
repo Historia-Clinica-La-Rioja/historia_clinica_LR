@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MenuItem } from '@core/core-model';
 
 @Component({
@@ -6,12 +6,9 @@ import { MenuItem } from '@core/core-model';
 	templateUrl: './menu.component.html',
 	styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent {
 	@Input() menuItems: MenuItem[];
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 }

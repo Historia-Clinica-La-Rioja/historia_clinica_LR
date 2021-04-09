@@ -40,8 +40,10 @@ export class InstitucionComponent implements OnInit {
 			const institutionId = Number(params.get('id'));
 			this.contextService.setInstitutionId(institutionId);
 
-			this.menuItems$ = this.featureFlagService.filterItems$(SIDEBAR_MENU);
-			this.menuItems$ = this.menuItems$.pipe(switchMap(menu => this.permissionsService.filterItems$(menu)));
+			this.menuItems$ = this.featureFlagService.filterItems$(SIDEBAR_MENU)
+				.pipe(
+					switchMap(menu => this.permissionsService.filterItems$(menu)),
+				);
 
 			this.institutionService.getInstitutions(Array.of(institutionId))
 				.subscribe(institutionDto => {

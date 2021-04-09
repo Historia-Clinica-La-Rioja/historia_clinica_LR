@@ -1,22 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import {PatientBasicData} from '@presentation/components/patient-card/patient-card.component';
-import {ActivatedRoute} from '@angular/router';
-import {map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import {PatientService} from '@api-rest/services/patient.service';
-import {MapperService} from '@presentation/services/mapper.service';
-import {DockPopupService} from '@presentation/services/dock-popup.service';
-import {NuevaConsultaDockPopupComponent} from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
-import {DockPopupRef} from '@presentation/services/dock-popup-ref';
-import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
-import {HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
-import {BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from '@api-rest/api-model';
-import {AppFeature} from '@api-rest/api-model';
-import {InteroperabilityBusService} from '@api-rest/services/interoperability-bus.service';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
-import {MatTabChangeEvent} from '@angular/material/tabs';
-import {MedicacionesService} from '../../services/medicaciones.service';
-import {FeatureFlagService} from '@core/services/feature-flag.service';
+import { Component, OnInit } from '@angular/core';
+import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { PatientService } from '@api-rest/services/patient.service';
+import { MapperService } from '@presentation/services/mapper.service';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
+import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
+import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MedicacionesService } from '../../services/medicaciones.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 
 const RESUMEN_INDEX = 0;
@@ -25,7 +25,7 @@ const RESUMEN_INDEX = 0;
 	selector: 'app-ambulatoria-paciente',
 	templateUrl: './ambulatoria-paciente.component.html',
 	styleUrls: ['./ambulatoria-paciente.component.scss'],
-	providers: [ HistoricalProblemsFacadeService, AmbulatoriaSummaryFacadeService ]
+	providers: [HistoricalProblemsFacadeService, AmbulatoriaSummaryFacadeService]
 
 })
 export class AmbulatoriaPacienteComponent implements OnInit {
@@ -54,7 +54,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private medicacionesService: MedicacionesService,
 		private readonly featureFlagService: FeatureFlagService,
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe((params) => {
@@ -66,7 +66,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
 			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 			this.patientService.getPatientPhoto(this.patientId)
-				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
+				.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD)
@@ -111,13 +111,13 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.TIMEOUT-MESSAGE');
 				this.spinner = false;
 			}
-			}, this.timeOut);
+		}, this.timeOut);
 	}
 
 	openNuevaConsulta(): void {
 		if (!this.dialogRef) {
 			this.patientId = Number(this.route.snapshot.paramMap.get('idPaciente'));
-			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente: this.patientId});
+			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId });
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
 				this.medicacionesService.updateMedication();
