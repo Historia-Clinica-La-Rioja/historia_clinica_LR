@@ -5,4 +5,5 @@
 	(confirm)="setTriage($event)"
 	(cancel)="dialogRef.close()"
 	[confirmLabel]="'guardia.triage.CONFIRM'"
-	[cancelLabel]="'buttons.CANCEL'"></app-pediatric-triage>
+	[cancelLabel]="'buttons.CANCEL'"
+	[disableConfirmButton]="requestPending"></app-pediatric-triage>

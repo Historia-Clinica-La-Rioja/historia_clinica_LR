@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TriageAdministrativeDto } from '@api-rest/api-model';
 
 @Component({
@@ -6,16 +6,20 @@ import { TriageAdministrativeDto } from '@api-rest/api-model';
 	templateUrl: './administrative-triage.component.html',
 	styleUrls: ['./administrative-triage.component.scss']
 })
-export class AdministrativeTriageComponent implements OnInit {
+export class AdministrativeTriageComponent implements OnInit, OnChanges {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
+	@Input() disableConfirmButton: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 
 	constructor() {
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
 	}
 
 	ngOnInit(): void {
@@ -31,8 +35,8 @@ export class AdministrativeTriageComponent implements OnInit {
 
 	confirmTriage(): void {
 		const triage: TriageAdministrativeDto = {
-				categoryId: this.triageCategoryId,
-				doctorsOfficeId: this.doctorsOfficeId
+			categoryId: this.triageCategoryId,
+			doctorsOfficeId: this.doctorsOfficeId
 		};
 		this.confirm.emit(triage);
 	}

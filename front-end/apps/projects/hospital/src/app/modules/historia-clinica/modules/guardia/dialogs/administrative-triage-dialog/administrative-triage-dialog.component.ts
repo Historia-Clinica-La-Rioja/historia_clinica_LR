@@ -12,19 +12,19 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class AdministrativeTriageDialogComponent implements OnInit {
 
 	private triage: TriageAdministrativeDto;
-
+	requestPending = false;
 	constructor(
 		private triageService: TriageService,
 		private readonly snackBarService: SnackBarService,
 		public readonly dialogRef: MatDialogRef<AdministrativeTriageDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public episodeId: number,
-	) {
-	}
+	) {}
 
 	ngOnInit(): void {
 	}
 
 	setTriage(triage: TriageAdministrativeDto): void {
+		this.requestPending = true;
 		this.triage = triage;
 		this.triageService.createAdministrative(this.episodeId, this.triage)
 			.subscribe(idReturned => {
@@ -32,6 +32,7 @@ export class AdministrativeTriageDialogComponent implements OnInit {
 				this.dialogRef.close(idReturned);
 			}, _ => {
 				this.snackBarService.showError('guardia.triage.NEW_TRIAGE_ERROR_MSG');
+				this.requestPending = false;
 			});
 	}
 }

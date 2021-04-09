@@ -8,7 +8,7 @@
 		<button mat-stroked-button class="uppercase" (click)="back()">
 			<span [translate]="cancelLabel"></span>
 		</button>
-		<button mat-raised-button class="uppercase" color="primary" (click)="confirmTriage()">
+		<button mat-raised-button class="uppercase" color="primary" (click)="confirmTriage()" [disabled]="disableConfirmButton">
 			<span [translate]="confirmLabel"></span>
 		</button>
 	</div>

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MenuItem } from '@core/core-model';
-import { AuthenticationService } from '../../../../../app/modules/auth/services/authentication.service';
+import { AuthenticationService } from '../../../auth/services/authentication.service';
 
 @Component({
 	selector: 'app-main-layout',

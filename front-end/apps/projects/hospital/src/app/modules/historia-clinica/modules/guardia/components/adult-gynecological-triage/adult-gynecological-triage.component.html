@@ -138,7 +138,7 @@
 		<button mat-stroked-button class="uppercase" (click)="back()">
 			<span [translate]="cancelLabel"></span>
 		</button>
-		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirmAdultGynecologicalTriage()">
+		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirmAdultGynecologicalTriage()" [disabled]="disableConfirmButton">
 			<span [translate]="confirmLabel"></span>
 		</button>
 	</div>

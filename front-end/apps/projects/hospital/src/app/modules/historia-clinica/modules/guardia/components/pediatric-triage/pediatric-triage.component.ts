@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
@@ -15,10 +15,11 @@ import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 	templateUrl: './pediatric-triage.component.html',
 	styleUrls: ['./pediatric-triage.component.scss']
 })
-export class PediatricTriageComponent implements OnInit {
+export class PediatricTriageComponent implements OnInit, OnChanges {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
+	@Input() disableConfirmButton: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 	private triageCategoryId: number;
@@ -37,6 +38,8 @@ export class PediatricTriageComponent implements OnInit {
 		private readonly triageMasterDataService: TriageMasterDataService,
 		private readonly vitalSignsFormService: VitalSignsFormService
 	) {
+	}
+	ngOnChanges(changes: SimpleChanges): void {
 	}
 
 	ngOnInit(): void {

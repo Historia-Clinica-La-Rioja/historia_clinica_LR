@@ -12,6 +12,7 @@ import { TriagePediatricDto } from '@api-rest/api-model';
 export class PediatricTriageDialogComponent implements OnInit {
 
 	private triage: TriagePediatricDto;
+	requestPending = false;
 
 	constructor(
 		private triageService: TriageService,
@@ -25,6 +26,7 @@ export class PediatricTriageDialogComponent implements OnInit {
 	}
 
 	setTriage(triage: TriagePediatricDto): void {
+		this.requestPending = true;
 		this.triage = triage;
 		this.triageService.newPediatric(this.episodeId, this.triage)
 			.subscribe(idReturned => {
@@ -32,6 +34,7 @@ export class PediatricTriageDialogComponent implements OnInit {
 				this.dialogRef.close(idReturned);
 			}, _ => {
 				this.snackBarService.showError('guardia.triage.NEW_TRIAGE_ERROR_MSG');
+				this.requestPending = false;
 			});
 	}
 }

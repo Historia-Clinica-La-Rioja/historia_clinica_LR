@@ -12,6 +12,7 @@ import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 export class AdultGynecologicalTriageDialogComponent implements OnInit {
 
 	private triage: TriageAdultGynecologicalDto;
+	requestPending = false;
 
 	constructor(
 		private triageService: TriageService,
@@ -25,6 +26,7 @@ export class AdultGynecologicalTriageDialogComponent implements OnInit {
 	}
 
 	setTriage(triage: TriageAdultGynecologicalDto): void {
+		this.requestPending = true;
 		this.triage = triage;
 		this.triageService.newAdultGynecological(this.episodeId, this.triage)
 			.subscribe(idReturned => {
@@ -32,6 +34,7 @@ export class AdultGynecologicalTriageDialogComponent implements OnInit {
 				this.dialogRef.close(idReturned);
 			}, _ => {
 				this.snackBarService.showError('guardia.triage.NEW_TRIAGE_ERROR_MSG');
+				this.requestPending = false;
 			});
 	}
 }
