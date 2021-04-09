@@ -43,6 +43,7 @@ public class PoliceInterventionDetails implements Serializable {
 		private String lastname;
 
 		public PoliceInterventionDetails(PoliceInterventionDetailsBo policeInterventionDetailsBo){
+			this.id = policeInterventionDetailsBo.getId();
 			this.callDate = policeInterventionDetailsBo.getCallDate();
 			this.callTime = policeInterventionDetailsBo.getCallTime();
 			this.plateNumber = policeInterventionDetailsBo.getPlateNumber();

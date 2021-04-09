@@ -142,7 +142,9 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         EmergencyCareEpisode e = emergencyCareEpisodeRepository
                 .findById(newEmergencyCare.getId())
                 .orElseThrow(()->new NotFoundException("ECEpisode.not.found", "ECEpisode not found"));
+
             validateUpdate(e, newEmergencyCare);
+
             e.setPatientId(newEmergencyCare.getPatient().getId());
             e.setEmergencyCareTypeId(newEmergencyCare.getEmergencyCareTypeId());
             e.setEmergencyCareEntranceTypeId(newEmergencyCare.getEmergencyCareEntranceId());
@@ -150,9 +152,26 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             if (e.getEmergencyCareStateId() != EmergencyCareState.EN_ESPERA)
                 e.setDoctorsOfficeId(newEmergencyCare.getDoctorsOfficeId());
             EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
+
             EmergencyCareBo emergencyCareEpisodeBo = new EmergencyCareBo(saved);
+            PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
+            updatePoliceIntervention(policeInterventionDetailsBo, e, newEmergencyCare);
+
             LOG.debug(OUTPUT, saved);;
         return 0;
+    }
+
+    private void updatePoliceIntervention(PoliceInterventionDetailsBo policeInterventionDetailsBo, EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate) {
+        if (episodePersisted.getHasPoliceIntervention() && !episodeToUpdate.getHasPoliceIntervention())
+            policeInterventionRepository.deleteById(episodePersisted.getId());
+        else {
+            if (policeInterventionDetailsBo != null && episodeToUpdate.getHasPoliceIntervention()) {
+                PoliceInterventionDetails policeInterventionDetails = new PoliceInterventionDetails(policeInterventionDetailsBo);
+                policeInterventionDetails = policeInterventionRepository.save(policeInterventionDetails);
+                PoliceInterventionDetailsBo result = new PoliceInterventionDetailsBo(policeInterventionDetails);
+                LOG.debug(OUTPUT, result);
+            }
+        }
     }
 
     private void validPatient(PatientECEBo patient, Integer institutionId) {
