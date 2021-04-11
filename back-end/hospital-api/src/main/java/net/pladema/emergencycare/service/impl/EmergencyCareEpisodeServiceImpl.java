@@ -30,7 +30,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -144,19 +143,17 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
                 .orElseThrow(()->new NotFoundException("ECEpisode.not.found", "ECEpisode not found"));
 
             validateUpdate(e, newEmergencyCare);
-
             e.setPatientId(newEmergencyCare.getPatient().getId());
             e.setEmergencyCareTypeId(newEmergencyCare.getEmergencyCareTypeId());
             e.setEmergencyCareEntranceTypeId(newEmergencyCare.getEmergencyCareEntranceId());
-            e.setTriageCategoryId(newEmergencyCare.getTriage().getCategoryId());
+            e.setAmbulanceCompanyId(newEmergencyCare.getAmbulanceCompanyId());
             if (e.getEmergencyCareStateId() != EmergencyCareState.EN_ESPERA)
                 e.setDoctorsOfficeId(newEmergencyCare.getDoctorsOfficeId());
-            EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
 
-            EmergencyCareBo emergencyCareEpisodeBo = new EmergencyCareBo(saved);
             PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
             updatePoliceIntervention(policeInterventionDetailsBo, e, newEmergencyCare);
-
+            e.setHasPoliceIntervention(newEmergencyCare.getHasPoliceIntervention());
+            EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
             LOG.debug(OUTPUT, saved);;
         return 0;
     }
@@ -167,6 +164,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         else {
             if (policeInterventionDetailsBo != null && episodeToUpdate.getHasPoliceIntervention()) {
                 PoliceInterventionDetails policeInterventionDetails = new PoliceInterventionDetails(policeInterventionDetailsBo);
+                policeInterventionDetails.setId(episodeToUpdate.getId());
                 policeInterventionDetails = policeInterventionRepository.save(policeInterventionDetails);
                 PoliceInterventionDetailsBo result = new PoliceInterventionDetailsBo(policeInterventionDetails);
                 LOG.debug(OUTPUT, result);

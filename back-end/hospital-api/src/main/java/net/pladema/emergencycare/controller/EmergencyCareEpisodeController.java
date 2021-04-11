@@ -11,6 +11,7 @@ import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
+import net.pladema.emergencycare.controller.dto.NewEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
@@ -108,10 +109,10 @@ public class EmergencyCareEpisodeController {
     public ResponseEntity<Integer> updateAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "emergencyCareEpisodeId") Integer emergencyCareEpisodeId,
-            @Valid @RequestBody ECAdministrativeDto body) {
+            @Valid @RequestBody NewEmergencyCareDto body) {
         LOG.debug("Update emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
-        EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
-        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        EmergencyCareBo newEmergencyCare = emergencyCareMapper.emergencyCareDtoToEmergencyCareBo(body);
+        List<SnomedDto> reasons = reasonExternalService.addReasons(body.getReasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
         newEmergencyCare.setInstitutionId(institutionId);
         newEmergencyCare.setId(emergencyCareEpisodeId);

@@ -71,6 +71,17 @@ public interface EmergencyCareMapper {
     @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
     EmergencyCareBo administrativeEmergencyCareDtoToEmergencyCareBo(ECAdministrativeDto emergencyCareDto);
 
+    @Named("administrativeUpdateEmergencyCareDtoToEmergencyCareBo")
+    @Mapping(target = "patient.id", source = "patient.id")
+    @Mapping(target = "patient.patientMedicalCoverageId", source = "patient.patientMedicalCoverageId")
+    @Mapping(target = "ambulanceCompanyId", source = "ambulanceCompanyId")
+    @Mapping(target = "policeInterventionDetails", source = "policeInterventionDetails", qualifiedByName = "toPoliceInterventionBo")
+    @Mapping(target = "doctorsOffice.id", source = "doctorsOfficeId")
+    @Mapping(target = "emergencyCareTypeId", source = "emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareEntranceId", source = "entranceTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
+    EmergencyCareBo emergencyCareDtoToEmergencyCareBo(NewEmergencyCareDto updateEmergencyCareDto);
+
     @Named("adultGynecologicalEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
     @Mapping(target = "patient.patientMedicalCoverageId", source = "administrative.patient.patientMedicalCoverageId")
