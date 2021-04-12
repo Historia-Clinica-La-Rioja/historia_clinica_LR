@@ -29,7 +29,7 @@ Sitio de demo: http://sgh.pladema.net/auth/login
 El proyecto está formado por los siguientes tres proyectos:
 
 1. front-end/backoffice: Single Page Application del panel de administración (backoffice) para manejo de los flujos básicos y creación de datos maestros. Implementada con ReactAdmin.
-2. front-end/webapp: Single Page Application que contiene la funcionalidad principal del sistema. Implementada en Angular 9.
+2. front-end/apps/projects/hospital: Single Page Application que contiene la funcionalidad principal del sistema. Implementada en Angular 11.
 3. back-end/hospital-api: API REST de todo el sistema implementada con Spring Boot 2.3 y Java 11
 
 ## Ambiente de desarrollo
@@ -38,7 +38,7 @@ Para inicializar cada uno de los ambientes de desarrollo se requiere tener una *
 
 El **backend** se puede iniciar para desarrollo o solamente para dar soporte al desarrollo del frontend siguiendo los pasos del [back-end/README.md](back-end/README.md).
 
-El frontend está formado por dos proyectos, una webapp y el backoffice. En cada caso, se puede iniciar para desarrollo o solamente para dar soporte al desarrollo del backend siguiendo los pasos del [front-end/README.md](front-end/README.md).
+El frontend está formado por dos proyectos, la app hospital y el backoffice. En cada caso, se puede iniciar para desarrollo o solamente para dar soporte al desarrollo del backend siguiendo los pasos del [front-end/README.md](front-end/README.md).
 
 
 ## Ambiente con docker-compose
