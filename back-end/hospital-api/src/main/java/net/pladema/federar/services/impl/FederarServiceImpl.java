@@ -1,18 +1,5 @@
 package net.pladema.federar.services.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import net.pladema.federar.configuration.FederarRestTemplateAuth;
 import net.pladema.federar.configuration.FederarWSConfig;
 import net.pladema.federar.services.FederarService;
@@ -27,6 +14,18 @@ import net.pladema.patient.repository.entity.Patient;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.sgx.restclient.services.RestClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @ConditionalOnProperty(
@@ -68,15 +67,7 @@ public class FederarServiceImpl extends RestClient implements FederarService {
 	}
 
 	private boolean federateSucceded(ResponseEntity<FederarErrorResponse> response) {
-		if (response.getStatusCode() == HttpStatus.CREATED) {
-			return true;
-		}
-		if (response.getStatusCode() == HttpStatus.BAD_REQUEST && response.getBody() != null
-				&& response.getBody().getIssue() != null) {
-			return response.getBody().getIssue().stream()
-					.anyMatch(issue -> issue.getDiagnostics().contains(ALREADY_PATIENT));
-		}
-		return false;
+		return response.getStatusCode() == HttpStatus.CREATED;
 	}
 
 	private ResponseEntity<FederarErrorResponse> callFederateWS(Person person, Patient patient) {
