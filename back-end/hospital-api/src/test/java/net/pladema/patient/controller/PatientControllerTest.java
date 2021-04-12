@@ -2,7 +2,7 @@ package net.pladema.patient.controller;
 
 import net.pladema.UnitController;
 import net.pladema.address.controller.service.AddressExternalService;
-import net.pladema.federar.services.FederarService;
+import net.pladema.federar.controller.FederarExternalService;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.service.AdditionalDoctorService;
@@ -32,7 +32,7 @@ public class PatientControllerTest extends UnitController {
 	private PatientService patientService;
 	
 	@MockBean
-	private FederarService federarService;
+	private FederarExternalService federarService;
 
 	@MockBean
 	private PersonExternalService personExternalService;

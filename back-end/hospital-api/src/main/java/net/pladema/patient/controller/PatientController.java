@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.federar.controller.FederarExternalService;
+import net.pladema.federar.services.domain.FederarResourceAttributes;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.*;
 import net.pladema.patient.controller.mapper.PatientMapper;
@@ -20,10 +22,12 @@ import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
+import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -66,9 +70,12 @@ public class PatientController {
 
 	private final ObjectMapper jackson;
 
+	private final FederarExternalService federarExternalService;
+
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
-							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService) {
+							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService,
+							 FederarExternalService federarExternalService) {
 		this.patientService = patientService;
 		this.personExternalService = personExternalService;
 		this.addressExternalService = addressExternalService;
@@ -77,6 +84,7 @@ public class PatientController {
 		this.patientTypeRepository = patientTypeRepository;
 		this.personMapper = personMapper;
 		this.additionalDoctorService = additionalDoctorService;
+		this.federarExternalService = federarExternalService;
 	}
 
 	@GetMapping(value = "/search")
@@ -118,7 +126,17 @@ public class PatientController {
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient -> {
 		});
 		if (createdPatient.isValidated()) {
-			patientService.federatePatient(createdPatient, personMapper.fromPersonDto(createdPerson));
+			Person person = personMapper.fromPersonDto(createdPerson);
+			FederarResourceAttributes attributes = new FederarResourceAttributes();
+			BeanUtils.copyProperties(person, attributes);
+			federarExternalService.federatePatient(attributes, createdPatient.getId()).ifPresent(
+					nationalId -> {
+						createdPatient.setNationalId(nationalId);
+						createdPatient.setTypeId(PatientType.PERMANENT);
+						patientService.addPatient(createdPatient);
+						LOG.debug("Successful federated patient with nationalId => {}", nationalId);
+					}
+			);
 		}
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}

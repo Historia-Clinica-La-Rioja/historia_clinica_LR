@@ -44,7 +44,7 @@ public class Patient implements Serializable{
     private Short identityVerificationStatusId;
 
     public Patient(PatientPersonVo patientPersonVo) {
-        this.id = patientPersonVo.getPatientId();
+        this.id = patientPersonVo.getId();
         this.personId = patientPersonVo.getPersonId();
         this.typeId = patientPersonVo.getPatientTypeId();
         this.possibleDuplicate = patientPersonVo.getPossibleDuplicate();

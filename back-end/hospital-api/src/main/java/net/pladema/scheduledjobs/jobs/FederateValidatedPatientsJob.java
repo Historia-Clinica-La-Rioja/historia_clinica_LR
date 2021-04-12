@@ -1,8 +1,11 @@
 package net.pladema.scheduledjobs.jobs;
 
-import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.federar.controller.FederarExternalService;
+import net.pladema.federar.services.domain.FederarResourceAttributes;
+import net.pladema.patient.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,15 @@ public class FederateValidatedPatientsJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(FederateValidatedPatientsJob.class);
 
-    private final PatientExternalService patientExternalService;
+    //TODO: change for PatientExternalService
+    private final PatientService patientService;
 
-    public FederateValidatedPatientsJob(PatientExternalService patientExternalService) {
-        this.patientExternalService = patientExternalService;
+    private final FederarExternalService federarExternalService;
+
+    public FederateValidatedPatientsJob(PatientService patientService,
+                                        FederarExternalService federarExternalService) {
+        this.patientService = patientService;
+        this.federarExternalService = federarExternalService;
     }
 
     @Scheduled(cron = "${scheduledjobs.federatepatients.seconds} " +
@@ -32,7 +40,11 @@ public class FederateValidatedPatientsJob {
             "${scheduledjobs.federatepatients.dayofweek}")
     public void execute(){
         LOG.debug("Executing FederateValidatedPatientsJob at {}", new Date());
-        patientExternalService.federateAllValidatedPatients();
+        patientService.getAllValidatedPatients().forEach(p -> {
+            FederarResourceAttributes attributes = new FederarResourceAttributes();
+            BeanUtils.copyProperties(p, attributes);
+            federarExternalService.federatePatient(attributes, p.getId());
+        });
         LOG.debug("Finishing FederateValidatedPatientsJob at {}", new Date());
     }
 

@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @ToString
 public class PatientPersonVo {
 
-    private Integer patientId;
+    private Integer id;
 
     private Short patientTypeId;
 
@@ -48,7 +48,7 @@ public class PatientPersonVo {
     private LocalDate birthDate;
 
     public PatientPersonVo(Patient patient, Person person) {
-        this.patientId = patient.getId();
+        this.id = patient.getId();
         this.patientTypeId = patient.getTypeId();
         this.possibleDuplicate = patient.getPossibleDuplicate();
         this.nationalId = patient.getNationalId();
