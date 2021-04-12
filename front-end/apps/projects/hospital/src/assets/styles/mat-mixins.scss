@@ -4,12 +4,13 @@ $primary-bg: #EDF1F7;
 $default-color: 50;
 
 @mixin general($theme) {
+	$primary: map-get($theme, primary);
 	mat-sidenav-content {
-		background-color: $primary-bg;
+		background-color: mat-color($primary, 25);
 	}
 
 	.app-background-color {
-		background-color: $primary-bg;
+		background-color: mat-color($primary, 25);
 	}
 }
 
