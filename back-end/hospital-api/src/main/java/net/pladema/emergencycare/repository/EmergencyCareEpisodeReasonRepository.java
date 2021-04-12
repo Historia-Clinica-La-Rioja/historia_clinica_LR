@@ -20,4 +20,10 @@ public interface EmergencyCareEpisodeReasonRepository extends JpaRepository<Emer
             " JOIN Reason r ON ( ecer.pk.reasonId = r.id ) "+
             " WHERE ecer.pk.emergencyCareEpisodeId = :episodeId ")
     List<Reason> findByEpisodeId(@Param("episodeId") Integer episodeId);
+
+    @Transactional
+    @Query(value = " DELETE " +
+            " FROM EmergencyCareEpisodeReason ecer"+
+            " WHERE ecer.pk.emergencyCareEpisodeId = :episodeId ")
+    void deleteByEpisodeId(@Param("episodeId") Integer episodeId);
 }

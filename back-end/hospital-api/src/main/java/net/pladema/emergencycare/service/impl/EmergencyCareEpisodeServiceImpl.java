@@ -153,13 +153,14 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
             updatePoliceIntervention(policeInterventionDetailsBo, e, newEmergencyCare);
             e.setHasPoliceIntervention(newEmergencyCare.getHasPoliceIntervention());
+            updateReasons(newEmergencyCare.getReasons(), e.getId());
             EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
             LOG.debug(OUTPUT, saved);;
-        return 0;
+        return 1;
     }
 
     private void updatePoliceIntervention(PoliceInterventionDetailsBo policeInterventionDetailsBo, EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate) {
-        if (episodePersisted.getHasPoliceIntervention() && !episodeToUpdate.getHasPoliceIntervention())
+        if ((episodePersisted.getHasPoliceIntervention() != null && episodePersisted.getHasPoliceIntervention()) && (episodeToUpdate.getHasPoliceIntervention() != null && !episodeToUpdate.getHasPoliceIntervention()))
             policeInterventionRepository.deleteById(episodePersisted.getId());
         else {
             if (policeInterventionDetailsBo != null && episodeToUpdate.getHasPoliceIntervention()) {
@@ -169,6 +170,18 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
                 PoliceInterventionDetailsBo result = new PoliceInterventionDetailsBo(policeInterventionDetails);
                 LOG.debug(OUTPUT, result);
             }
+        }
+    }
+
+    private void updateReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
+        if (reasons != null) {
+            LOG.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
+            emergencyCareEpisodeReasonRepository.deleteByEpisodeId(emergencyCareEpisodeId);
+            reasons.forEach(reason -> {
+                EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getId());
+                emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);
+            });
+            LOG.debug(OUTPUT, reasons);
         }
     }
 
