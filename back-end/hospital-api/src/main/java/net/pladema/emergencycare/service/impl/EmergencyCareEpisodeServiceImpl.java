@@ -174,9 +174,9 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
     private void updateReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
-        if (reasons != null) {
+        emergencyCareEpisodeReasonRepository.deleteByEpisodeId(emergencyCareEpisodeId);
+        if (reasons.size() != 0) {
             LOG.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
-            emergencyCareEpisodeReasonRepository.deleteByEpisodeId(emergencyCareEpisodeId);
             reasons.forEach(reason -> {
                 EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getId());
                 emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);

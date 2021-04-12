@@ -4,6 +4,7 @@ import net.pladema.clinichistory.outpatient.repository.domain.Reason;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReason;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReasonPK;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -22,6 +23,7 @@ public interface EmergencyCareEpisodeReasonRepository extends JpaRepository<Emer
     List<Reason> findByEpisodeId(@Param("episodeId") Integer episodeId);
 
     @Transactional
+    @Modifying
     @Query(value = " DELETE " +
             " FROM EmergencyCareEpisodeReason ecer"+
             " WHERE ecer.pk.emergencyCareEpisodeId = :episodeId ")
