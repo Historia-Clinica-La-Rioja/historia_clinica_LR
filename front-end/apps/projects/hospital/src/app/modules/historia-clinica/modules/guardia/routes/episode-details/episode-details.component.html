@@ -3,6 +3,11 @@
 	<div fxLayout="row" fxLayoutAlign="space-between">
 		<h1 translate="guardia.episode.TITLE"></h1>
 		<div fxLayoutGap="5px" style="height: 90%;" fxLayout="row">
+
+			<button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode" mat-raised-button color="primary"
+				(click)="goToEditEpisode()">
+				{{ 'guardia.episode.EDIT_EPISODE' | translate | uppercase }}
+			</button>
 			<button *ngIf="episodeState === STATES.EN_ATENCION" id="cancel-attention" mat-raised-button color="primary"
 				(click)="cancelAttention()">
 				{{ 'guardia.episode.CANCEL_ATTENTION' | translate | uppercase }}

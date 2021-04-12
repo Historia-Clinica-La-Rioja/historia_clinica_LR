@@ -5,7 +5,6 @@ import { AppFeature, ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 import { NewEpisodeAdminTriageComponent } from './routes/new-episode-admin-triage/new-episode-admin-triage.component';
-import { AdmisionAdministrativaComponent } from './routes/admision-administrativa/admision-administrativa.component';
 import {
 	NewEpisodeAdultGynecologicalTriageComponent
 } from './routes/new-episode-adult-gynecological-triage/new-episode-adult-gynecological-triage.component';
@@ -13,6 +12,8 @@ import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatr
 import { EpisodeDetailsComponent } from './routes/episode-details/episode-details.component';
 import { MedicalDischargeComponent } from './routes/medical-discharge/medical-discharge.component';
 import { AdministrativeDischargeComponent } from './routes/administrative-discharge/administrative-discharge.component';
+import { NewEpisodeAdmissionComponent } from './routes/new-episode-admission/new-episode-admission.component';
+import { EditEmergencyCareEpisodeComponent } from './routes/edit-emergency-care-episode/edit-emergency-care-episode.component';
 
 
 const routes: Routes = [{
@@ -24,7 +25,11 @@ const routes: Routes = [{
 		},
 		{
 			path: 'nuevo-episodio/administrativa',
-			component: AdmisionAdministrativaComponent
+			component: NewEpisodeAdmissionComponent
+		},
+		{
+			path: 'episodio/:id/edit',
+			component: EditEmergencyCareEpisodeComponent
 		},
 		{
 			path: 'nuevo-episodio/triage-administrativo',

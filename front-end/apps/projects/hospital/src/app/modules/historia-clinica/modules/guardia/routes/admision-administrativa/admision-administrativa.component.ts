@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -16,18 +16,15 @@ import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
-import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { Patient, SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
-import { AdministrativeAdmission, NewEpisodeService } from '../../services/new-episode.service';
-import { Router } from '@angular/router';
-import { ContextService } from '@core/services/context.service';
+import { AdministrativeAdmission } from '../../services/new-episode.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-constants';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
-import { TriageDefinitionsService } from '../../services/triage-definitions.service';
-import {DoctorsOfficeService} from '@api-rest/services/doctors-office.service';
-import {SECTOR_AMBULATORIO} from '../../constants/masterdata';
+import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
+import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
+import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { Patient, SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -42,6 +39,13 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		photo: PersonPhotoDto,
 		basicData: PatientBasicData
 	};
+
+	@Input() initData: AdministrativeAdmission;
+	@Input() isDoctorOfficeEditable = true;
+	@Input() isEmergencyCareTypeEditable = true;
+	@Output() confirm = new EventEmitter();
+	@Output() cancel = new EventEmitter();
+	@Input() submitLabel = 'buttons.CONTINUE';
 
 	readonly POLICE_OFFICER = POLICE_OFFICER;
 	readonly PERSON = PERSON;
@@ -58,7 +62,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 
-	private readonly routePrefix;
 	private selectedPatient;
 
 	constructor(
@@ -70,15 +73,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly patientMapperService: PatientMapperService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
-		private readonly newEpisodeService: NewEpisodeService,
-		private router: Router,
-		private readonly contextService: ContextService,
 		private readonly patientService: PatientService,
-		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly doctorsOfficeService: DoctorsOfficeService
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
-		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
 	ngOnInit(): void {
@@ -89,9 +87,9 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			patientMedicalCoverageId: [null],
-			emergencyCareTypeId: [null],
+			emergencyCareTypeId: [{ value: null, disabled: !this.isEmergencyCareTypeEditable }],
 			emergencyCareEntranceTypeId: [null],
-			doctorsOfficeId: [null],
+			doctorsOfficeId: [{ value: null, disabled: !this.isDoctorOfficeEditable }],
 			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)],
 			hasPoliceIntervention: [null],
 			callDate: [null],
@@ -103,24 +101,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			patientId: [null]
 		});
 
-		if (window.history.state.commingBack) {
 
-			const administrativeAdmission: AdministrativeAdmission = this.newEpisodeService.getAdministrativeAdmission();
-			if (!administrativeAdmission) {
-				return;
-			}
-			this.form.setValue(administrativeAdmission);
-
-			if (administrativeAdmission?.patientId) {
-				this.loadPatient(administrativeAdmission.patientId);
-			}
-
-			this.form.value.reasons.forEach(reason => this.motivoNuevaConsultaService.add(reason));
-
-		} else {
-			this.newEpisodeService.destroy();
-		}
-
+		this.setExistingInfo();
 	}
 
 	searchPatient(): void {
@@ -178,12 +160,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	continue(): void {
 		this.form.controls.reasons.setValue(this.motivoNuevaConsultaService.getMotivosConsulta());
-
 		const formValue: AdministrativeAdmission = this.form.getRawValue();
 		if (this.form.valid) {
-			this.goToTriage(formValue);
+			this.confirm.emit(formValue);
 		}
-
 	}
 
 	onChange(): void {
@@ -197,22 +177,14 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	goBack(): void {
-		this.newEpisodeService.destroy();
-		const url = `${this.routePrefix}guardia`;
-		this.router.navigateByUrl(url);
+		this.cancel.emit();
 	}
 
 	setAmbulanceCompanyIdStatus(): void {
 		if (this.form.value.emergencyCareEntranceTypeId !== EmergencyCareEntranceType.AMBULANCIA_CON_MEDICO
 			|| this.form.value.emergencyCareEntranceTypeId !== EmergencyCareEntranceType.AMBULANCIA_SIN_MEDICO) {
-				this.form.controls.ambulanceCompanyId.setValue(null);
+			this.form.controls.ambulanceCompanyId.setValue(null);
 		}
-	}
-
-	goToTriage(administrativeAdmission: AdministrativeAdmission): void {
-		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmission);
-		this.triageDefinitionsService.getTriagePath(administrativeAdmission?.emergencyCareTypeId)
-			.subscribe(({ url }) => this.router.navigateByUrl(url));
 	}
 
 	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
@@ -240,5 +212,17 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			});
 		});
 
+	}
+
+	private setExistingInfo(): void {
+		if (this.initData) {
+			this.form.setValue(this.initData);
+
+			if (this.initData.patientId) {
+				this.loadPatient(this.initData.patientId);
+			}
+
+			this.form.value.reasons.forEach(reason => this.motivoNuevaConsultaService.add(reason));
+		}
 	}
 }

@@ -61,4 +61,10 @@ export class EmergencyCareEpisodeService {
 			BASIC_URL_SUFIX}/episodes/` + episodeId + '/creation-date';
 		return this.http.get<DateTimeDto>(url);
 	}
+
+	updateAdministrative(episodeId: number, data): Observable<number> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/` + episodeId;
+		return this.http.put<number>(url, data);
+	}
 }

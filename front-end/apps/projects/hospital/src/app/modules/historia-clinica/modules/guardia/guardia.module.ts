@@ -27,6 +27,8 @@ import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialo
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 import { MedicalDischargeComponent } from './routes/medical-discharge/medical-discharge.component';
 import { AdministrativeDischargeComponent } from './routes/administrative-discharge/administrative-discharge.component';
+import { NewEpisodeAdmissionComponent } from './routes/new-episode-admission/new-episode-admission.component';
+import { EditEmergencyCareEpisodeComponent } from './routes/edit-emergency-care-episode/edit-emergency-care-episode.component';
 
 @NgModule({
 	declarations: [
@@ -48,6 +50,8 @@ import { AdministrativeDischargeComponent } from './routes/administrative-discha
 		AdultGynecologicalTriageDialogComponent,
 		MedicalDischargeComponent,
 		AdministrativeDischargeComponent,
+		NewEpisodeAdmissionComponent,
+		EditEmergencyCareEpisodeComponent,
 	],
 	imports: [
 		CommonModule,

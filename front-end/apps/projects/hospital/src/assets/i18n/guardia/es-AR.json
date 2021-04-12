@@ -56,8 +56,8 @@
 				"EMERGENCY_CARE_ENTRANCE_TYPE": "Forma de ingreso",
 				"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
 				"waiting_room": {
-					"PLACEHOLDER" : "Sala de espera",
-					"DESCRIPTION" : "Lugar físico donde el paciente esperará a ser atendido"
+					"PLACEHOLDER": "Sala de espera",
+					"DESCRIPTION": "Lugar físico donde el paciente esperará a ser atendido"
 				},
 				"police_intervention": {
 					"CALL_DETAIL": "Detalle del llamado",
@@ -107,7 +107,6 @@
 					"TEMPORAL_PATIENT": "Paciente temporal",
 					"TYPE": "Tipo de guardia",
 					"URGENCY": "Nivel de urgencia"
-
 				},
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",
@@ -119,6 +118,7 @@
 		"episode": {
 			"TITLE": "Episodio de guardia",
 			"CANCEL_ATTENTION": "Cancelar atención",
+			"EDIT_EPISODE": "Editar episodio",
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"cancel_attention": {
 				"SUCCESS": "La atención fue cancelada exitosamente",
@@ -129,10 +129,10 @@
 				"REASONS": "Motivos de consulta",
 				"ENTRANCE": "Ingreso",
 				"POLICE_INTERVENTION": "Intervención policial",
-				"UBICACION" : "Ubicación"
+				"UBICACION": "Ubicación"
 			},
 			"administrative_discharge": {
-				"TITLE":"Alta Administrativa",
+				"TITLE": "Alta Administrativa",
 				"medical_discharge_card": {
 					"DATE_TIME": "Fecha y hora",
 					"PROBLEMS": "Problemas",
@@ -142,12 +142,12 @@
 				"form": {
 					"TITLE": "Formulario de alta administrativa",
 					"DATE": "Fecha",
-					"TIME":"Hora",
-					"AMBULANCE_COMPANY_ID":"ID Compañia ambulancia",
+					"TIME": "Hora",
+					"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
 					"TIME_LIMIT": "La hora debe ser posterior a la del alta medica"
 				},
 				"messages": {
-					"SUCCESS":"El alta administrativa se guardó exitosamente",
+					"SUCCESS": "El alta administrativa se guardó exitosamente",
 					"ERROR": "Ocurrió un error al intentar guardar el alta administrativa"
 				},
 				"autopsy": {
@@ -161,7 +161,7 @@
 				"PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
 				"form": {
 					"DATE": "Fecha",
-					"TIME":"Hora",
+					"TIME": "Hora",
 					"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
 					"AUTOPSY": "Autopsia autorizada",
 					"DISCHARGE_TYPE": "Tipo de egreso"
@@ -211,7 +211,19 @@
 				"CONFIRM": "Confirmar Paciente",
 				"update": {
 					"ERROR": "Ocurrio un error al actualizar el paciente",
-					"SUCCESS":"El paciente fue actualizado correctamente"
+					"SUCCESS": "El paciente fue actualizado correctamente"
+				}
+			},
+			"edit": {
+				"TITLE": "Editar episodio",
+				"cancel": {
+					"TITLE": "Cancelar edición",
+					"SUBTITLE": "¿Desea continuar sin guardar cambios?"
+				},
+				"IN_ATTENTION_PATIENT": "El paciente está siendo atendido",
+				"messages": {
+					"SUCCESS": "El episodio fue editado correctamente",
+					"ERROR": "Ocurrió un error al intentar editar el episodio"
 				}
 			}
 		},

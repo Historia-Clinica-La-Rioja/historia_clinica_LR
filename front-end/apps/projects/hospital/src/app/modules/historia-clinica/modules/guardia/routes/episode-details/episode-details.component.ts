@@ -225,6 +225,10 @@ export class EpisodeDetailsComponent implements OnInit {
 	goToAdministrativeDischarge(): void {
 		this.router.navigate([`${this.router.url}/alta-administrativa`]);
 	}
+
+	goToEditEpisode(): void {
+		this.router.navigate([`${this.router.url}/edit`]);
+	}
 }
 
 export interface TriageReduced {

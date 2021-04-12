@@ -1,18 +1,28 @@
 import { Injectable } from '@angular/core';
-import { NewEmergencyCareDto, DateTimeDto, PoliceInterventionDetailsDto } from '@api-rest/api-model';
-import { dateToDateDto, dateToTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { NewEmergencyCareDto } from '@api-rest/api-model';
 import { Moment } from 'moment';
+import { BehaviorSubject } from 'rxjs';
 import { MotivoConsulta } from '../../ambulatoria/services/motivo-nueva-consulta.service';
+import { GuardiaMapperService } from './guardia-mapper.service';
 
 @Injectable()
 export class NewEpisodeService {
 
 	private administrativeAdmission: AdministrativeAdmission;
 
+	private subject: BehaviorSubject<AdministrativeAdmission> = new BehaviorSubject<AdministrativeAdmission>(null);
 	constructor() { }
 
-	destroy(): void {
+	clearData(): void {
 		this.administrativeAdmission = undefined;
+	}
+
+	getSubject(): BehaviorSubject<AdministrativeAdmission> {
+		return this.subject;
+	}
+
+	nextSubject(param: AdministrativeAdmission): void {
+		this.subject.next(param);
 	}
 
 	setAdministrativeAdmission(data: AdministrativeAdmission): void {
@@ -20,66 +30,11 @@ export class NewEpisodeService {
 	}
 
 	getAdministrativeAdmissionDto(): NewEmergencyCareDto {
-
-		if (!this.administrativeAdmission) {
-			return null;
-		}
-		const policeInterventionDetails: PoliceInterventionDetailsDto = this.hasPoliceIntervention() ?
-			this.toPoliceInterventionDetails() : null;
-		const newEmergencyCareDto: NewEmergencyCareDto = {
-			patient: {
-				id: this.administrativeAdmission.patientId,
-				patientMedicalCoverageId: this.administrativeAdmission.patientMedicalCoverageId
-			},
-			reasons: this.administrativeAdmission.reasons.map(s => s.snomed),
-			emergencyCareTypeId: this.administrativeAdmission.emergencyCareTypeId,
-			entranceTypeId: this.administrativeAdmission.emergencyCareEntranceTypeId,
-			ambulanceCompanyId: this.administrativeAdmission.ambulanceCompanyId,
-			doctorsOfficeId: this.administrativeAdmission.doctorsOfficeId,
-			hasPoliceIntervention: this.administrativeAdmission.hasPoliceIntervention,
-			policeInterventionDetails,
-		};
-		return newEmergencyCareDto;
+		return GuardiaMapperService._toECAdministrativeDto(this.administrativeAdmission);
 	}
 
 	getAdministrativeAdmission(): AdministrativeAdmission {
 		return this.administrativeAdmission;
-	}
-
-	hasPoliceIntervention(): boolean {
-		if (this.administrativeAdmission?.callDate ||
-			this.administrativeAdmission?.callTime ||
-			this.administrativeAdmission?.plateNumber ||
-			this.administrativeAdmission?.firstName ||
-			this.administrativeAdmission?.lastName) {
-			return true;
-		}
-		return false;
-	}
-
-
-	private toPoliceInterventionDetails(): PoliceInterventionDetailsDto {
-
-		return {
-			callDate: this.administrativeAdmission.callDate ? dateToDateDto(this.administrativeAdmission.callDate.toDate()) : undefined,
-			callTime: this.administrativeAdmission.callTime ? dateToTimeDto(getDateWithTime(getTimeArray(this.administrativeAdmission.callTime))) : undefined,
-			plateNumber: this.administrativeAdmission.plateNumber,
-			firstName: this.administrativeAdmission.firstName,
-			lastName: this.administrativeAdmission.lastName
-		};
-
-		/**
-		 * eg. 12:00
-		 */
-		function getTimeArray(timeString): string[] {
-			return timeString.split(':');
-		}
-
-		function getDateWithTime(time: string[]): Date {
-			const date = new Date();
-			date.setHours(Number(time[0]), Number(time[1]));
-			return date;
-		}
 	}
 
 }
@@ -100,34 +55,3 @@ export interface AdministrativeAdmission {
 	lastName: string;
 }
 
-export interface TriageAdultGynecologicalDto {
-	categoryId: number;
-	doctorsOfficeId: number;
-	notes: string;
-	vitalSigns?: {
-		bloodOxygenSaturation?: {
-			effectiveTime: DateTimeDto,
-			value: number,
-		},
-		diastolicBloodPressure?: {
-			effectiveTime: DateTimeDto,
-			value: number,
-		},
-		heartRate?: {
-			effectiveTime: DateTimeDto,
-			value: number,
-		},
-		respiratoryRate?: {
-			effectiveTime: DateTimeDto,
-			value: number,
-		},
-		systolicBloodPressure?: {
-			effectiveTime: DateTimeDto,
-			value: number,
-		},
-		temperature?: {
-			effectiveTime: DateTimeDto,
-			value: number,
-		},
-	};
-}

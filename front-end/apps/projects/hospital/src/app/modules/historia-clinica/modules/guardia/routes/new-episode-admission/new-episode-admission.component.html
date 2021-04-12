@@ -1,0 +1,8 @@
+<app-content width="full">
+	<h2 class="page-title" [translate]="'guardia.administrative_admision.TITLE'"></h2>
+	<h3 [translate]="'guardia.administrative_admision.SUBTITLE'"></h3>
+	<app-admision-administrativa [initData]="initData" (confirm)=confirm($event) (cancel)="goBack()">
+		<button moreActions mat-raised-button color="primary" (click)="confirm(null)" class="uppercase"
+			translate="buttons.SKIP"></button>
+	</app-admision-administrativa>
+</app-content>
