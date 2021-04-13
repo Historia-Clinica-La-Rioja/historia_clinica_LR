@@ -64,7 +64,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 				} else {
 					this.snackBarService.showError('guardia.episode.edit.messages.ERROR');
 				}
-			}, () => this.snackBarService.showError('guardia.episode.edit.messages.ERROR'));
+			}, (error) => error?.text ? this.snackBarService.showError(error.text) : this.snackBarService.showError('guardia.episode.edit.messages.ERROR'));
 	}
 
 	openDialog(): void {
