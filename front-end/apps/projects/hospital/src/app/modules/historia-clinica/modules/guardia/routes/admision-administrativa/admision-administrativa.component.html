@@ -108,7 +108,7 @@
 		<mat-radio-button id="policeIntervention" [value]="true" [checked]="form.value.hasPoliceIntervention">
 			Si
 		</mat-radio-button>
-		<mat-radio-button id="withoutPoliceIntervention" [value]="false">
+		<mat-radio-button id="withoutPoliceIntervention" [value]="false" [checked]="form.value.hasPoliceIntervention == false">
 			No
 		</mat-radio-button>
 	</mat-radio-group>

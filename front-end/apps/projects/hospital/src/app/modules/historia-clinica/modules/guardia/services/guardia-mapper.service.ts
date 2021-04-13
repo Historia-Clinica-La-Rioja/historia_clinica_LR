@@ -213,7 +213,7 @@ export class GuardiaMapperService {
 			emergencyCareEntranceTypeId: dto.entranceType?.id ? dto.entranceType.id : null,
 			emergencyCareTypeId: dto.emergencyCareType?.id ? dto.emergencyCareType.id : null,
 			firstName: dto.policeInterventionDetails?.firstName ? dto.policeInterventionDetails?.firstName : null,
-			hasPoliceIntervention: dto.hasPoliceIntervention ? dto.hasPoliceIntervention : null,
+			hasPoliceIntervention: dto.hasPoliceIntervention === true || dto.hasPoliceIntervention === false ? dto.hasPoliceIntervention : null,
 			lastName: dto.policeInterventionDetails?.lastName ? dto.policeInterventionDetails?.lastName : null,
 			patientId: dto.patient ? dto.patient.id : null,
 			patientMedicalCoverageId: dto.patient?.patientMedicalCoverageId ? dto.patient.patientMedicalCoverageId : null,
