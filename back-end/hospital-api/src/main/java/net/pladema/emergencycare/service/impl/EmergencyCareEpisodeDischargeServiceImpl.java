@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.service.impl;
 
+import io.jsonwebtoken.lang.Assert;
 import net.pladema.clinichistory.documents.repository.DocumentHealthConditionRepository;
 import net.pladema.clinichistory.documents.repository.generalstate.domain.HealthConditionVo;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
@@ -19,13 +20,13 @@ import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.sgx.exceptions.NotFoundException;
-import io.jsonwebtoken.lang.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,7 +101,8 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         LocalDateTime zonedEmergencyCareCreatedOn = emergencyCareCreatedOn
                 .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
                 .withZoneSameInstant(institutionZoneId)
-                .toLocalDateTime();
+                .toLocalDateTime()
+                .truncatedTo(ChronoUnit.MINUTES);
         Assert.isTrue( !medicalDischargeOn.isBefore(zonedEmergencyCareCreatedOn), "care-episode.medical-discharge.exceeds-min-date");
     }
 
