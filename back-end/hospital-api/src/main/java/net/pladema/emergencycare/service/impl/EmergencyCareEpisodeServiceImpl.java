@@ -126,8 +126,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
     private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
-        if (persisted.getPatientId() != null && toUpdate.getPatient().getId() == null)
-            throw new ValidationException("care-episode.patient.invalid.update");
         if (persisted.getEmergencyCareEntranceTypeId() != null && toUpdate.getEmergencyCareEntranceId() == null)
             throw new ValidationException("care-episode.entrance.invalid.update");
         if (persisted.getEmergencyCareTypeId() != null && toUpdate.getEmergencyCareTypeId() == null)
@@ -143,7 +141,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
                 .orElseThrow(()->new NotFoundException("ECEpisode.not.found", "ECEpisode not found"));
 
             validateUpdate(e, newEmergencyCare);
-            e.setPatientId(newEmergencyCare.getPatient().getId());
+            updatePatient(e, newEmergencyCare);
             e.setEmergencyCareTypeId(newEmergencyCare.getEmergencyCareTypeId());
             e.setEmergencyCareEntranceTypeId(newEmergencyCare.getEmergencyCareEntranceId());
             e.setAmbulanceCompanyId(newEmergencyCare.getAmbulanceCompanyId());
@@ -157,6 +155,18 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
             LOG.debug(OUTPUT, saved);;
         return 1;
+    }
+
+    private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate){
+        if (episodeToUpdate.getPatient() != null) {
+            episodePersisted.setPatientId(episodeToUpdate.getPatient().getId());
+            episodePersisted.setPatientMedicalCoverageId(episodeToUpdate.getPatient().getPatientMedicalCoverageId());
+        }
+        else{
+            episodePersisted.setPatientId(null);
+            episodePersisted.setPatientMedicalCoverageId(null);
+        }
+
     }
 
     private void updatePoliceIntervention(PoliceInterventionDetailsBo policeInterventionDetailsBo, EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate) {
