@@ -141,7 +141,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
                 .orElseThrow(()->new NotFoundException("ECEpisode.not.found", "ECEpisode not found"));
 
             validateUpdate(e, newEmergencyCare);
-            updatePatient(e, newEmergencyCare);
+            updatePatient(e, newEmergencyCare, institutionId);
             e.setEmergencyCareTypeId(newEmergencyCare.getEmergencyCareTypeId());
             e.setEmergencyCareEntranceTypeId(newEmergencyCare.getEmergencyCareEntranceId());
             e.setAmbulanceCompanyId(newEmergencyCare.getAmbulanceCompanyId());
@@ -157,8 +157,9 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         return 1;
     }
 
-    private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate){
+    private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId){
         if (episodeToUpdate.getPatient() != null) {
+            assertPatientValid(episodeToUpdate.getPatient().getId(), institutionId);
             episodePersisted.setPatientId(episodeToUpdate.getPatient().getId());
             episodePersisted.setPatientMedicalCoverageId(episodeToUpdate.getPatient().getPatientMedicalCoverageId());
         }
