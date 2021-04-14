@@ -145,7 +145,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             e.setEmergencyCareTypeId(newEmergencyCare.getEmergencyCareTypeId());
             e.setEmergencyCareEntranceTypeId(newEmergencyCare.getEmergencyCareEntranceId());
             e.setAmbulanceCompanyId(newEmergencyCare.getAmbulanceCompanyId());
-            if (e.getEmergencyCareStateId() != EmergencyCareState.EN_ESPERA)
+            if (e.getEmergencyCareStateId() != EmergencyCareState.EN_ATENCION)
                 e.setDoctorsOfficeId(newEmergencyCare.getDoctorsOfficeId());
 
             PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
