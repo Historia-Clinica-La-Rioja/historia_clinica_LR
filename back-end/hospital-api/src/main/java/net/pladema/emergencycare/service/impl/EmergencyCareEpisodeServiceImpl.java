@@ -159,7 +159,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId){
         if (episodeToUpdate.getPatient() != null) {
-            if (episodePersisted.getPatientId() != null && (!episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId())))
+            if (episodePersisted.getPatientId() == null || (episodePersisted.getPatientId() != null && !episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId())))
                 assertPatientValid(episodeToUpdate.getPatient().getId(), institutionId);
             episodePersisted.setPatientId(episodeToUpdate.getPatient().getId());
             episodePersisted.setPatientMedicalCoverageId(episodeToUpdate.getPatient().getPatientMedicalCoverageId());
