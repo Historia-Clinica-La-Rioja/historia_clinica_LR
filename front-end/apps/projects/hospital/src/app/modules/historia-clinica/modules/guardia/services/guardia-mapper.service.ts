@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
-import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto, dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto, dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { TriageReduced } from '../routes/episode-details/episode-details.component';
 import {
 	AdministrativeDischargeDto,
@@ -204,11 +204,11 @@ export class GuardiaMapperService {
 
 	static _toAdministrativeAdmission(dto: ResponseEmergencyCareDto): AdministrativeAdmission {
 		const callDate = dto.policeInterventionDetails?.callDate ? dateDtoToDate(dto.policeInterventionDetails.callDate) : null;
-		const callTime = dto.policeInterventionDetails?.callTime ? dto.policeInterventionDetails?.callTime : null;
+		const callTime = dto.policeInterventionDetails?.callTime ? timeDtoToDate(dto.policeInterventionDetails.callTime) : null;
 		return {
 			ambulanceCompanyId: dto.ambulanceCompanyId ? dto.ambulanceCompanyId : null,
 			callDate: callDate ? dateToMoment(callDate) : null,
-			callTime: callTime ? callTime.hours + ':' + callTime.minutes : null,
+			callTime: callTime ? momentFormat(dateToMoment(callTime), DateFormat.HOUR_MINUTE) : null,
 			doctorsOfficeId: dto.doctorsOffice ? dto.doctorsOffice.id : null,
 			emergencyCareEntranceTypeId: dto.entranceType?.id ? dto.entranceType.id : null,
 			emergencyCareTypeId: dto.emergencyCareType?.id ? dto.emergencyCareType.id : null,
