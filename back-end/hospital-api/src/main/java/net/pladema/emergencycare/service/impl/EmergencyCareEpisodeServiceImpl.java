@@ -159,7 +159,8 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId){
         if (episodeToUpdate.getPatient() != null) {
-            assertPatientValid(episodeToUpdate.getPatient().getId(), institutionId);
+            if (episodePersisted.getPatientId() != null && (!episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId())))
+                assertPatientValid(episodeToUpdate.getPatient().getId(), institutionId);
             episodePersisted.setPatientId(episodeToUpdate.getPatient().getId());
             episodePersisted.setPatientMedicalCoverageId(episodeToUpdate.getPatient().getPatientMedicalCoverageId());
         }
@@ -171,15 +172,16 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
     private void updatePoliceIntervention(PoliceInterventionDetailsBo policeInterventionDetailsBo, EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate) {
-        if ((episodePersisted.getHasPoliceIntervention() != null && episodePersisted.getHasPoliceIntervention()) && (episodeToUpdate.getHasPoliceIntervention() != null && !episodeToUpdate.getHasPoliceIntervention()))
-            policeInterventionRepository.deleteById(episodePersisted.getId());
+        if ((episodePersisted.getHasPoliceIntervention() != null && episodePersisted.getHasPoliceIntervention()) && (episodeToUpdate.getHasPoliceIntervention() != null && !episodeToUpdate.getHasPoliceIntervention())
+            && policeInterventionRepository.existsById(episodePersisted.getId()))
+                policeInterventionRepository.deleteById(episodePersisted.getId());
         else {
-            if (policeInterventionDetailsBo != null && episodeToUpdate.getHasPoliceIntervention()) {
+            if (episodeToUpdate.getHasPoliceIntervention() != null && episodeToUpdate.getHasPoliceIntervention() && policeInterventionDetailsBo != null) {
                 PoliceInterventionDetails policeInterventionDetails = new PoliceInterventionDetails(policeInterventionDetailsBo);
                 policeInterventionDetails.setId(episodeToUpdate.getId());
                 policeInterventionDetails = policeInterventionRepository.save(policeInterventionDetails);
-                PoliceInterventionDetailsBo result = new PoliceInterventionDetailsBo(policeInterventionDetails);
-                LOG.debug(OUTPUT, result);
+                policeInterventionDetailsBo = new PoliceInterventionDetailsBo(policeInterventionDetails);
+                LOG.debug(OUTPUT, policeInterventionDetailsBo);
             }
         }
     }
