@@ -5,9 +5,14 @@ import net.pladema.snowstorm.configuration.SnowstormRestTemplateAuth;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormCie10RefsetMembersResponse;
+import net.pladema.snowstorm.services.domain.SnowstormConcept;
+import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class SnowstormServiceImpl extends RestClient implements SnowstormService {
@@ -41,6 +46,18 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
 
         ResponseEntity<SnowstormSearchResponse> response = exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
         return response.getBody();
+    }
+
+    @Override
+    public List<SnowstormItemResponse> getConceptAncestors(String conceptId) {
+        String urlWithParams = snowstormWSConfig.getBrowserConceptUrl()
+                .concat(conceptId)
+                .concat("/ancestors")
+                .concat("?form=inferred");
+        ResponseEntity<SnowstormConcept> entityResponse = exchangeGet(urlWithParams, SnowstormConcept.class);
+        if(entityResponse.getBody() != null)
+            return entityResponse.getBody().getItems();
+        return Collections.emptyList();
     }
 
     @Override
