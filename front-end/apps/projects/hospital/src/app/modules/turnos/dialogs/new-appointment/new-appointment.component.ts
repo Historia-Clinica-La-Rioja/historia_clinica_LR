@@ -236,6 +236,7 @@ export class NewAppointmentComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(
 			values => {
+				this.appointmentInfoForm.patchValue({patientMedicalCoverage: null});
 				if (values) {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
