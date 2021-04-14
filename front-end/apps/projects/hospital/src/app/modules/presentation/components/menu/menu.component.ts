@@ -10,7 +10,7 @@ export interface MenuItem {
 }
 
 export const defToMenuItem = ({text, icon, url, id, options}): MenuItem =>
-	({label: {text}, icon, url, id, options});
+	({label: {key: text}, icon, url, id, options});
 
 @Component({
 	selector: 'app-menu',

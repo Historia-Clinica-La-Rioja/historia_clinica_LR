@@ -14,6 +14,7 @@ import { AccountService } from '@api-rest/services/account.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
+import { MenuService } from '../extensions/services/menu.service';
 
 @Component({
 	selector: 'app-institucion',
@@ -27,6 +28,7 @@ export class InstitucionComponent implements OnInit {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private contextService: ContextService,
+		private extensionMenuService: MenuService,
 		private permissionsService: PermissionsService,
 		private institutionService: InstitutionService,
 		private accountService: AccountService,
@@ -44,6 +46,9 @@ export class InstitucionComponent implements OnInit {
 				.pipe(
 					switchMap(menu => this.permissionsService.filterItems$(menu)),
 					map(menuItems => menuItems.map(defToMenuItem)),
+					switchMap(items => this.extensionMenuService.getInstitutionMenu(institutionId).pipe(
+						map(extesionItems => [...items, ...extesionItems]),
+					)),
 				);
 
 			this.institutionService.getInstitutions(Array.of(institutionId))

@@ -11,6 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { LoggedUserService } from '../auth/services/logged-user.service';
 import { RoleAssignment } from '@api-rest/api-model';
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
+import { MenuService } from '../extensions/services/menu.service';
 
 @Component({
 	selector: 'app-home',
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit {
 
 	constructor(
 		private contextService: ContextService,
+		private extensionMenuService: MenuService,
 		private permissionsService: PermissionsService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
@@ -40,7 +42,11 @@ export class HomeComponent implements OnInit {
 				.pipe(
 					switchMap(menu => this.permissionsService.filterItems$(menu)),
 					map(menu => menu.map(defToMenuItem)),
+					switchMap(items => this.extensionMenuService.getSystemMenuItems().pipe(
+						map(extesionItems => [...items, ...extesionItems]),
+					)),
 				);
+
 		});
 
 		this.accountService.getInfo()

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
+import { InstitutionExtensionComponent } from '../extensions/routes/extension/extension.component';
 
 import { InstitucionComponent } from './institucion.component';
 import { HomeComponent } from './routes/home/home.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
 				path: 'guardia',
 				loadChildren: () => import('../historia-clinica/modules/guardia/guardia.module').then(m => m.GuardiaModule),
 			},
+			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent },
 		],
 		canActivate: [RoleGuard],
 		data: { allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRATIVO,

@@ -1,0 +1,9 @@
+<app-content>
+	<ng-container *ngIf="(extension$ | async) as extension; else loading">
+		<app-content-title [title]="extension.title"></app-content-title>
+		<app-page [page]="extension.page"></app-page>
+	</ng-container>
+	<ng-template #loading>
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</ng-template>
+</app-content>

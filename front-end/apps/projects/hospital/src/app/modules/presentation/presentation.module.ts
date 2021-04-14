@@ -31,6 +31,10 @@ import { FiltersCardComponent } from './components/filters-card/filters-card.com
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 import { SignoVitalComponent } from './components/signo-vital-current/signo-vital.component';
+import { ContentTitleComponent } from './components/content-title/content-title.component';
+import { PageComponent } from './components/page/page.component';
+import { PageComponentsComponent } from './components/page-components/page-components.component';
+import { UiComponentComponent } from './components/ui-component/ui-component.component';
 
 @NgModule({
 	declarations: [
@@ -63,6 +67,10 @@ import { SignoVitalComponent } from './components/signo-vital-current/signo-vita
 		ViewDateDtoPipe,
 		ImgUploaderComponent,
 		SignoVitalComponent,
+		ContentTitleComponent,
+		PageComponent,
+		PageComponentsComponent,
+		UiComponentComponent,
 	],
 	imports: [
 		CommonModule,
@@ -98,6 +106,8 @@ import { SignoVitalComponent } from './components/signo-vital-current/signo-vita
 		ViewDateDtoPipe,
 		ImgUploaderComponent,
 		SignoVitalComponent,
+		ContentTitleComponent,
+		PageComponent,
 	],
 	entryComponents: [
 		DockPopupComponent

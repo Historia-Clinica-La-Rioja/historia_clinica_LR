@@ -24,6 +24,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { AppMaterialModule } from './modules/material/app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { environment } from '@environments/environment';
+import { ExtensionsModule } from './modules/extensions/extensions.module';
 
 registerLocaleData(localeEsAr, 'es-AR');
 
@@ -56,6 +57,7 @@ registerLocaleData(localeEsAr, 'es-AR');
 		// Module import order
 		// https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
+		ExtensionsModule,
 	],
 	providers: [
 		httpInterceptorProviders,
