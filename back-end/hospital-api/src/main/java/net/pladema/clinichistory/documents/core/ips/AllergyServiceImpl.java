@@ -13,6 +13,8 @@ import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
+import net.pladema.snowstorm.services.SnowstormInferredService;
+import net.pladema.snowstorm.services.inferredrules.InferredAllergyAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,18 +40,22 @@ public class AllergyServiceImpl implements AllergyService {
 
     private final CalculateCie10CodesService calculateCie10CodesService;
 
+    private final SnowstormInferredService snowstormInferredService;
+
     public AllergyServiceImpl(AllergyIntoleranceRepository allergyIntoleranceRepository,
                               AllergyIntoleranceClinicalStatusRepository allergyClinicalStatusRepository,
                               AllergyIntoleranceVerificationStatusRepository allergyVerificationStatusRepository,
                               DocumentService documentService,
                               SnomedService snomedService,
-                              CalculateCie10CodesService calculateCie10CodesService){
+                              CalculateCie10CodesService calculateCie10CodesService,
+                              SnowstormInferredService snowstormInferredService){
         this.allergyIntoleranceRepository = allergyIntoleranceRepository;
         this.allergyClinicalStatusRepository = allergyClinicalStatusRepository;
         this.allergyVerificationStatusRepository = allergyVerificationStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
         this.calculateCie10CodesService = calculateCie10CodesService;
+        this.snowstormInferredService = snowstormInferredService;
     }
 
     @Override
@@ -86,6 +92,12 @@ public class AllergyServiceImpl implements AllergyService {
                 allergy.getVerificationId(),
                 allergy.getCategoryId(),
                 allergy.getDate());
+
+        InferredAllergyAttributes inferredAttributes = snowstormInferredService.
+                getInferredAllergyAttributes(allergy.getSnomed().getSctid());
+        allergyIntolerance.setCategoryId(inferredAttributes.getCategory());
+        allergyIntolerance.setType(inferredAttributes.getType());
+
         allergyIntolerance = allergyIntoleranceRepository.save(allergyIntolerance);
         LOG.debug("allergyIntolerance saved -> {} ", allergyIntolerance.getId());
         LOG.debug(OUTPUT, allergyIntolerance);
