@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-
-import { MenuItem } from '@presentation/components/menu/menu.component';
-import { of } from 'rxjs';
-import { environment } from '@environments/environment';
-import { SYSTEM_MENU, INSTITUTION_MENU } from '../constants/demo.mocks';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { MenuItem } from '@presentation/components/menu/menu.component';
+
+import { SYSTEM_MENU, INSTITUTION_MENU } from '../constants/demo.mocks';
+import { environment } from '@environments/environment';
 
 @Injectable({
 	providedIn: 'root'

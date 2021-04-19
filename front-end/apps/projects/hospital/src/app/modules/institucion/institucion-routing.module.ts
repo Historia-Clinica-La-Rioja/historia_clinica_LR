@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
-import { InstitutionExtensionComponent } from '../extensions/routes/extension/extension.component';
+import { InstitutionExtensionComponent } from '@extensions/routes/extension/extension.component';
 
 import { InstitucionComponent } from './institucion.component';
 import { HomeComponent } from './routes/home/home.component';

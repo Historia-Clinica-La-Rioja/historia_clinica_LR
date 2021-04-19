@@ -11,7 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { LoggedUserService } from '../auth/services/logged-user.service';
 import { RoleAssignment } from '@api-rest/api-model';
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
-import { MenuService } from '../extensions/services/menu.service';
+import { MenuService } from '@extensions/services/menu.service';
 
 @Component({
 	selector: 'app-home',

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+
 import { Page } from '@presentation/components/page/page.component';
-import { of } from 'rxjs';
-import { Observable } from 'rxjs';
-import { environment } from '@environments/environment';
+
 import { SYSTEM_MANUALES_PAGE, INSTITUTION_MANUALES_PAGE } from '../constants/demo.mocks';
+import { environment } from '@environments/environment';
 
 @Injectable({
 	providedIn: 'root'

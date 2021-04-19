@@ -45,7 +45,10 @@
       ],
       "@turnos/*": [
         "projects/hospital/src/app/modules/turnos/*"
-      ]
+      ],
+	  "@extensions/*": [
+        "projects/hospital/src/app/modules/extensions/*"
+      ],
     }
 	},
 	"angularCompilerOptions": {

@@ -14,7 +14,7 @@ import { AccountService } from '@api-rest/services/account.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
-import { MenuService } from '../extensions/services/menu.service';
+import { MenuService } from '@extensions/services/menu.service';
 
 @Component({
 	selector: 'app-institucion',

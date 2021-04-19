@@ -1,24 +1,20 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Title } from '@presentation/components/content-title/content-title.component';
-import { Page } from '@presentation/components/page/page.component';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { MenuService } from '../../services/menu.service';
+import { Page } from '@presentation/components/page/page.component';
 import { PageService } from '../../services/page.service';
 
-const mapToTitle = ({icon, label}): Title => ({icon, label});
-
 class RoutedExtensionComponent {
-	extension$: Observable<{title: Title, page: Page}>;
+	page$: Observable<Page>;
 
 	constructor(
 		activatedRoute: ActivatedRoute,
-		mapper: (menuData: {menuItemId: string, id: any}) => Observable<{title: Title, page: Page}>,
+		mapper: (menuData: {menuItemId: string, id: any}) => Observable<Page>,
 	) {
 		// el id está en el parent y cambiaría junto con este
 		const id = activatedRoute.parent.snapshot.paramMap.get( 'id' );
-		this.extension$ = activatedRoute.paramMap.pipe(
+		this.page$ = activatedRoute.paramMap.pipe(
 			map(params => ({menuItemId: params.get('menuItemId'), id })),
 			switchMap(menuData => mapper(menuData))
 		);
@@ -34,17 +30,9 @@ class RoutedExtensionComponent {
 export class SystemExtensionComponent extends RoutedExtensionComponent {
 	constructor(
 		activatedRoute: ActivatedRoute,
-		menuService: MenuService,
-		moduleService: PageService,
+		extensionSystemService: PageService,
 	) {
-		super(activatedRoute, ({menuItemId}) => menuService.getSystemMenuItem(menuItemId).pipe(
-			switchMap(menuItem => moduleService.getSystemPage(menuItem.id).pipe(
-				map(page => ({
-					title: mapToTitle(menuItem),
-					page
-				}))
-			))
-		));
+		super(activatedRoute, ({menuItemId}) => extensionSystemService.getSystemPage(menuItemId));
 	}
 
 }
@@ -58,17 +46,9 @@ export class SystemExtensionComponent extends RoutedExtensionComponent {
 export class InstitutionExtensionComponent extends RoutedExtensionComponent {
 	constructor(
 		activatedRoute: ActivatedRoute,
-		menuService: MenuService,
 		moduleService: PageService,
 	) {
-		super(activatedRoute, ({menuItemId, id}) => menuService.getInstitutionMenuItem(id, menuItemId).pipe(
-			switchMap(menuItem => moduleService.getInstitutionPage(id, menuItem.id).pipe(
-				map(page => ({
-					title: mapToTitle(menuItem),
-					page
-				}))
-			))
-		));
+		super(activatedRoute, ({menuItemId, id}) => moduleService.getInstitutionPage(id, menuItemId));
 	}
 
 }
