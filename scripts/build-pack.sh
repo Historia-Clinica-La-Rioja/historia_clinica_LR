@@ -9,6 +9,7 @@ npm install
 yarn install
 npm run lint
 npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+npm run build:odontology
 npm run build:prod
 cd -
 
