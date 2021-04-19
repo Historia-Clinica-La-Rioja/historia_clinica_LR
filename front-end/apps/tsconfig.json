@@ -49,6 +49,10 @@
 	  "@extensions/*": [
         "projects/hospital/src/app/modules/extensions/*"
       ],
+      "odontology": [
+        "dist/odontology/odontology",
+        "dist/odontology"
+      ]
     }
 	},
 	"angularCompilerOptions": {

@@ -13,6 +13,7 @@
 			false,
 			"attribute",
 			"app",
+			"lib",
 			"camelCase"
 		],
 		"indent": [
@@ -24,6 +25,7 @@
 			true,
 			"element",
 			"app",
+			"lib",
 			"kebab-case"
 		],
 		"import-blacklist": [
