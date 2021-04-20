@@ -22,6 +22,10 @@
 	"procedimientos": {
 		"FECHA": "Fecha",
 		"PROCEDIMIENTO": "Procedimiento"
-	}
+	},
+	  "snowstorm": {
+		  "SERVICE_NOT_AVAILABLE": "El servicio externo no está disponible en este momento, por favor intente más tarde.",
+		  "CONCEPTS_COULD_NOT_BE_OBTAINED": "Los conceptos de SNOMED no pudieron ser obtenidos."
+	  }
   }
 }

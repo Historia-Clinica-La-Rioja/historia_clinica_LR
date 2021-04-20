@@ -52,8 +52,9 @@ public class SnowstormController {
             if (snowstormSearchResponse == null) {
                 deferredResult.setResult(ResponseEntity.noContent().build());
             }
-
-            deferredResult.setResult(ResponseEntity.ok().body(snowstormSearchResponse));
+            else {
+                deferredResult.setResult(ResponseEntity.ok().body(snowstormSearchResponse));
+            }
         });
         return deferredResult;
     }

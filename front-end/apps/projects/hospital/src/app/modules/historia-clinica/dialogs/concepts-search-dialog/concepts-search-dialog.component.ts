@@ -4,6 +4,7 @@ import { SnomedDto } from '@api-rest/api-model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService, SNOMED_RESULTS_LIMIT } from '@api-rest/services/snowstorm.service';
 import { SnomedSemanticSearch } from '../../services/snomed.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-concepts-search-dialog',
@@ -14,19 +15,25 @@ export class ConceptsSearchDialogComponent implements OnInit {
 
 	conceptsResultsTable: TableModel<any>;
 	conceptsResultsLength: number;
+	snowstormServiceNotAvailable = false;
 	readonly SNOMED_RESULTS_LIMIT: number = +SNOMED_RESULTS_LIMIT;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: SnomedSemanticSearch,
 		public dialogRef: MatDialogRef<ConceptsSearchDialogComponent>,
-		private readonly snowstormService: SnowstormService
+		private readonly snowstormService: SnowstormService,
+		private readonly snackBarService: SnackBarService,
 	) { }
 
 	ngOnInit(): void {
 		this.snowstormService.getSNOMEDConcepts({ term: this.data.searchValue, ecl: this.data.eclFilter }).subscribe(
 			result => {
-				this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
-				this.conceptsResultsLength = result.total;
+					this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
+					this.conceptsResultsLength = result.total;
+			},
+			error => {
+				this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+				this.snowstormServiceNotAvailable = true;
 			}
 		);
 	}

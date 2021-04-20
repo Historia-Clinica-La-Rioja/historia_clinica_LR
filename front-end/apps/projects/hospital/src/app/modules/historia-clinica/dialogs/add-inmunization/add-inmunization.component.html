@@ -14,7 +14,11 @@
 		</app-concepts-search>
 
 		<div class="spinner">
-			<mat-spinner diameter="70" color="primary" *ngIf="searching"></mat-spinner>
+			<mat-spinner diameter="70" color="primary" *ngIf="searching && !snowstormServiceNotAvailable"></mat-spinner>
+		</div>
+
+		<div *ngIf="snowstormServiceNotAvailable">
+			<span [translate]="'historia-clinica.snowstorm.SERVICE_NOT_AVAILABLE'"> </span>
 		</div>
 
 		<app-table *ngIf="!searching && !snomedConcept" [model]="conceptsResultsTable"

@@ -19,17 +19,22 @@ export class SnowstormService {
 	getSNOMEDConcepts(params): Observable<SnomedResponseDto> {
 		const url = `${environment.apiBase}/snowstorm/concepts`;
 		return this.http.get<any>(url, { params }).pipe(map(results => {
-			const newItems = results.items.map((i: any): SnomedDto => {
-				return {
-					sctid: i.conceptId,
-					pt: i.pt.term,
-					// TODO no llegan las siguientes propiedades desde este endpoint de snowstorm
-					parentFsn: '',
-					parentId: ''
-				};
-			});
-			results.items = newItems;
-			return results;
+			if (results) {
+				const newItems = results.items.map((i: any): SnomedDto => {
+					return {
+						sctid: i.conceptId,
+						pt: i.pt.term,
+						// TODO no llegan las siguientes propiedades desde este endpoint de snowstorm
+						parentFsn: '',
+						parentId: ''
+					};
+				});
+				results.items = newItems;
+				return results;
+			}
+			else {
+				throw Error('SNOMED concepts could not be obtained.');
+			}
 		}));
 	}
 

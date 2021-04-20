@@ -21,6 +21,7 @@ export class AddAllergyComponent implements OnInit {
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	searching = false;
+	snowstormServiceNotAvailable = false;
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
@@ -81,6 +82,10 @@ export class AddAllergyComponent implements OnInit {
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
 						this.searching = false;
+					},
+					error => {
+						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+						this.snowstormServiceNotAvailable = true;
 					}
 				);
 		}

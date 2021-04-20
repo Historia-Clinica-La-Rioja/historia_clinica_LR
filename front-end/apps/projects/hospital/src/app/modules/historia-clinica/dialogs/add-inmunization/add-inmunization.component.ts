@@ -7,6 +7,7 @@ import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-add-inmunization',
@@ -22,12 +23,14 @@ export class AddInmunizationComponent implements OnInit {
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	searching = false;
+	snowstormServiceNotAvailable = false;
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
 		public dialogRef: MatDialogRef<AddInmunizationComponent>,
 		private readonly formBuilder: FormBuilder,
-		private readonly snowstormService: SnowstormService
+		private readonly snowstormService: SnowstormService,
+		private readonly snackBarService: SnackBarService,
 	) {
 	}
 
@@ -80,6 +83,10 @@ export class AddInmunizationComponent implements OnInit {
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
 						this.searching = false;
+					},
+					error => {
+						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+						this.snowstormServiceNotAvailable = true;
 					}
 				);
 		}

@@ -9,6 +9,7 @@ import { ActionDisplays, TableModel } from '@presentation/components/table/table
 import { SEMANTICS_CONFIG } from '@historia-clinica/constants/snomed-semantics';
 import { hasError } from '@core/utils/form.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -19,6 +20,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 
 	loading = false;
 	searching = false;
+	snowstormServiceNotAvailable = false;
 	snomedConcept: SnomedDto;
 	prescriptionItemForm: FormGroup;
 	conceptsResultsTable: TableModel<any>;
@@ -41,6 +43,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly requestMasterDataService: RequestMasterDataService,
+		private readonly snackBarService: SnackBarService,
 		public dialogRef: MatDialogRef<AgregarPrescripcionItemComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) { }
 
@@ -137,6 +140,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
 						this.searching = false;
+					},
+					error => {
+						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+						this.snowstormServiceNotAvailable = true;
 					}
 				);
 		}

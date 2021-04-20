@@ -24,6 +24,7 @@ export class AplicarVacunaComponent implements OnInit {
 	form: FormGroup;
 	loading = false;
 	today: Moment = newMoment();
+	snowstormServiceNotAvailable = false;
 	searching = false;
 	conceptsResultsTable: TableModel<any>;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
@@ -75,6 +76,10 @@ export class AplicarVacunaComponent implements OnInit {
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
 						this.searching = false;
+					},
+					error => {
+						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+						this.snowstormServiceNotAvailable = true;
 					}
 				);
 		}
