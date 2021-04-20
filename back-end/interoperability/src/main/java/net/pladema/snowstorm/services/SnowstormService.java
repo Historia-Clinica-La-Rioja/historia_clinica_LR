@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface SnowstormService {
 
-    public SnowstormSearchResponse getConcepts(String term, String ecl);
+    SnowstormSearchResponse getConcepts(String term, String ecl);
 
     List<SnowstormItemResponse> getConceptAncestors(String conceptId);
 
-    public SnowstormCie10RefsetMembersResponse getCie10RefsetMembers(String referencedComponentId);
+    SnowstormCie10RefsetMembersResponse getCie10RefsetMembers(String referencedComponentId);
 
 }

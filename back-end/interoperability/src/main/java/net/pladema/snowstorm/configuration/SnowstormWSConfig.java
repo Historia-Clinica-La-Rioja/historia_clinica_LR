@@ -52,7 +52,7 @@ public class SnowstormWSConfig extends WSConfig {
 
     private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
-    public SnowstormWSConfig(@Value("${ws.snowstorm.url.base:https://snowstorm.msal.gov.ar}") String baseUrl) {
+    public SnowstormWSConfig(@Value("${ws.snowstorm.url.base:https://snowstorm-test.msal.gob.ar/}") String baseUrl) {
         super(baseUrl);
     }
 

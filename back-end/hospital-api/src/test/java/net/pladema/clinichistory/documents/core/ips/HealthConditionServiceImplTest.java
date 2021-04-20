@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.documents.core.ips;
 
 import net.pladema.UnitRepository;
+import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
 import net.pladema.clinichistory.documents.repository.ips.GetLastHealthConditionRepository;
 import net.pladema.clinichistory.documents.repository.ips.GetLastHealthConditionRepositotyImpl;
 import net.pladema.clinichistory.documents.repository.ips.HealthConditionRepository;
@@ -14,7 +15,6 @@ import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class HealthConditionServiceImplTest extends UnitRepository {
     private SnomedService snomedService;
 
     @MockBean
-    private CalculateCie10CodesService calculateCie10CodesService;
+    private CalculateCie10Facade calculateCie10Facade;
 
     @MockBean
     private DocumentService documentService;
@@ -72,7 +72,7 @@ public class HealthConditionServiceImplTest extends UnitRepository {
                 conditionVerificationStatusRepository,
                 conditionClinicalStatusRepository,
                 snomedService,
-                calculateCie10CodesService,
+                calculateCie10Facade,
                 documentService,
                 noteService,
                 dateTimeProvider,

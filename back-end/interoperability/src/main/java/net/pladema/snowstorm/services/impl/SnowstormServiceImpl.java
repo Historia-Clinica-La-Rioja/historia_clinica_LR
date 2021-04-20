@@ -8,20 +8,29 @@ import net.pladema.snowstorm.services.domain.SnowstormCie10RefsetMembersResponse
 import net.pladema.snowstorm.services.domain.SnowstormConcept;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
+import net.pladema.snowstorm.services.exceptions.SnowstormTimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+
+import static net.pladema.snowstorm.services.exceptions.SnowstormEnumException.SNOWSTORM_TIMEOUT_SERVICE;
 
 @Service
 public class SnowstormServiceImpl extends RestClient implements SnowstormService {
 
-    private SnowstormWSConfig snowstormWSConfig;
+    public static final String FAIL_COMMUNICATION = "Fallo la comunicación con el servidor de snowstorm -> %s";
+    public static final String SNOWSTORM_FAIL_SERVICE = "Snowstorm fail service ";
+    private final Logger logger;
+
+    private final SnowstormWSConfig snowstormWSConfig;
 
     public SnowstormServiceImpl(SnowstormRestTemplateAuth restTemplateSSL, SnowstormWSConfig wsConfig) {
         super(restTemplateSSL, wsConfig);
         this.snowstormWSConfig = wsConfig;
+        logger = LoggerFactory.getLogger(CalculateCie10CodesServiceImpl.class);
     }
 
     @Override
@@ -44,8 +53,17 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
             urlWithParams.append("&ecl=" + ecl);
         }
 
-        ResponseEntity<SnowstormSearchResponse> response = exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
-        return response.getBody();
+        SnowstormSearchResponse result;
+        try {
+            ResponseEntity<SnowstormSearchResponse> response = exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
+            result = response.getBody();
+            if (result == null)
+                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        } catch (Exception e) {
+            logger.error(SNOWSTORM_FAIL_SERVICE, e);
+            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        }
+        return result;
     }
 
     @Override
@@ -54,10 +72,18 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
                 .concat(conceptId)
                 .concat("/ancestors")
                 .concat("?form=inferred");
-        ResponseEntity<SnowstormConcept> entityResponse = exchangeGet(urlWithParams, SnowstormConcept.class);
-        if(entityResponse.getBody() != null)
-            return entityResponse.getBody().getItems();
-        return Collections.emptyList();
+
+        SnowstormConcept result;
+        try {
+            ResponseEntity<SnowstormConcept> response = exchangeGet(urlWithParams, SnowstormConcept.class);
+            result = response.getBody();
+            if (result == null)
+                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        } catch (Exception e) {
+            logger.error(SNOWSTORM_FAIL_SERVICE, e);
+            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        }
+        return result.getItems();
     }
 
     @Override
@@ -70,7 +96,16 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
         urlWithParams.append("&offset=0");
         urlWithParams.append("&limit=" + SnowstormWSConfig.CIE10_LIMIT);
 
-        ResponseEntity<SnowstormCie10RefsetMembersResponse> response = exchangeGet(urlWithParams.toString(), SnowstormCie10RefsetMembersResponse.class);
-        return response.getBody();
+        SnowstormCie10RefsetMembersResponse result;
+        try {
+            ResponseEntity<SnowstormCie10RefsetMembersResponse> response = exchangeGet(urlWithParams.toString(), SnowstormCie10RefsetMembersResponse.class);
+            result = response.getBody();
+            if (result == null)
+                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        } catch (Exception e) {
+            logger.error(SNOWSTORM_FAIL_SERVICE, e);
+            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        }
+        return result;
     }
 }

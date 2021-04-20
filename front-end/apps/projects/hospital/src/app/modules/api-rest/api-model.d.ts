@@ -143,6 +143,11 @@ export interface ApiErrorMessageDto {
     text: string;
 }
 
+export interface ApiSnowstormErrorMessageDto {
+    code: string;
+    text: string;
+}
+
 export interface AppearanceDto extends Serializable {
     bodyTemperatureId?: number;
     cryingExcessive?: boolean;

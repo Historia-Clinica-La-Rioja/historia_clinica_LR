@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +48,7 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
 
     private List<String> calculateCie10Codes(SnowstormCie10RefsetMembersResponse cie10Response, Cie10RuleFeature features) {
         LOG.debug("Input parameters -> cie10Response {}, patient {}", cie10Response, features);
-        Map<String, List<SnowstormCie10ItemResponse>> groupedItems = groupByMapGroupSortedByPriority(cie10Response.getItems());
+        Map<String, List<SnowstormCie10ItemResponse>> groupedItems = groupByMapGroupSortedByPriority(cie10Response != null ? cie10Response.getItems() : Collections.emptyList());
         List<String> result = groupedItems.values()
                 .stream()
                 .map(ruleGroup -> processRules(ruleGroup, features))

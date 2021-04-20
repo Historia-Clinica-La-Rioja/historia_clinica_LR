@@ -3,7 +3,6 @@ package net.pladema.snowstorm.controller;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import org.apache.http.HttpStatus;
@@ -34,8 +33,6 @@ public class SnowstormController {
     private static final String TIMEOUT_MSG = "Timeout en WS Snowstorm";
 
     private final SnowstormService snowstormService;
-
-    private final CalculateCie10CodesService calculateCie10CodesService;
 
     @Value("${ws.snowstorm.request.timeout:10000}")
     private long requestTimeOut;

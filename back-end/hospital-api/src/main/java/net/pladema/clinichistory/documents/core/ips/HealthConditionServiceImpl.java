@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
+import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
 import net.pladema.clinichistory.documents.repository.ips.GetLastHealthConditionRepository;
 import net.pladema.clinichistory.documents.repository.ips.HealthConditionRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.HealthCondition;
@@ -17,8 +19,6 @@ import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.sgx.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
-import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
 
     private final SnomedService snomedService;
 
-    private final CalculateCie10CodesService calculateCie10CodesService;
+    private final CalculateCie10Facade calculateCie10Facade;
 
     private final DocumentService documentService;
 
@@ -58,14 +58,14 @@ public class HealthConditionServiceImpl implements HealthConditionService {
                                       ConditionVerificationStatusRepository conditionVerificationStatusRepository,
                                       ConditionClinicalStatusRepository conditionClinicalStatusRepository,
                                       SnomedService snomedService,
-                                      CalculateCie10CodesService calculateCie10CodesService,
+                                      CalculateCie10Facade calculateCie10Facade,
                                       DocumentService documentService,
                                       NoteService noteService, DateTimeProvider dateTimeProvider, GetLastHealthConditionRepository getLastHealthConditionRepository){
         this.healthConditionRepository = healthConditionRepository;
         this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
         this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
         this.snomedService = snomedService;
-        this.calculateCie10CodesService = calculateCie10CodesService;
+        this.calculateCie10Facade = calculateCie10Facade;
         this.documentService = documentService;
         this.noteService = noteService;
         this.dateTimeProvider = dateTimeProvider;
@@ -219,8 +219,8 @@ public class HealthConditionServiceImpl implements HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         Integer snomedId = snomedService.getSnomedId(info.getSnomed())
                 .orElseGet(() -> snomedService.createSnomedTerm(info.getSnomed()));
-        String cie10Codes = calculateCie10CodesService.execute(info.getSnomed().getSctid(),
-                new Cie10RuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
+        String cie10Codes = calculateCie10Facade.execute(info.getSnomed().getSctid(),
+                new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         HealthCondition healthCondition = new HealthCondition();
         healthCondition.setPatientId(patientInfo.getId());
         healthCondition.setSnomedId(snomedId);
