@@ -1,0 +1,14 @@
+{
+  "type": "components",
+  "content": [
+    { "type": "typography", "args": { "value": "Resumen de historia clínica", "className": "title" } },
+    { "type": "typography", "args": { "value": "Información contenida en sistema legado", "className": "caption" } },
+    { "type": "typography", "args": { "value": "Resumen de historia clínica", "className": "title" } },
+    {
+      "type": "html",
+      "args": {
+        "value": "<div ><div ><div ><div ><span ><img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Frame-1.png\" height=\"auto\" width=\"auto\" ></span></div><div ><div ><h1><strong>Desarrollo</strong></h1></div></div> <div ><span ><img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Rectangle-3.png\" height=\"auto\" width=\"auto\" ></span></div><div ><div><p><b data-stringify-type=\"bold\">HSI nace como un proyecto desarrollado por el grupo Lamansys del Instituto PLADEMA de la Fac. de Ciencias Exactas de la UNCPBA y cuenta con la cooperación del Ministerio de Salud de la República Argentina.</b></p><p><span>A través del financiamiento del Ministerio de Desarrollo Productivo de la Nación, el Banco Interamericano de Desarrollo y la Agencia Nacional de Promoción de la Investigación, el Desarrollo Tecnológico y la Innovación, se desarrolló un sistema integral de gestión destinado a establecimientos de salud. </span></p><p><span>La plataforma está diseñada para trabajar de manera integral con la Red Nacional de Salud Digital del Ministerio de Salud de la Nación. </span></p><p>&nbsp;</p></div></div> </div> </div> </div>"
+      }
+    }
+  ]
+}

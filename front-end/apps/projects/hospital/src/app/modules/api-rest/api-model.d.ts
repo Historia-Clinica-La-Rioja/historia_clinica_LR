@@ -1510,6 +1510,29 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
+export interface UIComponentDto {
+    actions: UIComponentDto[];
+    args: { [index: string]: any };
+    children: UIComponentDto[];
+    type: string;
+}
+
+export interface UILabelDto {
+    key?: string;
+    text?: string;
+}
+
+export interface UIMenuItemDto {
+    icon: string;
+    id: string;
+    label: UILabelDto;
+}
+
+export interface UIPageDto {
+    content: UIComponentDto[];
+    type: string;
+}
+
 export interface UserDto extends AbstractUserDto {
     email: string;
     id: number;

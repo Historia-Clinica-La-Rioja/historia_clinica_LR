@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Page } from '@presentation/components/page/page.component';
 
-import { SYSTEM_MANUALES_PAGE, INSTITUTION_MANUALES_PAGE } from '../constants/demo.mocks';
-import { environment } from '@environments/environment';
+import { ExtensionsService } from '@api-rest/services/extensions.service';
+import { mapPage } from '../mappers.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,19 +13,20 @@ import { environment } from '@environments/environment';
 export class PageService {
 
 	constructor(
+		private extensionsService: ExtensionsService,
 	) { }
 
 	getSystemPage(menuId: string): Observable<Page> {
-		if (!environment.production && menuId === 'manuales') {
-			return of(SYSTEM_MANUALES_PAGE);
-		}
-		return of(undefined);
+		return this.extensionsService.getSystemPage(menuId)
+			.pipe(
+				map(mapPage)
+			);
 	}
 
 	getInstitutionPage(institutionId: number, menuId: string): Observable<Page> {
-		if (!environment.production && menuId === 'informacion') {
-			return of(INSTITUTION_MANUALES_PAGE);
-		}
-		return of(undefined);
+		return this.extensionsService.getInstitutionPage(institutionId, menuId)
+			.pipe(
+				map(mapPage)
+			);
 	}
 }

@@ -19,7 +19,6 @@ import { BarComponent } from './components/bar/bar.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { LabelComponent } from './components/label/label.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { MockComponent } from './components/mock/mock.component';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
@@ -55,7 +54,6 @@ import { UiComponentComponent } from './components/ui-component/ui-component.com
 		MenuComponent,
 		LabelComponent,
 		FooterComponent,
-		MockComponent,
 		DayTimeRangePipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,

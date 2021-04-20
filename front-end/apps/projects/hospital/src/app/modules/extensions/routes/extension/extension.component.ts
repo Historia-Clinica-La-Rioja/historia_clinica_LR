@@ -10,12 +10,12 @@ class RoutedExtensionComponent {
 
 	constructor(
 		activatedRoute: ActivatedRoute,
-		mapper: (menuData: {menuItemId: string, id: any}) => Observable<Page>,
+		mapper: (menuData: { menuItemId: string, id: any }) => Observable<Page>,
 	) {
 		// el id está en el parent y cambiaría junto con este
-		const id = activatedRoute.parent.snapshot.paramMap.get( 'id' );
+		const id = activatedRoute.parent.snapshot.paramMap.get('id');
 		this.page$ = activatedRoute.paramMap.pipe(
-			map(params => ({menuItemId: params.get('menuItemId'), id })),
+			map(params => ({ menuItemId: params.get('menuItemId'), id })),
 			switchMap(menuData => mapper(menuData))
 		);
 	}
@@ -32,7 +32,7 @@ export class SystemExtensionComponent extends RoutedExtensionComponent {
 		activatedRoute: ActivatedRoute,
 		extensionSystemService: PageService,
 	) {
-		super(activatedRoute, ({menuItemId}) => extensionSystemService.getSystemPage(menuItemId));
+		super(activatedRoute, ({ menuItemId }) => extensionSystemService.getSystemPage(menuItemId));
 	}
 
 }
@@ -48,7 +48,7 @@ export class InstitutionExtensionComponent extends RoutedExtensionComponent {
 		activatedRoute: ActivatedRoute,
 		moduleService: PageService,
 	) {
-		super(activatedRoute, ({menuItemId, id}) => moduleService.getInstitutionPage(id, menuItemId));
+		super(activatedRoute, ({ menuItemId, id }) => moduleService.getInstitutionPage(id, menuItemId));
 	}
 
 }

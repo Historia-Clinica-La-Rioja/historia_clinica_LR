@@ -20,6 +20,7 @@
 		<module>sgx-shared</module>
 		<module>sgx-dashboards</module>
 		<module>interoperability</module>
+		<module>extensions</module>
         <module>odontology</module>
 		<module>hospital-api</module>
     </modules>

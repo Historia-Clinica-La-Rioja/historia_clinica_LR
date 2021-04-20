@@ -40,6 +40,4 @@ public class CubeController {
 		return fullURI.split(prefix)[1];
 	}
 
-
-
 }
