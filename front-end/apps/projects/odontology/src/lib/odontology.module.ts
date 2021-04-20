@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import { OdontologyComponent } from './odontology.component';
-
-
+import { OdontologyComponent } from './routes/odontology.component';
+import { OdontologyRoutingModule } from './odontology-routing.module';
 
 @NgModule({
-  declarations: [OdontologyComponent],
-  imports: [
-  ],
-  exports: [OdontologyComponent]
+	declarations: [OdontologyComponent],
+	imports: [
+		OdontologyRoutingModule
+	],
+	exports: [OdontologyComponent]
 })
-export class OdontologyModule { }
+export class OdontologyModule {
+}

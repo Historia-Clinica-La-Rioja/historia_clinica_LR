@@ -37,6 +37,10 @@ const routes: Routes = [
 				path: 'guardia',
 				loadChildren: () => import('../historia-clinica/modules/guardia/guardia.module').then(m => m.GuardiaModule),
 			},
+			{
+				path: 'odontologia',
+				loadChildren: () => import('odontology').then(m => m.OdontologyModule)
+			},
 			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent },
 		],
 		canActivate: [RoleGuard],

@@ -80,6 +80,12 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: AppFeature.HABILITAR_MODULO_GUARDIA
 	},
 	{
+		text: 'Odontologia',
+		icon: 'assignment_ind',
+		id: 'odontology',
+		url: './odontologia'
+	},
+	{
 		text: 'app.menu.PERFIL',
 		icon: 'account_circle',
 		id: 'home_profile',
