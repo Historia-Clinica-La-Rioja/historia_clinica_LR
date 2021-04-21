@@ -36,6 +36,7 @@ export class NuevaConsultaComponent implements OnInit {
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	problemasService: ProblemasService;
+	severityTypes: any[];
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
@@ -75,6 +76,7 @@ export class NuevaConsultaComponent implements OnInit {
 	static buildProblema(p: HealthConditionNewConsultationDto) {
 		const problema: Problema = {
 			snomed: p.snomed,
+			codigoSeveridad: '',
 			cronico: p.isChronic,
 			fechaInicio: dateToMomentTimeZone(p.startDate),
 			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
@@ -138,6 +140,11 @@ export class NuevaConsultaComponent implements OnInit {
 		});
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[5] = presionDiastolicaError;
+		});
+
+		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+			this.severityTypes = healthConditionSeverities;
+			this.problemasService.setSeverityTypes(healthConditionSeverities);
 		});
 	}
 

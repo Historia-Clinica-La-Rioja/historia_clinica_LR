@@ -18,6 +18,7 @@ import { map } from 'rxjs/operators';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
+import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -34,6 +35,7 @@ export class MedicalDischargeComponent implements OnInit {
 	dischargeTypes$: Observable<MasterDataInterface<number>[]>;
 
 	problemasService: ProblemasService;
+	severityTypes: any[];
 	today = new Date();
 	episodeCreatedOn: Moment;
 	formSubmited = false;
@@ -50,6 +52,7 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
 
 	) {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
@@ -81,6 +84,10 @@ export class MedicalDischargeComponent implements OnInit {
 				map((dischargeTypes) => sortByDescription(dischargeTypes))
 			);
 
+		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+			this.severityTypes = healthConditionSeverities;
+			this.problemasService.setSeverityTypes(healthConditionSeverities);
+		});
 	}
 
 	confirm(): void {

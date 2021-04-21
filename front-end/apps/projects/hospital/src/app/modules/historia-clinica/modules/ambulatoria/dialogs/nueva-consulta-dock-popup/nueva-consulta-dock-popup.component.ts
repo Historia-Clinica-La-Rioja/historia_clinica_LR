@@ -51,6 +51,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	specialties: ClinicalSpecialtyDto[];
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
+	severityTypes: any[];
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -132,6 +133,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[9] = presionDiastolicaError;
+		});
+
+		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+			this.severityTypes = healthConditionSeverities;
+			this.problemasService.setSeverityTypes(healthConditionSeverities);
 		});
 	}
 
@@ -246,6 +252,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	private buildProblema(p: HealthConditionNewConsultationDto) {
 		const problema: Problema = {
 			snomed: p.snomed,
+			codigoSeveridad: '',
 			cronico: p.isChronic,
 			fechaInicio: dateToMomentTimeZone(p.startDate),
 			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
@@ -284,6 +291,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			problems: this.problemasService.getProblemas().map(
 				(problema: Problema) => {
 					return {
+						severityCode: problema.codigoSeveridad,
 						chronic: problema.cronico,
 						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,

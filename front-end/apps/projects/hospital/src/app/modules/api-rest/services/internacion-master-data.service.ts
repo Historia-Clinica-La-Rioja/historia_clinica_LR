@@ -71,4 +71,14 @@ export class InternacionMasterDataService {
 		const url = `${environment.apiBase}/internments/masterdata/discharge/type`;
 		return this.http.get<any[]>(url);
 	}
+
+	getAllergyCriticality(): Observable<any[]> {
+		const url = `${environment.apiBase}/internments/masterdata/allergy/criticality`;
+		return this.http.get<any[]>(url);
+	}
+
+	getHealthSeverity(): Observable<any[]> {
+		const url = `${environment.apiBase}/internments/masterdata/health/severity`;
+		return this.http.get<any[]>(url);
+	}
 }

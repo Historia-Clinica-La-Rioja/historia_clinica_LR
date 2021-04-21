@@ -11,6 +11,7 @@ import {Observable, Subject} from 'rxjs';
 
 export interface Problema {
 	snomed: SnomedDto;
+	codigoSeveridad: string;
 	cronico?: boolean;
 	fechaInicio: Moment;
 	fechaFin?: Moment;
@@ -26,6 +27,7 @@ export class ProblemasService {
 	private data: Problema[];
 	private errorSource = new Subject<string>();
 	private _error$: Observable<string>;
+	private severityTypes: any[];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -33,6 +35,7 @@ export class ProblemasService {
 	) {
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
+			severidad: [null, Validators.required],
 			cronico: [null],
 			fechaInicio: [null, Validators.required],
 			fechaFin: [null]
@@ -43,6 +46,11 @@ export class ProblemasService {
 				def: 'diagnosticos',
 				header: 'ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA',
 				text: (row) => row.snomed.pt
+			},
+			{
+				def: 'severidad',
+				header: 'ambulatoria.paciente.nueva-consulta.problemas.SEVERIDAD',
+				text: (row) => this.getDisplayName(row.codigoSeveridad)
 			},
 			{
 				def: 'cronico',
@@ -64,6 +72,13 @@ export class ProblemasService {
 		this.data = [];
 	}
 
+	private getDisplayName(codigoSeveridad) {
+		return this.severityTypes.find(severityType => severityType.code === codigoSeveridad)?.display;
+	}
+
+	setSeverityTypes(severityTypes): void {
+		this.severityTypes = severityTypes;
+	}
 
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
@@ -79,6 +94,7 @@ export class ProblemasService {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProblema: Problema = {
 				snomed: this.snomedConcept,
+				codigoSeveridad: this.form.value.severidad,
 				cronico: this.form.value.cronico,
 				fechaInicio: this.form.value.fechaInicio,
 				fechaFin: this.form.value.fechaFin
@@ -91,6 +107,7 @@ export class ProblemasService {
 
 	addProblemToList(problema: Problema): void {
 		this.add(problema);
+		this.form.controls.severidad.setValue(problema.codigoSeveridad);
 		this.form.controls.cronico.setValue(problema.cronico);
 		this.form.controls.fechaInicio.setValue(problema.fechaInicio);
 		this.form.controls.fechaFin?.setValue(problema.fechaFin);

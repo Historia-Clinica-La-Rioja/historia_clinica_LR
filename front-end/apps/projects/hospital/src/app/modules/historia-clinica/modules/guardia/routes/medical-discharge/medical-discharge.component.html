@@ -55,6 +55,17 @@
 							</button>
 						</mat-form-field>
 
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.SEVERIDAD'">
+							</mat-label>
+							<mat-select id="severity-select" formControlName="severidad">
+								<mat-option *ngFor="let severityType of severityTypes" [value]="severityType.code">
+									{{severityType.display}}
+								</mat-option>
+							</mat-select>
+							<mat-error translate="forms.REQUIRED"></mat-error>
+						</mat-form-field>
+
 						<mat-checkbox id="cronico-checkbox" formControlName="cronico">
 							<span translate="guardia.episode.medical_discharge.problems.CRONICO"></span>
 						</mat-checkbox>
