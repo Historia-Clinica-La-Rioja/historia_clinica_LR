@@ -23,6 +23,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE, true);
 		map.put(AppFeature.HABILITAR_CONFIGURACION, false);
 		map.put(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD, false);
+		map.put(AppFeature.HABILITAR_ODONTOLOGY, false);
 
 		return map;
 	}

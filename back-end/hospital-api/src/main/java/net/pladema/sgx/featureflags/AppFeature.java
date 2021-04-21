@@ -40,7 +40,12 @@ public enum AppFeature implements Feature {
     HABILITAR_CONFIGURACION,
 
     @Label("Indica si está habilitado el Bus de Interoperabilidad")
-    HABILITAR_BUS_INTEROPERABILIDAD;
+    HABILITAR_BUS_INTEROPERABILIDAD,
+
+    @Label("Indica si está habilitado el módulo de odontología")
+    HABILITAR_ODONTOLOGY,
+
+    ;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

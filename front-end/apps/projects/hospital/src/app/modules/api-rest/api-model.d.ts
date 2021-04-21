@@ -143,11 +143,6 @@ export interface ApiErrorMessageDto {
     text: string;
 }
 
-export interface ApiOdontologyErrorMessageDto {
-    code: string;
-    text: string;
-}
-
 export interface AppearanceDto extends Serializable {
     bodyTemperatureId?: number;
     cryingExcessive?: boolean;
@@ -1576,6 +1571,7 @@ export const enum AppFeature {
     HABILITAR_MODULO_PORTAL_PACIENTE = "HABILITAR_MODULO_PORTAL_PACIENTE",
     HABILITAR_CONFIGURACION = "HABILITAR_CONFIGURACION",
     HABILITAR_BUS_INTEROPERABILIDAD = "HABILITAR_BUS_INTEROPERABILIDAD",
+    HABILITAR_ODONTOLOGY = "HABILITAR_ODONTOLOGY",
 }
 
 export const enum EDocumentSearch {
