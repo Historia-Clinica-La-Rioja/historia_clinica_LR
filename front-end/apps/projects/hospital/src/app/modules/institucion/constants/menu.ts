@@ -83,7 +83,8 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		text: 'Odontologia',
 		icon: 'assignment_ind',
 		id: 'odontology',
-		url: './odontologia'
+		url: './odontologia',
+		featureFlag: AppFeature.HABILITAR_ODONTOLOGY
 	},
 	{
 		text: 'app.menu.PERFIL',
