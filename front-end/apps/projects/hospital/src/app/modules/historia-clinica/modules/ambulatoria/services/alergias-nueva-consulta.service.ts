@@ -7,6 +7,7 @@ import { pushTo } from '@core/utils/array.utils';
 
 export interface Alergia {
 	snomed: SnomedDto;
+	criticalityId: number;
 }
 
 export class AlergiasNuevaConsultaService {
@@ -16,13 +17,15 @@ export class AlergiasNuevaConsultaService {
 	private data: Alergia[] = [];
 	private snomedConcept: SnomedDto;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+	private criticalityTypes: any[];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService) {
 
 		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required]
+			snomed: [null, Validators.required],
+			criticality: [null, Validators.required],
 		});
 
 		this.columns = [
@@ -30,9 +33,22 @@ export class AlergiasNuevaConsultaService {
 				def: 'problemType',
 				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.ALLERGY',
 				text: a => a.snomed.pt
+			},
+			{
+				def: 'criticality',
+				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.CRITICALITY',
+				text: a => this.getDisplayName(a.criticalityId)
 			}
 		];
 
+	}
+
+	private getDisplayName(criticalityId) {
+		return this.criticalityTypes.find(criticalityType => criticalityType.id === criticalityId)?.display;
+	}
+
+	setCriticalityTypes(criticalityTypes): void {
+		this.criticalityTypes = criticalityTypes;
 	}
 
 	getColumns(): ColumnConfig[] {
@@ -60,7 +76,8 @@ export class AlergiasNuevaConsultaService {
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			const alergia: Alergia = {
-				snomed: this.snomedConcept
+				snomed: this.snomedConcept,
+				criticalityId: this.form.value.criticality,
 			};
 			this.add(alergia);
 			this.resetForm();

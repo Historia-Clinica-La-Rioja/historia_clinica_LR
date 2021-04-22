@@ -146,6 +146,7 @@
 					"TITLE": "Alergias",
 					"ADD": "Agregar alergia",
 					"ALLERGY": "Alergia",
+					"CRITICALITY": "Criticidad",
 					"form": {
 						"REGISTRY_DATE": "Fecha registro"
 					},
@@ -153,6 +154,7 @@
 						"TITLE": "Alergias registradas",
 						"columns": {
 							"ALLERGY": "Alergia",
+							"CRITICALITY": "Criticidad",
 							"REGISTRY_DATE": "Fecha registro"
 						}
 					}

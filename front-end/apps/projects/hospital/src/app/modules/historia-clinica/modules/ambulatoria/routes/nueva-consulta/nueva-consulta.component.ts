@@ -37,6 +37,7 @@ export class NuevaConsultaComponent implements OnInit {
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	problemasService: ProblemasService;
 	severityTypes: any[];
+	criticalityTypes: any[];
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
@@ -146,6 +147,11 @@ export class NuevaConsultaComponent implements OnInit {
 			this.severityTypes = healthConditionSeverities;
 			this.problemasService.setSeverityTypes(healthConditionSeverities);
 		});
+
+		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
+			this.criticalityTypes = allergyCriticalities;
+			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
+		});
 	}
 
 	private goToAmbulatoria(idPaciente: number) {
@@ -217,7 +223,7 @@ export class NuevaConsultaComponent implements OnInit {
 			allergies: this.alergiasNuevaConsultaService.getAlergias().map((alergia: Alergia) => {
 				return {
 					categoryId: null,
-					severity: null,
+					criticalityId: null,
 					snomed: alergia.snomed,
 					startDate: null,
 					statusId: null,

@@ -513,6 +513,18 @@
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.CRITICALITY'">
+								</mat-label>
+								<mat-select id="criticality-select" formControlName="criticality">
+									<mat-option *ngFor="let criticalityType of criticalityTypes" [value]="criticalityType.id">
+										{{criticalityType.display}}
+									</mat-option>
+								</mat-select>
+								<mat-error translate="forms.REQUIRED"></mat-error>
+							</mat-form-field>
+
 							<div align="end">
 								<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
 										type="submit">

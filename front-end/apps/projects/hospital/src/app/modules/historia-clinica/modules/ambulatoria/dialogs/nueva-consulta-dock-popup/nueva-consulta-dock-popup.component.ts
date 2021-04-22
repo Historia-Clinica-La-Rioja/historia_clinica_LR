@@ -52,6 +52,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
 	severityTypes: any[];
+	criticalityTypes: any[];
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -138,6 +139,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypes = healthConditionSeverities;
 			this.problemasService.setSeverityTypes(healthConditionSeverities);
+		});
+
+		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
+			this.criticalityTypes = allergyCriticalities;
+			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 	}
 
@@ -265,11 +271,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			allergies: this.alergiasNuevaConsultaService.getAlergias().map((alergia: Alergia) => {
 				return {
 					categoryId: null,
-					severity: null,
 					snomed: alergia.snomed,
 					startDate: null,
 					statusId: null,
-					verificationId: null
+					verificationId: null,
+					criticalityId: alergia.criticalityId,
 				};
 			}),
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
@@ -291,7 +297,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			problems: this.problemasService.getProblemas().map(
 				(problema: Problema) => {
 					return {
-						severityCode: problema.codigoSeveridad,
+						severity: problema.codigoSeveridad,
 						chronic: problema.cronico,
 						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,

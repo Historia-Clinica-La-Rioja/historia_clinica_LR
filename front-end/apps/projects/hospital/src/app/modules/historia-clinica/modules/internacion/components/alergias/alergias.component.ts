@@ -58,10 +58,10 @@ export class AlergiasComponent implements OnInit {
 			const alergia: AllergyConditionDto = {
 				categoryId: null,
 				date: null,
-				severity: null,
 				verificationId: null,
 				id: null,
 				snomed: this.snomedConcept,
+				criticalityId: null,
 				statusId: null
 			};
 			this.add(alergia);
