@@ -1,4 +1,4 @@
-package net.pladema.sgx.error.controller.dto;
+package ar.lamansys.sgx.controller.dto;
 
 public class ApiErrorMessageDto {
 	public final String code;

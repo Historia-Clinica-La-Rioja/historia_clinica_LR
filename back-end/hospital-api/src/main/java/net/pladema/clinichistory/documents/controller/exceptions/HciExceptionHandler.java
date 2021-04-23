@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.controller.exceptions;
 
+import ar.lamansys.sgx.controller.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.documents.core.cie10.exceptions.HCICIE10Exception;
-import net.pladema.snowstorm.controller.exceptions.dto.ApiSnowstormErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -21,9 +21,9 @@ public class HciExceptionHandler {
 
 	@ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
 	@ExceptionHandler({ HCICIE10Exception.class })
-	protected ApiSnowstormErrorMessageDto handleHCICIE10Exception(HCICIE10Exception ex, Locale locale) {
+	protected ApiErrorMessageDto handleHCICIE10Exception(HCICIE10Exception ex, Locale locale) {
 		LOG.error("HCICIE10Exception exception -> {}", ex.getMessage());
-		return new ApiSnowstormErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 }
 

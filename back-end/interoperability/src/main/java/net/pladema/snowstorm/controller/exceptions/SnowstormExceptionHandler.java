@@ -1,6 +1,6 @@
 package net.pladema.snowstorm.controller.exceptions;
 
-import net.pladema.snowstorm.controller.exceptions.dto.ApiSnowstormErrorMessageDto;
+import ar.lamansys.sgx.controller.dto.ApiErrorMessageDto;
 import net.pladema.snowstorm.services.exceptions.SnowstormTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,9 @@ public class SnowstormExceptionHandler {
 
 	@ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
 	@ExceptionHandler({ SnowstormTimeoutException.class })
-	protected ApiSnowstormErrorMessageDto handleSnowstormTimeoutException(SnowstormTimeoutException ex, Locale locale) {
+	protected ApiErrorMessageDto handleSnowstormTimeoutException(SnowstormTimeoutException ex, Locale locale) {
 		LOG.error("SnowstormTimeoutException exception -> {}", ex.getMessage());
-		return new ApiSnowstormErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 }
 

@@ -1,4 +1,4 @@
-package net.pladema.sgx.error.controller;
+package net.pladema.sgx.exceptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
-import net.pladema.sgx.exceptions.StringValidatorException;
+import ar.lamansys.sgx.controller.dto.ApiErrorMessageDto;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +32,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.security.exceptions.JWTParseException;
-import net.pladema.sgx.error.controller.dto.ApiErrorDto;
-import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
-import net.pladema.sgx.exceptions.BackofficeValidationException;
-import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.sgx.exceptions.PermissionDeniedException;
+import ar.lamansys.sgx.controller.dto.ApiErrorDto;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice

@@ -1,4 +1,4 @@
-package net.pladema.sgx.error.controller.dto;
+package ar.lamansys.sgx.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;

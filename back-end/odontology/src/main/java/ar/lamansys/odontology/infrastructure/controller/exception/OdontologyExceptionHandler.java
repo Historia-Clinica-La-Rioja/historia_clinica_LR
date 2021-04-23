@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.infrastructure.controller.exception;
 
 import ar.lamansys.odontology.application.plugin.exception.ToothServiceException;
+import ar.lamansys.sgx.controller.dto.ApiErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -20,9 +21,9 @@ public class OdontologyExceptionHandler {
 
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
 	@ExceptionHandler({ ToothServiceException.class })
-	protected ApiOdontologyErrorMessageDto handleToothServiceException(ToothServiceException ex, Locale locale) {
+	protected ApiErrorMessageDto handleToothServiceException(ToothServiceException ex, Locale locale) {
 		LOG.debug("ToothServiceException exception -> {}", ex.getMessage());
-		return new ApiOdontologyErrorMessageDto(null, ex.getMessage());
+		return new ApiErrorMessageDto(null, ex.getMessage());
 	}
 
 

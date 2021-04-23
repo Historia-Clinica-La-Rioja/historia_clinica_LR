@@ -1,5 +1,6 @@
 package ar.lamansys.sgx.cubejs.infrastructure.api.exception;
 
+import ar.lamansys.sgx.controller.dto.ApiErrorMessageDto;
 import ar.lamansys.sgx.cubejs.application.dashboardinfo.excepciones.DashboardInfoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

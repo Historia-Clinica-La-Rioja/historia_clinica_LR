@@ -20,7 +20,7 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.error.controller.dto.ApiErrorDto;
+import ar.lamansys.sgx.controller.dto.ApiErrorDto;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.sgx.pdf.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
