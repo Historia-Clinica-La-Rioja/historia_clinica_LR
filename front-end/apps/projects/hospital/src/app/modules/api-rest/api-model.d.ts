@@ -672,6 +672,8 @@ export interface GenderDto extends AbstractMasterdataDto<number> {
 }
 
 export interface HCEAllergyDto extends ClinicalTermDto {
+    categoryId: number;
+    criticalityId: number;
 }
 
 export interface HCEAnthropometricDataDto extends Serializable {
