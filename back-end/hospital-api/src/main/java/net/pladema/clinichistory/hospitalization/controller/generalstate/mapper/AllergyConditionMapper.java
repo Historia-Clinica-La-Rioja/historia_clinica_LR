@@ -11,6 +11,5 @@ import org.mapstruct.Named;
 public interface AllergyConditionMapper {
 
     @Named("toAllergyConditionDto")
-    @Mapping(target = "severity", source = "severityId")
     AllergyConditionDto toAllergyConditionDto(AllergyConditionBo allergyConditionBo);
 }

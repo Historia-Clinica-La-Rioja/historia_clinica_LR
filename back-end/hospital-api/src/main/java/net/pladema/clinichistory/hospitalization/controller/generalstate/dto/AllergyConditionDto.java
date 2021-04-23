@@ -13,7 +13,7 @@ public class AllergyConditionDto extends HealthConditionDto {
 
     private Short categoryId;
 
-    private String severity;
+    private Short criticalityId;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String date;

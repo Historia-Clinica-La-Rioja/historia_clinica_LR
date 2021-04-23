@@ -26,7 +26,7 @@ public class OutpatientAllergyConditionDto {
 
     private String categoryId;
 
-    private String severity;
+    private Short criticalityId;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String startDate;

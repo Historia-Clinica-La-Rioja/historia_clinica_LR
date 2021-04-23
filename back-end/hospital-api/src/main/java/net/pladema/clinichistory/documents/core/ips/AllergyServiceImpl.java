@@ -92,6 +92,7 @@ public class AllergyServiceImpl implements AllergyService {
                 allergy.getStatusId(),
                 allergy.getVerificationId(),
                 allergy.getCategoryId(),
+                allergy.getCriticalityId(),
                 allergy.getDate());
 
         InferredAllergyAttributes inferredAttributes = snowstormInferredService.

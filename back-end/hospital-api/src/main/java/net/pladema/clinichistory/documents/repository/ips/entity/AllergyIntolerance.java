@@ -4,12 +4,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceVerificationStatus;
+import net.pladema.sgx.auditable.entity.SGXAuditListener;
+import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -63,7 +69,7 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 	private Short criticality;
 
 	public AllergyIntolerance(Integer patientId, Integer snomedId, String cie10Codes, String statusId,
-							  String verificationId, Short categoryId, LocalDate startDate){
+							  String verificationId, Short categoryId, Short criticalityId, LocalDate startDate){
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
@@ -73,6 +79,7 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 		if (verificationId != null)
 			this.verificationStatusId = verificationId;
 		this.categoryId = categoryId;
+		this.criticality = criticalityId;
 		this.startDate = startDate;
 	}
 

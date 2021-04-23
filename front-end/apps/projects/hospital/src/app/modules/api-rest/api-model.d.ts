@@ -93,8 +93,8 @@ export interface AdministrativeDischargeDto {
 
 export interface AllergyConditionDto extends HealthConditionDto {
     categoryId: number;
+    criticalityId: number;
     date: string;
-    severity: string;
 }
 
 export interface AllergyIntoleranceDto {
@@ -1071,7 +1071,7 @@ export interface OrganizationDto extends Serializable {
 
 export interface OutpatientAllergyConditionDto {
     categoryId: string;
-    severity: string;
+    criticalityId: number;
     snomed: SnomedDto;
     startDate: string;
     statusId?: string;

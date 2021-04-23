@@ -1,6 +1,10 @@
 package net.pladema.clinichistory.documents.repository.generalstate.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 
 import java.time.LocalDate;
@@ -19,30 +23,30 @@ public class AllergyConditionVo extends ClinicalTermVo {
 
     private Short categoryId;
 
-    private String severityId;
+    private Short criticalityId;
 
     private LocalDate date;
 
     public AllergyConditionVo(Integer id, Snomed snomed, String statusId, String verificationId,
-                             Short categoryId, LocalDate date) {
+                             Short categoryId, Short criticalityId, LocalDate date) {
         super(id, snomed, statusId);
         this.verificationId = verificationId;
-        this.severityId = null;
+        this.criticalityId = criticalityId;
         this.categoryId = categoryId;
         this.date = date;
     }
 
 	public AllergyConditionVo(Integer id, Snomed snomed, String statusId, String status,
 							  String verificationId, String verification,
-							  Short categoryId, LocalDate date) {
-		this(id, snomed, statusId,verificationId, categoryId, date);
+							  Short categoryId, Short criticalityId, LocalDate date) {
+		this(id, snomed, statusId, verificationId, categoryId, criticalityId, date);
 		this.setStatus(status);
 		this.setVerification(verification);
 	}
     
 	@Override
 	public int hashCode() {
-		return Objects.hash(verificationId, categoryId, severityId);
+		return Objects.hash(verificationId, categoryId, criticalityId);
 	}
 
 	@Override
@@ -56,6 +60,6 @@ public class AllergyConditionVo extends ClinicalTermVo {
 		AllergyConditionVo other = (AllergyConditionVo) obj;
 		return Objects.equals(verificationId, other.getVerificationId()) && 
 			   Objects.equals(categoryId, other.getCategoryId()) &&
-			   Objects.equals(severityId, other.getSeverityId());
+			   Objects.equals(criticalityId, other.getCriticalityId());
 	}
 }
