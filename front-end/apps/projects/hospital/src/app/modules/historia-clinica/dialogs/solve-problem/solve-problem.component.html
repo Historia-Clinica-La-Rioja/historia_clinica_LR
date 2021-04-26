@@ -16,6 +16,17 @@
 					<input class='name' id="snomed-input-new-consultation" matInput type="text" formControlName="snomed" readonly>
 				</mat-form-field>
 
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.SEVERIDAD'">
+					</mat-label>
+					<mat-select id="severity-select" formControlName="severidad">
+						<mat-option *ngFor="let severityType of severityTypeMasterData" [value]="severityType.code">
+							{{severityType.display}}
+						</mat-option>
+					</mat-select>
+					<mat-error translate="forms.REQUIRED"></mat-error>
+				</mat-form-field>
+
 				<mat-form-field appearance="outline" class="mat-form-field--no-underline">
 					<input class="input-checkbox-solve-problem" matInput placeholder="input">
 					<mat-checkbox id="cronico-checkbox" formControlName="cronico" class="checkbox" (click)="$event.preventDefault()">

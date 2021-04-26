@@ -10,6 +10,7 @@ import {SnomedService} from '../../services/snomed.service';
 import {HEALTH_CLINICAL_STATUS} from '../../modules/internacion/constants/ids';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
 import {hasError} from '@core/utils/form.utils';
+import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-solve-problem',
@@ -27,6 +28,7 @@ export class SolveProblemComponent implements OnInit {
 	private readonly patientId: number;
 	private readonly problemId: number;
 	private readonly startDate: Date;
+	severityTypeMasterData: any[];
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) data,
@@ -37,6 +39,7 @@ export class SolveProblemComponent implements OnInit {
 		private readonly healthConditionService: HealthConditionService,
 		private readonly snomedService: SnomedService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
 	) {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
 		this.dataDto = data.problema;
@@ -45,6 +48,7 @@ export class SolveProblemComponent implements OnInit {
 		this.startDate = this.toFormatDate(this.dataDto.startDate);
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
+			severidad: [null, Validators.required],
 			cronico: [null, Validators.required],
 			fechaInicio: [null, Validators.required],
 			fechaFin: [null, Validators.required]
@@ -57,10 +61,17 @@ export class SolveProblemComponent implements OnInit {
 			this.initializeFields(p);
 		});
 
+		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+			this.severityTypeMasterData = healthConditionSeverities;
+		});
 	}
 
 	initializeFields(p: HealthConditionNewConsultationDto) {
 		this.form.controls.snomed.setValue(p.snomed.pt);
+		if (p.severity) {
+			this.form.controls.severidad.setValue(p.severity);
+			this.form.controls.severidad.disable();
+		}
 		this.form.controls.cronico.setValue(p.isChronic);
 		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit'}));
 	}
@@ -81,6 +92,8 @@ export class SolveProblemComponent implements OnInit {
 					this.problema.inactivationDate = this.form.value.fechaFin.toDate();
 					this.problema.statusId = HEALTH_CLINICAL_STATUS.RESUELTO;
 					this.problema.id = this.problemId;
+					this.problema.severity = this.form.value.severidad;
+
 
 					this.outpatientConsultationService.solveProblem(this.problema, this.patientId).subscribe(
 						_ => {
