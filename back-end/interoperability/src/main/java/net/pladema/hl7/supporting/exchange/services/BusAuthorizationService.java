@@ -21,7 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Service
 public class BusAuthorizationService extends RestTemplate {
 
-    @Value("${ws.federar.url.login:/bus-auth/tokeninfo}")
+    @Value("${ws.federar.url.validateToken:/bus-auth/tokeninfo}")
     private String relativeUrl;
 
     private final FederarConfig configuration;

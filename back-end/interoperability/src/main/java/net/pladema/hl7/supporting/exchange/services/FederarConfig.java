@@ -43,7 +43,7 @@ public class FederarConfig {
     private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
 
-    public FederarConfig(@Value("${ws.federar.url.base:https://testapp.hospitalitaliano.org.ar}") String baseUrl) {
+    public FederarConfig(@Value("${ws.federar.url.base}") String baseUrl) {
         this.baseUrl=baseUrl;
         url = new HashMap<>();
     }

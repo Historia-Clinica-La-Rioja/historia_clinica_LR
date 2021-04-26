@@ -109,21 +109,21 @@ Para la configuracion de ReCaptcha seguir los siguientes pasos:
 | ws.renaper.url.persona |   | /personas/renaper | Obligatorio (si Renaper esta activado) | URL relativa para consumir el servicio de Datos de Persona | v0.2.0 |
 | ws.renaper.nombre |  | - | Obligatorio (si Renaper esta activado)  | Nombre que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
 | ws.renaper.clave |  | - | Obligatorio (si Renaper esta activado)  | Clave que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
-| ws.renaper.dominio |  | - | Obligatorio (si Renaper esta activado)  | Dominio que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
-| ws.federar.enabled | | false | Obligatorio | Determina si se utiliza la integracion con Federar (se necesita completar la configuracion) | v0.2.0  |
+| ws.renaper.dominio |  | DOMINIOSINAUTORIZACIONDEALTA | Único  | Código de dominio | v0.2.0  |
+| ws.federar.enabled | | false | No obligatorio | Determina si se utiliza la integracion con Federar (se necesita completar la configuración) | v0.2.0  |
 | ws.federar.claims.iss  |  | - | Obligatorio (si Federar esta activado) | URI del dominio (registrada previamente ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.sub  |  | - | Obligatorio (si Federar esta activado) | Nombre del dominio | v0.2.0  |
-| ws.federar.claims.aud  |  | - | Obligatorio (si Federar esta activado) | URL de autenticación del Federador    | v0.2.0  |
+| ws.federar.claims.aud  |  | - | No obligatorio | URL de autenticación del Federador | v0.2.0  |
 | ws.federar.claims.name  |  | - | Obligatorio (si Federar esta activado) | Apellido y Nombres del Usuario que accede (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.role |  | - | Obligatorio (si Federar esta activado) | Especialidad del Usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.ident  |  | - | Obligatorio (si Federar esta activado) | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
-| ws.federar.auth.grantType |   | client_credentials  | Obligatorio (si Federar esta activado)  | Propiedades definidas por Federar | v0.2.0  |
-| ws.federar.auth.scope |   | Patient/\*.read,Patient/\*.write  | Obligatorio (si Federar esta activado)  | Propiedades definidas por Federar | v0.2.0  |
-| ws.federar.auth.clientAssertionType |   | urn:ietf:params:oauth:client-assertion-type:jwt-bearer  | Obligatorio (si Federar esta activado)  | Propiedades definidas por Federar | v0.2.0  |
-| ws.federar.auth.signKey |   | - | Obligatorio (si Federar esta activado)  | A cada dominio se le asignara una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
-| ws.federar.url.validateToken |   |  - | Obligatorio (si Federar esta activado) |  URL relativa del servicio para validar el token obtenido | v0.2.0  |
-| ws.federar.url.localIdSearch |   |  - | Obligatorio (si Federar esta activado) |  URL relativa del servicio para buscar por id paciente nacional  | v0.2.0  |
-| ws.federar.url.federate |   |  - | Obligatorio (si Federar esta activado) |  URL relativa del servicio para federar un paciente  | v0.2.0  |
+| ws.federar.auth.grantType |   | client_credentials  | Único | Propiedades definidas por Federar | v0.2.0  |
+| ws.federar.auth.scope |   | Patient/\*.read,Patient/\*.write  | Único | Propiedades definidas por Federar | v0.2.0  |
+| ws.federar.auth.clientAssertionType |   | urn:ietf:params:oauth:client-assertion-type:jwt-bearer  | Único | Propiedades definidas por Federar | v0.2.0  |
+| ws.federar.auth.signKey |   | - | Obligatorio (si Federar esta activado)  | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
+| ws.federar.url.validateToken |   | /bus-auth/tokeninfo | Único |  URL relativa del servicio para validar el token obtenido | v0.2.0  |
+| ws.federar.url.localIdSearch |   | /masterfile-federacion-service/fhir/Patient | Único |  URL relativa del servicio para buscar por id paciente nacional  | v0.2.0  |
+| ws.federar.url.federate |   | /masterfile-federacion-service/fhir/Patient | Único |  URL relativa del servicio para federar un paciente  | v0.2.0  |
 | ws.snowstorm.params.preferredOrAcceptableIn |   | 450828004 | No obligatorio |  Parametros para consulta a servicio Conceptos que indica que la descripción debe ser preferida o aceptable en al menos uno de estos parametros  | v1.2.0  |
 | ws.snowstorm.params.limit |   | 30 | No obligatorio |  Parametro para consulta a servicio Conceptos que indica limite de resultados  | v1.2.0  |
 | ws.snowstorm.params.termActive |   | true | No obligatorio |  Parametro para consulta a servicio Conceptos que indica si el termino a buscar debe estar activo  | v1.2.0  |

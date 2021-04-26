@@ -31,7 +31,7 @@ public class FederarWSConfig extends WSConfig {
 	private static final String TOKEN_VALID="validateToken";
 	private static final String SEARCH_LOCAL_ID ="localIdSearch";
 
-	private static final long DEFAULT_TOKEN_EXPIRATION = 180l;
+	private static final long DEFAULT_TOKEN_EXPIRATION = 180L;
 	private static final String FEDERATE ="federate";
 	
     private Map<String, String> url;
@@ -41,7 +41,7 @@ public class FederarWSConfig extends WSConfig {
 	private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
 	
-	public FederarWSConfig(@Value("${ws.federar.url.base:https://testapp.hospitalitaliano.org.ar}") String baseUrl) {
+	public FederarWSConfig(@Value("${ws.federar.url.base}") String baseUrl) {
 		super(baseUrl);
 		url = new HashMap<>();
 	}

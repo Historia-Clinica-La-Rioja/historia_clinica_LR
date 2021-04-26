@@ -70,7 +70,6 @@ La tabla siguiente expone el conjunto de variables que deben configurarse de man
 | renaper_clave | Clave para login en servicio Renaper | No funciona servicio Renaper | 
 | federar_issuer | URI del dominio (registrada previamente ante la DNGISS)  | No funciona servicio Federar. Sin acceso a la Red Nacional de interoperabilidad |
 | federar_subject | Nombre del dominio | No funciona servicio Federar. Sin acceso a la Red Nacional de interoperabilidad |
-| federar_audience | URL de autenticación del Federador | No funciona servicio Federar |
 | federar_sign_key | Palabra secreta, única y cifrada la cual será asignada por la DNGISS para autenticación | No funciona servicio Federar |
  
 **Variables sugeridas a ser modificadas**: 

@@ -20,7 +20,7 @@ public class BusAuthenticationService extends RestTemplate {
 
     private final FederarConfig configuration;
 
-    @Value("${ws.federar.url.login:/bus-auth/auth}")
+    @Value("${ws.federar.url.login}")
     private String relativeUrl;
 
     public BusAuthenticationService(FederarConfig configuration){

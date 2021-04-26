@@ -19,7 +19,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 	private FederarWSConfig federarWSConfig;
 
 	public FederarAuthService(
-			@Value("${ws.federar.url.login:/bus-auth/auth}") String relUrl,
+			@Value("${ws.federar.url.login}") String relUrl,
 			FederarWSConfig wsConfig) throws Exception {
 		super(relUrl, new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
 		federarWSConfig = wsConfig;
