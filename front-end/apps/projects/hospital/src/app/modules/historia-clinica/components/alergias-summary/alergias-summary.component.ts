@@ -65,11 +65,11 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 	}
 
 	getCriticalityDisplayName(criticalityId): string {
-		return criticalityId ? this.criticalityMasterData.find(c => c.id === criticalityId).display : '';
+		return (criticalityId && this.criticalityMasterData) ? this.criticalityMasterData.find(c => c.id === criticalityId).display : '';
 	}
 
 	getCategoryDisplayName(categoryId): string {
-		return categoryId ? this.categoryMasterData.find(c => c.id === categoryId).display : '';
+		return (categoryId && this.categoryMasterData) ? this.categoryMasterData.find(c => c.id === categoryId).display : '';
 	}
 
 	ngOnChanges(): void {
