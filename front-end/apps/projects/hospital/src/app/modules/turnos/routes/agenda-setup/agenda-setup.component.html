@@ -83,6 +83,7 @@
 							       [min]="form.value.startDate" (dateChange)="setAllWeeklyDoctorsOfficeOcupation()">
 							<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
 							<mat-datepicker #endPicker></mat-datepicker>
+							<mat-error [translate]="'forms.INVALID_DATE'"></mat-error>
 						</mat-form-field>
 					</div>
 				</div>

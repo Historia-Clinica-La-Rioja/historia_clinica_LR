@@ -236,6 +236,9 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setAllWeeklyDoctorsOfficeOcupation(): void {
+		if (!this.form.valid) {
+			return;
+		}
 		const formValue = this.form.getRawValue();
 		if (!formValue.doctorOffice || !formValue.startDate || !formValue.endDate) {
 			return;
