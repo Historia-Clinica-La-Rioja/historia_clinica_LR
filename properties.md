@@ -101,12 +101,12 @@ Para la configuracion de ReCaptcha seguir los siguientes pasos:
 
 ## Integración con terceros (Renaper, Federar, Snowstorm ... )
 
-| Propiedad               | Parametro       | Valor por defecto       | Necesidad | Descripcion | Desde |
+| Propiedad               | Parametro       | Valor por defecto       | Condición | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | ws.renaper.enabled   | | false | Obligatorio | Determina si se utiliza la integracion con Renaper (se necesita completar la configuracion) | v0.2.0  |
 | ws.renaper.url.base |   |  https://federador.msal.gob.ar/masterfile-federacion-service/api | Obligatorio (si Renaper esta activado)  | URL base donde se van a consumir los servicios Renaper  | v0.2.0  |
-| ws.renaper.url.cobertura |   | /personas/cobertura | Obligatorio (si Renaper esta activado) | URL relativa para consumir el servicio de Cobertura Medica | v0.2.0 |
-| ws.renaper.url.persona |   | /personas/renaper | Obligatorio (si Renaper esta activado) | URL relativa para consumir el servicio de Datos de Persona | v0.2.0 |
+| ws.renaper.url.cobertura |   | /personas/cobertura | Único | URL relativa para consumir el servicio de Cobertura Medica | v0.2.0 |
+| ws.renaper.url.persona |   | /personas/renaper | Único | URL relativa para consumir el servicio de Datos de Persona | v0.2.0 |
 | ws.renaper.nombre |  | - | Obligatorio (si Renaper esta activado)  | Nombre que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
 | ws.renaper.clave |  | - | Obligatorio (si Renaper esta activado)  | Clave que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
 | ws.renaper.dominio |  | DOMINIOSINAUTORIZACIONDEALTA | Único  | Código de dominio | v0.2.0  |
