@@ -23,6 +23,8 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
 
     private String problemId;
 
+    private String severity;
+
     private LocalDate startDate;
 
     private LocalDate inactivationDate;
@@ -32,11 +34,12 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
     private Integer patientId;
 
     public HCEHealthConditionVo(Integer id, Snomed snomed, String statusId, boolean main, String verificationId,
-                                String problemId, LocalDate startDate, LocalDate inactivationDate, Integer patientId) {
+                                String problemId, String severity, LocalDate startDate, LocalDate inactivationDate, Integer patientId) {
         super(id, snomed, statusId);
         this.main = main;
         this.verificationId = verificationId;
         this.problemId = problemId;
+        this.severity = severity;
         this.startDate = startDate;
         this.inactivationDate = inactivationDate;
         this.patientId = patientId;

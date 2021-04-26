@@ -18,5 +18,8 @@ public class ProblemBo extends HealthConditionBo {
 
     private LocalDate endDate;
 
+    @NotNull(message = "{value.mandatory}")
+    private String severity;
+
     private boolean chronic = false;
 }

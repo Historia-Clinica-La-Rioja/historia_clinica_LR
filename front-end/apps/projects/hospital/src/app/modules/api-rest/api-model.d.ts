@@ -728,6 +728,7 @@ export interface HCEMedicationDto extends ClinicalTermDto {
 
 export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
     inactivationDate: string;
+    severity: string;
     startDate: string;
 }
 
@@ -764,6 +765,7 @@ export interface HealthConditionNewConsultationDto extends Serializable {
     patientId: number;
     problemId: string;
     sctidCode: string;
+    severity: string;
     snomed: SnomedDto;
     startDate: Date;
     statusId: string;
@@ -1121,6 +1123,7 @@ export interface OutpatientMedicationDto {
 export interface OutpatientProblemDto {
     chronic: boolean;
     endDate?: string;
+    severity: string;
     snomed: SnomedDto;
     startDate: string;
     statusId?: string;

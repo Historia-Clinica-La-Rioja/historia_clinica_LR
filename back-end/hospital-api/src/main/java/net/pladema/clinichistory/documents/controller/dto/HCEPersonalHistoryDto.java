@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,4 +20,7 @@ public class HCEPersonalHistoryDto extends HCEClinicalTermDto {
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String inactivationDate;
+
+    @NotNull(message = "{value.mandatory}")
+    private String severity;
 }

@@ -26,6 +26,7 @@ public class OutpatientAllergyConditionDto {
 
     private String categoryId;
 
+    @NotNull(message = "{value.mandatory}")
     private Short criticalityId;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)

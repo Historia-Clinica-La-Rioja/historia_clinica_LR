@@ -280,6 +280,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
             healthCondition.setInactivationDate(info.getEndDate());
             healthCondition.setStatusId(ConditionClinicalStatus.SOLVED);
         }
+        healthCondition.setSeverity(info.getSeverity());
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }

@@ -22,6 +22,8 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
 
     private String problemId;
 
+    private String severity;
+
     private LocalDate startDate;
 
     private LocalDate inactivationDate;
@@ -33,6 +35,7 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
         this.verificationId = source.getVerificationId();
         this.verification = source.getVerification();
         this.problemId = source.getProblemId();
+        this.severity = source.getSeverity();
         this.startDate = source.getStartDate();
         this.main = source.isMain();
     }
