@@ -23,6 +23,9 @@
 											{{problem.startDate }}
 										</span>
 									</div>
+									<div>
+										{{getSeverityTypeDisplayByCode(problem.severity)}}
+									</div>
 									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
 										<mat-icon>more_vert</mat-icon>
 									</button>
@@ -54,7 +57,9 @@
 										{{problem.startDate }}
 									</span>
 									</div>
-
+									<div>
+										{{getSeverityTypeDisplayByCode(problem.severity)}}
+									</div>
 									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
 										<mat-icon>more_vert</mat-icon>
 									</button>
@@ -89,6 +94,9 @@
 										<span mat-line class="mat-body">
 										{{problem.startDate }}
 									</span>
+									</div>
+									<div>
+										{{getSeverityTypeDisplayByCode(problem.severity)}}
 									</div>
 								</mat-list-item>
 								<mat-divider></mat-divider>

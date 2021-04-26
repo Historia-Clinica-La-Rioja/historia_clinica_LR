@@ -20,6 +20,7 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -57,6 +58,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private patientId: number;
 	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
+	private severityTypeMasterData: any[];
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -67,6 +69,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		public dialog: MatDialog,
 		private contextService: ContextService,
 		private dockPopupService: DockPopupService,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -83,6 +86,16 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.loadHospitalizationProblems();
 		this.loadSolvedProblems();
 		this.loadHistoricalProblems();
+
+		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+			this.severityTypeMasterData = healthConditionSeverities;
+		});
+	}
+
+	getSeverityTypeDisplayByCode(severityCode): string {
+		return (severityCode && this.severityTypeMasterData) ?
+			this.severityTypeMasterData.find(severityType => severityType.code === severityCode).display
+			: '';
 	}
 
 	setActiveProblems$() {

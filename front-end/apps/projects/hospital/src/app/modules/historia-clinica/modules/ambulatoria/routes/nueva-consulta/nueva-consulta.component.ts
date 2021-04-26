@@ -249,6 +249,7 @@ export class NuevaConsultaComponent implements OnInit {
 			problems: this.problemasService.getProblemas().map(
 				(problema: Problema) => {
 					return {
+						severity: problema.codigoSeveridad,
 						chronic: problema.cronico,
 						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,

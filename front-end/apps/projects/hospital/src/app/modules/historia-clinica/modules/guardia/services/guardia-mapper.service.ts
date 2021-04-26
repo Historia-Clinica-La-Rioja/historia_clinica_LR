@@ -151,6 +151,7 @@ export class GuardiaMapperService {
 			problems: s.problems.map(
 				(problema: Problema) => {
 					return {
+						severity: problema.codigoSeveridad,
 						chronic: problema.cronico,
 						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,
