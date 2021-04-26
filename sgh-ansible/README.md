@@ -71,6 +71,8 @@ La tabla siguiente expone el conjunto de variables que deben configurarse de man
 | federar_issuer | URI del dominio (registrada previamente ante la DNGISS)  | No funciona servicio Federar. Sin acceso a la Red Nacional de interoperabilidad |
 | federar_subject | Nombre del dominio | No funciona servicio Federar. Sin acceso a la Red Nacional de interoperabilidad |
 | federar_sign_key | Palabra secreta, única y cifrada la cual será asignada por la DNGISS para autenticación | No funciona servicio Federar |
+| snowstorm_id | Identificador para autenticación | No funciona servicio snowstorm para búsqueda de conceptos Snomed |
+| snowstorm_key | Clave para autenticación | No funciona servicio snowstorm para búsqueda de conceptos Snomed |
  
 **Variables sugeridas a ser modificadas**: 
 

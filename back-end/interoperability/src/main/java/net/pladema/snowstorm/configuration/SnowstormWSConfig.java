@@ -17,7 +17,7 @@ public class SnowstormWSConfig extends WSConfig {
 
     private static final String CONCEPTS = "concepts";
 
-    private static final long DEFAULT_TOKEN_EXPIRATION = -1l;
+    private static final long DEFAULT_TOKEN_EXPIRATION = -1L;
 
     public static final String CIE10_REFERENCE_SET_ID = "447562003";
 
@@ -52,7 +52,7 @@ public class SnowstormWSConfig extends WSConfig {
 
     private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
-    public SnowstormWSConfig(@Value("${ws.snowstorm.url.base:https://snowstorm-test.msal.gob.ar/}") String baseUrl) {
+    public SnowstormWSConfig(@Value("${ws.snowstorm.url.base}") String baseUrl) {
         super(baseUrl);
     }
 

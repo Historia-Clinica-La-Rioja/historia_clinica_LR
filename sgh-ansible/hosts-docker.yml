@@ -38,3 +38,5 @@ all:
         federar_issuer:
         federar_subject:
         federar_sign_key:
+        snowstorm_id: 
+        snowstorm_key:

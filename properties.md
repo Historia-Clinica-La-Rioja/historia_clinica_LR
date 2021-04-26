@@ -129,7 +129,7 @@ Para la configuracion de ReCaptcha seguir los siguientes pasos:
 | ws.snowstorm.params.termActive |   | true | No obligatorio |  Parametro para consulta a servicio Conceptos que indica si el termino a buscar debe estar activo  | v1.2.0  |
 | ws.snowstorm.auth.language |   | es-AR;q=0.8,en-GB;q=0.6 | No obligatorio |  Header que indica el lenguaje de los resultados  | v1.2.0  |
 | ws.snowstorm.url.concepts |   | /MAIN/concepts | No obligatorio |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
-| ws.snowstorm.url.base |   | https://snowstorm.msal.gov.ar | No obligatorio |  URL base donde se van a consumir los servicios de Snowstorm  | v1.2.0  |
+| ws.snowstorm.url.base |   | https://snowstorm-test.msal.gob.ar (test) y https://snowstorm.msal.gov.ar (prod) | No obligatorio |  URL base donde se van a consumir los servicios de Snowstorm  | v1.2.0  |
 | ws.snowstorm.appKey |   | - | Obligatorio(si Snowstorm lo requiere) |  Key de la aplicación utilizada para autorización de request  | v1.2.0  |
 | ws.snowstorm.appId |   | - | Obligatorio(si Snowstorm lo requiere) |  Id de la aplicación utilizada para autorización de request  | v1.2.0  |
 
