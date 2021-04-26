@@ -92,8 +92,9 @@ export class SolveProblemComponent implements OnInit {
 					this.problema.inactivationDate = this.form.value.fechaFin.toDate();
 					this.problema.statusId = HEALTH_CLINICAL_STATUS.RESUELTO;
 					this.problema.id = this.problemId;
-					this.problema.severity = this.form.value.severidad;
-
+					if (this.form.value.severidad) {
+						this.problema.severity = this.form.value.severidad;
+					}
 
 					this.outpatientConsultationService.solveProblem(this.problema, this.patientId).subscribe(
 						_ => {
