@@ -35,6 +35,7 @@ public class FederarServiceImpl extends RestClient implements FederarService {
 
 	@Override
 	public Optional<Integer> federatePatient(FederarResourceAttributes attributes, Integer patientId) {
+		attributes.setId(patientId);
 		FederarResourcePayload requestBody = new FederarResourcePayload(attributes);
 		requestBody.setIdentifier(federarWSConfig.getDomain(), attributes);
 		ResponseEntity<FederarErrorResponse> response = callFederateWS(requestBody);

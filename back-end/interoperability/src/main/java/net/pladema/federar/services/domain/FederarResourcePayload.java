@@ -42,6 +42,7 @@ public class FederarResourcePayload {
 	private LocalDate birthDate;
 
 	public FederarResourcePayload(FederarResourceAttributes attributes){
+		setId(attributes.getPatientId());
 		setGender(attributes.getGenderId());
 		setName(attributes.getFirstName(), attributes.getMiddleNames(), attributes.getLastName(), attributes.getOtherLastNames());
 		setBirthDate(attributes.getBirthDate());
@@ -49,6 +50,10 @@ public class FederarResourcePayload {
 
 	private void setGender(Short genderId){
 		this.gender = genderId == (short)1 ? FEMALE : MALE;
+	}
+
+	private void setGender(String gender){
+		this.gender = gender;
 	}
 
 	private void setName(String firstname, String middlenames, String lastname, String otherlastnames){

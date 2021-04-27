@@ -23,7 +23,6 @@ public class FederarExternalServiceImpl implements FederarExternalService {
     }
 
     @Override
-    @Async
     public Optional<Integer> federatePatient(FederarResourceAttributes attributes, Integer localId){
         LOG.debug("Going to federate Patient => {} /n with data => {}", localId, attributes);
         return federarService.federatePatient(attributes, localId);
