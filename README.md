@@ -2,18 +2,6 @@
 
 # HospitalApp
 
-## Instalación
-
-Para instalar y hacer uso del sistema de gestión de hospitales se debe tener en cuenta el [flujo de git](https://docs.gitlab.com/ee/topics/gitlab_flow.html) utilizado para este proyecto:
-
-* master: es la rama por defecto del repositorio y contiene la versión más actualizada en **estado de desarrollo**. A dicha rama les falta aplicar un proceso de regresión para detectar posibles errores.
-* tg-###: son las ramas alternativas usadas por el equipo de desarrollo para llevar las funcionalidades que se estan implementando.
-* rc-##.##: es la rama que contiene un estado de código confirmado para su uso y estable (release candidate). Se genera en cada sprint y es donde se realiza el proceso de regresión para detección y corrección de errores.
-
-
-Habiendo aclarado esto, para poder hacer uso del sistema estable, es necesario generar los artefactos a deployar desde las ramas de release candidate. Esta rama tiene el control de calidad necesario para su uso.
-
-
 ## Contribución
 
 Para el envío de propuestas, consultas técnicas o especificación funcional y responsable de la aprobación de las mismas, escribir al siguiente mail de contacto: historia_clinica@pladema.exa.unicen.edu.ar. 
