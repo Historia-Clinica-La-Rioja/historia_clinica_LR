@@ -73,7 +73,9 @@ export class ProblemasService {
 	}
 
 	private getDisplayName(codigoSeveridad) {
-		return this.severityTypes.find(severityType => severityType.code === codigoSeveridad)?.display;
+		return (codigoSeveridad && this.severityTypes) ?
+			this.severityTypes.find(severityType => severityType.code === codigoSeveridad)?.display
+			: '';
 	}
 
 	setSeverityTypes(severityTypes): void {
@@ -188,6 +190,7 @@ export class ProblemasService {
 		if (this.form.valid) {
 			this.getProblemas()[0].snomed.pt = this.form.controls.snomed.value;
 			this.getProblemas()[0].cronico = this.form.controls.cronico.value;
+			this.getProblemas()[0].codigoSeveridad = this.form.controls.severidad.value;
 			this.getProblemas()[0].fechaInicio = this.form.controls.fechaInicio.value;
 			this.getProblemas()[0].fechaFin = this.form.controls.fechaFin.value;
 			this.resetForm();

@@ -258,7 +258,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	private buildProblema(p: HealthConditionNewConsultationDto) {
 		const problema: Problema = {
 			snomed: p.snomed,
-			codigoSeveridad: '',
+			codigoSeveridad: p.severity,
 			cronico: p.isChronic,
 			fechaInicio: dateToMomentTimeZone(p.startDate),
 			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
