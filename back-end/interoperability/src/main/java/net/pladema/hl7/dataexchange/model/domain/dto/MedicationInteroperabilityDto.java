@@ -27,13 +27,15 @@ public class MedicationInteroperabilityDto {
         this.statementId = medicationVo.getStatementId();
 
         DosageVo dosage = medicationVo.getDosage();
-        this.routeCode = dosage.getRouteCode();
-        this.routeTerm = dosage.getRouteTerm();
+        if(dosage != null) {
+            this.routeCode = dosage.getRouteCode();
+            this.routeTerm = dosage.getRouteTerm();
+            this.unitTime = dosage.getPeriodUnit();
+            this.doseQuantityCode = dosage.getDoseQuantityCode();
+            this.doseQuantityValue = BigDecimal.valueOf(dosage.getDoseQuantityValue());
+            this.doseQuantityUnit = dosage.getDoseQuantityUnit();
+        }
         this.status = medicationVo.getStatus();
-        this.unitTime = dosage.getPeriodUnit();
-        this.doseQuantityCode = dosage.getDoseQuantityCode();
-        this.doseQuantityValue = BigDecimal.valueOf(dosage.getDoseQuantityValue());
-        this.doseQuantityUnit = dosage.getDoseQuantityUnit();
         this.effectiveTime = medicationVo.getEffectiveTime();
 
     }
