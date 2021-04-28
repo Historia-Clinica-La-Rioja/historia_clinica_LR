@@ -18,6 +18,43 @@ Se recomienda desplegar la aplicación bajo la siguiente infraestrutura:
 * Un cluster para PostgreSQL
 * Un nodo NFS para el almacenamiento y acceso compartido de documentos clínicos y fotos de pacientes. 
 
+### Verificar integraciones con servicios externos
+
+* Autenticación servicio Renaper
+
+```shell
+curl -X POST 'https://federador.msal.gob.ar/masterfile-federacion-service/api/usuarios/aplicacion/login' -d '{"nombre":"NOMBRE", "clave":"CLAVE", "codDominio":"DOMINIOSINAUTORIZACIONDEALTA"}' -H "Content-Type: application/json"
+```
+
+Reemplazar los valores **NOMBRE** y **CLAVE** por los proporcionados por el Ministerio de Salud.
+
+
+* Autenticación servicio Federar 
+
+Para verificar la correcta creación de un JWT (*Json Web Token*) ingresar a la [plataforma](http://jwtbuilder.jamiekurtz.com/) y completar el **claim** teniendo en cuenta la descripción de cada atributo:
+
+```json
+{
+	"iss": "URI del dominio registrada ante la DNGISS",
+	"iat": "Fecha de generación del Token", 
+	"exp": "Fecha de expiración del Token",
+	"aud": "https://federador.msal.gob.ar/bus-auth/auth",
+	"sub": "Nombre del dominio, por ej. Ministerio de Salud de la Nación",
+	"name": "Apellido y Nombres del Usuario que accede",
+	"role": "Especialidad del usuario",
+	"ident": "Un identificador para el usuario"
+}
+```
+
+Completar el valor **KEY** con el proporcionado por el ministerio de Salud.
+
+Una vez generado el **JWT**, utilizarlo en el siguiente comando — *reemplazando la palabra TOKEN* — para validar la autenticación en el servicio — *obtensión del accessToken* —.
+
+```shell
+curl -X POST 'https://federador.msal.gob.ar/bus-auth/auth' -d '{"grantType": "client_credentials","scope": "Patient/*.read,Patient/*.write", "clientAssertionType": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "clientAssertion":"TOKEN"}' -H "Content-Type: application/json"
+```
+
+
 ## Contribución
 
 Para el envío de propuestas, consultas técnicas o especificación funcional y responsable de la aprobación de las mismas, escribir al siguiente mail de contacto: historia_clinica@pladema.exa.unicen.edu.ar. 
