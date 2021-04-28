@@ -120,7 +120,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		return problemas.map((problema: HCEPersonalHistoryDto) => {
 			return {
 				...problema,
-				startDate: momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE)
+				startDate: momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE),
+				inactivationDate: momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE)
 			};
 		});
 	}

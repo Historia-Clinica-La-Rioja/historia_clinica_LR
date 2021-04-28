@@ -13,30 +13,41 @@
 				<div fxFlex="50%">
 					<app-summary-card id="active_problems" [header]="activos" [editable]="false">
 						<mat-list id="lista-problemas-activos" *ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
+							<div fxLayout="row">
+								<mat-list-item class="problems-table-header">
+									<div fxFlex="50%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.TYPE'"></span></div>
+									<div fxFlex="25%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.SEVERITY'"></span></div>
+									<div fxFlex="25%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.START_DATE'"></span></div>
+								</mat-list-item>
+							</div>
 							<div fxLayout="row" *ngFor="let problem of (activeProblems$ | async)">
-								<mat-list-item>
-									<div (click)="filterByProblemOnProblemClick(problem)" fxFlex="100%">
+								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+									<div fxFlex="50%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
 										</span>
-										<span mat-line class="mat-body">
-											{{problem.startDate }}
-										</span>
 									</div>
-									<div>
+									<div fxFlex="25%">
 										{{getSeverityTypeDisplayByCode(problem.severity)}}
 									</div>
-									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
-										<mat-icon>more_vert</mat-icon>
-									</button>
-									<mat-menu #menu="matMenu">
-										<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item (click)="openNuevaConsulta(problem)">
-											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+
+									<div class="mat-body" fxFlex="20%">
+											{{problem.startDate}}
+									</div>
+
+									<div fxFlex="5%">
+										<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+											<mat-icon>more_vert</mat-icon>
 										</button>
-										<button mat-menu-item (click)="solveProblemPopUp(problem)">
-											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-										</button>
-									</mat-menu>
+										<mat-menu #menu="matMenu">
+											<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item (click)="openNuevaConsulta(problem)">
+												<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+											</button>
+											<button mat-menu-item (click)="solveProblemPopUp(problem)">
+												<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+											</button>
+										</mat-menu>
+									</div>
 
 								</mat-list-item>
 								<mat-divider></mat-divider>
@@ -47,32 +58,42 @@
 				<div fxFlex="50%">
 					<app-summary-card id="chronic_problems" [header]="cronicos" [editable]="false">
 						<mat-list id="lista-problemas-cronicos" *ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
+							<div fxLayout="row">
+								<mat-list-item class="problems-table-header">
+									<div fxFlex="50%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.TYPE'"></span></div>
+									<div fxFlex="25%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.SEVERITY'"></span></div>
+									<div fxFlex="25%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.START_DATE'"></span></div>
+								</mat-list-item>
+							</div>
 							<div fxLayout="row" *ngFor="let problem of (chronicProblems$ | async)">
-								<mat-list-item>
-									<div (click)="filterByProblemOnProblemClick(problem)" fxFlex="100%">
-									<span mat-line class="capitalize-first-letter">
-										{{ problem.snomed.pt}}
-									</span>
-										<span mat-line class="mat-body">
-										{{problem.startDate }}
-									</span>
+								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+									<div fxFlex="50%">
+										<span mat-line class="capitalize-first-letter">
+											{{ problem.snomed.pt}}
+										</span>
 									</div>
-									<div>
+									<div fxFlex="25%">
 										{{getSeverityTypeDisplayByCode(problem.severity)}}
 									</div>
-									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
-										<mat-icon>more_vert</mat-icon>
-									</button>
-									<mat-menu #menu="matMenu">
-										<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
-												(click)="openNuevaConsulta(problem)">
-											<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
-										</button>
-										<button mat-menu-item (click)="solveProblemPopUp(problem)">
-											<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-										</button>
-									</mat-menu>
 
+									<div class="mat-body" fxFlex="20%">
+										{{problem.startDate}}
+									</div>
+
+									<div fxFlex="5%">
+										<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+											<mat-icon>more_vert</mat-icon>
+										</button>
+										<mat-menu #menu="matMenu">
+											<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
+													(click)="openNuevaConsulta(problem)">
+												<span [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+											</button>
+											<button mat-menu-item (click)="solveProblemPopUp(problem)">
+												<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+											</button>
+										</mat-menu>
+									</div>
 								</mat-list-item>
 								<mat-divider></mat-divider>
 							</div>
@@ -85,19 +106,34 @@
 				<div fxFlex="50%">
 					<app-summary-card id="solved_problems" [header]="resueltos" [editable]="false">
 						<mat-list id="lista-problemas-resueltos" *ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
+							<div class="" fxLayout="row">
+								<mat-list-item class="problems-table-header">
+									<div fxFlex="50%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.TYPE'"></span></div>
+									<div fxFlex="20%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.SEVERITY'"></span></div>
+									<div fxFlex="18%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.START_DATE'"></span></div>
+									<div fxFlex="18%"><span class="problems-table-header-text" [translate]="'ambulatoria.paciente.problemas.table-columns.END_DATE'"></span></div>
+								</mat-list-item>
+							</div>
+
 							<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
-								<mat-list-item>
-									<div (click)="filterByProblemOnProblemClick(problem)" fxFlex="100%">
-									<span mat-line class="capitalize-first-letter">
-										{{ problem.snomed.pt}}
-									</span>
-										<span mat-line class="mat-body">
-										{{problem.startDate }}
-									</span>
+								<mat-list-item class="solved-problems-row" (click)="filterByProblemOnProblemClick(problem)">
+									<div fxFlex="50%">
+										<span mat-line class="capitalize-first-letter">
+											{{ problem.snomed.pt }}
+										</span>
 									</div>
-									<div>
+									<div fxFlex="20%">
 										{{getSeverityTypeDisplayByCode(problem.severity)}}
 									</div>
+
+									<div class="mat-body" fxFlex="18%">
+										{{problem.startDate}}
+									</div>
+
+									<div class="mat-body" fxFlex="18%">
+										{{problem.inactivationDate}}
+									</div>
+
 								</mat-list-item>
 								<mat-divider></mat-divider>
 							</div>

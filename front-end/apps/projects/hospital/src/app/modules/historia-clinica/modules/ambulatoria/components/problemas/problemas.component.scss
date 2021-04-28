@@ -57,3 +57,18 @@ h3 {
     margin: 0px;
 }
 
+.problems-table-header-text {
+	color: rgba(0, 0, 0, 0.54);
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.problems-table-header {
+	pointer-events:none;
+}
+
+.solved-problems-row {
+	padding-bottom: 15px;
+	padding-top: 15px;
+}
+
