@@ -24,7 +24,7 @@ export class LoggedUserService {
 	}
 
 	public reset() {
-		this.assignmentsSource.next([]);
+		this._assignments$ = undefined;
 	}
 
 	public load(): Observable<any> {
