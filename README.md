@@ -54,6 +54,13 @@ Una vez generado el **JWT**, utilizarlo en el siguiente comando — *reemplazand
 curl -X POST 'https://federador.msal.gob.ar/bus-auth/auth' -d '{"grantType": "client_credentials","scope": "Patient/*.read,Patient/*.write", "clientAssertionType": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "clientAssertion":"TOKEN"}' -H "Content-Type: application/json"
 ```
 
+* Autenticación servicio Snowstorm
+
+```shell
+curl -X GET 'https://snowstorm.msal.gob.ar/MAIN/concepts?activeFilter=true&term=meningococo&limit=10&offset=0&ecl=%5E2281000221106' -H "Accept-Language: es" -H "app_id: APP_ID" -H "app_key: APP_KEY"
+```
+
+Reemplazar los valores **APP_ID** y **APP_KEY** por los proporcionados por el Ministerio de Salud.
 
 ## Contribución
 
