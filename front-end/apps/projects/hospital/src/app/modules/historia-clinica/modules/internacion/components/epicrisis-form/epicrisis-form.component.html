@@ -72,7 +72,7 @@
 							<mat-checkbox (click)="$event.stopPropagation()"
 										  (change)="$event ? diagnosticsEpicrisisService?.toggle(row) : null"
 										  [checked]="diagnosticsEpicrisisService?.isSelected(row)"
-										  [disabled]="row.snomed.id === form.value.mainDiagnosis?.snomed.id">
+										  [disabled]="row.snomed.sctid === form.value.mainDiagnosis?.snomed.sctid">
 							</mat-checkbox>
 						</td>
 					</ng-container>
