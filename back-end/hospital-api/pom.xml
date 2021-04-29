@@ -21,21 +21,13 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<lombok.version>1.18.10</lombok.version>
-		<start-class>net.pladema.App</start-class>
-
-		<swagger.input>${project.build.directory}/generated-sources/swagger.json</swagger.input>
-		<asciidoctor.input.directory>${project.basedir}/src/docs/asciidoc</asciidoctor.input.directory>
-		<generated.asciidoc.directory>${project.build.directory}/asciidoc</generated.asciidoc.directory>
-		<asciidoctor.html.output.directory>${project.build.directory}/asciidoc/html</asciidoctor.html.output.directory>
-		<asciidoctor.pdf.output.directory>${project.build.directory}/asciidoc/pdf</asciidoctor.pdf.output.directory>
-
 	</properties>
 
 	<dependencies>
-		<!-- application dependencies -->
+
 		<dependency>
-			<groupId>net.pladema</groupId>
-			<artifactId>interoperability</artifactId>
+			<groupId>ar.lamansys.sgh</groupId>
+			<artifactId>hospital-shared</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
@@ -46,14 +38,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.pladema</groupId>
-			<artifactId>odontology</artifactId>
+			<groupId>ar.lamansys</groupId>
+			<artifactId>extensions</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.pladema</groupId>
-			<artifactId>extensions</artifactId>
+			<artifactId>interoperability</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
@@ -186,132 +178,8 @@
 			<version>2.6.1.Final</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
-	<profiles>
-		<profile>
-			<id>war</id>
-			<properties>
-				<packaging.type>war</packaging.type>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>javax.servlet</groupId>
-					<artifactId>javax.servlet-api</artifactId>
-					<version>3.1.0</version>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>3.2.3</version>
-						<configuration>
-							<archive>
-								<manifest>
-									<mainClass>${start-class}</mainClass>
-									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-								</manifest>
-							</archive>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>generateDocs</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>io.github.swagger2markup</groupId>
-						<artifactId>swagger2markup-maven-plugin</artifactId>
-						<version>1.3.7</version>
-						<configuration>
-							<swaggerInput>${swagger.input}</swaggerInput>
-							<outputDir>${generated.asciidoc.directory}</outputDir>
-							<config>
-								<swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-							</config>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>test</phase>
-								<goals>
-									<goal>convertSwagger2markup</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.asciidoctor</groupId>
-						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<version>2.0.0-RC.1</version>
-						<dependencies>
-							<dependency>
-								<groupId>org.asciidoctor</groupId>
-								<artifactId>asciidoctorj-pdf</artifactId>
-								<version>1.5.0-alpha.18</version>
-							</dependency>
-						</dependencies>
-						<configuration>
-							<sourceDirectory>${asciidoctor.input.directory}</sourceDirectory>
-							<sourceDocumentName>api.adoc</sourceDocumentName>
-							<attributes>
-								<doctype>book</doctype>
-								<toc>left</toc>
-								<toclevels>3</toclevels>
-								<numbered></numbered>
-								<hardbreaks></hardbreaks>
-								<sectlinks></sectlinks>
-								<sectanchors></sectanchors>
-								<generated>${generated.asciidoc.directory}</generated>
-							</attributes>
-						</configuration>
-						<!-- Since each execution can only handle one backend, run separate 
-							executions for each desired output type -->
-						<executions>
-							<execution>
-								<id>output-pdf</id>
-								<phase>test</phase>
-								<goals>
-									<goal>process-asciidoc</goal>
-								</goals>
-								<configuration>
-									<backend>pdf</backend>
-									<outputDirectory>${asciidoctor.pdf.output.directory}</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-			<pluginRepositories>
-				<pluginRepository>
-					<id>jcenter-snapshots</id>
-					<name>jcenter</name>
-					<url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
-				</pluginRepository>
-				<pluginRepository>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-					<id>jcenter-releases</id>
-					<name>jcenter</name>
-					<url>http://jcenter.bintray.com</url>
-				</pluginRepository>
-			</pluginRepositories>
-		</profile>
-	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -344,106 +212,6 @@
 					</compilerArgs>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.1.9.RELEASE</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<mainClass>net.pladema.App</mainClass>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>cz.habarta.typescript-generator</groupId>
-				<artifactId>typescript-generator-maven-plugin</artifactId>
-				<version>2.18.565</version>
-				<executions>
-					<execution>
-						<id>generate</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<phase>process-classes</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<jsonLibrary>jackson2</jsonLibrary>
-					<noFileComment>true</noFileComment>
-					<sortDeclarations>true</sortDeclarations>
-					<loggingLevel>Info</loggingLevel>
-					<mapEnum>asEnum</mapEnum>
-					<classPatterns>
-						<pattern>net.pladema.**.controller.**Dto</pattern>
-						<pattern>net.pladema.**.masterdata.**Dto</pattern>
-						<pattern>net.pladema.hl7.**.dto.**Dto</pattern>
-						<pattern>ar.lamansys.**.dto.**Dto</pattern>
-					</classPatterns>
-					<outputKind>module</outputKind>
-					<outputFile>../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-model.d.ts</outputFile>
-					<optionalAnnotations>
-						<annotation>javax.annotation.Nullable</annotation>
-						<annotation>org.springframework.lang.Nullable</annotation>
-					</optionalAnnotations>
-				</configuration>
-			</plugin>
-			<!-- Plugin para obtener información de git y generar el archivo git.properties -->
-			<plugin>
-				<groupId>pl.project13.maven</groupId>
-				<artifactId>git-commit-id-plugin</artifactId>
-				<version>4.0.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>revision</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<verbose>true</verbose>
-					<dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
-					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
-				</configuration>
-			</plugin>
-
-			<!-- Plugin for creating a pom.properties file in the classpath -->
-			<plugin>
-				<groupId>com.internetitem</groupId>
-				<artifactId>write-properties-file-maven-plugin</artifactId>
-				<version>1.0.1</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>write-properties-file</goal>
-						</goals>
-						<configuration>
-							<filename>pom.properties</filename>
-							<properties>
-								<property>
-									<name>artifactId</name>
-									<value>${project.artifactId}</value>
-								</property>
-								<property>
-									<name>groupId</name>
-									<value>${project.groupId}</value>
-								</property>
-								<property>
-									<name>version</name>
-									<value>${revision}</value>
-								</property>
-							</properties>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 

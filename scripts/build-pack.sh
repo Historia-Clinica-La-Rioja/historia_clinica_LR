@@ -24,4 +24,4 @@ cd back-end
 mvn clean package
 cd -
 
-cp back-end/hospital-api/target/hospital*.jar hospital.jar
+cp back-end/app/target/app*.jar hospital.jar

@@ -23,7 +23,9 @@
 		<module>extensions</module>
         <module>odontology</module>
 		<module>hospital-api</module>
-    </modules>
+        <module>app</module>
+		<module>hospital-shared</module>
+	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

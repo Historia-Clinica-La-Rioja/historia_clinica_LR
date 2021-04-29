@@ -11,6 +11,7 @@ import net.pladema.user.repository.UserPasswordRepository;
 import net.pladema.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Profile("dev")
 public class SampleData {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SampleData.class);

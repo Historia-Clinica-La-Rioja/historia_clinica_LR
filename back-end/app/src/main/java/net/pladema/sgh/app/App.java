@@ -1,9 +1,8 @@
-package net.pladema;
+package net.pladema.sgh.app;
 
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -12,7 +11,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @ServletComponentScan
 @SpringBootApplication
-public class App  extends SpringBootServletInitializer {
+public class App extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

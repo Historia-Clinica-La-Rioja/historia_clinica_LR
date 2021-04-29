@@ -11,6 +11,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <groupId>ar.lamansys</groupId>
     <artifactId>odontology</artifactId>
     <description>SGX odontology</description>
     <packaging>${packaging.type}</packaging>
@@ -20,6 +21,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>ar.lamansys.sgh</groupId>
+            <artifactId>hospital-shared</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <dependency>
             <groupId>ar.lamansys</groupId>
@@ -38,7 +44,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

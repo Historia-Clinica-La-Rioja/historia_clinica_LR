@@ -13,6 +13,7 @@ import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserPassword;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Configuration
+@Profile("dev")
 @ConfigurationProperties(prefix = "app.data.sample")
 @PropertySource(value = "classpath:application-dev.properties")
 public class SampleProperties {
