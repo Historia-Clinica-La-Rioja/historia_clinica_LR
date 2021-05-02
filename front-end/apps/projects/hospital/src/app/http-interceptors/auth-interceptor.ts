@@ -12,6 +12,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '../modules/auth/services/authentication.service';
 import { environment } from '@environments/environment';
 import { canRefreshToken, addToken } from '@core/utils/auth.utils';
+import { retrieveRefreshToken, retrieveToken } from '@core/utils/jwt-storage';
 
 const PUBLIC_ENDPOINTS = [
 	'auth',
@@ -36,20 +37,19 @@ export class AuthInterceptor implements HttpInterceptor {
 			return next.handle(req.clone());
 		}
 
-		return next.handle(addToken(req, localStorage.getItem('token')))
+		return next.handle(addToken(req, retrieveToken()))
 			.pipe(
 				catchError((error: any) => {
-						if (isUnauthorized(error)) {
-							return this.refreshToken().pipe(
-								switchMap(token => {
-									return next.handle(addToken(req, token));
-								})
-							);
-						}
-						return throwError(error);
-					},
-				));
-
+					if (isUnauthorized(error)) {
+						return this.refreshToken().pipe(
+							switchMap(token => {
+								return next.handle(addToken(req, token));
+							})
+						);
+					}
+					return throwError(error);
+				},
+			));
 	}
 
 	private refreshToken(): Observable<string> {
@@ -67,11 +67,11 @@ export class AuthInterceptor implements HttpInterceptor {
 				this.refreshTokenSubject = undefined;
 			});
 		}
-		return this.refreshTokenSubject.asObservable();
+		return this.refreshTokenSubject?.asObservable() || EMPTY;
 	}
 
 	private callRefreshToken(): Observable<string>  {
-		const refreshToken: string = localStorage.getItem('refreshtoken');
+		const refreshToken: string = retrieveRefreshToken();
 		if (canRefreshToken(refreshToken)) {
 			return this.authenticationService.tokenRefresh(refreshToken);
 		}

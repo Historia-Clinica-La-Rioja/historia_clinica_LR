@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from '@api-rest/services/account.service';
-import { ReplaySubject, Observable, of } from 'rxjs';
+import { ReplaySubject, Observable, EMPTY } from 'rxjs';
 import { RoleAssignment, PermissionsDto } from '@api-rest/api-model';
 import { tap, catchError } from 'rxjs/operators';
 
@@ -30,12 +30,10 @@ export class LoggedUserService {
 	public load(): Observable<any> {
 		return this.accountService.getPermissions()
 			.pipe(
-				catchError(error => {
-					// console.log('auth/permissions load() error', error);
-					return of({roleAssignments: []});
+				catchError(() => {
+					return EMPTY;
 				}),
 				tap((permissionsDto: PermissionsDto) => {
-					// console.log('auth/permissions load() next', permissionsDto);
 					this.assignmentsSource.next(permissionsDto.roleAssignments);
 				}),
 			);
