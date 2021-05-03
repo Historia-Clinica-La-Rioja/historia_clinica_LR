@@ -74,3 +74,33 @@ databaseChangeLog:
                 INSERT INTO ethnicity(sctid, pt, active) VALUES ('77502007','atacameño', ${boolean.true});
                 INSERT INTO ethnicity(sctid, pt, active) VALUES ('75704009','toba', ${boolean.true});
                 INSERT INTO ethnicity(sctid, pt, active) VALUES ('75301003','mapuche', ${boolean.true});
+
+    - changeSet:
+        id: person_extended-addColumn-ethnicity_id
+        author: tmedina
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: ethnicity_id
+                type: int
+                constraints:
+                    nullable: true  
+            tableName: person_extended
+        - addForeignKeyConstraint:
+            baseColumnNames: ethnicity_id
+            baseTableName: person_extended
+            constraintName: FK_person_extended_ethnicity_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: ethnicity
+            validate: true
+
+    - changeSet:
+        id: person_extended-dropColumn-ethnic
+        author: tmedina
+        changes:
+        - dropColumn:
+            columnName: ethnic
+            tableName: person_extended
