@@ -630,6 +630,12 @@ export interface EpicrisisObservationsDto extends Serializable {
 export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 }
 
+export interface EthnicityDto extends Serializable {
+    id: number;
+    pt: string;
+    sctid: string;
+}
+
 export interface EvaluationNoteSummaryDto extends DocumentSummaryDto {
 }
 

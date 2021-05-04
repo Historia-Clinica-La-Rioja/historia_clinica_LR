@@ -43,8 +43,8 @@ public class PersonExtended implements Serializable {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "ethnic", length = 25)
-    private String ethnic;
+    @Column(name = "ethnicity_id")
+    private Integer ethnicityId;
 
     @Column(name = "religion", length = 25)
     private String religion;
