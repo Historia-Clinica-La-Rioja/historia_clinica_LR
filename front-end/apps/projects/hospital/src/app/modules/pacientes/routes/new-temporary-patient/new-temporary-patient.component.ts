@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, EthnicityDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -46,6 +46,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	private identityVerificationStatus;
 	private comments;
 	private readonly routePrefix;
+	public ethnicities: EthnicityDto[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -86,7 +87,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					mothersLastName: [],
 					phoneNumber: [],
 					email: [null, [Validators.email]],
-					ethnic: [],
+					ethnicityId: [],
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
@@ -125,6 +126,11 @@ export class NewTemporaryPatientComponent implements OnInit {
 				this.identificationTypeList = identificationTypes;
 			}
 		);
+
+		this.personMasterDataService.getEthnicities()
+			.subscribe(ethnicities => {
+				this.ethnicities = ethnicities;
+			});
 
 		this.addressMasterDataService.getAllCountries()
 			.subscribe(countries => {
@@ -168,7 +174,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
-			ethnic: this.form.controls.ethnic.value,
+			ethnicityId: this.form.controls.ethnicityId.value,
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,

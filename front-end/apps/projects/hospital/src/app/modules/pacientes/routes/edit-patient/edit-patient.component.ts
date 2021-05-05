@@ -3,7 +3,16 @@ import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms'
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, CompletePatientDto, BMPersonDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import {
+	APatientDto,
+	BMPatientDto,
+	GenderDto,
+	IdentificationTypeDto,
+	CompletePatientDto,
+	BMPersonDto,
+	PatientMedicalCoverageDto,
+	EthnicityDto
+} from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -51,6 +60,7 @@ export class EditPatientComponent implements OnInit {
 	public patientId: any;
 
 	private medicalCoverages: PatientMedicalCoverage[];
+	public ethnicities: EthnicityDto[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -101,7 +111,7 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('email', new FormControl(personInformationData.email, Validators.email));
 								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
 								this.form.setControl('religion', new FormControl(personInformationData.religion));
-								this.form.setControl('ethnic', new FormControl(personInformationData.ethnic));
+								this.form.setControl('ethnicityId', new FormControl(personInformationData.ethnicityId));
 								// address
 								this.form.setControl('addressCountryId', new FormControl(DEFAULT_COUNTRY_ID));
 								if (personInformationData.province !== undefined) {
@@ -141,6 +151,11 @@ export class EditPatientComponent implements OnInit {
 				this.identificationTypeList = identificationTypes;
 			});
 
+		this.personMasterDataService.getEthnicities()
+			.subscribe(ethnicities => {
+				this.ethnicities = ethnicities;
+			});
+
 		this.addressMasterDataService.getAllCountries()
 			.subscribe(countries => {
 				this.countries = countries;
@@ -166,7 +181,7 @@ export class EditPatientComponent implements OnInit {
 			mothersLastName: [],
 			phoneNumber: [],
 			email: [null, Validators.email],
-			ethnic: [],
+			ethnicityId: [],
 			religion: [],
 			nameSelfDetermination: [],
 			genderSelfDeterminationId: [],
@@ -225,7 +240,7 @@ export class EditPatientComponent implements OnInit {
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
-			ethnic: this.form.controls.ethnic.value,
+			ethnicityId: this.form.controls.ethnicityId.value,
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,

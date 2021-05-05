@@ -3,7 +3,15 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { APatientDto, BMPatientDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
+import {
+	APatientDto,
+	BMPatientDto,
+	EthnicityDto,
+	GenderDto,
+	IdentificationTypeDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto
+} from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -44,6 +52,7 @@ export class NewPatientComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 	patientMedicalCoveragesToAdd: PatientMedicalCoverage[];
 	public isSubmitButtonDisabled = false;
+	public ethnicities: EthnicityDto[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -80,7 +89,7 @@ export class NewPatientComponent implements OnInit {
 					mothersLastName: [],
 					phoneNumber: [],
 					email: [null, Validators.email],
-					ethnic: [],
+					ethnicityId: [],
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
@@ -117,6 +126,11 @@ export class NewPatientComponent implements OnInit {
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
 				this.identificationTypeList = identificationTypes;
+			});
+
+		this.personMasterDataService.getEthnicities()
+			.subscribe(ethnicities => {
+				this.ethnicities = ethnicities;
 			});
 
 		this.addressMasterDataService.getAllCountries()
@@ -192,7 +206,7 @@ export class NewPatientComponent implements OnInit {
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
-			ethnic: this.form.controls.ethnic.value,
+			ethnicityId: this.form.controls.ethnicityId.value,
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,

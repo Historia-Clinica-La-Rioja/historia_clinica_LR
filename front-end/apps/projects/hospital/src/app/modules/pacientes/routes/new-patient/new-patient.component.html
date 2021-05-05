@@ -390,18 +390,16 @@
 					>
 				</mat-form-field>
 			</div>
-
 			<div>
 				<div>
 					<span [translate]="'pacientes.form.ETHNIC'"></span>
 				</div>
 				<mat-form-field appearance="outline">
-					<input id="ethnic"
-							name="ethnic"
-							formControlName="ethnic"
-							maxlength="25"
-							placeholder="{{'pacientes.form.ETHNIC' | translate}}"
-							matInput>
+					<mat-select id="ethnicity-select" formControlName="ethnicityId" placeholder="{{'pacientes.form.ETHNIC' | translate}}">
+						<mat-option *ngFor="let ethnicity of ethnicities" [value]="ethnicity.id">
+							{{ethnicity.pt | titlecase}}
+						</mat-option>
+					</mat-select>
 				</mat-form-field>
 			</div>
 			<div *hasRole="['ADMINISTRATIVO']" class="form-buttons">
