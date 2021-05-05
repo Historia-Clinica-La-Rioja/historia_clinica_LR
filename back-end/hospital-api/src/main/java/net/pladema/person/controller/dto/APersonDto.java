@@ -49,7 +49,7 @@ public class APersonDto {
 
     private String email;
 
-    private String ethnic;
+    private Integer ethnicityId;
 
     private String religion;
 

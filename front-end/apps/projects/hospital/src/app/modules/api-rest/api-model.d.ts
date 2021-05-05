@@ -42,7 +42,7 @@ export interface APersonDto {
     cityId: number;
     cuil: string;
     email: string;
-    ethnic: string;
+    ethnicityId: number;
     firstName: string;
     floor: string;
     genderId: number;

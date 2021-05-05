@@ -75,6 +75,7 @@ public interface PersonMapper {
     @Mapping(target = "phoneNumber", source = "personExtended.phoneNumber")
     @Mapping(target = "email", source = "personExtended.email")
     @Mapping(target = "religion", source = "personExtended.religion")
+    @Mapping(target = "ethnicityId", source = "personExtended.ethnicityId")
     @Mapping(target = "nameSelfDetermination", source = "personExtended.nameSelfDetermination")
     @Mapping(target = "genderSelfDeterminationId", source = "personExtended.genderSelfDeterminationId")
     @Mapping(target = "street", source = "address.street")
