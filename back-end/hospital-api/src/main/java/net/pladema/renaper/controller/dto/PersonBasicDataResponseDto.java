@@ -1,10 +1,10 @@
 package net.pladema.renaper.controller.dto;
 
-import java.io.Serializable;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -23,4 +23,6 @@ public class PersonBasicDataResponseDto implements Serializable{
     private String birthDate;
 
     private String photo;
+
+    private String cuil;
 }

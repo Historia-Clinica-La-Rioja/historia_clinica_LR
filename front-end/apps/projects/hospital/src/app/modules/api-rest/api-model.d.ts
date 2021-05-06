@@ -1251,6 +1251,7 @@ export interface PermissionsDto {
 
 export interface PersonBasicDataResponseDto extends Serializable {
     birthDate: string;
+    cuil: string;
     firstName: string;
     lastName: string;
     photo: string;
