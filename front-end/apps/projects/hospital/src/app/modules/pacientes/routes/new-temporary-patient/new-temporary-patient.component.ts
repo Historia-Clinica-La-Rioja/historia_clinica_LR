@@ -83,7 +83,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined],
 
 					// Person extended
-					cuil: [null, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
+					cuil: [params.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
 					mothersLastName: [],
 					phoneNumber: [],
 					email: [null, [Validators.email]],

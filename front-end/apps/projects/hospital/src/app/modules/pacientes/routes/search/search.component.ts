@@ -325,7 +325,8 @@ export class SearchComponent implements OnInit {
 			lastName: splitedLastName.firstSubstring,
 			otherLastNames: splitedLastName.secondSubstring,
 			birthDate: personData.birthDate,
-			photo: personData.photo
+			photo: personData.photo,
+			cuil: personData.cuil
 		};
 	}
 

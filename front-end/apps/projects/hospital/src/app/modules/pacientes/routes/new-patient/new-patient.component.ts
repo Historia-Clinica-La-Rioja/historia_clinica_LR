@@ -85,7 +85,7 @@ export class NewPatientComponent implements OnInit {
 					birthDate: [params.birthDate ? moment(params.birthDate) : null, [Validators.required]],
 
 					// Person extended
-					cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
+					cuil: [params.cuil, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phoneNumber: [],
 					email: [null, Validators.email],
