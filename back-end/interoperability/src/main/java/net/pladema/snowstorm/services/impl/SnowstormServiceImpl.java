@@ -108,4 +108,24 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
         }
         return result;
     }
+
+    @Override
+    public SnowstormSearchResponse getConcepts(String ecl) {
+        StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getConceptsUrl());
+
+        urlWithParams.append("?termActive=" + snowstormWSConfig.getTermActive());
+        urlWithParams.append("&ecl=" + ecl);
+
+        SnowstormSearchResponse result;
+        try {
+            ResponseEntity<SnowstormSearchResponse> response = exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
+            result = response.getBody();
+            if (result == null)
+                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        } catch (Exception e) {
+            logger.error(SNOWSTORM_FAIL_SERVICE, e);
+            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+        }
+        return result;
+    }
 }

@@ -18,4 +18,6 @@ public interface PersonMasterDataService {
     Optional<IdentificationType> getIdentificationType(Short identificationTypeId);
 
     List<EthnicityBo> getActiveEthnicities();
+
+    void updateActiveEthnicities(List<EthnicityBo> newActiveEthnicities);
 }

@@ -3,6 +3,7 @@ package net.pladema.person.service.impl;
 import net.pladema.person.repository.EthnicityRepository;
 import net.pladema.person.repository.GenderRepository;
 import net.pladema.person.repository.IdentificationTypeRepository;
+import net.pladema.person.repository.entity.Ethnicity;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.service.PersonMasterDataService;
@@ -74,6 +75,58 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
                 .collect(Collectors.toList());
         LOG.debug("Output size -> {}", result.size());
         LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public void updateActiveEthnicities(List<EthnicityBo> newActiveEthnicities) {
+        LOG.debug("Input parameter -> newActiveEthnicities size = {}", newActiveEthnicities.size());
+        LOG.trace("Input parameter -> newActiveEthnicities {}", newActiveEthnicities);
+        List<EthnicityBo> actualActiveEthnicities = this.getActiveEthnicities();
+        List<Ethnicity> ethnicitiesToSave = getNonActiveEthnicitiesToSave(newActiveEthnicities, actualActiveEthnicities);
+        ethnicitiesToSave.addAll(getNewActiveEthnicitiesToSave(newActiveEthnicities, actualActiveEthnicities));
+        ethnicityRepository.saveAll(ethnicitiesToSave);
+        LOG.debug("Finished updating ethnicities");
+    }
+
+    private List<Ethnicity> getNewActiveEthnicitiesToSave(List<EthnicityBo> newActiveEthnicities, List<EthnicityBo> actualActiveEthnicities) {
+        LOG.debug("Input parameters -> newActiveEthnicities size = {}, actualActiveEthnicities size = {}", newActiveEthnicities.size(), actualActiveEthnicities.size());
+        LOG.trace("Input parameters -> newActiveEthnicities {}, actualActiveEthnicities {}", newActiveEthnicities, actualActiveEthnicities);
+        List<Ethnicity> result = newActiveEthnicities.stream()
+                .filter(newEthnicity -> ethnicityIsNotContained(actualActiveEthnicities, newEthnicity))
+                .map(ethnicityBo -> {
+                    ethnicityBo.setId(ethnicityRepository.findIdBySctidAndPt(ethnicityBo.getSctid(), ethnicityBo.getPt()).orElse(null));
+                    ethnicityBo.setActive(Boolean.TRUE);
+                    return new Ethnicity(ethnicityBo);
+                })
+                .collect(Collectors.toList());
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    private List<Ethnicity> getNonActiveEthnicitiesToSave(List<EthnicityBo> newActiveEthnicities, List<EthnicityBo> actualActiveEthnicities) {
+        LOG.debug("Input parameters -> newActiveEthnicities size = {}, actualActiveEthnicities size = {}", newActiveEthnicities.size(), actualActiveEthnicities.size());
+        LOG.trace("Input parameters -> newActiveEthnicities {}, actualActiveEthnicities {}", newActiveEthnicities, actualActiveEthnicities);
+        List<Ethnicity> result =  actualActiveEthnicities.stream()
+                .filter(actualEthnicity -> ethnicityIsNotContained(newActiveEthnicities, actualEthnicity))
+                .map(ethnicityBo -> {
+                    ethnicityBo.setActive(Boolean.FALSE);
+                    return new Ethnicity(ethnicityBo); })
+                .collect(Collectors.toList());
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    private boolean ethnicityIsNotContained(List<EthnicityBo> ethnicityBoList, EthnicityBo ethnicity) {
+        LOG.debug("Input parameters -> ethnicityBoList size = {}, ethnicity {}", ethnicityBoList.size(), ethnicity);
+        LOG.trace("Input parameters -> ethnicityBoList {}, ethnicity {}", ethnicityBoList, ethnicity);
+        boolean result = ethnicityBoList.stream()
+                .noneMatch(newEthnicity ->
+                        (ethnicity.getSctid().equals(newEthnicity.getSctid())
+                        && ethnicity.getPt().equals(newEthnicity.getPt())));
+        LOG.debug("Output -> {}", result);
         return result;
     }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.person.service.domain.EthnicityBo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 public class Ethnicity {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -32,6 +33,13 @@ public class Ethnicity {
     private String pt;
 
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private boolean active;
+
+    public Ethnicity(EthnicityBo ethnicityBo) {
+        this.id = ethnicityBo.getId();
+        this.sctid = ethnicityBo.getSctid();
+        this.pt = ethnicityBo.getPt();
+        this.active = ethnicityBo.isActive();
+    }
 
 }

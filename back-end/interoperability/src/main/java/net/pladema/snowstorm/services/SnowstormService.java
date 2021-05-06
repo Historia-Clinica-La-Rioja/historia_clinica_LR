@@ -10,6 +10,8 @@ public interface SnowstormService {
 
     SnowstormSearchResponse getConcepts(String term, String ecl);
 
+    SnowstormSearchResponse getConcepts(String ecl);
+
     List<SnowstormItemResponse> getConceptAncestors(String conceptId);
 
     SnowstormCie10RefsetMembersResponse getCie10RefsetMembers(String referencedComponentId);
