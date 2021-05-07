@@ -9,6 +9,8 @@ import net.pladema.federar.services.domain.FederarResourceAttributes;
 import net.pladema.federar.services.domain.FederarResourcePayload;
 import net.pladema.federar.services.domain.LocalIdSearchResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ import java.util.Optional;
 		matchIfMissing = false)
 public class FederarServiceImpl extends RestClient implements FederarService {
 
-	private static final String ALREADY_PATIENT = "already a patient";
+	private final Logger log = LoggerFactory.getLogger(FederarServiceImpl.class);
 
 	private final FederarWSConfig federarWSConfig;
 
@@ -44,6 +46,10 @@ public class FederarServiceImpl extends RestClient implements FederarService {
 			if(searchResponse.isPresent())
 				return searchResponse.get().getNationalId();
 		}
+		if(response.hasBody()) {
+			log.debug("Federate patient with id {}, statusCode {}, Cause: {}",
+					patientId, response.getStatusCode(), response.getBody().getDiagnostics());
+		}
 		return Optional.empty();
 	}
 
@@ -62,16 +68,5 @@ public class FederarServiceImpl extends RestClient implements FederarService {
 		String urlWithParams = federarWSConfig.getFederateUrl();
 		return exchangePost(urlWithParams, requestBody, FederarErrorResponse.class);
 	}
-
-	/*
-
-	@Override
-	public void federateAllValidatedPatients() {
-		LOG.debug("Federating all validated patients");
-		List<PatientPersonVo> validatedPatients = patientRepository.getAllByPatientType(PatientType.VALIDATED);
-		validatedPatients.forEach(p -> federatePatient(new Patient(p), new Person(p)));
-		LOG.debug("Finished federating patients.");
-	}
-	 */
 
 }
