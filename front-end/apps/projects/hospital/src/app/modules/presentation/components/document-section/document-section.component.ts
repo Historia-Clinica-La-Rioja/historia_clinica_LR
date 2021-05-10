@@ -12,6 +12,7 @@ export class DocumentSectionComponent implements OnInit {
 	@Input() tableTitle: string;
 	@Input() columns: ColumnConfig[];
 	@Input() data: any[];
+	@Input() reducedHeaderSize = false;
 	@Input() addRemoveColumn = false;
 	@Output() removeColumn = new EventEmitter();
 

@@ -13,7 +13,7 @@
 	<table mat-table [dataSource]="data" class="secondary">
 
 		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
-			<th *matHeaderCellDef>{{ column.header | translate }}</th>
+			<th [ngClass]="reducedHeaderSize ? 'reduced-header' : ''" *matHeaderCellDef>{{ column.header | translate }}</th>
 			<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
 		</ng-container>
 

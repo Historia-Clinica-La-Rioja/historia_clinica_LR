@@ -70,7 +70,8 @@
 								  [sectionImportance]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"
 								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE'"
 								  [columns]="problemasService.getColumns()"
-								  [data]="problemasService.getProblemas()">
+								  [data]="problemasService.getProblemas()"
+								  [reducedHeaderSize]="true">
 				<div concept-form *ngIf="!this.readOnlyProblema else problemaForm">
 					<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
 										 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
