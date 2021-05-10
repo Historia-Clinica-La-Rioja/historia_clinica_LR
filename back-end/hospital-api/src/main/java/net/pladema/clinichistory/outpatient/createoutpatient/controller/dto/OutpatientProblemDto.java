@@ -30,7 +30,7 @@ public class OutpatientProblemDto {
     @Nullable
     private String verificationId;
 
-    @NotNull(message = "{value.mandatory}")
+    @NotNull(message = "{outpatient.problem.severity.mandatory}")
     private String severity;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
