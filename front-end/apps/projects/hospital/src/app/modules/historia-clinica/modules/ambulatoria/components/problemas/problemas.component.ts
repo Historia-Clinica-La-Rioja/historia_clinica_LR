@@ -83,8 +83,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 		this.setActiveProblems$();
 		this.setChronicProblems$();
+		this.setSolvedProblems$();
 		this.loadHospitalizationProblems();
-		this.loadSolvedProblems();
 		this.loadHistoricalProblems();
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
@@ -110,8 +110,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	loadSolvedProblems() {
-		this.solvedProblems$ = this.hceGeneralStateService.getSolvedProblems(this.patientId).pipe(
+	setSolvedProblems$() {
+		this.solvedProblems$ = this.ambulatoriaSummaryFacadeService.solvedProblems$.pipe(
 			map(this.formatProblemsDates)
 		);
 	}
@@ -193,7 +193,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		}).afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({problems: true});
-				this.loadSolvedProblems();
 			}});
 	}
 

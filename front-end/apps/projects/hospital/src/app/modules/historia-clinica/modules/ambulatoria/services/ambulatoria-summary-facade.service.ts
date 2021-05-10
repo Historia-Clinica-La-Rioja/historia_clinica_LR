@@ -17,6 +17,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private anthropometricDataSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private activeProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private chronicProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private solvedProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private hasNewConsultationEnabledSubject: Subject<any> = new BehaviorSubject<boolean>(false);
 
 	public readonly allergies$ = this.allergiesSubject.asObservable();
@@ -27,6 +28,7 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly anthropometricData$ = this.anthropometricDataSubject.asObservable();
 	public readonly activeProblems$ = this.activeProblemsSubject.asObservable();
 	public readonly chronicProblems$ = this.chronicProblemsSubject.asObservable();
+	public readonly solvedProblems$ = this.solvedProblemsSubject.asObservable();
 	public readonly hasNewConsultationEnabled$ = this.hasNewConsultationEnabledSubject.asObservable();
 
 
@@ -78,8 +80,12 @@ export class AmbulatoriaSummaryFacadeService {
 			this.hceGeneralStateService.getActiveProblems(this.idPaciente).subscribe(p => {
 				this.activeProblemsSubject.next(p);
 			});
-			this.hceGeneralStateService.getChronicConditions(this.idPaciente).subscribe(c =>
-				this.chronicProblemsSubject.next(c));
+			this.hceGeneralStateService.getChronicConditions(this.idPaciente).subscribe(c => {
+				this.chronicProblemsSubject.next(c);
+			});
+			this.hceGeneralStateService.getSolvedProblems(this.idPaciente).subscribe(c => {
+				this.solvedProblemsSubject.next(c);
+			});
 			this.historialProblemsFacadeService.loadEvolutionSummaryList(this.idPaciente);
 		}
 
