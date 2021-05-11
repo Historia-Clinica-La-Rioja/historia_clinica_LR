@@ -18,6 +18,8 @@ import {
 import LaunchIcon from '@material-ui/icons/Launch';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { parseISO, isFuture } from 'date-fns';
+
 import passwordReset from '../password-reset';
 import { openPasswordReset } from '../../providers/utils/webappLink';
 
@@ -29,6 +31,8 @@ const useAsideStyles = makeStyles(theme => ({
         },
     },
 }));
+
+const isNotExpired = ({expiryDate}) => isFuture(parseISO(expiryDate));
 
 const Aside = ({ record, basePath }) => {
     const classes = useAsideStyles();
@@ -62,7 +66,11 @@ const PasswordResetList = ({ record }) => {
         }
     });
 
-    const actionClick = (resetCodesId && resetCodesId.length === 0)? createPasswordReset : () => openPasswordReset(resetCodes[resetCodesId[0]].token);
+    const validResetCode = (resetCodesId || [])
+        .map(resetCodeId => resetCodes[resetCodeId])
+        .find(isNotExpired);
+
+    const actionClick = (!validResetCode) ? createPasswordReset : () => openPasswordReset(validResetCode.token);
 
     return (
         <>
