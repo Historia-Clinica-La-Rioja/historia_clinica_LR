@@ -94,7 +94,7 @@
 							<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #finDatePicker></mat-datepicker>
 							<mat-error *ngIf="problemasService.hasError('min', 'fechaFin')"
-								translate="guardia.episode.medical_discharge.problemas.errors.FECHA_FIN_MIN">
+								translate="guardia.episode.medical_discharge.problems.errors.FECHA_FIN_MIN">
 							</mat-error>
 							<mat-error *ngIf="problemasService.hasError('matDatepickerMax', 'fechaFin')"
 								translate="forms.MAX_DATE_TODAY">
