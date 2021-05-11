@@ -164,7 +164,8 @@
 					"TIME": "Hora",
 					"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
 					"AUTOPSY": "Autopsia autorizada",
-					"DISCHARGE_TYPE": "Tipo de egreso"
+					"DISCHARGE_TYPE": "Tipo de egreso",
+					"INVALID_TIME": "La hora debe ser posterior a la de creación del episodio"
 				},
 				"REQUIRED_PROBLEM": "Debe ingresar al menos un problema",
 				"messages": {

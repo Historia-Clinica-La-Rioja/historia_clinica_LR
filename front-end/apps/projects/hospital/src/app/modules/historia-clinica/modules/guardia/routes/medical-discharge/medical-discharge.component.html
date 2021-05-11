@@ -25,7 +25,8 @@
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED">
 				</mat-error>
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')" translate="forms.MAX_TIME_ERROR"></mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')">La hora debe ser posterior a la de creacion del episodio</mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')" translate="guardia.episode.medical_discharge.form.INVALID_TIME">
+				</mat-error>
 			</mat-form-field>
 		</div>
 
