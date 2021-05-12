@@ -44,6 +44,7 @@
 					<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
 									(monthSelected)="chosenMonthHandler($event)">
 					</mat-datepicker>
+					<mat-error *ngIf="!selectedDateIsTodayOrBefore()" translate="internaciones.internacion-paciente.vacunas-summary.INVALID_DATE"></mat-error>
 				</mat-form-field>
 			</form>
 		</ng-template>
@@ -51,7 +52,7 @@
 	<mat-dialog-actions align="end">
 		<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
 		</button>
-		<button *ngIf="snomedConcept" mat-raised-button color="primary" (click)="submit()">
+		<button *ngIf="snomedConcept && this.selectedDateIsTodayOrBefore()" mat-raised-button color="primary" (click)="submit()">
 			<span [translate]="'buttons.ADD'"></span>
 		</button>
 	</mat-dialog-actions>

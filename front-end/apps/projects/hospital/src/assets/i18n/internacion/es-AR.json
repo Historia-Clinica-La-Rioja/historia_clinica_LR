@@ -359,6 +359,7 @@
 				"ADD": "Agregar vacuna",
 				"INMUNIZATION": "Vacuna",
 				"REGISTRY_DATE": "Fecha de vacunación",
+				"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
 				"save": {
 					"SUCCESS": "Una nueva vacuna se guardó exitosamente",
 					"ERROR": "Error al guardar nueva vacuna"

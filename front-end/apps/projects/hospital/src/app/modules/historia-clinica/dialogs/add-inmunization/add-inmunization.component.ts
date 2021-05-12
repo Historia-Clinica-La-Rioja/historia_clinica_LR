@@ -92,6 +92,10 @@ export class AddInmunizationComponent implements OnInit {
 		}
 	}
 
+	selectedDateIsTodayOrBefore(): boolean {
+		return (this.form.value.date) ? this.today.isSameOrAfter(this.form.value.date, 'day') : true;
+	}
+
 	submit(): void {
 		if (this.snomedConcept) {
 			this.loading = true;
