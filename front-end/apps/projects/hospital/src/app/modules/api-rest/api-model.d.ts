@@ -1069,6 +1069,17 @@ export interface OccupationDto {
     timeRanges: TimeRangeDto[];
 }
 
+export interface OdontogramQuadrantDto {
+    quadrantCode: number;
+    snomed: OdontologySnomedDto;
+}
+
+export interface OdontologySnomedDto {
+    id: number;
+    pt: string;
+    sctid: string;
+}
+
 export interface OpeningHoursDto extends TimeRangeDto {
     dayWeekId: number;
     id?: number;
@@ -1450,6 +1461,11 @@ export interface StudyDto extends Serializable {
     snomed: SnomedDto;
 }
 
+export interface TeethGroupDto {
+    quadrant: OdontogramQuadrantDto;
+    teeth: ToothDto[];
+}
+
 export interface TimeDto {
     hours: number;
     minutes: number;
@@ -1459,6 +1475,12 @@ export interface TimeDto {
 export interface TimeRangeDto {
     from: string;
     to: string;
+}
+
+export interface ToothDto {
+    code: number;
+    rootsAmount: number;
+    snomed: OdontologySnomedDto;
 }
 
 export interface TriageAdministrativeDto extends TriageDto {
