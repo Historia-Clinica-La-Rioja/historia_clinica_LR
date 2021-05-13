@@ -1,4 +1,4 @@
-package ar.lamansys.odontology.configuration;
+package ar.lamansys.odontology;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
