@@ -23,4 +23,6 @@ public interface PatientService {
     Patient addPatient(Patient patientToSave);
 
     List<PatientPersonVo> getAllValidatedPatients();
+
+    void updatePatientPermanent(PatientPersonVo patientPersonVo, Integer nationalId);
 }

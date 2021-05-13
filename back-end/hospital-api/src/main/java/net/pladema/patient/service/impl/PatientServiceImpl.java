@@ -104,4 +104,13 @@ public class PatientServiceImpl implements PatientService {
 		return patientRepository.getAllByPatientType(PatientType.VALIDATED);
 	}
 
+	@Override
+	public void updatePatientPermanent(PatientPersonVo patientPersonVo, Integer nationalId) {
+		LOG.debug("Updating to permanent patient -> patientPersonVo {}, nationalId {}", patientPersonVo, nationalId);
+		Patient patient = new Patient(patientPersonVo);
+		patient.setNationalId(nationalId);
+		patient.setTypeId(PatientType.PERMANENT);
+		patientRepository.save(patient);
+	}
+
 }

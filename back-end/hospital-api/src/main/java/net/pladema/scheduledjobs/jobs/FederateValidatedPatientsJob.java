@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @ConditionalOnProperty(
@@ -43,7 +44,8 @@ public class FederateValidatedPatientsJob {
         patientService.getAllValidatedPatients().forEach(p -> {
             FederarResourceAttributes attributes = new FederarResourceAttributes();
             BeanUtils.copyProperties(p, attributes);
-            federarExternalService.federatePatient(attributes, p.getId());
+            Optional<Integer> optionalNationalId = federarExternalService.federatePatient(attributes, p.getId());
+            optionalNationalId.ifPresent(nationalId -> patientService.updatePatientPermanent(p, nationalId));
         });
         LOG.debug("Finishing FederateValidatedPatientsJob at {}", new Date());
     }
