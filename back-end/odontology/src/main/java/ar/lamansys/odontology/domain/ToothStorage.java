@@ -1,9 +1,9 @@
 package ar.lamansys.odontology.domain;
 
-import ar.lamansys.odontology.application.plugin.exception.ToothServiceException;
+import java.util.List;
 
 public interface ToothStorage {
 
-    TeethBo getTeeth() throws ToothServiceException;
+    List<ToothBo> getAll();
 
 }
