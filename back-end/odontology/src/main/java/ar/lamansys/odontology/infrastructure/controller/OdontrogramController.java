@@ -1,7 +1,7 @@
 package ar.lamansys.odontology.infrastructure.controller;
 
 import ar.lamansys.odontology.application.fetchodontogram.GetOdontogramInfoService;
-import ar.lamansys.odontology.infrastructure.controller.dto.TeethGroupDto;
+import ar.lamansys.odontology.infrastructure.controller.dto.OdontogramQuadrantDto;
 import ar.lamansys.odontology.infrastructure.controller.mapper.OdontogramMapper;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -30,8 +30,8 @@ public class OdontrogramController {
 
     @GetMapping()
     @ResponseBody
-    public List<TeethGroupDto> getOdontogramInfo() {
-        List<TeethGroupDto> result = odontogramMapper.parseToTeethGroupList(getOdontogramInfoService.run());
+    public List<OdontogramQuadrantDto> getOdontogramInfo() {
+        List<OdontogramQuadrantDto> result = odontogramMapper.parseToOdontongramQuadrantList(getOdontogramInfoService.run());
         LOG.debug("Response validate -> {}", result);
         return result;
     }

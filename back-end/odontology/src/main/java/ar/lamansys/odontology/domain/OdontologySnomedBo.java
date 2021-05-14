@@ -10,7 +10,6 @@ import java.util.Objects;
 @NoArgsConstructor
 public class OdontologySnomedBo {
 
-    private Integer id;
     private String sctid;
     private String pt;
 

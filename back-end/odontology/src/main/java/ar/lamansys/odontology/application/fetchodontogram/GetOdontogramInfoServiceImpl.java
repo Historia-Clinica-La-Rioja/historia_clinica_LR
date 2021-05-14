@@ -1,7 +1,7 @@
 package ar.lamansys.odontology.application.fetchodontogram;
 
+import ar.lamansys.odontology.domain.OdontogramQuadrantBo;
 import ar.lamansys.odontology.domain.OdontogramQuadrantStorage;
-import ar.lamansys.odontology.domain.TeethGroupBo;
 import ar.lamansys.odontology.domain.ToothStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +29,13 @@ public class GetOdontogramInfoServiceImpl implements GetOdontogramInfoService {
     //
 
     @Override
-    public List<TeethGroupBo> run() {
+    public List<OdontogramQuadrantBo> run() {
         var teeth = toothStorage.getAll();
-        var quadrants = odontogramQuadrantStorage.getAll();
-        List<TeethGroupBo> result = quadrants.stream().map(q ->
-                new TeethGroupBo(
-                        q,
-                        teeth.stream().filter(t -> (t.getQuadrant().equals(q.getQuadrantCode())))
-                                .collect(Collectors.toList())
-                )).collect(Collectors.toList());
+        var result = odontogramQuadrantStorage.getAll();
+        result.stream().forEach(q ->
+               q.setTeeth(teeth.stream().filter(t -> (t.getQuadrant().equals(q.getCode())))
+                       .collect(Collectors.toList()))
+                );
         LOG.debug("Response validate -> {}", result);
         return result;
     }
