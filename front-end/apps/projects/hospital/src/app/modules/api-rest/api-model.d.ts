@@ -1070,8 +1070,12 @@ export interface OccupationDto {
 }
 
 export interface OdontogramQuadrantDto {
-    quadrantCode: number;
+    code: number;
+    left: boolean;
+    permanent: boolean;
     snomed: OdontologySnomedDto;
+    teeth: ToothDto[];
+    top: boolean;
 }
 
 export interface OdontologySnomedDto {
@@ -1459,11 +1463,6 @@ export interface StudyDto extends Serializable {
     healthConditionId: number;
     observations?: string;
     snomed: SnomedDto;
-}
-
-export interface TeethGroupDto {
-    quadrant: OdontogramQuadrantDto;
-    teeth: ToothDto[];
 }
 
 export interface TimeDto {

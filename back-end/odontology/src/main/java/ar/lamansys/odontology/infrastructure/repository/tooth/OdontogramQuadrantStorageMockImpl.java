@@ -12,16 +12,72 @@ public class OdontogramQuadrantStorageMockImpl implements OdontogramQuadrantStor
 
     @Override
     public List<OdontogramQuadrantBo> getAll() {
-        List<OdontogramQuadrantBo> teethGroups = new ArrayList<>();
-        for (int i=1; i<9 ; i++) {
-            OdontogramQuadrantBo odontogramQuadrantBo = new OdontogramQuadrantBo();
-            OdontologySnomedBo odontologySnomedBo = new OdontologySnomedBo();
-            odontologySnomedBo.setPt("Cuadrante " + i);
-            odontologySnomedBo.setSctid("235234234");
-            odontogramQuadrantBo.setSnomed(odontologySnomedBo);
-            teethGroups.add(odontogramQuadrantBo);
-            odontogramQuadrantBo.setQuadrantCode(i);
-        }
-        return teethGroups;
+        return List.of(
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 1),
+                        1,
+                        false,
+                        true,
+                        true,
+                        null
+                ),
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 2),
+                        2,
+                        true,
+                        true,
+                        true,
+                        null
+                ),
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 3),
+                        3,
+                        true,
+                        false,
+                        true,
+                        null
+                ),
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 4),
+                        4,
+                        false,
+                        false,
+                        true,
+                        null
+                ),
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 5),
+                        5,
+                        false,
+                        true,
+                        false,
+                        null
+                ),
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 6),
+                        6,
+                        true,
+                        true,
+                        false,
+                        null
+                ),
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 7),
+                        7,
+                        true,
+                        false,
+                        false,
+                        null
+                ),
+                new OdontogramQuadrantBo(
+                        new OdontologySnomedBo("235234234", "Cuadrante " + 8),
+                        8,
+                        false,
+                        false,
+                        false,
+                        null
+                )
+        );
+
     }
 }
