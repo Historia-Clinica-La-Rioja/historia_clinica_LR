@@ -47,3 +47,26 @@ databaseChangeLog:
                 INSERT INTO dependency(code, description) VALUES ('31','Servicio Penitenciario Federal');
                 INSERT INTO dependency(code, description) VALUES ('32','Servicio Penitenciario Provincial');
 
+    - changeSet:
+        id: institution-addColumn-dependency_id
+        author: tmedina
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: dependency_id
+                type: int
+                constraints:
+                    nullable: true 
+            tableName: institution
+        - addForeignKeyConstraint:
+            baseColumnNames: dependency_id
+            baseTableName: institution
+            constraintName: FK_institution_dependency_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: dependency
+            validate: true
+
+
