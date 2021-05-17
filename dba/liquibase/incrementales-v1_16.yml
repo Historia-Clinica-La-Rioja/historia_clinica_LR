@@ -1,3 +1,49 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_16 
 
+    - changeSet:
+        id: dependency-createTable
+        author: tmedina
+        changes:
+        - createTable:
+            tableName: dependency
+            columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_dependency
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: code 
+                type: varchar(10)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+
+    - changeSet:
+        id: dependency-insertValues
+        author: tmedina
+        context: "!schema-only"
+        changes:
+        - sql:
+            sql: |-
+                INSERT INTO dependency(code, description) VALUES ('20','Nacional');
+                INSERT INTO dependency(code, description) VALUES ('21','Provincial');
+                INSERT INTO dependency(code, description) VALUES ('22','Municipal');
+                INSERT INTO dependency(code, description) VALUES ('23','Privado');
+                INSERT INTO dependency(code, description) VALUES ('24','FFAA/Seguridad');
+                INSERT INTO dependency(code, description) VALUES ('22','Universitario público');
+                INSERT INTO dependency(code, description) VALUES ('26','Universitario privado');
+                INSERT INTO dependency(code, description) VALUES ('27','Obra social');
+                INSERT INTO dependency(code, description) VALUES ('28','Mutual');
+                INSERT INTO dependency(code, description) VALUES ('29','Mixta');
+                INSERT INTO dependency(code, description) VALUES ('30','Otros');
+                INSERT INTO dependency(code, description) VALUES ('31','Servicio Penitenciario Federal');
+                INSERT INTO dependency(code, description) VALUES ('32','Servicio Penitenciario Provincial');
+
