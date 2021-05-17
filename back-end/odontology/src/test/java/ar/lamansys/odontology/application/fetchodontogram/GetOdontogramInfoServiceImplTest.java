@@ -3,9 +3,9 @@ package ar.lamansys.odontology.application.fetchodontogram;
 import ar.lamansys.odontology.domain.*;
 import ar.lamansys.odontology.infrastructure.repository.tooth.OdontogramQuadrantStorageMockImpl;
 import ar.lamansys.odontology.infrastructure.repository.tooth.ToothStorageMockImpl;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -30,40 +30,77 @@ class GetOdontogramInfoServiceImplTest {
         );
     }
 
-
     @Test
-    @DisplayName("Test that teeth amount is 52")
-    public void odontology_teeth_masterdata() {
-        ToothStorage toothStorage = new ToothStorageMockImpl();
-        List<ToothBo> resultService = toothStorage.getAll();
-        assertThat(resultService.size()).isEqualTo(52);
+    @DisplayName("Test quadrant' teeth amount and permanent success")
+    public void odontogramInfoAmountAndPermanent() {
+        List<OdontogramQuadrantBo> resultService = getOdontogramInfoService.run();
+
+        List.of(1,2,3,4).forEach(quadrantCode -> {
+            var quadrant = resultService.stream()
+                    .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
+
+            assertThat(quadrant.getTeeth().size())
+                    .isEqualTo(8);
+            assertThat(quadrant.isPermanent()).isEqualTo(true);
+        });
+
+        List.of(5,6,7,8).forEach(quadrantCode -> {
+            var quadrant = resultService.stream()
+                    .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
+
+            assertThat(quadrant.getTeeth().size())
+                    .isEqualTo(5);
+            assertThat(quadrant.isPermanent()).isEqualTo(false);
+        });
     }
 
     @Test
-    @DisplayName("Test that of teeth groups is 8")
-    public void odontology_teethGroups_masterdata() {
-        OdontogramQuadrantStorage odontogramQuadrantStorage = new OdontogramQuadrantStorageMockImpl();
-        List<OdontogramQuadrantBo> resultService = odontogramQuadrantStorage.getAll();
-        assertThat(resultService.size()).isEqualTo(8);
-    }
+    @DisplayName("Test quadrant' teeth amount success")
+    public void odontogramInfoPosition() {
+        List<OdontogramQuadrantBo> resultService = getOdontogramInfoService.run();
 
-//    @Test
-//    @DisplayName("Test teeth order success")
-//    void odontogramTeethOrder() {
-//        List<OdontogramQuadrantBo> resultService = getOdontogramInfoService.run();
-//
-//        Integer reverseOrderQuadrant = 1;
-//        Integer naturalOrderQuadrant = 2;
-//
-//        assertThat(resultService.stream()
-//                .filter(q -> q.getCode().equals(reverseOrderQuadrant))
-//                .collect(Collectors.toList()).get(0).getTeeth().get(0).getPosition())
-//                .isEqualTo(8);
-//
-//        assertThat(resultService.stream()
-//                .filter(q -> q.getCode().equals(naturalOrderQuadrant))
-//                .collect(Collectors.toList()).get(0).getTeeth().get(0).getPosition())
-//                .isEqualTo(1);
-//    }
+        List.of(1,5).forEach(quadrantCode -> {
+            var quadrant = resultService.stream()
+                    .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
+
+            assertThat(quadrant.isLeft())
+                    .isEqualTo(false);
+
+            assertThat(quadrant.isTop())
+                    .isEqualTo(true);
+        });
+        List.of(2,6).forEach(quadrantCode -> {
+            var quadrant = resultService.stream()
+                    .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
+
+            assertThat(quadrant.isLeft())
+                    .isEqualTo(true);
+
+            assertThat(quadrant.isTop())
+                    .isEqualTo(true);
+        });
+        List.of(3,7).forEach(quadrantCode -> {
+            var quadrant = resultService.stream()
+                    .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
+
+            assertThat(quadrant.isLeft())
+                    .isEqualTo(true);
+
+            assertThat(quadrant.isTop())
+                    .isEqualTo(false);
+        });
+        List.of(4,8).forEach(quadrantCode -> {
+            var quadrant = resultService.stream()
+                    .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
+
+            assertThat(quadrant.isLeft())
+                    .isEqualTo(false);
+
+            assertThat(quadrant.isTop())
+                    .isEqualTo(false);
+        });
+
+
+    }
 }
 
