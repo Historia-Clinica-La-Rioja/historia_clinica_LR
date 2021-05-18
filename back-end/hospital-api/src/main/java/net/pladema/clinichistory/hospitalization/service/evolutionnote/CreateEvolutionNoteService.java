@@ -1,12 +1,12 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
+import net.pladema.sgx.pdf.PDFDocumentException;
+
+import java.io.IOException;
 
 public interface CreateEvolutionNoteService {
 
-    EvolutionNoteBo createDocument(Integer intermentEpisodeId, PatientInfoBo patientInfo, EvolutionNoteBo evolutionNoteBo);
+    EvolutionNoteBo execute(Integer institutionId, EvolutionNoteBo evolutionNoteBo) throws IOException, PDFDocumentException;
 
-    Long createEvolutionDiagnosis(Integer internmentEpisodeId, Integer patientId, EvolutionDiagnosisBo evolutionNote);
 }
