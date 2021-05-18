@@ -49,6 +49,9 @@ public class Institution {
 	@Column(name = "sisa_code", nullable = false, length = 15)
 	private String sisaCode;
 
+	@Column(name = "dependencyId", nullable = true)
+	private Integer dependencyId;
+
 	@Column(name = "timezone", nullable = false, length = 60)
 	private String timezone = JacksonDateFormatConfig.ZONE_ID;
 

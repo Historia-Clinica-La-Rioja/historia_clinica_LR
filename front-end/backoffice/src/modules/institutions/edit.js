@@ -8,10 +8,24 @@ import {
     Datagrid,
     TextField,
     EditButton,
+    ReferenceInput, 
+    SelectInput,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import CustomToolbar from "../../modules/components/CustomToolbar";
+
+const Dependency = (sourceId) => {
+    return (
+        <ReferenceInput
+            {...sourceId}
+            reference="dependencies"
+            sort={{ field: 'description', order: 'ASC' }}
+        >
+            <SelectInput optionText="description" optionValue="id" validate={[required()]} />
+        </ReferenceInput>);
+
+};
 
 const InstitutionEdit = props => (
     <Edit {...props}>
@@ -22,6 +36,7 @@ const InstitutionEdit = props => (
             <TextInput source="email" type="email" validate={[required()]} />
             <TextInput source="cuit" validate={[required()]} />
             <TextInput source="sisaCode" validate={[required()]} />
+            <Dependency source="dependencyId" />
 
             <SectionTitle label="resources.institutions.fields.sectors"/>
             <CreateRelatedButton
