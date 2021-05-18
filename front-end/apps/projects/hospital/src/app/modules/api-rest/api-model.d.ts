@@ -407,6 +407,12 @@ export interface DepartmentDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface DependencyDto extends Serializable {
+    code: string;
+    description: string;
+    id: number;
+}
+
 export interface DiagnosesGeneralStateDto extends DiagnosisDto {
     main: boolean;
 }
