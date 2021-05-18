@@ -25,7 +25,7 @@ import java.util.List;
 @Configuration
 @Profile("dev")
 @ConfigurationProperties(prefix = "app.data.sample")
-@PropertySource(value = "classpath:application-dev.properties")
+@PropertySource(value = "classpath:sample-data.properties")
 public class SampleProperties {
 
     private List<Person> people;
