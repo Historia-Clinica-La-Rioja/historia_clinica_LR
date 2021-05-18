@@ -22,11 +22,6 @@ export class AnamnesisService {
 		return this.http.post<ResponseAnamnesisDto>(url, anamnesis);
 	}
 
-	updateAnamnesis(anamnesisId: number, anamnesis: AnamnesisDto, internmentEpisodeId: number): Observable<ResponseAnamnesisDto> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/anamnesis/${anamnesisId}`;
-		return this.http.put<ResponseAnamnesisDto>(url, anamnesis);
-	}
-
 	getAnamnesis(anamnesisId: number, internmentEpisodeId: number): Observable<ResponseAnamnesisDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/anamnesis/${anamnesisId}`;
 		return this.http.get<ResponseAnamnesisDto>(url);

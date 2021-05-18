@@ -12,7 +12,6 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
 import net.pladema.featureflags.service.FeatureFlagsService;
@@ -52,9 +51,6 @@ public class AnamnesisControllerTest extends UnitController {
 	private CreateAnamnesisService createAnamnesisService;
 
 	@MockBean
-	private UpdateAnamnesisService updateAnamnesisService;
-
-	@MockBean
 	private AnamnesisService anamnesisService;
 
 	@MockBean
@@ -81,9 +77,6 @@ public class AnamnesisControllerTest extends UnitController {
 	@MockBean
 	private SGHNotNullValidator sghNotNullValidator;
 
-	@MockBean
-	private FeatureFlagsService featureFlagsService;
-
 	@Before
 	public void setup() {
 	}
@@ -103,57 +96,14 @@ public class AnamnesisControllerTest extends UnitController {
 				.andExpect(status().isOk());
 	}
 
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisSuccess() throws Exception {
-		configContextDocumentValid();
-		configContextPatientExist();
-		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
-		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockRequestBodyBasic()))
-				.andExpect(status().isNotImplemented());
-	}
-
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisFailed() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT))
-				.andExpect(status().isBadRequest());
-	}
-
-
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisWithoutPatient() throws Exception {
-		configContextAnamnesisValid();
-		configContextDocumentValid();
-		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
-		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockRequestBodyBasic()))
-				.andExpect(status().isNotImplemented());
-	}
-
 	private void configContextInternmentValid(){
 		when(internmentEpisodeRepository.existsById(anyInt())).thenReturn(true);
 		when(institutionRepository.existsById(anyInt())).thenReturn(true);
 	}
 
-	private void configContextAnamnesisValid(){
-		configContextInternmentValid();
-		when(internmentEpisodeService.haveAnamnesis(any())).thenReturn(false);
-	}
-
 	private void configContextDocumentValid(){
 		configContextInternmentValid();
 		when(documentRepository.findById(DOCUMENT_ID)).thenReturn(mockDocument());
-	}
-
-	private void configContextPatientExist(){
-		when(internmentEpisodeService.getPatient(any())).thenReturn(Optional.of(1));
 	}
 
 	private static Optional<Document> mockDocument() {
@@ -164,77 +114,5 @@ public class AnamnesisControllerTest extends UnitController {
 		return Optional.of(mock);
 	}
 
-	private String mockRequestBodyBasic() {
-		return "{" +
-					"\"confirmed\":false," +
-					"\"notes\":null," +
-					"\"mainDiagnosis\":{" +
-						"\"id\":null," +
-						"\"statusId\":null," +
-						"\"snomed\":{" +
-							"\"id\":\"43275000\"," +
-							"\"pt\":\"Preferred Term\"," +
-							"\"parentId\":null," +
-							"\"parentFsn\":null" +
-						"}," +
-						"\"verificationId\":null" +
-					"}," +
-					"\"diagnosis\":[]," +
-					"\"personalHistories\":[]," +
-					"\"familyHistories\":[]," +
-					"\"medications\":[]," +
-					"\"immunizations\":[]," +
-					"\"allergies\":[]," +
-					"\"anthropometricData\":null," +
-					"\"vitalSigns\":null" +
-				"}";
-	}
-
-	private String mockEmptyAnamnesisDto() {
-		return "{" +
-					"\"confirmed\":false," +
-					"\"notes\":null," +
-					"\"mainDiagnosis\":null," +
-					"\"diagnosis\":[]," +
-					"\"personalHistories\":[]," +
-					"\"familyHistories\":[]," +
-					"\"medications\":[]," +
-					"\"immunizations\":[]," +
-					"\"allergies\":[]," +
-					"\"anthropometricData\":null," +
-					"\"vitalSigns\":null" +
-				"}";
-	}
-
-	private String mockAnamnesisDtoWithDiagnosis() {
-		return "{" +
-					"\"confirmed\":false," +
-					"\"notes\":null," +
-					"\"mainDiagnosis\":{" +
-						"\"id\":null," +
-						"\"statusId\":null," +
-						"\"snomed\":{\"id\":\"43275000\",\"pt\":\"Preferred Term\",\"parentId\":null,\"parentFsn\":null}," +
-						"\"verificationId\":null" +
-					"}," +
-					"\"diagnosis\":[" +
-						"{" +
-							"\"id\":null," +
-							"\"statusId\":null," +
-							"\"snomed\":{" +
-								"\"id\":\"43275000\",\"pt\":\"Preferred Term\",\"parentId\":null,\"parentFsn\":null" +
-							"}," +
-							"\"verificationId\":null," +
-							"\"presumptive\":false" +
-						"}" +
-					"]," +
-					"\"personalHistories\":[]," +
-					"\"familyHistories\":[]," +
-					"\"medications\":[]," +
-					"\"immunizations\":[]," +
-					"\"allergies\":[]," +
-					"\"anthropometricData\":null," +
-					"\"vitalSigns\":null" +
-				"}";
-	}
 
 }

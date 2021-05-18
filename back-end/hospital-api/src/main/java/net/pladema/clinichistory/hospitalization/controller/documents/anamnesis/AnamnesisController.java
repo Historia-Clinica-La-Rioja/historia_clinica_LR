@@ -3,27 +3,20 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.controller.constraints.AnamnesisMainDiagnosisValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
-import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.constraints.AnamnesisValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.AnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.ResponseAnamnesisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.EffectiveVitalSignTimeValid;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -36,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,19 +42,14 @@ public class AnamnesisController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnamnesisController.class);
     public static final String OUTPUT = "Output -> {}";
-    public static final String INVALID_EPISODE = "internmentepisode.invalid";
 
     private final InternmentEpisodeService internmentEpisodeService;
 
     private final CreateAnamnesisService createAnamnesisService;
 
-    private final UpdateAnamnesisService updateAnamnesisService;
-
     private final AnamnesisService anamnesisService;
 
     private final AnamnesisMapper anamnesisMapper;
-
-    private final FeatureFlagsService featureFlagsService;
 
     private final MessageSource messageSource;
 
@@ -70,18 +57,14 @@ public class AnamnesisController {
 
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
                                CreateAnamnesisService createAnamnesisService,
-                               UpdateAnamnesisService updateAnamnesisService,
                                AnamnesisService anamnesisService,
                                AnamnesisMapper anamnesisMapper,
-                               FeatureFlagsService featureFlagsService,
                                MessageSource messageSource,
                                PatientExternalService patientExternalService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
-        this.updateAnamnesisService = updateAnamnesisService;
         this.anamnesisService = anamnesisService;
         this.anamnesisMapper = anamnesisMapper;
-        this.featureFlagsService = featureFlagsService;
         this.messageSource = messageSource;
         this.patientExternalService = patientExternalService;
     }
@@ -107,36 +90,6 @@ public class AnamnesisController {
         return  ResponseEntity.ok().body(Boolean.TRUE);
     }
 
-
-    @PutMapping("/{anamnesisId}")
-    @InternmentValid
-    @AnamnesisValid
-    @AnamnesisMainDiagnosisValid
-    @EffectiveVitalSignTimeValid
-    @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
-    public ResponseEntity<ResponseAnamnesisDto> updateAnamnesis(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @PathVariable(name = "anamnesisId") Long anamnesisId,
-            @Valid @RequestBody AnamnesisDto anamnesisDto) throws MethodNotSupportedException {
-        LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, ananmnesis {}",
-                institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
-
-        if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_UPDATE_DOCUMENTS))
-            throw new MethodNotSupportedException("Funcionalidad no soportada por el momento");
-
-        AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
-        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
-                .map(patientExternalService::getBasicDataFromPatient)
-                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
-                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
-        anamnesis = updateAnamnesisService.updateDocument(internmentEpisodeId, patientInfo, anamnesis);
-        ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
-        LOG.debug(OUTPUT, result);
-
-        return  ResponseEntity.ok().body(result);
-    }
 
     @GetMapping("/{anamnesisId}")
     @InternmentValid
