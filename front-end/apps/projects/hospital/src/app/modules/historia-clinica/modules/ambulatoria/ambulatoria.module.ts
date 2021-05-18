@@ -33,6 +33,7 @@ import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/comp
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import {ExternalSummaryCardComponent} from '@presentation/components/external-summary-card/external-summary-card.component';
 import {ConfirmarNuevaConsultaPopupComponent} from './dialogs/confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
+import { OdontologiaModule } from '../odontologia/odontologia.module';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import {ConfirmarNuevaConsultaPopupComponent} from './dialogs/confirmar-nueva-co
 		PresentationModule,
 		OverlayModule,
 		PortalModule,
+		OdontologiaModule
 	]
 })
 export class AmbulatoriaModule {
