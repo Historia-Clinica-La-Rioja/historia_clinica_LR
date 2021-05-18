@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ToothComponent } from './components/tooth/tooth.component';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 import { AppMaterialModule } from '@material/app.material.module';
+import { OdontogramComponent } from './components/odontogram/odontogram.component';
 
 
 
 @NgModule({
-	declarations: [ToothComponent],
+	declarations: [ToothComponent, OdontogramComponent],
 	imports: [
 		CommonModule,
 		FlexModule,
@@ -15,7 +16,8 @@ import { AppMaterialModule } from '@material/app.material.module';
 		AppMaterialModule
 	],
 	exports: [
-		ToothComponent
+		ToothComponent,
+		OdontogramComponent
 	]
 })
 export class OdontologiaModule { }

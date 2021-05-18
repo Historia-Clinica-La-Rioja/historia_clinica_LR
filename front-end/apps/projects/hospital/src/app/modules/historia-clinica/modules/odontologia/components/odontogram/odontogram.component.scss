@@ -1,0 +1,12 @@
+.mouth-right-column {
+	justify-self: flex-end;
+}
+
+.gridGap {
+	grid-column-gap: 30px;
+}
+
+::ng-deep .mat-tooltip {
+	white-space: pre-line !important;
+	font-size: 12px;
+}
