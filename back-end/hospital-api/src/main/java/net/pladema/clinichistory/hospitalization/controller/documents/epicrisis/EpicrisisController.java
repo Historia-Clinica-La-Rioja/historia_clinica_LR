@@ -1,14 +1,11 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
 import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
-import net.pladema.clinichistory.hospitalization.controller.constraints.CanCreateEpicrisis;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisDto;
@@ -30,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
@@ -54,8 +50,6 @@ public class EpicrisisController {
 
     private final EncounterGeneralStateBuilder encounterGeneralStateBuilder;
 
-    private final CreateDocumentFile createDocumentFile;
-
     private final PatientExternalService patientExternalService;
 
     public EpicrisisController(
@@ -64,7 +58,6 @@ public class EpicrisisController {
             EpicrisisService epicrisisService,
             EpicrisisMapper epicrisisMapper,
             EncounterGeneralStateBuilder encounterGeneralStateBuilder,
-            CreateDocumentFile createDocumentFile,
             PatientExternalService patientExternalService
     ) {
         this.internmentEpisodeService = internmentEpisodeService;
@@ -72,39 +65,28 @@ public class EpicrisisController {
         this.epicrisisService = epicrisisService;
         this.epicrisisMapper = epicrisisMapper;
         this.encounterGeneralStateBuilder = encounterGeneralStateBuilder;
-        this.createDocumentFile = createDocumentFile;
         this.patientExternalService = patientExternalService;
     }
 
 
     @PostMapping
     @Transactional
-    @InternmentValid
-    @CanCreateEpicrisis
-    public ResponseEntity<ResponseEpicrisisDto> createDocument(
+    public ResponseEntity<Boolean> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid EpicrisisDto epicrisisDto) throws IOException, PDFDocumentException {
+            @RequestBody EpicrisisDto epicrisisDto) throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, epicrisisDto);
-        PatientInfoBo patientInfo = internmentEpisodeService.getPatient(internmentEpisodeId)
+        EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
+        internmentEpisodeService.getPatient(internmentEpisodeId)
                 .map(patientExternalService::getBasicDataFromPatient)
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
-                .orElseThrow(() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
-        EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
-        epicrisis = createEpicrisisService.createDocument(internmentEpisodeId, patientInfo, epicrisis);
-        ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
-        LOG.debug(OUTPUT, result);
-        generateDocument(epicrisis, institutionId, internmentEpisodeId, patientInfo.getId());
-        return  ResponseEntity.ok().body(result);
-    }
+                .ifPresentOrElse(epicrisis::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+        epicrisis.setEncounterId(internmentEpisodeId);
+        createEpicrisisService.execute(institutionId, epicrisis);
 
-
-    private void generateDocument(EpicrisisBo epicrisis, Integer institutionId, Integer internmentEpisodeId,
-                                  Integer patientId) throws IOException, PDFDocumentException {
-        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(epicrisis, institutionId, internmentEpisodeId,
-                EDocumentType.map(DocumentType.EPICRISIS), patientId);
-        createDocumentFile.execute(event);
+        LOG.debug(OUTPUT, Boolean.TRUE);
+        return  ResponseEntity.ok().body(Boolean.TRUE);
     }
 
     @GetMapping("/{epicrisisId}")

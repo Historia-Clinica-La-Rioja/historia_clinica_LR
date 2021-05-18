@@ -1,9 +1,11 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
+import net.pladema.sgx.pdf.PDFDocumentException;
+
+import java.io.IOException;
 
 public interface CreateEpicrisisService {
 
-    EpicrisisBo createDocument(Integer intermentEpisodeId, PatientInfoBo patientInfo, EpicrisisBo epicrisisBo);
+    EpicrisisBo execute(Integer institutionId, EpicrisisBo epicrisis) throws IOException, PDFDocumentException;
 }
