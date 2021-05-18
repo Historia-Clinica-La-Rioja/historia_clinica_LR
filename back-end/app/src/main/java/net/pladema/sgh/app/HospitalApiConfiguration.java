@@ -1,8 +1,8 @@
 package net.pladema.sgh.app;
 
 
-import ar.lamansys.odontology.configuration.EnableOdontology;
 import ar.lamansys.sgx.shared.EnableSharedLibrary;
+import ar.lamansys.odontology.EnableOdontology;
 import ar.lamansys.sgx.cubejs.infrastructure.configuration.EnableCubeJs;
 import net.pladema.EnableHospitalLib;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
