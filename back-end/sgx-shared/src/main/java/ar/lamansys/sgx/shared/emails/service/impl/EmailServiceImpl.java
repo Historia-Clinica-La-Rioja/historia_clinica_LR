@@ -1,4 +1,4 @@
-package net.pladema.sgx.emails.service.impl;
+package ar.lamansys.sgx.shared.emails.service.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import net.pladema.sgx.emails.domain.Mail;
-import net.pladema.sgx.emails.service.EmailService;
+import ar.lamansys.sgx.shared.emails.domain.Mail;
+import ar.lamansys.sgx.shared.emails.service.EmailService;
 
 @Service
 public class EmailServiceImpl implements EmailService {

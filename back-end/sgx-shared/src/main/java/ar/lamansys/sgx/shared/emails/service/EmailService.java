@@ -1,4 +1,4 @@
-package net.pladema.sgx.emails.service;
+package ar.lamansys.sgx.shared.emails.service;
 
 public interface EmailService {
 

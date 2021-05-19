@@ -1,4 +1,4 @@
-package net.pladema.sgx.emails.domain;
+package ar.lamansys.sgx.shared.emails.domain;
 
 import java.util.HashMap;
 import java.util.Map;
