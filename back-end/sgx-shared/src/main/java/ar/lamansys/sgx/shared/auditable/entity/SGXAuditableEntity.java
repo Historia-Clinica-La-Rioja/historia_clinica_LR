@@ -1,7 +1,7 @@
-package net.pladema.sgx.auditable.entity;
+package ar.lamansys.sgx.shared.auditable.entity;
 
-import net.pladema.sgx.auditable.CreationableEntity;
-import net.pladema.sgx.auditable.UpdateableEntity;
+import ar.lamansys.sgx.shared.auditable.CreationableEntity;
+import ar.lamansys.sgx.shared.auditable.UpdateableEntity;
 
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;

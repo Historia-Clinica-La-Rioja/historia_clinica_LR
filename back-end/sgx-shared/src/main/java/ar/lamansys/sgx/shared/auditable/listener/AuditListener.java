@@ -1,8 +1,8 @@
-package net.pladema.sgx.auditable.listener;
+package ar.lamansys.sgx.shared.auditable.listener;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
-import net.pladema.sgx.auditable.Auditable;
-import net.pladema.sgx.auditable.entity.Audit;
+import ar.lamansys.sgx.shared.auditable.Auditable;
+import ar.lamansys.sgx.shared.auditable.entity.Audit;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;

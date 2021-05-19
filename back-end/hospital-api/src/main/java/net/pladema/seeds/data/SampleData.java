@@ -1,8 +1,8 @@
 package net.pladema.seeds.data;
 
 import net.pladema.address.repository.AddressRepository;
-import net.pladema.sgx.auditable.entity.Audit;
-import net.pladema.sgx.auditable.entity.AuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.Audit;
+import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.person.repository.PersonRepository;

@@ -1,4 +1,4 @@
-package net.pladema.sgx.auditable.entity;
+package ar.lamansys.sgx.shared.auditable.entity;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,6 @@
-package net.pladema.sgx.auditable.entity;
+package ar.lamansys.sgx.shared.auditable.entity;
+
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 

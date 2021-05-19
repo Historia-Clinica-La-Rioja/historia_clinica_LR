@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

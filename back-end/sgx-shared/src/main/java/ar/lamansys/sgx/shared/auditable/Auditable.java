@@ -1,8 +1,8 @@
-package net.pladema.sgx.auditable;
+package ar.lamansys.sgx.shared.auditable;
 
 import java.util.Optional;
 
-import net.pladema.sgx.auditable.entity.Audit;
+import ar.lamansys.sgx.shared.auditable.entity.Audit;
 
 public interface Auditable {
  

@@ -12,7 +12,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.summary.Inter
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
-import net.pladema.sgx.auditable.entity.Updateable;
+import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.security.utils.UserInfo;
 import org.slf4j.Logger;

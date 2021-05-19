@@ -15,10 +15,10 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.auditable.DeleteableEntity;
-import net.pladema.sgx.auditable.entity.Deleteable;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.DeleteableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.Deleteable;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity

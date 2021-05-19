@@ -1,4 +1,4 @@
-package net.pladema.sgx.auditable;
+package ar.lamansys.sgx.shared.auditable;
 
 import java.time.LocalDateTime;
 

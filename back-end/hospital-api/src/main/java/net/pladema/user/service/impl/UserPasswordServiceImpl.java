@@ -1,6 +1,6 @@
 package net.pladema.user.service.impl;
 
-import net.pladema.sgx.auditable.entity.Audit;
+import ar.lamansys.sgx.shared.auditable.entity.Audit;
 import net.pladema.user.repository.UserPasswordRepository;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserPassword;

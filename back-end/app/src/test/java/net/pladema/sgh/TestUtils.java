@@ -1,7 +1,7 @@
 package net.pladema.sgh;
 
-import net.pladema.sgx.auditable.entity.Audit;
-import net.pladema.sgx.auditable.entity.AuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.Audit;
+import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
 
 import java.util.Optional;
 
