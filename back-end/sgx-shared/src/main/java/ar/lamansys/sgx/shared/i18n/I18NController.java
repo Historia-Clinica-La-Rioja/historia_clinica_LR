@@ -1,4 +1,4 @@
-package net.pladema.sgx.i18n;
+package ar.lamansys.sgx.shared.i18n;
 
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;

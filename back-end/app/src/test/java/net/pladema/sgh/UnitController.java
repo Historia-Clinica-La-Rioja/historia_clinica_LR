@@ -4,7 +4,7 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.token.service.TokenService;
 import net.pladema.sgx.actuator.configuration.ActuatorConfiguration;
-import net.pladema.sgx.i18n.CustomMessageSourceConfiguration;
+import ar.lamansys.sgx.shared.i18n.CustomMessageSourceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
