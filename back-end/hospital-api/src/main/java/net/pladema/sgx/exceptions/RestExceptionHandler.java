@@ -12,7 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
-import ar.lamansys.sgx.shared.controller.dto.ApiErrorMessageDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.security.exceptions.JWTParseException;
-import ar.lamansys.sgx.shared.controller.dto.ApiErrorDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice

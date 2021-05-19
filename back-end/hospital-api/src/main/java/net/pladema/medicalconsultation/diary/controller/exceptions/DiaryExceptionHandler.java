@@ -1,6 +1,6 @@
 package net.pladema.medicalconsultation.diary.controller.exceptions;
 
-import ar.lamansys.sgx.shared.controller.dto.ApiErrorMessageDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

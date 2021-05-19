@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.controller.dto;
+package ar.lamansys.sgx.shared.exceptions.dto;
 
 public class ApiErrorMessageDto {
 	public final String code;
