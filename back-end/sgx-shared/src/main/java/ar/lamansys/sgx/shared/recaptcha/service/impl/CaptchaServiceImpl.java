@@ -1,8 +1,7 @@
-package net.pladema.sgx.recaptcha.service.impl;
+package ar.lamansys.sgx.shared.recaptcha.service.impl;
 
-import net.pladema.sgx.exceptions.RecaptchaInvalid;
-import net.pladema.sgx.recaptcha.service.ICaptchaService;
-import net.pladema.sgx.recaptcha.service.domain.RecaptchaPublicConfigBo;
+import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
+import ar.lamansys.sgx.shared.recaptcha.service.domain.RecaptchaPublicConfigBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

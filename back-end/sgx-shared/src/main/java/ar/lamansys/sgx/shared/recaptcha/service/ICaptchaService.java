@@ -1,6 +1,6 @@
-package net.pladema.sgx.recaptcha.service;
+package ar.lamansys.sgx.shared.recaptcha.service;
 
-import net.pladema.sgx.recaptcha.service.domain.RecaptchaPublicConfigBo;
+import ar.lamansys.sgx.shared.recaptcha.service.domain.RecaptchaPublicConfigBo;
 
 public interface ICaptchaService {
 

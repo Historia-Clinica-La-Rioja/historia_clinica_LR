@@ -1,4 +1,4 @@
-package net.pladema.sgx.recaptcha.service.domain;
+package ar.lamansys.sgx.shared.recaptcha.service.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

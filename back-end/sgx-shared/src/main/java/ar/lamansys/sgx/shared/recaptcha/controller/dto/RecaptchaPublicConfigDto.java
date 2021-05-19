@@ -1,8 +1,8 @@
-package net.pladema.sgx.recaptcha.controller.dto;
+package ar.lamansys.sgx.shared.recaptcha.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.pladema.sgx.recaptcha.service.domain.RecaptchaPublicConfigBo;
+import ar.lamansys.sgx.shared.recaptcha.service.domain.RecaptchaPublicConfigBo;
 
 @Getter
 @AllArgsConstructor

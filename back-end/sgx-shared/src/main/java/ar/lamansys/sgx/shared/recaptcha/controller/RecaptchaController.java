@@ -1,7 +1,7 @@
-package net.pladema.sgx.recaptcha.controller;
+package ar.lamansys.sgx.shared.recaptcha.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.sgx.recaptcha.service.ICaptchaService;
+import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

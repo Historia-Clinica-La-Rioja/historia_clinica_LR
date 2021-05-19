@@ -2,7 +2,7 @@ package net.pladema.security.authentication.controller;
 
 import javax.validation.Valid;
 
-import net.pladema.sgx.recaptcha.service.ICaptchaService;
+import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
