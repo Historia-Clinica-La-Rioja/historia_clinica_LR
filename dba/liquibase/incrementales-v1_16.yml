@@ -69,4 +69,12 @@ databaseChangeLog:
             referencedTableName: dependency
             validate: true
 
+    - changeSet:
+        id: dependency-fixCodeValue
+        author: tmedina
+        context: "!schema-only"
+        changes:
+        - sql:
+            sql: |-
+                UPDATE dependency SET code = '25' WHERE description='Universitario público';
 
