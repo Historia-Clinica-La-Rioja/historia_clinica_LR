@@ -1,11 +1,11 @@
 package net.pladema.sgx.auditable.entity;
 
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-
-import net.pladema.security.utils.SecurityContextUtils;
 
 public class SGXAuditListener {
 

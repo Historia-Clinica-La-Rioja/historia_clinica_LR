@@ -1,6 +1,6 @@
 package net.pladema.sgx.auditable.listener;
 
-import net.pladema.security.utils.SecurityContextUtils;
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.sgx.auditable.Auditable;
 import net.pladema.sgx.auditable.entity.Audit;
 

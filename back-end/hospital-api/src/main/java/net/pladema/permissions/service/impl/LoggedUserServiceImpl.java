@@ -1,13 +1,13 @@
 package net.pladema.permissions.service.impl;
 
 
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.permissions.controller.external.LoggedUserExternalServiceImpl;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.domain.UserBo;
 import net.pladema.permissions.service.dto.RoleAssignment;
-import net.pladema.security.utils.SecurityContextUtils;
 import net.pladema.user.repository.UserRepository;
 import net.pladema.user.repository.entity.User;
 import org.slf4j.Logger;

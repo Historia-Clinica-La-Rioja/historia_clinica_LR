@@ -25,6 +25,10 @@ public class SgxUserDetails implements UserDetails {
 	
 	private Boolean enabled = true;
 
+	public SgxUserDetails(Integer userId) {
+		this.userId = userId;
+	}
+
 	public SgxUserDetails(Integer userId, String username) {
 		this.userId = userId;
 		this.username = username;
