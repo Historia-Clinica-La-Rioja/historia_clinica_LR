@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.generalstate.constr
 
 import net.pladema.clinichistory.documents.controller.dto.EffectiveClinicalObservationDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignDto;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.EffectiveVitalSignTimeValid;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;

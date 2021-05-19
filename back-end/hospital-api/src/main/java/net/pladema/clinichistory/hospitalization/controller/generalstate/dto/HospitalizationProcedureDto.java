@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

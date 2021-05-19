@@ -1,7 +1,7 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
-import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
-import static net.pladema.sgx.dates.utils.DateUtils.isBetween;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
 import static net.pladema.sgx.security.utils.UserInfo.getCurrentAuditor;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.groupingBy;

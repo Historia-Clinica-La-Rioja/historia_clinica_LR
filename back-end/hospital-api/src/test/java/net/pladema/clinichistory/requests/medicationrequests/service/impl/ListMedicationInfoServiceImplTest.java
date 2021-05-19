@@ -14,7 +14,7 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedi
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

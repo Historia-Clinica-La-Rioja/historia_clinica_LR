@@ -14,7 +14,7 @@ import net.pladema.clinichistory.hospitalization.service.patientdischarge.Patien
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Test;

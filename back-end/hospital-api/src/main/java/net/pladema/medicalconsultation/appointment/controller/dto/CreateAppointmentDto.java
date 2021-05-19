@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import org.hibernate.validator.constraints.Length;
 
 import javax.annotation.Nullable;

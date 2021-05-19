@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.core.ips;
 
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

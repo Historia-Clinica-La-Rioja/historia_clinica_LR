@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.core.generalstate;
 
 import net.pladema.clinichistory.documents.repository.generalstate.domain.AllergyConditionVo;
 import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

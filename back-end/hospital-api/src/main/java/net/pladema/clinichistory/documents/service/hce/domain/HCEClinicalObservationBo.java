@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.service.hce.domain;
 
 import lombok.*;
 import net.pladema.clinichistory.documents.repository.hce.domain.HCEClinicalObservationVo;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

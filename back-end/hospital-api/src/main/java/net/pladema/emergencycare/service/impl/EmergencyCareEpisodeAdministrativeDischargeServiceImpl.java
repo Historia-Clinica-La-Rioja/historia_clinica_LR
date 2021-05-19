@@ -9,7 +9,7 @@ import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeAdministrativeDischargeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.AdministrativeDischargeBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

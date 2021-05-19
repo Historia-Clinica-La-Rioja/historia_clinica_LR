@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.controller.mapper;
 import net.pladema.clinichistory.documents.controller.dto.*;
 import net.pladema.clinichistory.documents.service.hce.domain.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

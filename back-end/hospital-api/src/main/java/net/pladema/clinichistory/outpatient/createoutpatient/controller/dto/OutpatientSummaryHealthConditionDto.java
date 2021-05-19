@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.ClinicalTermDto;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 @Getter
 @Setter

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Nullable;

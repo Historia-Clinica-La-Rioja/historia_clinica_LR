@@ -4,7 +4,7 @@ import net.pladema.clinichistory.hospitalization.controller.constraints.Probable
 import net.pladema.clinichistory.hospitalization.controller.dto.ProbableDischargeDateDto;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

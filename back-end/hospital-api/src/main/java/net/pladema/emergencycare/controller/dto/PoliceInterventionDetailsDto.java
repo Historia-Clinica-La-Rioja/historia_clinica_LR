@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.dates.controller.dto.DateDto;
-import net.pladema.sgx.dates.controller.dto.TimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 
 import java.io.Serializable;
 

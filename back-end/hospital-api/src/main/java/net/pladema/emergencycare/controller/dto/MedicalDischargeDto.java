@@ -3,7 +3,7 @@ package net.pladema.emergencycare.controller.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.sgx.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 @NoArgsConstructor
 @Getter

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 public abstract class AbstractDiaryPeriodValidator<A extends Annotation, T extends DiaryADto>
 		implements ConstraintValidator<A, T> {

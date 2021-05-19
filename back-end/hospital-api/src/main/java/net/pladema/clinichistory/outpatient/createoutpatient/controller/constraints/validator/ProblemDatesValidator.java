@@ -2,7 +2,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.constra
 
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.ProblemDates;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientProblemDto;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

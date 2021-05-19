@@ -1,7 +1,7 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
 import static java.util.stream.Collectors.groupingBy;
-import static net.pladema.sgx.dates.utils.DateUtils.getWeekDay;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,7 +24,7 @@ import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAp
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 @RequiredArgsConstructor
 public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<DiaryEmptyAppointmentsValid, DiaryDto> {

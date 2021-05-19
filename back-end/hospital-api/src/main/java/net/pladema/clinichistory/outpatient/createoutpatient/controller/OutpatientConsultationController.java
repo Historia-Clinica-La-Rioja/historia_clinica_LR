@@ -25,7 +25,7 @@ import net.pladema.medicalconsultation.appointment.controller.service.Appointmen
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.pdf.PDFDocumentException;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
 import net.pladema.staff.service.ClinicalSpecialtyService;

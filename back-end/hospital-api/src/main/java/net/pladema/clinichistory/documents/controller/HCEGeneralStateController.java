@@ -21,7 +21,7 @@ import net.pladema.clinichistory.documents.service.hce.domain.HCEImmunizationBo;
 import net.pladema.clinichistory.documents.service.hce.domain.HCEMedicationBo;
 import net.pladema.clinichistory.documents.service.hce.domain.HCEPersonalHistoryBo;
 import net.pladema.clinichistory.documents.service.hce.domain.Last2HCEVitalSignsBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

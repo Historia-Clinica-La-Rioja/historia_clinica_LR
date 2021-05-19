@@ -18,7 +18,7 @@ import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
 import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
 import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

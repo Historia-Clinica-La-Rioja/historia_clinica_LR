@@ -5,7 +5,7 @@ import net.pladema.clinichistory.requests.medicalrequests.repository.MedicalRequ
 import net.pladema.clinichistory.requests.medicalrequests.repository.entity.MedicalRequest;
 import net.pladema.clinichistory.requests.medicalrequests.service.CreateMedicalRequestService;
 import net.pladema.clinichistory.requests.medicalrequests.service.domain.MedicalRequestBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

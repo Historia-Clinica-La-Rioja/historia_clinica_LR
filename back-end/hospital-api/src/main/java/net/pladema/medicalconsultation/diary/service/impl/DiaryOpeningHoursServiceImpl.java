@@ -29,7 +29,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.diary.service.DiaryBoMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
-import net.pladema.sgx.dates.repository.entity.EDayOfWeek;
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 
 @Service
 @RequiredArgsConstructor

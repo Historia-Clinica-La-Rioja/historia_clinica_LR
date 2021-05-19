@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis
 import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.AnthropometricDataMapper;

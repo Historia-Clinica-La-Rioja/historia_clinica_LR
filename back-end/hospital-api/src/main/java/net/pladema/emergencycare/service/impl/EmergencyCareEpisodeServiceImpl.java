@@ -18,7 +18,7 @@ import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.elasticsearch.common.TriFunction;
 import org.slf4j.Logger;

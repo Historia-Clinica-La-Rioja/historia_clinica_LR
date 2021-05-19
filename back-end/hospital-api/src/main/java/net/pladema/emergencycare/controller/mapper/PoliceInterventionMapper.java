@@ -2,7 +2,7 @@ package net.pladema.emergencycare.controller.mapper;
 
 import net.pladema.emergencycare.controller.dto.PoliceInterventionDetailsDto;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 

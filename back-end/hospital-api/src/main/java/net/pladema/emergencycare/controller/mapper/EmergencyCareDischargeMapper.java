@@ -6,7 +6,7 @@ import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import net.pladema.emergencycare.controller.dto.AdministrativeDischargeDto;

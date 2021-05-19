@@ -18,9 +18,9 @@ import net.pladema.clinichistory.hospitalization.service.patientdischarge.Patien
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
-import net.pladema.sgx.dates.controller.dto.DateDto;
-import net.pladema.sgx.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;

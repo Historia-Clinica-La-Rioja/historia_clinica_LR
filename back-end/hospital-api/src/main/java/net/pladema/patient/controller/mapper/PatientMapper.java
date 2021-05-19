@@ -8,7 +8,7 @@ import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.mapper.PersonMapper;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 

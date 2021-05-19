@@ -14,7 +14,7 @@ import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

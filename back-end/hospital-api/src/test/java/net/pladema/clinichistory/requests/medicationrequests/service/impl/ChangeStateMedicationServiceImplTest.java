@@ -13,7 +13,7 @@ import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.mocks.MedicationTestMocks;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;

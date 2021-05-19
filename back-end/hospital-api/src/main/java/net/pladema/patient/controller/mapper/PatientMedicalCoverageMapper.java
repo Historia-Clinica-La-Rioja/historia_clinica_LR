@@ -2,7 +2,7 @@ package net.pladema.patient.controller.mapper;
 
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
