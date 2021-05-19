@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import net.pladema.renaper.services.RenaperAuthService;
 import net.pladema.renaper.services.domain.RenaperLoginResponse;
-import ar.lamansys.sgx.restclient.configuration.TokenHolder;
-import ar.lamansys.sgx.restclient.configuration.interceptors.AuthInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.TokenHolder;
+import ar.lamansys.sgx.shared.restclient.configuration.interceptors.AuthInterceptor;
 
 @Component
 public class RenaperAuthInterceptor extends AuthInterceptor<RenaperLoginResponse,RenaperAuthService> {

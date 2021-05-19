@@ -1,10 +1,10 @@
 package ar.lamansys.sgx.cubejs.infrastructure.repository;
 
 import ar.lamansys.sgx.cubejs.domain.DashboardStorage;
-import ar.lamansys.sgx.cubejs.domain.DashboardBoInfo;
 import ar.lamansys.sgx.cubejs.infrastructure.configuration.CubejsAutoConfiguration;
-import ar.lamansys.sgx.proxy.reverse.ReverseProxy;
-import ar.lamansys.sgx.proxy.reverse.resttemplate.RestTemplateReverseProxy;
+import ar.lamansys.sgx.cubejs.domain.DashboardBoInfo;
+import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
+import ar.lamansys.sgx.shared.proxy.reverse.resttemplate.RestTemplateReverseProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import lombok.Setter;
-import ar.lamansys.sgx.restclient.configuration.WSConfig;
+import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
 
 @Component
 @ConfigurationProperties(prefix="ws.renaper")

@@ -1,9 +1,9 @@
 package net.pladema.snowstorm.services;
 
-import ar.lamansys.sgx.restclient.configuration.interceptors.LoggingRequestInterceptor;
-import ar.lamansys.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
-import ar.lamansys.sgx.restclient.services.AuthService;
-import ar.lamansys.sgx.restclient.services.domain.WSResponseException;
+import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
+import ar.lamansys.sgx.shared.restclient.services.AuthService;
+import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
 import net.pladema.snowstorm.services.domain.SnowstormLoginResponse;
 import org.springframework.beans.factory.annotation.Value;

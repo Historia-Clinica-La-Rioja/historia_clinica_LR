@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.exceptions;
 
-import ar.lamansys.sgx.controller.dto.ApiErrorMessageDto;
+import ar.lamansys.sgx.shared.controller.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.documents.core.cie10.exceptions.HCICIE10Exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

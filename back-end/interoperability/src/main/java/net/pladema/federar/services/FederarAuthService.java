@@ -1,9 +1,9 @@
 package net.pladema.federar.services;
 
-import ar.lamansys.sgx.restclient.configuration.interceptors.LoggingRequestInterceptor;
-import ar.lamansys.sgx.restclient.configuration.resttemplate.RestTemplateSSL;
-import ar.lamansys.sgx.restclient.services.AuthService;
-import ar.lamansys.sgx.restclient.services.domain.WSResponseException;
+import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
+import ar.lamansys.sgx.shared.restclient.services.AuthService;
+import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
 import net.pladema.federar.configuration.FederarWSConfig;
 import net.pladema.federar.services.domain.FederarLoginPayload;
 import net.pladema.federar.services.domain.FederarLoginResponse;

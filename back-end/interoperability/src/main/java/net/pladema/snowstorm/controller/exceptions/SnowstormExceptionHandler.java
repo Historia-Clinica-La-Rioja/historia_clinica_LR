@@ -1,6 +1,6 @@
 package net.pladema.snowstorm.controller.exceptions;
 
-import ar.lamansys.sgx.controller.dto.ApiErrorMessageDto;
+import ar.lamansys.sgx.shared.controller.dto.ApiErrorMessageDto;
 import net.pladema.snowstorm.services.exceptions.SnowstormTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

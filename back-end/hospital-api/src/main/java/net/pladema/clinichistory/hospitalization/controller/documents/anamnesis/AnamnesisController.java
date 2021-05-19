@@ -18,7 +18,7 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnes
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import ar.lamansys.sgx.controller.dto.ApiErrorDto;
+import ar.lamansys.sgx.shared.controller.dto.ApiErrorDto;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.sgx.pdf.PDFDocumentException;

@@ -1,7 +1,7 @@
 package net.pladema.federar.configuration;
 
-import ar.lamansys.sgx.restclient.configuration.interceptors.LoggingRequestInterceptor;
-import ar.lamansys.sgx.restclient.configuration.resttemplate.RestTemplateAuth;
+import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateAuth;
 import org.springframework.stereotype.Service;
 
 @Service

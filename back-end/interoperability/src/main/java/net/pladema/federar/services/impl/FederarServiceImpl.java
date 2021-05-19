@@ -1,6 +1,6 @@
 package net.pladema.federar.services.impl;
 
-import ar.lamansys.sgx.restclient.services.RestClient;
+import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import net.pladema.federar.configuration.FederarRestTemplateAuth;
 import net.pladema.federar.configuration.FederarWSConfig;
 import net.pladema.federar.services.FederarService;

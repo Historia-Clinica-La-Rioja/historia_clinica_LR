@@ -1,7 +1,7 @@
 package net.pladema.federar.configuration;
 
-import ar.lamansys.sgx.restclient.configuration.TokenHolder;
-import ar.lamansys.sgx.restclient.configuration.interceptors.AuthInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.TokenHolder;
+import ar.lamansys.sgx.shared.restclient.configuration.interceptors.AuthInterceptor;
 import net.pladema.federar.services.FederarAuthService;
 import net.pladema.federar.services.domain.FederarLoginResponse;
 import org.springframework.http.HttpHeaders;

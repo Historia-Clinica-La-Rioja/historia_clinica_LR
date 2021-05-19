@@ -1,6 +1,6 @@
 package net.pladema.snowstorm.services.domain;
 
-import ar.lamansys.sgx.restclient.services.domain.LoginResponse;
+import ar.lamansys.sgx.shared.restclient.services.domain.LoginResponse;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

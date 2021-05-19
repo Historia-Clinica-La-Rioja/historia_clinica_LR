@@ -2,9 +2,9 @@ package ar.lamansys.sgx.cubejs.application.dashboardinfo;
 
 import ar.lamansys.sgx.cubejs.application.dashboardinfo.excepciones.DashboardInfoException;
 import ar.lamansys.sgx.cubejs.infrastructure.configuration.CubejsAutoConfiguration;
-import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
-import ar.lamansys.sgx.proxy.reverse.ReverseProxy;
+import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
+import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

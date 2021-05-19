@@ -1,6 +1,6 @@
 package net.pladema.federar.configuration;
 
-import ar.lamansys.sgx.restclient.configuration.WSConfig;
+import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;

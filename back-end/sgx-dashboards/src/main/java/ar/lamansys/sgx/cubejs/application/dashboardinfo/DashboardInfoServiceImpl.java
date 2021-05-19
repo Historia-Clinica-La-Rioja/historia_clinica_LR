@@ -1,7 +1,7 @@
 package ar.lamansys.sgx.cubejs.application.dashboardinfo;
 
-import ar.lamansys.sgx.cubejs.domain.DashboardBoInfo;
 import ar.lamansys.sgx.cubejs.domain.DashboardStorage;
+import ar.lamansys.sgx.cubejs.domain.DashboardBoInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

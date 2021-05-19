@@ -13,7 +13,7 @@ import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.RenaperService;
 import net.pladema.renaper.services.domain.PersonDataResponse;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
-import ar.lamansys.sgx.restclient.services.RestClient;
+import ar.lamansys.sgx.shared.restclient.services.RestClient;
 
 @Service
 @ConditionalOnProperty(
