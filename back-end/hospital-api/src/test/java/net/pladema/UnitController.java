@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import net.pladema.security.service.SecurityService;
 import net.pladema.security.token.service.TokenService;
-import net.pladema.sgx.actuator.configuration.ActuatorConfiguration;
+import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.i18n.CustomMessageSourceConfiguration;
 

@@ -2,7 +2,7 @@ package net.pladema.security.configuration;
 
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.security.filters.AuthenticationTokenFilter;
-import net.pladema.sgx.actuator.configuration.ActuatorConfiguration;
+import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

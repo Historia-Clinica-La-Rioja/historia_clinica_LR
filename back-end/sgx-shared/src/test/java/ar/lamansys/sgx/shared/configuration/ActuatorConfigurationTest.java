@@ -1,4 +1,4 @@
-package net.pladema.sgx.actuator.configuration;
+package ar.lamansys.sgx.shared.configuration;
 
 import org.junit.Before;
 import org.junit.Test;
