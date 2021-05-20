@@ -57,7 +57,7 @@ public class ApplicationVersionServiceImpl implements ApplicationVersionService 
         LOG.debug(NO_INPUT_PARAMETERS);
         String version = "";
         Properties properties = new Properties();
-        InputStream pomFile = getClass().getClassLoader().getResourceAsStream("classpath:/pom.properties");
+        InputStream pomFile = getClass().getClassLoader().getResourceAsStream("pom.properties");
         if (pomFile != null) {
             properties.load(pomFile);
             version = properties.getProperty("version", "");

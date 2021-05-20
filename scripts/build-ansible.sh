@@ -12,10 +12,10 @@ ls back-end/app/target/*.war
 cp back-end/app/target/*.war sgh-ansible/dist/api.war
 
 
-rm -r sgh-ansible/front-end/webapp 2> /dev/null || true
+rm -r sgh-ansible/dist/webapp 2> /dev/null || true
 cp -r front-end/apps/dist/hospital sgh-ansible/dist/webapp
 
-rm -r sgh-ansible/front-end/backoffice 2> /dev/null || true
+rm -r sgh-ansible/dist/backoffice 2> /dev/null || true
 cp -r front-end/backoffice/build/ sgh-ansible/dist/backoffice
 
 cd sgh-ansible/dist
