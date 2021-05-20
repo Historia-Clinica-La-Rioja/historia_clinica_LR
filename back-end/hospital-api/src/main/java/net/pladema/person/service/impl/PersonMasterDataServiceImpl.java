@@ -1,13 +1,17 @@
 package net.pladema.person.service.impl;
 
+import net.pladema.person.repository.EducationLevelRepository;
 import net.pladema.person.repository.EthnicityRepository;
 import net.pladema.person.repository.GenderRepository;
 import net.pladema.person.repository.IdentificationTypeRepository;
+import net.pladema.person.repository.OccupationRepository;
 import net.pladema.person.repository.entity.Ethnicity;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.service.PersonMasterDataService;
+import net.pladema.person.service.domain.EducationLevelBo;
 import net.pladema.person.service.domain.EthnicityBo;
+import net.pladema.person.service.domain.PersonOccupationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,13 +31,19 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
 
     private final EthnicityRepository ethnicityRepository;
 
+    private final EducationLevelRepository educationLevelRepository;
+
+    private final OccupationRepository occupationRepository;
+
     public PersonMasterDataServiceImpl(GenderRepository genderRepository,
                                        IdentificationTypeRepository identificationTypeRepository,
-                                       EthnicityRepository ethnicityRepository) {
+                                       EthnicityRepository ethnicityRepository, EducationLevelRepository educationLevelRepository, OccupationRepository occupationRepository) {
         super();
         this.genderRepository = genderRepository;
         this.identificationTypeRepository = identificationTypeRepository;
         this.ethnicityRepository = ethnicityRepository;
+        this.educationLevelRepository = educationLevelRepository;
+        this.occupationRepository = occupationRepository;
         LOG.debug("{}", "created service");
     }
 
@@ -72,6 +82,28 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
         LOG.debug("No input parameters");
         List<EthnicityBo> result = ethnicityRepository.findAllActive().stream()
                 .map(EthnicityBo::new)
+                .collect(Collectors.toList());
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public List<EducationLevelBo> getActiveEducationLevels() {
+        LOG.debug("No input parameters");
+        List<EducationLevelBo> result = educationLevelRepository.findAllActive().stream()
+                .map(EducationLevelBo::new)
+                .collect(Collectors.toList());
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public List<PersonOccupationBo> getActiveOccupations() {
+        LOG.debug("No input parameters");
+        List<PersonOccupationBo> result = occupationRepository.findAllActive().stream()
+                .map(PersonOccupationBo::new)
                 .collect(Collectors.toList());
         LOG.debug("Output size -> {}", result.size());
         LOG.trace("Output -> {}", result);

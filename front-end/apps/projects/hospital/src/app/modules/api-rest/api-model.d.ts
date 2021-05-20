@@ -554,6 +554,12 @@ export interface ECPediatricDto extends Serializable {
     triage: TriagePediatricDto;
 }
 
+export interface EducationLevelDto extends Serializable {
+    code: number;
+    description: string;
+    id: number;
+}
+
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: string;
 }
@@ -1276,6 +1282,12 @@ export interface PersonBasicDataResponseDto extends Serializable {
     firstName: string;
     lastName: string;
     photo: string;
+}
+
+export interface PersonOccupationDto extends Serializable {
+    code: number;
+    description: string;
+    id: number;
 }
 
 export interface PersonPhotoDto {
