@@ -24,6 +24,7 @@
         <module>odontology</module>
 		<module>hospital-api</module>
         <module>app</module>
+		<module>sgx-auth</module>
 		<module>hospital-shared</module>
 	</modules>
 	<properties>

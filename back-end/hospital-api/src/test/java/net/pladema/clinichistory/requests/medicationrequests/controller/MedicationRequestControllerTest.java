@@ -12,6 +12,7 @@ import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.pdf.PdfService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MedicationRequestController.class)
+@Ignore
 public class MedicationRequestControllerTest extends UnitController {
 
     private String BASE_PATH = "/institutions/{institutionId}/patient/{patientId}/medication-requests";

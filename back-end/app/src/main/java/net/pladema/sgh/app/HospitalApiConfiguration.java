@@ -1,6 +1,7 @@
 package net.pladema.sgh.app;
 
 
+import ar.lamansys.sgx.auth.EnableAuth;
 import ar.lamansys.sgx.shared.EnableSharedLibrary;
 import ar.lamansys.odontology.EnableOdontology;
 import ar.lamansys.sgx.cubejs.infrastructure.configuration.EnableCubeJs;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableCubeJs
 @EnableOdontology
+@EnableAuth
 @EnableHospitalLib
 @EnableSharedLibrary
 @ComponentScan(basePackages = {"net.pladema.sgh.app"})

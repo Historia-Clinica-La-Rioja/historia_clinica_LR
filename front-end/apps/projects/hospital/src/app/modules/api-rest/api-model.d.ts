@@ -145,6 +145,10 @@ export interface ApiErrorMessageDto {
     text: string;
 }
 
+export interface ApiKeyInfoDto {
+    id: number;
+}
+
 export interface AppearanceDto extends Serializable {
     bodyTemperatureId?: number;
     cryingExcessive?: boolean;
@@ -1674,4 +1678,5 @@ export const enum ERole {
     ENFERMERO = "ENFERMERO",
     ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE = "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE",
     ADMINISTRADOR_AGENDA = "ADMINISTRADOR_AGENDA",
+    API_CONSUMER = "API_CONSUMER",
 }

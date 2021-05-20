@@ -1,3 +1,39 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_18 
 
+    - changeSet:
+          id: user-key-createTable
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: user_key
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: user_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: key
+                              type: varchar(255)
+
+    - changeSet:
+          id: user-key-primary_key
+          author:  etrapani
+          changes:
+              -  addPrimaryKey:
+                     columnNames:  user_id, key
+                     constraintName:  pk_user_key
+                     tableName: user_key
+
+    - changeSet:
+          id: user-key-unique_constraint
+          author: etrapani
+          changes:
+              - addUniqueConstraint:
+                    columnNames: key
+                    constraintName: UQ_key
+                    tableName: user_key
+
