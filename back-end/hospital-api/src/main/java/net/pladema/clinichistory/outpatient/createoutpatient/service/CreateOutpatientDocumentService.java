@@ -1,9 +1,11 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
+import net.pladema.sgx.pdf.PDFDocumentException;
+
+import java.io.IOException;
 
 public interface CreateOutpatientDocumentService {
     
-    OutpatientDocumentBo create(Integer outpatientId, PatientInfoBo patientInfo, OutpatientDocumentBo outpatient);
+    OutpatientDocumentBo execute(Integer institutionId, OutpatientDocumentBo outpatient) throws IOException, PDFDocumentException;
 }
