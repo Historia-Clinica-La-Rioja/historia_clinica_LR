@@ -77,6 +77,7 @@ public class MainDiagnosesController {
                 .map(patientExternalService::getBasicDataFromPatient)
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
                 .ifPresentOrElse(mainDiagnoseBo::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+        mainDiagnoseBo.setEncounterId(internmentEpisodeId);
 
         changeMainDiagnosesService.execute(institutionId, mainDiagnoseBo);
 

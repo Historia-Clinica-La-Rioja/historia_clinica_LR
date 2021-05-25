@@ -18,9 +18,9 @@ public interface EmergencyCareDischargeMapper {
 
     @Named("toMedicalDischargeBo")
     @Mapping(source = "medicalDischargeDto.problems", target = "problems")
-    @Mapping(source = "patientInfoBo.id", target = "patientId")
-    @Mapping(source = "patientInfoBo", target = "patientInfoBo")
-    MedicalDischargeBo toMedicalDischargeBo(AMedicalDischargeDto medicalDischargeDto, Integer medicalDischargeBy, PatientInfoBo patientInfoBo, Integer sourceId);
+    @Mapping(source = "patientInfo.id", target = "patientId")
+    @Mapping(source = "patientInfo", target = "patientInfo")
+    MedicalDischargeBo toMedicalDischargeBo(AMedicalDischargeDto medicalDischargeDto, Integer medicalDischargeBy, PatientInfoBo patientInfo, Integer sourceId);
 
     @Named("toAdministrativeDischargeBo")
     AdministrativeDischargeBo toAdministrativeDischargeBo(AdministrativeDischargeDto medicalDischargeDto, Integer episodeId, Integer userId);

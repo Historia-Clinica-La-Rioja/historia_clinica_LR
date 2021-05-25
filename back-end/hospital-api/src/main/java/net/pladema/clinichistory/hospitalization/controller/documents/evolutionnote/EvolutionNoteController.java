@@ -102,7 +102,7 @@ public class EvolutionNoteController {
     public ResponseEntity<Boolean> createEvolutionDiagnosis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid EvolutionDiagnosisDto evolutionDiagnosisDto) throws IOException, PDFDocumentException {
+            @RequestBody @Valid EvolutionDiagnosisDto evolutionDiagnosisDto) {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionDiagnosisDto {}",
                 institutionId, internmentEpisodeId, evolutionDiagnosisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)

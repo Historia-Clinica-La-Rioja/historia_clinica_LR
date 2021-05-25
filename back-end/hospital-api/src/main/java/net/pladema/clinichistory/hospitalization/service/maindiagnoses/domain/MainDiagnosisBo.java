@@ -48,6 +48,13 @@ public class MainDiagnosisBo extends SelfValidating<MainDiagnosisBo> implements 
     private List<@Valid DiagnosisBo> diagnosis;
 
     @Override
+    public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return patientId;
+    }
+
+    @Override
     public short getDocumentType() {
         return DocumentType.EVALUATION_NOTE;
     }

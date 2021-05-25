@@ -61,6 +61,13 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements Document
     @Valid
     private VitalSignBo vitalSigns;
 
+    @Override
+    public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return patientId;
+    }
+
     public List<DiagnosisBo> getAlternativeDiagnosis() {
         return diagnosis;
     }

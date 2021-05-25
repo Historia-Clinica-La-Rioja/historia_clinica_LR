@@ -29,6 +29,13 @@ public class ServiceRequestBo implements Document {
     private LocalDate requestDate = LocalDate.now();
 
     @Override
+    public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return null;
+    }
+
+    @Override
     public short getDocumentType() {
         return DocumentType.ORDER;
     }
@@ -36,11 +43,6 @@ public class ServiceRequestBo implements Document {
     @Override
     public Short getDocumentSource() {
         return SourceType.ORDER;
-    }
-
-    @Override
-    public Integer getPatientId() {
-        return patientInfo.getId();
     }
 
 }

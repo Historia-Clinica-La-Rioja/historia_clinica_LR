@@ -33,7 +33,7 @@ public class MedicalDischargeBo implements Document {
 
     private Integer patientId;
 
-    private PatientInfoBo patientInfoBo;
+    private PatientInfoBo patientInfo;
 
     @Override
     public short getDocumentType() {
@@ -52,16 +52,9 @@ public class MedicalDischargeBo implements Document {
 
     @Override
     public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
         return patientId;
     }
 
-    @Override
-    public List<ProblemBo> getProblems() {
-        return problems;
-    }
-
-    @Override
-    public PatientInfoBo getPatientInfo() {
-        return patientInfoBo;
-    }
 }
