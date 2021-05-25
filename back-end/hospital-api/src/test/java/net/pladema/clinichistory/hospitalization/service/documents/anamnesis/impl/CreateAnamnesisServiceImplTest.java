@@ -77,7 +77,7 @@ public class CreateAnamnesisServiceImplTest {
 	@Test(expected = NotFoundException.class)
 	public void createDocument_withEpisodeThatNotExists() throws IOException, PDFDocumentException {
 		var anamnesis = validAnamnesis();
-		createAnamnesisServiceImpl.createDocument(8, anamnesis);
+		createAnamnesisServiceImpl.execute(8, anamnesis);
 	}
 
 	@Test(expected = ConstraintViolationException.class)
@@ -85,7 +85,7 @@ public class CreateAnamnesisServiceImplTest {
 		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(1l));
 		var anamnesis = validAnamnesis();
 		anamnesis.setEncounterId(internmentEpisode.getId());
-		createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId(), anamnesis);
+		createAnamnesisServiceImpl.execute(internmentEpisode.getInstitutionId(), anamnesis);
 	}
 
 	//TODO: la PK de internación es institucion_id + algo mas
@@ -94,7 +94,7 @@ public class CreateAnamnesisServiceImplTest {
 		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(null));
 		var anamnesis = validAnamnesis();
 		anamnesis.setEncounterId(internmentEpisode.getId());
-		createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId()+1, anamnesis);
+		createAnamnesisServiceImpl.execute(internmentEpisode.getInstitutionId()+1, anamnesis);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class CreateAnamnesisServiceImplTest {
 		anamnesis.setEncounterId(internmentEpisode.getId());
 		anamnesis.setMainDiagnosis(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisode.getInstitutionId(), anamnesis)
 		);
 		String expectedMessage = "Diagnóstico principal obligatorio";
 		String actualMessage = exception.getMessage();
@@ -122,7 +122,7 @@ public class CreateAnamnesisServiceImplTest {
 		anamnesis.setEncounterId(internmentEpisode.getId());
 
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisode.getInstitutionId(), anamnesis)
 		);
 		String expectedMessage = "Diagnostico principal duplicado en los secundarios";
 		String actualMessage = exception.getMessage();
@@ -140,25 +140,25 @@ public class CreateAnamnesisServiceImplTest {
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setDiagnosis(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("diagnosis: {value.mandatory}"));
 
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED")),
 				new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Diagnósticos secundarios repetidos"));
 
@@ -174,24 +174,24 @@ public class CreateAnamnesisServiceImplTest {
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setPersonalHistories(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("personalHistories: {value.mandatory}"));
 
 		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
 				new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Antecedentes personales repetidos"));
 
@@ -207,24 +207,24 @@ public class CreateAnamnesisServiceImplTest {
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setFamilyHistories(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
 		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
 				new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Antecedentes familiares repetidos"));
 	}
@@ -241,18 +241,18 @@ public class CreateAnamnesisServiceImplTest {
 
 		anamnesis.setProcedures(List.of(new ProcedureBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setProcedures(List.of(new ProcedureBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setProcedures(List.of(new ProcedureBo(new SnomedBo("REPEATED", "REPEATED")),
 				new ProcedureBo(new SnomedBo("REPEATED", "REPEATED"))));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Procedimientos repetidos"));
 	}
@@ -267,17 +267,17 @@ public class CreateAnamnesisServiceImplTest {
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setMedications(null);
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setMedications(List.of(new MedicationBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setMedications(List.of(new MedicationBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 	}
 
@@ -291,17 +291,17 @@ public class CreateAnamnesisServiceImplTest {
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setImmunizations(null);
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setImmunizations(List.of(new ImmunizationBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 
 		anamnesis.setImmunizations(List.of(new ImmunizationBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 	}
 
@@ -320,13 +320,13 @@ public class CreateAnamnesisServiceImplTest {
 
 		anamnesis.setAnthropometricData(newAnthropometricData("10001", localDateTime));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 
 		anamnesis.setAnthropometricData(newAnthropometricData("-50", null));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 	}
@@ -344,7 +344,7 @@ public class CreateAnamnesisServiceImplTest {
 				LocalTime.of(11,20));
 		anamnesis.setVitalSigns(newVitalSigns(null, localDateTime));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("vitalSigns.bloodOxygenSaturation.value: {value.mandatory}"));
 
@@ -357,7 +357,7 @@ public class CreateAnamnesisServiceImplTest {
 
 		anamnesis.setVitalSigns(newVitalSigns("Value", LocalDateTime.of(2020,9,9,1,5,6)));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Saturación de oxigeno: La fecha de medición debe ser posterior a la fecha de internación"));
 	}

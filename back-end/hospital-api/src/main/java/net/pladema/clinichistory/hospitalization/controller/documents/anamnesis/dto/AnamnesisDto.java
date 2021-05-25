@@ -3,9 +3,6 @@ package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.constraints.DiagnosisValid;
-import net.pladema.clinichistory.hospitalization.controller.constraints.HealthHistoryConditionValid;
-import net.pladema.clinichistory.hospitalization.controller.constraints.ProceduresValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
@@ -34,19 +31,15 @@ public class AnamnesisDto implements DocumentDto, Serializable {
     private HealthConditionDto mainDiagnosis;
 
     @NotNull
-    @DiagnosisValid
     private List<@Valid DiagnosisDto> diagnosis = new ArrayList<>();
 
     @NotNull
-    @HealthHistoryConditionValid
     private List<@Valid HealthHistoryConditionDto> personalHistories = new ArrayList<>();
 
     @Nullable
-    @ProceduresValid
     private List<@Valid HospitalizationProcedureDto> procedures = new ArrayList<>();
 
     @NotNull
-    @HealthHistoryConditionValid
     private List<@Valid HealthHistoryConditionDto> familyHistories = new ArrayList<>();
 
     @NotNull

@@ -57,7 +57,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     @Override
     @Transactional
-    public AnamnesisBo createDocument(Integer institutionId, AnamnesisBo anamnesis)
+    public AnamnesisBo execute(Integer institutionId, AnamnesisBo anamnesis)
             throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> anamnesis {}", anamnesis);
 
