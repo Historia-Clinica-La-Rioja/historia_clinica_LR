@@ -67,10 +67,6 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements Document
         return patientId;
     }
 
-    public String getDocumentStatusId(){
-        return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
-    }
-
     public short getDocumentType() {
         return DocumentType.EPICRISIS;
     }

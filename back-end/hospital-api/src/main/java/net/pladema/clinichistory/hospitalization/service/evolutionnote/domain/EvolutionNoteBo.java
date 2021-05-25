@@ -74,9 +74,4 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
         return SourceType.HOSPITALIZATION;
     }
 
-    public String getDocumentStatusId(){
-        return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
-    }
-
-
 }

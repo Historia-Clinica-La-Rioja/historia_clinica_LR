@@ -3,14 +3,21 @@ package net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.sgx.exceptions.SelfValidating;
 
 import javax.annotation.Nullable;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
@@ -18,106 +25,37 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class MainDiagnosisBo implements Document {
+public class MainDiagnosisBo extends SelfValidating<MainDiagnosisBo> implements Document {
 
     private Long id;
+
+    private Integer patientId;
+
+    private PatientInfoBo patientInfo;
+
+    private Integer encounterId;
 
     @NotNull
     private boolean confirmed = false;
 
-    @Nullable
+    @NotNull
     private DocumentObservationsBo notes;
 
-    @Nullable
+    @NotNull(message = "{diagnosis.mandatory}")
     private HealthConditionBo mainDiagnosis;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
+    @Nullable
+    private List<@Valid DiagnosisBo> diagnosis;
 
     @Override
-    public List<DiagnosisBo> getDiagnosis() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ProblemBo> getProblems() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ProcedureBo> getProcedures() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getPersonalHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getFamilyHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<MedicationBo> getMedications() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<AllergyConditionBo> getAllergies() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ImmunizationBo> getImmunizations() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public VitalSignBo getVitalSigns() {
-        return null;
-    }
-
-    @Override
-    public AnthropometricDataBo getAnthropometricData() {
-        return null;
-    }
-
-    @Override
-    public List<ReasonBo> getReasons() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public ClinicalSpecialtyBo getClinicalSpecialty() {
-        return null;
-    }
-    
     public short getDocumentType() {
-        return 0;
-    }
-
-    @Override
-    public Integer getEncounterId() {
-        return null;
+        return DocumentType.EVALUATION_NOTE;
     }
 
     @Override
     public Short getDocumentSource() {
-        return null;
+        return SourceType.HOSPITALIZATION;
     }
 
-    @Override
-    public String getDocumentStatusId() {
-        return null;
-    }
-
-    @Override
-    public Integer getPatientId() {
-        return null;
-    }
 
 }
