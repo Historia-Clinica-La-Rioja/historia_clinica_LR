@@ -35,7 +35,7 @@ public class ToothStorageMockImpl implements ToothStorage {
 
             OdontologySnomedBo odontologySnomedBo = new OdontologySnomedBo();
             odontologySnomedBo.setPt("Diente " + i);
-            odontologySnomedBo.setId(Integer.parseInt(23 + Integer.toString(toothCode) + quadrantCode));
+            odontologySnomedBo.setSctid("232323" +  + quadrantCode + toothCode);
             toothBo.setSnomed(odontologySnomedBo);
             teeth.add(toothBo);
         }

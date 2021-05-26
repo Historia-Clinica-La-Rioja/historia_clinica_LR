@@ -14,8 +14,8 @@ public class OdontologySnomedBo {
     private String sctid;
     private String pt;
 
-    public OdontologySnomedBo(Integer id, String pt) {
-        this.id = id;
+    public OdontologySnomedBo(String sctid, String pt) {
+        this.sctid = sctid;
         this.pt = pt;
     }
 
