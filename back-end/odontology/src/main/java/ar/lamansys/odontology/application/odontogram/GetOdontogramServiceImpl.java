@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.application.odontogram;
 
 import ar.lamansys.odontology.domain.OdontogramQuadrantBo;
+import ar.lamansys.odontology.domain.OdontogramQuadrantData;
 import ar.lamansys.odontology.domain.OdontogramQuadrantStorage;
 import ar.lamansys.odontology.domain.ToothStorage;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,9 +31,7 @@ public class GetOdontogramServiceImpl implements GetOdontogramService {
 
     public List<OdontogramQuadrantBo> run() {
         var teeth = toothStorage.getAll();
-        var quadrants = odontogramQuadrantStorage.getAll();
-        HashMap<Integer, OdontogramQuadrantBo> quadrantMap = new HashMap<>();
-        quadrants.forEach(q -> quadrantMap.put(q.getCode(), q));
+        Map<Integer, OdontogramQuadrantBo> quadrantMap = OdontogramQuadrantData.getAsMap();
         teeth.forEach(t -> quadrantMap.get(t.getQuadrantCode()).addTooth(t));
         var result = new ArrayList<>(quadrantMap.values());
         LOG.debug("Output -> {}", result);
