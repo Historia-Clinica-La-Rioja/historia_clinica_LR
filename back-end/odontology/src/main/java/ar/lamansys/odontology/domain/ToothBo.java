@@ -15,8 +15,15 @@ public class ToothBo {
     private OdontologySnomedBo snomed;
     private Integer toothCode;
     private Integer quadrantCode;
-    private boolean isPosterior;
+    private boolean posterior;
     private final Logger LOG =  LoggerFactory.getLogger(getClass());
+
+    public ToothBo(ToothBo other){
+        this.snomed = other.snomed;
+        this.toothCode = other.toothCode;
+        this.quadrantCode = other.quadrantCode;
+        this.posterior = other.posterior;
+    }
 
     public boolean belongsToQuadrant(Integer quadrantCode) {
         LOG.debug("Input -> {}", quadrantCode);
