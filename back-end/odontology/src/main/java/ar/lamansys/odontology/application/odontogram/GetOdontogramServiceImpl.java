@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +29,11 @@ public class GetOdontogramServiceImpl implements GetOdontogramService {
 
     public List<OdontogramQuadrantBo> run() {
         var teeth = toothStorage.getAll();
-        var result = odontogramQuadrantStorage.getAll();
-        result.forEach(q ->
-                q.setTeeth(teeth.stream().filter(t -> t.belongsToQuadrant(q.getCode()))
-                        .collect(Collectors.toList()))
-        );
+        var quadrants = odontogramQuadrantStorage.getAll();
+        HashMap<Integer, OdontogramQuadrantBo> quadrantMap = new HashMap<>();
+        quadrants.forEach(q -> quadrantMap.put(q.getCode(), q));
+        teeth.forEach(t -> quadrantMap.get(t.getQuadrantCode()).addTooth(t));
+        var result = new ArrayList<>(quadrantMap.values());
         LOG.debug("Output -> {}", result);
         return result;
     }
