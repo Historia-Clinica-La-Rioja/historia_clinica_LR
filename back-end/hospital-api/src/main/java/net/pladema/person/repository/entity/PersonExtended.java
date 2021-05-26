@@ -46,6 +46,12 @@ public class PersonExtended implements Serializable {
     @Column(name = "ethnicity_id")
     private Integer ethnicityId;
 
+    @Column(name = "education_level_id")
+    private Integer educationLevelId;
+
+    @Column(name = "occupation_id")
+    private Integer occupationId;
+
     @Column(name = "religion", length = 25)
     private String religion;
 

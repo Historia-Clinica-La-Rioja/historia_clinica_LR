@@ -51,6 +51,10 @@ public class APersonDto {
 
     private Integer ethnicityId;
 
+    private Integer educationLevelId;
+
+    private Integer occupationId;
+
     private String religion;
 
     private String nameSelfDetermination;
