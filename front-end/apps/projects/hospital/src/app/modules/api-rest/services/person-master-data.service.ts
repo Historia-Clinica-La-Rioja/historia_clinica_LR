@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { EthnicityDto, GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
+import { EducationLevelDto, EthnicityDto, GenderDto, IdentificationTypeDto, PersonOccupationDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -27,5 +27,15 @@ export class PersonMasterDataService {
 	getEthnicities(): Observable<EthnicityDto[]> {
 		const url = `${environment.apiBase}/person/masterdata/ethnicities`;
 		return this.http.get<EthnicityDto[]>(url);
+	}
+
+	getOccupations(): Observable<PersonOccupationDto[]> {
+		const url = `${environment.apiBase}/person/masterdata/occupations`;
+		return this.http.get<PersonOccupationDto[]>(url);
+	}
+
+	getEducationLevels(): Observable<EducationLevelDto[]> {
+		const url = `${environment.apiBase}/person/masterdata/educationLevel`;
+		return this.http.get<EducationLevelDto[]>(url);
 	}
 }
