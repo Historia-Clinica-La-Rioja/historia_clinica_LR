@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ToothDto {
-    private Integer code;
-    private Integer rootsAmount;
     private OdontologySnomedDto snomed;
+    private Integer code;
 }

@@ -3,7 +3,6 @@ package ar.lamansys.odontology.infrastructure.repository.tooth;
 import ar.lamansys.odontology.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,68 +13,60 @@ public class OdontogramQuadrantStorageMockImpl implements OdontogramQuadrantStor
     public List<OdontogramQuadrantBo> getAll() {
         return List.of(
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 1),
+                        new OdontologySnomedBo(1230, "Cuadrante " + 1),
                         1,
                         false,
                         true,
-                        true,
-                        null
+                        true
                 ),
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 2),
+                        new OdontologySnomedBo(1231, "Cuadrante " + 2),
                         2,
                         true,
                         true,
-                        true,
-                        null
+                        true
                 ),
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 3),
+                        new OdontologySnomedBo(1232, "Cuadrante 3" + 3),
                         3,
                         true,
                         false,
-                        true,
-                        null
+                        true
                 ),
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 4),
+                        new OdontologySnomedBo(1233, "Cuadrante " + 4),
                         4,
                         false,
                         false,
-                        true,
-                        null
+                        true
                 ),
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 5),
+                        new OdontologySnomedBo(1234, "Cuadrante " + 5),
                         5,
                         false,
                         true,
-                        false,
-                        null
+                        false
                 ),
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 6),
+                        new OdontologySnomedBo(1235, "Cuadrante " + 6),
                         6,
                         true,
                         true,
-                        false,
-                        null
+                        false
                 ),
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 7),
+                        new OdontologySnomedBo(1236, "Cuadrante " + 7),
                         7,
                         true,
                         false,
-                        false,
-                        null
+                        false
                 ),
                 new OdontogramQuadrantBo(
-                        new OdontologySnomedBo("235234234", "Cuadrante " + 8),
+                        new OdontologySnomedBo(1237, "Cuadrante " + 8),
                         8,
                         false,
                         false,
-                        false,
-                        null
+                        false
                 )
         );
 

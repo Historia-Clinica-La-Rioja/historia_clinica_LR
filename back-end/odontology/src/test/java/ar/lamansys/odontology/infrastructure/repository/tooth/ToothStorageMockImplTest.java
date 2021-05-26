@@ -20,8 +20,7 @@ class ToothStorageMockImplTest {
     }
 
     @Test
-    @DisplayName("Test that teeth amount is 52")
-    public void odontology_teeth_masterdata() {
+    public void odontologyTeethAmountSuccess() {
         ToothStorage toothStorage = new ToothStorageMockImpl();
         List<ToothBo> resultService = toothStorage.getAll();
         assertThat(resultService.size()).isEqualTo(52);

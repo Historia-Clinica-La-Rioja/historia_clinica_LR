@@ -1478,7 +1478,6 @@ export interface TimeRangeDto {
 
 export interface ToothDto {
     code: number;
-    rootsAmount: number;
     snomed: OdontologySnomedDto;
 }
 

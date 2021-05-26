@@ -1,7 +1,5 @@
 package ar.lamansys.odontology.infrastructure.controller.dto;
 
-import ar.lamansys.odontology.domain.OdontologySnomedBo;
-import ar.lamansys.odontology.domain.ToothBo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,8 +12,8 @@ import java.util.List;
 public class OdontogramQuadrantDto{
     private OdontologySnomedDto snomed;
     private Integer code;
-    private boolean isLeft;
-    private boolean isTop;
-    private boolean isPermanent;
+    private boolean left;
+    private boolean top;
+    private boolean permanent;
     private List<ToothDto> teeth;
 }

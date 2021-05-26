@@ -16,26 +16,26 @@ public class ToothStorageMockImpl implements ToothStorage {
     public List<ToothBo> getAll() {
         List<ToothBo> teeth = new ArrayList<>();
         int quadrantSize = 8;
-        int quadrant;
-        int position;
-        String code;
+        int quadrantCode;
+        int toothCode;
         int t = 0;
         int w = 0;
         for (int i=0; i<52 ; i++) {
-            quadrant = w + ( (i - t) / quadrantSize + 1 );
-            if (quadrant==5) {
+            quadrantCode = w + ( (i - t) / quadrantSize + 1 );
+            if (quadrantCode == 5) {
                 quadrantSize = 5;
                 t = 32;
                 w = 4;
             }
-            position = (i - t) % quadrantSize + 1;
-            code = quadrant + Integer.toString(position);
+            toothCode = (i - t) % quadrantSize + 1;
 
             ToothBo toothBo = new ToothBo();
-            toothBo.setCode(code);
+            toothBo.setToothCode(toothCode);
+            toothBo.setQuadrantCode(quadrantCode);
+
             OdontologySnomedBo odontologySnomedBo = new OdontologySnomedBo();
             odontologySnomedBo.setPt("Diente " + i);
-            odontologySnomedBo.setSctid("12124125124");
+            odontologySnomedBo.setId(Integer.parseInt(23 + Integer.toString(toothCode) + quadrantCode));
             toothBo.setSnomed(odontologySnomedBo);
             teeth.add(toothBo);
         }

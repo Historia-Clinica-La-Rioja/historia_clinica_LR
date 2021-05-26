@@ -1,37 +1,27 @@
 package ar.lamansys.odontology.domain;
 
-import ar.lamansys.odontology.infrastructure.controller.dto.OdontologySnomedDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ToothBo implements Comparable<ToothBo>{
+public class ToothBo {
     private OdontologySnomedBo snomed;
-    private String code;
+    private Integer toothCode;
+    private Integer quadrantCode;
+    private boolean isPosterior;
+    private final Logger LOG =  LoggerFactory.getLogger(getClass());
 
-    public Integer getQuadrant() {
-        return Integer.parseInt(String.valueOf(code.charAt(0)));
-    }
-
-    public Integer getPosition() {
-        return Integer.parseInt(String.valueOf(code.charAt(1)));
-    }
-
-    @Override
-    public int compareTo(ToothBo o) {
-        return this.getPosition().compareTo(o.getPosition());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ToothBo) {
-            return this.code.equals(((ToothBo)obj).getCode());
-        }
-        return false;
+    public boolean belongsToQuadrant(Integer quadrantCode) {
+        LOG.debug("Input -> {}", quadrantCode);
+        var result = quadrantCode.equals(this.getQuadrantCode());
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 }

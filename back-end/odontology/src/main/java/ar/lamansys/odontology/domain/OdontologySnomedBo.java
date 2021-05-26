@@ -10,8 +10,14 @@ import java.util.Objects;
 @NoArgsConstructor
 public class OdontologySnomedBo {
 
+    private Integer id;
     private String sctid;
     private String pt;
+
+    public OdontologySnomedBo(Integer id, String pt) {
+        this.id = id;
+        this.pt = pt;
+    }
 
     @Override
     public boolean equals(Object o) {

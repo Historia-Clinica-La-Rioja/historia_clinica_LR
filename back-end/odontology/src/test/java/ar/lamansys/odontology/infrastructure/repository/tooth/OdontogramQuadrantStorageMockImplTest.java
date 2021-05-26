@@ -1,6 +1,5 @@
 package ar.lamansys.odontology.infrastructure.repository.tooth;
 
-import ar.lamansys.odontology.application.fetchodontogram.GetOdontogramInfoServiceImpl;
 import ar.lamansys.odontology.domain.OdontogramQuadrantBo;
 import ar.lamansys.odontology.domain.OdontogramQuadrantStorage;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +21,7 @@ class OdontogramQuadrantStorageMockImplTest {
     }
 
     @Test
-    @DisplayName("Test that of teeth groups is 8")
-    public void odontology_teethGroups_masterdata() {
+    public void odontogramQuadrantAmount() {
         OdontogramQuadrantStorage odontogramQuadrantStorage = new OdontogramQuadrantStorageMockImpl();
         List<OdontogramQuadrantBo> resultService = odontogramQuadrantStorage.getAll();
         assertThat(resultService.size()).isEqualTo(8);
