@@ -57,11 +57,14 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     @Override
     @Transactional
-    public AnamnesisBo execute(Integer institutionId, AnamnesisBo anamnesis)
+    public AnamnesisBo execute(AnamnesisBo anamnesis)
             throws IOException, PDFDocumentException {
         LOG.debug("Input parameters -> anamnesis {}", anamnesis);
 
-        var internmentEpisode = internmentEpisodeService.getInternmentEpisode(anamnesis.getEncounterId(), institutionId);
+        assertContextValid(anamnesis);
+        var internmentEpisode = internmentEpisodeService
+                .getInternmentEpisode(anamnesis.getEncounterId(), anamnesis.getInstitutionId());
+
         anamnesis.setPatientId(internmentEpisode.getPatientId());
 
         assertAnamnesisValid(anamnesis);
@@ -74,9 +77,16 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
         internmentEpisodeService.updateAnamnesisDocumentId(anamnesis.getEncounterId(), anamnesis.getId());
         LOG.debug(OUTPUT, anamnesis);
-        generateDocument(anamnesis, institutionId);
+        generateDocument(anamnesis, anamnesis.getInstitutionId());
 
         return anamnesis;
+    }
+
+    private void assertContextValid(AnamnesisBo anamnesis) {
+        if (anamnesis.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (anamnesis.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 
     private void assertAnamnesisValid(AnamnesisBo anamnesis) {

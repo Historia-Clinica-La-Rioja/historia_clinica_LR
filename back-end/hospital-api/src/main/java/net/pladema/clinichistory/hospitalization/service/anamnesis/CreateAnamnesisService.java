@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface CreateAnamnesisService {
 
-    AnamnesisBo execute(Integer institutionId, AnamnesisBo anamnesis) throws IOException, PDFDocumentException;
+    AnamnesisBo execute(AnamnesisBo anamnesis) throws IOException, PDFDocumentException;
 }

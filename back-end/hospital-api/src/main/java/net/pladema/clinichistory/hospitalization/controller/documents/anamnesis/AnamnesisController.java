@@ -80,11 +80,14 @@ public class AnamnesisController {
                 institutionId, internmentEpisodeId, anamnesisDto);
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis.setEncounterId(internmentEpisodeId);
+        anamnesis.setInstitutionId(institutionId);
+
         internmentEpisodeService.getPatient(internmentEpisodeId)
                 .map(patientExternalService::getBasicDataFromPatient)
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
                 .ifPresentOrElse(anamnesis::setPatientInfo, () -> new NotFoundException("El paciente no existe", "El paciente no existe"));
-        createAnamnesisService.execute(institutionId, anamnesis);
+
+        createAnamnesisService.execute(anamnesis);
 
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);
