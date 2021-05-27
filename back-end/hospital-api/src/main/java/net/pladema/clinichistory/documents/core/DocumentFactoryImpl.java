@@ -1,13 +1,9 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.service.Document;
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
+import net.pladema.clinichistory.documents.service.*;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,8 +16,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentFactoryImpl.class);
 
     private final DocumentService documentService;
-
-    private final InternmentEpisodeService internmentEpisodeService;
 
     private final NoteService noteService;
 
@@ -40,7 +34,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
     private final DiagnosticReportService diagnosticReportService;
 
     public DocumentFactoryImpl(DocumentService documentService,
-                               InternmentEpisodeService internmentEpisodeService,
                                NoteService noteService,
                                HealthConditionService healthConditionService,
                                AllergyService allergyService,
@@ -50,7 +43,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                CreateMedicationService createMedicationService,
                                DiagnosticReportService diagnosticReportService) {
         this.documentService = documentService;
-        this.internmentEpisodeService = internmentEpisodeService;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
@@ -71,7 +63,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
         doc = documentService.save(doc);
 
         PatientInfoBo patientInfo = document.getPatientInfo();
-        Integer intermentEpisodeId = document.getEncounterId();
         healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(document.getMainDiagnosis()));
         healthConditionService.loadDiagnosis(patientInfo, doc.getId(), document.getDiagnosis());
         healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), document.getPersonalHistories());
@@ -84,8 +75,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
         clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(document.getVitalSigns()));
         clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(document.getAnthropometricData()));
-
-        internmentEpisodeService.updateAnamnesisDocumentId(intermentEpisodeId, doc.getId());
 
         diagnosticReportService.loadDiagnosticReport(doc.getId(), patientInfo, document.getDiagnosticReports());
 

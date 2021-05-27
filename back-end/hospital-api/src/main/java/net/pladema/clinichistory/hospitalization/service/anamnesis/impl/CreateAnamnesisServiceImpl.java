@@ -72,6 +72,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         
         anamnesis.setId(documentFactory.run(anamnesis));
 
+        internmentEpisodeService.updateAnamnesisDocumentId(anamnesis.getEncounterId(), anamnesis.getId());
         LOG.debug(OUTPUT, anamnesis);
         generateDocument(anamnesis, institutionId);
 
