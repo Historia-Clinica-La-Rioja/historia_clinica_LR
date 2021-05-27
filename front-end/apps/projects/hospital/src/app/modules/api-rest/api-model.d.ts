@@ -1481,6 +1481,14 @@ export interface ToothDto {
     snomed: OdontologySnomedDto;
 }
 
+export interface ToothSurfacesDto {
+    central: OdontologySnomedDto;
+    external: OdontologySnomedDto;
+    internal: OdontologySnomedDto;
+    left: OdontologySnomedDto;
+    right: OdontologySnomedDto;
+}
+
 export interface TriageAdministrativeDto extends TriageDto {
 }
 
