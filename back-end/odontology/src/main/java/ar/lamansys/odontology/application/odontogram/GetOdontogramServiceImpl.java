@@ -2,7 +2,6 @@ package ar.lamansys.odontology.application.odontogram;
 
 import ar.lamansys.odontology.domain.OdontogramQuadrantBo;
 import ar.lamansys.odontology.domain.OdontogramQuadrantData;
-import ar.lamansys.odontology.domain.OdontogramQuadrantStorage;
 import ar.lamansys.odontology.domain.ToothStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +15,11 @@ import java.util.Map;
 public class GetOdontogramServiceImpl implements GetOdontogramService {
 
     private final ToothStorage toothStorage;
-    private final OdontogramQuadrantStorage odontogramQuadrantStorage;
-    private final Logger LOG;
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     public GetOdontogramServiceImpl(
-            ToothStorage toothStorage,
-            OdontogramQuadrantStorage odontogramQuadrantStorage) {
+            ToothStorage toothStorage) {
         this.toothStorage = toothStorage;
-        this.odontogramQuadrantStorage = odontogramQuadrantStorage;
-        this.LOG = LoggerFactory.getLogger(getClass());
     }
 
     public List<OdontogramQuadrantBo> run() {

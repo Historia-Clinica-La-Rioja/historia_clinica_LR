@@ -1,4 +1,4 @@
-package ar.lamansys.odontology.infrastructure.repository.tooth;
+package ar.lamansys.odontology.infrastructure.repository;
 
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ToothBo;
