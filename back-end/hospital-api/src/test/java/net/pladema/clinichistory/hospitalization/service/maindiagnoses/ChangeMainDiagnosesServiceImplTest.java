@@ -73,7 +73,7 @@ class ChangeMainDiagnosesServiceImplTest {
     @Test
     void createDocumentWithEpisodeThatNotExists() {
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
-                changeMainDiagnosesService.execute(9, validMainDiagnosisBo())
+                changeMainDiagnosesService.execute(validMainDiagnosisBo(9, 10))
         );
         String expectedMessage = "internmentepisode.not.found";
         String actualMessage = exception.getMessage();
@@ -81,12 +81,30 @@ class ChangeMainDiagnosesServiceImplTest {
     }
 
     @Test
+    void createDocumentWithInvalidInstitutionId() {
+        Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+                changeMainDiagnosesService.execute(validMainDiagnosisBo(null, 8))
+        );
+        String expectedMessage = "El id de la institución es obligatorio";
+        String actualMessage = exception.getMessage();
+        assertEquals(actualMessage,expectedMessage);
+    }
+
+    @Test
+    void createDocumentWithInvalidEpisodeId() {
+        Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+                changeMainDiagnosesService.execute(validMainDiagnosisBo(8, null))
+        );
+        String expectedMessage = "El id del encuentro asociado es obligatorio";
+        String actualMessage = exception.getMessage();
+        assertEquals(actualMessage,expectedMessage);
+    }
+
+    @Test
     void createDocumentWithInternmentInOtherInstitution() {
         var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
-        var mainDiagnosisBo = validMainDiagnosisBo();
-        mainDiagnosisBo.setEncounterId(internmentEpisode.getId());
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
-                changeMainDiagnosesService.execute(internmentEpisode.getInstitutionId()+1, mainDiagnosisBo)
+                changeMainDiagnosesService.execute(validMainDiagnosisBo(internmentEpisode.getInstitutionId()+1, internmentEpisode.getId()))
         );
         String expectedMessage = "internmentepisode.not.found";
         String actualMessage = exception.getMessage();
@@ -96,10 +114,8 @@ class ChangeMainDiagnosesServiceImplTest {
     @Test
     void createDocumentWithEpicrisis() {
         var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(1l));
-        var mainDiagnosisBo = validMainDiagnosisBo();
-        mainDiagnosisBo.setEncounterId(internmentEpisode.getId());
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                changeMainDiagnosesService.execute(8, mainDiagnosisBo)
+                changeMainDiagnosesService.execute(validMainDiagnosisBo(8, internmentEpisode.getId()))
         );
         String expectedMessage = "Esta internación ya posee una epicrisis";
         String actualMessage = exception.getMessage();
@@ -109,11 +125,10 @@ class ChangeMainDiagnosesServiceImplTest {
     @Test
     void createDocument_withoutMainDiagnosis() {
         var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
-        var mainDiagnosisBo = validMainDiagnosisBo();
-        mainDiagnosisBo.setEncounterId(internmentEpisode.getId());
+        var mainDiagnosisBo = validMainDiagnosisBo(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         mainDiagnosisBo.setMainDiagnosis(null);
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                changeMainDiagnosesService.execute(internmentEpisode.getInstitutionId(), mainDiagnosisBo)
+                changeMainDiagnosesService.execute(mainDiagnosisBo)
         );
         String expectedMessage = "mainDiagnosis: {diagnosis.mandatory}";
         String actualMessage = exception.getMessage();
@@ -122,9 +137,11 @@ class ChangeMainDiagnosesServiceImplTest {
     }
 
 
-    private MainDiagnosisBo validMainDiagnosisBo(){
+    private MainDiagnosisBo validMainDiagnosisBo(Integer institutionId, Integer encounterId){
         var result = new MainDiagnosisBo();
         result.setConfirmed(true);
+        result.setInstitutionId(institutionId);
+        result.setEncounterId(encounterId);
         result.setNotes(new DocumentObservationsBo());
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         result.setDiagnosis(Lists.emptyList());

@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface ChangeMainDiagnosesService {
 
-    MainDiagnosisBo execute(Integer institutionId, MainDiagnosisBo mainDiagnosisBo) throws IOException, PDFDocumentException;
+    MainDiagnosisBo execute(MainDiagnosisBo mainDiagnosisBo) throws IOException, PDFDocumentException;
 }

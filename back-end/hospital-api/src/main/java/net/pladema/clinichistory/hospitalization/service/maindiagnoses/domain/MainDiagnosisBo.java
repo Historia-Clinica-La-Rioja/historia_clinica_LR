@@ -35,6 +35,8 @@ public class MainDiagnosisBo extends SelfValidating<MainDiagnosisBo> implements 
 
     private Integer encounterId;
 
+    private Integer institutionId;
+
     @NotNull
     private boolean confirmed = false;
 

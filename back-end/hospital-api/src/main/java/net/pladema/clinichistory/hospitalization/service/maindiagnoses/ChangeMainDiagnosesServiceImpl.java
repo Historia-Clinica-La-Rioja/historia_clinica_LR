@@ -49,10 +49,12 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
     }
 
     @Override
-    public MainDiagnosisBo execute(Integer institutionId, MainDiagnosisBo mainDiagnosisBo) throws IOException, PDFDocumentException {
-        LOG.debug("Input parameters -> institutionId {},mainDiagnosisBo {}", institutionId, mainDiagnosisBo);
+    public MainDiagnosisBo execute(MainDiagnosisBo mainDiagnosisBo) throws IOException, PDFDocumentException {
+        LOG.debug("Input parameters -> mainDiagnosisBo {}", mainDiagnosisBo);
 
-        var internmentEpisode = internmentEpisodeService.getInternmentEpisode(mainDiagnosisBo.getEncounterId(), institutionId);
+        assertContextValid(mainDiagnosisBo);
+        var internmentEpisode = internmentEpisodeService.
+                getInternmentEpisode(mainDiagnosisBo.getEncounterId(), mainDiagnosisBo.getInstitutionId());
         mainDiagnosisBo.setPatientId(internmentEpisode.getPatientId());
 
         assertDoesNotHaveEpicrisis(internmentEpisode);
@@ -68,12 +70,18 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
 
         internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), mainDiagnosisBo.getId());
 
-
         LOG.debug(OUTPUT, mainDiagnosisBo);
 
         internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), mainDiagnosisBo.getId());
-        generateDocument(mainDiagnosisBo, institutionId);
+        generateDocument(mainDiagnosisBo, mainDiagnosisBo.getInstitutionId());
         return mainDiagnosisBo;
+    }
+
+    private void assertContextValid(MainDiagnosisBo mainDiagnosisBo) {
+        if (mainDiagnosisBo.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (mainDiagnosisBo.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 
     private DiagnosisBo createAlternativeDiagnoses(HealthConditionBo currentMainDiagnose) {
