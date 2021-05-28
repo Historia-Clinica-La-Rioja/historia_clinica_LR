@@ -1,9 +1,8 @@
-package ar.lamansys.odontology.infrastructure.repository.tooth;
+package ar.lamansys.odontology.infrastructure.repository;
 
 import ar.lamansys.odontology.domain.OdontogramQuadrantBo;
 import ar.lamansys.odontology.domain.OdontogramQuadrantStorage;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

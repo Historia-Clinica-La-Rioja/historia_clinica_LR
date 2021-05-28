@@ -1,9 +1,7 @@
-package ar.lamansys.odontology.infrastructure.repository.tooth;
+package ar.lamansys.odontology.infrastructure.repository;
 
 import ar.lamansys.odontology.domain.ToothBo;
 import ar.lamansys.odontology.domain.ToothStorage;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,10 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class ToothStorageMockImplTest {
-
-    @BeforeEach
-    public void setUp() {
-    }
 
     @Test
     public void odontologyTeethAmountSuccess() {
