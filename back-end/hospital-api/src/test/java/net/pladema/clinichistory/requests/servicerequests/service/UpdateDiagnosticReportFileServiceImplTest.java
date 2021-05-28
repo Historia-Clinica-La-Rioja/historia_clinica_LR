@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.UnitRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.DiagnosticReport;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.UpdateDiagnosticReportFileServiceImpl;

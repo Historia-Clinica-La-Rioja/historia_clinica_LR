@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.repository.NoteRepository;
-import net.pladema.clinichistory.documents.repository.entity.Note;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Note;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.sgx.validator.StringValidator;
 import org.slf4j.Logger;

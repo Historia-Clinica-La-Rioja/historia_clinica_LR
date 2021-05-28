@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 
 import java.io.Serializable;

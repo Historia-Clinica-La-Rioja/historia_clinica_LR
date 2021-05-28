@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.repository.*;
-import net.pladema.clinichistory.documents.repository.entity.*;
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.*;
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.repository.generalstate.domain.*;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.*;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

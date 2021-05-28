@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.outpatient.repository;
 
-import net.pladema.clinichistory.outpatient.repository.domain.HealthConditionSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.HealthConditionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
-import net.pladema.clinichistory.outpatient.repository.domain.ProcedureSummaryVo;
-import net.pladema.clinichistory.outpatient.repository.domain.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ProcedureSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ReasonSummaryVo;
 
 import java.util.List;
 

@@ -1,8 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
 import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
@@ -17,8 +16,7 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicris
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.sgx.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +24,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/epicrisis")

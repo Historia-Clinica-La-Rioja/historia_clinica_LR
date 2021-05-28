@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.e
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 
 import java.util.ArrayList;
 import java.util.List;

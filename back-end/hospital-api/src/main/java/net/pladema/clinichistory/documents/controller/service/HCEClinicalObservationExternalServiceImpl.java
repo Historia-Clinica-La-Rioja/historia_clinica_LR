@@ -4,8 +4,8 @@ import net.pladema.clinichistory.documents.controller.dto.HCEAnthropometricDataD
 import net.pladema.clinichistory.documents.controller.dto.HCELast2VitalSignsDto;
 import net.pladema.clinichistory.documents.controller.mapper.HCEGeneralStateMapper;
 import net.pladema.clinichistory.documents.service.hce.HCEClinicalObservationService;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEAnthropometricDataBo;
-import net.pladema.clinichistory.documents.service.hce.domain.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

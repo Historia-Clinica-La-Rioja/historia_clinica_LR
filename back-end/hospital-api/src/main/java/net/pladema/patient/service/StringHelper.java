@@ -69,7 +69,4 @@ public class StringHelper {
 		return (str == null || str.length() == 0 || str.equals(" "));
 	}
 
-	public static String escapeSql(String sql){
-		return sql.replace("'", "''");
-	}
 }

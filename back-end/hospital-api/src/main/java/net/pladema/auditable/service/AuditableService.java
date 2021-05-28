@@ -2,8 +2,8 @@ package net.pladema.auditable.service;
 
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.documents.repository.entity.DocumentFile;
 
 public interface AuditableService {
 

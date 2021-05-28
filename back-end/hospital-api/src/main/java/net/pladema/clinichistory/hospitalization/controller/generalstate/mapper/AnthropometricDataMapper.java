@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.generalstate.mapper;
 
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.AnthropometricDataDto;
-import net.pladema.clinichistory.documents.service.ips.domain.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 

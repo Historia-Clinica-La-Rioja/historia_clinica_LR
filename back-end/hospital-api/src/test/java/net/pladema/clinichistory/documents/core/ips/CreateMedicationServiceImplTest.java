@@ -1,21 +1,22 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
-import net.pladema.clinichistory.documents.repository.ips.DosageRepository;
-import net.pladema.clinichistory.documents.repository.ips.MedicationStatementRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.Dosage;
-import net.pladema.clinichistory.documents.repository.ips.entity.MedicationStatement;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.MedicamentStatementStatusRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
-import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
-import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,8 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class CreateMedicationServiceImplTest {
+public class CreateMedicationServiceImplTest extends UnitRepository {
 
     private CreateMedicationServiceImpl medicationServiceImpl;
 

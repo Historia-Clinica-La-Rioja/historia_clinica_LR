@@ -7,10 +7,10 @@ import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.Hea
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
-import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

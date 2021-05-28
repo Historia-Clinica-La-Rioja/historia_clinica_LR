@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.repository.NoteRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.sgx.exceptions.StringValidatorException;
 import org.junit.Before;
@@ -12,8 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class NoteServiceImplTest {
+public class NoteServiceImplTest extends UnitRepository {
 
     @Autowired
     private NoteRepository noteRepository;

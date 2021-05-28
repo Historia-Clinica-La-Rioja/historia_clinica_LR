@@ -10,13 +10,13 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import net.pladema.sgx.files.StreamFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.documents.repository.entity.DocumentFile;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.sgx.pdf.PdfService;
 

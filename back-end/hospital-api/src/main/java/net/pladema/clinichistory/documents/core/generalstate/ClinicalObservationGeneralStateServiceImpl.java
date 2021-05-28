@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.documents.core.generalstate;
 
 import net.pladema.clinichistory.documents.service.generalstate.ClinicalObservationGeneralStateService;
-import net.pladema.clinichistory.documents.repository.generalstate.HCHClinicalObservationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.HCHClinicalObservationRepository;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
-import net.pladema.clinichistory.documents.service.ips.domain.AnthropometricDataBo;
-import net.pladema.clinichistory.documents.service.ips.domain.MapClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

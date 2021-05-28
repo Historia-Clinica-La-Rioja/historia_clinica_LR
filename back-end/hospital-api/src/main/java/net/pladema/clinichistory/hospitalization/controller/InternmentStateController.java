@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.service.generalstate.*;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -8,7 +9,6 @@ import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

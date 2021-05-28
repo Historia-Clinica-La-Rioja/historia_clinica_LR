@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.summary.domain;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ResponsibleDoctorVo;
 import lombok.*;
-import net.pladema.clinichistory.hospitalization.repository.domain.summary.ResponsibleDoctorVo;
 
 @Getter
 @Setter

@@ -1,6 +1,6 @@
 package net.pladema.permissions.repository.enums;
 
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 public enum ERole {
 

@@ -2,7 +2,7 @@ package net.pladema.staff.controller;
 
 import net.pladema.UnitController;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import net.pladema.staff.service.HealthcareProfessionalService;

@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.service.ips;
 
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package net.pladema.patient.repository;
 
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.service.domain.PatientSearch;
-import net.pladema.sgx.repository.QueryPart;
+import ar.lamansys.sgx.shared.repositories.QueryPart;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

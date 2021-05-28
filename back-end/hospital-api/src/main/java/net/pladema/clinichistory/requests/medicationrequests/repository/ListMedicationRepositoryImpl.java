@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.requests.medicationrequests.repository;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import net.pladema.clinichistory.requests.medicationrequests.repository.domain.MedicationFilterVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

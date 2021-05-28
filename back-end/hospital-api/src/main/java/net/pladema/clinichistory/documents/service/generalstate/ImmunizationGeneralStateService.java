@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.service.generalstate;
 
-import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 
 import java.util.List;
 

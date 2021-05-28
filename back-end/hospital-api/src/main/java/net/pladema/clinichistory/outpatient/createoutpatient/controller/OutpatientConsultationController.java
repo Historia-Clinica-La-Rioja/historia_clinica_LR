@@ -2,8 +2,8 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
 import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
-import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;

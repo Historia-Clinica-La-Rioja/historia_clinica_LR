@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.documents.core.ips;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.SnomedRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.patient.service.StringHelper;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,14 +1,14 @@
 package net.pladema.clinichistory.documents.events;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventEnumException;
 import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventException;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ESourceType;
 import net.pladema.clinichistory.documents.service.IDocumentBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import org.springframework.context.ApplicationEvent;
 
 import java.time.LocalDateTime;

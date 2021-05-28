@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 
 import java.util.List;
 

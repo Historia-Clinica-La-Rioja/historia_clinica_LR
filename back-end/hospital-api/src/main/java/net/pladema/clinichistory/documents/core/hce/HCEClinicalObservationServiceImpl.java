@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.documents.core.hce;
 
-import net.pladema.clinichistory.documents.repository.hce.HCEClinicalObservationRepository;
-import net.pladema.clinichistory.documents.repository.hce.domain.HCEMapClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEClinicalObservationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEMapClinicalObservationVo;
 import net.pladema.clinichistory.documents.service.hce.HCEClinicalObservationService;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEAnthropometricDataBo;
-import net.pladema.clinichistory.documents.service.hce.domain.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

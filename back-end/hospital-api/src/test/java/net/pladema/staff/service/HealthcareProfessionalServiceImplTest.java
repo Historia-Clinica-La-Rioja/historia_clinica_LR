@@ -1,7 +1,7 @@
 package net.pladema.staff.service;
 
 import net.pladema.clinichistory.hospitalization.repository.HealthcareProfessionalGroupRepository;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;

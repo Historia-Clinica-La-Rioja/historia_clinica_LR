@@ -1,14 +1,16 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
-import net.pladema.sgx.exceptions.SelfValidating;
+import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

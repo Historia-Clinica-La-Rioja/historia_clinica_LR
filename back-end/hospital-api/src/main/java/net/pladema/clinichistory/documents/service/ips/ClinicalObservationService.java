@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.documents.service.ips;
 
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.AnthropometricDataBo;
-import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
-import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignObservationBo;
 
 import java.util.Optional;
 

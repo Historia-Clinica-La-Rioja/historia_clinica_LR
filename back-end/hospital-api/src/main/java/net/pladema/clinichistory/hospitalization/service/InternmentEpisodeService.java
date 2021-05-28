@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service;
 
-import net.pladema.clinichistory.documents.repository.entity.EvolutionNoteDocument;
+import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;

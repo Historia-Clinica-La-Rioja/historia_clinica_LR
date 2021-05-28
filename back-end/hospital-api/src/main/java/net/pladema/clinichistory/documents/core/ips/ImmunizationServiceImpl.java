@@ -1,19 +1,17 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ImmunizationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Inmunization;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ImmunizationStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.InmunizationStatus;
 import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
 import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.repository.ips.ImmunizationRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.Inmunization;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.ImmunizationStatusRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InmunizationStatus;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.ImmunizationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
-import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
-import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

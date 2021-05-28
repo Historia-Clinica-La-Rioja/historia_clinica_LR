@@ -1,12 +1,9 @@
 package net.pladema.clinichistory.documents.service;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.documents.service.ips.domain.ProblemBo;
-import net.pladema.clinichistory.documents.service.ips.domain.ProcedureBo;
-import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 
 import java.util.Collections;

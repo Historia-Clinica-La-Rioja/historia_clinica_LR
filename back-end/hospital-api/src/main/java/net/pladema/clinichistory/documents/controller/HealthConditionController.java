@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.controller;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
 import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

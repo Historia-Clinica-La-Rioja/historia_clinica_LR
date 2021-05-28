@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import net.pladema.UnitController;
-import net.pladema.clinichistory.documents.repository.DocumentRepository;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;

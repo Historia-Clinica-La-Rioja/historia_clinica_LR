@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.documents.core.generalstate;
 
 import net.pladema.clinichistory.documents.service.generalstate.MedicationGeneralStateService;
-import net.pladema.clinichistory.documents.repository.generalstate.HCHMedicationStatementRepository;
-import net.pladema.clinichistory.documents.repository.generalstate.domain.MedicationVo;
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.HCHMedicationStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.MedicationVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

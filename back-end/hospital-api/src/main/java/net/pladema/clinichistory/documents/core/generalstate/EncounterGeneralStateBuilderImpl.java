@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.documents.core.generalstate;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import net.pladema.clinichistory.documents.service.generalstate.*;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

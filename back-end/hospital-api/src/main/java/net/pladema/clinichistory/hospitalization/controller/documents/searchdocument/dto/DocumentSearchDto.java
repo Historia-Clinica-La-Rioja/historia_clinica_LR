@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
-import net.pladema.person.repository.domain.ProcedureReduced;
 
 import java.io.Serializable;
 import java.time.LocalDate;

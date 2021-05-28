@@ -1,5 +1,6 @@
 package net.pladema.user.repository;
 
+import net.pladema.UnitRepository;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserBean;
 import org.junit.Before;
@@ -16,8 +17,7 @@ import static net.pladema.TestUtils.assertUpdateAuditableEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class UserRepositoryTest {
+public class UserRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private UserRepository userRepository;

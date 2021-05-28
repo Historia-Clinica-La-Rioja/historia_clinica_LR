@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.repository.domain.summary;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import lombok.*;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 
 @Getter
 @Setter

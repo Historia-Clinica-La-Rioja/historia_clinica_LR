@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
 
 import java.io.Serializable;
 

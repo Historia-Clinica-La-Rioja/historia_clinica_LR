@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.documents.core.hce;
 
-import net.pladema.clinichistory.documents.repository.hce.HCEAllergyIntoleranceRepository;
-import net.pladema.clinichistory.documents.repository.hce.domain.HCEAllergyVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEAllergyIntoleranceRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEAllergyVo;
 import net.pladema.clinichistory.documents.service.hce.HCEAllergyService;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEAllergyBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

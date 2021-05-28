@@ -1,15 +1,15 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.GetLastHealthConditionRepositotyImpl;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionClinicalStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionVerificationStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
-import net.pladema.clinichistory.documents.repository.ips.GetLastHealthConditionRepository;
-import net.pladema.clinichistory.documents.repository.ips.GetLastHealthConditionRepositotyImpl;
-import net.pladema.clinichistory.documents.repository.ips.HealthConditionRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.HealthCondition;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.ConditionClinicalStatusRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.ConditionVerificationStatusRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;

@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

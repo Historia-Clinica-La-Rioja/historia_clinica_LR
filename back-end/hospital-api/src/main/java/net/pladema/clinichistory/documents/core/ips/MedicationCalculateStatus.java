@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.core.ips;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
-import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

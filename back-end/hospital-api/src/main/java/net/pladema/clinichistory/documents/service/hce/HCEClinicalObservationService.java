@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.service.hce;
 
-import net.pladema.clinichistory.documents.service.hce.domain.HCEAnthropometricDataBo;
-import net.pladema.clinichistory.documents.service.hce.domain.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
 
 public interface HCEClinicalObservationService {
 

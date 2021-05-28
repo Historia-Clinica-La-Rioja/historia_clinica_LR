@@ -1,8 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventException;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -15,8 +14,7 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnes
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
-import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.sgx.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

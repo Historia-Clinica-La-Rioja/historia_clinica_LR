@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.documents.core.generalstate;
 
 import net.pladema.clinichistory.documents.service.generalstate.AllergyGeneralStateService;
-import net.pladema.clinichistory.documents.repository.generalstate.HCHAllergyIntoleranceRepository;
-import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.HCHAllergyIntoleranceRepository;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

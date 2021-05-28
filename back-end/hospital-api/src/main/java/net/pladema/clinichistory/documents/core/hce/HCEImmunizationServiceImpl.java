@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.documents.core.hce;
 
-import net.pladema.clinichistory.documents.repository.hce.HCEImmunizationRepository;
-import net.pladema.clinichistory.documents.repository.hce.domain.HCEImmunizationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEImmunizationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEImmunizationVo;
 import net.pladema.clinichistory.documents.service.hce.HCEImmunizationService;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

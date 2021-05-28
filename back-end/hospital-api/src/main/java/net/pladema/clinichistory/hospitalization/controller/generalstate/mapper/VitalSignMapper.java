@@ -2,8 +2,8 @@ package net.pladema.clinichistory.hospitalization.controller.generalstate.mapper
 
 import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
 import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDto;
-import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
-import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignObservationBo;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignsReportDto;
 import net.pladema.emergencycare.triage.controller.dto.TriagePediatricDto;

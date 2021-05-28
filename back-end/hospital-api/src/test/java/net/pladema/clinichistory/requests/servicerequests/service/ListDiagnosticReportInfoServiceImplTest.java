@@ -1,9 +1,16 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
+import ar.lamansys.sgh.clinichistory.mocks.DiagnosticReportTestMocks;
+import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
+import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
+import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
 import net.pladema.UnitRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.*;
-import net.pladema.clinichistory.mocks.*;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepositoryImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;

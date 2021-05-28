@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.controller.service;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
 import net.pladema.clinichistory.documents.core.ReasonService;
-import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

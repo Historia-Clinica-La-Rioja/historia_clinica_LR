@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.service.hce;
 
-import net.pladema.clinichistory.documents.service.hce.domain.HCEHospitalizationBo;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEPersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 
 import java.util.List;
 

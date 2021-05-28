@@ -1,12 +1,12 @@
 package net.pladema.clinichistory.documents.core.generalstate;
 
 import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
-import net.pladema.clinichistory.documents.repository.generalstate.HCHHealthConditionRepository;
-import net.pladema.clinichistory.documents.repository.generalstate.domain.HealthConditionVo;
-import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
-import net.pladema.clinichistory.documents.service.ips.domain.GeneralHealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.HCHHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.HealthConditionVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

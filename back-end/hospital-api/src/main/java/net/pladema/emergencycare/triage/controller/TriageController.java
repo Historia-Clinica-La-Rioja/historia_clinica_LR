@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
 import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDto;
 import net.pladema.clinichistory.documents.controller.service.VitalSignExternalService;
-import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
+import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;

@@ -4,8 +4,8 @@ import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservati
 import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDto;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.ClinicalObservationService;
-import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
-import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignObservationBo;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;

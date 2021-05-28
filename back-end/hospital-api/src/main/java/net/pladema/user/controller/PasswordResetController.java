@@ -1,6 +1,6 @@
 package net.pladema.user.controller;
 
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.user.controller.dto.PasswordResetDto;
 import net.pladema.user.controller.dto.UserDto;
 import net.pladema.user.controller.mappers.UserMapper;

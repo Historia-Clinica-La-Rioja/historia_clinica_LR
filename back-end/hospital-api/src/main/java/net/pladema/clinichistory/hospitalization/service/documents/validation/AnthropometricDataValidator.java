@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.service.documents.validation;
 
 import net.pladema.clinichistory.documents.service.IDocumentBo;
-import net.pladema.clinichistory.documents.service.ips.domain.AnthropometricDataBo;
-import net.pladema.clinichistory.documents.service.ips.domain.ClinicalObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

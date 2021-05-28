@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.documents.service.searchdocument.domain;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentSearchVo;
 import lombok.*;
-import net.pladema.clinichistory.documents.repository.searchdocument.DocumentSearchVo;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
-import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.person.repository.domain.ProcedureReduced;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 
 import java.time.LocalDate;
 import java.util.List;

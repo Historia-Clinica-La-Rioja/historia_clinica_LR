@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.documents.core;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.*;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.*;
-import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

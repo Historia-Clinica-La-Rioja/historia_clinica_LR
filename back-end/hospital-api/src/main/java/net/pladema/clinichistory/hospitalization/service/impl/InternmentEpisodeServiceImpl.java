@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
-import net.pladema.clinichistory.documents.repository.EvolutionNoteDocumentRepository;
-import net.pladema.clinichistory.documents.repository.entity.EvolutionNoteDocument;
 import net.pladema.clinichistory.documents.service.DocumentService;
+import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
+import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.EvaluationNoteSummaryVo;
@@ -13,7 +13,7 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.sgx.security.utils.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

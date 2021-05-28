@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.service.generalstate;
 
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.documents.core.generalstate;
 
 import net.pladema.clinichistory.documents.service.generalstate.ImmunizationGeneralStateService;
-import net.pladema.clinichistory.documents.repository.generalstate.HCHImmunizationRepository;
-import net.pladema.clinichistory.documents.repository.generalstate.domain.ImmunizationVo;
-import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.HCHImmunizationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ImmunizationVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

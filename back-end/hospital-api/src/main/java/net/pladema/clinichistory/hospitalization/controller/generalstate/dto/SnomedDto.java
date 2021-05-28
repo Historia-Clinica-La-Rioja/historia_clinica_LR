@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 
 import javax.annotation.Nullable;
 import lombok.*;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;

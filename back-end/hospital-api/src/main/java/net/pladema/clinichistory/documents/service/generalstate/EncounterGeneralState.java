@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.documents.service.generalstate;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
 
 import java.io.Serializable;

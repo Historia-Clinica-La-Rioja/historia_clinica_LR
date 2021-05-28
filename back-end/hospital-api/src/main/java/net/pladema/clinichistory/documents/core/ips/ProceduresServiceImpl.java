@@ -1,16 +1,16 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ProceduresRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Procedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ProceduresStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
 import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
-import net.pladema.clinichistory.documents.repository.ips.ProceduresRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.Procedure;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.ProceduresStatusRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProceduresStatus;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.ProceduresService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
-import net.pladema.clinichistory.documents.service.ips.domain.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

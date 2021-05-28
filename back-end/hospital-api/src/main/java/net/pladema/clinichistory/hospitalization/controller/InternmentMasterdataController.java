@@ -1,20 +1,10 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.*;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceCategory;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceClinicalStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceCriticality;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceVerificationStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.BloodType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.HealthConditionSeverity;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InmunizationStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ObservationStatus;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.emergencycare.controller.DischargeTypeMasterDataExternalService;
 import net.pladema.sgx.masterdata.dto.MasterDataDto;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;

@@ -1,8 +1,7 @@
 package net.pladema.clinichistory.documents.service;
 
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.repository.entity.*;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.*;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 
 import java.util.List;

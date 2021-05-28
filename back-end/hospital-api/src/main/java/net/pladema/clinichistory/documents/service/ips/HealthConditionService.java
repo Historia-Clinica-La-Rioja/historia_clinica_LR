@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.documents.service.ips;
 
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.ProblemBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 
 import java.util.List;
 import java.util.Map;

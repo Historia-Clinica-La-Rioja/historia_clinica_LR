@@ -1,19 +1,18 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.AllergyIntoleranceRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.AllergyIntolerance;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.AllergyIntoleranceClinicalStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.AllergyIntoleranceVerificationStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceClinicalStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
 import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
 import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.repository.ips.AllergyIntoleranceRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.AllergyIntolerance;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.AllergyIntoleranceClinicalStatusRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.AllergyIntoleranceVerificationStatusRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceClinicalStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceVerificationStatus;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.AllergyService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
-import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
-import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import net.pladema.snowstorm.services.SnowstormInferredService;
 import net.pladema.snowstorm.services.inferredrules.InferredAllergyAttributes;
 import org.slf4j.Logger;

@@ -1,16 +1,15 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
 import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
 import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
-import net.pladema.clinichistory.documents.repository.ips.DiagnosticReportRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.DiagnosticReport;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.DiagnosticReportService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
-import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

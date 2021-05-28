@@ -1,12 +1,12 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
-import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
-import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedicationRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.domain.MedicationFilterVo;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;

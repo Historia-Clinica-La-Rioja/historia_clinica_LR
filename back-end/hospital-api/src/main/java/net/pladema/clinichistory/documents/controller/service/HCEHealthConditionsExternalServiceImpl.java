@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.controller.service;
 import net.pladema.clinichistory.documents.controller.dto.HCEPersonalHistoryDto;
 import net.pladema.clinichistory.documents.controller.mapper.HCEGeneralStateMapper;
 import net.pladema.clinichistory.documents.service.hce.HCEHealthConditionsService;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEPersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

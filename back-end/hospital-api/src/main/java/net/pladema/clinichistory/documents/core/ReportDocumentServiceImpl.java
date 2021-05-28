@@ -1,14 +1,13 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.repository.*;
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ports.DocumentAuthorPort;
 import net.pladema.clinichistory.documents.service.ReportDocumentService;
-import net.pladema.clinichistory.hospitalization.repository.domain.summary.ResponsibleDoctorVo;
-import net.pladema.clinichistory.documents.repository.generalstate.domain.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.*;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +22,6 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
 
     private static final String LOGGING_DOCUMENT_ID = "Input parameters -> documentId {}";
 
-    private final DocumentRepository documentRepository;
-
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
 
     private final DocumentImmunizationRepository documentImmunizationRepository;
@@ -37,20 +34,22 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
 
     private final DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository;
 
-    public ReportDocumentServiceImpl(DocumentRepository documentRepository,
-                                     DocumentHealthConditionRepository documentHealthConditionRepository,
+    private final DocumentAuthorPort documentAuthorPort;
+
+    public ReportDocumentServiceImpl(DocumentHealthConditionRepository documentHealthConditionRepository,
                                      DocumentImmunizationRepository documentImmunizationRepository,
                                      DocumentVitalSignRepository documentVitalSignRepository,
                                      DocumentLabRepository documentLabRepository,
                                      DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
-                                     DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository) {
-        this.documentRepository = documentRepository;
+                                     DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
+                                     DocumentAuthorPort documentAuthorPort) {
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
         this.documentVitalSignRepository = documentVitalSignRepository;
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
         this.documentMedicamentionStatementRepository = documentMedicamentionStatementRepository;
+        this.documentAuthorPort = documentAuthorPort;
     }
 
     @Override
@@ -113,19 +112,8 @@ public class ReportDocumentServiceImpl implements ReportDocumentService {
     @Override
     public ResponsibleDoctorBo getAuthor(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        ResponsibleDoctorVo author;
-        //User Creator
-        try {
-            author = documentRepository.getUserCreator(documentId);
-        }
-        catch(IncorrectResultSizeDataAccessException ex) {
-            author = null;
-        }
-        if (author == null)
-            //Responsible
-            author = documentRepository.getResponsible(documentId);
+        ResponsibleDoctorVo author = documentAuthorPort.getAuthor(documentId);
         ResponsibleDoctorBo result = null;
-
         if (author != null)
             result = new ResponsibleDoctorBo(author.getId(),
                     author.getFirstName(),

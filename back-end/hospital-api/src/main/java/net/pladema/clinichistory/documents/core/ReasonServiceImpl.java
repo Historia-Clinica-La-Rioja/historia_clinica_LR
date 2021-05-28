@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ReasonsRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Reason;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationReasonsRepository;
-import net.pladema.clinichistory.documents.repository.ips.ReasonsRepository;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientConsultationReasons;
-import net.pladema.clinichistory.documents.repository.ips.entity.Reason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.DiagnosesGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.*;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
 import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
 import org.mapstruct.IterableMapping;

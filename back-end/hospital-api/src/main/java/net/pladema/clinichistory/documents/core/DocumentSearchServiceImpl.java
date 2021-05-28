@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.repository.DocumentRepository;
-import net.pladema.clinichistory.documents.repository.searchdocument.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.*;
 import net.pladema.clinichistory.documents.service.searchdocument.DocumentSearchService;
 import net.pladema.clinichistory.documents.service.searchdocument.domain.DocumentHistoricBo;
 import net.pladema.clinichistory.documents.service.searchdocument.domain.DocumentSearchBo;

@@ -1,5 +1,8 @@
 package net.pladema.clinichistory.outpatient.repository.domain;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.HealthConditionSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ProcedureSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ReasonSummaryVo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

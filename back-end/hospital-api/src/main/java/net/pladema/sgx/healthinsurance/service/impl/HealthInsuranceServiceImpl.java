@@ -6,7 +6,7 @@ import net.pladema.person.repository.HealthInsuranceRepository;
 import net.pladema.person.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.HealthInsurance;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

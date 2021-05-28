@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.service.hce;
 
-import net.pladema.clinichistory.documents.service.hce.domain.HCEImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 
 import java.util.List;
 

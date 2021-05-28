@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service;
 
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 
 import java.util.List;

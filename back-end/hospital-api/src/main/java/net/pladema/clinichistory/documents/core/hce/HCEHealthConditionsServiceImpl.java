@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.documents.core.hce;
 
-import net.pladema.clinichistory.documents.repository.hce.HCEHealthConditionRepository;
-import net.pladema.clinichistory.documents.repository.hce.domain.HCEHealthConditionVo;
-import net.pladema.clinichistory.documents.repository.hce.domain.HCEHospitalizationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHospitalizationVo;
 import net.pladema.clinichistory.documents.service.hce.HCEHealthConditionsService;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEHospitalizationBo;
-import net.pladema.clinichistory.documents.service.hce.domain.HCEPersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

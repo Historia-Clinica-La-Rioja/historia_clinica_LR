@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.documents.repository.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
