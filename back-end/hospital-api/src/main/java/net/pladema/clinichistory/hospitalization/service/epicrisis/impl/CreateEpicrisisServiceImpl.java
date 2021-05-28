@@ -8,6 +8,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
@@ -48,10 +49,11 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     }
 
     @Override
-    public EpicrisisBo execute(Integer institutionId, EpicrisisBo epicrisis) throws IOException, PDFDocumentException {
-        LOG.debug("Input parameters -> institutionId {}, epicrisis {}", institutionId, epicrisis);
+    public EpicrisisBo execute(EpicrisisBo epicrisis) throws IOException, PDFDocumentException {
+        LOG.debug("Input parameters -> epicrisis {}", epicrisis);
 
-        var internmentEpisode = internmentEpisodeService.getInternmentEpisode(epicrisis.getEncounterId(), institutionId);
+        assertContextValid(epicrisis);
+        var internmentEpisode = internmentEpisodeService.getInternmentEpisode(epicrisis.getEncounterId(), epicrisis.getInstitutionId());
         epicrisis.setPatientId(internmentEpisode.getPatientId());
         assertInternmentEpisodeCanCreateEpicrisis(internmentEpisode);
 
@@ -63,9 +65,16 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisode.getId(), epicrisis.getId());
 
         LOG.debug(OUTPUT, epicrisis);
-        generateDocument(epicrisis, institutionId);
+        generateDocument(epicrisis, epicrisis.getInstitutionId());
 
         return epicrisis;
+    }
+
+    private void assertContextValid(EpicrisisBo epicrisis) {
+        if (epicrisis.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (epicrisis.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 
     private void assertEpicrisisValid(EpicrisisBo epicrisis) {

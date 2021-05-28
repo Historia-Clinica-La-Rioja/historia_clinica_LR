@@ -83,7 +83,8 @@ public class EpicrisisController {
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
                 .ifPresentOrElse(epicrisis::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
         epicrisis.setEncounterId(internmentEpisodeId);
-        createEpicrisisService.execute(institutionId, epicrisis);
+        epicrisis.setInstitutionId(institutionId);
+        createEpicrisisService.execute(epicrisis);
 
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);

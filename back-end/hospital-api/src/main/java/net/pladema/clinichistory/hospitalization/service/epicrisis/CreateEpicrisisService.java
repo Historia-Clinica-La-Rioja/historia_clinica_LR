@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface CreateEpicrisisService {
 
-    EpicrisisBo execute(Integer institutionId, EpicrisisBo epicrisis) throws IOException, PDFDocumentException;
+    EpicrisisBo execute(EpicrisisBo epicrisis) throws IOException, PDFDocumentException;
 }

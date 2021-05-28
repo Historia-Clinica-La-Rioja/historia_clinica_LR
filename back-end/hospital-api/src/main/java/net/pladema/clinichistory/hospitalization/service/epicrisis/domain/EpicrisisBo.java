@@ -28,6 +28,8 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements Document
 
     private Integer encounterId;
 
+    private Integer institutionId;
+
     @NotNull(message = "{value.mandatory}")
     private boolean confirmed;
 
