@@ -3,14 +3,20 @@ package ar.lamansys.odontology.infrastructure.repository.tooth;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ToothBo;
 import ar.lamansys.odontology.domain.ToothStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ToothStorageMockImpl implements ToothStorage {
 
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Override
     public List<ToothBo> getAll() {
@@ -39,6 +45,24 @@ public class ToothStorageMockImpl implements ToothStorage {
             toothBo.setSnomed(odontologySnomedBo);
             teeth.add(toothBo);
         }
+        LOG.trace("Output -> {}", teeth);
         return teeth;
+    }
+
+    @Override
+    public Optional<ToothBo> get(String toothId) {
+        LOG.trace("Input -> {}", toothId);
+        var search = getAll()
+                .stream()
+                .filter(t -> t.getSnomed().getSctid().equals(toothId))
+                .collect(Collectors.toList());
+        ToothBo toothBo = null;
+        if (search.size() == 1 ) {
+            toothBo = search.get(0);
+            toothBo.setPosterior(toothBo.getToothCode() > 3);
+        }
+        Optional<ToothBo> result =  Optional.ofNullable(toothBo);
+        LOG.trace("Output -> {}", result);
+        return result;
     }
 }
