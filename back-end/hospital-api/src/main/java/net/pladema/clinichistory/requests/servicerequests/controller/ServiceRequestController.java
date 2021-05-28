@@ -126,7 +126,8 @@ public class ServiceRequestController {
                     categoryId,
                     serviceRequestListDto.getMedicalCoverageId(),
                     studyListDto);
-            Integer srId = createServiceRequestService.execute(institutionId, serviceRequestBo);
+            serviceRequestBo.setInstitutionId(institutionId);
+            Integer srId = createServiceRequestService.execute(serviceRequestBo);
             result.add(srId);
         });
 

@@ -19,13 +19,23 @@ import java.util.List;
 public class ServiceRequestBo implements Document {
 
     private Integer serviceRequestId;
+
     private PatientInfoBo patientInfo;
+
     private String categoryId;
+
     private Integer medicalCoverageId;
+
     private Integer encounterId;
+
+    private Integer institutionId;
+
     private Integer doctorId;
+
     private Long noteId;
+
     private List<DiagnosticReportBo> diagnosticReports;
+
     private LocalDate requestDate = LocalDate.now();
 
     @Override

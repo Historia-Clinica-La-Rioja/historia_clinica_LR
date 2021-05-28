@@ -3,5 +3,6 @@ package net.pladema.clinichistory.requests.servicerequests.service;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 
 public interface CreateServiceRequestService {
-    Integer execute(Integer institutionId, ServiceRequestBo serviceRequestBo);
+
+    Integer execute(ServiceRequestBo serviceRequestBo);
 }
