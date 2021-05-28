@@ -4,5 +4,5 @@ import net.pladema.clinichistory.requests.medicationrequests.service.domain.Medi
 
 public interface CreateMedicationRequestService {
 
-    Integer execute(Integer institutionId, MedicationRequestBo medicationRequest);
+    Integer execute(MedicationRequestBo medicationRequest);
 }

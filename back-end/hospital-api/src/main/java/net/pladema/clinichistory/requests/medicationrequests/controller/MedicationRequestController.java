@@ -109,7 +109,8 @@ public class MedicationRequestController {
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientDto, medicationRequest);
-        Integer result = createMedicationRequestService.execute(institutionId, medicationRequestBo);
+        medicationRequestBo.setInstitutionId(institutionId);
+        Integer result = createMedicationRequestService.execute(medicationRequestBo);
         LOG.debug("create result -> {}", result);
         return result;
     }

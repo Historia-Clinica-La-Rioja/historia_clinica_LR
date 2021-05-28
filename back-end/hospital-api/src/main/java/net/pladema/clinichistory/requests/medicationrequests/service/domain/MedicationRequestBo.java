@@ -8,7 +8,6 @@ import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,13 +21,13 @@ public class MedicationRequestBo implements Document {
 
     private PatientInfoBo patientInfo;
 
-    private BasicPatientDto patientDto;
-
     private Integer medicalCoverageId;
 
     private Integer doctorId;
 
     private Integer encounterId;
+
+    private Integer institutionId;
 
     private List<MedicationBo> medications = new ArrayList<>();
 

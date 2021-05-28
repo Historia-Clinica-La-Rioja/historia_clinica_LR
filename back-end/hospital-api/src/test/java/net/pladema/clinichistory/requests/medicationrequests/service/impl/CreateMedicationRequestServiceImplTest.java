@@ -52,8 +52,10 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 	@Test
 	public void execute_withNullInstitution(){
+		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(null);
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(null, null)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "El identificador de la institución es obligatorio";
 		String actualMessage = exception.getMessage();
@@ -63,7 +65,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	@Test
 	public void execute_withNullMedicationRequest(){
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-			createMedicationRequestService.execute(1, null)
+			createMedicationRequestService.execute(null)
 		);
 		String expectedMessage = "La receta es obligatoria";
 		String actualMessage = exception.getMessage();
@@ -73,8 +75,9 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	@Test
 	public void execute_withNullPatient(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(1);
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "La información del paciente es obligatoria";
 		String actualMessage = exception.getMessage();
@@ -84,9 +87,10 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	@Test
 	public void execute_withNullDoctorId(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "El identificador del médico es obligatorio";
 		String actualMessage = exception.getMessage();
@@ -96,11 +100,12 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	@Test
 	public void execute_withEmptyMedications(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "La receta tiene que tener asociada al menos una medicación";
 		String actualMessage = exception.getMessage();
@@ -113,6 +118,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
+		medicationRequest.setInstitutionId(1);
 
 		MedicationBo medication = new MedicationBo();
 		HealthConditionBo hc = new HealthConditionBo();
@@ -128,7 +134,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		when(healthConditionService.getHealthCondition(any())).thenReturn(mockActiveHealthCondition());
 
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "La fecha de comienzo para tomar la medicación es obligatoria";
 		String actualMessage = exception.getMessage();
@@ -141,12 +147,13 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
+		medicationRequest.setInstitutionId(1);
 
 		MedicationBo medication = new MedicationBo();
 		medication.setSnomed(null);
 		medicationRequest.setMedications(List.of(medication));
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "La terminología snomed es obligatoria";
 		String actualMessage = exception.getMessage();
@@ -155,7 +162,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		medication.setSnomed(new SnomedBo(null, "ANGINA"));
 		medicationRequest.setMedications(List.of(medication));
 		exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		expectedMessage = "El código identificador de snomed es obligatorio";
 		actualMessage = exception.getMessage();
@@ -164,7 +171,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		medication.setSnomed(new SnomedBo("12314124", null));
 		medicationRequest.setMedications(List.of(medication));
 		exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		expectedMessage = "El termino preferido de snomed es obligatorio";
 		actualMessage = exception.getMessage();
@@ -174,6 +181,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	@Test
 	public void execute_withInvalidMedication_HealthCondition_Snomed(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setMedicalCoverageId(5);
@@ -184,7 +192,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		medication.setHealthCondition(null);
 		medicationRequest.setMedications(List.of(medication));
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "La medicación tiene que estar asociada a un problema";
 		String actualMessage = exception.getMessage();
@@ -197,7 +205,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		medication.setHealthCondition(hc);
 		medicationRequest.setMedications(List.of(medication));
 		exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(1, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		expectedMessage = "La medicación tiene que estar asociada a un problema";
 		actualMessage = exception.getMessage();
@@ -206,9 +214,8 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 	@Test
 	public void execute_withNewerSolvedHeathCondition(){
-		Integer institutionId = 5;
-
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(5);
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short)1, (short)29));
 		medicationRequest.setMedicalCoverageId(5);
@@ -219,10 +226,10 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 						ConditionClinicalStatus.ACTIVE,
 						createDosageBo(15d, 8, EUnitsOfTimeBo.HOUR))));
 
-		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMapWhithNewerHealthCondition());
+		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMapWithNewerHealthCondition());
 
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(institutionId, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "El problema asociado tiene que estar activo";
 		String actualMessage = exception.getMessage();
@@ -232,8 +239,8 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	@Test
 	public void execute_withDuplicatedStudy() {
 
-		Integer institutionId = 5;
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(5);
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short) 1, (short) 29));
 		medicationRequest.setMedicalCoverageId(5);
@@ -260,7 +267,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-				createMedicationRequestService.execute(institutionId, medicationRequest)
+				createMedicationRequestService.execute(medicationRequest)
 		);
 		String expectedMessage = "La receta no puede contener más de un medicamento con el mismo problema y el mismo concepto snomed";
 		String actualMessage = exception.getMessage();
@@ -269,8 +276,8 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 	@Test
 	public void execute_success() {
-		Integer institutionId = 5;
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
+		medicationRequest.setInstitutionId(5);
 		medicationRequest.setDoctorId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(4, (short)1, (short)29));
 		medicationRequest.setMedicalCoverageId(5);
@@ -287,7 +294,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
                         createDosageBo(7d, 12, EUnitsOfTimeBo.HOUR))));
 		when(healthConditionService.getHealthCondition(any())).thenReturn(mockActiveHealthCondition());
 		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMap());
-		Integer medicationRequestId = createMedicationRequestService.execute(institutionId, medicationRequest);
+		Integer medicationRequestId = createMedicationRequestService.execute(medicationRequest);
 
 		Assertions.assertEquals(1, medicationRequestRepository.count());
 		Assertions.assertNotNull(medicationRequestId);
@@ -303,7 +310,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 		return result;
 	}
 
-	private Map<Integer, HealthConditionBo> mockHealthConditionMapWhithNewerHealthCondition() {
+	private Map<Integer, HealthConditionBo> mockHealthConditionMapWithNewerHealthCondition() {
 		HealthConditionBo hc1 = new HealthConditionBo();
 		hc1.setId(47);
 		hc1.setStatusId(ConditionClinicalStatus.SOLVED);
