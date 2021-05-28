@@ -1,6 +1,6 @@
-package net.pladema.clinichistory.outpatient.repository;
+package net.pladema.clinichistory.documents.repository.ips;
 
-import net.pladema.clinichistory.outpatient.repository.domain.Reason;
+import net.pladema.clinichistory.documents.repository.ips.entity.Reason;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.service;
+package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 
 import java.util.List;
 

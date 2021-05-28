@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.service.ips;
 
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ProcedureBo;
 
 import java.util.List;
 

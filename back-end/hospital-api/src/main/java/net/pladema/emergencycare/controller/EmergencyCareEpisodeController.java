@@ -6,7 +6,7 @@ import net.pladema.clinichistory.documents.controller.service.VitalSignExternalS
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.service.ReasonExternalService;
+import net.pladema.clinichistory.documents.controller.service.ReasonExternalService;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;

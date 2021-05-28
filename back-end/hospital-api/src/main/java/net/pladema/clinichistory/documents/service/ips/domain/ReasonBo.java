@@ -1,11 +1,10 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
+package net.pladema.clinichistory.documents.service.ips.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
-import net.pladema.clinichistory.outpatient.repository.domain.Reason;
+import net.pladema.clinichistory.documents.repository.ips.entity.Reason;
 import net.pladema.clinichistory.outpatient.repository.domain.ReasonSummaryVo;
 import javax.validation.constraints.NotNull;
 

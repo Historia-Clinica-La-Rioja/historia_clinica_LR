@@ -16,7 +16,7 @@ import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ProblemBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.slf4j.Logger;

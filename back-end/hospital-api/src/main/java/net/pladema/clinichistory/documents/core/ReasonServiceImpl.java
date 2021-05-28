@@ -1,10 +1,10 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.service;
+package net.pladema.clinichistory.documents.core;
 
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationReasonsRepository;
-import net.pladema.clinichistory.outpatient.repository.ReasonsRepository;
+import net.pladema.clinichistory.documents.repository.ips.ReasonsRepository;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientConsultationReasons;
-import net.pladema.clinichistory.outpatient.repository.domain.Reason;
+import net.pladema.clinichistory.documents.repository.ips.entity.Reason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

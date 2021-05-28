@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 
 import java.time.LocalDate;
 import java.util.List;

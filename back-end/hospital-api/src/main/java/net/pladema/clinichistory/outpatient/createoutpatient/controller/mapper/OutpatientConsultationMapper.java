@@ -8,8 +8,8 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.*;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ProblemBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import org.mapstruct.IterableMapping;

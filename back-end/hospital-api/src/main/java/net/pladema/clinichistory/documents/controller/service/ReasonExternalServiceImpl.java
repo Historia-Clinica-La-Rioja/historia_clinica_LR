@@ -1,9 +1,9 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.controller.service;
+package net.pladema.clinichistory.documents.controller.service;
 
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.ReasonService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.documents.core.ReasonService;
+import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

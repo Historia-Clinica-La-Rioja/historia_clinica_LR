@@ -4,9 +4,9 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Docu
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ProblemBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ProcedureBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 
 import java.util.Collections;

@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.repository;
 
-import net.pladema.clinichistory.outpatient.repository.domain.Reason;
+import net.pladema.clinichistory.documents.repository.ips.entity.Reason;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReason;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReasonPK;
 import org.springframework.data.jpa.repository.JpaRepository;

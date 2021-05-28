@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
+package net.pladema.clinichistory.documents.service.ips.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

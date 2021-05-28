@@ -2,8 +2,8 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ProcedureBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ReasonBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.domain.HealthConditionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;

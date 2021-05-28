@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.controller.service;
+package net.pladema.clinichistory.documents.controller.service;
 
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 

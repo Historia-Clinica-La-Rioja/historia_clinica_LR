@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.outpatient.repository.domain;
+package net.pladema.clinichistory.documents.repository.ips.entity;
 
 import lombok.*;
 

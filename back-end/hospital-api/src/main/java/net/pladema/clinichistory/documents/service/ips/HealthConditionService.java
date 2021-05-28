@@ -5,7 +5,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
+import net.pladema.clinichistory.documents.service.ips.domain.ProblemBo;
 
 import java.util.List;
 import java.util.Map;
