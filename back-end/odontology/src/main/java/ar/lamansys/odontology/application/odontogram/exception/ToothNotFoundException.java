@@ -1,9 +1,14 @@
 package ar.lamansys.odontology.application.odontogram.exception;
 
-import ar.lamansys.odontology.application.exception.OdontologyException;
+public class ToothNotFoundException extends RuntimeException {
 
-public class ToothNotFoundException extends OdontologyException {
-    public ToothNotFoundException(String errorMessage) {
+    private final ToothExceptionEnum code;
+    public ToothNotFoundException(ToothExceptionEnum code, String errorMessage) {
         super(errorMessage);
+        this.code = code;
+    }
+
+    public String getCode() {
+        return this.code.name();
     }
 }

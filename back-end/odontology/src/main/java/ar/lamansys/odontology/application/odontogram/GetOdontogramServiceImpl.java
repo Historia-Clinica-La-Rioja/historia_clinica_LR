@@ -15,11 +15,12 @@ import java.util.Map;
 public class GetOdontogramServiceImpl implements GetOdontogramService {
 
     private final ToothStorage toothStorage;
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger;
 
     public GetOdontogramServiceImpl(
             ToothStorage toothStorage) {
         this.toothStorage = toothStorage;
+        logger = LoggerFactory.getLogger(getClass());
     }
 
     public List<OdontogramQuadrantBo> run() {
@@ -27,7 +28,7 @@ public class GetOdontogramServiceImpl implements GetOdontogramService {
         Map<Integer, OdontogramQuadrantBo> quadrantMap = OdontogramQuadrantData.getAsMap();
         teeth.forEach(t -> quadrantMap.get(t.getQuadrantCode()).addTooth(t));
         var result = new ArrayList<>(quadrantMap.values());
-        LOG.debug("Output -> {}", result);
+        logger.debug("Output -> {}", result);
         return result;
     }
 }

@@ -16,7 +16,7 @@ public class ToothBo {
     private Integer toothCode;
     private Integer quadrantCode;
     private boolean posterior;
-    private final Logger LOG =  LoggerFactory.getLogger(getClass());
+    private final Logger logger =  LoggerFactory.getLogger(getClass());
 
     public ToothBo(ToothBo other){
         this.snomed = other.snomed;
@@ -26,9 +26,9 @@ public class ToothBo {
     }
 
     public boolean belongsToQuadrant(Integer quadrantCode) {
-        LOG.debug("Input -> {}", quadrantCode);
+        logger.debug("Input -> {}", quadrantCode);
         var result = quadrantCode.equals(this.getQuadrantCode());
-        LOG.debug("Output -> {}", result);
+        logger.debug("Output -> {}", result);
         return result;
     }
 }

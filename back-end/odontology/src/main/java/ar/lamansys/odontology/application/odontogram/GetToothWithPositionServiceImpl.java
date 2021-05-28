@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.application.odontogram;
 
-import ar.lamansys.odontology.application.exception.OdontologyException;
+import ar.lamansys.odontology.domain.OdontogramQuadrantBo;
 import ar.lamansys.odontology.domain.OdontogramQuadrantData;
 import ar.lamansys.odontology.domain.ToothWithPositionBo;
 import org.slf4j.Logger;
@@ -11,20 +11,21 @@ import org.springframework.stereotype.Service;
 public class GetToothWithPositionServiceImpl implements GetToothWithPositionService {
 
     private final GetToothService getToothService;
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger;
 
     public GetToothWithPositionServiceImpl(GetToothService getToothService) {
         this.getToothService = getToothService;
+        logger = LoggerFactory.getLogger(getClass());
     }
 
 
     @Override
     public ToothWithPositionBo run(String toothId){
-        LOG.debug("Input -> {}", toothId);
+        logger.debug("Input -> {}", toothId);
         var tooth = getToothService.run(toothId);
-        var quadrant = OdontogramQuadrantData.getAsMap().get(tooth.getQuadrantCode());
+        var quadrant = OdontogramQuadrantBo.getQuadrant(tooth.getQuadrantCode());
         ToothWithPositionBo result = new ToothWithPositionBo(tooth, quadrant);
-        LOG.debug("Output -> {}", result);
+        logger.debug("Output -> {}", result);
         return result;
     }
 }

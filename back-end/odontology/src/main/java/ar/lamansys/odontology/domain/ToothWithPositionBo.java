@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor
 public class ToothWithPositionBo extends ToothBo {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private boolean left;
     private boolean top;
 
@@ -36,7 +36,7 @@ public class ToothWithPositionBo extends ToothBo {
         result.setRight(isLeft() ? EToothSurfaces.MESIAL.getValue() : EToothSurfaces.DISTAL.getValue());
         result.setLeft(isLeft() ? EToothSurfaces.DISTAL.getValue() : EToothSurfaces.MESIAL.getValue());
         result.setCentral(isPosterior() ? EToothSurfaces.OCLUSAL.getValue() : EToothSurfaces.INCISAL.getValue());
-        LOG.debug("Output -> {}", result);
+        logger.debug("Output -> {}", result);
         return result;
     }
 }

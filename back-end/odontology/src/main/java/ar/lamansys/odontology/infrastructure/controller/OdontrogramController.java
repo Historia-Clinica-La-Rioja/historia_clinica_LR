@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/odontology/odontogram")
 @Api(value="Odontologram", tags= { "Odontologram" } )
 public class OdontrogramController {
-    private final Logger LOG;
+    private final Logger logger;
 
     private final OdontogramQuadrantMapper odontogramQuadrantMapper;
     private final ToothSurfacesMapper toothSurfacesMapper;
@@ -29,14 +29,14 @@ public class OdontrogramController {
         this.toothSurfacesMapper = toothSurfacesMapper;
         this.getOdontogramService = getOdontogramService;
         this.getToothSurfacesService = getToothSurfacesService;
-        this.LOG = LoggerFactory.getLogger(getClass());
+        this.logger = LoggerFactory.getLogger(getClass());
     }
 
     @GetMapping()
     @ResponseBody
     public List<OdontogramQuadrantDto> getOdontogram() {
         List<OdontogramQuadrantDto> result = odontogramQuadrantMapper.parseToOdontongramQuadrantDtoList(getOdontogramService.run());
-        LOG.debug("Output -> {}", result);
+        logger.debug("Output -> {}", result);
         return result;
     }
 
@@ -44,7 +44,7 @@ public class OdontrogramController {
     @ResponseBody
     public ToothSurfacesDto getToothSurfaces(@PathVariable(name = "toothId") String toothId) {
         ToothSurfacesDto result = toothSurfacesMapper.parseToToothSurfacesDto(getToothSurfacesService.run(toothId));
-        LOG.debug("Output -> {}", result);
+        logger.debug("Output -> {}", result);
         return result;
     }
 

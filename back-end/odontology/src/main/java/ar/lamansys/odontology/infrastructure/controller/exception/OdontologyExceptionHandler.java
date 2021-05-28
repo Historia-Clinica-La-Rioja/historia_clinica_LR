@@ -1,5 +1,6 @@
-package ar.lamansys.odontology.application.exception;
+package ar.lamansys.odontology.infrastructure.controller.exception;
 
+import ar.lamansys.odontology.application.odontogram.exception.ToothNotFoundException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +17,17 @@ import java.util.Locale;
 @RestControllerAdvice(basePackages = "ar.lamansys.odontology")
 public class OdontologyExceptionHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OdontologyExceptionHandler.class);
+	private final Logger logger;
 
-	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-	@ExceptionHandler({ OdontologyException.class })
-	protected ApiErrorMessageDto handleToothServiceException(OdontologyException ex, Locale locale) {
-		LOG.debug("ToothServiceException exception -> {}", ex.getMessage());
-		return new ApiErrorMessageDto(null, ex.getMessage());
+	public OdontologyExceptionHandler() {
+		logger = LoggerFactory.getLogger(OdontologyExceptionHandler.class);
 	}
 
-
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({ ToothNotFoundException.class })
+	protected ApiErrorMessageDto handleToothServiceException(ToothNotFoundException ex, Locale locale) {
+		logger.debug("ToothServiceException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode(), ex.getMessage());
+	}
 }
 

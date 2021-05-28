@@ -35,4 +35,8 @@ public class OdontogramQuadrantBo {
     public void addTooth(ToothBo t) {
         this.teeth.add(t);
     }
+
+    public static OdontogramQuadrantBo getQuadrant(Integer code) {
+        return OdontogramQuadrantData.getAsMap().get(code);
+    }
 }
