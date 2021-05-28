@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import javax.validation.ConstraintViolationException;
+import java.util.Collections;
+
 
 @Service
 public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocumentService {
@@ -35,15 +38,16 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
 
     @Override
-    public OutpatientDocumentBo execute(Integer institutionId, OutpatientDocumentBo outpatient) throws IOException, PDFDocumentException {
-        LOG.debug("Input parameters -> institutionId {}, outpatient {}", institutionId, outpatient);
+    public OutpatientDocumentBo execute(OutpatientDocumentBo outpatient) throws IOException, PDFDocumentException {
+        LOG.debug("Input parameters -> outpatient {}", outpatient);
 
+        assertContextValid(outpatient);
         outpatient.setId(documentFactory.run(outpatient));
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());
         LOG.debug(OUTPUT, outpatient);
 
-        generateDocument(outpatient, institutionId);
+        generateDocument(outpatient, outpatient.getInstitutionId());
         return outpatient;
     }
 
@@ -51,6 +55,13 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(outpatient, institutionId, outpatient.getEncounterId(),
                 EDocumentType.map(DocumentType.OUTPATIENT), outpatient.getPatientId());
         createDocumentFile.execute(event);
+    }
+
+    private void assertContextValid(OutpatientDocumentBo outpatient) {
+        if (outpatient.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (outpatient.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 }
 

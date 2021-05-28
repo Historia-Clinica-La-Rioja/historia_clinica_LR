@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface CreateOutpatientDocumentService {
     
-    OutpatientDocumentBo execute(Integer institutionId, OutpatientDocumentBo outpatient) throws IOException, PDFDocumentException;
+    OutpatientDocumentBo execute(OutpatientDocumentBo outpatient) throws IOException, PDFDocumentException;
 }

@@ -29,6 +29,8 @@ public class OutpatientDocumentBo implements Document {
 
     private Integer encounterId;
 
+    private Integer institutionId;
+
     private boolean confirmed = true;
 
     private Integer doctorId;

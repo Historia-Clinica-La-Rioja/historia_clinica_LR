@@ -114,6 +114,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         OutpatientDocumentBo outpatient = outpatientConsultationMapper.fromCreateOutpatientDto(createOutpatientDto);
         outpatient.setEncounterId(newOutPatient.getId());
+        outpatient.setInstitutionId(institutionId);
 
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         outpatient.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
@@ -126,7 +127,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(createOutpatientDto.getClinicalSpecialtyId())
                 .orElse(null));
 
-        createOutpatientDocumentService.execute(institutionId, outpatient);
+        createOutpatientDocumentService.execute(outpatient);
 
         if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
             appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
@@ -149,6 +150,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true, clinicalSpecialtyId);
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
+        outpatient.setInstitutionId(institutionId);
 
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         outpatient.setPatientId(patientId);
@@ -160,7 +162,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId)
                 .orElse(null));
 
-        createOutpatientDocumentService.execute(institutionId, outpatient);
+        createOutpatientDocumentService.execute(outpatient);
 
 
         if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
@@ -206,6 +208,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
+        outpatient.setInstitutionId(institutionId);
 
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         outpatient.setPatientId(patientId);
@@ -215,7 +218,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         immunizationBo.setInstitutionId(institutionId);
         outpatient.setImmunizations(Collections.singletonList(immunizationBo));
 
-        createOutpatientDocumentService.execute(institutionId, outpatient);
+        createOutpatientDocumentService.execute(outpatient);
 
         LOG.debug(OUTPUT, true);
         return  ResponseEntity.ok().body(true);
@@ -233,13 +236,14 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null);
         OutpatientDocumentBo outpatient = new OutpatientDocumentBo();
         outpatient.setEncounterId(newOutPatient.getId());
+        outpatient.setInstitutionId(institutionId);
 
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         outpatient.setPatientId(patientId);
         outpatient.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
 
         outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
-        createOutpatientDocumentService.execute(institutionId, outpatient);
+        createOutpatientDocumentService.execute(outpatient);
 
         return ResponseEntity.ok().body(true);
     }
