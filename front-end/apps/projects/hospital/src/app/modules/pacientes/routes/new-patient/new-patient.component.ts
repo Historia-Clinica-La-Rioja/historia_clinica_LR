@@ -7,6 +7,8 @@ import {
 	APatientDto,
 	BMPatientDto,
 	EthnicityDto,
+	PersonOccupationDto,
+	EducationLevelDto,
 	GenderDto,
 	IdentificationTypeDto,
 	PatientMedicalCoverageDto,
@@ -53,6 +55,8 @@ export class NewPatientComponent implements OnInit {
 	patientMedicalCoveragesToAdd: PatientMedicalCoverage[];
 	public isSubmitButtonDisabled = false;
 	public ethnicities: EthnicityDto[];
+	public occupations: PersonOccupationDto[];
+	public educationLevels: EducationLevelDto[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -90,6 +94,8 @@ export class NewPatientComponent implements OnInit {
 					phoneNumber: [],
 					email: [null, Validators.email],
 					ethnicityId: [],
+					occupationId: [],
+					educationLevelId: [],
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
@@ -131,6 +137,16 @@ export class NewPatientComponent implements OnInit {
 		this.personMasterDataService.getEthnicities()
 			.subscribe(ethnicities => {
 				this.ethnicities = ethnicities;
+			});
+
+		this.personMasterDataService.getOccupations()
+			.subscribe(occupations => {
+				this.occupations = occupations;
+			});
+
+		this.personMasterDataService.getEducationLevels()
+			.subscribe(educationLevels => {
+				this.educationLevels = educationLevels;
 			});
 
 		this.addressMasterDataService.getAllCountries()
@@ -207,6 +223,8 @@ export class NewPatientComponent implements OnInit {
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
 			ethnicityId: this.form.controls.ethnicityId.value,
+			educationLevelId: this.form.controls.educationLevelId.value,
+			occupationId: this.form.controls.occupationId.value,
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,

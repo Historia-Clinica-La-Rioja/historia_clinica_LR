@@ -11,7 +11,9 @@ import {
 	CompletePatientDto,
 	BMPersonDto,
 	PatientMedicalCoverageDto,
-	EthnicityDto
+	EthnicityDto,
+	PersonOccupationDto,
+	EducationLevelDto
 } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
@@ -61,6 +63,8 @@ export class EditPatientComponent implements OnInit {
 
 	private medicalCoverages: PatientMedicalCoverage[];
 	public ethnicities: EthnicityDto[];
+	public occupations: PersonOccupationDto[];
+	public educationLevels: EducationLevelDto[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -112,6 +116,8 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
 								this.form.setControl('religion', new FormControl(personInformationData.religion));
 								this.form.setControl('ethnicityId', new FormControl(personInformationData.ethnicityId));
+								this.form.setControl('occupationId', new FormControl(personInformationData.occupationId));
+								this.form.setControl('educationLevelId', new FormControl(personInformationData.educationLevelId));
 								// address
 								this.form.setControl('addressCountryId', new FormControl(DEFAULT_COUNTRY_ID));
 								if (personInformationData.province !== undefined) {
@@ -156,6 +162,16 @@ export class EditPatientComponent implements OnInit {
 				this.ethnicities = ethnicities;
 			});
 
+		this.personMasterDataService.getOccupations()
+			.subscribe(occupations => {
+				this.occupations = occupations;
+			});
+
+		this.personMasterDataService.getEducationLevels()
+			.subscribe(educationLevels => {
+				this.educationLevels = educationLevels;
+			});
+
 		this.addressMasterDataService.getAllCountries()
 			.subscribe(countries => {
 				this.countries = countries;
@@ -182,6 +198,8 @@ export class EditPatientComponent implements OnInit {
 			phoneNumber: [],
 			email: [null, Validators.email],
 			ethnicityId: [],
+			occupationId: [],
+			educationLevelId: [],
 			religion: [],
 			nameSelfDetermination: [],
 			genderSelfDeterminationId: [],
@@ -241,6 +259,8 @@ export class EditPatientComponent implements OnInit {
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
 			ethnicityId: this.form.controls.ethnicityId.value,
+			occupationId: this.form.controls.occupationId.value,
+			educationLevelId: this.form.controls.educationLevelId.value,
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,

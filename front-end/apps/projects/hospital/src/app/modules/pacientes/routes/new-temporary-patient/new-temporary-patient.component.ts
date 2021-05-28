@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { APatientDto, BMPatientDto, EthnicityDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -47,6 +47,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 	private comments;
 	private readonly routePrefix;
 	public ethnicities: EthnicityDto[];
+	public occupations: PersonOccupationDto[];
+	public educationLevels: EducationLevelDto[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -88,6 +90,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 					phoneNumber: [],
 					email: [null, [Validators.email]],
 					ethnicityId: [],
+					occupationId: [],
+					educationLevelId: [],
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
@@ -130,6 +134,16 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.personMasterDataService.getEthnicities()
 			.subscribe(ethnicities => {
 				this.ethnicities = ethnicities;
+			});
+
+		this.personMasterDataService.getOccupations()
+			.subscribe(occupations => {
+				this.occupations = occupations;
+			});
+
+		this.personMasterDataService.getEducationLevels()
+			.subscribe(educationLevels => {
+				this.educationLevels = educationLevels;
 			});
 
 		this.addressMasterDataService.getAllCountries()
@@ -175,6 +189,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
 			ethnicityId: this.form.controls.ethnicityId.value,
+			educationLevelId: this.form.controls.educationLevelId.value,
+			occupationId: this.form.controls.occupationId.value,
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,

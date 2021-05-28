@@ -41,6 +41,7 @@ export interface APersonDto {
     birthDate: Date;
     cityId: number;
     cuil: string;
+    educationLevelId: number;
     email: string;
     ethnicityId: number;
     firstName: string;
@@ -54,6 +55,7 @@ export interface APersonDto {
     mothersLastName: string;
     nameSelfDetermination: string;
     number: string;
+    occupationId: number;
     otherLastNames: string;
     phoneNumber: string;
     postcode: string;

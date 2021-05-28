@@ -16,6 +16,8 @@
 			"CUIT_CUIL": "CUIT / CUIL",
 			"EMAIL": "Email",
 			"ETHNIC": "Etnia",
+			"OCCUPATION":"Ocupación",
+			"EDUCATION_LEVEL":"Nivel educativo",
 			"FIRST_NAME": "Primer nombre",
 			"FIRST_NAMES_TITLE": "Nombres",
 			"FULL_NAME": "Nombre completo",

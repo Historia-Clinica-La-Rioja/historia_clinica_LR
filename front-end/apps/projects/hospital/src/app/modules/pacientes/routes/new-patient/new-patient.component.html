@@ -402,6 +402,30 @@
 					</mat-select>
 				</mat-form-field>
 			</div>
+			<div>
+				<div>
+					<span [translate]="'pacientes.form.OCCUPATION'"></span>
+				</div>
+				<mat-form-field appearance="outline">
+					<mat-select id="occupation-select" formControlName="occupationId" placeholder="{{'pacientes.form.OCCUPATION' | translate}}">
+						<mat-option *ngFor="let occupation of occupations" [value]="occupation.id">
+								{{occupation.description | titlecase}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div>
+				<div>
+					<span [translate]="'pacientes.form.EDUCATION_LEVEL'"></span>
+				</div>
+				<mat-form-field appearance="outline">
+					<mat-select id="educationLevel-select" formControlName="educationLevelId" placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
+						<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id">
+								{{educationLevel.description | titlecase}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
 			<div *hasRole="['ADMINISTRATIVO']" class="form-buttons">
 				<button mat-stroked-button type="button" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>
