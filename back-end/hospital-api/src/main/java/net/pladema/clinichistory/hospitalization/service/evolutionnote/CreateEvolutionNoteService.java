@@ -7,6 +7,6 @@ import java.io.IOException;
 
 public interface CreateEvolutionNoteService {
 
-    EvolutionNoteBo execute(Integer institutionId, EvolutionNoteBo evolutionNoteBo) throws IOException, PDFDocumentException;
+    EvolutionNoteBo execute(EvolutionNoteBo evolutionNoteBo) throws IOException, PDFDocumentException;
 
 }

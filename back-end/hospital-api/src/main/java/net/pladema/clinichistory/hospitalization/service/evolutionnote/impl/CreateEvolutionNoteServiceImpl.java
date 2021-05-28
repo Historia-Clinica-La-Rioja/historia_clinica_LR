@@ -55,10 +55,12 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     }
 
     @Override
-    public EvolutionNoteBo execute(Integer institutionId, EvolutionNoteBo evolutionNote) throws IOException, PDFDocumentException {
-        LOG.debug("Input parameters -> institutionId {}, evolutionNote {}", institutionId, evolutionNote);
+    public EvolutionNoteBo execute(EvolutionNoteBo evolutionNote) throws IOException, PDFDocumentException {
+        LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
 
-        var internmentEpisode = internmentEpisodeService.getInternmentEpisode(evolutionNote.getEncounterId(), institutionId);
+        assertContextValid(evolutionNote);
+        var internmentEpisode = internmentEpisodeService
+                .getInternmentEpisode(evolutionNote.getEncounterId(), evolutionNote.getInstitutionId());
         evolutionNote.setPatientId(internmentEpisode.getPatientId());
 
 
@@ -73,11 +75,17 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
         internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), evolutionNote.getId());
 
-
         LOG.debug(OUTPUT, evolutionNote);
 
-        generateDocument(evolutionNote, institutionId);
+        generateDocument(evolutionNote, evolutionNote.getInstitutionId());
         return evolutionNote;
+    }
+
+    private void assertContextValid(EvolutionNoteBo evolutionNote) {
+        if (evolutionNote.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (evolutionNote.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 
     private void assertEvolutionNoteValid(EvolutionNoteBo evolutionNote) {

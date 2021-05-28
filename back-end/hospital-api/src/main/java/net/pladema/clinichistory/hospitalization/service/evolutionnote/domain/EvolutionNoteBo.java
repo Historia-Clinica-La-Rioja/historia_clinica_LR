@@ -31,6 +31,8 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 
     private Integer encounterId;
 
+    private Integer institutionId;
+
     @NotNull(message = "{value.mandatory}")
     private boolean confirmed;
 

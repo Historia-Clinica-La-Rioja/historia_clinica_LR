@@ -80,9 +80,30 @@ class CreateEvolutionNoteServiceImplTest {
     @Test
     void createDocumentWithEpisodeThatNotExists() {
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
-                createEvolutionNoteService.execute(9, validEvolutionNote())
+                createEvolutionNoteService.execute(validEvolutionNote(9, 14))
         );
         String expectedMessage = "internmentepisode.not.found";
+        String actualMessage = exception.getMessage();
+        assertEquals(actualMessage,expectedMessage);
+    }
+
+
+    @Test
+    void createDocumentWithInvalidInstitutionId() {
+        Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+                createEvolutionNoteService.execute(validEvolutionNote(null, 8))
+        );
+        String expectedMessage = "El id de la institución es obligatorio";
+        String actualMessage = exception.getMessage();
+        assertEquals(actualMessage,expectedMessage);
+    }
+
+    @Test
+    void createDocumentWithInvalidEpisodeId() {
+        Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+                createEvolutionNoteService.execute(validEvolutionNote(8, null))
+        );
+        String expectedMessage = "El id del encuentro asociado es obligatorio";
         String actualMessage = exception.getMessage();
         assertEquals(actualMessage,expectedMessage);
     }
@@ -90,10 +111,8 @@ class CreateEvolutionNoteServiceImplTest {
     @Test
     void createDocumentWithInternmentInOtherInstitution() {
         var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
-        var evolutionNote = validEvolutionNote();
-        evolutionNote.setEncounterId(internmentEpisode.getId());
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisode.getInstitutionId()+1, evolutionNote)
+                createEvolutionNoteService.execute(validEvolutionNote(internmentEpisode.getInstitutionId()+1, internmentEpisode.getId()))
         );
         String expectedMessage = "internmentepisode.not.found";
         String actualMessage = exception.getMessage();
@@ -103,10 +122,8 @@ class CreateEvolutionNoteServiceImplTest {
     @Test
     void createDocumentWithEpicrisis() {
         var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(1l));
-        var evolutionNote = validEvolutionNote();
-        evolutionNote.setEncounterId(internmentEpisode.getId());
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(8, evolutionNote)
+                createEvolutionNoteService.execute(validEvolutionNote(8, internmentEpisode.getId()))
         );
         String expectedMessage = "Esta internación ya posee una epicrisis";
         String actualMessage = exception.getMessage();
@@ -116,13 +133,12 @@ class CreateEvolutionNoteServiceImplTest {
     @Test
     void createDocument_withMainDiagnosisDuplicated() {
         var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
-        var evolutionNote  = validEvolutionNote();
+        var evolutionNote  = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("SECONDARY", "SECONDARY"))));
-        evolutionNote.setEncounterId(internmentEpisode.getId());
 
         when(healthConditionGeneralStateService.getMainDiagnosisGeneralState(any())).thenReturn(new HealthConditionBo(new SnomedBo("SECONDARY", "SECONDARY")));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisode.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
         String expectedMessage = "Diagnostico principal duplicado en los secundarios";
         String actualMessage = exception.getMessage();
@@ -134,26 +150,25 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidDiagnosis() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-        var evolutionNote = validEvolutionNote();
-        evolutionNote.setEncounterId(internmentEpisodeSaved.getId());
+        var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
         evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
 
 
         evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
 
         evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED")),
                 new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED"))));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
         String expectedMessage = "Diagnósticos secundarios repetidos";
         String actualMessage = exception.getMessage();
@@ -164,19 +179,18 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidImmunizations() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-        var evolutionNote = validEvolutionNote();
-        evolutionNote.setEncounterId(internmentEpisodeSaved.getId());
+        var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
         evolutionNote.setImmunizations(List.of(new ImmunizationBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
 
         evolutionNote.setImmunizations(List.of(new ImmunizationBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
     }
 
@@ -184,20 +198,19 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidProcedures() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-        var evolutionNote = validEvolutionNote();
-        evolutionNote.setEncounterId(internmentEpisodeSaved.getId());
+        var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
         evolutionNote.setProcedures(List.of(new ProcedureBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
 
         evolutionNote.setProcedures(List.of(new ProcedureBo(new SnomedBo("REPEATED", "REPEATED")),
                 new ProcedureBo(new SnomedBo("REPEATED", "REPEATED"))));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
         Assertions.assertTrue(exception.getMessage().contains("Procedimientos repetidos"));
     }
@@ -206,10 +219,9 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidAnthropometricData() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-        var evolutionNote = validEvolutionNote();
-        evolutionNote.setEncounterId(internmentEpisodeSaved.getId());
+        var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
         LocalDateTime localDateTime = LocalDateTime.of(
                 LocalDate.of(2020, 10,29),
@@ -217,13 +229,13 @@ class CreateEvolutionNoteServiceImplTest {
 
         evolutionNote.setAnthropometricData(newAnthropometricData("10001", localDateTime));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
         Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
 
         evolutionNote.setAnthropometricData(newAnthropometricData("-50", null));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
         Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
     }
@@ -232,22 +244,21 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidVitalSign() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-        var evolutionNote = validEvolutionNote();
-        evolutionNote.setEncounterId(internmentEpisodeSaved.getId());
+        var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         LocalDateTime localDateTime = LocalDateTime.of(
                 LocalDate.of(2020, 10,29),
                 LocalTime.of(11,20));
         evolutionNote.setVitalSigns(newVitalSigns(null, localDateTime));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
         Assertions.assertTrue(exception.getMessage().contains("vitalSigns.bloodOxygenSaturation.value: {value.mandatory}"));
 
         evolutionNote.setVitalSigns(newVitalSigns("Value", LocalDateTime.of(2020,9,9,1,5,6)));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(internmentEpisodeSaved.getInstitutionId(), evolutionNote)
+                createEvolutionNoteService.execute(evolutionNote)
         );
         Assertions.assertTrue(exception.getMessage().contains("Saturación de oxigeno: La fecha de medición debe ser posterior a la fecha de internación"));
     }
@@ -262,8 +273,10 @@ class CreateEvolutionNoteServiceImplTest {
         return internmentEpisode;
     }
 
-    private EvolutionNoteBo validEvolutionNote(){
+    private EvolutionNoteBo validEvolutionNote(Integer institutionId, Integer encounterId){
         var result = new EvolutionNoteBo();
+        result.setInstitutionId(institutionId);
+        result.setEncounterId(encounterId);
         result.setConfirmed(true);
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         result.setDiagnosis(Lists.emptyList());

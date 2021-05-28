@@ -90,7 +90,8 @@ public class EvolutionNoteController {
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
                 .ifPresentOrElse(evolutionNote::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
         evolutionNote.setEncounterId(internmentEpisodeId);
-        createEvolutionNoteService.execute(institutionId, evolutionNote);
+        evolutionNote.setInstitutionId(institutionId);
+        createEvolutionNoteService.execute(evolutionNote);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);
     }
