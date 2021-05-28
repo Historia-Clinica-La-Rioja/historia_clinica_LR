@@ -65,7 +65,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 
         MedicationRequest newMR = createMedicationRequest(medicationRequest);
         medicationRequest.setEncounterId(newMR.getId());
-        documentFactory.run(medicationRequest);
+        documentFactory.run(medicationRequest, false);
 
         return newMR.getId();
     }

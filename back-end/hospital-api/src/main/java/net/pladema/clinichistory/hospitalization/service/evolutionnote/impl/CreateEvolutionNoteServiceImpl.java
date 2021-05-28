@@ -1,9 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
-import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
 import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
@@ -16,13 +12,11 @@ import net.pladema.clinichistory.hospitalization.service.documents.validation.An
 import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.sgx.pdf.PDFDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,22 +34,18 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final CreateDocumentFile createDocumentFile;
-
     private final HealthConditionGeneralStateService healthConditionGeneralStateService;
 
     public CreateEvolutionNoteServiceImpl(DocumentFactory documentFactory,
                                           InternmentEpisodeService internmentEpisodeService,
-                                          CreateDocumentFile createDocumentFile,
                                           HealthConditionGeneralStateService healthConditionGeneralStateService) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.createDocumentFile = createDocumentFile;
         this.healthConditionGeneralStateService = healthConditionGeneralStateService;
     }
 
     @Override
-    public EvolutionNoteBo execute(EvolutionNoteBo evolutionNote) throws IOException, PDFDocumentException {
+    public EvolutionNoteBo execute(EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
 
         assertContextValid(evolutionNote);
@@ -71,13 +61,12 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         assertAnthropometricData(evolutionNote);
 
 
-        evolutionNote.setId(documentFactory.run(evolutionNote));
+        evolutionNote.setId(documentFactory.run(evolutionNote, true));
 
         internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), evolutionNote.getId());
 
         LOG.debug(OUTPUT, evolutionNote);
 
-        generateDocument(evolutionNote, evolutionNote.getInstitutionId());
         return evolutionNote;
     }
 
@@ -135,9 +124,4 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         validator.isValid(evolutionNote, entryDate);
     }
 
-    private void generateDocument(EvolutionNoteBo evolutionNote, Integer institutionId) throws IOException, PDFDocumentException {
-        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(evolutionNote, institutionId, evolutionNote.getEncounterId(),
-                EDocumentType.map(DocumentType.EVALUATION_NOTE), evolutionNote.getPatientId());
-        createDocumentFile.execute(event);
-    }
 }

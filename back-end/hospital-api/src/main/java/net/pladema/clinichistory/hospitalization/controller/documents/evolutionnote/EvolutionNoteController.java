@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventException;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -81,7 +82,7 @@ public class EvolutionNoteController {
     public ResponseEntity<Boolean> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody EvolutionNoteDto evolutionNoteDto) throws IOException, PDFDocumentException {
+            @RequestBody EvolutionNoteDto evolutionNoteDto) {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNote {}",
                 institutionId, internmentEpisodeId, evolutionNoteDto);
         EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);

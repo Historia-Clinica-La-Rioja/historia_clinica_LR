@@ -60,7 +60,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         validateMedicalDischarge(medicalDischarge, institutionZoneId, institutionId);
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
         emergencyCareEpisodeDischargeRepository.save(newDischarge);
-        documentFactory.run(medicalDischarge);
+        documentFactory.run(medicalDischarge, false);
         return true;
     }
 

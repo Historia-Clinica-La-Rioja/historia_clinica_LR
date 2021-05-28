@@ -46,7 +46,7 @@ public class AuditableDocumentServiceImpl implements AuditableService {
 
     @Override
     public Optional<DocumentFile> save(OnGenerateDocumentEvent event)  {
-        Map<String,Object> contextMap = auditableContextBuilder.buildContext(event.getDocument(), event.getPatientId());
+        Map<String,Object> contextMap = auditableContextBuilder.buildContext(event.getDocumentBo(), event.getPatientId());
 
         String path = streamFile.buildPathAsString(event.getRelativeDirectory());
         String realFileName = event.getUuid();
@@ -60,8 +60,8 @@ public class AuditableDocumentServiceImpl implements AuditableService {
             LOG.error("Save document file -> {}", event, e);
         }
         return Optional.of(new DocumentFile(
-                event.getDocument().getId(),
-                event.getSourceId(),
+                event.getDocumentBo().getId(),
+                event.getEncounterId(),
                 event.getSourceType(),
                 event.getDocumentTypeId(), path, fictitiousFileName, realFileName, checksum));
     }

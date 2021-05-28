@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventException;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
@@ -40,6 +41,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -104,7 +106,7 @@ public class MedicationRequestController {
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
-                   @RequestBody @Valid PrescriptionDto medicationRequest) {
+                   @RequestBody @Valid PrescriptionDto medicationRequest){
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);

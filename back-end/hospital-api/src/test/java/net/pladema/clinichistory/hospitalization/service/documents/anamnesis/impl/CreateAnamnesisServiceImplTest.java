@@ -70,7 +70,8 @@ class CreateAnamnesisServiceImplTest {
 				patientDischargeRepository,
 				documentService
 		);
-		createAnamnesisServiceImpl = new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, createDocumentFile, featureFlagsService);
+		createAnamnesisServiceImpl =
+				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, featureFlagsService);
 	}
 
 	@Test

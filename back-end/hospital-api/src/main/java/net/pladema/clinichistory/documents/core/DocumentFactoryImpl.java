@@ -19,6 +19,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private final DocumentService documentService;
 
+    private final CreateDocumentFile createDocumentFile;
+
     private final NoteService noteService;
 
     private final HealthConditionService healthConditionService;
@@ -36,6 +38,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
     private final DiagnosticReportService diagnosticReportService;
 
     public DocumentFactoryImpl(DocumentService documentService,
+                               CreateDocumentFile createDocumentFile,
                                NoteService noteService,
                                HealthConditionService healthConditionService,
                                AllergyService allergyService,
@@ -45,6 +48,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                CreateMedicationService createMedicationService,
                                DiagnosticReportService diagnosticReportService) {
         this.documentService = documentService;
+        this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
         this.healthConditionService = healthConditionService;
         this.allergyService = allergyService;
@@ -56,7 +60,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
     }
 
     @Override
-    public Long run(IDocumentBo documentBo) {
+    public Long run(IDocumentBo documentBo, boolean createFile) {
 
         Document doc = new Document(documentBo.getEncounterId(),
                 documentBo.getDocumentStatusId(),
@@ -81,6 +85,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
         diagnosticReportService.loadDiagnosticReport(doc.getId(), patientInfo, documentBo.getDiagnosticReports());
 
+        if (createFile)
+            generateDocument(documentBo);
         return doc.getId();
     }
 
@@ -95,6 +101,11 @@ public class DocumentFactoryImpl implements DocumentFactory {
             document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
         });
         return document;
+    }
+
+    private void generateDocument(IDocumentBo documentBo) {
+        OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(documentBo);
+        createDocumentFile.execute(event);
     }
 
 }

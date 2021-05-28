@@ -1,10 +1,14 @@
 package net.pladema.clinichistory.documents.events;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventEnumException;
+import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventException;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ESourceType;
 import net.pladema.clinichistory.documents.service.IDocumentBo;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import org.springframework.context.ApplicationEvent;
 
 import java.time.LocalDateTime;
@@ -12,38 +16,44 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Getter
-@Setter
 @ToString
-public abstract class OnGenerateDocumentEvent extends ApplicationEvent {
+public class OnGenerateDocumentEvent extends ApplicationEvent {
 
     protected static final String PDF_EXTENSION = ".pdf";
 
-    private IDocumentBo document;
+    @Getter(value = AccessLevel.NONE)
+    @Setter(value = AccessLevel.NONE)
+    private final String RELATIVE_DIRECTORY = "/institution/{institutionId}/{encounterType}/{encounterId}/{documentType}/";
 
-    private String uuid;
+    private final IDocumentBo documentBo;
 
-    private Integer institutionId;
+    private final String uuid;
 
-    private Integer sourceId;
+    private final EDocumentType documentType;
 
-    private EDocumentType documentType;
+    private final ESourceType eSourceType;
 
-    private Integer patientId;
-
-    public OnGenerateDocumentEvent(IDocumentBo document, Integer institutionId, Integer sourceId,
-                                   EDocumentType documentType, Integer patientId) {
-        super(sourceId);
-        this.document = document;
-        this.institutionId = institutionId;
-        this.sourceId = sourceId;
-        this.documentType = documentType;
-        this.patientId = patientId;
+    public OnGenerateDocumentEvent(IDocumentBo documentBo) throws GenerateDocumentEventException {
+        super(documentBo);
+        validData(documentBo);
+        this.documentBo = documentBo;
+        this.documentType = EDocumentType.map(documentBo.getDocumentType());
+        this.eSourceType = ESourceType.map(documentBo.getDocumentSource());
         this.uuid = UUID.randomUUID().toString();
     }
 
-    public abstract String getRelativeDirectory();
-
-    public abstract Short getSourceType();
+    private void validData(IDocumentBo documentBo) throws GenerateDocumentEventException {
+        if (documentBo == null)
+            throw new GenerateDocumentEventException(GenerateDocumentEventEnumException.DOCUMENT_NULL, "El documento es obligatorio");
+        if (documentBo.getId() == null)
+            throw new GenerateDocumentEventException(GenerateDocumentEventEnumException.DOCUMENT_ID_NULL, "El id del documento es obligatorio");
+        if (documentBo.getInstitutionId() == null)
+            throw new GenerateDocumentEventException(GenerateDocumentEventEnumException.INSTITUTION_ID_NULL, "El id de la institución es obligatorio");
+        if (documentBo.getEncounterId() == null)
+            throw new GenerateDocumentEventException(GenerateDocumentEventEnumException.ENCOUNTER_ID_NULL, "El id del encuentro asociado al documento es obligatorio");
+        if (documentBo.getPatientId() == null)
+            throw new GenerateDocumentEventException(GenerateDocumentEventEnumException.PATIENT_ID_NULL, "El id del paciente es obligatorio");
+    }
 
     public String getTemplateName() {
         return documentType.getTemplate();
@@ -57,8 +67,20 @@ public abstract class OnGenerateDocumentEvent extends ApplicationEvent {
         return documentType.getId();
     }
 
+    public String getRelativeDirectory() {
+        return RELATIVE_DIRECTORY
+                .replace("{institutionId}", documentBo.getInstitutionId().toString())
+                .replace("{encounterType}", eSourceType.getValue() + "")
+                .replace("{encounterId}", documentBo.getEncounterId().toString())
+                .replace("{documentType}", getDocumentType()) +
+                getUuid() + PDF_EXTENSION;
+    }
+    public Short getSourceType() {
+        return eSourceType.getId();
+    }
+
     public String buildDownloadName() {
-        String name = documentType + "_" + document.getId();
+        String name = documentType + "_" + documentBo.getId();
         return buildDownloadName(name);
     }
 
@@ -69,5 +91,12 @@ public abstract class OnGenerateDocumentEvent extends ApplicationEvent {
         return name;
     }
 
+    public Integer getPatientId() {
+        return documentBo.getPatientId();
+    }
+
+    public Integer getEncounterId(){
+        return documentBo.getEncounterId();
+    }
 }
 

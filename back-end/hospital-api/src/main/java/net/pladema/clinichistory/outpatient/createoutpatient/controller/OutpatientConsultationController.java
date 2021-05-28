@@ -1,11 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
-import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.documents.events.OnGenerateOutpatientDocumentEvent;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
@@ -106,7 +101,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<Boolean> createOutpatientConsultation(
             Integer institutionId,
             Integer patientId,
-            CreateOutpatientDto createOutpatientDto) throws IOException, PDFDocumentException {
+            CreateOutpatientDto createOutpatientDto) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, createOutpatientDto {}", institutionId, patientId, createOutpatientDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true,
@@ -142,7 +137,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<Boolean> gettingVaccine(
             Integer institutionId,
             Integer patientId,
-            List<OutpatientImmunizationDto> vaccineDto) throws IOException, PDFDocumentException {
+            List<OutpatientImmunizationDto> vaccineDto) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, vaccineDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         Integer clinicalSpecialtyId = getClinicalSpecialtyId(vaccineDto);
@@ -201,7 +196,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<Boolean> updateImmunization(
             Integer institutionId,
             Integer patientId,
-            OutpatientUpdateImmunizationDto outpatientUpdateImmunization) throws IOException, PDFDocumentException {
+            OutpatientUpdateImmunizationDto outpatientUpdateImmunization) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, OutpatientImmunizationDto {}", institutionId, patientId, outpatientUpdateImmunization);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null);
@@ -230,7 +225,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<Boolean> solveHealthCondition(
             Integer institutionId,
             Integer patientId,
-            @Valid HealthConditionNewConsultationDto solvedProblemDto) throws IOException, PDFDocumentException {
+            @Valid HealthConditionNewConsultationDto solvedProblemDto) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, HealthConditionNewConsultationDto {}", institutionId, patientId, solvedProblemDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, false, null);

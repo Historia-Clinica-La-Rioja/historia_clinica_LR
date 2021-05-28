@@ -1,8 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
-import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
@@ -12,14 +9,11 @@ import net.pladema.clinichistory.hospitalization.service.documents.validation.An
 import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.sgx.pdf.PDFDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,20 +29,16 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
     private final DocumentFactory documentFactory;
 
-    private final CreateDocumentFile createDocumentFile;
-
     private final InternmentEpisodeService internmentEpisodeService;
 
     public CreateEpicrisisServiceImpl(DocumentFactory documentFactory,
-                                      CreateDocumentFile createDocumentFile,
                                       InternmentEpisodeService internmentEpisodeService) {
         this.documentFactory = documentFactory;
-        this.createDocumentFile = createDocumentFile;
         this.internmentEpisodeService = internmentEpisodeService;
     }
 
     @Override
-    public EpicrisisBo execute(EpicrisisBo epicrisis) throws IOException, PDFDocumentException {
+    public EpicrisisBo execute(EpicrisisBo epicrisis) {
         LOG.debug("Input parameters -> epicrisis {}", epicrisis);
 
         assertContextValid(epicrisis);
@@ -60,11 +50,10 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         assertEffectiveVitalSignTimeValid(epicrisis, internmentEpisode.getEntryDate());
         assertAnthropometricData(epicrisis);
 
-        epicrisis.setId(documentFactory.run(epicrisis));
+        epicrisis.setId(documentFactory.run(epicrisis, true));
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisode.getId(), epicrisis.getId());
 
         LOG.debug(OUTPUT, epicrisis);
-        generateDocument(epicrisis, epicrisis.getInstitutionId());
 
         return epicrisis;
     }
@@ -111,12 +100,4 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
             throw new ConstraintViolationException("Esta internación no puede crear una epicrisis", Collections.emptySet());
         }
     }
-
-    private void generateDocument(EpicrisisBo epicrisis, Integer institutionId) throws IOException, PDFDocumentException {
-        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(epicrisis, institutionId, epicrisis.getEncounterId(),
-                EDocumentType.map(DocumentType.EPICRISIS), epicrisis.getPatientId());
-        createDocumentFile.execute(event);
-    }
-
-
 }

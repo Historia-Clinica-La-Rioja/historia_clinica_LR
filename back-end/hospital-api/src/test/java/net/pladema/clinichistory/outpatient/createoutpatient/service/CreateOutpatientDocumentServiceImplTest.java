@@ -39,14 +39,11 @@ class CreateOutpatientDocumentServiceImplTest {
     @Mock
     private DocumentFactory documentFactory;
 
-    @Mock
-    private CreateDocumentFile createDocumentFile;
-
     @BeforeEach
     public void setUp() {
         var updateOutpatientConsultationService = new UpdateOutpatientDocumentServiceImpl(outpatientConsultationRepository);
         createOutpatientDocumentService =
-                new CreateOutpatientDocumentServiceImpl(documentFactory, createDocumentFile, updateOutpatientConsultationService);
+                new CreateOutpatientDocumentServiceImpl(documentFactory, updateOutpatientConsultationService);
     }
 
     @Test

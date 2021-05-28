@@ -56,9 +56,6 @@ class CreateEvolutionNoteServiceImplTest {
     private DocumentFactory documentFactory;
 
     @Mock
-    private CreateDocumentFile createDocumentFile;
-
-    @Mock
     private HealthConditionGeneralStateService healthConditionGeneralStateService;
 
     @BeforeEach
@@ -72,7 +69,6 @@ class CreateEvolutionNoteServiceImplTest {
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                createDocumentFile,
                 healthConditionGeneralStateService);
     }
 

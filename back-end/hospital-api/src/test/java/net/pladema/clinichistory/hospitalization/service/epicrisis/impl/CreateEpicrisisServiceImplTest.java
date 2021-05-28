@@ -9,16 +9,12 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Docu
 import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.impl.CreateEvolutionNoteServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.sgx.exceptions.NotFoundException;
@@ -40,7 +36,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest(showSql = false)
@@ -67,10 +62,6 @@ class CreateEpicrisisServiceImplTest {
     @Mock
     private DocumentFactory documentFactory;
 
-    @Mock
-    private CreateDocumentFile createDocumentFile;
-
-
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -81,7 +72,6 @@ class CreateEpicrisisServiceImplTest {
         );
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
-                createDocumentFile,
                 internmentEpisodeService);
     }
 

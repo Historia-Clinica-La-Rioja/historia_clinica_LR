@@ -9,7 +9,6 @@ import net.pladema.clinichistory.hospitalization.service.maindiagnoses.ChangeMai
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.sgx.pdf.PDFDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/main-diagnoses")
@@ -59,7 +57,7 @@ public class MainDiagnosesController {
     public ResponseEntity<Boolean> addMainDiagnosis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody @Valid MainDiagnosisDto mainDiagnosis) throws IOException, PDFDocumentException {
+            @RequestBody @Valid MainDiagnosisDto mainDiagnosis) {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, mainDiagnosis {}",
                 institutionId, internmentEpisodeId, mainDiagnosis);
         MainDiagnosisBo mainDiagnoseBo = healthConditionMapper.fromMainDiagnoseDto(mainDiagnosis);

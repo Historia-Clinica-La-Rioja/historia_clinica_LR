@@ -50,9 +50,6 @@ class ChangeMainDiagnosesServiceImplTest {
     private DocumentFactory documentFactory;
 
     @Mock
-    private CreateDocumentFile createDocumentFile;
-
-    @Mock
     private HealthConditionGeneralStateService healthConditionGeneralStateService;
 
     @BeforeEach
@@ -66,7 +63,6 @@ class ChangeMainDiagnosesServiceImplTest {
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                createDocumentFile,
                 healthConditionGeneralStateService);
     }
 

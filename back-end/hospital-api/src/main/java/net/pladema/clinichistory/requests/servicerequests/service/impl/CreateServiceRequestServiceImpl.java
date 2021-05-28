@@ -40,7 +40,7 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
         assertNoDuplicatedStudies(serviceRequestBo);
         ServiceRequest newServiceRequest = createServiceRequest(serviceRequestBo);
         serviceRequestBo.setEncounterId(newServiceRequest.getId());
-        documentFactory.run(serviceRequestBo);
+        documentFactory.run(serviceRequestBo, false);
 
         LOG.debug(OUTPUT, serviceRequestBo);
         return newServiceRequest.getId();

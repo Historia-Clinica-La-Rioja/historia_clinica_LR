@@ -1,9 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
-import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
 import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -13,13 +9,11 @@ import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.Ma
 import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 
-import net.pladema.sgx.pdf.PDFDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -34,22 +28,18 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final CreateDocumentFile createDocumentFile;
-
     private final HealthConditionGeneralStateService healthConditionGeneralStateService;
 
     public ChangeMainDiagnosesServiceImpl(DocumentFactory documentFactory,
                                           InternmentEpisodeService internmentEpisodeService,
-                                          CreateDocumentFile createDocumentFile,
                                           HealthConditionGeneralStateService healthConditionGeneralStateService) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.createDocumentFile = createDocumentFile;
         this.healthConditionGeneralStateService = healthConditionGeneralStateService;
     }
 
     @Override
-    public MainDiagnosisBo execute(MainDiagnosisBo mainDiagnosisBo) throws IOException, PDFDocumentException {
+    public MainDiagnosisBo execute(MainDiagnosisBo mainDiagnosisBo) {
         LOG.debug("Input parameters -> mainDiagnosisBo {}", mainDiagnosisBo);
 
         assertContextValid(mainDiagnosisBo);
@@ -66,14 +56,14 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
             mainDiagnosisBo.setDiagnosis(Arrays.asList(createAlternativeDiagnoses(currentMainDiagnose)));
 
         mainDiagnosisBo.getMainDiagnosis().setVerificationId(ConditionVerificationStatus.CONFIRMED);
-        mainDiagnosisBo.setId(documentFactory.run(mainDiagnosisBo));
+        mainDiagnosisBo.setId(documentFactory.run(mainDiagnosisBo, true));
 
         internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), mainDiagnosisBo.getId());
+
 
         LOG.debug(OUTPUT, mainDiagnosisBo);
 
         internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), mainDiagnosisBo.getId());
-        generateDocument(mainDiagnosisBo, mainDiagnosisBo.getInstitutionId());
         return mainDiagnosisBo;
     }
 
@@ -101,12 +91,5 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
             throw new ConstraintViolationException("Esta internación ya posee una epicrisis", Collections.emptySet());
         }
     }
-
-    private void generateDocument(MainDiagnosisBo mainDiagnosisBo, Integer institutionId) throws IOException, PDFDocumentException {
-        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(mainDiagnosisBo, institutionId, mainDiagnosisBo.getEncounterId(),
-                EDocumentType.map(DocumentType.EVALUATION_NOTE), mainDiagnosisBo.getPatientId());
-        createDocumentFile.execute(event);
-    }
-
 
 }

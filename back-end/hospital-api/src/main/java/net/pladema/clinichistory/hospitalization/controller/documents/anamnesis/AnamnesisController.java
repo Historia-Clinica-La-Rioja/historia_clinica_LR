@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
 import io.swagger.annotations.Api;
+import net.pladema.clinichistory.documents.events.exceptions.GenerateDocumentEventException;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
@@ -75,7 +76,7 @@ public class AnamnesisController {
     public ResponseEntity<Boolean> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody AnamnesisDto anamnesisDto) throws IOException, PDFDocumentException {
+            @RequestBody AnamnesisDto anamnesisDto) {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, anamnesisDto);
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);

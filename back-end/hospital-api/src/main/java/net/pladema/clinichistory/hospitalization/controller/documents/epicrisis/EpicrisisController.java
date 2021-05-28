@@ -74,7 +74,7 @@ public class EpicrisisController {
     public ResponseEntity<Boolean> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-            @RequestBody EpicrisisDto epicrisisDto) throws IOException, PDFDocumentException {
+            @RequestBody EpicrisisDto epicrisisDto) {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
                 institutionId, internmentEpisodeId, epicrisisDto);
         EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
