@@ -409,7 +409,7 @@
 				<mat-form-field appearance="outline">
 					<mat-select id="occupation-select" formControlName="occupationId" placeholder="{{'pacientes.form.OCCUPATION' | translate}}">
 						<mat-option *ngFor="let occupation of occupations" [value]="occupation.id">
-								{{occupation.description | titlecase}}
+								{{occupation.description}}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
@@ -421,7 +421,7 @@
 				<mat-form-field appearance="outline">
 					<mat-select id="educationLevel-select" formControlName="educationLevelId" placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
 						<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id">
-								{{educationLevel.description | titlecase}}
+								{{educationLevel.description}}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
