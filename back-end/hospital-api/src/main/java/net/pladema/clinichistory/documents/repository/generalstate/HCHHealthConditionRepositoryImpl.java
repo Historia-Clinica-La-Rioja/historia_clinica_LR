@@ -4,7 +4,7 @@ import net.pladema.clinichistory.documents.repository.generalstate.domain.Health
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

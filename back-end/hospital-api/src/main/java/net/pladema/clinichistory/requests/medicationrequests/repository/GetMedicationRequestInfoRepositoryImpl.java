@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.repository;
 
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

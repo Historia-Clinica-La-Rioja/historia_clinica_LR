@@ -8,7 +8,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Docu
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

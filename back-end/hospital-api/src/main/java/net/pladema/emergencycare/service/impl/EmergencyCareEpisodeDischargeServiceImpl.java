@@ -7,7 +7,7 @@ import net.pladema.clinichistory.documents.service.DocumentFactory;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.emergencycare.controller.EmergencyCareEpisodeMedicalDischargeController;
 import net.pladema.emergencycare.repository.DischargeTypeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeDischargeRepository;

@@ -2,7 +2,7 @@ package net.pladema.clinichistory.requests.medicationrequests.repository;
 
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.clinichistory.requests.medicationrequests.repository.domain.MedicationFilterVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

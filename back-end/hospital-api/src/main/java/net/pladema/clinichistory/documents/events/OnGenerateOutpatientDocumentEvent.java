@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.clinichistory.documents.service.IDocumentBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 
 @Getter
 @Setter

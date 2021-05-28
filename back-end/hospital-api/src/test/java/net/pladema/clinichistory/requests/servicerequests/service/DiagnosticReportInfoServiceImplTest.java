@@ -6,7 +6,7 @@ import net.pladema.clinichistory.mocks.DiagnosticReportTestMocks;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.mocks.SnomedTestMocks;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepositoryImpl;

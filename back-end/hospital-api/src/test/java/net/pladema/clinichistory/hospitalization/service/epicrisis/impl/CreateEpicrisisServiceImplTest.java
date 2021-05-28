@@ -20,7 +20,7 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvo
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.impl.CreateEvolutionNoteServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.sgx.exceptions.NotFoundException;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;

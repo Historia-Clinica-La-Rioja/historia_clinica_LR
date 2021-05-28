@@ -3,7 +3,7 @@ package net.pladema.clinichistory.requests.servicerequests.service;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.*;
 import net.pladema.clinichistory.mocks.*;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepositoryImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;

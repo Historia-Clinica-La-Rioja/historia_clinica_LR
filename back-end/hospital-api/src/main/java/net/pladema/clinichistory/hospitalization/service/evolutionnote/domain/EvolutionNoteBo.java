@@ -7,9 +7,8 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Docu
 import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.sgx.exceptions.SelfValidating;
 
 import javax.annotation.Nullable;

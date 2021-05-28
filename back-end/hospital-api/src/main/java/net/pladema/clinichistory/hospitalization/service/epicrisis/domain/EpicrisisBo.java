@@ -8,7 +8,7 @@ import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.sgx.exceptions.SelfValidating;
 
 import javax.validation.Valid;

@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.repository.generalstate;
 import net.pladema.clinichistory.documents.repository.generalstate.domain.ClinicalObservationVo;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.service.ips.domain.MapClinicalObservationVo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

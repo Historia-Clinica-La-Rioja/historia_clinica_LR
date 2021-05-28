@@ -7,7 +7,7 @@ import lombok.Setter;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -11,7 +11,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Docu
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
 import net.pladema.clinichistory.mocks.ClinicalObservationTestMocks;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

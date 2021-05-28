@@ -14,7 +14,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.mocks.SnomedTestMocks;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
 import org.assertj.core.api.Assertions;

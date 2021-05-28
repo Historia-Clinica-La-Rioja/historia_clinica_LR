@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.repository;
 
 import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.ResponsibleDoctorVo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import net.pladema.person.repository.domain.ProcedureReduced;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import org.springframework.data.jpa.repository.JpaRepository;

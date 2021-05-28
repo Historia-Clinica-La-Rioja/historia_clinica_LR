@@ -13,7 +13,7 @@ import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snom
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.mocks.SnomedTestMocks;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.SourceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
