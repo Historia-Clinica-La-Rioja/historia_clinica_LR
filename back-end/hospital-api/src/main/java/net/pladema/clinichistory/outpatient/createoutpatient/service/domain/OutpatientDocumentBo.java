@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OutpatientDocumentBo implements Document {
+public class OutpatientDocumentBo implements IDocumentBo {
 
     private Long id;
 

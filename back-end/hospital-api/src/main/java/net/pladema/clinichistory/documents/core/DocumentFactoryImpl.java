@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.documents.core;
 
+import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
+import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.documents.service.*;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.*;
@@ -54,34 +56,35 @@ public class DocumentFactoryImpl implements DocumentFactory {
     }
 
     @Override
-    public Long run(Document document) {
+    public Long run(IDocumentBo documentBo) {
 
-        net.pladema.clinichistory.documents.repository.entity.Document doc =
-                new net.pladema.clinichistory.documents.repository.entity.Document(
-                        document.getEncounterId(), document.getDocumentStatusId(), document.getDocumentType(), document.getDocumentSource());
-        loadNotes(doc, Optional.ofNullable(document.getNotes()));
+        Document doc = new Document(documentBo.getEncounterId(),
+                documentBo.getDocumentStatusId(),
+                documentBo.getDocumentType(),
+                documentBo.getDocumentSource());
+        loadNotes(doc, Optional.ofNullable(documentBo.getNotes()));
         doc = documentService.save(doc);
 
-        PatientInfoBo patientInfo = document.getPatientInfo();
-        healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(document.getMainDiagnosis()));
-        healthConditionService.loadDiagnosis(patientInfo, doc.getId(), document.getDiagnosis());
-        healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), document.getPersonalHistories());
-        healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), document.getFamilyHistories());
-        healthConditionService.loadProblems(patientInfo, doc.getId(), document.getProblems());
-        allergyService.loadAllergies(patientInfo, doc.getId(), document.getAllergies());
-        immunizationService.loadImmunization(patientInfo, doc.getId(), document.getImmunizations());
-        createMedicationService.execute(patientInfo, doc.getId(), document.getMedications());
-        proceduresService.loadProcedures(patientInfo, doc.getId(), document.getProcedures());
+        PatientInfoBo patientInfo = documentBo.getPatientInfo();
+        healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getMainDiagnosis()));
+        healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getDiagnosis());
+        healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), documentBo.getPersonalHistories());
+        healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), documentBo.getFamilyHistories());
+        healthConditionService.loadProblems(patientInfo, doc.getId(), documentBo.getProblems());
+        allergyService.loadAllergies(patientInfo, doc.getId(), documentBo.getAllergies());
+        immunizationService.loadImmunization(patientInfo, doc.getId(), documentBo.getImmunizations());
+        createMedicationService.execute(patientInfo, doc.getId(), documentBo.getMedications());
+        proceduresService.loadProcedures(patientInfo, doc.getId(), documentBo.getProcedures());
 
-        clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(document.getVitalSigns()));
-        clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(document.getAnthropometricData()));
+        clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getVitalSigns()));
+        clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
 
-        diagnosticReportService.loadDiagnosticReport(doc.getId(), patientInfo, document.getDiagnosticReports());
+        diagnosticReportService.loadDiagnosticReport(doc.getId(), patientInfo, documentBo.getDiagnosticReports());
 
         return doc.getId();
     }
 
-    private net.pladema.clinichistory.documents.repository.entity.Document loadNotes(net.pladema.clinichistory.documents.repository.entity.Document document, Optional<DocumentObservationsBo> optNotes) {
+    private Document loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
         LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));

@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.ReportDocumentService;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
 import net.pladema.patient.controller.dto.BasicPatientDto;
@@ -38,7 +38,7 @@ public class AuditableContextBuilder {
 		this.vitalSignMapper = vitalSignMapper;
 	}
 
-	public <T extends Document> Map<String,Object> buildContext(T document, Integer patientId){
+	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
 		logger.debug("Input parameters -> document {}", document);
 
 		Map<String,Object> contextMap = new HashMap<>();
@@ -50,7 +50,7 @@ public class AuditableContextBuilder {
 	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId) {
 		contextMap.put("patient", basicDataFromPatientLoader.apply(patientId));
 	}
-	private <T extends Document> void addDocumentInfo(Map<String,Object> contextMap, T document) {
+	private <T extends IDocumentBo> void addDocumentInfo(Map<String,Object> contextMap, T document) {
 		contextMap.put("mainDiagnosis", document.getMainDiagnosis());
 		contextMap.put("diagnosis", document.getDiagnosis());
 		contextMap.put("reasons", document.getReasons());

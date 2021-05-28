@@ -1,25 +1,15 @@
 package net.pladema.clinichistory.hospitalization.controller.maindiagnoses;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.events.OnGenerateDocumentEvent;
-import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
-import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
-import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.constraints.EvolutionNoteValid;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteReportService;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.ChangeMainDiagnosesService;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.pdf.PDFDocumentException;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

@@ -12,7 +12,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Diagnos
 import java.util.Collections;
 import java.util.List;
 
-public interface Document {
+public interface IDocumentBo {
 
     default PatientInfoBo getPatientInfo() {
         return null;
@@ -89,6 +89,8 @@ public interface Document {
     short getDocumentType();
 
     Integer getEncounterId();
+
+    Integer getInstitutionId();
 
     Short getDocumentSource();
 

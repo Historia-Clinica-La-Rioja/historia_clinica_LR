@@ -4,7 +4,7 @@ package net.pladema.clinichistory.requests.medicationrequests.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MedicationRequestBo implements Document {
+public class MedicationRequestBo implements IDocumentBo {
 
     private Integer medicationRequestId;
 

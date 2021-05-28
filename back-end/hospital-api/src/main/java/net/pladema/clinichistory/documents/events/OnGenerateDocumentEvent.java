@@ -3,8 +3,8 @@ package net.pladema.clinichistory.documents.events;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.service.IDocumentBo;
 import org.springframework.context.ApplicationEvent;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public abstract class OnGenerateDocumentEvent extends ApplicationEvent {
 
     protected static final String PDF_EXTENSION = ".pdf";
 
-    private Document document;
+    private IDocumentBo document;
 
     private String uuid;
 
@@ -30,7 +30,7 @@ public abstract class OnGenerateDocumentEvent extends ApplicationEvent {
 
     private Integer patientId;
 
-    public OnGenerateDocumentEvent(Document document, Integer institutionId, Integer sourceId,
+    public OnGenerateDocumentEvent(IDocumentBo document, Integer institutionId, Integer sourceId,
                                    EDocumentType documentType, Integer patientId) {
         super(sourceId);
         this.document = document;

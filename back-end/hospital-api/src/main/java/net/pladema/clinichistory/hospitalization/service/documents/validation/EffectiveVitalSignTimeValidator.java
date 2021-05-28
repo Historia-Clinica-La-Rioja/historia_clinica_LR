@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.documents.validation;
 
-import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.ips.domain.ClinicalObservationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
 import org.slf4j.Logger;
@@ -15,15 +15,15 @@ public class EffectiveVitalSignTimeValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(EffectiveVitalSignTimeValidator.class);
 
-    public boolean isValid(Document document, LocalDate entryDate) {
-        LOG.debug("Input parameters -> document {}", document);
+    public boolean isValid(IDocumentBo IDocumentBo, LocalDate entryDate) {
+        LOG.debug("Input parameters -> document {}", IDocumentBo);
 
-        if (document == null) {
+        if (IDocumentBo == null) {
             LOG.error("Illegal method signature, expected a parameter of type DocumentDto.");
             return false;
         }
 
-        VitalSignBo vitalSigns = document.getVitalSigns();
+        VitalSignBo vitalSigns = IDocumentBo.getVitalSigns();
         if (vitalSigns == null)
             return true;
 

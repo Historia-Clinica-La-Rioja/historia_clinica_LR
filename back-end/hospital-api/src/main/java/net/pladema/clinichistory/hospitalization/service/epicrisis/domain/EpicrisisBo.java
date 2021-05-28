@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.Document;
+import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements Document {
+public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumentBo {
 
     private Long id;
 

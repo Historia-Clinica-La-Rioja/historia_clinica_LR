@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.Document;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
+import net.pladema.clinichistory.documents.service.IDocumentBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 
 @Getter
@@ -17,7 +17,7 @@ public class OnGenerateInternmentDocumentEvent extends OnGenerateDocumentEvent {
     @Setter(value = AccessLevel.NONE)
     private final static String RELATIVE_DIRECTORY = "/institution/{institutionId}/internment/{sourceId}/{documentType}/";
 
-    public OnGenerateInternmentDocumentEvent(Document document, Integer institutionId, Integer sourceId,
+    public OnGenerateInternmentDocumentEvent(IDocumentBo document, Integer institutionId, Integer sourceId,
                                              EDocumentType documentType, Integer patientId) {
         super(document, institutionId, sourceId, documentType, patientId);
     }
