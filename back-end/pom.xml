@@ -22,6 +22,7 @@
 		<module>interoperability</module>
 		<module>extensions</module>
         <module>odontology</module>
+		<module>clinic-history</module>
 		<module>hospital-api</module>
         <module>app</module>
 		<module>sgx-auth</module>
