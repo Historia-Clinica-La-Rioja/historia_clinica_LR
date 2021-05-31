@@ -268,3 +268,12 @@ databaseChangeLog:
             sql: |-
                 UPDATE dependency SET code = '25' WHERE description='Universitario público';
 
+    - changeSet:
+        id: institution_phonenumber-modifyDataType
+        author: saguero
+        changes:
+        - modifyDataType:
+            columnName: phone_number
+            newDataType: varchar(35)
+            tableName: institution
+
