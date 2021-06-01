@@ -45,7 +45,7 @@
 		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)">
-					<mat-tab id="tab_odontologia">
+					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled">
 						<ng-template mat-tab-label>
 							<span>ODONTOLOGÍA</span>
 						</ng-template>
