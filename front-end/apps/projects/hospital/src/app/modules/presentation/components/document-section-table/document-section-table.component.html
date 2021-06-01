@@ -1,0 +1,26 @@
+<app-cell-templates #cellTemplates [id]="cellTemplates"></app-cell-templates>
+
+<section *ngIf="columns && data">
+	<h3 class="mat-body-2" [translate]="tableTitle"></h3>
+
+	<table mat-table [dataSource]="data" class="secondary">
+
+		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
+			<th *matHeaderCellDef>{{ column.header | translate }}</th>
+			<td mat-cell *matCellDef="let element; index as i">
+				<ng-container [ngTemplateOutlet]="getTemplate(column.templateName)"
+							  [ngTemplateOutletContext]="{
+								  data: element,
+								  text: (column.text) ? column.text(element) : null,
+								  action: (column.action) ? column.action : null,
+								  rowIndex: i}">
+				</ng-container>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+	<app-no-data class="secondary" *ngIf="data.length === 0"></app-no-data>
+
+</section>

@@ -1,0 +1,10 @@
+<h2 class="mat-h2" [translate]="sectionTitle"></h2>
+<h5 *ngIf="sectionImportance" class="recomendado" [translate]="sectionImportance"></h5>
+
+<mat-card>
+	<mat-card-content>
+		<ng-content select="[concept-form]"></ng-content>
+	</mat-card-content>
+</mat-card>
+
+<ng-content select="[data-display]"></ng-content>

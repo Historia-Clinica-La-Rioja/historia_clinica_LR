@@ -34,6 +34,10 @@ import { ContentTitleComponent } from './components/content-title/content-title.
 import { PageComponent } from './components/page/page.component';
 import { PageComponentsComponent } from './components/page-components/page-components.component';
 import { UiComponentComponent } from './components/ui-component/ui-component.component';
+import {NewDocumentSectionComponent} from '@presentation/components/new-document-section/new-document-section-component.component';
+import {DocumentSectionTableComponent} from '@presentation/components/document-section-table/document-section-table.component';
+import {CtrlTemplateDirective} from '@presentation/directives/ctrl-template.directive';
+import {CellTemplatesComponent} from '@presentation/components/cell-templates/cell-templates.component';
 
 @NgModule({
 	declarations: [
@@ -69,6 +73,10 @@ import { UiComponentComponent } from './components/ui-component/ui-component.com
 		PageComponent,
 		PageComponentsComponent,
 		UiComponentComponent,
+		NewDocumentSectionComponent,
+		DocumentSectionTableComponent,
+		CtrlTemplateDirective,
+		CellTemplatesComponent,
 	],
 	imports: [
 		CommonModule,
@@ -106,6 +114,10 @@ import { UiComponentComponent } from './components/ui-component/ui-component.com
 		SignoVitalComponent,
 		ContentTitleComponent,
 		PageComponent,
+		NewDocumentSectionComponent,
+		DocumentSectionTableComponent,
+		CtrlTemplateDirective,
+		CellTemplatesComponent,
 	],
 	entryComponents: [
 		DockPopupComponent
