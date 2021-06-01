@@ -47,5 +47,5 @@ export interface TableColumnConfig {
 	header?: string;
 	text?: (row: any) => string | number;
 	action?: (rowIndex: number) => any;
-	templateName?: string;
+	template?: string;
 }

@@ -33,3 +33,12 @@ export class CellTemplatesComponent implements OnInit {
 		 return date ? momentFormat(date, DateFormat.VIEW_DATE) : '';
 	 }
 }
+
+export enum CellTemplates {
+	TEXT = 'textTemplate',
+	ERROR = 'errorTemplate',
+	REMOVE_BUTTON = 'removeButtonTemplate',
+	SNOMED_PROBLEM = 'snomedProblemTemplate',
+	PROBLEM_SEVERITY = 'problemSeverityTemplate',
+	START_AND_END_DATE = 'startAndEndDateTemplate',
+}

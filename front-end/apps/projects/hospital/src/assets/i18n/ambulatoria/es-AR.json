@@ -98,9 +98,13 @@
 					},
 					"FECHA_FIN": "Fecha fin",
 					"FECHA_INICIO": "Fecha inicio",
+					"FECHA": "Fecha",
 					"PROBLEMA": "Problema",
 					"TABLE_TITLE": "Problemas registrados",
-					"TITLE": "Problema"
+					"TITLE": "Problema",
+					"ACLARACION_CRONICO": "(Crónico)",
+					"FECHA_INICIO_PREFIJO": "Desde",
+					"FECHA_FIN_PREFIJO": "Hasta"
 				},
 				"procedimientos": {
 					"buttons": {

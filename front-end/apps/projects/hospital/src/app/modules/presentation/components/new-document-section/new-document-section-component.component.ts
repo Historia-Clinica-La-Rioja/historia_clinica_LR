@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'app-document-section-copy',
+	selector: 'app-new-document-section',
 	templateUrl: './new-document-section-component.component.html',
 	styleUrls: ['./new-document-section-component.component.scss']
 })
