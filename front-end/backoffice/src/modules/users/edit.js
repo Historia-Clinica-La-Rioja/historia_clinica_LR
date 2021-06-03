@@ -10,6 +10,9 @@ import {
     SimpleForm,
     SimpleFormIterator,
     TextInput,
+    ReferenceField,
+    EmailField,
+    useTranslate
 } from 'react-admin';
 
 import CustomToolbar from '../components/CustomToolbar';
@@ -40,32 +43,40 @@ const validateInstitutionRequired = (values, entity) => {
     return errors
 };
 
-const UserEdit = props => (
-    <Edit {...props} 
-        aside={<Aside />} 
-    >
-        <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
-            <PersonReferenceField source="personId" />
-            <TextInput source="username" validate={[required()]}/>
-            <BooleanInput source="enable" validate={[required()]}/>
-            <SgxDateField source="lastLogin" showTime/>
-            <ArrayInput source="roles" validate={validateInstitutionRequired}>
-                <SimpleFormIterator>
-                    <ReferenceInput source="roleId" reference="roles" validate={[required()]}>
-                        <SelectInput optionText="description" optionValue="id"/>
-                    </ReferenceInput>
-                    <ReferenceInput
-                        source="institutionId"
-                        reference="institutions"
-                        sort={{ field: 'name', order: 'ASC' }}
-                        filterToQuery={searchText => ({name: searchText})}
-                    >
-                        <AutocompleteInput optionText="name" optionValue="id"/>
-                    </ReferenceInput>
-                </SimpleFormIterator>
-            </ArrayInput>
-        </SimpleForm>
-    </Edit>
-);
+const UserEdit = props => {
+    const translate = useTranslate();
+    return (
+        <Edit {...props} 
+            aside={<Aside />} 
+        >
+            <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
+                <PersonReferenceField source="personId" />
+                <TextInput source="username" validate={[required()]}/>
+                <BooleanInput source="enable" validate={[required()]}/>
+    
+                <ReferenceField source="personId" reference="personextended" label="resources.users.fields.email" link={false}>
+                    <EmailField source="email" emptyText={translate('resources.users.noEmail')} />
+                </ReferenceField>
+
+                <SgxDateField source="lastLogin" showTime/>
+                <ArrayInput source="roles" validate={validateInstitutionRequired}>
+                    <SimpleFormIterator>
+                        <ReferenceInput source="roleId" reference="roles" validate={[required()]}>
+                            <SelectInput optionText="description" optionValue="id"/>
+                        </ReferenceInput>
+                        <ReferenceInput
+                            source="institutionId"
+                            reference="institutions"
+                            sort={{ field: 'name', order: 'ASC' }}
+                            filterToQuery={searchText => ({name: searchText})}
+                        >
+                            <AutocompleteInput optionText="name" optionValue="id"/>
+                        </ReferenceInput>
+                    </SimpleFormIterator>
+                </ArrayInput>
+            </SimpleForm>
+        </Edit>
+    );
+}
 
 export default UserEdit;

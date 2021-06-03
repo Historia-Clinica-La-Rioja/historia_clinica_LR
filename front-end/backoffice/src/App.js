@@ -64,6 +64,7 @@ const App = () => {
         <Resource name="beds" {...beds}/>,
         <Resource name="clinicalspecialties" show={ClinicalSpecialtyShow}/>,
         <Resource name="dependencies" />,
+        <Resource name="personextended" />,
     ];
 
     const resourcesAdminRoot = [
@@ -97,6 +98,7 @@ const App = () => {
         <Resource name="beds" {...beds}/>,
         <Resource name="users" {...users}/>,
         <Resource name="dependencies" />,
+        <Resource name="personextended" />,
     ];
 
     return <Admin title="Historia de salud integrada"
