@@ -406,6 +406,10 @@
 								{{occupation.description}}
 						</mat-option>
 					</mat-select>
+					<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value" matSuffix color="warn"
+							mat-icon-button (click)="form.controls.occupationId.reset(); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
 				</mat-form-field>
 			</div>
 			<div>
@@ -413,11 +417,16 @@
 					<span [translate]="'pacientes.form.EDUCATION_LEVEL'"></span>
 				</div>
 				<mat-form-field appearance="outline">
+
 					<mat-select id="educationLevel-select" formControlName="educationLevelId" placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
 						<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id" matTooltip="{{ educationLevel.description }}">
 								{{educationLevel.description}}
 						</mat-option>
 					</mat-select>
+					<button id="clear-educationLevel" type="button" mat-button *ngIf="form.controls.educationLevelId.value" matSuffix color="warn"
+							mat-icon-button (click)="form.controls.educationLevelId.reset(); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
 				</mat-form-field>
 			</div>
 			<div *hasRole="['ADMINISTRATIVO']" class="form-buttons">
