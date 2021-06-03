@@ -72,13 +72,13 @@
 					}
 				},
 				"medicaciones": {
-					"CONCEPT_LABEL": "Medicación",
+					"CONCEPT_LABEL": "Medicación habitual",
 					"DESCRIPCION": "Descripción",
 					"NOMBRE_MEDICACION": "Nombre de medicación",
 					"OBSERVACIONES": "Observaciones",
 					"SUSPENDIDO": "Suspendido",
 					"TABLE_TITLE": "Medicaciones registradas",
-					"TITLE": "Medicación"
+					"TITLE": "Medicación habitual"
 				},
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
