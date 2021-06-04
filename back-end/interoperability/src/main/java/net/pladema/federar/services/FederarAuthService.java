@@ -4,16 +4,19 @@ import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingReque
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.AuthService;
 import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
+import net.pladema.federar.configuration.FederarCondition;
 import net.pladema.federar.configuration.FederarWSConfig;
 import net.pladema.federar.services.domain.FederarLoginPayload;
 import net.pladema.federar.services.domain.FederarLoginResponse;
 import net.pladema.federar.services.domain.FederarValidateTokenPayload;
 import net.pladema.federar.services.domain.FederarValidateTokenResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@Conditional(FederarCondition.class)
 public class FederarAuthService extends AuthService<FederarLoginResponse> {
 
 	private FederarWSConfig federarWSConfig;

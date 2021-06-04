@@ -1,10 +1,13 @@
 package net.pladema.hl7.supporting.exchange.services;
 
 import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
+import net.pladema.federar.configuration.FederarWSConfig;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginPayload;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginResponse;
 import net.pladema.hl7.supporting.exchange.services.federar.JWTUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,14 +19,15 @@ import org.springframework.web.client.RestTemplate;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
+@Conditional(InteroperabilityCondition.class)
 public class BusAuthenticationService extends RestTemplate {
 
-    private final FederarConfig configuration;
+    private final FederarWSConfig configuration;
 
     @Value("${ws.federar.url.login}")
     private String relativeUrl;
 
-    public BusAuthenticationService(FederarConfig configuration){
+    public BusAuthenticationService(FederarWSConfig configuration){
         this.configuration=configuration;
     }
 
