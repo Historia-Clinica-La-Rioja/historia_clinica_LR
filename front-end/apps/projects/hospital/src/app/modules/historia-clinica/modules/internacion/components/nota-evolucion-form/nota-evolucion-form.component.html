@@ -299,6 +299,11 @@
 								[translate]="'forms.MAX_ERROR'"
 								[translateParams]="{max: getError(this.form.controls.anthropometricData, 'max', 'height').max}">
 							</mat-error>
+							<mat-error
+								*ngIf="hasError(this.form.controls.anthropometricData, 'pattern', 'height')"
+								[translate]="'forms.FORMAT_NUMERIC_INTEGER'"
+								[translateParams]="{pattern: getError(this.form.controls.anthropometricData, 'pattern', 'height').pattern}">
+							</mat-error>
 						</mat-form-field>
 					</div>
 					<div>
@@ -319,6 +324,11 @@
 								*ngIf="hasError(this.form.controls.anthropometricData, 'max', 'weight')"
 								[translate]="'forms.MAX_ERROR'"
 								[translateParams]="{max: getError(this.form.controls.anthropometricData, 'max', 'weight').max}">
+							</mat-error>
+							<mat-error
+								*ngIf="hasError(this.form.controls.anthropometricData, 'pattern', 'weight')"
+								[translate]="'forms.FORMAT_NUMERIC'"
+								[translateParams]="{pattern: getError(this.form.controls.anthropometricData, 'pattern', 'weight').pattern}">
 							</mat-error>
 						</mat-form-field>
 					</div>

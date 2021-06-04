@@ -72,8 +72,8 @@ export class AnamnesisFormComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			anthropometricData: this.formBuilder.group({
 				bloodType: [null],
-				height: [null, [Validators.min(0), Validators.max(1000)]],
-				weight: [null, [Validators.min(0), Validators.max(1000)]]
+				height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
+				weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
 			}),
 			vitalSigns: this.formBuilder.group({
 				heartRate: this.formBuilder.group({

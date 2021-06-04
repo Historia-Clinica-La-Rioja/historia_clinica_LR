@@ -14,8 +14,11 @@ public class AnthropometricDataValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnthropometricDataValidator.class);
 
-    private static final Integer MIN_VALUE = 0;
-    private static final Integer MAX_VALUE = 1000;
+    private static final Integer MIN_HEIGHT_VALUE = 0;
+    private static final Integer MAX_HEIGHT_VALUE = 1000;
+
+    private static final Double MIN_WEIGHT_VALUE = 0.0;
+    private static final Double MAX_WEIGHT_VALUE = 1000.0;
 
     public boolean isValid(Document document){
         LOG.debug("Input parameters -> document {}", document);
@@ -23,18 +26,27 @@ public class AnthropometricDataValidator {
         if (anthropometricDataBo == null)
             return true;
 
-        validClinicalObservation(anthropometricDataBo.getWeight(), "peso");
-        validClinicalObservation(anthropometricDataBo.getHeight(), "altura");
+        validWeightClinicalObservation(anthropometricDataBo.getWeight(), "peso");
+        validHeightClinicalObservation(anthropometricDataBo.getHeight(), "altura");
 
         return true;
     }
 
-    private void validClinicalObservation(ClinicalObservationBo clinicalObservationBo, String property) {
+    private void validHeightClinicalObservation(ClinicalObservationBo clinicalObservationBo, String property) {
         if (clinicalObservationBo == null)
             return;
         int anthropometricValue = Integer.parseInt(clinicalObservationBo.getValue());
-        if (anthropometricValue >= MIN_VALUE && anthropometricValue <= MAX_VALUE)
+        if (anthropometricValue >= MIN_HEIGHT_VALUE && anthropometricValue <= MAX_HEIGHT_VALUE)
             return;
-        throw new ConstraintViolationException(String.format("%s: La medición debe estar entre %s y %s", property, MIN_VALUE, MAX_VALUE), Collections.emptySet());
+        throw new ConstraintViolationException(String.format("%s: La medición debe estar entre %s y %s", property, MIN_HEIGHT_VALUE, MAX_HEIGHT_VALUE), Collections.emptySet());
+    }
+
+    private void validWeightClinicalObservation(ClinicalObservationBo clinicalObservationBo, String property) {
+        if (clinicalObservationBo == null)
+            return;
+        double anthropometricValue = Double.parseDouble(clinicalObservationBo.getValue());
+        if (anthropometricValue >= MIN_WEIGHT_VALUE && anthropometricValue <= MAX_WEIGHT_VALUE)
+            return;
+        throw new ConstraintViolationException(String.format("%s: La medición debe estar entre %s y %s", property, MIN_WEIGHT_VALUE, MAX_WEIGHT_VALUE), Collections.emptySet());
     }
 }
