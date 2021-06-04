@@ -1,16 +1,16 @@
 package net.pladema.clinichistory.ips.controller.constraints;
 
-import net.pladema.clinichistory.ips.controller.constraints.validator.AnthropometricDataValidator;
+import net.pladema.clinichistory.ips.controller.constraints.validator.HeightDataValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = AnthropometricDataValidator.class)
+@Constraint(validatedBy = HeightDataValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AnthropometricDataValid {
+public @interface HeightDataValid {
 
     String message() default "{diagnosis.anthropometric.invalid}";
 

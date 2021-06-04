@@ -322,13 +322,13 @@ public class CreateAnamnesisServiceImplTest {
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
-		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
+		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 
 		anamnesis.setAnthropometricData(newAnthropometricData("-50", null));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
 		);
-		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
+		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 	}
 
 	@Test

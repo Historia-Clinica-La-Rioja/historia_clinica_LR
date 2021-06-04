@@ -47,6 +47,7 @@
 		"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
 		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy",
 		"FORMAT_NUMERIC": "El valor debe ser numérico",
+		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",
 		"YES": "Si",
 		"NO":"No"
 	},

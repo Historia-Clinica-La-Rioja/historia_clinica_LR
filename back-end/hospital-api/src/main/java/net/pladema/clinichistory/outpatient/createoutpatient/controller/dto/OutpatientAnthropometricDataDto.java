@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.controller.dto.ClinicalObservationDto;
-import net.pladema.clinichistory.ips.controller.constraints.AnthropometricDataValid;
+import net.pladema.clinichistory.ips.controller.constraints.HeightDataValid;
+import net.pladema.clinichistory.ips.controller.constraints.WeightDataValid;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -20,11 +21,11 @@ public class OutpatientAnthropometricDataDto implements Serializable {
     private ClinicalObservationDto bloodType;
 
     @Valid
-    @AnthropometricDataValid(message = "{diagnosis.anthropometric.height.invalid}")
+    @HeightDataValid(message = "{diagnosis.anthropometric.height.invalid}")
     private ClinicalObservationDto height;
 
     @Valid
-    @AnthropometricDataValid(message = "{diagnosis.anthropometric.weight.invalid}")
+    @WeightDataValid(message = "{diagnosis.anthropometric.weight.invalid}")
     private ClinicalObservationDto weight;
 
     @Nullable
