@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @Component
 @ConfigurationProperties(prefix="ws.federar")
+@Conditional(FederarCondition.class)
 @Getter
 @Setter
 public class FederarWSConfig extends WSConfig {
@@ -101,5 +103,4 @@ public class FederarWSConfig extends WSConfig {
 	public String getFederateUrl() {
 		return url.get(FEDERATE);
 	}
-	
 }

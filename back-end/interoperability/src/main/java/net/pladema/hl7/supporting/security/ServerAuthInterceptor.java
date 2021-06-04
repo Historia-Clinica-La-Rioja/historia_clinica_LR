@@ -12,8 +12,10 @@ import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
 import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.auth.IAuthRule;
 import ca.uhn.fhir.rest.server.interceptor.auth.RuleBuilder;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.services.BusAuthorizationService;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Component
+@Conditional(InteroperabilityCondition.class)
 public class ServerAuthInterceptor extends AuthorizationInterceptor {
 
     private static final String BEARER = "Bearer";

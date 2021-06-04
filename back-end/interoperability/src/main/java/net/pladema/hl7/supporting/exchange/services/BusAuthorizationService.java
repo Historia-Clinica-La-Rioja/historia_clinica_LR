@@ -6,8 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.federar.configuration.FederarWSConfig;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,14 +22,15 @@ import org.springframework.web.client.RestTemplate;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
+@Conditional(InteroperabilityCondition.class)
 public class BusAuthorizationService extends RestTemplate {
 
     @Value("${ws.federar.url.validateToken:/bus-auth/tokeninfo}")
     private String relativeUrl;
 
-    private final FederarConfig configuration;
+    private final FederarWSConfig configuration;
 
-    public BusAuthorizationService(FederarConfig configuration){
+    public BusAuthorizationService(FederarWSConfig configuration){
         super();
         this.configuration=configuration;
     }
