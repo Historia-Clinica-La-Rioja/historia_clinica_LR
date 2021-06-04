@@ -1,5 +1,6 @@
 package net.pladema.renaper.services;
 
+import net.pladema.renaper.configuration.RenaperCondition;
 import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.domain.RenaperLoginPayload;
 import net.pladema.renaper.services.domain.RenaperLoginResponse;
@@ -10,10 +11,12 @@ import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@Conditional(RenaperCondition.class)
 public class RenaperAuthService extends AuthService<RenaperLoginResponse> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RenaperAuthService.class);

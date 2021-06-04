@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
@@ -13,6 +14,7 @@ import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
 
 @Component
 @ConfigurationProperties(prefix="ws.renaper")
+@Conditional(RenaperCondition.class)
 @Getter
 @Setter
 public class RenaperWSConfig extends WSConfig{
