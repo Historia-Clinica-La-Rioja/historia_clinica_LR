@@ -1,0 +1,12 @@
+$ npx ng add @angular-eslint/schematics
+ℹ Using package manager: yarn
+✔ Found compatible package version: @angular-eslint/schematics@4.3.0.
+✔ Package information loaded.
+✔ Package successfully installed.
+    
+    All @angular-eslint dependencies have been successfully installed 🎉
+    
+    Please see https://github.com/angular-eslint/angular-eslint for how to add ESLint configuration to your project.
+    
+UPDATE package.json (2580 bytes)
+✔ Packages installed successfully.
