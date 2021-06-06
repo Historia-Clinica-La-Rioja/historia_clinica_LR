@@ -167,14 +167,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/odontology/tsconfig.lib.json",
-              "projects/odontology/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/odontology/**/*.ts",
+              "projects/odontology/**/*.html"
             ]
           }
         }

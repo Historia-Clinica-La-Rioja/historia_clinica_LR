@@ -1,4 +1,7 @@
+###################################################################################################
+
 $ npx ng add @angular-eslint/schematics
+
 ℹ Using package manager: yarn
 ✔ Found compatible package version: @angular-eslint/schematics@4.3.0.
 ✔ Package information loaded.
@@ -9,4 +12,31 @@ $ npx ng add @angular-eslint/schematics
     Please see https://github.com/angular-eslint/angular-eslint for how to add ESLint configuration to your project.
     
 UPDATE package.json (2580 bytes)
+✔ Packages installed successfully.
+
+###################################################################################################
+
+$ npx ng g @angular-eslint/schematics:convert-tslint-to-eslint odontology
+
+? Would you like to remove TSLint and its related config if there are no TSLint projects remaining after this conversion? Yes
+? Would you like to ignore the existing TSLint config? Recommended if the TSLint config has not been altered much as it makes the new ESLint config cleaner. No
+    
+    INFO: We are now installing the "tslint-to-eslint-config" package into a tmp directory to aid with the conversion
+    
+    This may take a minute or two...
+    
+    
+    INFO: To most closely match your tslint.json, the `latest` version of the following eslint plugin(s) have been installed:
+    
+      - eslint-plugin-import
+      - eslint-plugin-jsdoc
+      - eslint-plugin-prefer-arrow
+    
+    Please note, you may wish to pin these to a specific version number in your package.json, rather than leaving it open to `latest`.
+    
+DELETE projects/odontology/tslint.json
+CREATE .eslintrc.json (1646 bytes)
+CREATE projects/odontology/.eslintrc.json (1425 bytes)
+UPDATE angular.json (5896 bytes)
+UPDATE package.json (2699 bytes)
 ✔ Packages installed successfully.
