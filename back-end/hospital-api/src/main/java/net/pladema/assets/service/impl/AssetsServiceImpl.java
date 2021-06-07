@@ -20,8 +20,8 @@ public class AssetsServiceImpl implements AssetsService {
 
     private static final String ORIGINAL_PATH = "/assets/webapp/";
     private static final String CUSTOM_PATH = "/assets/custom/";
-    private static final Logger LOG = LoggerFactory.getLogger(AssetsServiceImpl.class);
-
+    private final Logger logger;
+    private final String INPUT_LOG = "Input parameters -> fileName {}";
     private static final Assets SPONSOR_LOGO = new Assets("image/png", "sponsor-logo-512x128.png");
     private static final Assets FAVICON = new Assets("image/x-icon", "favicon.ico");
     private static final Assets ICON_72 = new Assets("image/png", "icons/icon-72x72.png");
@@ -41,17 +41,18 @@ public class AssetsServiceImpl implements AssetsService {
     public AssetsServiceImpl(FileService fileService, StreamFile streamFile) {
         this.fileService = fileService;
         this.streamFile = streamFile;
+        this.logger = LoggerFactory.getLogger(getClass());
     }
 
     @Override
     public Optional<Assets> findByName(String name) {
-        LOG.debug("Input parameters ->  {} fileName {}", name);
+        logger.debug(INPUT_LOG, name);
         return this.assetsList.stream().filter(a -> a.getNameFile().equals(name)).findAny();
     }
 
     @Override
     public AssetsFileBo getFile(String fileName) {
-        LOG.debug("Input parameters ->  {} fileName {}", fileName);
+        logger.debug(INPUT_LOG, fileName);
 
         Assets newAsset = this.findByName(fileName).get();
         String partialPath = CUSTOM_PATH.concat(newAsset.getNameFile());
