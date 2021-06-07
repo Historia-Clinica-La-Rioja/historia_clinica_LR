@@ -80,6 +80,15 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: AppFeature.HABILITAR_MODULO_GUARDIA
 	},
 	{
+		text: 'app.menu.REPORTES',
+		icon: 'description',
+		id: 'reportes',
+		url: './reportes',
+		permissions: [
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE
+		]
+	},
+	{
 		text: 'app.menu.PERFIL',
 		icon: 'account_circle',
 		id: 'home_profile',

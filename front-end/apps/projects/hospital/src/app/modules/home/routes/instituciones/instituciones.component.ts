@@ -27,7 +27,7 @@ export class InstitucionesComponent {
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {
 			const institutionIds = allRoles
-				.filter((ra) => ra.institutionId >= 0 && ra.role !== ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE)
+				.filter((ra) => ra.institutionId >= 0)
 				.map(r => r.institutionId);
 
 			this.webappInstitutionsAccess = this.hasAccessToWebappInstitutions(allRoles);
@@ -73,8 +73,7 @@ export class InstitucionesComponent {
 	hasAccessToWebappInstitutions(allRoles: RoleAssignment[]) {
 		return allRoles
 			.filter((ra) => ra.role !== ERole.ROOT &&
-				ra.role !== ERole.ADMINISTRADOR &&
-				ra.role !== ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE).length > 0;
+				ra.role !== ERole.ADMINISTRADOR).length > 0;
 	}
 
 	hasAccessToPatientPortal(allRoles: RoleAssignment[]): boolean {

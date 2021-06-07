@@ -13,7 +13,8 @@
 			"MIS_DATOS_PERSONALES": "Mis Datos Personales",
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta",
-			"TURNOS": "Gestión de turnos"
+			"TURNOS": "Gestión de turnos",
+			"REPORTES": "Reportes"
 		}
 	},
 	"buttons": {
