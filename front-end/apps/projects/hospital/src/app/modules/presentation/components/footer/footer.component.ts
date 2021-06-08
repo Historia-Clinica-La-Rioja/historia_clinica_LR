@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ImageSrc } from '@core/utils/flavored-image-definitions';
-import { FlavoredImagesService } from '@core/services/flavored-images.service';
+import {Component, OnInit} from '@angular/core';
 import {PublicService} from '@api-rest/services/public.service';
+import {ImageSrc} from '@core/utils/image.utils';
 
 @Component({
 	selector: 'app-footer',
@@ -10,18 +9,29 @@ import {PublicService} from '@api-rest/services/public.service';
 })
 export class FooterComponent implements OnInit {
 
-	public footerImages: ImageSrc[] = [];
 	public applicationVersionNumber: string;
-
+	public BASE_URL = 'assets/custom/footer/';
+	footerImages: ImageSrc[] = [
+		{
+			location: this.BASE_URL + 'footer_left.png',
+			alt: 'footer_left'
+		},
+		{
+			location: this.BASE_URL + 'footer_center.png',
+			alt: 'footer_center'
+		},
+		{
+			location: this.BASE_URL + 'footer_right	.png',
+			alt: 'footer_right'
+		}
+	]
 	constructor(
-		private flavoredImagesService: FlavoredImagesService,
 		private publicService: PublicService,
 	) {
 	}
 
 	ngOnInit(): void {
 		this.publicService.getApplicationCurrentVersion().subscribe(versionDto => this.applicationVersionNumber = versionDto.version);
-		this.flavoredImagesService.getFooterImages().subscribe(footerImages => this.footerImages = footerImages);
 	}
 
 }

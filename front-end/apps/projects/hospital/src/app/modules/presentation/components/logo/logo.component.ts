@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ImageSrc } from '@core/utils/flavored-image-definitions';
+import { ImageSrc } from '@core/utils/image.utils';
 @Component({
 	selector: 'app-logo',
 	templateUrl: './logo.component.html',
