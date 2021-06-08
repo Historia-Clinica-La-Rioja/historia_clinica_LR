@@ -8,7 +8,7 @@ import { ImageSrc } from '@core/utils/image.utils';
 export class LogoComponent implements OnInit {
 
 	@Input() isSecondaryLogo = false;
-	public img: ImageSrc = { location: 'assets/logos/logo_HSI.svg', alt: 'HSI' };
+	public img: ImageSrc = { location: 'assets/custom/app_logo.svg', alt: 'HSI' };
 
 	constructor() {
 	}

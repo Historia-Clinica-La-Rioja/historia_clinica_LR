@@ -37,6 +37,8 @@ public class AssetsServiceImpl implements AssetsService {
     private static final Assets FOOTER_CENTER = new Assets("image/png", "footer/footer_center.png");
     private static final Assets FOOTER_RIGHT = new Assets("image/png", "footer/footer_right.png");
 
+    private static final Assets APP_LOGO = new Assets("image/svg+xml", "app_logo.svg");
+
 
     private final FileService fileService;
     private final StreamFile streamFile;
@@ -44,7 +46,7 @@ public class AssetsServiceImpl implements AssetsService {
     List<Assets> assetsList = new ArrayList<>(Arrays.asList(
             SPONSOR_LOGO, FAVICON,
             ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512,
-            FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT));
+            FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT, APP_LOGO));
 
     public AssetsServiceImpl(FileService fileService, StreamFile streamFile) {
         this.fileService = fileService;
