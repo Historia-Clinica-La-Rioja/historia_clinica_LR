@@ -33,10 +33,18 @@ public class AssetsServiceImpl implements AssetsService {
     private static final Assets ICON_384 = new Assets("image/png", "icons/icon-384x384.png");
     private static final Assets ICON_512 = new Assets("image/png", "icons/icon-512x512.png");
 
+    private static final Assets FOOTER_LEFT = new Assets("image/png", "footer/footer_left.png");
+    private static final Assets FOOTER_CENTER = new Assets("image/png", "footer/footer_center.png");
+    private static final Assets FOOTER_RIGHT = new Assets("image/png", "footer/footer_right.png");
+
+
     private final FileService fileService;
     private final StreamFile streamFile;
 
-    List<Assets> assetsList = new ArrayList<>(Arrays.asList(SPONSOR_LOGO, FAVICON, ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512));
+    List<Assets> assetsList = new ArrayList<>(Arrays.asList(
+            SPONSOR_LOGO, FAVICON,
+            ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512,
+            FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT));
 
     public AssetsServiceImpl(FileService fileService, StreamFile streamFile) {
         this.fileService = fileService;
