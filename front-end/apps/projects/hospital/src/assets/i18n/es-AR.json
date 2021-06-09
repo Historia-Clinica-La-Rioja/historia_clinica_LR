@@ -64,5 +64,12 @@
 	},
 	"version": {
 		"SHORTENED": "V. {{versionNumber}}"
+	},
+	"logos": {
+		"footer_right": "Logo inferior derecho",
+		"footer_center": "Logo inferior central",
+		"footer_left": "Logo inferior izquierdo",
+		"app_logo": "App logo",
+		"sponsor_logo": "Sponsor logo"
 	}
 }

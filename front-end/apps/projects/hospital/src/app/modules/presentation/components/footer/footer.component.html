@@ -1,9 +1,9 @@
 <div class="footer-container" fxLayout="row wrap" fxLayoutAlign="space-around center">
 
 	<div class="footer-logos">
-		<ng-container *ngFor="let img of footerImages">
-			<img src="{{img.location}}" alt="{{img.alt}}">
-		</ng-container>
+		<img src='assets/custom/footer/footer_left.png' [alt]="'logos.footer_left' | translate">
+		<img src='assets/custom/footer/footer_center.png' [alt]="'logos.footer_center' | translate">
+		<img src='assets/custom/footer/footer_right.png' [alt]="'logos.footer_right' | translate">
 	</div>
 	<div class="footer-version">
 		<span *ngIf="applicationVersionNumber" class="footer-version-text">
