@@ -1,18 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {LoggedUserService} from '../../../auth/services/logged-user.service';
+import { Component } from '@angular/core';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { RoleAssignment } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
-import {Router} from '@angular/router';
-import {InstitutionService} from '@api-rest/services/institution.service';
-import {FeatureFlagService} from '@core/services/feature-flag.service';
+import { Router } from '@angular/router';
+import { InstitutionService } from '@api-rest/services/institution.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-instituciones',
 	templateUrl: './instituciones.component.html',
 	styleUrls: ['./instituciones.component.scss']
 })
-export class InstitucionesComponent implements OnInit {
+export class InstitucionesComponent {
 	institutions: { id: number, name: string }[] = null;
 	patientPortalEnabled: boolean;
 	webappInstitutionsAccess: boolean;
@@ -51,9 +51,6 @@ export class InstitucionesComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE).subscribe(isOn => this.patientPortalEnabled = isOn);
 	}
 
-	ngOnInit(): void {
-	}
-
 	ingresar(institutionDto: { id: number }, backoffice): void {
 		if (backoffice) {
 			window.location.href = '/backoffice/index.html';
@@ -70,14 +67,14 @@ export class InstitucionesComponent implements OnInit {
 		return allRoles
 			.filter((ra) => ra.role === ERole.ROOT ||
 				ra.role === ERole.ADMINISTRADOR ||
-				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ).length > 0;
+				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE).length > 0;
 	}
 
 	hasAccessToWebappInstitutions(allRoles: RoleAssignment[]) {
 		return allRoles
 			.filter((ra) => ra.role !== ERole.ROOT &&
 				ra.role !== ERole.ADMINISTRADOR &&
-				ra.role !== ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ).length > 0;
+				ra.role !== ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE).length > 0;
 	}
 
 	hasAccessToPatientPortal(allRoles: RoleAssignment[]): boolean {

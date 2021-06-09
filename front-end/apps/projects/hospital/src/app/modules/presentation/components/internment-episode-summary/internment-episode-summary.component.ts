@@ -1,19 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
 	selector: 'app-internment-episode-summary',
 	templateUrl: './internment-episode-summary.component.html',
 	styleUrls: ['./internment-episode-summary.component.scss']
 })
-export class InternmentEpisodeSummaryComponent implements OnInit {
+export class InternmentEpisodeSummaryComponent {
 
 	@Input() internmentEpisode: InternmentEpisodeSummary;
 	@Input() canLoadProbableDischargeDate: boolean;
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 }
 

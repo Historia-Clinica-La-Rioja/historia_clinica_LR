@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { INDICACIONES } from '@historia-clinica/constants/summaries';
 
 @Component({
@@ -6,7 +6,7 @@ import { INDICACIONES } from '@historia-clinica/constants/summaries';
   templateUrl: './card-indicaciones.component.html',
   styleUrls: ['./card-indicaciones.component.scss']
 })
-export class CardIndicacionesComponent implements OnInit {
+export class CardIndicacionesComponent {
 
   public readonly indicaciones = INDICACIONES;
 
@@ -14,8 +14,6 @@ export class CardIndicacionesComponent implements OnInit {
 
 	constructor() { }
 
-	ngOnInit(): void {
-	}
 
   	openDialogNewRecommendation() {
 		// TODO completar con pop-up nueva recomendacion

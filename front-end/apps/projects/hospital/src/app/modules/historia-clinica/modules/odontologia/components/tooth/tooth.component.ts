@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
 	selector: 'app-tooth',
 	templateUrl: './tooth.component.html',
 	styleUrls: ['./tooth.component.scss']
 })
-export class ToothComponent implements OnInit, AfterViewInit {
+export class ToothComponent implements AfterViewInit {
 
 	constructor() { }
 
@@ -17,9 +17,6 @@ export class ToothComponent implements OnInit, AfterViewInit {
 
 	@Output() mouseOverEmitter = new EventEmitter();
 	@Output() mouseClickEmitter = new EventEmitter();
-
-	ngOnInit() {
-	}
 
 	ngAfterViewInit(): void {
 

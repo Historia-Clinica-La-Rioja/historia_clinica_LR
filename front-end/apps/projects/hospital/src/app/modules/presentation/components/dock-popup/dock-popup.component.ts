@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 
 @Component({
@@ -6,16 +6,13 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 	templateUrl: './dock-popup.component.html',
 	styleUrls: ['./dock-popup.component.scss']
 })
-export class DockPopupComponent implements OnInit {
+export class DockPopupComponent {
 
 	@Input() dockPopupRef: DockPopupRef;
 	@Input() title: string;
 
 	constructor(
 	) {
-	}
-
-	ngOnInit(): void {
 	}
 
 	close(): void {

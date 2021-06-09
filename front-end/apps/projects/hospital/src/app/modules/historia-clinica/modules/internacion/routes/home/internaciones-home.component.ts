@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-internaciones-home',
   templateUrl: './internaciones-home.component.html',
   styleUrls: ['./internaciones-home.component.scss']
 })
-export class InternacionesHomeComponent implements OnInit {
+export class InternacionesHomeComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { AddressDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 
@@ -7,16 +7,13 @@ import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 	templateUrl: './personal-information.component.html',
 	styleUrls: ['./personal-information.component.scss']
 })
-export class PersonalInformationComponent implements OnInit, OnChanges {
+export class PersonalInformationComponent implements OnChanges {
 
 	@Input() personalInformation: PersonalInformation;
 	@Input() patientMedicalCoverage: PatientMedicalCoverageDto[];
 	public addressPresent = false;
 	public address: Address;
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 	ngOnChanges() {
 		if (this.personalInformation?.address) {

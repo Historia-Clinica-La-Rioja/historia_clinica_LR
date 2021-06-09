@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RoleAssignment, InstitutionDto } from '@api-rest/api-model';
 
@@ -11,7 +11,7 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 	templateUrl: './profile.component.html',
 	styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
 	roleAssignments$: Observable<{ label: string, institution?: {name: string} }[]>;
 
 	constructor(
@@ -31,6 +31,4 @@ export class ProfileComponent implements OnInit {
 		);
 	}
 
-	ngOnInit(): void {
-	}
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Moment } from 'moment';
 
 @Component({
@@ -6,15 +6,12 @@ import { Moment } from 'moment';
 	templateUrl: './signo-vital.component.html',
 	styleUrls: ['./signo-vital.component.scss']
 })
-export class SignoVitalComponent implements OnInit {
+export class SignoVitalComponent {
 
 	@Input() description: string;
 	@Input() vitalSign: VitalSign;
 
 	constructor() {
-	}
-
-	ngOnInit(): void {
 	}
 
 }

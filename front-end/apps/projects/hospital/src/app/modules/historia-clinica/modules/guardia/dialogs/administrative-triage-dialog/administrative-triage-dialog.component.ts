@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TriageService } from '@api-rest/services/triage.service';
 import { TriageAdministrativeDto } from '@api-rest/api-model';
@@ -9,7 +9,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 	templateUrl: './administrative-triage-dialog.component.html',
 	styleUrls: ['./administrative-triage-dialog.component.scss']
 })
-export class AdministrativeTriageDialogComponent implements OnInit {
+export class AdministrativeTriageDialogComponent {
 
 	private triage: TriageAdministrativeDto;
 	requestPending = false;
@@ -19,9 +19,6 @@ export class AdministrativeTriageDialogComponent implements OnInit {
 		public readonly dialogRef: MatDialogRef<AdministrativeTriageDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public episodeId: number,
 	) {}
-
-	ngOnInit(): void {
-	}
 
 	setTriage(triage: TriageAdministrativeDto): void {
 		this.requestPending = true;

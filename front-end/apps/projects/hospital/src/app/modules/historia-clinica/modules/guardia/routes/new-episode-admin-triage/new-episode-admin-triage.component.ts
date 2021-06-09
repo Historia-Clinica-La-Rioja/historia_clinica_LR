@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ECAdministrativeDto, TriageAdministrativeDto } from '@api-rest/api-model';
 import { NewEpisodeService } from '../../services/new-episode.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
@@ -12,7 +12,7 @@ import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service'
 	templateUrl: './new-episode-admin-triage.component.html',
 	styleUrls: ['./new-episode-admin-triage.component.scss']
 })
-export class NewEpisodeAdminTriageComponent implements OnInit {
+export class NewEpisodeAdminTriageComponent {
 
 	private triage: TriageAdministrativeDto;
 	private emergencyCareDto = {} as ECAdministrativeDto;
@@ -27,8 +27,6 @@ export class NewEpisodeAdminTriageComponent implements OnInit {
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId;
 	}
-
-	ngOnInit(): void { }
 
 	confirmEvent(triage: TriageAdministrativeDto): void {
 		this.triage = triage;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ERole } from '@api-rest/api-model';
 
@@ -7,7 +7,7 @@ import { ERole } from '@api-rest/api-model';
 	templateUrl: './summary-card.component.html',
 	styleUrls: ['./summary-card.component.scss']
 })
-export class SummaryCardComponent implements OnInit {
+export class SummaryCardComponent {
 
 	@Input() header: SummaryHeader;
 	@Input() tooltip: string;
@@ -20,8 +20,6 @@ export class SummaryCardComponent implements OnInit {
 	constructor(
 		public dialog: MatDialog
 	) { }
-
-	ngOnInit(): void { }
 
 }
 
