@@ -27,7 +27,7 @@
 
 			</div>
 
-			<button mat-flat-button color="primary" id="goToNewAgendaButton" *hasRole="['ADMINISTRADOR_AGENDA']" (click)="goToNewAgenda()"
+			<button mat-flat-button color="primary" id="goToNewAgendaButton" *appHasRole="['ADMINISTRADOR_AGENDA']" (click)="goToNewAgenda()"
 			        fxFlexFill.xs>
 				<span class="uppercase" [translate]="'turnos.home.actions.NEW_AGENDA'"></span>
 			</button>

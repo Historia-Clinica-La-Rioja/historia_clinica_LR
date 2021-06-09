@@ -7,7 +7,7 @@
 		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto">
 			<div horizontal-content>
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
-					<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
+					<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 							id="nueva_consulta"
 							mat-flat-button color="primary"
 							(click)="openNuevaConsulta()">

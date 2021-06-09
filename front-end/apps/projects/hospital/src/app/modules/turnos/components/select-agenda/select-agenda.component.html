@@ -22,11 +22,11 @@
 		        (click)="printAgenda()">
 			<mat-icon>print</mat-icon>
 		</button>
-		<button mat-flat-button color="primary" *hasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda" name="edit_agenda"
+		<button mat-flat-button color="primary" *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda" name="edit_agenda"
 		        (click)="goToEditAgenda()">
 			<mat-icon>edit</mat-icon>
 		</button>
-		<button mat-flat-button color="warn" *hasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda"
+		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda"
 		        (click)="deleteAgenda()">
 			<mat-icon>delete</mat-icon>
 		</button>
@@ -42,7 +42,7 @@
 				<mat-card-subtitle [translate]="'turnos.home.NO_AGENDA_MSG_SUBTITLE'"></mat-card-subtitle>
 			</mat-card-header>
 			<mat-card-content>
-				<button mat-flat-button color="primary" id="goToNewAgendaButton" *hasRole="['ADMINISTRADOR_AGENDA']"
+				<button mat-flat-button color="primary" id="goToNewAgendaButton" *appHasRole="['ADMINISTRADOR_AGENDA']"
 				        (click)="goToNewAgenda()" fxFlexFill.xs>
 					<span class="uppercase" [translate]="'turnos.home.actions.CREATE_AGENDA'"></span>
 				</button>

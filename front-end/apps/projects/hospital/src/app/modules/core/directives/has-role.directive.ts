@@ -5,7 +5,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { getElementViewFunction } from '@core/utils/directive.utils';
 
 @Directive({
-	selector: '[hasRole]'
+	selector: '[appHasRole]'
 })
 export class HasRoleDirective {
 
