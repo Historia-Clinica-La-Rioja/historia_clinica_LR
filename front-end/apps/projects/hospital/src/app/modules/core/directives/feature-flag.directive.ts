@@ -4,13 +4,13 @@ import { getElementViewFunction } from '@core/utils/directive.utils';
 
 /**
  *  Example:
- *  <ng-container *featureFlag="'habilitarEditarPaciente'">
+ *  <ng-container *appFeatureFlag="'habilitarEditarPaciente'">
  *      ...
  *  </ng-container>
  *
  */
 @Directive({
-	selector: '[featureFlag]'
+	selector: '[appFeatureFlag]'
 })
 export class FeatureFlagDirective {
 
@@ -25,10 +25,9 @@ export class FeatureFlagDirective {
 
 
 	@Input()
-	set featureFlag(featureFlag: string) {
+	set appFeatureFlag(featureFlag: string) {
 		this.featureFlagService.isOn(featureFlag).subscribe(isOn => {
 			this.showElement(isOn);
 		});
-
 	}
 }

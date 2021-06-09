@@ -21,7 +21,7 @@
 						</button>
 					</ng-container>
 
-					<ng-container *featureFlag="'epicrisisRequired'">
+					<ng-container *appFeatureFlag="'epicrisisRequired'">
 						<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
 							<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToEpicrisis()"
 								*appHasRole="['ESPECIALISTA_MEDICO']">
@@ -31,7 +31,7 @@
 						</ng-container>
 					</ng-container>
 
-					<ng-container *featureFlag="'habilitarPaseCama'">
+					<ng-container *appFeatureFlag="'habilitarPaseCama'">
 						<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" fxFlexFill.xs (click)="goToPaseCama()">
 							<span class="uppercase"
 								[translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
@@ -40,7 +40,7 @@
 
 				</ng-container>
 
-				<ng-container *featureFlag="'epicrisisRequired'">
+				<ng-container *appFeatureFlag="'epicrisisRequired'">
 					<ng-container *ngIf="epicrisisDoc?.confirmed && !hasMedicalDischarge">
 						<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToMedicalDischarge()"
 							*appHasRole="['ESPECIALISTA_MEDICO']">
@@ -58,7 +58,7 @@
 					</button>
 				</ng-container>
 
-				<ng-container *featureFlag="'habilitarEdicionPacienteInternacion'">
+				<ng-container *appFeatureFlag="'habilitarEdicionPacienteInternacion'">
 					<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" fxFlexFill.xs
 						(click)="goToEditPatient()">
 						<span class="uppercase"
@@ -110,7 +110,7 @@
 							</mat-card-content>
 						</app-summary-card>
 					</ng-container>
-					<ng-container *featureFlag="'mainDiagnosisRequired'">
+					<ng-container *appFeatureFlag="'mainDiagnosisRequired'">
 						<ng-container *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']">
 							<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
 								[editable]="!epicrisisDoc">

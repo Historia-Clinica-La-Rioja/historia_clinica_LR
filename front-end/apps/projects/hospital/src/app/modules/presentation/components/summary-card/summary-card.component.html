@@ -6,7 +6,7 @@
 				<span>{{ header.title | translate }}</span>
 			</div>
 		</mat-card-title>
-		<ng-container *featureFlag="'habilitarBotonCovidDiagnosticoPresuntivo'">
+		<ng-container *appFeatureFlag="'habilitarBotonCovidDiagnosticoPresuntivo'">
 			<div *ngIf="hasCovidAlert">
 				<button class="presumptive-button" mat-icon-button (click)="covidAlertEvent.emit()">
 					<mat-icon matListIcon fontSet="material-icons-outlined">pest_control</mat-icon>
