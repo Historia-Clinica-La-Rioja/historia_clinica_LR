@@ -22,7 +22,7 @@ export class MainLayoutComponent implements OnDestroy {
 		this.mobileQuery.addEventListener('change', this._mobileQueryListener);
 	}
 
-	@Input('menuItems') set menuItems(items: MenuItem[]) {
+	@Input() set menuItems(items: MenuItem[]) {
 		this._menuItems = items;
 		this.opened = (items && items.length) && !this.mobileQuery.matches;
 	}

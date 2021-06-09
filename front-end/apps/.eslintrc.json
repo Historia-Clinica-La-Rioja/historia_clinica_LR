@@ -10,52 +10,31 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.json",
-          "e2e/tsconfig.json"
+          "tsconfig.json"
         ],
         "createDefaultProgram": true
       },
       "extends": [
-        "plugin:@angular-eslint/ng-cli-compat",
-        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
         "@angular-eslint/component-selector": [
           "error",
           {
-            "type": "element",
-            "prefix": "app",
-            "style": "lib"
+            "prefix": "lib",
+            "style": "kebab-case",
+            "type": "element"
           }
         ],
         "@angular-eslint/directive-selector": [
           "error",
           {
-            "type": "attribute",
-            "prefix": "app",
-            "style": "lib"
+            "prefix": "lib",
+            "style": "camelCase",
+            "type": "attribute"
           }
-        ],
-        "@typescript-eslint/explicit-member-accessibility": [
-          "off",
-          {
-            "accessibility": "explicit"
-          }
-        ],
-        "arrow-parens": [
-          "off",
-          "always"
-        ],
-        "dot-notation": "error",
-        "import/order": "off",
-        "indent": "error",
-        "no-empty-function": "off",
-        "no-shadow": "error",
-        "no-unused-expressions": "error",
-        "no-use-before-define": "off",
-        "quotes": "error",
-        "semi": "error"
+        ]
       }
     },
     {
@@ -65,9 +44,7 @@
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
-      "rules": {
-        "@angular-eslint/template/eqeqeq": "error"
-      }
+      "rules": {}
     }
   ]
 }

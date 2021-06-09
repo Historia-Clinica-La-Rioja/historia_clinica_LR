@@ -10,20 +10,11 @@
       ],
       "parserOptions": {
         "project": [
-          "projects/odontology/tsconfig.lib.json",
-          "projects/odontology/tsconfig.spec.json"
+          "projects/odontology/tsconfig.eslint.json"
         ],
-        "createDefaultProgram": true
+        "createDefaultProgram": false
       },
       "rules": {
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "lib",
-            "style": "kebab-case"
-          }
-        ],
         "@angular-eslint/directive-selector": [
           "error",
           {
@@ -32,34 +23,21 @@
             "style": "camelCase"
           }
         ],
-        "@typescript-eslint/explicit-member-accessibility": [
-          "off",
+        "@angular-eslint/component-selector": [
+          "error",
           {
-            "accessibility": "explicit"
+            "type": "element",
+            "prefix": "lib",
+            "style": "kebab-case"
           }
-        ],
-        "arrow-parens": [
-          "off",
-          "always"
-        ],
-        "dot-notation": "error",
-        "import/order": "off",
-        "indent": "error",
-        "no-empty-function": "off",
-        "no-shadow": "error",
-        "no-unused-expressions": "error",
-        "no-use-before-define": "off",
-        "quotes": "error",
-        "semi": "error"
+        ]
       }
     },
     {
       "files": [
         "*.html"
       ],
-      "rules": {
-        "@angular-eslint/template/eqeqeq": "error"
-      }
+      "rules": {}
     }
   ]
 }

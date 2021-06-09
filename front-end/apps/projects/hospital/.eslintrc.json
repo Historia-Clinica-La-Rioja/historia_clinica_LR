@@ -10,57 +10,35 @@
       ],
       "parserOptions": {
         "project": [
-          "projects/hospital/tsconfig.app.json",
-          "projects/hospital/tsconfig.spec.json",
+          "projects/hospital/tsconfig.eslint.json",
           "projects/hospital/e2e/tsconfig.json"
         ],
-        "createDefaultProgram": true
+        "createDefaultProgram": false
       },
       "rules": {
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "app",
-            "style": "lib"
-          }
-        ],
         "@angular-eslint/directive-selector": [
           "error",
           {
             "type": "attribute",
             "prefix": "app",
-            "style": "lib"
+            "style": "camelCase"
           }
         ],
-        "@typescript-eslint/explicit-member-accessibility": [
-          "off",
+        "@angular-eslint/component-selector": [
+          "error",
           {
-            "accessibility": "explicit"
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
           }
-        ],
-        "arrow-parens": [
-          "off",
-          "always"
-        ],
-        "dot-notation": "error",
-        "import/order": "off",
-        "indent": "error",
-        "no-empty-function": "off",
-        "no-shadow": "error",
-        "no-unused-expressions": "error",
-        "no-use-before-define": "off",
-        "quotes": "error",
-        "semi": "error"
+        ]
       }
     },
     {
       "files": [
         "*.html"
       ],
-      "rules": {
-        "@angular-eslint/template/eqeqeq": "error"
-      }
+      "rules": {}
     }
   ]
 }

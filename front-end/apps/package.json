@@ -8,8 +8,9 @@
     "build:prod": "ng build hospital --prod --base-href /",
     "build:odontology": "ng build odontology",
     "test": "ng test",
-    "lint": "ng lint --tslint-config=tslint-ci.json",
-    "lint:fix": "ng lint --fix --tslint-config=tslint-ci.json",
+    "lint": "ng lint",
+    "lint:debug": "DEBUG=typescript-eslint:* ng lint",
+    "lint:fix": "ng lint --fix",
     "e2e": "ng e2e",
     "postinstall": "ngcc"
   },
