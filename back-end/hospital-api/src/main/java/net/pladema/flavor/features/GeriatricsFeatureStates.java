@@ -21,6 +21,7 @@ public class GeriatricsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_EDITAR_PACIENTE_COMPLETO, true);
 		map.put(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE, false);
 		map.put(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD, false);
+		map.put(AppFeature.HABILITAR_REPORTES, false);
 
 		return map;
 	}

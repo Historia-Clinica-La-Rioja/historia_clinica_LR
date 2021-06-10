@@ -45,6 +45,9 @@ public enum AppFeature implements Feature {
     @Label("Indica si está habilitado el módulo de odontología")
     HABILITAR_ODONTOLOGY,
 
+    @Label("Indica si está habilitado el módulo de Reportes")
+    HABILITAR_REPORTES,
+
     ;
 
     public boolean isActive() {
