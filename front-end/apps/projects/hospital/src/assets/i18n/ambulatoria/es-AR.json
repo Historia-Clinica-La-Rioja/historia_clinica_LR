@@ -82,7 +82,7 @@
 				},
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
-					"SUCCESS": "El documento de nueva consulta ambulatoria se guardó exitosamente"
+					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente"
 				},
 				"problemas": {
 					"buttons": {
