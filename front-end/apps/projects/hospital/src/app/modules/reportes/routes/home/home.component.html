@@ -1,7 +1,102 @@
-<app-content width="full">
+<app-content width="narrow">
 
 	<section id="title">
-		<h2 class="page-title"> Reportes </h2>
+		<h2 class="page-title" [translate]="'reportes.TITLE'"> </h2>
 	</section>
+
+	<mat-card>
+		<h2 [translate]="'reportes.form.TITLE'"></h2>
+		<form [formGroup]="form">
+
+			<div id="report-type" fxLayout="column" fxLayoutGap="5px">
+				<div>
+					<mat-label [translate]="'reportes.form.REPORT_TYPE'"></mat-label>
+				</div>
+				<mat-radio-group fxLayout="column" id="report-type-radio-group" formControlName="reportType">
+					<mat-radio-button *ngFor="let reportType of REPORT_TYPES" [value]="reportType.id">
+						<span>{{reportType.description}}</span>
+					</mat-radio-button>
+				</mat-radio-group>
+				<mat-error
+					*ngIf="submitted && this.form.controls.reportType.hasError('required')"
+					[translate]="'forms.REQUIRED'">
+				</mat-error>
+			</div>
+
+
+			<div fxLayout="row" fxLayoutGap="30px" style="padding-top: 10px">
+				<div id="start-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
+					<div>
+						<mat-label [translate]="'reportes.form.START_DATE'"></mat-label>
+						<mat-label class="required-field" [translate]="'reportes.form.REQUIRED_FIELD'"></mat-label>
+					</div>
+					<mat-form-field appearance="outline">
+						<input formControlName="startDate" id="startDatePicker" matInput [matDatepicker]="startDatePicker"
+							   placeholder="{{'reportes.form.START_DATE_PLACEHOLDER' | translate}}"
+							   [max]="this.form.controls.endDate.value"
+								(dateChange)="checkValidDates()">
+						<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #startDatePicker></mat-datepicker>
+						<mat-error *ngIf="this.form.controls.startDate.hasError('required')"
+							[translate]="'forms.REQUIRED'">
+						</mat-error>
+						<mat-error *ngIf="this.form.controls.startDate.hasError('max')"
+								   [translate]="'reportes.form.errors.FECHA_INICIO_MAX'">
+						</mat-error>
+					</mat-form-field>
+				</div>
+
+				<div id="end-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
+					<div>
+						<mat-label [translate]="'reportes.form.END_DATE'"></mat-label>
+						<span class="required-field" [translate]="'reportes.form.REQUIRED_FIELD'"></span>
+					</div>
+					<mat-form-field appearance="outline">
+						<input formControlName="endDate" id="endDatePicker" matInput [matDatepicker]="endDatePicker"
+							   placeholder="{{'reportes.form.END_DATE_PLACEHOLDER' | translate}}"
+							   (dateChange)="checkValidDates()">
+						<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #endDatePicker></mat-datepicker>
+						<mat-error *ngIf="this.form.controls.endDate.hasError('required')"
+							[translate]="'forms.REQUIRED'">
+						</mat-error>
+						<mat-error *ngIf="this.form.controls.endDate.hasError('min')"
+						   	[translate]="'reportes.form.errors.FECHA_FIN_MIN'">
+						</mat-error>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div fxLayout="row" fxLayoutGap="30px">
+				<div id="specialty" fxFlex="50%" fxLayoutGap="5px">
+					<mat-label [translate]="'reportes.form.SPECIALTY'"></mat-label>
+
+					<app-typeahead
+						[placeholder]="'reportes.form.SPECIALTY_PLACEHOLDER'"
+						[options]="specialtiesTypeaheadOptions$ | async"
+						(selectionChange)="setSpecialty($event)">
+					</app-typeahead>
+				</div>
+
+				<div id="professional" fxFlex="50%" fxLayoutGap="5px">
+					<mat-label [translate]="'reportes.form.PROFESSIONAL'"></mat-label>
+
+					<app-typeahead
+						[options]="professionalsTypeahead" [placeholder]="'reportes.form.PROFESSIONAL_PLACEHOLDER'"
+						(selectionChange)="setProfessional($event)">
+					</app-typeahead>
+				</div>
+
+			</div>
+
+			<div fxLayout="row" fxLayoutAlign="end" style="margin-top: 20px">
+				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()">
+					<span [translate]="'reportes.form.SUBMIT'"></span>
+				</button>
+			</div>
+
+		</form>
+
+	</mat-card>
 
 </app-content>

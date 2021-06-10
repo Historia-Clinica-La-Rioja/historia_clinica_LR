@@ -64,11 +64,12 @@ public class HealthcareProfessionalController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ResponseEntity<List<ProfessionalDto>> getAll(
 			@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
-		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId, List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA));
+		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
+				List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAll(institutionId);
 		if (!isAdministrativeRole) {
 			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());

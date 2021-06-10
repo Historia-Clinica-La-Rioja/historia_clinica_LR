@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReportesRoutingModule } from './reportes-routing.module';
 import {HomeComponent} from './routes/home/home.component';
 import {CoreModule} from '@core/core.module';
+import {PresentationModule} from '@presentation/presentation.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import {CoreModule} from '@core/core.module';
 	imports: [
 		CommonModule,
 		ReportesRoutingModule,
-		CoreModule
+		CoreModule,
+		PresentationModule
 	]
 })
 export class ReportesModule { }
