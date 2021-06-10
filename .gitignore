@@ -63,3 +63,6 @@ back-end/.recommenders/
 build/
 /.sonarlint
 sonarlint.json
+
+#jenv
+.java-version
