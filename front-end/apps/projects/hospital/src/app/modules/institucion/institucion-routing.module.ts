@@ -41,6 +41,8 @@ const routes: Routes = [
 			{
 				path: 'reportes',
 				loadChildren: () => import('../reportes/reportes.module').then(m => m.ReportesModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
 			{
 				path: 'odontologia',
