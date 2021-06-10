@@ -3,7 +3,7 @@
 
  1. Crear paquete del módulo
  
- ![Estructura-paquete](documentacion/images/mockups-estructura.png)
+ ![Estructura-paquete](images/mockups-estructura.png)
 
  2. Estructura de Código básica para comenzar — *copiar y pegar extracto reemplazando los nombres adecuadamente* —
 
