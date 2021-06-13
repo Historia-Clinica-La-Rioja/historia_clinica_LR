@@ -15,10 +15,11 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.auditable.DeleteableEntity;
-import net.pladema.sgx.auditable.entity.Deleteable;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.DeleteableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.Deleteable;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "diary")
@@ -53,19 +54,23 @@ public class Diary extends SGXAuditableEntity implements DeleteableEntity<Intege
     @Column(name = "appointment_duration", nullable = false)
     private Short appointmentDuration;
 
-    @Column(name = "automatic_renewal", columnDefinition = "boolean default false", nullable = false)
+    @Column(name = "automatic_renewal", nullable = false)
+	@ColumnDefault("false")
     private boolean automaticRenewal = false;
 
     @Column(name = "days_before_renew", columnDefinition = "smallint default 0", nullable = false)
     private Short daysBeforeRenew = 0;
 
-    @Column(name = "professional_asign_shift", columnDefinition = "boolean default false", nullable = false)
-    private boolean professionalAsignShift = false;
+    @Column(name = "professional_asign_shift", nullable = false)
+	@ColumnDefault("false")
+	private boolean professionalAsignShift = false;
 
-    @Column(name = "include_holiday", columnDefinition = "boolean default false", nullable = false)
+    @Column(name = "include_holiday", nullable = false)
+	@ColumnDefault("false")
     private boolean includeHoliday = false;
 
-    @Column(name = "active", columnDefinition = "boolean default true", nullable = false)
+    @Column(name = "active", nullable = false)
+	@ColumnDefault("true")
     private boolean active = true;
     
 	@Embedded

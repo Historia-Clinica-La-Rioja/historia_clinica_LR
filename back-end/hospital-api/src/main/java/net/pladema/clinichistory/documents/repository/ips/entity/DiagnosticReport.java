@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DiagnosticReportStatus;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

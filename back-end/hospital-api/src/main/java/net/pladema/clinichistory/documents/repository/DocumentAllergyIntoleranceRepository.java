@@ -17,8 +17,7 @@ public interface DocumentAllergyIntoleranceRepository extends JpaRepository<Docu
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.documents.repository.generalstate.domain.AllergyConditionVo(" +
-            "ai.id, s, ai.statusId, ai.verificationStatusId, ai.categoryId," +
-            "ai.startDate) " +
+            "ai.id, s, ai.statusId, ai.verificationStatusId, ai.categoryId, ai.criticality, ai.startDate) " +
             "FROM DocumentAllergyIntolerance da " +
             "JOIN AllergyIntolerance ai ON (da.pk.allergyIntoleranceId = ai.id) " +
             "JOIN Snomed s ON (s.id = ai.snomedId) " +
@@ -30,7 +29,7 @@ public interface DocumentAllergyIntoleranceRepository extends JpaRepository<Docu
     @Query("SELECT NEW net.pladema.clinichistory.documents.repository.generalstate.domain.AllergyConditionVo(" +
             "ai.id, s, ai.statusId, aics.description as status, " +
             "ai.verificationStatusId, aivs.description as verification, " +
-            "ai.categoryId, ai.startDate) " +
+            "ai.categoryId, ai.criticality, ai.startDate) " +
             "FROM DocumentAllergyIntolerance da " +
             "JOIN AllergyIntolerance ai ON (da.pk.allergyIntoleranceId = ai.id) " +
             "JOIN Snomed s ON (s.id = ai.snomedId) " +

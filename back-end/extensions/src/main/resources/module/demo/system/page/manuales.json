@@ -1,0 +1,10 @@
+{
+  "type": "components",
+  "content": [
+    { "type": "typography", "args": { "value": "Este contenido se muestra a modo de ejemplo del potencial de los Puntos de extensión", "className": "caption" } },
+    { "type": "typography", "args": { "value": "Manuales de ayuda para la configuración del sistema", "className": "title" } },
+    { "type": "typography", "args": { "value": "MÓDULO 1 – Backoffice", "className": "headline" } },
+    { "type": "typography", "args": { "value": "Creación y configuración de instituciones, así como la estructura de las mismas (sectores, especialidades).", "className": "body-1" } },
+    { "type": "link", "args": { "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf", "label": { "text": "DESCARGAR" } } }
+  ]
+}

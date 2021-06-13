@@ -1,8 +1,10 @@
 package net.pladema.hl7.dataexchange.clinical;
 
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
@@ -15,14 +17,18 @@ import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class ConditionResource extends IMultipleResourceFhir {
+@Conditional(InteroperabilityCondition.class)
+public class ConditionResource extends IMultipleResourceFhir<Condition> {
 
     @Autowired
     public ConditionResource(FhirPersistentStore store){
@@ -35,18 +41,18 @@ public class ConditionResource extends IMultipleResourceFhir {
     }
 
     @Override
-    public List<Condition> fetch(String id, Reference[] references) {
+    public List<Condition> fetch(String id, Map<ResourceType, Reference> references) {
         List<ConditionVo> conditions = store.findAllCondition(id);
 
         if(conditions.isEmpty())
-            return noInformationAvailable(references[0]);
+            return noInformationAvailable(references.get(ResourceType.Patient));
 
         List<Condition> resources = new ArrayList<>();
-        conditions.forEach( (condition) ->{
+        conditions.forEach(condition ->{
             Condition resource = new Condition();
             resource.setId(condition.getId());
             resource.addCategory(newCodeableConcept(CodingSystem.LOINC, CodingCode.Condition.CATEGORY));
-            resource.setSubject(references[0]);
+            resource.setSubject(references.get(ResourceType.Patient));
             resource.getOnsetDateTimeType().setValue(FhirDateMapper.toDate(condition.getCreatedOn()));
             resource.setVerificationStatus(newCodeableConcept(CodingSystem.Condition.VERIFICATION, condition.getVerificationStatus()));
             resource.setCode(newCodeableConcept(CodingSystem.SNOMED, condition.get()));
@@ -69,6 +75,7 @@ public class ConditionResource extends IMultipleResourceFhir {
         none.setClinicalStatus(newCodeableConcept(CodingSystem.Condition.STATUS, ConditionVo.defaultClinicalStatus()));
         none.setVerificationStatus(newCodeableConcept(CodingSystem.Condition.VERIFICATION, ConditionVo.defaultVerificationStatus()));
         none.setSubject(patientRef);
+        none.getOnsetDateTimeType().setValue(new Date(), TemporalPrecisionEnum.YEAR);
         none.getOnsetDateTimeType().addExtension(newExtension(
                 CodingProfile.DATA_ABSENT_REASON, CodingCode.ABSENT_REASON)
         );

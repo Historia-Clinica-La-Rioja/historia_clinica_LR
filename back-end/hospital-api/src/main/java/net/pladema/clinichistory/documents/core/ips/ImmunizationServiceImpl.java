@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
+import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.repository.ips.ImmunizationRepository;
@@ -10,8 +12,8 @@ import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.ImmunizationService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.ImmunizationBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class ImmunizationServiceImpl implements ImmunizationService {
 
     private final SnomedService snomedService;
 
-    private final CalculateCie10CodesService calculateCie10CodesService;
+    private final CalculateCie10Facade calculateCie10Facade;
 
     private final DocumentService documentService;
 
@@ -42,13 +44,13 @@ public class ImmunizationServiceImpl implements ImmunizationService {
     public ImmunizationServiceImpl(ImmunizationRepository immunizationRepository,
                                    ImmunizationStatusRepository immunizationStatusRepository,
                                    SnomedService snomedService,
-                                   CalculateCie10CodesService calculateCie10CodesService,
+                                   CalculateCie10Facade calculateCie10Facade,
                                    DocumentService documentService,
                                    NoteService noteService){
         this.immunizationRepository = immunizationRepository;
         this.immunizationStatusRepository = immunizationStatusRepository;
         this.snomedService = snomedService;
-        this.calculateCie10CodesService = calculateCie10CodesService;
+        this.calculateCie10Facade = calculateCie10Facade;
         this.documentService = documentService;
         this.noteService = noteService;
     }
@@ -59,7 +61,8 @@ public class ImmunizationServiceImpl implements ImmunizationService {
         immunizations.forEach(i -> {
             Integer snomedId = snomedService.getSnomedId(i.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(i.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(i.getSnomed().getSctid(), patientInfo);
+            String cie10Codes = calculateCie10Facade.execute(i.getSnomed().getSctid(),
+                    new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
 
             AtomicReference<Long> noteId = new AtomicReference<>(null);
             Optional.ofNullable(i.getNote()).ifPresent(n ->

@@ -15,7 +15,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
-import net.pladema.patient.controller.dto.BasicPatientDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -2,6 +2,7 @@ package net.pladema.hl7.dataexchange.medications;
 
 import net.pladema.hl7.dataexchange.IResourceFhir;
 
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.dataexchange.model.domain.MedicationIngredientVo;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -14,12 +15,14 @@ import org.hl7.fhir.r4.model.Ratio;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Conditional(InteroperabilityCondition.class)
 public class MedicationResource extends IResourceFhir {
 
     @Autowired
@@ -43,7 +46,7 @@ public class MedicationResource extends IResourceFhir {
 
     private List<Medication.MedicationIngredientComponent> buildIngredientsData(MedicationVo medication) {
         List<Medication.MedicationIngredientComponent> ingredients = new ArrayList<>();
-        medication.getIngredients().forEach((ingredient) ->
+        medication.getIngredients().forEach(ingredient ->
             ingredients.add(new Medication.MedicationIngredientComponent()
                     .setItem(newCodeableConcept(CodingSystem.SNOMED, ingredient.get()))
                     .setIsActive(ingredient.isActive())
@@ -74,7 +77,7 @@ public class MedicationResource extends IResourceFhir {
 
     private static List<MedicationIngredientVo> encodeIngredients(Medication resource){
         List<MedicationIngredientVo> ingredients = new ArrayList<>();
-        resource.getIngredient().forEach((ingredient)->{
+        resource.getIngredient().forEach(ingredient->{
             MedicationIngredientVo ingredientData = new MedicationIngredientVo();
 
             if(ingredient.hasItemCodeableConcept()) {
@@ -86,12 +89,12 @@ public class MedicationResource extends IResourceFhir {
                 if(ingredient.getStrength().hasNumerator()){
                     Quantity numerator = ingredient.getStrength().getNumerator();
                     ingredientData.setUnitMeasure(numerator.getUnit());
-                    ingredientData.setUnitValue(numerator.getValue());
+                    ingredientData.setUnitValue(numerator.getValue().doubleValue());
                 }
                 if(ingredient.getStrength().hasNumerator()){
                     Quantity denominator = ingredient.getStrength().getDenominator();
                     ingredientData.setPresentationUnit(denominator.getUnit());
-                    ingredientData.setPresentationValue(denominator.getValue());
+                    ingredientData.setPresentationValue(denominator.getValue().doubleValue());
                 }
             }
             ingredientData.setActive(ingredient.getIsActive());

@@ -70,6 +70,10 @@ public class FhirAddress {
     }
 
     public boolean hasAddressData(){
-        return address != null && !address.isBlank();
+        return FhirString.hasText(address);
+    }
+
+    public String getAddress(){
+        return hasAddressData() ? address : null;
     }
 }

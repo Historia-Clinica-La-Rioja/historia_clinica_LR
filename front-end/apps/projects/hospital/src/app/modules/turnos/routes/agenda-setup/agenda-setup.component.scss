@@ -1,0 +1,32 @@
+@import "../../../../../assets/styles/mixins";
+@import "../../../../../assets/styles/mat-mixins";
+
+form {
+
+	@include mat-form-field-background-white;
+
+	.mat-form-field {
+		width: 35%;
+	}
+
+	.datepicker-container .mat-form-field {
+		width: 90%;
+	}
+
+	@media screen and (max-width: 959px) {
+		.mat-form-field, .datepicker-container .mat-form-field {
+			width: 100%;
+		}
+	}
+
+	mwl-calendar-week-view ::ng-deep mwl-calendar-week-view-event.ng-star-inserted div {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+		justify-content: center;
+	}
+
+	mwl-calendar-week-view ::ng-deep .cal-week-view .cal-event {
+		color: #000000;
+	}
+}

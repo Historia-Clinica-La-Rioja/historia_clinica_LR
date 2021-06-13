@@ -7,7 +7,8 @@ import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +62,7 @@ public class DiaryOpeningHoursController {
             @PathVariable(name = "doctorsOfficeId") Integer doctorsOfficeId,
             @RequestParam(name = "startDate") String startDateStr,
             @RequestParam(name = "endDate") String endDateStr,
-            @RequestParam(name = "diaryId", required = false) String diaryId) {
+            @RequestParam(name = "diaryId", required = false) String diaryId) throws DiaryOpeningHoursException {
         LOG.debug("Input parameters -> doctorsOfficeId {}, startDateStr {}, endDateStr {}, diaryId {}",
                 doctorsOfficeId, startDateStr, endDateStr, diaryId);
 

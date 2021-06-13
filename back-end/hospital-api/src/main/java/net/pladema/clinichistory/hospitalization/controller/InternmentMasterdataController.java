@@ -1,8 +1,22 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.*;
-import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceCategory;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceClinicalStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceCriticality;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceVerificationStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.BloodType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionClinicalStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ConditionVerificationStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.HealthConditionSeverity;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InmunizationStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
+import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ObservationStatus;
+import net.pladema.emergencycare.controller.DischargeTypeMasterDataExternalService;
+import net.pladema.sgx.masterdata.dto.MasterDataDto;
 import net.pladema.sgx.masterdata.repository.MasterDataProjection;
 import net.pladema.sgx.masterdata.service.MasterDataService;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
@@ -26,9 +40,13 @@ public class InternmentMasterdataController {
 
     private final MasterDataService masterDataService;
 
-    public InternmentMasterdataController(MasterDataService masterDataService){
+    private final DischargeTypeMasterDataExternalService dischargeExternalService;
+
+    public InternmentMasterdataController(MasterDataService masterDataService,
+                                          DischargeTypeMasterDataExternalService dischargeExternalService){
         super();
         this.masterDataService = masterDataService;
+        this.dischargeExternalService = dischargeExternalService;
     }
 
     @GetMapping(value = "/allergy/category")
@@ -49,6 +67,12 @@ public class InternmentMasterdataController {
         return ResponseEntity.ok().body(masterDataService.findAll(AllergyIntoleranceVerificationStatus.class));
     }
 
+    @GetMapping(value = "/allergy/criticality")
+    public ResponseEntity<Collection<MasterDataProjection>> getAllergyCriticality(){
+        LOG.debug("{}", "All allergy intolerance criticality");
+        return ResponseEntity.ok().body(masterDataService.findAll(AllergyIntoleranceCriticality.class));
+    }
+
     @GetMapping(value = "/health/clinical")
     public ResponseEntity<Collection<MasterDataProjection>> getHealthClinical(){
         LOG.debug("{}", "All health condition clinical status");
@@ -62,11 +86,16 @@ public class InternmentMasterdataController {
                 ConditionClinicalStatus.downState()));
     }
 
-
     @GetMapping(value = "/health/verification")
     public ResponseEntity<Collection<MasterDataProjection>> getHealthVerification(){
         LOG.debug("{}", "All health condition verification status");
         return ResponseEntity.ok().body(masterDataService.findAll(ConditionVerificationStatus.class));
+    }
+
+    @GetMapping(value = "/health/severity")
+    public ResponseEntity<Collection<MasterDataProjection>> getHealthSeverity(){
+        LOG.debug("{}", "All health condition severity");
+        return ResponseEntity.ok().body(masterDataService.findAll(HealthConditionSeverity.class));
     }
 
     @GetMapping(value = "/health/verification/down")
@@ -130,9 +159,9 @@ public class InternmentMasterdataController {
 	}
     
     @GetMapping(value = "/discharge/type")
-    public ResponseEntity<Collection<MasterDataProjection>> getDischargeType(){
+    public ResponseEntity<Collection<MasterDataDto>> getDischargeType(){
         LOG.debug("All internment discharge types ");
-        return ResponseEntity.ok().body(masterDataService.findAll(DischargeType.class));
+        return ResponseEntity.ok().body(dischargeExternalService.internmentGetOf());
     }
     
     

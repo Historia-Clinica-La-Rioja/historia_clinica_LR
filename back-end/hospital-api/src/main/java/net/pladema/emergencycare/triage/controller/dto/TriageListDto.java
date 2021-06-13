@@ -8,7 +8,7 @@ import lombok.ToString;
 import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareUserDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
-import net.pladema.sgx.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import java.io.Serializable;
 

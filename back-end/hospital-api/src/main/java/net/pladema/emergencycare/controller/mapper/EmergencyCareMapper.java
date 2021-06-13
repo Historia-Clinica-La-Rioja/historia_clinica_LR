@@ -8,7 +8,7 @@ import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.controller.mapper.TriageMapper;
 import net.pladema.medicalconsultation.doctorsoffice.controller.mapper.DoctorsOfficeMapper;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.masterdata.service.domain.EnumWriter;
 import net.pladema.user.controller.dto.UserDto;
 import org.mapstruct.AfterMapping;
@@ -30,6 +30,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "policeInterventionDetails", source = "policeInterventionDetails", qualifiedByName = "toPoliceInterventionDto")
     @Mapping(target = "reasons", source = "reasons", qualifiedByName = "fromListReasonBo")
     @Mapping(target = "creationDate", source = "createdOn")
+    @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
     ResponseEmergencyCareDto toResponseEmergencyCareDto(EmergencyCareBo emergencyCareBo);
 
     @AfterMapping
@@ -60,6 +61,7 @@ public interface EmergencyCareMapper {
 
     @Named("administrativeEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
+    @Mapping(target = "patient.patientMedicalCoverageId", source = "administrative.patient.patientMedicalCoverageId")
     @Mapping(target = "ambulanceCompanyId", source = "administrative.ambulanceCompanyId")
     @Mapping(target = "policeInterventionDetails", source = "administrative.policeInterventionDetails", qualifiedByName = "toPoliceInterventionBo")
     @Mapping(target = "doctorsOffice.id", source = "administrative.doctorsOfficeId")
@@ -69,8 +71,21 @@ public interface EmergencyCareMapper {
     @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
     EmergencyCareBo administrativeEmergencyCareDtoToEmergencyCareBo(ECAdministrativeDto emergencyCareDto);
 
+    @Named("administrativeUpdateEmergencyCareDtoToEmergencyCareBo")
+    @Mapping(target = "patient.id", source = "patient.id")
+    @Mapping(target = "patient.patientMedicalCoverageId", source = "patient.patientMedicalCoverageId")
+    @Mapping(target = "ambulanceCompanyId", source = "ambulanceCompanyId")
+    @Mapping(target = "policeInterventionDetails", source = "policeInterventionDetails", qualifiedByName = "toPoliceInterventionBo")
+    @Mapping(target = "doctorsOffice.id", source = "doctorsOfficeId")
+    @Mapping(target = "emergencyCareTypeId", source = "emergencyCareTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "emergencyCareEntranceId", source = "entranceTypeId", qualifiedByName = "fromMasterDataDto")
+    @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
+    EmergencyCareBo emergencyCareDtoToEmergencyCareBo(NewEmergencyCareDto updateEmergencyCareDto);
+
     @Named("adultGynecologicalEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
+    @Mapping(target = "patient.patientMedicalCoverageId", source = "administrative.patient.patientMedicalCoverageId")
+    @Mapping(target = "ambulanceCompanyId", source = "administrative.ambulanceCompanyId")
     @Mapping(target = "policeInterventionDetails", source = "administrative.policeInterventionDetails", qualifiedByName = "toPoliceInterventionBo")
     @Mapping(target = "doctorsOffice.id", source = "administrative.doctorsOfficeId")
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")
@@ -81,6 +96,8 @@ public interface EmergencyCareMapper {
 
     @Named("pediatricEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
+    @Mapping(target = "patient.patientMedicalCoverageId", source = "administrative.patient.patientMedicalCoverageId")
+    @Mapping(target = "ambulanceCompanyId", source = "administrative.ambulanceCompanyId")
     @Mapping(target = "policeInterventionDetails", source = "administrative.policeInterventionDetails", qualifiedByName = "toPoliceInterventionBo")
     @Mapping(target = "doctorsOffice.id", source = "administrative.doctorsOfficeId")
     @Mapping(target = "triage", source = "triage", qualifiedByName = "toTriageBo")

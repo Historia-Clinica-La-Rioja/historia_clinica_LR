@@ -1,6 +1,5 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import io.swagger.models.auth.In;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.permissions.repository.enums.ERole;

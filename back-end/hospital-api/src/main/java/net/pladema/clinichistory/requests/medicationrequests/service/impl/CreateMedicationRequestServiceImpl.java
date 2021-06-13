@@ -11,8 +11,7 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.Medicati
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;

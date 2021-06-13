@@ -1,0 +1,109 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+    <h1 mat-dialog-title>{{ data.titleLabel | translate}}</h1>
+    <button id="close-modal" mat-button color="warn" mat-icon-button aria-label="close" [matDialogClose]="false">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+	<app-concepts-search *ngIf="!snomedConcept else PrescriptionItemForm"
+						[label]="data.searchSnomedLabel"
+						(search)="onSearch($event)">
+	</app-concepts-search>
+
+	<div class="spinner">
+		<mat-spinner diameter="70" color="primary" *ngIf="searching && !snowstormServiceNotAvailable"></mat-spinner>
+	</div>
+
+	<div *ngIf="snowstormServiceNotAvailable">
+		<span [translate]="'historia-clinica.snowstorm.SERVICE_NOT_AVAILABLE'"> </span>
+	</div>
+
+	<app-table *ngIf="!searching && !snomedConcept" [model]="conceptsResultsTable"
+		[mainStyle]="'secondary'"></app-table>
+
+	<ng-template #PrescriptionItemForm>
+		<form [formGroup]="prescriptionItemForm" fxLayout="column" fxLayoutGap="15px" (ngSubmit)="addPrescriptionItem()">
+			<mat-form-field appearance="outline">
+				<mat-label class="capitalize-first-letter">{{data.searchSnomedLabel | translate}}</mat-label>
+				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
+				<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+						(click)="resetForm()">
+					<mat-icon>close</mat-icon>
+				</button>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ASSOCIATED_PROBLEM' | translate}}</mat-label>
+				<mat-select formControlName="healthProblem" name="healthProblem">
+					<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem.sctId">
+						{{healthProblem.description | translate}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" *ngIf="data.showStudyCategory">
+				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_CATEGORY' | translate}}</mat-label>
+				<mat-select formControlName="studyCategory" name="studyCategory">
+					<mat-option *ngFor="let studyCategory of studyCategoryOptions" [value]="studyCategory.id">
+						{{studyCategory.description | translate}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<div class="mat-form-field-wrapper" fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="50px" *ngIf="data.showDosage">
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL' | translate}}</mat-label>
+					<mat-radio-group formControlName="interval" fxLayout="column" fxLayoutGap="10px">
+						<mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
+							{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_DEFAULT_OPTION' | translate}}
+						</mat-radio-button>
+						<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
+							Cada <input #intervalHoursInput [style.width.ch]="getInputNumberWidth('intervalHours')"
+									formControlName="intervalHours" type="number" matInput> hs.
+							<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'intervalHours')">
+								<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_HOURS_REQUIRED"></span>
+							</mat-error>
+						</mat-radio-button>
+					</mat-radio-group>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME' | translate}}</mat-label>
+					<mat-radio-group formControlName="administrationTime" fxLayout="column" fxLayoutGap="10px">
+						<mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
+							{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DEFAULT_OPTION' | translate}}
+						</mat-radio-button>
+						<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
+							Durante <input #administrationTimeDaysInput [style.width.ch]="getInputNumberWidth('administrationTimeDays')"
+										formControlName="administrationTimeDays" type="number" matInput> días.
+							<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'administrationTimeDays')">
+								<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DAYS_REQUIRED"></span>
+							</mat-error>
+						</mat-radio-button>
+					</mat-radio-group>
+				</div>
+			</div>
+
+			<mat-form-field appearance="outline">
+				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate}}</mat-label>
+				<textarea matInput type="text" id="observations" name="observations"
+						  formControlName="observations"
+						  placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate }}">
+				</textarea>
+				<mat-error *ngIf="hasError(prescriptionItemForm, 'maxlength', 'observations')" translate="forms.MAX_LENGTH_ERROR"
+						   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+				</mat-error>
+
+			</mat-form-field>
+
+			<div fxLayout="row" fxLayoutAlign="end start">
+				<button mat-flat-button color="primary" type="submit" fxFlexFill.xs>
+					<span class="uppercase">{{'buttons.ADD' | translate}}</span>
+				</button>
+			</div>
+
+		</form>
+	</ng-template>
+
+</div>

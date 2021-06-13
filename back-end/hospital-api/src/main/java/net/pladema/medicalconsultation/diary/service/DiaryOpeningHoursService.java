@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.service;
 
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ public interface DiaryOpeningHoursService {
     
     void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
 
-    List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate, Integer ignoreDiaryId);
+    List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate, Integer ignoreDiaryId) throws DiaryOpeningHoursException;
 
     Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
 

@@ -19,6 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class DischargeType implements Serializable {
 
+	public static final Short RETIRO_VOLUNTARIO = 4;
 	/**
 	 * 
 	 */
@@ -30,5 +31,11 @@ public class DischargeType implements Serializable {
 
 	@Column(name = "description", nullable = false)
 	private String description;
+
+	@Column(name = "internment", nullable = false)
+	private Boolean internment;
+
+	@Column(name = "emergency_care", nullable = false)
+	private Boolean emergencyCare;
 
 }

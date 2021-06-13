@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.repository.ips.entity;
 
 import lombok.*;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ObservationStatus;
 
 import javax.persistence.*;

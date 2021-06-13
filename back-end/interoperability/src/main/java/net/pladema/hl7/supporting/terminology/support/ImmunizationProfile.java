@@ -1,5 +1,6 @@
 package net.pladema.hl7.supporting.terminology.support;
 
+import lombok.experimental.UtilityClass;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import org.hl7.fhir.r4.model.ElementDefinition;
 import org.hl7.fhir.r4.model.StructureDefinition;
@@ -8,11 +9,8 @@ import org.hl7.fhir.r4.model.ValueSet;
 import java.util.Collections;
 import java.util.List;
 
-public class ImmunizationProfile {
-
-    public ImmunizationProfile(){
-        super();
-    }
+@UtilityClass
+public final class ImmunizationProfile {
 
     public static StructureDefinition structureDefinition(){
 

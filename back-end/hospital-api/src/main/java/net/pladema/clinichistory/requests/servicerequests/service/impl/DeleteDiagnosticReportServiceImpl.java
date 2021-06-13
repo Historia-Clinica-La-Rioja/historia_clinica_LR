@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
-import jdk.jshell.Diag;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
 import net.pladema.clinichistory.documents.repository.ips.DiagnosticReportRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.DiagnosticReport;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

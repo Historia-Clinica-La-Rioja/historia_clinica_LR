@@ -6,10 +6,8 @@ import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDt
 import net.pladema.clinichistory.documents.controller.service.VitalSignExternalService;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageBreathingDto;
@@ -23,7 +21,6 @@ import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 import net.pladema.medicalconsultation.doctorsoffice.controller.service.DoctorsOfficeExternalService;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import net.pladema.user.controller.dto.UserDto;
 import net.pladema.user.controller.service.UserExternalService;
 import org.slf4j.Logger;
@@ -110,29 +107,26 @@ public class TriageController {
 
     private TriageListDto createTriageListDto(TriageBo triageBo) {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
-        TriageListDto triageListDto = triageMapper.toTriageListDto(triageBo);
-        if (triageBo.getCreatedBy() != null) {
-            UserDto userDto = userExternalService.getUser(triageBo.getCreatedBy());
-            triageListDto.setCreatedBy(this.emergencyCareMapper.toEmergencyCareUserDto(userDto));
-        }
+        TriageListDto result = triageMapper.toTriageListDto(triageBo);
+        // set user data
+        UserDto userDto = userExternalService.getUser(triageBo.getCreatedBy());
+        result.setCreatedBy(emergencyCareMapper.toEmergencyCareUserDto(userDto));
+        // set doctor's office data
         if (triageBo.getDoctorsOfficeId() != null)
-            triageListDto.setDoctorsOffice(doctorsOfficeExternalService.getDoctorsOfficeById(triageBo.getDoctorsOfficeId()));
+            result.setDoctorsOffice(doctorsOfficeExternalService.getDoctorsOfficeById(triageBo.getDoctorsOfficeId()));
+        // set triage category
         TriageCategoryBo category = triageMasterDataService.getCategoryById(triageBo.getCategoryId());
-        triageListDto.setCategory(triageMasterDataMapper.toTriageCategoryDto(category));
-        if (!triageBo.getVitalSignIds().isEmpty()){
-            triageBo.getVitalSignIds().forEach(vitalSign -> {
-                VitalSignObservationDto vitalSignObservationDto = vitalSignExternalService.getVitalSignObservationById(vitalSign);
-                if (triageBo.getEmergencyCareTypeId() != null){
-                    if (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.ADULTO.getId()) ||
-                            (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.GINECOLOGICA.getId())))
-                        setVitalSignAsAdultGynecological(triageListDto, vitalSignObservationDto);
-                    else if (triageBo.getEmergencyCareTypeId().equals(EEmergencyCareType.PEDIATRIA.getId()))
-                        setVitalSignAsPediatric(triageListDto, vitalSignObservationDto);
-                }
-            });
-        }
-        LOG.debug("Output -> {}", triageListDto);
-        return triageListDto;
+        result.setCategory(triageMasterDataMapper.toTriageCategoryDto(category));
+        // set vital signs data
+        triageBo.getVitalSignIds().forEach(vitalSign -> {
+            VitalSignObservationDto vitalSignObservationDto = vitalSignExternalService.getVitalSignObservationById(vitalSign);
+            if (triageBo.isAdultGynecological())
+                setVitalSignAsAdultGynecological(result, vitalSignObservationDto);
+            else if (triageBo.isPediatric())
+                setVitalSignAsPediatric(result, vitalSignObservationDto);
+        });
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 
     private void setVitalSignAsAdultGynecological(TriageListDto triageListDto, VitalSignObservationDto vitalSignObservationDto) {
@@ -191,7 +185,7 @@ public class TriageController {
         LOG.debug("Add triage administrative => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
-        triage = triageService.createAdministrative(triage);
+        triage = triageService.createAdministrative(triage, institutionId);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -210,7 +204,7 @@ public class TriageController {
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, body.getVitalSigns());
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
-        triage = triageService.createAdultGynecological(triage);
+        triage = triageService.createAdultGynecological(triage, institutionId);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -230,7 +224,7 @@ public class TriageController {
         NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body);
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, vitalSignsObservationDto);
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
-        triage = triageService.createPediatric(triage);
+        triage = triageService.createPediatric(triage, institutionId);
         Integer result = triage.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);

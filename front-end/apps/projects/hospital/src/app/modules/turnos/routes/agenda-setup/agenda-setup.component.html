@@ -1,0 +1,168 @@
+<app-content width="full">
+	<section class="page">
+		<h2 class="page-title" [translate]="editMode ? 'turnos.agenda-setup.EDIT_AGENDA' : 'turnos.agenda-setup.NEW_AGENDA' "></h2>
+		<br>
+		<form [formGroup]="form" (ngSubmit)="save()">
+			<section>
+
+				<div fxLayout="row">
+					<span [translate]="'Profesional'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
+									formControlName="healthcareProfessionalId"
+									placeholder="{{'pacientes.form.SELECT' | translate}}">
+							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
+								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<section>
+					<div fxLayout="row">
+						<mat-checkbox (change)="appointmentManagementChange()" [checked]="appointmentManagement">
+							<span [translate]="'El profesional crea turnos'"></span>
+						</mat-checkbox>
+					</div>
+				</section>
+
+				<div fxLayout="row">
+					<span [translate]="'Sector'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="sectorId" name="sectorId" formControlName="sectorId"
+							placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="setDoctorOfficesAndResetFollowingControls(form.value.sectorId)">
+							<mat-option *ngFor="let sector of sectors" [value]="sector.id">
+								{{sector.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<div fxLayout="row">
+					<span [translate]="'Consultorio'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="doctorOffice" name="doctorOffice" formControlName="doctorOffice"
+							placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="loadCalendar()">
+							<mat-option *ngFor="let doctorOffice of doctorOffices" [value]="doctorOffice">
+								{{doctorOffice.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'No existen consultorios para este sector'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<div class="datepicker-container" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-md="column">
+					<div fxLayout="column">
+						<div fxLayout="row">
+							<span [translate]="'Fecha de inicio'"></span> *
+						</div>
+						<mat-form-field appearance="outline">
+							<input formControlName="startDate" id="startDate" matInput [matDatepicker]="initPicker"
+								(dateChange)="setAllWeeklyDoctorsOfficeOcupation()" [min]="minDate">
+							<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
+							<mat-datepicker #initPicker></mat-datepicker>
+						</mat-form-field>
+					</div>
+
+					<div fxLayout="column">
+						<div fxLayout="row">
+							<span [translate]="'Fecha de fin'"></span> *
+						</div>
+						<mat-form-field appearance="outline">
+							<input formControlName="endDate" id="endDate" matInput [matDatepicker]="endPicker"
+							       [min]="form.value.startDate" (dateChange)="setAllWeeklyDoctorsOfficeOcupation()">
+							<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+							<mat-datepicker #endPicker></mat-datepicker>
+							<mat-error [translate]="'forms.INVALID_DATE'"></mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+
+				<section>
+					<div fxLayout="row" fxLayoutGap="15px">
+						<mat-checkbox (change)="autoRenewChange()"  [checked]="autoRenew">
+							<span [translate]="'Renovar automáticamente'"></span>
+						</mat-checkbox>
+						<mat-checkbox (change)="holidayWorkChange()" [checked]="holidayWork">
+							<span [translate]="'Atiende dias feriados'"></span>
+						</mat-checkbox>
+					</div>
+				</section>
+
+				<div fxLayout="row">
+					<span [translate]="'Duración de la consulta'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="appointmentDuration" name="appointmentDuration"
+							formControlName="appointmentDuration" placeholder="{{'pacientes.form.SELECT' | translate}}"
+							(selectionChange)="agendaHorarioService.setAppointmentDuration(form.getRawValue().appointmentDuration)">
+							<mat-option *ngFor="let appointmentDuration of appointmentDurations"
+								[value]="appointmentDuration.id">
+								{{appointmentDuration.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+			</section>
+
+			<section *ngIf="form.valid">
+				<h3 [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE'"></h3>
+				<div fxLayout="row">
+					<span [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE_SUBTITLE'"></span>
+				</div>
+
+				<ng-template #weekViewHourSegmentTemplate let-segment="segment" let-locale="locale"
+					let-segmentHeight="segmentHeight" let-isTimeLabel="isTimeLabel">
+					<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
+						[class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
+						[ngClass]="segment.cssClass"
+						(mousedown)="agendaHorarioService.startDragToCreate(segment, segmentElement)">
+						<div class="cal-time" *ngIf="isTimeLabel">
+							{{ segment.date | calendarDate:'weekViewHour':locale }}
+						</div>
+					</div>
+				</ng-template>
+
+				<ng-template #headerTemplate let-days="days" let-locale="locale">
+					<div class="cal-day-headers">
+						<div class="cal-header" *ngFor="let day of days">
+							<strong>
+								{{ day.date | calendarDate:'weekViewColumnHeader':locale | titlecase}}
+							</strong>
+						</div>
+					</div>
+				</ng-template>
+
+				<mwl-calendar-week-view [viewDate]="TODAY"
+										[events]="agendaHorarioService.getEvents()" [hourSegmentTemplate]="weekViewHourSegmentTemplate"
+										[headerTemplate]="headerTemplate" [dayStartHour]="openingTime" [dayEndHour]="closingTime"
+										[hourSegments]="hourSegments"
+										[weekStartsOn]="MONDAY"
+										(eventClicked)="agendaHorarioService.eventClicked($event)">
+				</mwl-calendar-week-view>
+			</section>
+			<mat-card *ngIf="errors.length">
+				<mat-error *ngFor="let error of errors" class="mat-body-2">{{error}}</mat-error>
+			</mat-card>
+
+			<div *ngIf="form.valid" align="end">
+					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
+						<span [translate]="'buttons.CONFIRM'"></span>
+					</button>
+				</div>
+		</form>
+	</section>
+</app-content>

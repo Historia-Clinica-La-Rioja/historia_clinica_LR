@@ -11,7 +11,7 @@ import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.address.controller.mapper.DepartmentMapper;
 import net.pladema.address.controller.mapper.ProvinceMapper;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
@@ -74,8 +74,10 @@ public interface PersonMapper {
     @Mapping(target = "mothersLastName", source = "personExtended.mothersLastName")
     @Mapping(target = "phoneNumber", source = "personExtended.phoneNumber")
     @Mapping(target = "email", source = "personExtended.email")
-    @Mapping(target = "ethnic", source = "personExtended.ethnic")
     @Mapping(target = "religion", source = "personExtended.religion")
+    @Mapping(target = "ethnicityId", source = "personExtended.ethnicityId")
+    @Mapping(target = "educationLevelId", source = "personExtended.educationLevelId")
+    @Mapping(target = "occupationId", source = "personExtended.occupationId")
     @Mapping(target = "nameSelfDetermination", source = "personExtended.nameSelfDetermination")
     @Mapping(target = "genderSelfDeterminationId", source = "personExtended.genderSelfDeterminationId")
     @Mapping(target = "street", source = "address.street")

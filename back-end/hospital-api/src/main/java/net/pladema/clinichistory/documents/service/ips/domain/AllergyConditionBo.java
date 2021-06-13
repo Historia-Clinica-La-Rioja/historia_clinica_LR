@@ -14,9 +14,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AllergyConditionBo extends HealthConditionBo {
 
-    private String categoryId;
+    private Short categoryId;
 
-    private String severityId;
+    private Short criticalityId;
 
     private LocalDate date;
 
@@ -29,6 +29,6 @@ public class AllergyConditionBo extends HealthConditionBo {
         setCategoryId(allergyConditionVo.getCategoryId());
         setVerificationId(allergyConditionVo.getVerificationId());
         setVerification(allergyConditionVo.getVerification());
-        setSeverityId(allergyConditionVo.getSeverityId());
+        setCriticalityId(allergyConditionVo.getCriticalityId());
     }
 }

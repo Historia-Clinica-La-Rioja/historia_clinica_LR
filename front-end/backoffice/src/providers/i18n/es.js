@@ -128,6 +128,7 @@ export default {
                 sisaCode: 'Código SISA',
                 addressId: 'Dirección',
                 sectors: 'Sectores',
+                dependencyId: 'Dependencia',
             },
         }, 
         sectors: {

@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.renaper.configuration.RenaperCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +15,10 @@ import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.RenaperService;
 import net.pladema.renaper.services.domain.PersonDataResponse;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
-import net.pladema.sgx.restclient.services.RestClient;
+import ar.lamansys.sgx.shared.restclient.services.RestClient;
 
 @Service
-@ConditionalOnProperty(
-		value="ws.renaper.enabled",
-		havingValue = "true",
-		matchIfMissing = false)
+@Conditional(RenaperCondition.class)
 public class RenaperServiceImpl extends RestClient implements RenaperService {
 
 	private RenaperWSConfig renaperWSConfig;

@@ -1,6 +1,6 @@
 package net.pladema.sgx.security.utils;
 
-import net.pladema.security.utils.SecurityContextUtils;
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 
 public class UserInfo {
 	

@@ -2,9 +2,86 @@
 
 El proyecto esta desarrollado en Java en su versión 11. 
 
+## Flujo de Git 
+Para instalar y hacer uso del sistema de gestión de hospitales se debe tener en cuenta el [flujo de git](https://docs.gitlab.com/ee/topics/gitlab_flow.html) utilizado para este proyecto:
+
+* master: es la rama por defecto del repositorio y contiene la versión más actualizada en **estado de desarrollo**. A dicha rama les falta aplicar un proceso de regresión para detectar posibles errores.
+* tg-###: son las ramas alternativas usadas por el equipo de desarrollo para llevar las funcionalidades que se estan implementando.
+* rc-##.##: es la rama que contiene un estado de código confirmado para su uso y estable (release candidate). Se genera en cada sprint y es donde se realiza el proceso de regresión para detección y corrección de errores.
+* v#.##.#: tag que contiene una versión específica del sistema.
+
+
+## Ambiente de desarrollo
+
+Para inicializar cada uno de los ambientes de desarrollo se requiere tener una **base de datos** PostgreSQL que se puede crear siguiendo los pasos de [mas abajo](#bbdd).
+
+El **backend** se puede iniciar para desarrollo o solamente para dar soporte al desarrollo del frontend siguiendo los pasos detallados en este documento.
+
+El frontend está formado por dos proyectos, la app hospital y el backoffice. En cada caso, se puede iniciar para desarrollo o solamente para dar soporte al desarrollo del backend siguiendo los pasos del [front-end/README.md](front-end/README.md).
+
+
+## Ambiente con docker-compose
+
+### BBDD
+
+Para levantar y migrar la BBDD. Levanta Postgresql con usuario "postgres" y password "Local123". La monta localmente en el puerto localhost:5432
+
+```shell
+docker-compose up -d
+export DB_TYPE=postgresql
+export IP=$(ip addr show | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | grep 192.168)
+export DB_SERVER=${IP}
+export DB_NAME=hospitalDB
+export JDBC_URL=$(./scripts/make-jdbc.sh)
+export MIGRATION_USER=postgres
+export MIGRATION_PASSWORD=Local123
+./scripts/migrate-liquibase.sh $DB_TYPE $JDBC_URL $MIGRATION_USER $MIGRATION_PASSWORD
+```
+
+##### En windows
+
+Para exportar la variable IP utilizar el comando 'ipconfig' en consola para obtener la ip local y agregarla manualmente a la instrucción, por ej.
+```shell
+export IP=$192.168.1.3
+```
+
+
+En algunos casos en windows es necesario cambiar la forma de ejecucion de los archivos sh:
+```shell
+sh ./scripts/migrate-liquibase.sh $DB_TYPE $JDBC_URL $MIGRATION_USER $MIGRATION_PASSWORD
+```
+
+#### Migrate
+
+Para unicamente migrar, ir a la carpeta /dba y ejecutar el siguiente comando
+```shell
+mvn -Dliquibase.propertyFile=liquibase/postgresql.properties liquibase:update
+```
+
+
+## Ambiente completo con Docker (simil ambientes de QA)
+
+Ejecutar los pasos de BBDD para tener la BBDD local. Despues en la raiz del proyecto.
+Utiliza algunas variables ya creadas en el script de migracion, asegurarse de que estén creadas.
+
+```shell
+# Compilar binarios
+./scripts/build-pack.sh 
+# Preparar archivo de propiedades
+./scripts/prepare-property-file.sh /dev/null "" "" postgresql $JDBC_URL postgres Local123
+cp env.properties /tmp/app-local-test.properties
+# Construir imagen docker
+./scripts/build-docker.sh -t app:local
+# desplegar usando la version que acabamos de buildear
+./scripts/deploy-with-docker.sh app-local-test app:local url.example.com true true
+# Ver el puerto en el que se mapeo con 
+docker ps
+```
+
+
 ### Requerimientos
 
-Se espera tener configurado una base de datos postgreSQL con la siguiente configuración inicial (se puede seguír la guía explicada en el [README Raíz](README.md):
+Se espera tener configurada una base de datos postgreSQL con las siguientes características descriptas en el paso anterior:
 
 * IP: localhost
 * puerto: 5432
@@ -103,3 +180,33 @@ Al levantar el ambiente de desarrollo por primera vez se tiene un conjunto de us
 #### Renaper y federar
 
 Estos servicios estan deshabilitados para el ambiente de desarrollo. Esto se debe a que no tenemos ambientes de pruebas de cada uno para poder usarlos localmente.
+
+
+#### Configuración de tareas programadas
+
+En el backend existen tareas programadas (scheduled jobs), las cuales son implementadas con crons de Spring, que permite que sean configurables y se ejecuten automáticamente a determinado horario y/o con determinada frecuencia. Por defecto se encuentra habilitada la ejecución de tareas programadas, pero se pueden deshabilitar seteando la propiedad `scheduledjobs.enabled=false`.
+
+Cada tarea programada existente se debe poder habilitar/deshabilitar por propiedad.
+> Ejemplo: `scheduledjobs.some-job.enabled=true`
+
+Para configurar el horario y/o frecuencia de ejecución, cada tarea debe tener 6 parámetros configurados también por propiedades: hora, minuto, segundo, día del mes, mes y día de la semana. Cada parámetro debe seguir sus pautas según cómo se definen las [expresiones cron](https://docs.oracle.com/cd/E12058_01/doc/doc.1014/e12030/cron_expressions.htm).
+
+> Ejemplo 1: configurar ejecución para las 3 AM todos los días.
+```
+scheduledjobs.some-job.seconds=0
+scheduledjobs.some-job.minutes=0
+scheduledjobs.some-job.hours=3
+scheduledjobs.some-job.dayofmonth=*
+scheduledjobs.some-job.month=*
+scheduledjobs.some-job.dayofweek=*
+```
+
+> Ejemplo 2: configurar ejecución cada 3 hs, a los 0 minutos y 0 segundos, sólo días martes y jueves.
+```
+scheduledjobs.some-job.seconds=0
+scheduledjobs.some-job.minutes=0
+scheduledjobs.some-job.hours=*/3
+scheduledjobs.some-job.dayofmonth=*
+scheduledjobs.some-job.month=*
+scheduledjobs.some-job.dayofweek=TUE,THU
+```

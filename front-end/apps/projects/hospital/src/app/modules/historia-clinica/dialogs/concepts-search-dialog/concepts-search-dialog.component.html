@@ -1,0 +1,25 @@
+<div mat-dialog-title>
+	<div class="mat-h1">{{ 'internaciones.snomed-search.modal.TITLE' | translate }}</div>
+	<div *ngIf="!!conceptsResultsTable">
+		<span class="mat-body-1" [translate]="'internaciones.snomed-search.modal.SUBTITLE'"
+			[translateParams]="{ resultsLength: conceptsResultsLength }">
+		</span>
+		<span class="mat-body-2">{{ data.searchValue }}</span>
+	</div>
+	<div *ngIf="conceptsResultsLength > SNOMED_RESULTS_LIMIT ">
+		<span class="mat-body-1 warning" [translate]="'internaciones.snomed-search.modal.LIMIT_WARNING'">
+		</span>
+	</div>
+</div>
+<div mat-dialog-content>
+	<div class="spinner">
+		<mat-spinner color="primary" *ngIf="!conceptsResultsTable && !snowstormServiceNotAvailable"></mat-spinner>
+	</div>
+	<div *ngIf="snowstormServiceNotAvailable">
+		<span [translate]="'historia-clinica.snowstorm.SERVICE_NOT_AVAILABLE'"> </span>
+	</div>
+	<app-table [model]="conceptsResultsTable" [mainStyle]="'secondary'"></app-table>
+</div>
+<mat-dialog-actions align="end">
+	<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span></button>
+</mat-dialog-actions>

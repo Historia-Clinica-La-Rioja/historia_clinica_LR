@@ -1,14 +1,16 @@
 package net.pladema.renaper.configuration;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import net.pladema.renaper.services.RenaperAuthService;
 import net.pladema.renaper.services.domain.RenaperLoginResponse;
-import net.pladema.sgx.restclient.configuration.TokenHolder;
-import net.pladema.sgx.restclient.configuration.interceptors.AuthInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.TokenHolder;
+import ar.lamansys.sgx.shared.restclient.configuration.interceptors.AuthInterceptor;
 
 @Component
+@Conditional(RenaperCondition.class)
 public class RenaperAuthInterceptor extends AuthInterceptor<RenaperLoginResponse,RenaperAuthService> {
 	
 	private static final String COD_DOMINIO = "codDominio";

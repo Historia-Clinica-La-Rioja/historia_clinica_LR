@@ -8,7 +8,7 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvo
 import net.pladema.clinichistory.documents.service.NoteService;
 import net.pladema.clinichistory.documents.service.ips.*;
 import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

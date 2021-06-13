@@ -1,13 +1,11 @@
 package net.pladema.hl7.supporting.terminology.support;
 
+import lombok.experimental.UtilityClass;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import org.hl7.fhir.r4.model.StructureDefinition;
 
-public class DocumentReferenceProfile {
-
-    public DocumentReferenceProfile(){
-        super();
-    }
+@UtilityClass
+public final class DocumentReferenceProfile {
 
     public static StructureDefinition structureDefinition(){
         return TerminologySupport.loadStructureDefinition(

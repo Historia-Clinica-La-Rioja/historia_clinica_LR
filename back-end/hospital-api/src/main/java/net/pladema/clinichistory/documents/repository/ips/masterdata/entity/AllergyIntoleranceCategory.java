@@ -25,10 +25,13 @@ public class AllergyIntoleranceCategory implements Serializable {
 	private static final long serialVersionUID = -3053291021636483828L;
 
 	@Id
-	@Column(name = "id", length = 20)
-	private String id;
+	@Column(name = "id")
+	private Short id;
 
-	@Column(name = "description", nullable = false, length = 100)
+	@Column(name = "name", nullable = false, length = 15)
 	private String description;
+
+	@Column(name = "display", nullable = false, length = 15)
+	private String display;
 
 }

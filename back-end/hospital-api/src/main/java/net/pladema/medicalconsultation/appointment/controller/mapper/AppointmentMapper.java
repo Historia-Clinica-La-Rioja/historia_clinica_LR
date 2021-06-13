@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 @Mapper(uses = {LocalDateMapper.class})
 public interface AppointmentMapper {

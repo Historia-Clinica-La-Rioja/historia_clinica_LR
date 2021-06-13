@@ -5,7 +5,7 @@ import net.pladema.clinichistory.documents.repository.entity.*;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.repository.generalstate.domain.*;
 import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.sgx.auditable.entity.Updateable;
+import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -229,6 +229,10 @@ public class  DocumentServiceImpl implements DocumentService {
         return result;
     }
 
+    @Override
+    public List<Long> getDocumentId(Integer sourceId, Short sourceTypeId) {
+        return documentRepository.findBySourceIdAndSourceTypeId(sourceId,sourceTypeId);
+    }
 
     @Override
     public void deleteHealthConditionHistory(Long documentId) {

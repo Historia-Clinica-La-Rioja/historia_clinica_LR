@@ -8,14 +8,12 @@ package net.pladema.hl7.dataexchange.model.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import org.apache.commons.text.WordUtils;
 import org.hl7.fhir.r4.model.Coding;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -25,7 +23,7 @@ import java.util.Map;
 @Setter
 public class CompositionVo {
 
-    private final Map<Short, String> CONFIDENTIALITY = new HashMap<>();
+    private final Map<Short, String> confidentialityCoding = new HashMap<>();
 
     private Date createdOn;
     private Short confidentiality;
@@ -39,12 +37,12 @@ public class CompositionVo {
     }
 
     public CompositionVo(){
-        CONFIDENTIALITY.put((short)1, "U");
-        CONFIDENTIALITY.put((short)2, "L");
-        CONFIDENTIALITY.put((short)3, "M");
-        CONFIDENTIALITY.put((short)4, "N");
-        CONFIDENTIALITY.put((short)5, "R");
-        CONFIDENTIALITY.put((short)6, "V");
+        confidentialityCoding.put((short)1, "U");
+        confidentialityCoding.put((short)2, "L");
+        confidentialityCoding.put((short)3, "M");
+        confidentialityCoding.put((short)4, "N");
+        confidentialityCoding.put((short)5, "R");
+        confidentialityCoding.put((short)6, "V");
     }
 
     public void setCreatedOn(LocalDate date){
@@ -54,7 +52,7 @@ public class CompositionVo {
     public String getConfidentiality(){
         if(confidentiality == null)
             return "N";
-        return CONFIDENTIALITY.get(confidentiality);
+        return confidentialityCoding.get(confidentiality);
     }
 
     public String getTitle() {

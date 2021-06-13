@@ -8,7 +8,7 @@ import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
-import net.pladema.sgx.error.controller.dto.ApiErrorMessageDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpHeaders;

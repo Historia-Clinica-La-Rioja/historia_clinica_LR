@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
+import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
 import net.pladema.clinichistory.documents.repository.ips.DosageRepository;
 import net.pladema.clinichistory.documents.repository.ips.MedicationStatementRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.Dosage;
@@ -14,7 +16,6 @@ import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
 import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EUnitsOfTimeBo;
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
 
     private final SnomedService snomedService;
 
-    private final CalculateCie10CodesService calculateCie10CodesService;
+    private final CalculateCie10Facade calculateCie10Facade;
 
     private final NoteService noteService;
 
@@ -48,14 +49,14 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
                                  MedicamentStatementStatusRepository medicamentStatementStatusRepository,
                                  DocumentService documentService,
                                  SnomedService snomedService,
-                                 CalculateCie10CodesService calculateCie10CodesService,
+                                 CalculateCie10Facade calculateCie10Facade,
                                  NoteService noteService){
         this.medicationStatementRepository = medicationStatementRepository;
         this.dosageRepository = dosageRepository;
         this.medicamentStatementStatusRepository = medicamentStatementStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
-        this.calculateCie10CodesService = calculateCie10CodesService;
+        this.calculateCie10Facade = calculateCie10Facade;
         this.noteService = noteService;
     }
 
@@ -66,7 +67,8 @@ public class CreateMedicationServiceImpl implements CreateMedicationService {
         medications.forEach(medication -> {
             Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(medication.getSnomed().getSctid(), patientInfo);
+            String cie10Codes = calculateCie10Facade.execute(medication.getSnomed().getSctid(),
+                    new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
             MedicationStatement medicationStatement = saveMedicationStatement(patientInfo.getId(), medication, snomedId, cie10Codes);
 
             medication.setId(medicationStatement.getId());

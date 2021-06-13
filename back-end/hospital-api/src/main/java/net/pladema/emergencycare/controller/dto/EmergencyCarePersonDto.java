@@ -15,4 +15,6 @@ public class EmergencyCarePersonDto {
 
 	String lastName;
 
+	String identificationNumber;
+
 }

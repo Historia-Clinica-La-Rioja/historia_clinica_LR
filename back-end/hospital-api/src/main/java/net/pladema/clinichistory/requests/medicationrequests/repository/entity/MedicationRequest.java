@@ -2,8 +2,8 @@ package net.pladema.clinichistory.requests.medicationrequests.repository.entity;
 
 import lombok.*;
 import net.pladema.clinichistory.requests.repository.entity.RequestIntentStatus;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;

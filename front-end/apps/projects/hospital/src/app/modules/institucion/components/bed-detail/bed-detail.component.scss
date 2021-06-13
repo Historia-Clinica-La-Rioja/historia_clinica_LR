@@ -1,0 +1,26 @@
+@import '../../../../../assets/styles/variables.scss';
+
+section.page {
+	margin: 0px;
+}
+
+mat-card.mat-card {
+	min-height: 300px;
+	min-width: 300px;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+mat-chip {
+
+	&.default {
+		background-color: $success-color;
+		color: white;
+		text-decoration: underline;
+	}	
+	&.error {
+		background-color: $error-color;
+		color: white;
+		text-decoration: none;
+	}
+}

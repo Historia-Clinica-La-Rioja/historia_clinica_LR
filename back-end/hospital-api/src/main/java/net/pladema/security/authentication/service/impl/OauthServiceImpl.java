@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,7 +39,6 @@ public class OauthServiceImpl implements OauthService {
 	public OauthServiceImpl(
 			TokenService tokenService,
 			UserService userService,
-			@Qualifier("baseRestTemplate") RestTemplate restTemplate,
 			OAuthConfiguration oAuthConfiguration,
 			PersonService personService,
 			UserPasswordService userPasswordService,
@@ -49,7 +47,7 @@ public class OauthServiceImpl implements OauthService {
 		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.tokenService = tokenService;
 		this.userService = userService;
-		this.restTemplate = restTemplate;
+		this.restTemplate = new RestTemplate();
 		this.oAuthConfiguration = oAuthConfiguration;
 		this.personService = personService;
 		this.userPasswordService = userPasswordService;

@@ -10,6 +10,7 @@ import org.hl7.fhir.r4.model.Condition;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,26 +18,25 @@ import java.util.Map;
 @Setter
 public class ConditionVo {
 
-    private final Map<String, String> SEVERITY;
+    private final Map<String, String> severityCoding;
 
     public ConditionVo() {
-        //TODO: add to DB
-        SEVERITY = new HashMap<>();
-        SEVERITY.put("LA6752-5", "mild");
-        SEVERITY.put("LA6751-7", "moderate");
-        SEVERITY.put("LA6750-9", "severe");
+        severityCoding = new HashMap<>();
+        severityCoding.put("LA6752-5", "mild");
+        severityCoding.put("LA6751-7", "moderate");
+        severityCoding.put("LA6750-9", "severe");
     }
 
-    public ConditionVo(Object[] tuple){
+    public ConditionVo(Integer id, String sctidCode, String sctidTerm, String clinicalStatus,
+                       String verificationStatus, Date startDate, Date createdOn){
         this();
-        int index=0;
-        setId(Cast.toString(tuple[index++]));
-        setSctidCode(Cast.toString(tuple[index++]));
-        setSctidTerm(Cast.toString(tuple[index++]));
-        setClinicalStatus(Cast.toString(tuple[index++]));
-        setVerificationStatus(Cast.toString(tuple[index++]));
-        setStartDate(FhirDateMapper.toLocalDate(Cast.toSqlDate(tuple[index++])));
-        setCreatedOn(FhirDateMapper.toLocalDateTime(Cast.toSqlTimestamp(tuple[index])));
+        setId(Cast.toString(id));
+        setSctidCode(sctidCode);
+        setSctidTerm(sctidTerm);
+        setClinicalStatus(clinicalStatus);
+        setVerificationStatus(verificationStatus);
+        setStartDate(FhirDateMapper.toLocalDate(startDate));
+        setCreatedOn(FhirDateMapper.toLocalDateTime(createdOn));
     }
 
     private String id;
@@ -66,7 +66,7 @@ public class ConditionVo {
     }
 
     public FhirCode getSeverity(){
-        return new FhirCode(severityCode, SEVERITY.get(severityCode));
+        return new FhirCode(severityCode, severityCoding.get(severityCode));
     }
 
     public static FhirCode defaultClinicalStatus(){

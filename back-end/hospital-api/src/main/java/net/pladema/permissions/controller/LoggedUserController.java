@@ -4,7 +4,6 @@ import net.pladema.permissions.controller.dto.PermissionsDto;
 import net.pladema.permissions.controller.mappers.UserInfoMapper;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.domain.UserBo;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.controller.dto.UserDto;
 import net.pladema.user.controller.dto.UserPersonDto;

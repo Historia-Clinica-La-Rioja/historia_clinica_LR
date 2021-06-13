@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialtyDto;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalsByClinicalSpecialtyDto;
 import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;

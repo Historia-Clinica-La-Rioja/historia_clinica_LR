@@ -80,3 +80,27 @@ databaseChangeLog:
 - include:
     file: incrementales-v1_10.yml
     relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v1_11.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v1_12.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v1_13.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v1_14.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v1_15.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v1_16.yml
+    relativeToChangelogFile: true

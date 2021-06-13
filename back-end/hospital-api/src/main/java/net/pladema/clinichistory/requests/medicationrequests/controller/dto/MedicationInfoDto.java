@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
-import net.pladema.sgx.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 
 import java.io.Serializable;
 

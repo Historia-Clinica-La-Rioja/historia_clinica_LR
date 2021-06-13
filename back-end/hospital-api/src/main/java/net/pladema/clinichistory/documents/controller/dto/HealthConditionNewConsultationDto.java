@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -36,4 +37,7 @@ public class HealthConditionNewConsultationDto implements Serializable {
     private SnomedDto snomed;
 
     private Boolean isChronic;
+
+    @NotNull(message = "{value.mandatory}")
+    private String severity;
 }

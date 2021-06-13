@@ -4,25 +4,29 @@ import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
 import io.swagger.annotations.Api;
 import net.pladema.hl7.dataexchange.IResourceFhir;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
-import net.pladema.hl7.dataexchange.model.domain.*;
 import net.pladema.hl7.dataexchange.model.domain.dto.IdentifierDto;
 import net.pladema.hl7.dataexchange.model.domain.dto.OrganizationDto;
 import net.pladema.hl7.dataexchange.model.domain.dto.PatientSummaryDto;
 import net.pladema.hl7.supporting.conformance.FhirClientR4;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.documents.BundleResource;
 import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.DocumentReference;
+import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +34,7 @@ import java.util.function.Predicate;
 
 @RestController
 @RequestMapping("/masterfile-federacion-service/Patient")
-@ConditionalOnProperty(value="ws.renaper.enabled", havingValue = "true")
+@Conditional(InteroperabilityCondition.class)
 @Api(value = "Fhir Patient Provider", tags = {"Fhir Patient Provider"})
 public class PatientProvider {
 

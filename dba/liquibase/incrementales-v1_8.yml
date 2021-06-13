@@ -4,6 +4,7 @@ databaseChangeLog:
     - changeSet:
         id: addAutoIncrement-triage
         author: tmedina
+        dbms: postgresql
         changes:
             - addAutoIncrement:
                 columnDataType: int  
@@ -16,6 +17,7 @@ databaseChangeLog:
     - changeSet:
         id: addAutoIncrement-emergency_care_episode
         author: tmedina
+        dbms: "!mssql"
         changes:
             - addAutoIncrement:
                 columnDataType: int  
@@ -28,6 +30,7 @@ databaseChangeLog:
     - changeSet:
         id: addAutoIncrement-police_intervention
         author: tmedina
+        dbms: "!mssql"
         changes:
             - addAutoIncrement:
                 columnDataType: int  
@@ -79,8 +82,9 @@ databaseChangeLog:
                 
     - changeSet:  
         id:  createTable-DiagnosticReportFile
-        author: martinscooper  
-        changes:  
+        author: martinscooper
+        dbms: "!db2"  
+        changes: 
         - createTable: 
             tableName: diagnostic_report_file  
             columns:  
@@ -136,11 +140,74 @@ databaseChangeLog:
                     nullable: false
                 name: updated_on
                 type: datetime
+                defaultValueDate: ${date.now}
+
+    - changeSet:  
+        id:  createTable-DiagnosticReportFile
+        author: saguero
+        dbms: db2  
+        changes:  
+        - createTable: 
+            tableName: diagnostic_report_file  
+            columns:  
+            - column: 
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_diagnostic_report_file 
+                name:  id  
+                type:  int 
+            - column:
+                constraints:
+                    nullable: false
+                name: path
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: content_type
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: size
+                type: int8 
+            - column:
+                name: diagnostic_report_id
+                type: int
+                constraints:
+                    nullable: true
+                    references: diagnostic_report(id)
+                    foreignKeyName: FK_diagnostic_report 
+            - column:
+                    constraints:
+                        nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_by
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: false
+                name: created_on
+                type: datetime
+                defaultValueDate: ${date.now}
+            - column:
+                constraints:
+                    nullable: false
+                name: updated_on
+                type: datetime
                 defaultValueDate: ${date.now} 
     
     - changeSet:
         id: add-filename-diagnostic_report_file
         author: martinscooper
+        dbms: "!db2"
         changes:
             addColumn:
                 tableName: diagnostic_report_file
@@ -150,7 +217,22 @@ databaseChangeLog:
                     type: varchar
                     constraints: 
                         nullable: false
-    
+
+    - changeSet:
+        id: add-filename-diagnostic_report_file
+        author: saguero
+        dbms: db2
+        changes:
+        - addColumn:
+            tableName: diagnostic_report_file
+            columns:
+            - column:
+                name: name
+                type: varchar(255)
+                constraints: 
+                    nullable: false
+                defaultValue: "-"
+
     - changeSet:
         id: drop-column-path_file-diagnostic_report
         author: martinscooper
@@ -173,9 +255,21 @@ databaseChangeLog:
         id: triage_details-dropNotNullConstraint-body_temperature_id
         author: tmedina
         comment: Drop not null constraint in body_temperature_id column in triage_details table
+        dbms: "!mssql"
         changes:
             - dropNotNullConstraint:
                 columnDataType: short
+                columnName: body_temperature_id
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-body_temperature_id
+        author: saguero
+        comment: Drop not null constraint in body_temperature_id column in triage_details table
+        dbms: mssql
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: smallint
                 columnName: body_temperature_id
                 tableName: triage_details
 
@@ -192,6 +286,7 @@ databaseChangeLog:
     - changeSet:
         id: triage_details-dropNotNullConstraint-muscle_hypertonia_id
         author: tmedina
+        dbms: "!mssql"
         comment: Drop not null constraint in muscle_hypertonia_id column in triage_details table
         changes:
             - dropNotNullConstraint:
@@ -200,12 +295,35 @@ databaseChangeLog:
                 tableName: triage_details
 
     - changeSet:
+        id: triage_details-dropNotNullConstraint-muscle_hypertonia_id
+        author: saguero
+        dbms: mssql
+        comment: Drop not null constraint in muscle_hypertonia_id column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: smallint
+                columnName: muscle_hypertonia_id
+                tableName: triage_details
+
+    - changeSet:
         id: triage_details-dropNotNullConstraint-respiratory_retraction_id
         author: tmedina
+        dbms: "!mssql"
         comment: Drop not null constraint in respiratory_retraction_id column in triage_details table
         changes:
             - dropNotNullConstraint:
                 columnDataType: short
+                columnName: respiratory_retraction_id
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-respiratory_retraction_id
+        author: saguero
+        dbms: mssql
+        comment: Drop not null constraint in respiratory_retraction_id column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: smallint
                 columnName: respiratory_retraction_id
                 tableName: triage_details
 
@@ -222,10 +340,22 @@ databaseChangeLog:
     - changeSet:
         id: triage_details-dropNotNullConstraint-perfusion_id
         author: tmedina
+        dbms: "!mssql"
         comment: Drop not null constraint in perfusion_id column in triage_details table
         changes:
             - dropNotNullConstraint:
                 columnDataType: short
+                columnName: perfusion_id
+                tableName: triage_details
+
+    - changeSet:
+        id: triage_details-dropNotNullConstraint-perfusion_id
+        author: saguero
+        dbms: mssql
+        comment: Drop not null constraint in perfusion_id column in triage_details table
+        changes:
+            - dropNotNullConstraint:
+                columnDataType: smallint
                 columnName: perfusion_id
                 tableName: triage_details
 

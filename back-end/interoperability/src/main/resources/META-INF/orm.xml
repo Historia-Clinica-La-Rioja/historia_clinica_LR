@@ -1,0 +1,227 @@
+<entity-mappings
+        version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+    http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+    <!-- JPA Named Native Queries -->
+
+    <!-- ========================================== -->
+    <!-- ====== Historia clínica electrónica ====== -->
+    <!-- ========================================== -->
+
+    <named-native-query name="HCE.findAllMedications" result-set-mapping="HCE.findAllMedicationsResult">
+        <query>with temporal as (
+            SELECT DISTINCT
+            ms.id as medicationStatementId, ms.snomed_id, ms.status_id, ms.updated_on,
+            dsg.*,
+            row_number() OVER (PARTITION by ms.sctid_code ORDER BY ms.updated_on desc) AS rw
+            FROM document d
+            JOIN document_medicamention_statement dms ON d.id = dms.document_id
+            JOIN medication_statement ms ON dms.medication_statement_id = ms.id
+            LEFT JOIN dosage dsg ON ms.dosage_id = dsg.id
+            WHERE ms.patient_id = :patientId
+            AND d.type_id = :documentTypeId
+            AND d.status_id = :documentStatusId
+            )
+            SELECT  t.medicationStatementId AS id , s.sctid AS sctidCode, s.pt AS sctidTerm, status_id AS status,
+                    t.sequence, t.count, t.duration, t.duration_unit, t.frequency, t.period_unit
+            FROM temporal t
+            JOIN snomed s ON t.snomed_id = s.id
+            WHERE rw = 1 AND NOT status_id = :statusId
+            ORDER BY t.updated_on
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllMedicationsResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="sctidCode" class="java.lang.String"/>
+            <column name="sctidTerm" class="java.lang.String"/>
+            <column name="status" class="java.lang.String"/>
+            <column name="sequence" class="java.lang.Integer"/>
+            <column name="count" class="java.lang.Integer"/>
+            <column name="duration" class="java.lang.Double"/>
+            <column name="duration_unit" class="java.lang.String"/>
+            <column name="frequency" class="java.lang.Integer"/>
+            <column name="period_unit" class="java.lang.String"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.getDocumentReference" result-set-mapping="HCE.getDocumentReferenceResult">
+        <query>select pat.id, first_name, middle_names, last_name, bool_and(op.id is not null) as hasDocuments
+            from patient pat 
+            join person per on ( pat.person_id = per.id ) 
+            left join outpatient_consultation op on ( pat.id = op.patient_id ) 
+            where pat.id = :patientId
+            group by pat.id, first_name, middle_names, last_name
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.getDocumentReferenceResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.BundleVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="first_name" class="java.lang.String"/>
+            <column name="middle_names" class="java.lang.String"/>
+            <column name="last_name" class="java.lang.String"/>
+            <column name="hasDocuments" class="java.lang.Boolean"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.getPatient" result-set-mapping="HCE.getPatientResult">
+        <query>
+            select p.first_name, p.middle_names, p.last_name, p.other_last_names, pe.mothers_last_name,
+            p.identification_number, p.gender_id, p.birth_date, pe.phone_number, pe.address_id
+            from patient pat
+            join person p on ( pat.person_id = p.id )
+            left join person_extended pe on ( p.id = pe.person_id )
+            where pat.id = :patientId
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.getPatientResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.PatientVo">
+            <column name="first_name" class="java.lang.String"/>
+            <column name="middle_names" class="java.lang.String"/>
+            <column name="last_name" class="java.lang.String"/>
+            <column name="other_last_names" class="java.lang.String"/>
+            <column name="mothers_last_name" class="java.lang.String"/>
+            <column name="identification_number" class="java.lang.String"/>
+            <column name="gender_id" class="java.lang.Short"/>
+            <column name="birth_date" class="java.lang.String"/>
+            <column name="phone_number" class="java.lang.String"/>
+            <column name="address_id" class="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.getAddress">
+        <query>
+            select a.street, a.number, a.floor, a.apartment, a.postcode,
+            ci.description as city, p.description as province, co.description as country
+            from address a
+            left join city ci on ( a.city_id = ci.id )
+            left join department d on ( ci.department_id = d.id )
+            left join province p on ( d.province_id = p.id )
+            left join country co on ( p.country_id = co.id )
+            where a.id = :addressId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="HCE.findAllCondition" result-set-mapping="HCE.findAllConditionResult">
+        <query>
+            WITH t AS(
+             SELECT hc.id, snomed_id, hc.status_id, verification_status_id, start_date, hc.created_on, hc.updated_on,
+             row_number() over (partition by sctid_code order by hc.updated_on desc) as rw
+             FROM document d
+             JOIN document_health_condition dhc on d.id = dhc.document_id
+             JOIN health_condition hc on dhc.health_condition_id = hc.id
+             WHERE d.status_id = :docStatusId
+             AND d.type_id = :documentTypeId
+             AND hc.patient_id = :patientId
+             AND NOT hc.problem_id = :diagnosisId
+            )
+             SELECT t.id as id, s.sctid as code, s.pt as term, status_id as clinical_status,
+             verification_status_id, start_date, created_on
+             FROM t
+             JOIN snomed s ON snomed_id = s.id
+             WHERE rw = 1
+             AND NOT verification_status_id = :statusId
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllConditionResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ConditionVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="clinical_status" class="java.lang.String"/>
+            <column name="verification_status_id" class="java.lang.String"/>
+            <column name="start_date" class="java.sql.Date"/>
+            <column name="created_on" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.findAllImmunizations" result-set-mapping="HCE.findAllImmunizationsResult">
+        <query>
+            WITH t AS (
+               SELECT inm.id, snomed_id, inm.status_id, administration_date, expiration_date, inm.created_on, inm.updated_on,
+               row_number() over (partition by sctid_code, administration_date order by inm.updated_on desc) as rw
+               FROM document d
+               JOIN document_inmunization di on d.id = di.document_id
+               JOIN inmunization inm on di.inmunization_id = inm.id
+               WHERE d.status_id = :docStatusId
+               AND d.type_id = :documentTypeId
+               AND inm.patient_id = :patientId
+            )
+            SELECT t.id as id, s.sctid as code, s.pt as term, status_id, administration_date, created_on, expiration_date
+            FROM t
+            JOIN snomed s ON t.snomed_id = s.id
+            WHERE rw = 1
+            AND NOT status_id = :statusId
+            ORDER BY t.updated_on DESC
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllImmunizationsResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ImmunizationVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="status_id" class="java.lang.String"/>
+            <column name="administration_date" class="java.sql.Date"/>
+            <column name="created_on" class="java.sql.Date"/>
+            <column name="expiration_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.findAllAllergies" result-set-mapping="HCE.findAllAllergiesResult">
+        <query>
+            with temporal as (
+            SELECT DISTINCT ai.id, ai.snomed_id, ai.status_id, ai.verification_status_id,
+             ai.category_id, ai.start_date, ai.updated_on,
+             row_number() over (partition by ai.sctid_code order by ai.updated_on desc) as rw
+             FROM document d
+             JOIN document_allergy_intolerance dai ON d.id = dai.document_id
+             JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id
+             WHERE d.type_id = :documentTypeId
+             AND d.status_id = :documentStatusId
+             AND ai.patient_id = :patientId
+             )
+             SELECT t.id AS id, s.sctid AS code, s.pt as term, t.status_id, t.verification_status_id,
+             t.category_id, t.start_date
+             FROM temporal t
+             JOIN snomed s ON t.snomed_id = s.id
+             WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus
+             ORDER BY t.updated_on desc
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllAllergiesResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="status_id" class="java.lang.String"/>
+            <column name="verification_status_id" class="java.lang.String"/>
+            <column name="category_id" class="java.lang.String"/>
+            <column name="start_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    
+    <named-native-query name="HCE.getOrganization" result-set-mapping="HCE.getOrganizationResult">
+        <query>
+            select distinct sisa_code, name, phone_number, address_id 
+             from institution i 
+             where id = (
+             select distinct institution_id 
+             from ( 
+             select institution_id from internment_episode ie where patient_id = :patientId 
+             union 
+             select institution_id from outpatient_consultation oc where patient_id = :patientId 
+             ) as subquery 
+             limit 1)
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.getOrganizationResult" >
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.OrganizationVo">
+            <column name="sisa_code" class="java.lang.String"/>
+            <column name="name" class="java.lang.String"/>
+            <column name="phone_number" class="java.lang.String"/>
+            <column name="address_id" class="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+</entity-mappings>

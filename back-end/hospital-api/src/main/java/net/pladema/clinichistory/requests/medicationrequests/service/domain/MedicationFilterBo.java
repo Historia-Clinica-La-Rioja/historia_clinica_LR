@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.domain;
 
 import lombok.Getter;
-import net.pladema.clinichistory.requests.service.domain.EMedicationStatus;
 
 @Getter
 public class MedicationFilterBo {

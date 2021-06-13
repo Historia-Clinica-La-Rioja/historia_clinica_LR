@@ -22,6 +22,8 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
 
     private String problemId;
 
+    private String severity;
+
     private LocalDate startDate;
 
     private LocalDate inactivationDate;
@@ -33,16 +35,18 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
         this.verificationId = source.getVerificationId();
         this.verification = source.getVerification();
         this.problemId = source.getProblemId();
+        this.severity = source.getSeverity();
         this.startDate = source.getStartDate();
+        this.inactivationDate = source.getInactivationDate();
         this.main = source.isMain();
     }
 
     public boolean isChronic() {
-        return problemId.equals(ProblemType.CHRONIC);
+        return getStatusId().equals(ConditionClinicalStatus.ACTIVE) && problemId.equals(ProblemType.CHRONIC);
     }
 
     public boolean isActiveProblem() {
-        return getStatusId().equals(ConditionClinicalStatus.ACTIVE);
+        return getStatusId().equals(ConditionClinicalStatus.ACTIVE) && !problemId.equals(ProblemType.CHRONIC);
     }
 
     public boolean isSolvedProblem() {

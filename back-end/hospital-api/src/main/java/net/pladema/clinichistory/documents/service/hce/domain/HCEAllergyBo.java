@@ -17,7 +17,9 @@ public class HCEAllergyBo extends HCEClinicalTermBo {
 
     private String verificationId;
 
-    private String categoryId;
+    private Short categoryId;
+
+    private Short criticalityId;
 
     private LocalDate startDate;
 
@@ -28,6 +30,7 @@ public class HCEAllergyBo extends HCEClinicalTermBo {
         setSnomed(new SnomedBo(hceAllergyVo.getSnomed()));
         setVerificationId(hceAllergyVo.getVerificationId());
         setCategoryId(hceAllergyVo.getCategoryId());
+        setCriticalityId(hceAllergyVo.getCriticalityId());
         setStartDate(hceAllergyVo.getStartDate());
     }
 }

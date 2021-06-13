@@ -7,7 +7,7 @@ import net.pladema.clinichistory.requests.medicalrequests.controller.dto.NewMedi
 import net.pladema.clinichistory.requests.medicalrequests.controller.mapper.CreateMedicalRequestMapper;
 import net.pladema.clinichistory.requests.medicalrequests.service.CreateMedicalRequestService;
 import net.pladema.clinichistory.requests.medicalrequests.service.domain.MedicalRequestBo;
-import net.pladema.sgx.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;

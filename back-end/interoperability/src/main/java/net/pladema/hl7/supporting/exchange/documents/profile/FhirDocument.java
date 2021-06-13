@@ -3,6 +3,8 @@ package net.pladema.hl7.supporting.exchange.documents.profile;
 import ca.uhn.fhir.rest.param.TokenParam;
 
 import net.pladema.hl7.dataexchange.model.adaptor.FhirParam;
+import net.pladema.hl7.supporting.exchange.documents.ips.PatientSummaryDocument;
+import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Coding;
 import org.springframework.beans.BeansException;
@@ -31,7 +33,7 @@ public class FhirDocument {
         supported.put(PatientSummaryDocument.TYPE, PatientSummaryDocument.class);
     }
 
-    public Boolean isSupported(TokenParam type){
+    public boolean isSupported(TokenParam type){
         return supported.keySet().stream()
                 .map(c -> new TokenParam().setSystem(c.getSystem()).setValue(c.getCode()))
                 .anyMatch(c -> c.equals(type));
@@ -54,10 +56,10 @@ public class FhirDocument {
     }
 
     public static TokenParam defaultType(){
-        return FhirParam.newTokenParam(CodingSystem.LOINC,"60591-5");
+        return FhirParam.newTokenParam(CodingSystem.LOINC, CodingCode.Document.PATIENT_SUMMARY_DOC);
     }
 
     public static String defaultStringType(){
-        return FhirParam.getParam(CodingSystem.LOINC,"60591-5");
+        return FhirParam.getParam(CodingSystem.LOINC,CodingCode.Document.PATIENT_SUMMARY_DOC);
     }
 }

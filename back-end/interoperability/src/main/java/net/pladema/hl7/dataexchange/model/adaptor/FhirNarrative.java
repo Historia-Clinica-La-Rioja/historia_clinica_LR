@@ -1,5 +1,6 @@
 package net.pladema.hl7.dataexchange.model.adaptor;
 
+import lombok.experimental.UtilityClass;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
@@ -11,6 +12,7 @@ import org.hl7.fhir.r4.model.Resource;
 
 import java.util.List;
 
+@UtilityClass
 public class FhirNarrative {
 
     public static Narrative buildNarrative(List<Resource> resources){
@@ -48,13 +50,14 @@ public class FhirNarrative {
     private static String getText(List<Resource> resources){
         StringBuilder content = new StringBuilder();
 
-        resources.forEach((resource) -> {
+        resources.forEach(resource -> {
             switch (resource.getResourceType()){
                 case Condition:
                     content.append(row(((Condition) resource).getCode()));
                     break;
                 case MedicationStatement:
-                    content.append(row(((MedicationStatement) resource).getMedicationCodeableConcept()));
+                    if(((MedicationStatement) resource).hasMedicationCodeableConcept())
+                        content.append(row(((MedicationStatement) resource).getMedicationCodeableConcept()));
                     break;
                 case AllergyIntolerance:
                     content.append(row(((AllergyIntolerance) resource).getCode()));

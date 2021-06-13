@@ -4,7 +4,6 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 
-import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -23,32 +22,29 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Optional;
 
 @Component
 public abstract class IResourceFhir {
+
+    private static final String DELIMITER = "/";
 
     private static String dominio;
     private static String systemName;
 
     protected FhirPersistentStore store;
 
-    public IResourceFhir(FhirPersistentStore store){
+    protected IResourceFhir(FhirPersistentStore store){
         super();
         this.store=store;
     }
 
-    @Value("${ws.renaper.dominio:}")
+    @Value("${ws.federar.claims.iss}")
     public void setDominio(String dominio){
-        if(dominio.equals(CodingSystem.DOMAIN.RENAPER))
-            IResourceFhir.dominio = CodingSystem.DOMAIN.TEST;
-        else
-            IResourceFhir.dominio = dominio;
+        IResourceFhir.dominio = dominio;
     }
 
     @Value("${system.name:Historia de Salud Integrada}")
@@ -68,7 +64,13 @@ public abstract class IResourceFhir {
 
     public static <R extends IBaseResource> Bundle.BundleEntryComponent fetchEntry(R resource) {
         return new Bundle.BundleEntryComponent()
-                .setFullUrl(fullUrl(resource))
+                .setFullUrl(fullDomainUrl(resource))
+                .setResource((Resource) resource);
+    }
+
+    public static <R extends IBaseResource> Bundle.BundleEntryComponent fetchRequestEntry(R resource) {
+        return new Bundle.BundleEntryComponent()
+                .setFullUrl(fullRequestUrl(resource))
                 .setResource((Resource) resource);
     }
 
@@ -101,11 +103,18 @@ public abstract class IResourceFhir {
         return data;
     }
 
-    public static <R extends IBaseResource> String fullUrl(R resource){
-        String url = url(resource);
+    public static <R extends IBaseResource> String fullDomainUrl(R resource){
+        return fullUrl(resource, url(resource, dominio));
+    }
+
+    public static <R extends IBaseResource> String fullRequestUrl(R resource){
+        return fullUrl(resource, url(resource, currentServletMapping()));
+    }
+
+    private static <R extends IBaseResource> String fullUrl(R resource, String url){
         String id = resource.getIdElement().getValue();
         if(id != null)
-            return url.concat("/").concat(id);
+            return url.concat(DELIMITER).concat(id);
         return url;
     }
 
@@ -119,11 +128,13 @@ public abstract class IResourceFhir {
     }
 
     public static CodeableConcept newCodeableConcept(String system, FhirCode code) {
-        return newCodeableConcept(new Coding()
-                .setSystem(system)
-                .setCode(code.getTheCode())
-                .setDisplay(code.getTheDisplay())
-        );
+        if(code.hasCode())
+            return newCodeableConcept(new Coding()
+                    .setSystem(system)
+                    .setCode(code.getTheCode())
+                    .setDisplay(code.getTheDisplay())
+            );
+        return null;
     }
 
     public static CodeableConcept newCodeableConcept(Coding coding){
@@ -145,7 +156,7 @@ public abstract class IResourceFhir {
     }
 
     public static <R extends IBaseResource> Identifier newIdentifier(R resource, String value){
-        return newIdentifier(url(resource), value);
+        return newIdentifier(url(resource, dominio), value);
     }
 
     public static Identifier newIdentifier(String system, String value){
@@ -158,7 +169,7 @@ public abstract class IResourceFhir {
 
     public static Reference newReference(String system, String value){
         if(value != null) {
-            String ref = system.concat("/").concat(value);
+            String ref = system.concat(DELIMITER).concat(value);
             return newReference(ref);
         }
         return new Reference();
@@ -174,11 +185,11 @@ public abstract class IResourceFhir {
         return newReferenceAsIdentifier(system, value, "");
     }
 
-    public static Quantity newQuantity(String unit, BigDecimal value){
+    public static Quantity newQuantity(String unit, Double value){
         return new Quantity().setUnit(unit).setValue(value);
     }
 
-    public static Quantity newQuantity(String system, String code, String unit, BigDecimal value){
+    public static Quantity newQuantity(String system, String code, String unit, Double value){
         return newQuantity(unit, value)
                 .setSystem(system)
                 .setCode(code);
@@ -194,7 +205,11 @@ public abstract class IResourceFhir {
                 .setValue(value);
     }
 
-    public static <R extends IBaseResource> String url(R resource){
-        return dominio.concat("/").concat(resource.fhirType());
+    private static <R extends IBaseResource> String url(R resource, String baseUrl){
+        return baseUrl.concat(DELIMITER).concat(resource.fhirType());
+    }
+
+    private static String currentServletMapping(){
+        return ServletUriComponentsBuilder.fromCurrentServletMapping().toUriString();
     }
 }

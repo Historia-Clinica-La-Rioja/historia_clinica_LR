@@ -3,7 +3,7 @@ package net.pladema.user.events.listeners;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import net.pladema.sgx.emails.service.EmailService;
+import ar.lamansys.sgx.shared.emails.service.EmailService;
 import net.pladema.security.token.service.TokenService;
 import net.pladema.user.events.OnResetPasswordEvent;
 import net.pladema.user.repository.entity.User;

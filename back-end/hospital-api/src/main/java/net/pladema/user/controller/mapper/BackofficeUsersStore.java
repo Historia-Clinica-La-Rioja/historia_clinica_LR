@@ -31,6 +31,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	private final UserRepository userRepository;
 	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
+	private static final UserRole rootRole = new UserRole(null, ERole.ROOT.getId());
 
 	public BackofficeUsersStore(UserRepository repository,
 			UserRoleRepository userRoleRepository,
@@ -106,19 +107,33 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	}
 
 	private BackofficeUserDto update(BackofficeUserDto dto) {
-		BackofficeUserDto saved = repository.findById(dto.getId())
-				.map(inDb -> userDtoMapper.toModel(dto, inDb))
-				.map(repository::save)
-				.map(userDtoMapper::toDto)
-				.orElseThrow(() -> new NotFoundException("user-not-found", String.format("El usuario %s no existe", dto.getId())));
-
+		BackofficeUserDto saved = dto;
 		List<UserRole> userRoles = userRoleRepository.findByUserId(dto.getId());
-		userRoleRepository.deleteAll(roleToDelete(userRoles, toModel(dto.getRoles())));
+
+		if (!isRoot(userRoles)) {
+			saved = repository.findById(dto.getId())
+					.map(inDb -> userDtoMapper.toModel(dto, inDb))
+					.map(repository::save)
+					.map(userDtoMapper::toDto)
+					.orElseThrow(() -> new NotFoundException("user-not-found", String.format("El usuario %s no existe", dto.getId())));
+		}
+
+
+		List<UserRole> rolesDelFront = toModel(dto.getRoles());
+		rootRole.setUserId(dto.getId());
+		if (isRoot(userRoles)) {
+			rolesDelFront.add(rootRole);
+		}
+
+		userRoleRepository.deleteAll(roleToDelete(userRoles, rolesDelFront));
 		userRoleRepository.saveAll(roleToAdd(dto.getId(), toModel(dto.getRoles()), userRoles));
 
 		return saved;
 	}
 
+	private boolean isRoot(List<UserRole> roleList) {
+		return roleList.stream().map(UserRole::getRoleId).anyMatch(ERole.ROOT.getId()::equals);
+	}
 
 	private BackofficeUserDto create(BackofficeUserDto dto) {
 		checkIfUserAlreadyExists(dto);

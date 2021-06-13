@@ -3,7 +3,7 @@ package net.pladema.person.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.requests.servicerequests.controller.ServiceRequestController;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.diary.service.domain.*;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -27,7 +29,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.diary.service.DiaryBoMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
-import net.pladema.sgx.dates.repository.entity.EDayOfWeek;
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 
 @Service
 @RequiredArgsConstructor
@@ -86,9 +88,11 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     public List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId,
                                                                    LocalDate newDiaryStart,
                                                                    LocalDate newDiaryEnd,
-                                                                   Integer ignoreDiaryId){
+                                                                   Integer ignoreDiaryId) throws DiaryOpeningHoursException {
         LOG.debug("Input parameters -> doctorOfficeId {}, startDate {}, endDate {}",
                 doctorOfficeId, newDiaryStart, newDiaryEnd);
+        
+        validations(doctorOfficeId, newDiaryStart, newDiaryEnd);
 
         List<OccupationVo> queryResults = diaryOpeningHoursRepository
                 .findAllWeeklyDoctorsOfficeOccupation(doctorOfficeId, newDiaryStart, newDiaryEnd);
@@ -111,6 +115,13 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
                         result.add(mergeRangeTimeOfOpeningHours(dayWeekId, openingHours))
                 );
         return result;
+    }
+
+    private void validations(Integer doctorOfficeId, LocalDate newDiaryStart, LocalDate newDiaryEnd) throws DiaryOpeningHoursException {
+        if (doctorOfficeId == null)
+            throw new DiaryOpeningHoursException(DiaryOpeningHoursEnumException.NULL_DOCTOR_OFFICE_ID, "El id del consultorio es obligatorio");
+        if (newDiaryEnd.isBefore(newDiaryStart))
+            throw new DiaryOpeningHoursException(DiaryOpeningHoursEnumException.DIARY_END_DATE_BEFORE_START_DATE, String.format("La fecha de fin (%s) de agenda no puede ser previa al inicio (%s)", newDiaryEnd, newDiaryStart));
     }
 
     private Predicate<OccupationVo> defineFilter(Integer ignoreDiaryId) {

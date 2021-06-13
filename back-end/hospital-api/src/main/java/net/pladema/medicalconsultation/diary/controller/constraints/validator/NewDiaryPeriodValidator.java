@@ -7,7 +7,7 @@ import java.util.Optional;
 import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 public class NewDiaryPeriodValidator extends AbstractDiaryPeriodValidator<NewDiaryPeriodValid, DiaryADto> {
 

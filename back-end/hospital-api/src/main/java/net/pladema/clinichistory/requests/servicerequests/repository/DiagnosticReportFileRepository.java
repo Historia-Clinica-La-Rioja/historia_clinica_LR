@@ -2,7 +2,7 @@ package net.pladema.clinichistory.requests.servicerequests.repository;
 
 import net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.FileBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

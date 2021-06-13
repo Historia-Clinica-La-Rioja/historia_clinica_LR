@@ -35,7 +35,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     public List<HCEHealthConditionVo> getPersonalHistories(Integer patientId) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
+                "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, severity, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by snomed_id order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
@@ -46,7 +46,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   AND hc.problem_id IN (:validProblemTypes) " +
                 ") " +
                 "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
-                "start_date, inactivation_date, patient_id " +
+                "severity, start_date, inactivation_date, patient_id " +
                 "FROM t " +
                 "JOIN snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
@@ -72,9 +72,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                         (boolean)h[4],
                         (String)h[5],
                         (String)h[6],
-                        h[7] != null ? ((Date)h[7]).toLocalDate() : null,
+                        (String)h[7],
                         h[8] != null ? ((Date)h[8]).toLocalDate() : null,
-                        (Integer) h[9]))
+                        h[9] != null ? ((Date)h[9]).toLocalDate() : null,
+                        (Integer) h[10]))
         );
         return result;
     }
@@ -85,7 +86,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
     public List<HCEHealthConditionVo> getFamilyHistories(Integer patientId) {
         LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
+                "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, severity, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by snomed_id order by hc.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
@@ -97,7 +98,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   " +
                 ") " +
                 "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
-                "start_date, patient_id " +
+                "severity, start_date, patient_id " +
                 "FROM t " +
                 "JOIN snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
@@ -125,9 +126,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                             (boolean)h[4],
                             (String)h[5],
                             (String)h[6],
-                            h[7] != null ? ((Date)h[7]).toLocalDate() : null,
+                            (String)h[7],
+                            h[8] != null ? ((Date)h[8]).toLocalDate() : null,
                             null,
-                            (Integer) h[8]))
+                            (Integer) h[9]))
         );
         return result;
     }

@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 @Getter
 @Setter
 @ToString
 public class AllergyConditionDto extends HealthConditionDto {
 
-    private String categoryId;
+    private Short categoryId;
 
-    private String severity;
+    private Short criticalityId;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String date;

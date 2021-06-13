@@ -31,7 +31,7 @@ public class PersonExtended implements Serializable {
     @Column(name = "cuil", length = 11)
     private String cuil;
 
-    @Column(name = "mothers_last_name", length = 20)
+    @Column(name = "mothers_last_name", length = 40)
     private String mothersLastName;
 
     @Column(name = "address_id")
@@ -43,8 +43,14 @@ public class PersonExtended implements Serializable {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "ethnic", length = 25)
-    private String ethnic;
+    @Column(name = "ethnicity_id")
+    private Integer ethnicityId;
+
+    @Column(name = "education_level_id")
+    private Integer educationLevelId;
+
+    @Column(name = "occupation_id")
+    private Integer occupationId;
 
     @Column(name = "religion", length = 25)
     private String religion;

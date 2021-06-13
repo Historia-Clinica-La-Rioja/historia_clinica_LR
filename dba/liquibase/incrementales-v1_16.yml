@@ -1,0 +1,279 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_16
+    
+    - changeSet:
+        id: education_level-createTable
+        author: lbergottini
+        changes:
+        - createTable:
+            tableName: education_level
+            columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_education_level
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: code 
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(50)
+            - column:
+                constraints:
+                    nullable: false
+                name: active
+                type: boolean
+        - addUniqueConstraint:
+            tableName: education_level
+            columnNames: code, description
+            constraintName: UQ_education_level_code_desc
+            
+    - changeSet:
+        id: education_level-insertValues
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+        - sql:
+            sql: |-
+                INSERT INTO education_level(code, description, active) VALUES (1, 'Sin estudios', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (2, 'Primaria incompleta', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (3, 'Primaria completa', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (4, 'Secundario incompleto', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (5, 'Secundario completo', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (6, 'Ciclo EGB (1ro y 2do) incompleto', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (7, 'Ciclo EGB (1ro y 2do) completo', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (8, 'Ciclo EGB (3ro) incompleto', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (9, 'Ciclo EGB (3ro) completo', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (10, 'Polimodal incompleto', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (11, 'Polimodal completo', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (12, 'Terciario incompleto', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (13, 'Terciario completo', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (14, 'Universitario incompleto', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (15, 'Universitario completo', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (16, 'Posgrado incompleto', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (17, 'Posgrado completo', ${boolean.true});
+                INSERT INTO education_level(code, description, active) VALUES (18, 'Educación especial', ${boolean.true});
+                
+    - changeSet:
+        id: occupation-createTable
+        author: lbergottini
+        changes:
+        - createTable:
+            tableName: occupation
+            columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_occupation
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: code 
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: active
+                type: boolean
+        - addUniqueConstraint:
+            tableName: occupation
+            columnNames: code, description
+            constraintName: UQ_occupation_code_desc
+            
+    - changeSet:
+        id: occupation-insertValues
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+        - sql:
+            sql: |-
+                INSERT INTO occupation(code, description, active) VALUES (2, 'Directores ejecutivos, personal directivo de la administración pública y miembros del poder ejecutivo y de los cuerpos legislativos', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (3, 'Directores administradores y comerciales', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (4, 'Directores y gerentes de producción y operaciones', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (5, 'Gerentes de hoteles, restaurantes, comercios y otros servicios', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (6, 'Profesionales de las ciencias y de la ingeniería', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (7, 'Profesionales de la salud', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (8, 'Profesionales de la enseñanza', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (9, 'Especialistas en organización de la administración pública y de empresas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (10, 'Profesionales de tecnología de la información y las comunicaciones', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (11, 'Profesionales en derecho, en ciencias sociales y culturales', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (12, 'Profesionales de las ciencias y la ingeniería de nivel medio', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (13, 'Profesionales de nivel medio de la salud', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (14, 'Profesionales de nivel medio en operaciones financieras y administrativas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (15, 'Profesionales de nivel medio de servicios jurídicos, sociales, culturales y afines', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (16, 'Técnicos de la tecnología de la información y las comunicaciones', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (17, 'Oficinistas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (18, 'Empleados en trato directo con el público', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (19, 'Empleados contables y encargados del registro de materiales', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (20, 'Otro personal de apoyo administrativo', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (21, 'Trabajadores de los servicios personales', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (22, 'Vendedores', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (23, 'Trabajadores de los cuidados personales', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (24, 'Personal de los servicios de protección', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (25, 'Agricultores y trabajadores calificados de explotaciones agropecuarias con destino al mercado', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (26, 'Trabajadores forestales calificados, pescadores y cazadores', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (27, 'Trabajadores agropecuarios, pescadores, cazadores y recolectores de subsistencia', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (28, 'Oficiales y operarios de la construcción excluyendo electricistas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (29, 'Oficiales y operarios de la metalurgia, la construcción mecánica y afines', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (30, 'Artesanos y operarios de las artes gráficas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (31, 'Trabajadores especializados en electricidad y la electrotecnología', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (32, 'Operarios y oficiales de procesamiento de alimentos, de la confección, ebanistas, otros artesanos y afines', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (33, 'Operadores de instalaciones fijas y máquinas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (34, 'Ensambladores', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (35, 'Conductores de vehículos y operadores de equipos pesados móviles', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (36, 'Limpiadores y asistentes', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (37, 'Peones agropecuarios, pesqueros y forestales', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (38, 'Peones de la minería, la construcción, la industria manufacturera y el transporte', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (39, 'Ayudantes de preparación de alimentos', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (40, 'Vendedores ambulantes de servicios y afines', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (41, 'Recolectores de desechos y otras ocupaciones elementales', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (42, 'Oficiales de las fuerzas armadas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (43, 'Suboficiales de las fuerzas armadas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (44, 'Otros miembros de las fuerzas armadas', ${boolean.true});
+                INSERT INTO occupation(code, description, active) VALUES (45, 'Ama de casa', ${boolean.true});
+                      
+    - changeSet:
+        id: person_extended-addColumn-education_level_id
+        author: lbergottini
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: education_level_id
+                type: int
+                constraints:
+                    nullable: true  
+            tableName: person_extended
+        - addForeignKeyConstraint:
+            baseColumnNames: education_level_id
+            baseTableName: person_extended
+            constraintName: FK_person_extended_education_level_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: education_level
+            validate: true
+    
+    - changeSet:
+        id: person_extended-addColumn-occupation_id
+        author: lbergottini
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: occupation_id
+                type: int
+                constraints:
+                    nullable: true  
+            tableName: person_extended
+        - addForeignKeyConstraint:
+            baseColumnNames: occupation_id
+            baseTableName: person_extended
+            constraintName: FK_person_extended_occupation_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: occupation
+            validate: true
+
+    - changeSet:
+        id: dependency-createTable
+        author: tmedina
+        changes:
+        - createTable:
+            tableName: dependency
+            columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_dependency
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: code 
+                type: varchar(10)
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+
+    - changeSet:
+        id: dependency-insertValues
+        author: tmedina
+        context: "!schema-only"
+        changes:
+        - sql:
+            sql: |-
+                INSERT INTO dependency(code, description) VALUES ('20','Nacional');
+                INSERT INTO dependency(code, description) VALUES ('21','Provincial');
+                INSERT INTO dependency(code, description) VALUES ('22','Municipal');
+                INSERT INTO dependency(code, description) VALUES ('23','Privado');
+                INSERT INTO dependency(code, description) VALUES ('24','FFAA/Seguridad');
+                INSERT INTO dependency(code, description) VALUES ('22','Universitario público');
+                INSERT INTO dependency(code, description) VALUES ('26','Universitario privado');
+                INSERT INTO dependency(code, description) VALUES ('27','Obra social');
+                INSERT INTO dependency(code, description) VALUES ('28','Mutual');
+                INSERT INTO dependency(code, description) VALUES ('29','Mixta');
+                INSERT INTO dependency(code, description) VALUES ('30','Otros');
+                INSERT INTO dependency(code, description) VALUES ('31','Servicio Penitenciario Federal');
+                INSERT INTO dependency(code, description) VALUES ('32','Servicio Penitenciario Provincial');
+
+    - changeSet:
+        id: institution-addColumn-dependency_id
+        author: tmedina
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: dependency_id
+                type: int
+                constraints:
+                    nullable: true 
+            tableName: institution
+        - addForeignKeyConstraint:
+            baseColumnNames: dependency_id
+            baseTableName: institution
+            constraintName: FK_institution_dependency_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: dependency
+            validate: true
+
+    - changeSet:
+        id: dependency-fixCodeValue
+        author: tmedina
+        context: "!schema-only"
+        changes:
+        - sql:
+            sql: |-
+                UPDATE dependency SET code = '25' WHERE description='Universitario público';
+
+    - changeSet:
+        id: institution_phonenumber-modifyDataType
+        author: saguero
+        changes:
+        - modifyDataType:
+            columnName: phone_number
+            newDataType: varchar(35)
+            tableName: institution
+

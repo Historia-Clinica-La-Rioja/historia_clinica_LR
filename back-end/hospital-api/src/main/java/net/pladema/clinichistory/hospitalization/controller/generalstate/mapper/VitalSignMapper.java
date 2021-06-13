@@ -7,7 +7,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservati
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignsReportDto;
 import net.pladema.emergencycare.triage.controller.dto.TriagePediatricDto;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

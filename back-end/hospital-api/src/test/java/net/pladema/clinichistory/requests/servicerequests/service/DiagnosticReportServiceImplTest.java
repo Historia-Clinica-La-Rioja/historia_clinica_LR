@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
 import net.pladema.UnitRepository;
+import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
 import net.pladema.clinichistory.documents.core.ips.DiagnosticReportServiceImpl;
 import net.pladema.clinichistory.documents.repository.ips.DiagnosticReportRepository;
-import net.pladema.clinichistory.documents.repository.ips.entity.DiagnosticReport;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.*;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.service.NoteService;
@@ -11,17 +11,12 @@ import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.DiagnosticReportService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
-import net.pladema.clinichistory.mocks.DiagnosticReportTestMocks;
 import net.pladema.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.mocks.HealthConditionTestMocks;
 import net.pladema.clinichistory.mocks.SnomedTestMocks;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.CompleteDiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
-import net.pladema.clinichistory.requests.servicerequests.service.impl.CompleteDiagnosticReportServiceImpl;
-import net.pladema.clinichistory.requests.servicerequests.service.impl.DeleteDiagnosticReportServiceImpl;
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +48,7 @@ public class DiagnosticReportServiceImplTest extends UnitRepository {
     private SnomedService snomedService;
 
     @MockBean
-    private  CalculateCie10CodesService calculateCie10CodesService;
+    private CalculateCie10Facade calculateCie10Facade;
 
     @Before
     public void setUp() {
@@ -62,7 +57,7 @@ public class DiagnosticReportServiceImplTest extends UnitRepository {
                 documentService,
                 noteService,
                 snomedService,
-                calculateCie10CodesService
+                calculateCie10Facade
         );
     }
 

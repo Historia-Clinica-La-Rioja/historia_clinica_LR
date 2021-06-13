@@ -1,15 +1,14 @@
 <div xmlns="http://www.w3.org/1999/xhtml">
     <table>
-        <thead>
+        <caption>Resumen de Vacunas administradas</caption>
         <tr>
-            <td>Descripción</td>
-            <td>Estado</td>
-            <td>Fecha</td>
-            <td>Protocolo/Serie</td>
-            <td>Organización</td>
-            <td>Ubicación</td>
+            <th scope="col">Descripción</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Protocolo/Serie</th>
+            <th scope="col">Organización</th>
+            <th scope="col">Ubicación</th>
         </tr>
-        </thead>
         <tbody>
         <tr>
             <td th:narrative="${resource.vaccineCode}"></td>

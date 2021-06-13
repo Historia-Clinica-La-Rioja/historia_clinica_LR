@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -26,7 +26,8 @@ public class OutpatientAllergyConditionDto {
 
     private String categoryId;
 
-    private String severity;
+    @NotNull(message = "{value.mandatory}")
+    private Short criticalityId;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String startDate;

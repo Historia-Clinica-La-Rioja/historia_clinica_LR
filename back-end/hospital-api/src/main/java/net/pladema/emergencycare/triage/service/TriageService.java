@@ -8,11 +8,11 @@ public interface TriageService {
 
     List<TriageBo> getAll(Integer institutionId, Integer episodeId);
 
-    TriageBo createAdministrative(TriageBo triage);
+    TriageBo createAdministrative(TriageBo triage, Integer institutionId);
 
-    TriageBo createAdultGynecological(TriageBo triage);
+    TriageBo createAdultGynecological(TriageBo triage, Integer institutionId);
 
-    TriageBo createPediatric(TriageBo triage);
+    TriageBo createPediatric(TriageBo triage, Integer institutionId);
 }
 
 

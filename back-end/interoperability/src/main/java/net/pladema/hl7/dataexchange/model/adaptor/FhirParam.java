@@ -2,7 +2,9 @@ package net.pladema.hl7.dataexchange.model.adaptor;
 
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.TokenParam;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class FhirParam {
 
     public static final Character DELIMITER = '|';

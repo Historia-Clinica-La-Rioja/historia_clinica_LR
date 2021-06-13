@@ -10,7 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/assets")
@@ -19,6 +24,11 @@ public class AssetsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServiceRequestController.class);
 
+    private static String getFileName(HttpServletRequest request) {
+        String requestURL = request.getRequestURL().toString();
+        return requestURL.split("/assets/")[1];
+    }
+
     private final AssetsService assetsService;
 
     public AssetsController(AssetsService assetsService) {
@@ -26,12 +36,13 @@ public class AssetsController {
         this.assetsService = assetsService;
     }
 
-    @GetMapping(value = "/{fileName:.+}")
+    @GetMapping(value = "/{fileName:.+}/**")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity getAssetFile(@PathVariable(name = "fileName") String fileName) {
-        LOG.debug("Input parameters -> fileName {} ", fileName);
-        AssetsFileBo result = this.assetsService.getFile(fileName);
+    public ResponseEntity getAssetFile(HttpServletRequest request) {
+        LOG.debug("Input parameters -> fileName {} ", request.getRequestURL().toString());
+
+        AssetsFileBo result = this.assetsService.getFile(getFileName(request));
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(result.getContentType()))
                 .body(result.getResource());

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import net.pladema.hl7.dataexchange.model.adaptor.Cast;
-import net.pladema.hl7.supporting.exchange.documents.profile.PatientSummaryDocument;
+import net.pladema.hl7.supporting.exchange.documents.ips.PatientSummaryDocument;
 import org.hl7.fhir.r4.model.Coding;
 
 import java.time.LocalDate;
@@ -29,16 +29,16 @@ public class BundleVo {
     @Getter(AccessLevel.NONE)
     private boolean hasDocuments = false;
 
-    public BundleVo(Object[] tuple) {
-        int index=0;
-        PatientVo patient = new PatientVo();
-        patient.setId(Cast.toString(tuple[index++]));
-        patient.setFirstname(Cast.toString(tuple[index++]));
-        patient.setMiddlenames(Cast.toString(tuple[index++]));
-        patient.setLastname(Cast.toString(tuple[index++]));
-        this.patient = patient;
-        setId(patient.getId());
-        setHasDocuments(Cast.toBoolean(tuple[index]));
+    public BundleVo(Integer id, String firstName, String middleNames,
+                    String lastName, boolean hasDocuments) {
+        PatientVo patientData = new PatientVo();
+        patientData.setId(Cast.toString(id));
+        patientData.setFirstname(firstName);
+        patientData.setMiddlenames(middleNames);
+        patientData.setLastname(lastName);
+        this.patient = patientData;
+        setId(patientData.getId());
+        setHasDocuments(hasDocuments);
     }
 
     public void setLastUpdated(LocalDate date){

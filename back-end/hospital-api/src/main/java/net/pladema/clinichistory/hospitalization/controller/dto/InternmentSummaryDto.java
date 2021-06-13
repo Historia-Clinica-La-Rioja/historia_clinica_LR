@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.pladema.clinichistory.hospitalization.controller.dto.summary.DocumentsSummaryDto;
 import net.pladema.establishment.controller.dto.BedDto;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;

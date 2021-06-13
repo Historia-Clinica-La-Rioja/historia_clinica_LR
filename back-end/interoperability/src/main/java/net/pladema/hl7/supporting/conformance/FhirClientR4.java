@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
@@ -17,10 +18,12 @@ import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 @Component
+@Conditional(InteroperabilityCondition.class)
 public class FhirClientR4 {
 
     private final IFhirClient busClient;
@@ -55,7 +58,7 @@ public class FhirClientR4 {
         testClient = context.newRestfulGenericClient(CodingSystem.SERVER.TESTAPP);
     }
 
-    public DocumentReference readDocumentReferences(ReferenceParam subject, StringParam custodian, ReferenceParam type) throws Exception {
+    public DocumentReference readDocumentReferences(ReferenceParam subject, StringParam custodian, ReferenceParam type) {
         // Invoke the server with method Read and the given ID
         try {
             return busClient.getDocumentReference(subject, custodian, type);
@@ -64,7 +67,7 @@ public class FhirClientR4 {
             return null;
         }
         catch(InvalidRequestException ex){
-            throw new Exception(ex.getMessage());
+            throw new InvalidRequestException(ex.getMessage());
         }
     }
 
@@ -73,14 +76,18 @@ public class FhirClientR4 {
         parameters.addParameter(new Parameters.ParametersParameterComponent()
                 .setName(Patient.SP_IDENTIFIER)
                 .setValue(id));
-        return testClient
-                .operation()
-                .onType(Patient.class)
-                .named("patient-location")
-                .withParameters(parameters)
-                .useHttpGet()
-                .returnResourceType(Bundle.class)
-                .execute();
+        try {
+            return testClient
+                    .operation()
+                    .onType(Patient.class)
+                    .named("patient-location")
+                    .withParameters(parameters)
+                    .useHttpGet()
+                    .returnResourceType(Bundle.class)
+                    .execute();
+        } catch(InternalErrorException ex){
+            return new Bundle();
+        }
     }
 
     public Bundle getResourceById(IdType id){

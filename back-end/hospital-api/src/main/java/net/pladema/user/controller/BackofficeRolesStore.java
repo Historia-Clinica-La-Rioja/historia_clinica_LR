@@ -24,7 +24,7 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 
 	@Override
 	public Page<Role> findAll(Role example, Pageable pageable) {
-		List<Role> content = toList(roleRepository.findAll());
+		List<Role> content = toList(roleRepository.findAll()).stream().filter(role -> !role.getDescription().equals("ROOT")).collect(Collectors.toList());
 		return new PageImpl<>(content, pageable, content.size());
 	}
 

@@ -48,13 +48,13 @@ Existen los siguientes grupos que deben ser configurados en el inventory con las
 
 Se proveen archivos de inventarios de template para un ambiente de alta disponibilidad (HA - High Availability) y otro para un único nodo, en ambos casos con una base de datos PostgreSQL 11+ externa y ya instalada.
 Se supone que la base de datos está ya instalada y configurada correctamente para aceptar conexiones remotas.
-   1.1 Copiar el template `hosts-template.yml` a un archivo llamado `hosts-deploy.yml`
+   1.1 Copiar el template `hosts-template.yml` a un archivo llamado `hosts-deploy.yml` localizado en un directorio externo al proyecto.
    1.2 Editar nombres y grupos de hosts o arquitectura según URL o dirección IP de cada uno. 
 
 En el nodo `localhost` es necesario tener Maven 3 instalado para realizar la migracion de la BBDD.
 Se prevee en una versión futura quitar este requerimiento.
 
-En los pasos siguientes se asumirá que el inventario está almacenado en `hosts-deploy.yml`.
+En los pasos siguientes se asumirá que el inventario está almacenado en `${PATH}/hosts-deploy.yml`.
 
 ## Configuración de variables necesarias
 
@@ -70,8 +70,9 @@ La tabla siguiente expone el conjunto de variables que deben configurarse de man
 | renaper_clave | Clave para login en servicio Renaper | No funciona servicio Renaper | 
 | federar_issuer | URI del dominio (registrada previamente ante la DNGISS)  | No funciona servicio Federar. Sin acceso a la Red Nacional de interoperabilidad |
 | federar_subject | Nombre del dominio | No funciona servicio Federar. Sin acceso a la Red Nacional de interoperabilidad |
-| federar_audience | URL de autenticación del Federador | No funciona servicio Federar |
 | federar_sign_key | Palabra secreta, única y cifrada la cual será asignada por la DNGISS para autenticación | No funciona servicio Federar |
+| snowstorm_id | Identificador para autenticación | No funciona servicio snowstorm para búsqueda de conceptos Snomed |
+| snowstorm_key | Clave para autenticación | No funciona servicio snowstorm para búsqueda de conceptos Snomed |
  
 **Variables sugeridas a ser modificadas**: 
 
@@ -90,21 +91,29 @@ Para despliegues multi nodos se recomienda configurar un NFS cuyo directorio deb
 ```
 ../scripts/build-ansible.sh
 
-ansible-playbook -i hosts-deploy.yml 1-frontservers.yml
-ansible-playbook -i hosts-deploy.yml 2-backservers.yml
-ansible-playbook -i hosts-deploy.yml 3-create-database.yml
-ansible-playbook -i hosts-deploy.yml 4-lb_web.yml
-ansible-playbook -i hosts-deploy.yml 5-deploy.yml
+ansible-playbook -i ${PATH}/hosts-deploy.yml 1-frontservers.yml
+ansible-playbook -i ${PATH}/hosts-deploy.yml 2-backservers.yml
+ansible-playbook -i ${PATH}/hosts-deploy.yml 3-create-database.yml
+ansible-playbook -i ${PATH}/hosts-deploy.yml 4-lb_web.yml
+ansible-playbook -i ${PATH}/hosts-deploy.yml 5-deploy.yml
 ```
 
 Los pasos 1 a 5 se realizan una unica vez. 
 Si el paso automatizado de crear la base de datos prefiere realizarse externamente a estos playbooks, omitir el plabook `3-create-database.yml`, de todas formas debe indicarse el `postgres_master` porque su IP es necesaria para configurar el backend.
 
-Con siguientes deploys solo es necesario ejecutar el paso 5.
+Con siguientes deploys — *actualización de versiones* — solo es necesario ejecutar el playbook 5.
 
-```
+```shell
+git fetch --tags
+git checkout ${TAG}
+
+../scripts/build-ansible.sh
+
 ansible-playbook -i hosts-deploy.yml 5-deploy.yml
 ```
+
+## Startup 
+Al iniciar la aplicación, se podrá operar con el usuario administrador `admin@example.com` y contraseña configurada en la variable de ambiente `admin.password`, cuyo valor por defecto es `admin123`. Tras el login, la aplicación accederá al módulo de Backoffice.    
 
 ## Problemas conocidos y solución de errores
 

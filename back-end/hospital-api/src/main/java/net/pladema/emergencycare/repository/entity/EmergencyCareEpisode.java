@@ -6,8 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,8 +69,9 @@ public class EmergencyCareEpisode extends SGXAuditableEntity {
 
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
 								TriageBo triageBo) {
+		this.id = emergencyCareBo.getId();
 		this.patientId = emergencyCareBo.getPatient() != null ? emergencyCareBo.getPatient().getId() : null;
-		this.patientMedicalCoverageId = emergencyCareBo.getPatientMedicalCoverageId();
+		this.patientMedicalCoverageId = emergencyCareBo.getPatient() != null ? emergencyCareBo.getPatient().getPatientMedicalCoverageId() : null;
 		this.emergencyCareTypeId = emergencyCareBo.getEmergencyCareTypeId();
 		this.emergencyCareStateId = emergencyCareBo.getEmergencyCareStateId();
 		this.emergencyCareEntranceTypeId = emergencyCareBo.getEmergencyCareEntranceId();

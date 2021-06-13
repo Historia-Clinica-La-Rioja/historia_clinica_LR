@@ -1,0 +1,186 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_11 
+
+    - changeSet:        
+        id:  createTable-emergency_care_discharge
+        author: tmedina  
+        changes:  
+        - createTable: 
+            tableName: emergency_care_discharge  
+            columns:  
+            - column: 
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_emergency_care_discharge 
+                name:  emergency_care_episode_id  
+                type:  int 
+            - column:
+                constraints:
+                    nullable: true
+                name: medical_discharge_on
+                type: datetime
+            - column:
+                constraints:
+                    nullable: false
+                name: medical_discharge_by_professional
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: true
+                name: administrative_discharge_on
+                type: datetime
+            - column:
+                constraints:
+                    nullable: false
+                name: administrative_discharge_by_user
+                type: int
+                defaultValue: -1
+            - column:
+                constraints:
+                    nullable: true
+                name: autopsy
+                type: boolean
+            - column:
+                constraints:
+                    nullable: false
+                name: discharge_type_id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: true
+                name: hospital_transport_id   
+                type: smallint
+            - column:
+                constraints:
+                    nullable: true
+                name: ambulance_company_id
+                type: varchar(15)
+
+    - changeSet:
+        id: emergency_care_discharge-addForeignKeyConstraint-emergency_care_episode_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: emergency_care_episode_id 
+                baseTableName: emergency_care_discharge
+                constraintName: FK_emergency_care_discharge_emergency_care_episode_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: emergency_care_episode
+                validate: true
+
+    - changeSet:
+        id: emergency_care_discharge-addForeignKeyConstraint-discharge_type_id
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: discharge_type_id 
+                baseTableName: emergency_care_discharge
+                constraintName: FK_emergency_care_discharge_discharge_type_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: discharge_type
+                validate: true
+
+    - changeSet:
+        id: emergency_care_discharge-addForeignKeyConstraint-hospital_transport_id 
+        author: tmedina
+        changes:
+            - addForeignKeyConstraint:
+                baseColumnNames: hospital_transport_id 
+                baseTableName: emergency_care_discharge
+                constraintName: FK_emergency_care_discharge_hospital_transport_id 
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: emergency_care_entrance_type
+                validate: true
+
+    - changeSet:
+        id: discharge_type-addColumns
+        author: tmedina
+        changes:
+            addColumn:
+                tableName: discharge_type
+                columns:
+                - column:
+                    name: internment
+                    type: boolean
+                    defaultValueBoolean: ${boolean.true}
+                    constraints: 
+                        nullable: false
+                - column:
+                    name: emergency_care
+                    type: boolean
+                    defaultValueBoolean: ${boolean.true}
+                    constraints: 
+                        nullable: false
+
+    - changeSet:
+        id: discharge_type-update-values
+        comment: Update values for new discharge_type columns
+        author: tmedina
+        context: "!schema-only"
+        changes:
+        - update:
+            tableName: discharge_type
+            columns:
+                name: emergency_care
+                valueBoolean: ${boolean.false}
+            where: id = 2
+
+
+    - changeSet:
+        id: discharge_type-insert-values
+        comment: Insert new values in discharge_type
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(6, 'Cancelación', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(7, 'Suspensión', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(8, 'Traslado a otro hospital', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(9, 'Traslado a tercer nivel', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(10, 'Traslado a otro tipo de institución', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(11, 'Alta a internación', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(12, 'Alta a internación domiciliaria', ${boolean.false}, ${boolean.true});
+                    INSERT INTO discharge_type (id, description, internment, emergency_care) VALUES(13, 'Alta a seguimiento domiciliario', ${boolean.false}, ${boolean.true});
+
+    - changeSet:
+        id: create-discharge-for-emergency-care-episodes
+        comment: Create discharge for emergency care episodes finished by absence
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO emergency_care_discharge (emergency_care_episode_id , discharge_type_id, administrative_discharge_on, administrative_discharge_by_user) 
+                        (SELECT hee.emergency_care_episode_id , 4, hee.change_state_date , hee.created_by
+                        FROM historic_emergency_episode hee
+                        WHERE hee.emergency_care_state_id = 3);
+
+    - changeSet:
+        id: emergency_care_state-modifyData
+        comment: Modify master data descriptions in emergency_care_state
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE emergency_care_state SET description='Con alta administrativa' WHERE id=3;
+                    UPDATE emergency_care_state SET description='Con alta médica' WHERE id=4;
+
+    - changeSet:        
+        id: emergency_care_source_type_and_document_type-data_update
+        comment: Carga de datos source_type y document type para el modulo de guardia
+        author: jlardapide
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-      
+                    INSERT INTO source_type VALUES (4, 'Guardia');
+                    INSERT INTO document_type VALUES (7, 'Guardia');

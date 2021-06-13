@@ -3,7 +3,7 @@ package net.pladema.medicalconsultation.diary.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.dates.repository.entity.EDayOfWeek;
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 
 import java.util.ArrayList;
 import java.util.List;

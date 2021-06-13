@@ -33,11 +33,19 @@ public enum AppFeature implements Feature {
     @Label("Indica si esta habilitado el modulo de Guardia")
     HABILITAR_MODULO_GUARDIA,
 
-    @Label("Indica si esta habilitado la pestaña de ordenes y preescripciones")
-    HABILITAR_ORDENES_PRESCRIPCIONES,
+    @Label("Indica si esta habilitado el módulo de Portal de Paciente")
+    HABILITAR_MODULO_PORTAL_PACIENTE,
 
     @Label("Indica si esta habilitado el menu configuracion")
-    HABILITAR_CONFIGURACION;
+    HABILITAR_CONFIGURACION,
+
+    @Label("Indica si está habilitado el Bus de Interoperabilidad")
+    HABILITAR_BUS_INTEROPERABILIDAD,
+
+    @Label("Indica si está habilitado el módulo de odontología")
+    HABILITAR_ODONTOLOGY,
+
+    ;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

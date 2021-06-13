@@ -3,7 +3,6 @@ package net.pladema.staff.controller.service;
 import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.HealthCareProfessionalGroupMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import net.pladema.staff.service.HealthcareProfessionalService;

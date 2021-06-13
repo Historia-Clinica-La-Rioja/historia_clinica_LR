@@ -1,5 +1,6 @@
 package net.pladema.hl7.supporting.terminology.support;
 
+import lombok.experimental.UtilityClass;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import net.pladema.hl7.supporting.terminology.coding.CodingValueSet;
@@ -10,11 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GeneralProfile {
-
-    public GeneralProfile(){
-        super();
-    }
+@UtilityClass
+public final class GeneralProfile {
 
     public static CodeSystem absentUnknown(){
         return TerminologySupport.loadCodeSystem(
@@ -29,9 +27,10 @@ public class GeneralProfile {
     }
 
     public static List<ValueSet> allValueSet(){
-        return new ArrayList<>(){{
-            add(TerminologySupport.loadValueSet(
-                    CodingValueSet.DOC_TYPE, CodingSystem.LOINC, "60591-5"));
-        }};
+        List<ValueSet> valueSets = new ArrayList<>();
+        valueSets.add(TerminologySupport.loadValueSet(
+                CodingValueSet.DOC_TYPE,
+                CodingSystem.LOINC, CodingCode.Document.PATIENT_SUMMARY_DOC));
+        return valueSets;
     }
 }

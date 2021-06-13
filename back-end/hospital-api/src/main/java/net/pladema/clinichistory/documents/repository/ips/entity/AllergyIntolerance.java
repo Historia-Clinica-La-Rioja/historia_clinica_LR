@@ -4,12 +4,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceClinicalStatus;
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.AllergyIntoleranceVerificationStatus;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -47,17 +53,23 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 	@Column(name = "verification_status_id", length = 20, nullable = false)
 	private String verificationStatusId = AllergyIntoleranceVerificationStatus.CONFIRMED;
 
-	@Column(name = "category_id", length = 20)
-	private String categoryId;
-
 	@Column(name = "start_date")
 	private LocalDate startDate;
 
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "category_id")
+	private Short categoryId;
+
+	@Column(name = "type")
+	private Short type;
+
+	@Column(name = "criticality")
+	private Short criticality;
+
 	public AllergyIntolerance(Integer patientId, Integer snomedId, String cie10Codes, String statusId,
-							  String verificationId, String categoryId, LocalDate startDate){
+							  String verificationId, Short categoryId, Short criticalityId, LocalDate startDate){
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
@@ -67,6 +79,7 @@ public class AllergyIntolerance extends SGXAuditableEntity {
 		if (verificationId != null)
 			this.verificationStatusId = verificationId;
 		this.categoryId = categoryId;
+		this.criticality = criticalityId;
 		this.startDate = startDate;
 	}
 

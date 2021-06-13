@@ -37,7 +37,7 @@ const doRefreshToken = () => {
 const fetchWithToken = (url, options = {}) => {
     const token = retrieveToken();
 
-    options.headers = setHeader('X-Auth-Token', token, options.headers);
+    options.headers = setHeader('Authorization', `Bearer ${token}`, options.headers);
 
     return sgxFetchApi(url, options);
 };

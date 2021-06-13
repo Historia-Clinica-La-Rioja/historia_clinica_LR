@@ -11,21 +11,28 @@ import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
+import net.pladema.emergencycare.controller.dto.NewEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,6 +40,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes")
 @Api(value = "Emergency care Episodes", tags = {"Emergency care Episodes"})
+@Validated
 public class EmergencyCareEpisodeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeController.class);
@@ -49,12 +57,14 @@ public class EmergencyCareEpisodeController {
 
     private final VitalSignMapper vitalSignMapper;
 
+    private final LocalDateMapper localDateMapper;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
                                           EmergencyCareMapper emergencyCareMapper,
                                           ReasonExternalService reasonExternalService,
                                           VitalSignExternalService vitalSignExternalService,
                                           SnomedMapper snomedMapper,
-                                          VitalSignMapper vitalSignMapper){
+                                          VitalSignMapper vitalSignMapper, LocalDateMapper localDateMapper){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
@@ -62,6 +72,7 @@ public class EmergencyCareEpisodeController {
         this.vitalSignExternalService = vitalSignExternalService;
         this.snomedMapper = snomedMapper;
         this.vitalSignMapper = vitalSignMapper;
+        this.localDateMapper = localDateMapper;
     }
 
     @GetMapping
@@ -80,14 +91,32 @@ public class EmergencyCareEpisodeController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> createAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody ECAdministrativeDto body) {
+            @Valid @RequestBody ECAdministrativeDto body) {
         LOG.debug("Add emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
-        newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare);
+        newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
+        LOG.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @Transactional
+    @PutMapping("/{emergencyCareEpisodeId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    public ResponseEntity<Integer> updateAdministrative(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "emergencyCareEpisodeId") Integer emergencyCareEpisodeId,
+            @Valid @RequestBody NewEmergencyCareDto body) {
+        LOG.debug("Update emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
+        EmergencyCareBo newEmergencyCare = emergencyCareMapper.emergencyCareDtoToEmergencyCareBo(body);
+        List<SnomedDto> reasons = reasonExternalService.addReasons(body.getReasons());
+        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
+        newEmergencyCare.setInstitutionId(institutionId);
+        newEmergencyCare.setId(emergencyCareEpisodeId);
+        Integer result = emergencyCareEpisodeService.updateAdministrative(newEmergencyCare, institutionId);
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
@@ -109,7 +138,7 @@ public class EmergencyCareEpisodeController {
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
-        newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare);
+        newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -131,10 +160,22 @@ public class EmergencyCareEpisodeController {
         List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
-        newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare);
+        newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{episodeId}/creation-date")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    public ResponseEntity<DateTimeDto> getCreationDate(@PathVariable(name = "institutionId") Integer institutionId,
+                                                       @PathVariable(name = "episodeId") Integer episodeId) {
+        LOG.debug("Get episode creation date -> institutionId {}, episodeId {}", institutionId, episodeId);
+        EmergencyCareBo emergencyCareBo = emergencyCareEpisodeService.get(episodeId,institutionId);
+        LocalDateTime creationDate = emergencyCareBo.getCreatedOn();
+        DateTimeDto output = localDateMapper.toDateTimeDto(creationDate);
+        LOG.debug("Output -> {}", output);
+        return ResponseEntity.ok().body(output);
     }
 
     private List<Integer> getVitalSignIds(NewVitalSignsObservationDto vitalSignsObservationDto){

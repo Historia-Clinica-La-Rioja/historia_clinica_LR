@@ -168,6 +168,7 @@ databaseChangeLog:
 - changeSet:
     id: bed-addColumn-bed_number
     author: lmanterola
+    dbms: "!db2"
     changes:
     - addColumn:
         columns:
@@ -178,15 +179,48 @@ databaseChangeLog:
                 nullable: false
         tableName: bed
 
+#--------------------- Ajuste para nueva columna NotNull con DefaultValue para DB2 -------------------
+#-------------------------- [ PostgreSQL y MSSQL no fallan con Tabla vacía ] -------------------------
+- changeSet:
+    id: bed-addColumn-bed_number
+    author: saguero
+    dbms: db2
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: bed_number
+            type: varchar(50)
+            defaultValue: -1
+            constraints:
+                nullable: false
+        tableName: bed
+
 - changeSet:
     id: room-addColumn-room_number
     author: lmanterola
+    dbms: "!db2"
     changes:
     - addColumn:
         columns:
         - column:
             name: room_number
             type: varchar(50)
+            constraints:
+                nullable: false
+        tableName: room
+
+- changeSet:
+    id: room-addColumn-room_number
+    author: lmanterola
+    dbms: db2
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: room_number
+            type: varchar(50)
+            defaultValue: -1
             constraints:
                 nullable: false
         tableName: room
@@ -566,12 +600,37 @@ databaseChangeLog:
 - changeSet:
     id: health_condition-addColumn-problem_id
     author: saguero
+    dbms: "!db2"
     changes:
     - addColumn:
         columns:
         - column:
             name: problem_id
             type: varchar(20)
+            constraints:
+                nullable: false  
+        tableName: health_condition
+    - addForeignKeyConstraint:
+        baseColumnNames: problem_id
+        baseTableName: health_condition
+        constraintName: FK_health_condition_problem_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: problem_type
+        validate: true
+
+- changeSet:
+    id: health_condition-addColumn-problem_id
+    author: saguero
+    dbms: db2
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: problem_id
+            type: varchar(20)
+            defaultValue: -1
             constraints:
                 nullable: false  
         tableName: health_condition
@@ -1129,13 +1188,38 @@ databaseChangeLog:
 - changeSet:
     id: renameColumn-document-note_id
     author: etrapani
+    dbms: "!db2"
     changes:
     - renameColumn:
         columnDataType: bigint
         newColumnName: other_note_id
         oldColumnName: note_id
         tableName: document                
- 
+
+#--------------------------------- Ajuste renombre de columna para DB2 -------------------------------
+- changeSet:
+    id: renameColumn-document-note_id
+    author: saguero
+    dbms: db2
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: document
+        constraintName: FK_document_note_id
+    - renameColumn:
+        columnDataType: bigint
+        newColumnName: other_note_id
+        oldColumnName: note_id
+        tableName: document
+    - addForeignKeyConstraint:
+        baseColumnNames: other_note_id
+        baseTableName: document
+        constraintName: FK_document_note_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: note
+        validate: true   
+
 - changeSet:
     id: document-addColumn-notes
     author: etrapani
@@ -1285,6 +1369,7 @@ databaseChangeLog:
     id: blood_type-data
     comment: Carga de datos blood_type
     author: etrapani
+    dbms: "!db2"
     context: "!schema-only"
     changes:
         - sql:
@@ -1297,6 +1382,25 @@ databaseChangeLog:
                 INSERT INTO blood_type VALUES (6, 'B+');
                 INSERT INTO blood_type VALUES (7, 'AB−');
                 INSERT INTO blood_type VALUES (8, 'AB+');
+
+- changeSet:
+    id: blood_type-data
+    comment: Carga de datos blood_type
+    author: saguero
+    dbms: db2
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO blood_type VALUES (1, 'O-');
+                INSERT INTO blood_type VALUES (2, 'O+');
+                INSERT INTO blood_type VALUES (3, 'A-');
+                INSERT INTO blood_type VALUES (4, 'A+');
+                INSERT INTO blood_type VALUES (5, 'B-');
+                INSERT INTO blood_type VALUES (6, 'B+');
+                INSERT INTO blood_type VALUES (7, 'AB-');
+                INSERT INTO blood_type VALUES (8, 'AB+');
+
 - changeSet:
     id: patient-addColumns-medical_coverage
     author: gmurgolo
@@ -1318,7 +1422,21 @@ databaseChangeLog:
 - changeSet:
     id: dropColumn-person_extended
     author: lbergottini
+    dbms: "!mssql"
     changes:
+    - dropColumn:
+        columnName: health_insurance_id
+        tableName: person_extended
+
+#------------------------- Ajuste drop-column-with-FK para coincidir con MSSQL -----------------------
+- changeSet:
+    id: dropColumn-person_extended-mssql
+    author: saguero
+    dbms: mssql
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: person_extended
+        constraintName: FK_person_extended_health_insurance_id
     - dropColumn:
         columnName: health_insurance_id
         tableName: person_extended 
@@ -1353,11 +1471,36 @@ databaseChangeLog:
 - changeSet:
     id: rnos-modifyDataType
     author: lbergottini
+    dbms: postgresql
     changes:
     - modifyDataType:
         columnName: rnos
         newDataType: int
         tableName: health_insurance
+
+#---------------------- Ajuste tipo de columna of PK para coincidir con MSSQL y DB2 --------------------
+- changeSet:
+    id: rnos-modifyDataType
+    author: saguero
+    comment: MSSQL requires to drop PK before changing it type
+    dbms: "!postgresql"
+    changes:
+    - dropPrimaryKey:
+        constraintName: PK_health_insurance
+        dropIndex: true
+        tableName: health_insurance
+    - modifyDataType:
+        columnName: rnos
+        newDataType: int
+        tableName: health_insurance
+    - addNotNullConstraint:
+        columnDataType: int
+        columnName: rnos
+        tableName: health_insurance
+    - addPrimaryKey:
+        constraintName: PK_health_insurance
+        tableName: health_insurance
+        columnNames: rnos
 
 - changeSet:
     id: delete-condition_clinical_status-data
@@ -1784,6 +1927,7 @@ databaseChangeLog:
 - changeSet:
     id: user_role-pk-usr_role_institution
     author: efernandez
+    dbms: postgresql
     comment: Cambia la pk de user_role para que incluya a institution_id
     changes:
     - dropPrimaryKey:
@@ -1810,6 +1954,40 @@ databaseChangeLog:
         constraintName: PK_user_role
         validate: true
 
+#-------------------------- Ajuste de PrimaryKey para coincidir con MSSQL y DB2 ------------------------
+- changeSet:
+    id: user_role-pk-usr_role_institution
+    author: saguero
+    dbms: "!postgresql"
+    comment: Cambia la pk de user_role para que incluya a institution_id
+    changes:
+    - dropPrimaryKey:
+        tableName: user_role
+        constraintName: PK_user_role
+        dropIndex: true
+    - dropForeignKeyConstraint:
+        baseTableName: user_role
+        constraintName: FK_user_role__institution_id
+    - update:
+        tableName: user_role
+        columns:
+            name: institution_id
+            valueNumeric: -1
+        where: institution_id is null
+    - addDefaultValue:
+        tableName: user_role
+        columnName: institution_id
+        defaultValueNumeric: -1
+        defaultValueConstraintName: DV_user_role__instituion_id
+    - addNotNullConstraint:
+        columnDataType: int
+        columnName: institution_id
+        tableName: user_role
+    - addPrimaryKey:
+        tableName: user_role
+        columnNames: role_id, user_id, institution_id
+        constraintName: PK_user_role
+        validate: true
 
 - changeSet:
     id: dropNotNullConstraint-allergy_intolerance_category_id
@@ -1924,11 +2102,23 @@ databaseChangeLog:
 - changeSet: 
     id: addPatient_type
     author: ltelesco
+    dbms: "!db2"
     context: "!schema-only"
     changes:
         - sql:
             sql: |-
                 INSERT INTO patient_type (id,description,active,audit) VALUES (7,'Permanente no validado',${boolean.true},${boolean.true});
+
+#----------------------------- Ajuste por palabra reservada 'audit' en DB2 ---------------------------
+- changeSet: 
+    id: addPatient_type
+    author: saguero
+    dbms: db2
+    context: "!schema-only"
+    changes:
+        - sql:
+            sql: |-
+                INSERT INTO patient_type (id,description,active,"audit") VALUES (7,'Permanente no validado',${boolean.true},${boolean.true});
 
 - changeSet:  
     id:  modifyDataType-snomed_pt   

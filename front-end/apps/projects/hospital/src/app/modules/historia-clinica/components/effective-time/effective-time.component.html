@@ -1,0 +1,7 @@
+<div class="flex-row">
+	<mat-icon inline color="primary">access_time</mat-icon>
+	<span>{{ effectiveTime.toDate() | date: 'dd/MM/yy - HH:mm' }}hs</span>
+	<button type="button" color="primary" mat-icon-button (click)="openDialog()" matTooltip="Ajustar fecha y hora">
+		<mat-icon>settings</mat-icon>
+	</button>
+</div>

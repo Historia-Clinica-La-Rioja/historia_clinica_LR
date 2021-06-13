@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
+import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
 import net.pladema.clinichistory.documents.repository.ips.ObservationLabRepository;
 import net.pladema.clinichistory.documents.repository.ips.ObservationVitalSignRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.ObservationLab;
@@ -14,7 +16,6 @@ import net.pladema.clinichistory.documents.service.ips.domain.VitalSignBo;
 import net.pladema.clinichistory.documents.service.ips.domain.VitalSignObservationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EObservationLab;
 import net.pladema.clinichistory.documents.service.ips.domain.enums.EVitalSign;
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,18 +38,18 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
 
     private final SnomedService snomedService;
 
-    private final CalculateCie10CodesService calculateCie10CodesService;
+    private final CalculateCie10Facade calculateCie10Facade;
 
     public ClinicalObservationServiceImpl(ObservationVitalSignRepository observationVitalSignRepository,
                                           ObservationLabRepository observationLabRepository,
                                           DocumentService documentService,
                                           SnomedService snomedService,
-                                          CalculateCie10CodesService calculateCie10CodesService) {
+                                          CalculateCie10Facade calculateCie10Facade) {
         this.observationVitalSignRepository = observationVitalSignRepository;
         this.observationLabRepository = observationLabRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
-        this.calculateCie10CodesService = calculateCie10CodesService;
+        this.calculateCie10Facade = calculateCie10Facade;
     }
 
     @Override
@@ -161,7 +162,8 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
         LOG.debug("Input parameters -> patientInfo {}, ClinicalObservation {}, eVitalSign {}", patientInfo, observation, eVitalSign);
         Integer snomedId = snomedService.getLatestIdBySctid(eVitalSign.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
-        String cie10Codes = calculateCie10CodesService.execute(eVitalSign.getSctidCode(), patientInfo);
+        String cie10Codes = calculateCie10Facade.execute(eVitalSign.getSctidCode(),
+                new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         ObservationVitalSign observationVitalSign = observationVitalSignRepository.save(
                 new ObservationVitalSign(patientInfo.getId(), observation.getValue(), snomedId, cie10Codes, eVitalSign, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationVitalSign);
@@ -172,7 +174,8 @@ public class ClinicalObservationServiceImpl implements ClinicalObservationServic
         LOG.debug("Input parameters -> patientInfo {}, ClinicalObservation {}, eLab {}", patientInfo, observation, eObservationLab);
         Integer snomedId = snomedService.getLatestIdBySctid(eObservationLab.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
-        String cie10Codes = calculateCie10CodesService.execute(eObservationLab.getSctidCode(), patientInfo);
+        String cie10Codes = calculateCie10Facade.execute(eObservationLab.getSctidCode(),
+                new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         ObservationLab observationLab = observationLabRepository.save(
                 new ObservationLab(patientInfo.getId(), observation.getValue(), snomedId, cie10Codes, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationLab);

@@ -2,7 +2,7 @@ package net.pladema.security.configuration;
 
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.security.filters.AuthenticationTokenFilter;
-import net.pladema.sgx.actuator.configuration.ActuatorConfiguration;
+import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +25,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String BACKOFFICE = "/backoffice";
 
 	private static final String PUBLIC = "/public";
+
+	private static final String[] SWAGGER_RESOURCES = {
+			"/v2/**",
+			"/swagger-ui.html",
+			"/swagger-resources/**",
+			"/webjars/springfox-swagger-ui/**"
+	};
 
 	@Value("${api.user}")
 	protected String apiUser;
@@ -65,7 +72,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/actuator/health").permitAll()
 		.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 		.antMatchers(apiAuth + "/**").permitAll()
-		.antMatchers("/v2/**","/swagger-ui.html","/swagger-resources/**","/webjars/springfox-swagger-ui/**").permitAll()
+		.antMatchers(SWAGGER_RESOURCES).permitAll()
 		.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
 				ERole.ROOT.getValue(),
 				ERole.ADMINISTRADOR.getValue(),
@@ -74,7 +81,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/oauth/**").permitAll()
 		.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()
 		.antMatchers(HttpMethod.POST, PASSWORD_RESET).permitAll()
-		.antMatchers(HttpMethod.GET, "/bed/reports/**").permitAll()		
+		.antMatchers(HttpMethod.GET, "/bed/reports/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/assets/**").permitAll()
+		.antMatchers("/fhir/**").permitAll()
 		.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 

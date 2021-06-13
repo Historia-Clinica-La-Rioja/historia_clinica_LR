@@ -15,7 +15,7 @@ import net.pladema.establishment.controller.dto.PatientBedRelocationDto;
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 @Mapper(uses = {LocalDateMapper.class})
 public interface BedMapper {

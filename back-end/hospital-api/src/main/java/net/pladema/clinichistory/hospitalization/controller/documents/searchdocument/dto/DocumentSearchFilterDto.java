@@ -17,5 +17,5 @@ public class DocumentSearchFilterDto {
     @NotNull
     private String plainText;
 
-    private EDocumentSearch searchType = EDocumentSearch.ALL;
+    private EDocumentSearch searchType;
 }

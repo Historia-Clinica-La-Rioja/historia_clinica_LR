@@ -11,7 +11,7 @@ import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionNewConsultationBo;
 import net.pladema.clinichistory.documents.service.ips.domain.HealthHistoryConditionBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 

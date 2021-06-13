@@ -12,12 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/settings")
 @Api(value = "Settings", tags = { "Settings" })
 public class SettingsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SettingsController.class);
+
+    private static String getFileName(HttpServletRequest request) {
+        String requestURL = request.getRequestURL().toString();
+        return requestURL.split("/assets/")[1];
+    }
 
     private final SettingsService settingsService;
     private final AssetsExternalService assetsExternalService;
@@ -27,25 +34,25 @@ public class SettingsController {
         this.assetsExternalService = assetsExternalService;
     }
 
-    @PostMapping(value = "/assets/{fileName:.+}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/assets/{fileName:.+}/**", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyAuthority('ROOT')")
     @Transactional
-    public boolean uploadFile(@PathVariable(name = "fileName") String fileName,
-                                @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
+    public boolean uploadFile(HttpServletRequest request,
+                              @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
         //TODO: en service crear paquete exception con un exception handler en el controller o en otro paquete dentro de la capa de controler. Parserar a apierrordto
         LOG.debug("Input parameters ->  {} fileName {}",
-                fileName);
+                request.getRequestURL().toString());
 
-        return settingsService.uploadFile(this.assetsExternalService.findByName(fileName), file);
+        return settingsService.uploadFile(this.assetsExternalService.findByName(getFileName(request)), file);
     }
 
-    @DeleteMapping(value = "/assets/{fileName:.+}")
+    @DeleteMapping(value = "/assets/{fileName:.+}/**")
     @PreAuthorize("hasAnyAuthority('ROOT')")
     @Transactional
-    public boolean deleteFile(@PathVariable(name = "fileName") String fileName) throws MethodNotSupportedException {
+    public boolean deleteFile(HttpServletRequest request) throws MethodNotSupportedException {
         LOG.debug("Input parameters ->  {} fileName {}",
-                fileName);
+                request.getRequestURL().toString());
 
-        return settingsService.deleteFile(this.assetsExternalService.findByName(fileName));
+        return settingsService.deleteFile(this.assetsExternalService.findByName(getFileName(request)));
     }
 }

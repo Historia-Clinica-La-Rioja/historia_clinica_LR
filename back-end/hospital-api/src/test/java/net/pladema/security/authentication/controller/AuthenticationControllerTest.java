@@ -4,7 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import net.pladema.sgx.recaptcha.service.ICaptchaService;
+import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

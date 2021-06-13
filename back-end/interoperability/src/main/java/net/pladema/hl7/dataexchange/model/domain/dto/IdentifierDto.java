@@ -14,6 +14,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class IdentifierDto implements Serializable {
 
+    private static final long serialVersionUID = 2269449661255773512L;
+
     private String system;
 
     private String value;

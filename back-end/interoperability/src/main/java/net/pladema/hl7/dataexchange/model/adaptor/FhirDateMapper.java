@@ -1,20 +1,35 @@
 package net.pladema.hl7.dataexchange.model.adaptor;
 
+import lombok.experimental.UtilityClass;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+@UtilityClass
 public class FhirDateMapper {
 
     public static LocalDate toLocalDate(java.util.Date date){
-        return date != null ?
-                date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() :
-                null;
+        if(date != null){
+            try{
+                return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            } catch (UnsupportedOperationException ex){
+                return toLocalDate((java.sql.Date) date);
+            }
+        }
+        return null;
     }
 
     public static LocalDate toLocalDate(java.sql.Date date){
         return date != null ? date.toLocalDate() : null;
+    }
+
+    public static LocalDate toLocalDate(String date){
+        if(date != null){
+            return LocalDate.parse(date);
+        }
+        return null;
     }
 
     public static LocalDateTime toLocalDateTime(java.sql.Timestamp date){
@@ -23,7 +38,7 @@ public class FhirDateMapper {
 
     public static LocalDateTime toLocalDateTime(java.util.Date date){
         return date != null ?
-                date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() :
+                new java.sql.Timestamp(date.getTime()).toLocalDateTime() :
                 null;
     }
 

@@ -20,12 +20,15 @@ public class PersonECEBo {
 
 	private String lastName;
 
+	private String identificationNumber;
+
 	private String photo;
 
 	public PersonECEBo(PersonECEVo person){
 		this.id = person.getId();
 		this.firstName = person.getFirstName();
 		this.lastName = person.getLastName();
+		this.identificationNumber = person.getIdentificationNumber();
 		this.photo = person.getPhoto();
 	}
 }

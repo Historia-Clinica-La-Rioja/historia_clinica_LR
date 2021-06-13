@@ -1,0 +1,15 @@
+<app-content width="full">
+
+	<section id="title">
+		<h2 class="page-title" [translate]="'mi-historia-clinica.TITLE'"></h2>
+	</section>
+
+	<section id="content" fxLayout="column" fxLayoutGap="20px">
+		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto"></app-patient-card>
+
+		<mat-card id="tab_container" class="mat-typography">
+			<app-resumen-historia-clinica></app-resumen-historia-clinica>
+		</mat-card>
+	</section>
+
+</app-content>

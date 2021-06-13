@@ -18,7 +18,9 @@ import net.pladema.clinichistory.hospitalization.service.patientdischarge.Patien
 import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.sgx.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -154,18 +156,18 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/minDischargeDate")
-	public ResponseEntity<LocalDate> getMinDischargeDate(
+	public DateDto getMinDischargeDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
 		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
-			return ResponseEntity.ok(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
+			return localDateMapper.toDateDto(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
 		}
 		PatientDischargeBo patientDischarge =  patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		LocalDate result = patientDischarge.getMedicalDischargeDate();
 		LOG.debug(OUTPUT, result);
-		return ResponseEntity.ok(result);
+		return localDateMapper.toDateDto(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}")
@@ -192,28 +194,31 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/lastupdatedate")
-	public ResponseEntity<LocalDate> getLastUpdateDateOfInternmentEpisode(
+	public DateDto getLastUpdateDateOfInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		LocalDate result = internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId);
 		LOG.debug(OUTPUT, result);
-		return ResponseEntity.ok(result);
+		return localDateMapper.toDateDto(result);
 	}
 
 	@ProbableDischargeDateValid
 	@PutMapping("/{internmentEpisodeId}/probabledischargedate")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
-	public ResponseEntity<LocalDateTime> updateProbableDischargeDate(
+	public ResponseEntity<DateTimeDto> updateProbableDischargeDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody ProbableDischargeDateDto probableDischargeDateDto) {
 		LOG.debug("Input parameters -> institutionId {}, intermentEpisodeId {} ", institutionId, internmentEpisodeId);
 		LocalDateTime probableDischargeDate = localDateMapper.fromStringToLocalDateTime(probableDischargeDateDto.getProbableDischargeDate());
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA))
-			return new ResponseEntity<>(probableDischargeDate, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(localDateMapper.toDateTimeDto(probableDischargeDate), HttpStatus.BAD_REQUEST);
 		LocalDateTime result = internmentEpisodeService.updateInternmentEpisodeProbableDischargeDate(internmentEpisodeId, probableDischargeDate);
 		LOG.debug(OUTPUT, result);
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(localDateMapper.toDateTimeDto(result));
+
+
 	}
+
 }

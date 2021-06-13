@@ -1,0 +1,128 @@
+<form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
+	<div mat-dialog-content>
+		<section id="personal-data" fxLayout="column">
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" color="primary">person</mat-icon>
+				<span class="mat-body-strong">ID del paciente: {{appointmentData.patient.id}}</span>
+				<span class="mat-body-strong" *ngIf="appointmentData?.patient.typeId === TEMPORARY_PATIENT"> -
+					Temporal</span>
+				<span></span>
+			</div>
+			<div *ngIf="appointmentData.patient.fullName || appointmentData.patient.identificationNumber" fxLayout="row"
+				fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<span class="mat-body patient-info">
+					<span *ngIf="appointmentData.patient.fullName">{{appointmentData.patient.fullName}} -</span>
+					<span
+						*ngIf="appointmentData.patient.identificationNumber">{{appointmentData.patient.identificationNumber}}</span>
+				</span>
+			</div>
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<span class="mat-body patient-info"> Obra social:</span>
+				<span class="mat-body patient-info coverage-text" *ngIf="coverageData"
+					matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}} </span>
+				<span class="mat-body patient-info" *ngIf="coverageData">/ {{coverageData.affiliateNumber}}</span>
+			</div>
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center" class="mat-body patient-info">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<app-editable-field *ngIf="( hasRoleToEditPhoneNumber$ | async ) else notEditablePhone"
+					[fieldName]="'turnos.appointment.phoneNumber.PHONE_NUMBER'" [value]="appointmentData.phoneNumber"
+					(newValueEmitted)="updatePhoneNumber($event)"></app-editable-field>
+				<ng-template #notEditablePhone>
+					<div>
+						<span [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></span>:
+						<span>{{appointmentData.phoneNumber}}</span>
+					</div>
+				</ng-template>
+			</div>
+			<div fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+				<mat-icon fontSet="material-icons-outlined" style="color: transparent">person</mat-icon>
+				<a class="mat-body" *hasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']"
+					[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + appointmentData?.patient?.id"
+					(click)="closeDialog()">Ver historia clínica</a>
+			</div>
+		</section>
+
+		<section id="appointment">
+			<span class="mat-body-strong">Turno Asignado</span>
+			<div fxLayout="column" fxLayoutGap="3px">
+				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="full-date">
+					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">
+						calendar_today
+					</mat-icon>
+					<span class="mat-body"> {{appointmentData.date | date:"fullDate" }}</span>
+				</div>
+				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" id="hour">
+					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true">
+						access_time
+					</mat-icon>
+					<span class="mat-body"> {{appointmentData.date | date:"HH:mm"}} hs</span>
+				</div>
+			</div>
+		</section>
+
+		<section id="state">
+			<span class="mat-body-strong">Estado de turno</span>
+			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+
+				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
+					[ngClass]="{'selected assigned': estadoSelected === appointmentStatesIds.ASSIGNED }"
+					(click)="onClickedState(appointmentStatesIds.ASSIGNED)" mat-stroked-button>
+					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
+						color="primary">event_available</mat-icon>
+				</button>
+
+				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
+					[ngClass]="{'selected confirmed': estadoSelected === appointmentStatesIds.CONFIRMED }"
+					(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
+					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
+						color="primary">meeting_room
+					</mat-icon>
+				</button>
+
+				<button type="button" [ngClass]="{'selected absent': estadoSelected === appointmentStatesIds.ABSENT }"
+					(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
+					[disabled]="(hasRoleToChangeState$ | async) === false">
+					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
+						color="primary" svgIcon="person_cancel_outlined">
+					</mat-icon>
+				</button>
+
+				<button type="button" disabled
+					[ngClass]="{'selected served': estadoSelected === appointmentStatesIds.SERVED }" mat-stroked-button>
+					<mat-icon color="primary" svgIcon="person_check_outlined"
+						matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
+				</button>
+
+			</div>
+
+			<div style="margin-top: 10px" *ngIf="isMotivoRequired()">
+				<mat-form-field [floatLabel]="'never'" appearance="outline">
+					<mat-label>Motivo</mat-label>
+					<textarea formControlName="motivo" placeholder="Describa el motivo" matInput type="text"
+						id="motivo"></textarea>
+					<mat-error *ngIf="hasError(formMotivo, 'required', 'motivo')" [translate]="'forms.REQUIRED'">
+					</mat-error>
+					<mat-error *ngIf="hasError(formMotivo, 'maxlength', 'motivo')"
+						[translate]="'forms.MAX_LENGTH_ERROR'"
+						[translateParams]="{max: getError(formMotivo, 'maxlength', 'motivo')?.requiredLength}">
+					</mat-error>
+				</mat-form-field>
+			</div>
+		</section>
+	</div>
+
+	<mat-dialog-actions *hasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
+		align="end">
+
+		<button type="button" *ngIf="isCancelable()" mat-flat-button color="warn" id="cancel-appointment"
+			name="cancel-appointment" (click)="cancelAppointment()">
+			<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
+		</button>
+
+		<button type="submit" *ngIf="isMotivoRequired()" mat-flat-button color="primary" id="save">
+			<span class="uppercase">Guardar</span>
+		</button>
+	</mat-dialog-actions>
+</form>

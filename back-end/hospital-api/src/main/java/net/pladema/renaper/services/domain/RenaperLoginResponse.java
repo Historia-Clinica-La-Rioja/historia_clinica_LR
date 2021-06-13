@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.restclient.services.domain.LoginResponse;
+import ar.lamansys.sgx.shared.restclient.services.domain.LoginResponse;
 
 @Getter
 @Setter

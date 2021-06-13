@@ -1,0 +1,10 @@
+<div mat-dialog-title>
+	<div class="mat-h2" [translate]="'guardia.triage.TITLE'"></div>
+</div>
+<app-administrative-triage
+	(confirm)="setTriage($event)"
+	(cancel)="dialogRef.close()"
+	[confirmLabel]="'guardia.triage.CONFIRM'"
+	[cancelLabel]="'buttons.CANCEL'"
+	[disableConfirmButton]="requestPending"></app-administrative-triage>
+

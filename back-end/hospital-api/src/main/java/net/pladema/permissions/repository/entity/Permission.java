@@ -11,8 +11,8 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.sgx.auditable.entity.AuditableEntity;
-import net.pladema.sgx.auditable.listener.AuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.AuditListener;
 
 @Entity
 @Table(name = "permission")

@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.documents.core.ips;
 
+import net.pladema.clinichistory.documents.core.cie10.CalculateCie10Facade;
+import net.pladema.clinichistory.documents.core.cie10.Cie10FacadeRuleFeature;
 import net.pladema.clinichistory.documents.service.DocumentService;
 import net.pladema.clinichistory.documents.repository.ips.AllergyIntoleranceRepository;
 import net.pladema.clinichistory.documents.repository.ips.entity.AllergyIntolerance;
@@ -11,8 +13,9 @@ import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
 import net.pladema.clinichistory.documents.service.ips.AllergyService;
 import net.pladema.clinichistory.documents.service.ips.SnomedService;
 import net.pladema.clinichistory.documents.service.ips.domain.AllergyConditionBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
-import net.pladema.snowstorm.services.CalculateCie10CodesService;
+import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
+import net.pladema.snowstorm.services.SnowstormInferredService;
+import net.pladema.snowstorm.services.inferredrules.InferredAllergyAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,20 +39,24 @@ public class AllergyServiceImpl implements AllergyService {
 
     private final SnomedService snomedService;
 
-    private final CalculateCie10CodesService calculateCie10CodesService;
+    private final CalculateCie10Facade calculateCie10Facade;
+
+    private final SnowstormInferredService snowstormInferredService;
 
     public AllergyServiceImpl(AllergyIntoleranceRepository allergyIntoleranceRepository,
                               AllergyIntoleranceClinicalStatusRepository allergyClinicalStatusRepository,
                               AllergyIntoleranceVerificationStatusRepository allergyVerificationStatusRepository,
                               DocumentService documentService,
                               SnomedService snomedService,
-                              CalculateCie10CodesService calculateCie10CodesService){
+                              CalculateCie10Facade calculateCie10Facade,
+                              SnowstormInferredService snowstormInferredService){
         this.allergyIntoleranceRepository = allergyIntoleranceRepository;
         this.allergyClinicalStatusRepository = allergyClinicalStatusRepository;
         this.allergyVerificationStatusRepository = allergyVerificationStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
-        this.calculateCie10CodesService = calculateCie10CodesService;
+        this.calculateCie10Facade = calculateCie10Facade;
+        this.snowstormInferredService = snowstormInferredService;
     }
 
     @Override
@@ -58,7 +65,8 @@ public class AllergyServiceImpl implements AllergyService {
         allergies.forEach(allergy -> {
             Integer snomedId = snomedService.getSnomedId(allergy.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(allergy.getSnomed()));
-            String cie10Codes = calculateCie10CodesService.execute(allergy.getSnomed().getSctid(), patientInfo);
+            String cie10Codes = calculateCie10Facade.execute(allergy.getSnomed().getSctid(),
+                    new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
             AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientInfo, allergy, snomedId, cie10Codes);
 
             allergy.setId(allergyIntolerance.getId());
@@ -84,7 +92,14 @@ public class AllergyServiceImpl implements AllergyService {
                 allergy.getStatusId(),
                 allergy.getVerificationId(),
                 allergy.getCategoryId(),
+                allergy.getCriticalityId(),
                 allergy.getDate());
+
+        InferredAllergyAttributes inferredAttributes = snowstormInferredService.
+                getInferredAllergyAttributes(allergy.getSnomed().getSctid());
+        allergyIntolerance.setCategoryId(inferredAttributes.getCategory());
+        allergyIntolerance.setType(inferredAttributes.getType());
+
         allergyIntolerance = allergyIntoleranceRepository.save(allergyIntolerance);
         LOG.debug("allergyIntolerance saved -> {} ", allergyIntolerance.getId());
         LOG.debug(OUTPUT, allergyIntolerance);

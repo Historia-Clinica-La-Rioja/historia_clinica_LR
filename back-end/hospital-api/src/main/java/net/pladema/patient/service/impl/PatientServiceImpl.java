@@ -1,21 +1,19 @@
 package net.pladema.patient.service.impl;
 
 import net.pladema.federar.services.FederarService;
-import net.pladema.federar.services.domain.LocalIdSearchResponse;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
+import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.MedicalCoverageRepository;
-import net.pladema.person.repository.entity.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +21,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static net.pladema.patient.service.MathScore.calculateMatch;
@@ -42,15 +39,12 @@ public class PatientServiceImpl implements PatientService {
 
 	private final PatientRepository patientRepository;
 
-	private final FederarService federarService;
-
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
 							  MedicalCoverageRepository medicalCoverageRepository,
 							  PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository,
 							  FederarService federarService) {
 		this.patientRepository = patientRepository;
-		this.federarService = federarService;
 	}
 
 	@Override
@@ -105,20 +99,18 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	@Async
-	public void federatePatient(Patient patient, Person person) {
-		LOG.debug("Going to federate Patient => {} /n with Person => {}", patient, person);
-		Optional<LocalIdSearchResponse> federarResponse = federarService.federatePatient(person, patient);
-		federarResponse.ifPresent(updatePatientPermanent(patient));
+	public List<PatientPersonVo> getAllValidatedPatients() {
+		LOG.debug("Getting all validated patients");
+		return patientRepository.getAllByPatientType(PatientType.VALIDATED);
 	}
 
-	private Consumer<LocalIdSearchResponse> updatePatientPermanent(Patient patient) {
-		return federatedPatient -> federatedPatient.getNationalId().ifPresent(nationalId -> {
-			patient.setNationalId(nationalId);
-			patient.setTypeId(PatientType.PERMANENT);
-			patientRepository.save(patient);
-			LOG.debug("Successful federated patient with nationalId => {}", nationalId);
-		});
+	@Override
+	public void updatePatientPermanent(PatientPersonVo patientPersonVo, Integer nationalId) {
+		LOG.debug("Updating to permanent patient -> patientPersonVo {}, nationalId {}", patientPersonVo, nationalId);
+		Patient patient = new Patient(patientPersonVo);
+		patient.setNationalId(nationalId);
+		patient.setTypeId(PatientType.PERMANENT);
+		patientRepository.save(patient);
 	}
 
 }

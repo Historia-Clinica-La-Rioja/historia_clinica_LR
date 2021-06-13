@@ -67,9 +67,68 @@ databaseChangeLog:
             tableName: emergency_care_episode
 
     - changeSet:
+        id: dropDefaultPrimaryValue-police_intervention
+        author: saguero
+        dbms: db2
+        changes:
+        -  dropDefaultValue: 
+            columnDataType: int  
+            columnName: emergency_care_episode_id
+            tableName: police_intervention
+        - dropPrimaryKey:
+            constraintName: PK_police_intervention 
+            dropIndex: true
+            tableName: police_intervention
+        -  dropForeignKeyConstraint:
+            baseTableName: police_intervention
+            constraintName: FK_POLICE_INTERVENTION_EMERGENCY_CARE_EPISODE
+
+    - changeSet:
         id: renameTable-police_intervention
         author: saguero
         changes:
         - renameTable:
             newTableName: police_intervention_details
             oldTableName: police_intervention
+    
+    - changeSet:
+        id: addPrimaryKey-police_intervention
+        author: saguero
+        dbms: db2
+        changes:
+        - addPrimaryKey:
+            clustered: true
+            columnNames: emergency_care_episode_id
+            constraintName: PK_police_intervention
+            tableName: police_intervention_details
+            validate: true 
+
+    - changeSet:  
+        id:  modifyDataType-person
+        author: saguero
+        changes:
+        -  modifyDataType:
+            columnName: first_name
+            newDataType: varchar(40)
+            tableName: person
+        -  modifyDataType:
+            columnName: middle_names
+            newDataType: varchar(40)
+            tableName: person
+        -  modifyDataType:
+            columnName: last_name
+            newDataType: varchar(40)
+            tableName: person
+        -  modifyDataType:
+            columnName: other_last_names
+            newDataType: varchar(40)
+            tableName: person
+
+    - changeSet:  
+        id:  modifyDataType-person_extended
+        author: saguero
+        changes:
+        -  modifyDataType:
+            columnName: mothers_last_name
+            newDataType: varchar(40)
+            tableName: person_extended

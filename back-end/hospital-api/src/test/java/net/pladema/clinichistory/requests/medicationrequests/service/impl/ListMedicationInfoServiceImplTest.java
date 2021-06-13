@@ -14,7 +14,7 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedi
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
-import net.pladema.sgx.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -125,7 +125,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
         MedicationFilterBo medicationFilterBo1 = new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, null, null);
         List<MedicationBo> result = listMedicationInfoService.execute(medicationFilterBo1);
         Assertions.assertThat(result)
-                .hasSize(6);
+                .hasSize(4);
 
         result.forEach(r -> {
             Assertions.assertThat(r.getStatusId())
@@ -326,7 +326,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         List<MedicationBo> result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, "IBuPR", null));
         Assertions.assertThat(result)
-                .hasSize(7);
+                .hasSize(4);
 
         result.forEach(r -> {
             Assertions.assertThat(r.getStatusId())
@@ -446,7 +446,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         List<MedicationBo> result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, null, "Angi"));
         Assertions.assertThat(result)
-                .hasSize(4);
+                .hasSize(2  );
 
         result.forEach(r -> {
             Assertions.assertThat(r.getStatusId())
@@ -569,7 +569,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, "IBU", "Angi"));
         Assertions.assertThat(result)
-                .hasSize(3);
+                .hasSize(1);
 
         result = listMedicationInfoService.execute(new MedicationFilterBo(patientId, MedicationStatementStatus.ACTIVE, "PARA", "DOL"));
         Assertions.assertThat(result)

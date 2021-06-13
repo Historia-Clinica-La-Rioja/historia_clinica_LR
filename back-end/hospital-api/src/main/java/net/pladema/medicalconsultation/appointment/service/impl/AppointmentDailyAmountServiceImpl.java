@@ -8,7 +8,7 @@ import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
-import net.pladema.sgx.dates.utils.DateUtils;
+import ar.lamansys.sgx.shared.dates.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

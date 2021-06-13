@@ -1,6 +1,9 @@
 package net.pladema.emergencycare.triage.service.impl;
 
+import io.jsonwebtoken.lang.Assert;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
+import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.repository.TriageDetailsRepository;
 import net.pladema.emergencycare.triage.repository.TriageRepository;
 import net.pladema.emergencycare.triage.repository.TriageVitalSignsRepository;
@@ -15,7 +18,7 @@ import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
 import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
 import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.sgx.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,17 +44,20 @@ public class TriageServiceImpl implements TriageService {
 
     private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
 
+    private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
+
     public TriageServiceImpl(TriageRepository triageRepository,
                              TriageDetailsRepository triageDetailsRepository,
                              TriageVitalSignsRepository triageVitalSignsRepository,
                              InstitutionExternalService institutionExternalService,
-                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository) {
+                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, EmergencyCareEpisodeStateService emergencyCareEpisodeStateService) {
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
         this.triageVitalSignsRepository = triageVitalSignsRepository;
         this.institutionExternalService = institutionExternalService;
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
+        this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
     }
 
     @Override
@@ -94,22 +100,23 @@ public class TriageServiceImpl implements TriageService {
     }
 
     @Override
-    public TriageBo createAdministrative(TriageBo triageBo) {
-        return persistTriage(triageBo, getAdministrativeConsumer());
+    public TriageBo createAdministrative(TriageBo triageBo, Integer institutionId) {
+        return persistTriage(triageBo, institutionId, getAdministrativeConsumer());
     }
 
     @Override
-    public TriageBo createAdultGynecological(TriageBo triageBo) {
-        return persistTriage(triageBo, getAdultConsumer());
+    public TriageBo createAdultGynecological(TriageBo triageBo, Integer institutionId) {
+        return persistTriage(triageBo, institutionId, getAdultConsumer());
     }
 
     @Override
-    public TriageBo createPediatric(TriageBo triageBo) {
-        return persistTriage(triageBo, getPediatricConsumer());
+    public TriageBo createPediatric(TriageBo triageBo, Integer institutionId) {
+        return persistTriage(triageBo, institutionId, getPediatricConsumer());
     }
 
-    private TriageBo persistTriage(TriageBo triageBo, Consumer<TriageBo> consumer) {
-        LOG.debug("Input parameter -> triageBo {}", triageBo);
+    private TriageBo persistTriage(TriageBo triageBo, Integer institutionId, Consumer<TriageBo> consumer){
+        LOG.debug("Input parameter -> triageBo {}, institutionId{}", triageBo, institutionId);
+        validTriage(triageBo, institutionId);
         Triage triage = triageRepository.save(new Triage(triageBo));
         triageBo.setId(triage.getId());
 
@@ -121,6 +128,11 @@ public class TriageServiceImpl implements TriageService {
 
         LOG.debug("Output -> {}", triageBo);
         return triageBo;
+    }
+
+    private void validTriage(TriageBo triageBo, Integer institutionId) {
+        EEmergencyCareState ems = emergencyCareEpisodeStateService.getState(triageBo.getEmergencyCareEpisodeId(), institutionId);
+        Assert.isTrue(EEmergencyCareState.ESPERA.getId().equals(ems.getId()) || EEmergencyCareState.ATENCION.getId().equals(ems.getId()), "care-episode.invalid-triage");
     }
 
     private Consumer<TriageBo> getAdultConsumer() {

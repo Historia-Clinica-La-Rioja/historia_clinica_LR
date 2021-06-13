@@ -3,7 +3,7 @@ package net.pladema.clinichistory.documents.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 @Getter
 @Setter

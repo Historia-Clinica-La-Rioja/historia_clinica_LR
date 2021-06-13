@@ -1,0 +1,31 @@
+{
+	"configuracion": {
+		"logos": {
+			"TITLE": "Customización de logos",
+			"SUBTITLE_1": "Logotipo auspiciante",
+			"SUBTITLE_2": "Icono de página",
+			"SUBTITLE_3": "Iconos de escritorio",
+			"UPLOAD_FILE": "Adjuntar archivo",
+			"RESTORE": "Restablecer",
+			"logotipo": {
+				"DESCRIPTION": "El logotipo de auspiciante se ubicará en el encabezado alineado a la derecha en el mismo nivel de jerarquia que la marca de HSI.",
+				"IMAGE_FORMAT": "La imagen debe estar en formato .PNG y tener un tamaño de 512 x 128 pixeles."
+			},
+			"icono_pagina": {
+				"DESCRIPTION": "El ícono de página o favicon es la imagen que aparece antecediendo al título de la pestaña.",
+				"IMAGE_FORMAT": "La imagen deberá estar en formato .ICO y tener un tamaño cuadrado de 16 x 16 pixeles."
+			},
+			"icono_escritorio": {
+				"DESCRIPTION": "El ícono de escritorio es la imagen que tendrá el acceso directo de la aplicación una vez que se instale en cualquier dispositivo."
+			},
+			"toast_messages": {
+				"UPDATE_IMAGE_SUCCESS": "La imagen se actualizó correctamente",
+				"UPDATE_IMAGE_ERROR": "Hubo un error al actualizar la imagen",
+				"VALID_IMAGE_ERROR": "La imagen no responde al formato y/o medidas requeridas"
+			},
+			"confirm_dialog": {
+				"TITLE": "Restablecer"
+			}
+		}
+	}
+}

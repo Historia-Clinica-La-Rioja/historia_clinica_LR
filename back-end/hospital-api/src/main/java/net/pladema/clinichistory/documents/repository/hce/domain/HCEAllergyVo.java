@@ -18,15 +18,18 @@ public class HCEAllergyVo extends ClinicalTermVo {
 
     private String verificationId;
 
-    private String categoryId;
+    private Short categoryId;
+
+    private Short criticalityId;
 
     private LocalDate startDate;
 
     public HCEAllergyVo(Integer id, Snomed snomed, String statusId, String verificationId,
-                              String categoryId, LocalDate startDate) {
+                              Short categoryId, Short criticalityId, LocalDate startDate) {
         super(id, snomed, statusId);
         this.verificationId = verificationId;
         this.categoryId = categoryId;
+        this.criticalityId = criticalityId;
         this.startDate = startDate;
     }
 

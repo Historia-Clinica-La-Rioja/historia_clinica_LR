@@ -1,0 +1,8 @@
+<app-content width="full">
+	<h2 class="page-title" [translate]="'guardia.episode.edit.TITLE'"></h2>
+	<div *ngIf="(initData | async) as initData">
+		<app-admision-administrativa [initData]="initData" (confirm)="confirm($event)" (cancel)="openDialog()"
+			[isDoctorOfficeEditable]="isDoctorOfficeEditable" [isEmergencyCareTypeEditable]="false" [submitLabel]="'buttons.CONFIRM'">
+		</app-admision-administrativa>
+	</div>
+</app-content>

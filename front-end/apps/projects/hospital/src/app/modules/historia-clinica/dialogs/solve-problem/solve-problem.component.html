@@ -1,0 +1,69 @@
+<section id="resolver-problema" class="doc-section">
+	<app-document-section [sectionTitle]="'ambulatoria.paciente.problemas.TITLE_POPUP_RESOLVER_PROBLEMA'">
+
+		<div concept-form *ngIf="false else problemaForm">
+			<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
+								 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
+								 (search)="problemasService.openSearchDialog($event)">
+			</app-concepts-search>
+		</div>
+
+		<ng-template #problemaForm>
+			<form [formGroup]="this.getForm()" (ngSubmit)="solveProblem()">
+
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"></mat-label>
+					<input class='name' id="snomed-input-new-consultation" matInput type="text" formControlName="snomed" readonly>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.SEVERIDAD'">
+					</mat-label>
+					<mat-select id="severity-select" formControlName="severidad">
+						<mat-option *ngFor="let severityType of severityTypeMasterData" [value]="severityType.code">
+							{{severityType.display}}
+						</mat-option>
+					</mat-select>
+					<mat-error translate="forms.REQUIRED"></mat-error>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline" class="mat-form-field--no-underline">
+					<input class="input-checkbox-solve-problem" matInput placeholder="input">
+					<mat-checkbox id="cronico-checkbox" formControlName="cronico" class="checkbox" (click)="$event.preventDefault()">
+							<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CRONICO'"></span>
+					</mat-checkbox>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline" >
+					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'"></mat-label>
+					<input matInput id="fecha_inicio" formControlName="fechaInicio" readonly>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">	</mat-label>
+					<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
+						   (dateChange)="checkInactivationDate()">
+					<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
+					<mat-datepicker #finDatePicker></mat-datepicker>
+					<mat-error *ngIf="this.hasError('min', 'fechaFin')"
+							   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
+					</mat-error>
+					<mat-error *ngIf="this.hasError('max', 'fechaFin')"
+							   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MAX'">
+					</mat-error>
+				</mat-form-field>
+
+				<div class="buttons-solve-problem">
+					<button id="edit_problema" class="uppercase" mat-raised-button color="primary" type="submit" >
+						<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.SAVE'"></span>
+					</button>
+
+					<button mat-stroked-button color="primary" class="uppercase" [matDialogClose]="true">
+						<span [translate]="'buttons.CANCEL'"></span>
+					</button>
+				</div>
+
+			</form>
+		</ng-template>
+	</app-document-section>
+</section>

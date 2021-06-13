@@ -8,6 +8,7 @@ import lombok.Value;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 public class ECAdministrativeDto implements Serializable {
 
+    @Valid
     NewEmergencyCareDto administrative;
 
     TriageAdministrativeDto triage;

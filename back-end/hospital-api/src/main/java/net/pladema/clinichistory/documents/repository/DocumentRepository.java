@@ -4,7 +4,7 @@ import net.pladema.clinichistory.documents.repository.entity.Document;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.ResponsibleDoctorVo;
 import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import net.pladema.person.repository.domain.ProcedureReduced;
-import net.pladema.sgx.auditable.entity.Updateable;
+import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,4 +50,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, Docum
             "JOIN Snomed AS snomedPr ON (pr.snomedId = snomedPr.id) " +
             "WHERE dp.pk.documentId = :documentId")
     List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId);
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT d.id " +
+            "FROM Document d " +
+            "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId")
+    List<Long> findBySourceIdAndSourceTypeId(@Param("sourceId") Integer sourceId, @Param("sourceTypeId") Short sourceTypeId );
 }

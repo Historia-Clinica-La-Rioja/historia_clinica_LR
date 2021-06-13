@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Datagrid,
-    DateField,
     DeleteButton,
     Edit,
     EditButton,
@@ -19,6 +18,7 @@ import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../../modules/components/CustomToolbar";
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const INTERNACION = 2;
 
@@ -124,7 +124,7 @@ const SectorEdit = props => (
                     <TextField source="roomNumber" />
                     <TextField source="description"/>
                     <TextField source="type" />
-                    <DateField source="dischargeDate" />
+                    <SgxDateField source="dischargeDate" />
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

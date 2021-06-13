@@ -22,7 +22,7 @@ COPY nginx.conf /etc/nginx/sites-enabled/default
 WORKDIR /app
 COPY  *.jar .  
 
-COPY front-end-dist/sgh/ ./front-end
+COPY front-end-dist/hospital/ ./front-end
 COPY backoffice-dist/ ./backoffice
 
 

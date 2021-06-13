@@ -1,0 +1,6 @@
+<app-summary-card [header]="personalHistoriesHeader">
+	<app-table [showTableHeader]="true" [model]="tableModel" *ngIf="tableModel?.data?.length > 0 else noInfo"></app-table>
+	<ng-template #noInfo>
+		<app-no-data></app-no-data>
+	</ng-template>
+</app-summary-card>

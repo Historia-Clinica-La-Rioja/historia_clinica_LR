@@ -1,18 +1,21 @@
 <div xmlns="http://www.w3.org/1999/xhtml">
     <table>
-        <thead>
+        <caption>Resumen de Medicamentos</caption>
         <tr>
-            <td>Medicación</td>
-            <td>Forma</td>
-            <td>Dosis</td>
-            <td>Ruta</td>
-            <td>Estado</td>
-            <td>Periodo</td>
+            <th scope="col">Medicación</th>
+            <th scope="col">Forma</th>
+            <th scope="col">Dosis</th>
+            <th scope="col">Ruta</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Periodo</th>
         </tr>
-        </thead>
         <tbody>
         <tr>
-            <td th:narrative="${resource.medication}"></td>
+            <td>
+                <th:block th:if="${resource.hasMedicationCodeableConcept()}">
+                    <th:block th:narrative="${resource.medication}"></th:block>
+                </th:block>
+            </td>
             <td>
                 <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].doseAndRate.empty}" th:text="${resource.dosage[0].doseAndRate[0].dose.unit}"></th:block>
             </td>
@@ -20,7 +23,9 @@
                 <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].doseAndRate.empty}" th:text="${resource.dosage[0].doseAndRate[0].dose.value}"></th:block>
             </td>
             <td>
-                <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].route.coding.empty}" th:text="${resource.dosage[0].route.coding.display}"></th:block>
+                <th:block th:if="${not resource.dosage.empty} and ${not resource.dosage[0].route.coding.empty}">
+                    <th:block th:narrative="${resource.dosage[0].route}"></th:block>
+                </th:block>
             </td>
             <td><th:block th:if="${not resource.statusElement.empty}" th:text="${resource.statusElement.value}"></th:block></td>
             <td th:if="${resource.effectivePeriod != null}" th:text="${resource.effectivePeriod.start}"></td>

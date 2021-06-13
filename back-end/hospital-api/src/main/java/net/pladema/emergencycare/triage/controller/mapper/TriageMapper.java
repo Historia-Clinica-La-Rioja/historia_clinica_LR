@@ -10,7 +10,7 @@ import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
 import net.pladema.emergencycare.triage.controller.dto.TriagePediatricDto;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
-import net.pladema.sgx.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;

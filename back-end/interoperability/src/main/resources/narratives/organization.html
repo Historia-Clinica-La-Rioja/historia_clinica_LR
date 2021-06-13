@@ -1,12 +1,15 @@
 <div xmlns="http://www.w3.org/1999/xhtml">
-    <p><b>Generated Narrative with Details</b></p>
-    <p><b>id: </b><span th:utext="*{resource.id}"></span></p>
-    <p><b>identifier: </b><span th:utext="*{resource.identifier[0].value}"></span></p>
-    <p><b>active: </b><span th:utext="*{resource.active}"></span></p>
-    <p><b>name: </b><span th:utext="*{resource.name}"></span></p>
+    <p><strong>Generated Narrative with Details</strong></p>
+    <p><strong>id: </strong><span th:utext="*{resource.id}"></span></p>
+    <p><strong>identifier: </strong><span th:utext="*{resource.identifier[0].value}"></span></p>
+    <p><strong>active: </strong><span th:utext="*{resource.active}"></span></p>
+    <p><strong>name: </strong><span th:utext="*{resource.name}"></span></p>
     <p th:if="${resource.hasTelecom()}">
-        <b>telecom: </b>ph:<span th:utext="*{resource.telecom.get(0).value}"></span>
+        <strong>telecom: </strong>ph:<span th:utext="*{resource.telecom.get(0).value}"></span>
     </p>
-    <p><b>address: </b><th:block th:if="${not #lists.isEmpty(resource.address)}" th:narrative="${resource.address[0]}"></th:block></p>
+    <div th:if="${not resource.address.empty}">
+        <p th:narrative="${resource.address[0]}"><strong>address: </strong></p>
+    </div>
 </div>
+
 

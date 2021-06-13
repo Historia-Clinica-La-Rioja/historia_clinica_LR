@@ -30,6 +30,8 @@ public class HealthConditionNewConsultationBo extends ClinicalTerm{
 
     private String problemId;
 
+    private String severity;
+
     private Boolean isChronic;
 
     public HealthConditionNewConsultationBo(HealthCondition hc) {
@@ -43,6 +45,7 @@ public class HealthConditionNewConsultationBo extends ClinicalTerm{
         this.noteId = hc.getNoteId();
         this.problemId = hc.getProblemId();
         this.setStatusId(hc.getStatusId());
+        this.severity = hc.getSeverity();
         this.setIsChronic(ProblemType.CHRONIC.equals(hc.getProblemId()));
     }
 

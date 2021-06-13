@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.sgx.auditable.entity.SGXAuditableEntity;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +18,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "appointment")
@@ -43,7 +45,8 @@ public class Appointment extends SGXAuditableEntity {
     @Column(name = "appointment_state_id", nullable = false)
     private Short appointmentStateId;
 
-    @Column(name = "is_overturn", columnDefinition = "boolean default false", nullable = false)
+    @Column(name = "is_overturn", nullable = false)
+    @ColumnDefault("false")
     private Boolean isOverturn;
 
     @Column(name = "patient_id", nullable = false)
@@ -65,6 +68,6 @@ public class Appointment extends SGXAuditableEntity {
         result.setPatientMedicalCoverageId(appointmentBo.getPatientMedicalCoverageId());
         result.setPhoneNumber(appointmentBo.getPhoneNumber());
         return result;
-
+        
     }
 }

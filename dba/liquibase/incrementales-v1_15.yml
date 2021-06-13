@@ -1,0 +1,106 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_15 
+
+    - changeSet:
+        id: ethnicity-createTable
+        author: tmedina
+        changes:
+        - createTable:
+            tableName: ethnicity
+            columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_ethnicity
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: sctid 
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: pt
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: active
+                type: boolean
+        - addUniqueConstraint:
+            tableName: ethnicity
+            columnNames: sctid, pt
+            constraintName: UQ_ethnicity_sctid_pt
+
+    - changeSet:
+        id: ethnicity-insertValues
+        author: tmedina
+        context: "!schema-only"
+        changes:
+        - sql:
+            sql: |-
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92741000221107','wichí', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92731000221100','vilela', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92721000221103','tupí guaraní', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92711000221108','tonocote', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92701000221105','tehuelche', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92691000221105','tapiete', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92681000221107','sanavirón', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92671000221109','rankulche', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92661000221100','querandí', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92651000221102','pilagá', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92641000221104','pampa', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92631000221106','ona', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92621000221108','omaguaca', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92611000221103','mocoví', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92601000221101','mbyá guaraní', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92591000221106','maimará', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92581000221108','lule', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92571000221105','kolla', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92561000221101','huarpe', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92551000221103','guaraní', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92541000221100','diaguita', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92531000221107','comechingón', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92521000221109','chulupí', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92511000221104','chorote', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92501000221102','charrúa', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92491000221107','chané', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('92481000221109','ava guarani', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('113170005','aimara', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('79434006','quechua', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('77502007','atacameño', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('75704009','toba', ${boolean.true});
+                INSERT INTO ethnicity(sctid, pt, active) VALUES ('75301003','mapuche', ${boolean.true});
+
+    - changeSet:
+        id: person_extended-addColumn-ethnicity_id
+        author: tmedina
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: ethnicity_id
+                type: int
+                constraints:
+                    nullable: true  
+            tableName: person_extended
+        - addForeignKeyConstraint:
+            baseColumnNames: ethnicity_id
+            baseTableName: person_extended
+            constraintName: FK_person_extended_ethnicity_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: ethnicity
+            validate: true
+
+    - changeSet:
+        id: person_extended-dropColumn-ethnic
+        author: tmedina
+        changes:
+        - dropColumn:
+            columnName: ethnic
+            tableName: person_extended

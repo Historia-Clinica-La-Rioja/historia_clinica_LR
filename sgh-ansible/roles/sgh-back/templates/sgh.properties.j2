@@ -37,7 +37,6 @@ google.recaptcha.site.key = ${RECAPTCHA_PUBLIC_KEY:{{ recaptcha_site_key }}}
 #claves de acceso a renaper
 ws.renaper.nombre= {{ renaper_usuario }}
 ws.renaper.clave= {{ renaper_clave }}
-ws.renaper.dominio= DOMINIOSINAUTORIZACIONDEALTA
 
 
 # ============================================
@@ -46,17 +45,11 @@ ws.renaper.dominio= DOMINIOSINAUTORIZACIONDEALTA
 #Configuracion WS Federar
 ws.federar.claims.iss= {{ federar_issuer }}
 ws.federar.claims.sub= {{ federar_subject }}
-ws.federar.claims.aud= {{ federar_audience }} 
-ws.federar.claims.name=Prueba Jose
-ws.federar.claims.role=Project Manager
-ws.federar.claims.ident=0001
 
-ws.federar.auth.grantType=client_credentials
-ws.federar.auth.scope=Patient/*.read,Patient/*.write
-ws.federar.auth.clientAssertionType=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
 ws.federar.auth.signKey= {{ federar_sign_key }}
 
-ws.federar.url.base= {{ federar_audience }}
-ws.federar.url.validateToken=/bus-auth/tokeninfo
-ws.federar.url.localIdSearch=/masterfile-federacion-service/fhir/Patient
-ws.federar.url.federate=/masterfile-federacion-service/fhir/Patient
+# ============================================
+# Snowstorm
+# ============================================
+ws.snowstorm.appId= {{ snowstorm_id }}
+ws.snowstorm.appKey= {{ snowstorm_key }}

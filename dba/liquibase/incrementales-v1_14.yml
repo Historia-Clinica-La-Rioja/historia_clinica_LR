@@ -1,0 +1,193 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_14
+
+    - changeSet:
+        id: health_condition_severity-table
+        author: saguero
+        changes:
+        - createTable:
+            tableName: health_condition_severity
+            columns:
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_health_condition_severity
+                name: code
+                type: varchar(10)
+            - column:
+                constraints:
+                    nullable: false
+                name: name 
+                type: varchar(10)
+            - column:
+                constraints:
+                    nullable: false
+                name: display
+                type: varchar(10)
+        - sql:
+            sql: |-
+                INSERT INTO health_condition_severity VALUES ('LA6752-5','mild','Leve');
+                INSERT INTO health_condition_severity VALUES ('LA6751-7','moderate','Moderado');
+                INSERT INTO health_condition_severity VALUES ('LA6750-9','severe','Severo');
+
+    - changeSet:
+        id: health_condition-addColumn-severity
+        author: saguero
+        changes:
+        - addColumn:
+            tableName: health_condition
+            columns:
+            - column:
+                name: severity
+                type: varchar(10)
+        - addForeignKeyConstraint:
+            baseColumnNames: severity
+            baseTableName: health_condition
+            constraintName: FK_health_condition_severity
+            referencedColumnNames: code
+            referencedTableName: health_condition_severity
+            validate: true
+    
+    - changeSet:
+        id: allergy_intolerance_category-refactor
+        author: saguero
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_category_id
+        - dropColumn:
+            tableName: allergy_intolerance
+            columnName: category_id
+        - dropTable:
+            cascadeConstraints: true
+            tableName: allergy_intolerance_category
+        - createTable:
+            tableName: allergy_intolerance_category
+            columns:
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_allergy_intolerance_category
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: name
+                type: varchar(15)
+            - column:
+                constraints:
+                    nullable: false
+                name: display
+                type: varchar(15)
+        - sql:
+            sql: |-
+                INSERT INTO allergy_intolerance_category VALUES (1, 'food', 'Alimentaria');
+                INSERT INTO allergy_intolerance_category VALUES (2, 'medication', 'Medicamentosa');
+                INSERT INTO allergy_intolerance_category VALUES (3, 'biologic', 'Biológica');
+                INSERT INTO allergy_intolerance_category VALUES (4, 'environment', 'Ambiental');
+
+    - changeSet: 
+        id: allergy_intolerance-addColumn-new-category_id
+        author: saguero
+        changes:
+        - addColumn:
+            columns:
+            - column:
+                name: category_id
+                type: smallint
+            tableName: allergy_intolerance
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_category_id
+            referencedColumnNames: id
+            referencedTableName: allergy_intolerance_category
+            validate: true
+    
+    - changeSet:
+        id: allergy_intolerance_criticality-table
+        author: saguero
+        changes:
+        - createTable:
+            tableName: allergy_intolerance_criticality
+            columns:
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_allergy_intolerance_criticality
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: name
+                type: varchar(20)
+            - column:
+                constraints:
+                    nullable: false
+                name: display
+                type: varchar(20)
+        - sql: 
+            sql: |-
+                INSERT INTO allergy_intolerance_criticality VALUES (1,'low','Baja');
+                INSERT INTO allergy_intolerance_criticality VALUES (2,'high','Alta');
+                INSERT INTO allergy_intolerance_criticality VALUES (3,'unable-to-assess','Incapaz de evaluar');
+
+    - changeSet:
+        id: allergy_intolerance_type-table
+        author: saguero
+        changes:
+        - createTable:
+            tableName: allergy_intolerance_type
+            columns:
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_allergy_intolerance_type
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: name
+                type: varchar(15)
+            - column:
+                constraints:
+                    nullable: false
+                name: display
+                type: varchar(15)
+        - sql: 
+            sql: |-
+                INSERT INTO allergy_intolerance_type VALUES (1,'allergy','Alergia');
+                INSERT INTO allergy_intolerance_type VALUES (2,'intolerance','Intolerancia');
+
+
+    - changeSet:
+        id: allergy_intolerance-addColumns-type-criticality
+        author: saguero
+        changes:
+        - addColumn:
+            tableName: allergy_intolerance
+            columns:
+            - column:
+                name: type
+                type: smallint
+            - column:
+                name: criticality
+                type: smallint
+        - addForeignKeyConstraint:
+            baseColumnNames: criticality
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_criticality
+            referencedColumnNames: id
+            referencedTableName: allergy_intolerance_criticality
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: type
+            baseTableName: allergy_intolerance
+            constraintName: FK_allergy_intolerance_type
+            referencedColumnNames: id
+            referencedTableName: allergy_intolerance_type
+            validate: true
+

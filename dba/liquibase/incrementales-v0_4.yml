@@ -124,14 +124,38 @@ databaseChangeLog:
         
 - changeSet:  
     id:  renameColumn-outpatient_consultation  
-    author:  lbergottini 
+    author:  lbergottini
+    dbms: "!db2"
     changes:  
     - renameColumn:  
         columnDataType:  int  
         newColumnName:  clinical_specialty_id  
         oldColumnName:  clinical_speciality_id  
         tableName:  outpatient_consultation
-        
+
+- changeSet:  
+    id:  renameColumn-outpatient_consultation  
+    author: saguero
+    dbms: db2 
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: outpatient_consultation 
+        constraintName: FK_outpatient_consultation_clinical_speciality_id 
+    - renameColumn:  
+        columnDataType: int  
+        newColumnName: clinical_specialty_id  
+        oldColumnName: clinical_speciality_id  
+        tableName: outpatient_consultation
+    - addForeignKeyConstraint:
+        baseColumnNames: clinical_specialty_id
+        baseTableName: outpatient_consultation
+        constraintName: FK_outpatient_consultation_clinical_speciality_id
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: clinical_specialty
+        validate: true
+
 - changeSet:
     id: rename_FK-outpatient_consultation
     author: lbergottini
@@ -179,10 +203,19 @@ databaseChangeLog:
 - changeSet:  
     id:  dropView-v-institution  
     author:  saguero 
+    dbms: postgresql 
     changes:  
     -  dropView:    
         schemaName:  public  
         viewName:  v_institution
+
+- changeSet:
+    id:  dropView-v-institution
+    author: saguero
+    dbms: "!postgresql"
+    changes:
+    -  dropView:
+        viewName: v_institution
 
 - changeSet:   
     id:  createView-v-institution-V2-postgresql  
@@ -216,15 +249,87 @@ databaseChangeLog:
             where 	ie.status_id = 1 
                     and b."free" = false
 
+- changeSet:   
+    id:  createView-v-institution-V2  
+    author:  saguero
+    dbms: mssql
+    changes:  
+    -  createView: 
+        viewName:  v_institution 
+        fullDefinition:  false    
+        replaceIfExists:  true  
+        selectQuery: |-
+            select	distinct ie.institution_id, ie.id as "internment_episode_id", ad.longitud, ad.latitud, CAST(diagnosis.covid_presumptive AS BIT) AS "covid_presumptive"				
+            from 	internment_episode ie 
+            join    institution i on ( ie.institution_id = i.id )
+            join    address ad on i.address_id = ad.id 
+            join    bed b on ie.bed_id = b.id
+            outer apply ( 	
+                select 	top 1 
+                		case when hc.verification_status_id = '76104008' then ${boolean.true} else ${boolean.false} end as "covid_presumptive"
+                from 	document_health_condition dhc 
+                        join document d on ( dhc.document_id = d.id)
+                        join internment_episode ieSub on ( d.internment_episode_id = ieSub.id )
+                        join health_condition hc on ( dhc.health_condition_id = hc.id )
+                where 	ieSub.institution_id = i.id
+                        and ieSub.id = ie.id
+                        and hc.sctid_code = '186747009'
+                order by hc.updated_on desc         
+            ) as diagnosis
+            where 	ie.status_id = 1 
+                    and b."free" = ${boolean.false}
+
+- changeSet:   
+    id:  createView-v-institution-V2  
+    author:  saguero
+    dbms: db2
+    changes:  
+    -  createView: 
+        viewName:  v_institution 
+        fullDefinition:  false    
+        replaceIfExists:  true  
+        selectQuery: |-
+            select	distinct ie.institution_id, ie.id as internment_episode_id, ad.longitud, ad.latitud, CAST(diagnosis.covid_presumptive AS boolean) AS "covid_presumptive" 					
+            from 	internment_episode ie 
+            join    institution i on ( ie.institution_id = i.id )
+            join    address ad on i.address_id = ad.id 
+            join    bed b on ie.bed_id = b.id
+            left join lateral ( 	
+                select 	case when hc.verification_status_id = '76104008' then ${boolean.true} else ${boolean.false} end as covid_presumptive
+                from 	document_health_condition dhc 
+                        join document d on ( dhc.document_id = d.id)
+                        join internment_episode ieSub on ( d.internment_episode_id = ieSub.id )
+                        join health_condition hc on ( dhc.health_condition_id = hc.id )
+                where 	ieSub.institution_id = i.id
+                        and ieSub.id = ie.id
+                        and hc.sctid_code = '186747009'
+                order by hc.updated_on desc
+                limit 1         
+            ) as diagnosis on true
+            where 	ie.status_id = 1 
+                    and b."free" = ${boolean.false}
         
 - changeSet:  
     id:  dropColumn-problem_type_id  
-    author:  etrapani 
+    author:  etrapani
+    dbms: "!mssql" 
     changes:  
     -  dropColumn:  
             columnName: problem_type_id  
             tableName:  health_condition
 
+#------------------------- Ajuste drop-column-with-FK para coincidir con MSSQL -----------------------
+- changeSet:  
+    id:  dropColumn-problem_type_id  
+    author:  etrapani
+    dbms: mssql 
+    changes:
+    -  dropForeignKeyConstraint:
+            baseTableName: health_condition
+            constraintName: FK_health_condition_problem_type_id
+    -  dropColumn:  
+            columnName: problem_type_id  
+            tableName:  health_condition
 
 - changeSet:  
     id:  dropTable-condition_problem_type  
@@ -270,6 +375,7 @@ databaseChangeLog:
 - changeSet:
     id: renameColumn-document-internment_episode_id
     author: lbergottini
+    dbms: "!db2"
     changes:
     - renameColumn:
         columnDataType: int
@@ -278,8 +384,32 @@ databaseChangeLog:
         tableName: document
 
 - changeSet:
+    id: renameColumn-document-internment_episode_id
+    author: saguero
+    dbms: db2
+    changes:
+    - dropIndex:
+        indexName: IDX_document_internment_episode_id
+        tableName: document
+    - dropForeignKeyConstraint:
+            baseTableName: document
+            constraintName: FK_DOCUMENT_INTERNMENT_EPISODE_ID 
+    - renameColumn:
+        columnDataType: int
+        newColumnName: source_id
+        oldColumnName: internment_episode_id
+        tableName: document
+    - createIndex:  
+        columns:  
+        - column:
+            name: source_id 
+        indexName: IDX_document_internment_episode_id
+        tableName: document
+
+- changeSet:
     id: dropFK-document-internment_episode_id
     author: lbergottini
+    dbms: "!db2"
     changes:
     - dropForeignKeyConstraint:
         baseTableName: document

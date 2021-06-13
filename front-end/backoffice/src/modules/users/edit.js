@@ -1,22 +1,22 @@
 import React from 'react';
 import {
-    Edit,
-    SimpleForm,
-    BooleanInput,
-    TextInput,
     ArrayInput,
-    DateField,
-    SimpleFormIterator,
-    ReferenceInput,
     AutocompleteInput,
-    SelectInput,
+    BooleanInput,
+    Edit,
+    ReferenceInput,
     required,
+    SelectInput,
+    SimpleForm,
+    SimpleFormIterator,
+    TextInput,
 } from 'react-admin';
 
 import CustomToolbar from '../components/CustomToolbar';
 import PersonReferenceField from '../person/PersonReferenceField';
 import Aside from './Aside'
 import authProvider from '../../providers/authProvider';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const redirect = (basePath, id, data) => (data.personId !== -1) ? `/person/${data.personId}/show/1` : '/users';
 
@@ -27,9 +27,9 @@ const validateInstitutionRequired = (values, entity) => {
         if(roleAndInstitution) {
             let error = {};
             let isAdmin = (authProvider.getRole(roleAndInstitution.roleId) === 'ROOT' ||
-                                   authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
+                                authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
 
-            if(!isAdmin && !roleAndInstitution.institutionId) {
+            if(!isAdmin && roleAndInstitution.institutionId === -1) {
                 error.institutionId = 'La institucion es requerida';
             }
 
@@ -48,9 +48,9 @@ const UserEdit = props => (
             <PersonReferenceField source="personId" />
             <TextInput source="username" validate={[required()]}/>
             <BooleanInput source="enable" validate={[required()]}/>
-            <DateField source="lastLogin" showTime locales="es-AR"/>
+            <SgxDateField source="lastLogin" showTime/>
             <ArrayInput source="roles" validate={validateInstitutionRequired}>
-                <SimpleFormIterator >
+                <SimpleFormIterator>
                     <ReferenceInput source="roleId" reference="roles" validate={[required()]}>
                         <SelectInput optionText="description" optionValue="id"/>
                     </ReferenceInput>

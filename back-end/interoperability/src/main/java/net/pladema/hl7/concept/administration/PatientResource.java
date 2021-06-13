@@ -2,6 +2,8 @@ package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -16,12 +18,15 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Conditional(InteroperabilityCondition.class)
 public class PatientResource extends ISingleResourceFhir {
 
     @Autowired
@@ -35,7 +40,7 @@ public class PatientResource extends ISingleResourceFhir {
     }
 
     @Override
-    public Patient fetch(String id, Reference[] references) {
+    public Patient fetch(String id, Map<ResourceType, Reference> references) {
         PatientVo patient = store.getPatient(id);
 
         Patient resource = new Patient();
@@ -51,6 +56,8 @@ public class PatientResource extends ISingleResourceFhir {
                 .setFamily(patient.getLastname())
                 .setText(patient.getFullName());
         resource.getName().get(0).getFamilyElement().addExtension(fatherSurname);
+
+        resource.addTelecom(newTelecom(patient.getPhoneNumber()));
 
         resource.setGender(Enumerations.AdministrativeGender.fromCode(patient.getGender()));
         resource.setActive(true);
@@ -71,9 +78,6 @@ public class PatientResource extends ISingleResourceFhir {
 
         if(patient.hasAddressData())
             resource.addAddress(newAddress(patient.getFullAddress()));
-
-        if(patient.hasPhoneNumber())
-            resource.addTelecom(newTelecom(patient.getPhoneNumber()));
 
         if(patient.hasBirthDateData()) {
             DateType birthdate = new DateType();
@@ -104,7 +108,7 @@ public class PatientResource extends ISingleResourceFhir {
                         .map(e -> e.getValue().toString())
                         .filter(e -> !e.equals(data.getLastname()))
                         .collect(Collectors.joining(" "));
-                if(!otherLastNames.isBlank())
+                if(FhirString.hasText(otherLastNames))
                     data.setOtherLastName(otherLastNames);
             }
         }

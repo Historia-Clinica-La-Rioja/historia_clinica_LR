@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.sgx.auditable.entity.SGXAuditListener;
-import net.pladema.clinichistory.documents.service.ips.domain.enums.EObservationLab;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;

@@ -64,7 +64,7 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     public List<HCEPersonalHistoryBo> getActiveProblems(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isActiveProblem)
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isActiveProblem)
                 .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate).reversed()).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
@@ -74,7 +74,7 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     public List<HCEPersonalHistoryBo> getSolvedProblems(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
-        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(hceph -> !hceph.isChronic()).filter(HCEPersonalHistoryBo::isSolvedProblem)
+        List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isSolvedProblem)
                 .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate).reversed()).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;

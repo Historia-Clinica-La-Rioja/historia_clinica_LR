@@ -34,6 +34,7 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                 "ai.status_id, " +
                 "ai.verification_status_id, " +
                 "ai.category_id, " +
+                "ai.criticality, " +
                 "ai.start_date, " +
                 "ai.updated_on, " +
                 "row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw " +
@@ -44,7 +45,7 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
-                "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.start_date " +
+                "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
                 "from temporal t " +
                 "join snomed s on t.snomed_id = s.id " +
                 "where rw = 1 and not status_id = :allergyIntoleranceStatus " +
@@ -62,8 +63,9 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                     new Snomed((String)a[1], (String)a[2], null, null),
                     (String)a[3],
                     (String)a[4],
-                    (String)a[5],
-                    a[6] != null ? ((Date)a[6]).toLocalDate() : null
+                    (Short)a[5],
+                    (Short)a[6],
+                    a[7] != null ? ((Date)a[7]).toLocalDate() : null
             ))
         );
         return result;

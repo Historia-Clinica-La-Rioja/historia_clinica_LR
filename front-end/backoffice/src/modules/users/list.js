@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-    List,
-    Datagrid,
-    TextField,
-    DateField,
-    BooleanField, 
-    Filter,
-    TextInput,
-    TopToolbar
-} from 'react-admin';
+import {BooleanField, Datagrid, Filter, List, TextField, TextInput, TopToolbar} from 'react-admin';
+import SgxDateField from "../../dateComponents/sgxDateField";
 
 const PersonFilter = (props) => (
     <Filter {...props}>
@@ -27,7 +19,7 @@ const UserList = props => (
         <Datagrid rowClick="edit">
             <TextField source="username" />
             <BooleanField source="enable" />
-            <DateField source="lastLogin" />
+            <SgxDateField source="lastLogin" />
         </Datagrid>
     </List>
 );

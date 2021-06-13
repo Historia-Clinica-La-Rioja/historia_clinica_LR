@@ -1,6 +1,7 @@
 package net.pladema.patient.repository.entity;
 
 import lombok.*;
+import net.pladema.patient.repository.domain.PatientPersonVo;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -41,6 +42,16 @@ public class Patient implements Serializable{
     
     @Column(name = "identity_verification_status_id")
     private Short identityVerificationStatusId;
+
+    public Patient(PatientPersonVo patientPersonVo) {
+        this.id = patientPersonVo.getId();
+        this.personId = patientPersonVo.getPersonId();
+        this.typeId = patientPersonVo.getPatientTypeId();
+        this.possibleDuplicate = patientPersonVo.getPossibleDuplicate();
+        this.nationalId = patientPersonVo.getNationalId();
+        this.comments = patientPersonVo.getComments();
+        this.identityVerificationStatusId = patientPersonVo.getIdentityVerificationStatusId();
+    }
     
     public boolean isValidated() {
     	return getTypeId().equals(PatientType.VALIDATED);

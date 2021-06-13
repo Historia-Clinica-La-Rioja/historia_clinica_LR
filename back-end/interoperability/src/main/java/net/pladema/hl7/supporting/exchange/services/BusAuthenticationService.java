@@ -1,10 +1,13 @@
 package net.pladema.hl7.supporting.exchange.services;
 
 import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
+import net.pladema.federar.configuration.FederarWSConfig;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginPayload;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginResponse;
 import net.pladema.hl7.supporting.exchange.services.federar.JWTUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,14 +19,15 @@ import org.springframework.web.client.RestTemplate;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
+@Conditional(InteroperabilityCondition.class)
 public class BusAuthenticationService extends RestTemplate {
 
-    private final FederarConfig configuration;
+    private final FederarWSConfig configuration;
 
-    @Value("${ws.federar.url.login:/bus-auth/auth}")
+    @Value("${ws.federar.url.login}")
     private String relativeUrl;
 
-    public BusAuthenticationService(FederarConfig configuration){
+    public BusAuthenticationService(FederarWSConfig configuration){
         this.configuration=configuration;
     }
 
@@ -32,19 +36,18 @@ public class BusAuthenticationService extends RestTemplate {
         try {
             result = exchangePost(relativeUrl,
                     new FederarLoginPayload(configuration.getGrantType(), configuration.getScope(),
-                            configuration.getClientAssertionType(), generateClientAssertion()),
-                    FederarLoginResponse.class);
+                            configuration.getClientAssertionType(), generateClientAssertion()));
         } catch (RestClientException e) {
             throw new AuthenticationException("Invalid access token: " + e.getMessage() ) ;
         }
         return result;
     }
 
-    private <ResponseBody, RequestBody> ResponseEntity<ResponseBody> exchangePost(String relUrl,
-                                                                                    RequestBody requestBody, Class<ResponseBody> responseType) {
+    private ResponseEntity<FederarLoginResponse> exchangePost(String relUrl,
+                                                                     FederarLoginPayload requestBody) {
         String fullUrl = configuration.getAbsoluteURL(relUrl);
-        HttpEntity<RequestBody> entity = new HttpEntity<>(requestBody, getHeaders());
-        return exchange(fullUrl, HttpMethod.POST, entity, responseType);
+        HttpEntity<FederarLoginPayload> entity = new HttpEntity<>(requestBody, getHeaders());
+        return exchange(fullUrl, HttpMethod.POST, entity, FederarLoginResponse.class);
     }
 
     private static HttpHeaders getHeaders() {

@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,11 +23,10 @@ public class OauthChacoDataServiceImpl implements OauthDataService {
 	private final OAuthConfiguration oAuthConfiguration;
 
 	public OauthChacoDataServiceImpl(
-			@Qualifier("baseRestTemplate") RestTemplate restTemplate,
 			OAuthConfiguration oAuthConfiguration
 	) {
 		this.logger = LoggerFactory.getLogger(this.getClass());
-		this.restTemplate = restTemplate;
+		this.restTemplate = new RestTemplate();
 		this.oAuthConfiguration = oAuthConfiguration;
 	}
 

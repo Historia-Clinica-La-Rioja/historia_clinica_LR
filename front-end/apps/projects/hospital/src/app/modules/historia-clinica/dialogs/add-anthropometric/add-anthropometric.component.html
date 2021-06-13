@@ -1,0 +1,83 @@
+<div mat-dialog-title>
+	<div class="mat-h2" [translate]="'internaciones.internacion-paciente.anthropometric-summary.ADD'"></div>
+</div>
+
+<div class="spinner" *ngIf="loading else addAnthropometric">
+	<mat-spinner color="primary"></mat-spinner>
+</div>
+
+<ng-template #addAnthropometric>
+	<div mat-dialog-content>
+		<form [formGroup]="form" (ngSubmit)="submit()">
+			<div>
+				<mat-form-field [floatLabel]="'never'" appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'"></mat-label>
+					<mat-select placeholder="B+" formControlName="bloodType" name="bloodTypeId">
+						<mat-option *ngFor="let bloodType of bloodTypes" [value]="bloodType">
+							{{ bloodType.description }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div>
+				<mat-form-field [floatLabel]="'never'" appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.HEIGHT'"></mat-label>
+					<input id="height"
+						   name="height"
+						   formControlName="height"
+						   placeholder="Ej: 180"
+						   type="number"
+						   matInput>
+					<mat-error
+							*ngIf="hasError(this.form, 'min', 'height')"
+							[translate]="'forms.MIN_ERROR'"
+							[translateParams]="{min: getError(this.form, 'min', 'height').min}">
+					</mat-error>
+					<mat-error
+							*ngIf="hasError(this.form, 'max', 'height')"
+							[translate]="'forms.MAX_ERROR'"
+							[translateParams]="{max: getError(this.form, 'max', 'height').max}">
+					</mat-error>
+					<mat-error
+						*ngIf="hasError(this.form, 'pattern', 'height')"
+						[translate]="'forms.FORMAT_NUMERIC_INTEGER'"
+						[translateParams]="{pattern: getError(this.form, 'pattern', 'height').pattern}">
+					</mat-error>
+				</mat-form-field>
+			</div>
+			<div>
+				<mat-form-field [floatLabel]="'never'" appearance="outline">
+					<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.WEIGHT'"></mat-label>
+					<input id="weight"
+						   name="weight"
+						   formControlName="weight"
+						   placeholder="Ej: 70"
+						   type="number"
+						   matInput>
+					<mat-error
+							*ngIf="hasError(this.form, 'min', 'weight')"
+							[translate]="'forms.MIN_ERROR'"
+							[translateParams]="{min: getError(this.form, 'min', 'weight').min}">
+					</mat-error>
+					<mat-error
+							*ngIf="hasError(this.form, 'max', 'weight')"
+							[translate]="'forms.MAX_ERROR'"
+							[translateParams]="{max: getError(this.form, 'max', 'weight').max}">
+					</mat-error>
+					<mat-error
+						*ngIf="hasError(this.form, 'pattern', 'weight')"
+						[translate]="'forms.FORMAT_NUMERIC'"
+						[translateParams]="{pattern: getError(this.form, 'pattern', 'weight').pattern}">
+					</mat-error>
+				</mat-form-field>
+			</div>
+		</form>
+	</div>
+	<mat-dialog-actions align="end">
+		<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
+		</button>
+		<button *ngIf="this.form.valid && !formHasNoValues(this.form.value)" mat-raised-button color="primary" (click)="submit()">
+			<span [translate]="'buttons.ADD'"></span>
+		</button>
+	</mat-dialog-actions>
+</ng-template>

@@ -20,7 +20,7 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.error.controller.dto.ApiErrorDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import net.pladema.sgx.pdf.PDFDocumentException;
 import net.pladema.sgx.pdf.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
@@ -29,7 +29,6 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

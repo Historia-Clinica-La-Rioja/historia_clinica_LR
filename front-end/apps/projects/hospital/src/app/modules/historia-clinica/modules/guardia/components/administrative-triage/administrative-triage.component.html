@@ -1,0 +1,15 @@
+<div class="page" fxLayout="column">
+	<section>
+		<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
+					(doctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+		</app-triage>
+	</section>
+	<div class="simple-form-field" fxLayoutGap="10px" fxLayout="row" fxLayoutAlign="flex-end">
+		<button mat-stroked-button class="uppercase" (click)="back()">
+			<span [translate]="cancelLabel"></span>
+		</button>
+		<button mat-raised-button class="uppercase" color="primary" (click)="confirmTriage()" [disabled]="disableConfirmButton">
+			<span [translate]="confirmLabel"></span>
+		</button>
+	</div>
+</div>

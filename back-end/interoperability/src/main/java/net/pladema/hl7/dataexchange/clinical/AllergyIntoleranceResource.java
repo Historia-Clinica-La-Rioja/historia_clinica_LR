@@ -3,6 +3,7 @@ package net.pladema.hl7.dataexchange.clinical;
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
@@ -14,14 +15,17 @@ import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class AllergyIntoleranceResource extends IMultipleResourceFhir {
+@Conditional(InteroperabilityCondition.class)
+public class AllergyIntoleranceResource extends IMultipleResourceFhir<AllergyIntolerance> {
 
     @Autowired
     public AllergyIntoleranceResource(FhirPersistentStore store) {
@@ -35,23 +39,23 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
 
 
     @Override
-    public List<AllergyIntolerance> fetch(String id, Reference[] references) {
+    public List<AllergyIntolerance> fetch(String id, Map<ResourceType, Reference> references) {
         List<AllergyIntoleranceVo> allergies = store.findAllAllergies(id);
 
         if (allergies.isEmpty())
-            return noInformationAvailable(references[0]);
+            return noInformationAvailable(references.get(ResourceType.Patient));
 
         List<AllergyIntolerance> resources = new ArrayList<>();
-        allergies.forEach((allergy) -> {
+        allergies.forEach(allergy -> {
 
             AllergyIntolerance resource = new AllergyIntolerance();
             resource.setId(allergy.getId());
             resource.setType(AllergyIntolerance.AllergyIntoleranceType.fromCode(allergy.getType()));
             allergy.getCategories().forEach(c-> resource.addCategory(
-                    AllergyIntolerance.AllergyIntoleranceCategory.fromCode(c))
+                        AllergyIntolerance.AllergyIntoleranceCategory.fromCode(c))
             );
             resource.setCriticality(AllergyIntolerance.AllergyIntoleranceCriticality.fromCode(allergy.getCriticality()));
-            resource.setPatient(references[0]);
+            resource.setPatient(references.get(ResourceType.Patient));
             resource.setCode(newCodeableConcept(CodingSystem.SNOMED, allergy.get()));
             resource.getOnsetDateTimeType().setValue(FhirDateMapper.toDate(allergy.getStartDate()));
 
@@ -79,6 +83,7 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir {
                 CodingSystem.Allergy.CLINICAL_STATUS,
                 AllergyIntoleranceVo.defaultClinicalStatus())
         );
+        none.addCategory(AllergyIntolerance.AllergyIntoleranceCategory.MEDICATION);
         return Collections.singletonList(none);
     }
 

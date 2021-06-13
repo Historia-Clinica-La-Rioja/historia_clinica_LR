@@ -1,8 +1,12 @@
 package net.pladema.person.repository.entity;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.Period;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.patient.repository.domain.PatientPersonVo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Table(name = "person")
@@ -35,16 +38,16 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 40)
     private String firstName;
 
-    @Column(name = "middle_names")
+    @Column(name = "middle_names", length = 40)
     private String middleNames;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 40)
     private String lastName;
 
-    @Column(name = "other_last_names")
+    @Column(name = "other_last_names", length = 40)
     private String otherLastNames;
 
     @Column(name = "identification_type_id")
@@ -58,6 +61,18 @@ public class Person implements Serializable {
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
+
+    public Person(PatientPersonVo patientPersonVo) {
+        this.id = patientPersonVo.getPersonId();
+        this.firstName = patientPersonVo.getFirstName();
+        this.middleNames = patientPersonVo.getMiddleNames();
+        this.lastName = patientPersonVo.getLastName();
+        this.otherLastNames = patientPersonVo.getOtherLastNames();
+        this.identificationTypeId = patientPersonVo.getIdentificationTypeId();
+        this.identificationNumber = patientPersonVo.getIdentificationNumber();
+        this.genderId = patientPersonVo.getGenderId();
+        this.birthDate = patientPersonVo.getBirthDate();
+    }
 
     @JsonIgnore
     public Short getAge(){

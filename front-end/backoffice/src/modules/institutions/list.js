@@ -4,7 +4,8 @@ import {
     Datagrid,
     TextField,
     Filter,
-    TextInput
+    TextInput, 
+    ReferenceField
 } from 'react-admin';
 
 const InstitutionFilter = (props) => (
@@ -23,6 +24,9 @@ const InstitutionList = props => (
             <TextField source="email" />
             <TextField source="cuit" />
             <TextField source="sisaCode" />
+            <ReferenceField source="dependencyId" reference="dependencies" link={false}>
+                <TextField source="description" />
+            </ReferenceField>
         </Datagrid>
     </List>
 );

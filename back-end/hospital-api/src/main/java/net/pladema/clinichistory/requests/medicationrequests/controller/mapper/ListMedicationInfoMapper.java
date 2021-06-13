@@ -6,7 +6,7 @@ import net.pladema.clinichistory.requests.medicationrequests.controller.dto.Doct
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DosageInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
-import net.pladema.sgx.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

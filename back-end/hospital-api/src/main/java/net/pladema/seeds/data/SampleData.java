@@ -1,8 +1,8 @@
 package net.pladema.seeds.data;
 
 import net.pladema.address.repository.AddressRepository;
-import net.pladema.sgx.auditable.entity.Audit;
-import net.pladema.sgx.auditable.entity.AuditableEntity;
+import ar.lamansys.sgx.shared.auditable.entity.Audit;
+import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.person.repository.PersonRepository;
@@ -11,6 +11,7 @@ import net.pladema.user.repository.UserPasswordRepository;
 import net.pladema.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Profile("dev")
 public class SampleData {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SampleData.class);

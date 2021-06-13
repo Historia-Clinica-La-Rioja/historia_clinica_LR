@@ -1,9 +1,7 @@
 package net.pladema.hl7.dataexchange.model.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 import net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo;
 
 import java.time.LocalDate;
