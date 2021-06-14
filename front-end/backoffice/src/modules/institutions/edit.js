@@ -3,13 +3,16 @@ import {
     TextInput,
     Edit,
     SimpleForm,
-    required,
     ReferenceManyField,
     Datagrid,
     TextField,
     EditButton,
-    ReferenceInput, 
+    ReferenceInput,
     SelectInput,
+    required,
+    number,
+    maxLength,
+    minLength,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
@@ -32,10 +35,20 @@ const InstitutionEdit = props => (
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="name" validate={[required()]} />
             <TextInput source="website" />
-            <TextInput source="phone" validate={[required()]} />
+            <TextInput source="phone" validate={[
+                required(),
+                maxLength(20)]}/>
             <TextInput source="email" type="email" validate={[required()]} />
-            <TextInput source="cuit" validate={[required()]} />
-            <TextInput source="sisaCode" validate={[required()]} />
+            <TextInput source="cuit"
+                       validate={[
+                           required(),
+                           number(),
+                           maxLength(20)]}/>
+            <TextInput source="sisaCode" validate={[
+                required(),
+                number(),
+                minLength(14),
+                maxLength(14)]}/>
             <Dependency source="dependencyId" />
 
             <SectionTitle label="resources.institutions.fields.sectors"/>
