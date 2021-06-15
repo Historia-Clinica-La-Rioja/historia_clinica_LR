@@ -1,6 +1,5 @@
 package net.pladema.reports.controller;
 
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.reports.service.ExcelService;
 import net.pladema.reports.util.QueryFactory;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("reports")

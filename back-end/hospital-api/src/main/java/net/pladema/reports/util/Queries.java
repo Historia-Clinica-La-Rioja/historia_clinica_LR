@@ -34,6 +34,6 @@ public class Queries {
            "WHERE" +
             "   i.id = :institutionId " +
             "   AND oc.start_date between :startDate AND :endDate " +
-            "   AND oc.clinical_specialty_id = :clinicalSpecialtyId " +
-            "   AND oc.doctor_id = :doctorId";
+            "       %s " + // filtro especialidadId
+            "       %s ";  // filtro doctorId
 }
