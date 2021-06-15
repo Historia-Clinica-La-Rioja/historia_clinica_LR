@@ -1,4 +1,4 @@
-package net.pladema.reports.util.struct;
+package ar.lamansys.sgx.shared.reports.util.struct;
 
 import org.odftoolkit.simple.table.Row;
 

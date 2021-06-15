@@ -1,6 +1,6 @@
-package net.pladema.reports.util.struct;
+package ar.lamansys.sgx.shared.reports.util.struct;
 
-import net.pladema.reports.util.SheetConstants;
+import ar.lamansys.sgx.shared.reports.util.SheetConstants;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.OutputStream;

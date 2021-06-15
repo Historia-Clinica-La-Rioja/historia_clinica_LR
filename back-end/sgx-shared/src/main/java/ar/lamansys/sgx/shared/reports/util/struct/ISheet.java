@@ -1,4 +1,4 @@
-package net.pladema.reports.util.struct;
+package ar.lamansys.sgx.shared.reports.util.struct;
 
 public interface ISheet extends Iterable<IRow> {
 

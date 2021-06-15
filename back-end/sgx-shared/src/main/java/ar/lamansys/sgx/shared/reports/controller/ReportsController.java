@@ -1,9 +1,9 @@
-package net.pladema.reports.controller;
+package ar.lamansys.sgx.shared.reports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import net.pladema.reports.service.ExcelService;
-import net.pladema.reports.util.QueryFactory;
-import net.pladema.reports.util.struct.IWorkbook;
+import ar.lamansys.sgx.shared.reports.service.ExcelService;
+import ar.lamansys.sgx.shared.reports.util.QueryFactory;
+import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;

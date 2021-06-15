@@ -1,8 +1,8 @@
-package net.pladema.reports.util.manager;
+package ar.lamansys.sgx.shared.reports.util.manager;
 
-import net.pladema.reports.util.struct.ExcelWorkbook;
-import net.pladema.reports.util.struct.IWorkbook;
-import net.pladema.reports.util.struct.ODSWorkbook;
+import ar.lamansys.sgx.shared.reports.util.struct.ExcelWorkbook;
+import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import ar.lamansys.sgx.shared.reports.util.struct.ODSWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 

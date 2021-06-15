@@ -1,6 +1,6 @@
-package net.pladema.reports.service;
+package ar.lamansys.sgx.shared.reports.service;
 
-import net.pladema.reports.util.struct.IWorkbook;
+import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 
 import javax.persistence.Query;
 
