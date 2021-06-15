@@ -30,7 +30,7 @@ public class ExcelWorkbook implements IWorkbook {
 
     @Override
     public String getExtension() {
-        return "xlsx";
+        return "xls";
     }
 
     @Override
