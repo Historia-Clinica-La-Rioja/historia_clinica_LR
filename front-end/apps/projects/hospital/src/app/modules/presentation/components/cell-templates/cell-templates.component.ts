@@ -1,7 +1,6 @@
 import {
 	Component,
 	EventEmitter,
-	OnInit,
 	Output,
 	QueryList,
 	TemplateRef,
@@ -15,15 +14,12 @@ import {CtrlTemplateDirective} from '@presentation/directives/ctrl-template.dire
 	templateUrl: './cell-templates.component.html',
 	styleUrls: ['./cell-templates.component.scss']
 })
-export class CellTemplatesComponent implements OnInit {
+export class CellTemplatesComponent {
 
 	@ViewChildren(CtrlTemplateDirective) templateRefs: QueryList<CtrlTemplateDirective>;
 	@Output() valueChanged: EventEmitter<any> = new EventEmitter<any>();
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 	 getTemplate(templateName: string): TemplateRef<any> {
 		return this.templateRefs.toArray().find(x => x.name.toLowerCase() === templateName.toLowerCase()).template;
