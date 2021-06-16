@@ -6,11 +6,11 @@ public class Queries {
     "SELECT " +
             " p.description as provincia, d.description as municipio, i.sisa_code as cod_estable, i.name as institucion, " +
             " CONCAT(pe.last_name, ' ', pe.other_last_names) as apellidosPaciente, CONCAT(pe.first_name, ' ', pe.middle_names) as nombresPaciente, " +
-            " pe.identification_type_id as tipoDocumento, pe.identification_number as numeroDocumento, pe.birth_date as fechaNacimiento, " +
+            " it.description as tipoDocumento, pe.identification_number as numeroDocumento, to_char(pe.birth_date,'DD/MM/YYYY') as fechaNacimiento, " +
             " g.description as genero, CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as domicilio, " +
-            " px.phone_number as numeroTelefono, px.email as email, coverage.nombreCobertura as nombreCobertura, coverage.affiliate_number, oc.start_date as fechaInicio, " +
-            " cs.name as especialidad, CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as nombresApellidosProfesional, " +
-            " r.description as razonConsulta " +
+            " px.phone_number as numeroTelefono, px.email as email, coverage.nombreCobertura as nombreCobertura, coverage.affiliate_number, " +
+            " to_char(oc.start_date,'DD/MM/YYYY') as fechaInicio, cs.name as especialidad, " +
+            " CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as nombresApellidosProfesional, r.description as razonConsulta " +
             "FROM " +
             "   outpatient_consultation oc " +
             "   JOIN institution i ON (oc.institution_id = i.id) " +
@@ -20,6 +20,7 @@ public class Queries {
             "   JOIN province p ON (d.province_id = p.id) " +
             "   JOIN patient pa ON (oc.patient_id = pa.id) " +
             "   JOIN person pe ON (pa.person_id = pe.id) " +
+            "   LEFT JOIN identification_type it ON (pe.identification_type_id = it.id) "+
             "   LEFT JOIN person_extended px ON (px.person_id = pe.id) " +
             "   LEFT JOIN gender g ON (px.gender_self_determination = g.id) " +
             "   LEFT JOIN address a2 ON (px.address_id = a2.id) " +
