@@ -1,55 +1,63 @@
-# HSI | Front-End
+# ![logo](apps/projects/hospital/src/assets/custom/icons/icon-72x72.png) HSI | Front-End
 
 El front-end del proyecto está compuesto por la app Hospital y un Backoffice.
 
-## Ambiente de desarrollo
+## Requisitos
 
-Para el desarrollo de ambos proyectos se puede utilizar [Visual Studio Code](https://code.visualstudio.com/Download) o [WebStorm](https://www.jetbrains.com/webstorm/download/).
+1. Para el desarrollo de ambos proyectos se puede utilizar [Visual Studio Code](https://code.visualstudio.com/Download) o [WebStorm](https://www.jetbrains.com/webstorm/download/).
+2. Node en la versión definida en el [POM principal](../pom-parent.xml#L18) del proyecto.
+3. [NPM](https://www.npmjs.com/get-npm) en la versión definida en el [POM principal](../pom-parent.xml#L19) del proyecto.
+4. Yarn. 
 
-Además ambos proyectos requieren tener instalado [npm](https://www.npmjs.com/get-npm) en la versión definida en [../pom-parent.xml](../pom-parent.xml#L19).
+## LR/DR;
 
 ### Hospital
 
-El primer paso es descargar todas las dependencias de desarrollo, este paso se debe hacer cada vez que se agregue una nueva dependencia. En la raíz del repositorio ejecute:
+**Descargar** dependencias de desarrollo desde la carpeta `front-end/apps`
 
 ```shell
-# entrar al directorio del proyecto
-cd front-end/apps/
-# descargar las dependencias de desarrollo
 npm install
 yarn install
-# levantar el proyecto en modo desarrollo
+```
+
+> Este paso sólo debe ejecutarse cada vez que se agregue una nueva dependencia.
+
+**Buildear** bibliotecas propias del proyecto:
+
+```shell
+npm run build:odontology
+```
+
+**Levantar** servidor node local de desarrollo:
+
+```shell
 npm start
 ```
 
-> Mas comandos útiles para el desarrollo en [apps/README.md](apps/README.md).
-> Las características PWA no se pueden probar en modo desarrollo.
+> Las características PWA no pueden probarse en modo desarrollo.
 
 ### Backoffice
 
-El primer paso es descargar todas las dependencias de desarrollo, este paso se debe hacer cada vez que se agregue una nueva dependencia. En la raíz del repositorio ejecute:
+**Descargar** dependencias de desarrollo desde la carpeta `front-end/backoffice`
 
 ```shell
-# entrar al directorio del proyecto
-cd front-end/backoffice/
-# descargar las dependencias de desarrollo
 npm install
-# levantar el proyecto en modo desarrollo
+```
+
+**Levantar** servidor local de desarrollo:
+
+```shell
 npm start
 ```
 
-> Mas comandos útiles para el desarrollo en [backoffice/README.md](backoffice/README.md).
+
+## Desarrollo
+
+- Comandos útiles para desarrollo de app Hospital. [Leer más](apps/README.md).
+- Comandos útiles para desarrollo de backoffice. [Leer más](backoffice/README.md).
 
 ## Configuración de IDE
 
 ### WebStorm 
 
 1. Settings -> Editor -> Code Style -> JavaScript -> Spaces -> Within ES6 Import/export braces
-
-## PWA
-
-Dado que levantar el proyecto en modo desarrollo (por ejemplo: `npm start`) no permite usar las características PWA, se ofrece un script y un contenedor Docker para poder realizar pruebas localmente.
-
-El script [scripts/pwa-local.sh](../scripts/pwa-local.sh) buildea la app Hospital, levanta un contenedor Docker con nginx configurado para acceder al código buildeado y al backend en http://localhost:8080, y por último utiliza ngrok para obtener un acceso con https.
-
-> NOTA: no funciona de la misma manera en Windows, Linux o Mac así que algunos ajustes podrían ser necesarios.
