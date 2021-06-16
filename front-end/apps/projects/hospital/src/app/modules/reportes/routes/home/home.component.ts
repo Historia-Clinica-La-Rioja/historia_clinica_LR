@@ -66,6 +66,14 @@ export class HomeComponent implements OnInit {
 		return dateToMoment(new Date(today.year(), today.month() + 1, 0));
 	}
 
+	maxStartDate(endDate) {
+		const today = newMoment();
+		if (endDate){
+			return (today.isBefore(endDate)) ? today : endDate;
+		}
+		return today;
+	}
+
 	private getSpecialtiesTypeaheadOptions$(doctors: ProfessionalDto[]) {
 		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.id))
 			.pipe(map(toTypeaheadOptionList));
@@ -128,13 +136,20 @@ export class HomeComponent implements OnInit {
 				this.form.controls.startDate.setErrors({max: true});
 			} else {
 				this.form.controls.endDate.setErrors(null);
-				this.form.controls.startDate.setErrors(null);
+				this.checkStartDateIsSameOrBeforeToday();
 			}
 		} else if (this.form.value.startDate) {
-			this.form.controls.startDate.setErrors(null);
+			this.checkStartDateIsSameOrBeforeToday();
 		} else if (this.form.value.endDate) {
 			this.form.controls.endDate.setErrors(null);
 		}
+	}
+
+	private checkStartDateIsSameOrBeforeToday() {
+		const today = newMoment();
+		(today.isSameOrAfter(this.form.value.startDate))
+			? this.form.controls.startDate.setErrors(null)
+			: this.form.controls.startDate.setErrors({afterToday: true});
 	}
 
 	generateReport() {

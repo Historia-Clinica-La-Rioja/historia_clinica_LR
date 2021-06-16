@@ -33,7 +33,7 @@
 					<mat-form-field appearance="outline">
 						<input formControlName="startDate" id="startDatePicker" matInput [matDatepicker]="startDatePicker"
 							   placeholder="{{'reportes.form.START_DATE_PLACEHOLDER' | translate}}"
-							   [max]="this.form.controls.endDate.value"
+							   [max]="maxStartDate(this.form.controls.endDate.value)"
 								(dateChange)="checkValidDates()">
 						<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 						<mat-datepicker #startDatePicker></mat-datepicker>
@@ -41,7 +41,10 @@
 							[translate]="'forms.REQUIRED'">
 						</mat-error>
 						<mat-error *ngIf="this.form.controls.startDate.hasError('max')"
-								   [translate]="'reportes.form.errors.FECHA_INICIO_MAX'">
+								   [translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_FECHA_FIN'">
+						</mat-error>
+						<mat-error *ngIf="this.form.controls.startDate.hasError('afterToday')"
+								   [translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_HOY'">
 						</mat-error>
 					</mat-form-field>
 				</div>

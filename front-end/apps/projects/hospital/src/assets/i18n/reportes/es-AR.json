@@ -15,7 +15,8 @@
 			"SUBMIT": "Generar reporte",
 			"REQUIRED_FIELD": "Obligatorio *",
 			"errors": {
-				"FECHA_INICIO_MAX": "La fecha de inicio debe ser menor o igual a la fecha de fin",
+				"FECHA_INICIO_POSTERIOR_FECHA_FIN": "La fecha de inicio debe ser menor o igual a la fecha de fin",
+				"FECHA_INICIO_POSTERIOR_HOY": "La fecha de inicio debe ser anterior o igual a la fecha actual",
 				"FECHA_FIN_MIN": "La fecha de fin debe ser posterior o igual a la fecha de inicio"
 			}
 		}
