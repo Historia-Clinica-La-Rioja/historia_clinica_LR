@@ -1,6 +1,6 @@
 ![Historia Clinica](documentacion/images/HC-logo.png)
 
-# HospitalApp
+# HSI | Historia de Salud Integrada
 
 ## Instalación
 Se ofrecen dos alternativas para el despliegue — *y puesta en marcha* — de la aplicación: a través de contenedores Docker y mediante el uso de la herramienta Ansible. Esta última se describe en profundidad en su [apartado correspondiente](/sgh-ansible/README.md).
@@ -18,20 +18,39 @@ Se recomienda desplegar la aplicación bajo la siguiente infraestrutura:
 * Un cluster para PostgreSQL
 * Un nodo NFS para el almacenamiento y acceso compartido de documentos clínicos y fotos de pacientes. 
 
-### Verificar integraciones con servicios externos
+### Integraciones con servicios externos
 
-* Autenticación servicio Renaper
+- [Google Recaptcha](#configuración-de-google-recaptcha)
+- [Renaper](#validación-servicio-renaper)
+- [Federar](#validación-servicio-federar)
+- [Snowstorm](#validación-servicio-snowstorm)
+
+#### Configuración de Google Recaptcha
+
+Configurar el servicio siguiendo los pasos descriptos a continuación:
+
+1. Ingresar a la [página oficial](https://www.google.com/recaptcha/admin/) de Google Recaptcha. 
+2. Agregar un nuevo sitio eligiendo las opciones de *reCAPTCHA v2* y *Casilla No soy un robot*.
+3. Agregar el/los dominio/s necesarios.
+4. Copiar el valor `site` y `secret key` para utilizarlos en el archivo de configuracion externalizado.
+
+
+#### Validación servicio Renaper
+
+Ejecutar el siguiente request por línea de comandos reemplazando los valores **NOMBRE** y **CLAVE** por los provistos por el Ministerio de Salud.
 
 ```shell
 curl -X POST 'https://federador.msal.gob.ar/masterfile-federacion-service/api/usuarios/aplicacion/login' -d '{"nombre":"NOMBRE", "clave":"CLAVE", "codDominio":"DOMINIOSINAUTORIZACIONDEALTA"}' -H "Content-Type: application/json"
 ```
 
-Reemplazar los valores **NOMBRE** y **CLAVE** por los proporcionados por el Ministerio de Salud.
+> El request deberá retornar el atributo `token` para comprobar que las credenciales son correctas.
 
 
-* Autenticación servicio Federar 
+#### Validación servicio Federar 
 
-Para verificar la correcta creación de un JWT (*Json Web Token*) ingresar a la [plataforma](http://jwtbuilder.jamiekurtz.com/) y completar el **claim** teniendo en cuenta la descripción de cada atributo:
+Para verificar el acceso al servicio Federar primero deberá generarse un Token JWT (*Json Web Token*) y utilizar dicho token en el request de autenticación. El token puede crearse desde la plataforma [JWTBuilder](http://jwtbuilder.jamiekurtz.com/). 
+
+Una vez en la plataforma, debe configurarse el **claim** teniendo en cuenta la descripción de cada atributo:
 
 ```json
 {
@@ -48,19 +67,23 @@ Para verificar la correcta creación de un JWT (*Json Web Token*) ingresar a la 
 
 Completar el valor **KEY** con el proporcionado por el ministerio de Salud.
 
-Una vez generado el **JWT**, utilizarlo en el siguiente comando — *reemplazando la palabra TOKEN* — para validar la autenticación en el servicio — *obtensión del accessToken* —.
+Una vez generado el **JWT**, utilizarlo en el siguiente comando — *reemplazando la palabra TOKEN* — para validar la autenticación en el servicio.
 
 ```shell
 curl -X POST 'https://federador.msal.gob.ar/bus-auth/auth' -d '{"grantType": "client_credentials","scope": "Patient/*.read,Patient/*.write", "clientAssertionType": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "clientAssertion":"TOKEN"}' -H "Content-Type: application/json"
 ```
 
-* Autenticación servicio Snowstorm
+> El request deberá retornar el atributo `accessToken` para comprobar que las claves son correctas.
+
+#### Validación servicio Snowstorm
+
+Ejecutar el siguiente request por línea de comandos reemplazando los valores **APP_ID** y **APP_KEY** por los proporcionados por el Ministerio de Salud.
 
 ```shell
 curl -X GET 'https://snowstorm.msal.gob.ar/MAIN/concepts?activeFilter=true&term=meningococo&limit=10&offset=0&ecl=%5E2281000221106' -H "Accept-Language: es" -H "app_id: APP_ID" -H "app_key: APP_KEY"
 ```
 
-Reemplazar los valores **APP_ID** y **APP_KEY** por los proporcionados por el Ministerio de Salud.
+> El request deberá retornan un estado 200 para comprobar que las claves son correctas.
 
 ## Contribución
 
@@ -68,7 +91,7 @@ Para el envío de propuestas, consultas técnicas o especificación funcional y 
     
 Este código de Historia clínica, se encuentra  disponible en [gitlab-publico.pladema.net/historia-clinica/sgh](http://gitlab-publico.pladema.net/historia-clinica/sgh). 
     
-Para subir aportes utilizar un fork y pedir un Merge Request a dicha URL.
+Para subir aportes utilice esta [guía de contribución](CONTRIBUTING.md).
 
 ## Proyecto
 
@@ -77,13 +100,21 @@ Sitio de demo: http://sgh.pladema.net/auth/login
 El proyecto está formado por los siguientes tres proyectos:
 
 1. front-end/backoffice: Single Page Application del panel de administración (backoffice) para manejo de los flujos básicos y creación de datos maestros. Implementada con ReactAdmin.
-2. front-end/apps/projects/hospital: Single Page Application que contiene la funcionalidad principal del sistema. Implementada en Angular 11.
-3. back-end/hospital-api: API REST de todo el sistema implementada con Spring Boot 2.3 y Java 11
+2. front-end/apps/projects/hospital: Single Page Application que contiene la funcionalidad principal del sistema. Implementada en Angular.
+3. back-end/app: API REST de todo el sistema implementada con Spring Boot y Java.
+
+
+### Documentación (desarrollo)
+
+- [Architecture](documentacion/arquitectura.md)
+- [DDBB](dba/README.md)
+- [Back-end](back-end/README.md) 
+- [Front-end](front-end/README.md)
 
 ## Licencia
 
 Apache 2.0
 
-Consulte el archivo de LICENCIA incluido para obtener más detalles.
+Consulte el archivo de [LICENCIA](LICENSE.md) incluido para obtener más detalles.
 
 

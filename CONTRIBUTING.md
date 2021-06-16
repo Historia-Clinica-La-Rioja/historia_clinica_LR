@@ -37,11 +37,3 @@ En este documento se definen los requerimientos minimos para poder contribuir co
 La nueva funcionalidad será validada desde el equipo de PLADEMA, mediante herramientas automáticas o manuales según corresponda. Durante este proceso pueden surgir pedidos de cambios sobre código, funcionalidad, etc.
 
 Una vez validado el merge request, el equipo de QA perteneciente a PLADEMA y al Ministerio de Salud realizará los test de integración y aceptación correspondientes para finalmente enviar el código al repositorio.
-
-### Atribución
-
-Para el envío de propuestas, consultas técnicas o especificación funcional y responsable de la aprobación de las mismas, escribir al siguiente mail de contacto: historia_clinica@pladema.exa.unicen.edu.ar. 
-    
-Este código de Historia clínica, se encuentra  disponible en [gitlab-publico.pladema.net/historia-clinica/sgh](http://gitlab-publico.pladema.net/historia-clinica/sgh). 
-    
-Para subir aportes utilizar un fork y pedir un Merge Request a dicha URL.
