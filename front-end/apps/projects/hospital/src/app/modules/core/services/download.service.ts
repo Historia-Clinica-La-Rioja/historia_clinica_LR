@@ -13,6 +13,20 @@ export class DownloadService {
 		private http: HttpClient,
 	) {	}
 
+	downloadXlsWithRequestParams(url: string, fileName: string, params: any): Observable<any> {
+		const httpOptions = {
+			responseType  : 'arraybuffer' as 'json',
+			params: params
+		};
+		return this.http.get<any>(url, httpOptions).pipe(
+			tap((data: any) => {
+				const blobType = { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
+				const file = new Blob([data], blobType);
+				saveAs(file, fileName);
+			})
+		);
+	}
+
 	downloadPdf(url: string, fileName: string): Observable<any> {
 		const httpOptions = {
 			responseType  : 'arraybuffer' as 'json'

@@ -9,6 +9,7 @@ import {Observable} from 'rxjs/internal/Observable';
 import {REPORT_TYPES} from '../../constants/report-types';
 import {dateToMoment, newMoment} from '@core/utils/moment.utils';
 import {Moment} from 'moment';
+import {ReportsService} from '@api-rest/services/reports.service';
 
 @Component({
 	selector: 'app-home',
@@ -36,6 +37,7 @@ export class HomeComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly reportsService: ReportsService,
 	) { }
 
 	ngOnInit(): void {
@@ -138,7 +140,13 @@ export class HomeComponent implements OnInit {
 	generateReport() {
 		this.submitted = true;
 		if (this.form.valid) {
-			// generate report
+			const params = {
+				startDate: this.form.controls.startDate.value,
+				endDate: this.form.controls.endDate.value,
+				specialtyId: this.form.controls.specialtyId.value,
+				professionalId: this.form.controls.professionalId.value
+			}
+			this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe();
 		}
 	}
 
