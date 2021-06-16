@@ -1,27 +1,44 @@
-# Base de datos
+# ![logo](../front-end/apps/projects/hospital/src/assets/custom/icons/icon-72x72.png) HSI | Base de datos
 
-El DBMS utilizado actualmente es **Postgres**.
+El DBMS utilizado actualmente es **Postgres**. En el desarrollo iterativo e incremental se producen cambios estructurales y metadatos de la base de datos, para gestionar esto se utiliza la herramienta [liquibase](https://liquibase.org).
 
-## Ambiente de desarrollo
+## Requisitos 
 
-Para utilizar una base de datos local, se sugiere:
-1. instalar docker
-2. crear el contenedor con docker-compose
-3. luego ejecutar liquibase
-4. cambiar configuracion del proyecto para usar la base local
+1. Instalar y correr [docker](https://www.docker.com/products/docker-desktop).
+2. Maven 3.6.
 
-### Paso 2: Docker
+## Puesta en Marcha 
 
-En la raiz del proyecto, abrir shell y ejecutar:
+Levantar una DDBB de PostgreSQL:
 
 ```shell
-docker-compose up -d
+docker-compose up -d postgresql
 ```
 
-### Paso 4: Migrar con liquibase
+Popular la base con las estructuras y metadatos requeridos:
 
-Usar la explicación del [directorio raiz](../README.md) o la del [archivo especifico](../dba/Documentacion/liquibase.md) para más detalle.
+```shell
+mvn -Dliquibase.propertyFile=liquibase/postgresql.properties -Dliquibase.contexts=default liquibase:update
+```
+> Todos los comandos deben correrse dentro de la carpeta ```dba/```
 
-### Errores comunes
 
-#1. `Cannot create container for service db: status code not OK but 500: {"Message":"Unhandled exception: Drive has not been shared"}` Causado por no compartir el disco C con Docker. Hay que darle permisos.
+## Popular DDBB con datos de ambiente
+
+Tras ejecutar los pasos descriptos en el apartado **Puesta en Marcha**, la base de datos dispondrá de todas las estructuras básicas — *tablas, vistas, claves primarias, claves extranjeras, índices, etc.*— y todos los metadatos. Sin embargo, al momento de desarrollar una nueva funcionalidad en el sistema o resolver un error, podría ser necesario contar con una base completa de datos. Para ello, se recomienda ***copiar*** una DDBB de un ambiente de testing a la base de datos local en Docker. 
+> Para realizar la copia de datos debe seguirse el [instructivo](https://git.pladema.net/minsalud/sgh-os-infra/-/blob/master/guides/database/dump&restore.md#ejemplo-de-aplicaci%C3%B3n) correspondiente. 
+
+### Desarrollo
+
+- Información detallada y comandos útiles para el desarrollo. [Leer más](documentacion/liquibase.md).
+- Convenciones para escribir cambios en la DDBB. [Leer más](documentacion/convenciones.md). 
+- Diagrama de entidades y relaciones [Ver](https://app.diagrams.net/#G1r06bHAOUC4iIMkH8zuPFilpe8w9U2d7f).
+
+### Troubleshooting
+
+| Diagnóstico | Descripción |
+|---|---|
+| Problema | **Windows**: `Cannot create container for service db: status code not OK but 500: {"Message":"Unhandled exception: Drive has not been shared"}`|
+| Causa | El disco C no está compartido con Docker |
+| Solución | Otorgar permisos|
+
