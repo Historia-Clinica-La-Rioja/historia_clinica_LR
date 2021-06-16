@@ -30,7 +30,9 @@ export class InstitucionesComponent {
 				.filter((ra) => ra.institutionId >= 0)
 				.map(r => r.institutionId);
 
-			this.webappInstitutionsAccess = this.hasAccessToWebappInstitutions(allRoles);
+			this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTES).subscribe( habilitarReportesIsActive =>
+				this.webappInstitutionsAccess = this.hasAccessToWebappInstitutions(allRoles, habilitarReportesIsActive)
+			);
 			this.backofficeAccess = this.hasAccessToBackoffice(allRoles);
 			this.patientPortalAccess = this.hasAccessToPatientPortal(allRoles);
 
@@ -70,10 +72,12 @@ export class InstitucionesComponent {
 				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE).length > 0;
 	}
 
-	hasAccessToWebappInstitutions(allRoles: RoleAssignment[]) {
+	hasAccessToWebappInstitutions(allRoles: RoleAssignment[], habilitarReportesIsActive: boolean) {
 		return allRoles
 			.filter((ra) => ra.role !== ERole.ROOT &&
-				ra.role !== ERole.ADMINISTRADOR).length > 0;
+				ra.role !== ERole.ADMINISTRADOR &&
+				!(ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE && !habilitarReportesIsActive)
+			).length > 0;
 	}
 
 	hasAccessToPatientPortal(allRoles: RoleAssignment[]): boolean {
