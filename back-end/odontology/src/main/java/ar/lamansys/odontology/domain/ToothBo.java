@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 @NoArgsConstructor
 public class ToothBo {
     private OdontologySnomedBo snomed;
-    private Integer toothCode;
-    private Integer quadrantCode;
+    private Short toothCode;
+    private Short quadrantCode;
     private boolean posterior;
     private final Logger logger =  LoggerFactory.getLogger(getClass());
 
@@ -25,7 +25,7 @@ public class ToothBo {
         this.posterior = other.posterior;
     }
 
-    public boolean belongsToQuadrant(Integer quadrantCode) {
+    public boolean belongsToQuadrant(Short quadrantCode) {
         logger.debug("Input -> {}", quadrantCode);
         var result = quadrantCode.equals(this.getQuadrantCode());
         logger.debug("Output -> {}", result);

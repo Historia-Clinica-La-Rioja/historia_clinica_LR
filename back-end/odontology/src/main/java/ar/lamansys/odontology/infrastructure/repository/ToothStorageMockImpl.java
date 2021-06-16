@@ -39,8 +39,8 @@ public class ToothStorageMockImpl implements ToothStorage {
             toothCode = (i - t) % quadrantSize + 1;
 
             ToothBo toothBo = new ToothBo();
-            toothBo.setToothCode(toothCode);
-            toothBo.setQuadrantCode(quadrantCode);
+            toothBo.setToothCode((short) toothCode);
+            toothBo.setQuadrantCode((short) quadrantCode);
 
             OdontologySnomedBo odontologySnomedBo = new OdontologySnomedBo();
             odontologySnomedBo.setPt("Diente " + i);

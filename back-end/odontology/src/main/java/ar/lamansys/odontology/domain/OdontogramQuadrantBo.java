@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OdontogramQuadrantBo {
     private OdontologySnomedBo snomed;
-    private Integer code;
+    private Short code;
     private boolean left;
     private boolean top;
     private boolean permanent;
@@ -20,7 +20,7 @@ public class OdontogramQuadrantBo {
 
     public OdontogramQuadrantBo(
             OdontologySnomedBo snomed,
-            Integer code,
+            Short code,
             boolean left,
             boolean top,
             boolean permanent) {
@@ -36,7 +36,7 @@ public class OdontogramQuadrantBo {
         this.teeth.add(t);
     }
 
-    public static OdontogramQuadrantBo getQuadrant(Integer code) {
+    public static OdontogramQuadrantBo getQuadrant(Short code) {
         return OdontogramQuadrantData.getAsMap().get(code);
     }
 }

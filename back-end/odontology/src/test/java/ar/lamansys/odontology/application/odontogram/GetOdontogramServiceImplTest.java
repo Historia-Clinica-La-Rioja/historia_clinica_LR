@@ -28,7 +28,7 @@ class GetOdontogramServiceImplTest {
     public void odontogramTeethAmountAndPermanentSuccess() {
         List<OdontogramQuadrantBo> resultService = getOdontogramService.run();
 
-        List.of(1,2,3,4).forEach(quadrantCode -> {
+        List.of((short)1,(short)2,(short)3,(short)4).forEach(quadrantCode -> {
             var quadrant = resultService.stream()
                     .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
 
@@ -37,7 +37,7 @@ class GetOdontogramServiceImplTest {
             assertThat(quadrant.isPermanent()).isEqualTo(true);
         });
 
-        List.of(5,6,7,8).forEach(quadrantCode -> {
+        List.of((short)5,(short)6,(short)7,(short)8).forEach(quadrantCode -> {
             var quadrant = resultService.stream()
                     .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
 
@@ -51,7 +51,7 @@ class GetOdontogramServiceImplTest {
     public void odontogramPositionSuccess() {
         List<OdontogramQuadrantBo> resultService = getOdontogramService.run();
 
-        List.of(1,5).forEach(quadrantCode -> {
+        List.of((short)1,(short)5).forEach(quadrantCode -> {
             var quadrant = resultService.stream()
                     .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
 
@@ -61,7 +61,7 @@ class GetOdontogramServiceImplTest {
             assertThat(quadrant.isTop())
                     .isEqualTo(true);
         });
-        List.of(2,6).forEach(quadrantCode -> {
+        List.of((short)2,(short)6).forEach(quadrantCode -> {
             var quadrant = resultService.stream()
                     .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
 
@@ -71,7 +71,7 @@ class GetOdontogramServiceImplTest {
             assertThat(quadrant.isTop())
                     .isEqualTo(true);
         });
-        List.of(3,7).forEach(quadrantCode -> {
+        List.of((short)3,(short)7).forEach(quadrantCode -> {
             var quadrant = resultService.stream()
                     .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
 
@@ -81,7 +81,7 @@ class GetOdontogramServiceImplTest {
             assertThat(quadrant.isTop())
                     .isEqualTo(false);
         });
-        List.of(4,8).forEach(quadrantCode -> {
+        List.of((short)4,(short)8).forEach(quadrantCode -> {
             var quadrant = resultService.stream()
                     .filter(q -> q.getCode().equals(quadrantCode)).findFirst().get();
 
