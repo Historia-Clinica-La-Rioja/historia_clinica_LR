@@ -1,7 +1,9 @@
 package ar.lamansys.sgx.shared.auditable.entity;
 
 import ar.lamansys.sgx.shared.auditable.CreationableEntity;
+import ar.lamansys.sgx.shared.auditable.DeleteableEntity;
 import ar.lamansys.sgx.shared.auditable.UpdateableEntity;
+import lombok.ToString;
 
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
@@ -9,18 +11,25 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-public abstract class SGXAuditableEntity implements CreationableEntity<Integer>, UpdateableEntity<Integer>, Serializable {
-	
+@ToString
+public abstract class SGXAuditableEntity<ID> implements CreationableEntity<Integer>, UpdateableEntity<Integer>, DeleteableEntity<Integer>, Serializable, SGXEntity<ID> {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2446654484732250647L;
 
 	@Embedded
-	private Creationable creationable = new Creationable();
+	@ToString.Include
+	private Creationable creationable;
 
 	@Embedded
-	private Updateable updateable = new Updateable();
+	@ToString.Include
+	private Updateable updateable;
+
+	@Embedded
+	@ToString.Include
+	private Deleteable deleteable;
 
 	@Override
 	public Integer getCreatedBy() {
@@ -77,5 +86,48 @@ public abstract class SGXAuditableEntity implements CreationableEntity<Integer>,
 		if (updateable == null)
 			updateable = new Updateable();
 		updateable.setUpdatedOn(dateTime);
+	}
+
+
+	@Override
+	public Integer getDeletedBy() {
+		if (deleteable != null)
+			return deleteable.getDeletedBy();
+		return null;
+	}
+
+	@Override
+	public void setDeletedBy(Integer user) {
+		if (deleteable == null)
+			deleteable = new Deleteable();
+		deleteable.setDeletedBy(user);
+	}
+
+	@Override
+	public LocalDateTime getDeletedOn() {
+		if (deleteable != null)
+			return deleteable.getDeletedOn();
+		return null;
+	}
+
+	@Override
+	public void setDeletedOn(LocalDateTime dateTime) {
+		if (deleteable == null)
+			deleteable = new Deleteable();
+		deleteable.setDeletedOn(dateTime);
+	}
+
+	@Override
+	public boolean isDeleted() {
+		if (deleteable != null)
+			return deleteable.isDeleted();
+		return false;
+	}
+
+	@Override
+	public void setDeleted(Boolean deleted) {
+		if (deleteable == null)
+			deleteable = new Deleteable();
+		deleteable.setDeleted(deleted);
 	}
 }

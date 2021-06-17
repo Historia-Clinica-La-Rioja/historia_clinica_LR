@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 
 public interface DeleteableEntity<I> {
 
-    public I getDeleteBy();
+    I getDeletedBy();
 
-    public void setDeleteBy(I user);
+    void setDeletedBy(I user);
 
-    public LocalDateTime getDeletedOn();
+    LocalDateTime getDeletedOn();
 
-    public void setDeletedOn(LocalDateTime dateTime);
+    void setDeletedOn(LocalDateTime dateTime);
 
-    public boolean isDeleted();
+    boolean isDeleted();
     
-    public void setDeleted(Boolean deleted);
+    void setDeleted(Boolean deleted);
 }
