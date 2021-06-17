@@ -6,11 +6,11 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
 import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
-import ar.lamansys.sgx.shared.auditable.listener.AuditListener;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 
 @Entity
 @Table(name = "role_permission")
-@EntityListeners(AuditListener.class)
+@EntityListeners(SGXAuditListener.class)
 public class RolePermission extends AuditableEntity{
 
 	/**

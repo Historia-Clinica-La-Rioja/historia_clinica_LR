@@ -1,11 +1,11 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.*;
 import java.util.Objects;

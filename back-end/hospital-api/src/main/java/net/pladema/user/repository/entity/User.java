@@ -15,11 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
-import ar.lamansys.sgx.shared.auditable.listener.AuditListener;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 
 @Entity
 @Table(name = "users")
-@EntityListeners(AuditListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
