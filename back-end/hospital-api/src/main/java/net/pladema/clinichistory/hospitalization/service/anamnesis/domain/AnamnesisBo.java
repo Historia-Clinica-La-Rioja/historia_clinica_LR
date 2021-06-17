@@ -30,9 +30,6 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
 
     private Integer institutionId;
 
-    @NotNull(message = "{value.mandatory}")
-    private boolean confirmed;
-
     private DocumentObservationsBo notes;
 
     private HealthConditionBo mainDiagnosis;

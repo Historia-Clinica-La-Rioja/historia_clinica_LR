@@ -68,6 +68,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
                 documentBo.getDocumentSource());
         loadNotes(doc, Optional.ofNullable(documentBo.getNotes()));
         doc = documentService.save(doc);
+        documentBo.setId(doc.getId());
 
         PatientInfoBo patientInfo = documentBo.getPatientInfo();
         healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getMainDiagnosis()));

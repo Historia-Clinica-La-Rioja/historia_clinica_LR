@@ -63,7 +63,6 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
 
         LOG.debug(OUTPUT, mainDiagnosisBo);
 
-        internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), mainDiagnosisBo.getId());
         return mainDiagnosisBo;
     }
 

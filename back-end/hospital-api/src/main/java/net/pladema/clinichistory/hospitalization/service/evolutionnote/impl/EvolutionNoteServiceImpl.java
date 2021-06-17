@@ -35,7 +35,6 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
         EvolutionNoteBo r = documentService.findById(documentId).map( document -> {
             EvolutionNoteBo result = new EvolutionNoteBo();
             result.setId(document.getId());
-            result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
 
             GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());

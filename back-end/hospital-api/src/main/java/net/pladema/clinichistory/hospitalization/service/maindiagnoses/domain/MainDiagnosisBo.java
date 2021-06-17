@@ -31,9 +31,6 @@ public class MainDiagnosisBo extends SelfValidating<MainDiagnosisBo> implements 
     private Integer institutionId;
 
     @NotNull
-    private boolean confirmed = false;
-
-    @NotNull
     private DocumentObservationsBo notes;
 
     @NotNull(message = "{diagnosis.mandatory}")

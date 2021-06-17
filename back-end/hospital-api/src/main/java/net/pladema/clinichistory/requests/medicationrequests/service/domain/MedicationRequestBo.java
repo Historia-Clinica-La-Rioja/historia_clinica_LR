@@ -17,6 +17,8 @@ import java.util.List;
 @Setter
 public class MedicationRequestBo implements IDocumentBo {
 
+    private Long id;
+
     private Integer medicationRequestId;
 
     private PatientInfoBo patientInfo;

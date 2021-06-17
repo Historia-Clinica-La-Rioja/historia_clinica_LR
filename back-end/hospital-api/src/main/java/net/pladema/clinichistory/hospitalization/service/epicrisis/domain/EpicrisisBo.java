@@ -30,9 +30,6 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 
     private Integer institutionId;
 
-    @NotNull(message = "{value.mandatory}")
-    private boolean confirmed;
-
     private DocumentObservationsBo notes;
 
     @NotNull(message = "{value.mandatory}")

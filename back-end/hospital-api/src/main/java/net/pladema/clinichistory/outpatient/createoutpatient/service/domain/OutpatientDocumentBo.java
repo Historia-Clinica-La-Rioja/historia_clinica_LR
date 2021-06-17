@@ -30,8 +30,6 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private Integer institutionId;
 
-    private boolean confirmed = true;
-
     private Integer doctorId;
 
     private String reasonId;

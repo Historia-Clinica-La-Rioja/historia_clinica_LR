@@ -39,7 +39,6 @@ public class EpicrisisReportServiceImpl implements EpicrisisReportService {
         EpicrisisBo result = new EpicrisisBo();
         documentService.findById(documentId).ifPresent( document -> {
             result.setId(document.getId());
-            result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
 
             GeneralHealthConditionBo generalHealthConditionBo = reportDocumentService.getReportHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());

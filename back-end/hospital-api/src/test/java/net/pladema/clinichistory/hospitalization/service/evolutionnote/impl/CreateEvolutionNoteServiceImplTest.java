@@ -273,7 +273,6 @@ class CreateEvolutionNoteServiceImplTest {
         var result = new EvolutionNoteBo();
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);
-        result.setConfirmed(true);
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         result.setDiagnosis(Lists.emptyList());
         result.setImmunizations(Lists.emptyList());

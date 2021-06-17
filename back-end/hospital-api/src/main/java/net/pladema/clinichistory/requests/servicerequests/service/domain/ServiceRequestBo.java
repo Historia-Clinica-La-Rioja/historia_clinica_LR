@@ -18,6 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceRequestBo implements IDocumentBo {
 
+    private Long id;
+
     private Integer serviceRequestId;
 
     private PatientInfoBo patientInfo;

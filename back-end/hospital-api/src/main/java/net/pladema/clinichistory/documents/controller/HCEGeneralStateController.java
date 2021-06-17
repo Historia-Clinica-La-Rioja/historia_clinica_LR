@@ -65,7 +65,11 @@ public class HCEGeneralStateController {
 
     public HCEGeneralStateController(HCEHealthConditionsService hceHealthConditionsService,
                                      HCEClinicalObservationService hceClinicalObservationService,
-                                     HCEGeneralStateMapper hceGeneralStateMapper, HCEImmunizationService hceImmunizationService, HCEMedicationService hceMedicationService, HCEAllergyService hceAllergyService, LocalDateMapper localDateMapper) {
+                                     HCEGeneralStateMapper hceGeneralStateMapper,
+                                     HCEImmunizationService hceImmunizationService,
+                                     HCEMedicationService hceMedicationService,
+                                     HCEAllergyService hceAllergyService,
+                                     LocalDateMapper localDateMapper) {
         this.hceHealthConditionsService = hceHealthConditionsService;
         this.hceClinicalObservationService = hceClinicalObservationService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;

@@ -94,6 +94,8 @@ public interface IDocumentBo {
 
     Short getDocumentSource();
 
+    void setId(Long id);
+
     default String getDocumentStatusId(){
         return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
     }

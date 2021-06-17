@@ -326,7 +326,6 @@ class CreateEpicrisisServiceImplTest {
 
     private EpicrisisBo validEpicrisis(Integer institutionId, Integer encounterId){
         var result = new EpicrisisBo();
-        result.setConfirmed(true);
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));

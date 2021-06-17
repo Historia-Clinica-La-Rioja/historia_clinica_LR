@@ -386,7 +386,6 @@ class CreateAnamnesisServiceImplTest {
 
 	private AnamnesisBo validAnamnesis(Integer institutionId, Integer encounterId){
 		var anamnesis = new AnamnesisBo();
-		anamnesis.setConfirmed(true);
 		anamnesis.setInstitutionId(institutionId);
 		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));

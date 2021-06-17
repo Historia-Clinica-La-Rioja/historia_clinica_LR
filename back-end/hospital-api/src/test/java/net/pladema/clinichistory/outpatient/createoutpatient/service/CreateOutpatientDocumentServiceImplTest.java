@@ -68,7 +68,6 @@ class CreateOutpatientDocumentServiceImplTest {
 
     private OutpatientDocumentBo validOutpatientConsultation(Integer institutionId, Integer encounterId){
         var result = new OutpatientDocumentBo();
-        result.setConfirmed(true);
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);
         return result;

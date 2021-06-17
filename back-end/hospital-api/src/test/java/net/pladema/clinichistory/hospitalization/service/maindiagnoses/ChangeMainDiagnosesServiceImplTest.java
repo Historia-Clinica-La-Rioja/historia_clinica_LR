@@ -135,7 +135,6 @@ class ChangeMainDiagnosesServiceImplTest {
 
     private MainDiagnosisBo validMainDiagnosisBo(Integer institutionId, Integer encounterId){
         var result = new MainDiagnosisBo();
-        result.setConfirmed(true);
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);
         result.setNotes(new DocumentObservationsBo());

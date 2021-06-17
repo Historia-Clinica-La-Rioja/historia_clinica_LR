@@ -19,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 public class MedicalDischargeBo implements IDocumentBo {
 
+    private Long id;
+
     private Integer patientId;
 
     private PatientInfoBo patientInfo;
