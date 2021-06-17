@@ -1,5 +1,5 @@
-databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_18 
+databaseChangeLog:
+    - logicalFilePath: incrementales-v1_18
 
     - changeSet:
           id: user-key-createTable
@@ -37,3 +37,68 @@ databaseChangeLog:
                     constraintName: UQ_key
                     tableName: user_key
 
+    - changeSet:
+        id: add-delete_by-permission
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: permission
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-role
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: role
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-role_permission
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: role_permission
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-user_role
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: user_role
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-users
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: users
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+    
+    - changeSet:
+        id: add-delete_by-user_password
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: user_password
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
