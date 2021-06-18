@@ -102,3 +102,467 @@ databaseChangeLog:
                 - column:
                     name: deleted_by
                     type: INTEGER
+
+    - changeSet:
+        id: add-deleteable-columns-document
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: document
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-allergy_intolerance
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: allergy_intolerance
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+
+    - changeSet:
+        id: add-deleteable-columns-diagnostic_report
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: diagnostic_report
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-health_condition
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: health_condition
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-inmunization
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: inmunization
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-medication_statement
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: medication_statement
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-procedures
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: procedures
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-internment_episode
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: internment_episode
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+
+    - changeSet:
+        id: add-deleteable-columns-patient_discharge
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: patient_discharge
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-outpatient_consultation
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: outpatient_consultation
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-medical_request
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: medical_request
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-medication_request
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: medication_request
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-diagnostic_report_file
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: diagnostic_report_file
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-service_request
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: service_request
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-emergency_care_episode
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: emergency_care_episode
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-historic_emergency_episode
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: historic_emergency_episode
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-triage
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: triage
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-historic_patient_bed_relocation
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: historic_patient_bed_relocation
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+
+    - changeSet:
+        id: add-deleteable-columns-appointment
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: appointment
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+
+    - changeSet:
+        id: add-deleteable-columns-historic_appointment_state
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: historic_appointment_state
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+        
+    - changeSet:
+        id: add-deleteable-columns-document_file
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: document_file
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-observation_lab
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: observation_lab
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-observation_vital_sign
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: observation_vital_sign
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME                    
