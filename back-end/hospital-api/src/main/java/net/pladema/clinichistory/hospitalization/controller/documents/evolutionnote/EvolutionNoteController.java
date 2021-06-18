@@ -13,7 +13,6 @@ import net.pladema.clinichistory.hospitalization.controller.documents.evolutionn
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionDiagnosesService;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteReportService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
@@ -52,8 +51,6 @@ public class EvolutionNoteController {
 
     private final EvolutionDiagnosesService evolutionDiagnosesService;
 
-    private final EvolutionNoteReportService evolutionNoteReportService;
-
     private final EvolutionNoteMapper evolutionNoteMapper;
 
     private final PatientExternalService patientExternalService;
@@ -62,14 +59,12 @@ public class EvolutionNoteController {
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
                                    EvolutionDiagnosesService evolutionDiagnosesService,
-                                   EvolutionNoteReportService evolutionNoteReportService,
                                    EvolutionNoteMapper evolutionNoteMapper,
                                    PatientExternalService patientExternalService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.evolutionNoteService = evolutionNoteService;
         this.evolutionDiagnosesService = evolutionDiagnosesService;
-        this.evolutionNoteReportService = evolutionNoteReportService;
         this.evolutionNoteMapper = evolutionNoteMapper;
         this.patientExternalService = patientExternalService;
     }
@@ -108,9 +103,8 @@ public class EvolutionNoteController {
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
 
         EvolutionDiagnosisBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionDiagnosisDto);
-        Long documentId = evolutionDiagnosesService.execute(internmentEpisodeId, patientId, evolutionNote);
+        evolutionDiagnosesService.execute(internmentEpisodeId, patientId, evolutionNote);
 
-        evolutionNoteReportService.getDocument(documentId);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);
     }

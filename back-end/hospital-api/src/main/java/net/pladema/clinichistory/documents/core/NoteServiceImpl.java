@@ -44,13 +44,6 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteAllNotes(List<Long> notesToDelete) {
-        LOG.debug("Input parameters -> notesToDelete {}", notesToDelete);
-        if (!notesToDelete.isEmpty())
-            noteRepository.deleteAll();
-    }
-
-    @Override
     public String getDescriptionById(Long noteId) {
         LOG.debug("Input parameters -> noteId {}", noteId);
         if (noteId != null)
