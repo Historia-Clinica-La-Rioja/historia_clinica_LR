@@ -9,4 +9,10 @@ public interface ISheet extends Iterable<IRow> {
     void autoSizeColumns();
 
     int getCantRows();
+
+    void setColumnWidth(int column, int pixels);
+
+    void setRowHeight(int row, int pixels);
+
+    void addMergedRegion(int firstRow, int lastRow, int firstCol, int lastCol);
 }

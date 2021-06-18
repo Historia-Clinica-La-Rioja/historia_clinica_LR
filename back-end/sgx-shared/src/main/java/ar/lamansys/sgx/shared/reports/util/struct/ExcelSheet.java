@@ -1,6 +1,7 @@
 package ar.lamansys.sgx.shared.reports.util.struct;
 
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.util.Iterator;
 
@@ -38,6 +39,21 @@ public class ExcelSheet implements ISheet {
     }
 
     @Override
+    public void setColumnWidth(int column, int pixels) {
+        this.sheet.setColumnWidth(column, width(pixels));
+    }
+
+    @Override
+    public void setRowHeight(int row, int pixels) {
+        this.sheet.getRow(row).setHeightInPoints(height(pixels));
+    }
+
+    @Override
+    public void addMergedRegion(int firstRow, int lastRow, int firstCol, int lastCol) {
+        this.sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+    }
+
+    @Override
     public Iterator<IRow> iterator() {
         this.position = 0;
         int size = this.sheet.getPhysicalNumberOfRows();
@@ -54,5 +70,13 @@ public class ExcelSheet implements ISheet {
             }
         };
         return i;
+    }
+
+    private int width(int pixels){
+        return (int) ((pixels * 36.56f) + 20);
+    }
+
+    private float height(int pixels){
+        return pixels * 0.75f;
     }
 }

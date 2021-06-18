@@ -27,7 +27,7 @@ public class ODSCell implements ICell {
     public void setCellStyle(CellStyle cellStyle) {
         Font font = new Font(
                 "Arial",
-                cellStyle.getBold() != null && cellStyle.getBold() ?
+                cellStyle.isBold() ?
                         StyleTypeDefinitions.FontStyle.BOLD :
                         StyleTypeDefinitions.FontStyle.REGULAR,
                 cellStyle.getFontSize() != null ? cellStyle.getFontSize() : 11,

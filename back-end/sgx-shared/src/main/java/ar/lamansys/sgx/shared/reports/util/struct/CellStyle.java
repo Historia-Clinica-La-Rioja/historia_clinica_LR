@@ -25,8 +25,26 @@ public class CellStyle {
         }
     }
 
-    Short fontSize;
-    Boolean bold;
+    public enum HALIGNMENT {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+
+    public enum VALIGNMENT {
+        TOP,
+        CENTER,
+        BOTTOM
+    }
+
+
+    Short fontSize = 11;
+    boolean bold = false;
     COLOR color;
 
+
+    private boolean wrap = false;
+    private VALIGNMENT vAlign = VALIGNMENT.BOTTOM;
+    private HALIGNMENT halign = HALIGNMENT.LEFT;
+    private boolean borders;
 }

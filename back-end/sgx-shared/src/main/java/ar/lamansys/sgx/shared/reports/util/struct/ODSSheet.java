@@ -38,6 +38,21 @@ public class ODSSheet implements ISheet{
     }
 
     @Override
+    public void setColumnWidth(int column, int pixels) {
+        this.table.getColumnByIndex(column).setWidth(pixels);
+    }
+
+    @Override
+    public void setRowHeight(int row, int pixels) {
+        this.table.getRowByIndex(row).setHeight(pixels, false);
+    }
+
+    @Override
+    public void addMergedRegion(int firstRow, int lastRow, int firstCol, int lastCol) {
+        //TODO review
+    }
+
+    @Override
     public Iterator<IRow> iterator() {
         this.position = 0;
         int size = this.table.getRowCount();
