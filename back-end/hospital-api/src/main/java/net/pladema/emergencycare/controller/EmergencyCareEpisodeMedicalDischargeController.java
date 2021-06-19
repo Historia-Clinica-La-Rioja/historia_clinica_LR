@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;

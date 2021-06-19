@@ -1,12 +1,12 @@
 package net.pladema.clinichistory.documents.controller.service;
 
-import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
-import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDto;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.ClinicalObservationService;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.ClinicalObservationService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignObservationDto;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignObservationBo;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.VitalSignMapper;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.slf4j.Logger;

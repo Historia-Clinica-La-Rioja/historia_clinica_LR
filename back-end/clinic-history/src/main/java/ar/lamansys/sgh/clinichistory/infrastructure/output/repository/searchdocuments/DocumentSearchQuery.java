@@ -7,7 +7,7 @@ import ar.lamansys.sgx.shared.repositories.QueryPart;
 import ar.lamansys.sgx.shared.repositories.QueryStringHelper;
 import com.google.common.base.Strings;
 import lombok.NoArgsConstructor;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.DocumentObservationsVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.DocumentObservationsVo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

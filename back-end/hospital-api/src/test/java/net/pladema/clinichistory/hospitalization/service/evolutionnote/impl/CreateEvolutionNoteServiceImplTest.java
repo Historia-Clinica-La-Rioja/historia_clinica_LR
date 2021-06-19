@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
@@ -54,7 +54,7 @@ class CreateEvolutionNoteServiceImplTest {
     private DocumentFactory documentFactory;
 
     @Mock
-    private HealthConditionGeneralStateService healthConditionGeneralStateService;
+    private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
     @BeforeEach
     void setUp(){
@@ -67,7 +67,7 @@ class CreateEvolutionNoteServiceImplTest {
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                healthConditionGeneralStateService);
+                fetchHospitalizationHealthConditionState);
     }
 
 
@@ -130,7 +130,7 @@ class CreateEvolutionNoteServiceImplTest {
         var evolutionNote  = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("SECONDARY", "SECONDARY"))));
 
-        when(healthConditionGeneralStateService.getMainDiagnosisGeneralState(any())).thenReturn(new HealthConditionBo(new SnomedBo("SECONDARY", "SECONDARY")));
+        when(fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(any())).thenReturn(new HealthConditionBo(new SnomedBo("SECONDARY", "SECONDARY")));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEvolutionNoteService.execute(evolutionNote)
         );

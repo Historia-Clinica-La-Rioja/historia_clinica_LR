@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.controller.mapper;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;

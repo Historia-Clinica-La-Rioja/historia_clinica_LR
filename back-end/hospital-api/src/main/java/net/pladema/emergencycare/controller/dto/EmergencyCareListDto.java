@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 
 import java.io.Serializable;
 

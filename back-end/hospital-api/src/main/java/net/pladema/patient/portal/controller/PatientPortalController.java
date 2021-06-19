@@ -27,7 +27,7 @@ import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -6,13 +6,12 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.IDocumentBo;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter

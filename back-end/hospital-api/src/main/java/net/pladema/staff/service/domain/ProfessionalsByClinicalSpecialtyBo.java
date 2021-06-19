@@ -1,7 +1,6 @@
 package net.pladema.staff.service.domain;
 
 import lombok.*;
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 import java.util.List;

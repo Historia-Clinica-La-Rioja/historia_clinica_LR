@@ -6,8 +6,8 @@ import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticR
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.FileBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FileBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

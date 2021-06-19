@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetServiceRequestInfoRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

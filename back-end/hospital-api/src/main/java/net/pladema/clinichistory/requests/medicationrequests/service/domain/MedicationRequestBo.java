@@ -5,8 +5,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.clinichistory.documents.service.IDocumentBo;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 
 import java.time.LocalDate;

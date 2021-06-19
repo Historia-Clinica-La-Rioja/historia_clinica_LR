@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
-import net.pladema.clinichistory.documents.core.cie10.exceptions.HCICIE10Exception;
+import ar.lamansys.sgh.clinichistory.application.calculatecie10.exceptions.HCICIE10Exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;

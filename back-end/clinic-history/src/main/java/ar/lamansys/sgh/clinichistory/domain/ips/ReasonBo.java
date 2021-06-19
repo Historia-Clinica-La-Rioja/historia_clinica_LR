@@ -1,17 +1,16 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Reason;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReasonBo {
 
     @NotNull

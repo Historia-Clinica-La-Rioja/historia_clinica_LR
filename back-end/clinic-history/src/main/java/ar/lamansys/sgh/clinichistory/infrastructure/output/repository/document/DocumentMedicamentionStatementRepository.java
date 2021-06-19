@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatementPK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.MedicationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +17,7 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.MedicationVo(" +
+    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo(" +
             "ms.id, s, ms.statusId, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentMedicamentionStatement dm " +
@@ -29,7 +29,7 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
     List<MedicationVo> getMedicationStateFromDocument(@Param("documentId") Long documentId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.MedicationVo(" +
+    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo(" +
             "ms.id, s, ms.statusId, mss.description as status, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentMedicamentionStatement dm " +

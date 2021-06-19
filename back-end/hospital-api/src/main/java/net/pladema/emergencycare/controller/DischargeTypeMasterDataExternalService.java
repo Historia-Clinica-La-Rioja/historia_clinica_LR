@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.controller;
 
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 
 import java.util.Collection;
 

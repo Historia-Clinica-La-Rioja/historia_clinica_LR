@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.AnamnesisServiceImpl;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,13 +1,13 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.mapper;
 
-import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.AnthropometricDataMapper;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.VitalSignMapper;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -21,5 +21,5 @@ public interface EpicrisisMapper {
     @Named("fromEpicrisis")
     ResponseEpicrisisDto fromEpicrisis(EpicrisisBo epicrisisBo);
 
-    EpicrisisGeneralStateDto toEpicrisisGeneralStateDto(EncounterGeneralState interment);
+    EpicrisisGeneralStateDto toEpicrisisGeneralStateDto(HospitalizationGeneralState interment);
 }

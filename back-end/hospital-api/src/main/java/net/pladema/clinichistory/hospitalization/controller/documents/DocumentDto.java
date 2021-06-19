@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.documents;
 
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignDto;
 
 import javax.annotation.Nullable;
 

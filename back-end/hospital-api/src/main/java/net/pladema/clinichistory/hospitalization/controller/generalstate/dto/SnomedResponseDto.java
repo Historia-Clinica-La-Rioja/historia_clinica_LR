@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

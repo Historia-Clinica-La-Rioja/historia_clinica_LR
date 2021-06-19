@@ -1,18 +1,18 @@
 package net.pladema.emergencycare.controller;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternalService;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import net.pladema.clinichistory.documents.controller.service.VitalSignExternalService;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
-import net.pladema.clinichistory.documents.controller.service.ReasonExternalService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.dto.NewEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
+import net.pladema.emergencycare.controller.mapper.TriageVitalSignMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -55,7 +55,7 @@ public class EmergencyCareEpisodeController {
 
     private final SnomedMapper snomedMapper;
 
-    private final VitalSignMapper vitalSignMapper;
+    private final TriageVitalSignMapper triageVitalSignMapper;
 
     private final LocalDateMapper localDateMapper;
 
@@ -64,14 +64,14 @@ public class EmergencyCareEpisodeController {
                                           ReasonExternalService reasonExternalService,
                                           VitalSignExternalService vitalSignExternalService,
                                           SnomedMapper snomedMapper,
-                                          VitalSignMapper vitalSignMapper, LocalDateMapper localDateMapper){
+                                          TriageVitalSignMapper triageVitalSignMapper, LocalDateMapper localDateMapper){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
         this.vitalSignExternalService = vitalSignExternalService;
         this.snomedMapper = snomedMapper;
-        this.vitalSignMapper = vitalSignMapper;
+        this.triageVitalSignMapper = triageVitalSignMapper;
         this.localDateMapper = localDateMapper;
     }
 
@@ -95,7 +95,7 @@ public class EmergencyCareEpisodeController {
         LOG.debug("Add emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
-        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
@@ -112,7 +112,7 @@ public class EmergencyCareEpisodeController {
             @Valid @RequestBody NewEmergencyCareDto body) {
         LOG.debug("Update emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.emergencyCareDtoToEmergencyCareBo(body);
-        List<SnomedDto> reasons = reasonExternalService.addReasons(body.getReasons());
+        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.getReasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
         newEmergencyCare.setInstitutionId(institutionId);
         newEmergencyCare.setId(emergencyCareEpisodeId);
@@ -135,7 +135,7 @@ public class EmergencyCareEpisodeController {
                 vitalSignExternalService.saveVitalSigns(body.patientId(), body.vitalSignsObservation());
         newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
 
-        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
         newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare, institutionId);
@@ -153,11 +153,11 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
-        NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body.getTriage());
+        NewVitalSignsObservationDto vitalSignsObservationDto = triageVitalSignMapper.fromTriagePediatricDto(body.getTriage());
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(body.patientId(), vitalSignsObservationDto);
         newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
 
-        List<SnomedDto> reasons = reasonExternalService.addReasons(body.reasons());
+        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
         newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare, institutionId);

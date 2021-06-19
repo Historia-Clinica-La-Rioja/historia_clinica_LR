@@ -1,12 +1,13 @@
 package net.pladema.emergencycare.triage.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
-import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignObservationDto;
 import net.pladema.clinichistory.documents.controller.service.VitalSignExternalService;
 import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.VitalSignMapper;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
+import net.pladema.emergencycare.controller.mapper.TriageVitalSignMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
@@ -58,7 +59,7 @@ public class TriageController {
 
     private final VitalSignExternalService vitalSignExternalService;
 
-    private final VitalSignMapper vitalSignMapper;
+    private final TriageVitalSignMapper triageVitalSignMapper;
 
     private final DoctorsOfficeExternalService doctorsOfficeExternalService;
 
@@ -72,8 +73,7 @@ public class TriageController {
                             TriageMasterDataMapper triageMasterDataMapper,
                             EmergencyCareEpisodeService emergencyCareEpisodeService,
                             VitalSignExternalService vitalSignExternalService,
-                            VitalSignMapper vitalSignMapper,
-                            DoctorsOfficeExternalService doctorsOfficeExternalService,
+                            TriageVitalSignMapper triageVitalSignMapper, DoctorsOfficeExternalService doctorsOfficeExternalService,
                             UserExternalService userExternalService,
                             EmergencyCareMapper emergencyCareMapper){
         super();
@@ -83,7 +83,7 @@ public class TriageController {
         this.triageMasterDataMapper = triageMasterDataMapper;
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.vitalSignExternalService = vitalSignExternalService;
-        this.vitalSignMapper = vitalSignMapper;
+        this.triageVitalSignMapper = triageVitalSignMapper;
         this.doctorsOfficeExternalService = doctorsOfficeExternalService;
         this.userExternalService = userExternalService;
         this.emergencyCareMapper = emergencyCareMapper;
@@ -221,7 +221,7 @@ public class TriageController {
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
-        NewVitalSignsObservationDto vitalSignsObservationDto = vitalSignMapper.fromTriagePediatricDto(body);
+        NewVitalSignsObservationDto vitalSignsObservationDto = triageVitalSignMapper.fromTriagePediatricDto(body);
         vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(patientId, vitalSignsObservationDto);
         triage.setVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
         triage = triageService.createPediatric(triage, institutionId);

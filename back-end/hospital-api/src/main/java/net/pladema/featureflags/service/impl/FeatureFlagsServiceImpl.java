@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.togglz.core.manager.FeatureManager;
 
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 @Service
 public class FeatureFlagsServiceImpl implements FeatureFlagsService {

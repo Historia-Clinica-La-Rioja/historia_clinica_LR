@@ -7,9 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.documents.service.IDocumentBo;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private List<ReasonBo> reasons = new ArrayList<>();
 
-    private ClinicalSpecialtyBo clinicalSpecialty;
+    private Integer getClinicalSpecialtyId;
 
     @Override
     public DocumentObservationsBo getNotes() {

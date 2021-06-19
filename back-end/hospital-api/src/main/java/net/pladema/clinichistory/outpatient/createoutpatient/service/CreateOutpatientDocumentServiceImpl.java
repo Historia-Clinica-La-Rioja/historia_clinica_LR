@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
-import net.pladema.clinichistory.documents.service.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
@@ -28,14 +28,14 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final HealthConditionGeneralStateService healthConditionGeneralStateService;
+    private final FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
     public ChangeMainDiagnosesServiceImpl(DocumentFactory documentFactory,
                                           InternmentEpisodeService internmentEpisodeService,
-                                          HealthConditionGeneralStateService healthConditionGeneralStateService) {
+                                          FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.healthConditionGeneralStateService = healthConditionGeneralStateService;
+        this.fetchHospitalizationHealthConditionState = fetchHospitalizationHealthConditionState;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
         assertDoesNotHaveEpicrisis(internmentEpisode);
         mainDiagnosisBo.validateSelf();
 
-        HealthConditionBo currentMainDiagnose = healthConditionGeneralStateService.
+        HealthConditionBo currentMainDiagnose = fetchHospitalizationHealthConditionState.
                 getMainDiagnosisGeneralState(internmentEpisode.getId());
         if (!currentMainDiagnose.getSnomed().equals(mainDiagnosisBo.getMainDiagnosis().getSnomed()))
             mainDiagnosisBo.setDiagnosis(Arrays.asList(createAlternativeDiagnoses(currentMainDiagnose)));

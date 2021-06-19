@@ -1378,6 +1378,10 @@ export interface PublicInfoDto {
     flavor: string;
 }
 
+export interface ReasonDto {
+    snomed: SnomedDto;
+}
+
 export interface RecaptchaPublicConfigDto {
     enabled: boolean;
     siteKey: string;

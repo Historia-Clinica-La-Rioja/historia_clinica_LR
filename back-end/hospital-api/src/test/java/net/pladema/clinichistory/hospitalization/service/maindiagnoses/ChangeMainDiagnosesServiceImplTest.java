@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
@@ -49,7 +49,7 @@ class ChangeMainDiagnosesServiceImplTest {
     private DocumentFactory documentFactory;
 
     @Mock
-    private HealthConditionGeneralStateService healthConditionGeneralStateService;
+    private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
     @BeforeEach
     void setUp(){
@@ -62,7 +62,7 @@ class ChangeMainDiagnosesServiceImplTest {
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                healthConditionGeneralStateService);
+                fetchHospitalizationHealthConditionState);
     }
 
     @Test

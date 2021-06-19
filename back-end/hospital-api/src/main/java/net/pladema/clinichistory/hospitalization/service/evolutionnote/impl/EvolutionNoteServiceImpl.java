@@ -1,11 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.documents.service.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
-import net.pladema.clinichistory.documents.service.NoteService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import org.slf4j.Logger;

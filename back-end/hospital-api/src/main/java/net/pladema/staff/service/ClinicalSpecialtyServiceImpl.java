@@ -1,7 +1,7 @@
 package net.pladema.staff.service;
 
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.staff.repository.ClinicalSpecialtyRepository;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

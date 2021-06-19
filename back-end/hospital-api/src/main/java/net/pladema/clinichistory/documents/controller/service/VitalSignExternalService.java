@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.documents.controller.service;
 
-import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
-import net.pladema.clinichistory.documents.controller.dto.VitalSignObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignObservationDto;
 
 public interface VitalSignExternalService {
 

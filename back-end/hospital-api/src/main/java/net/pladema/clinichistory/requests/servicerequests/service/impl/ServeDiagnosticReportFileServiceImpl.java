@@ -3,7 +3,7 @@ package net.pladema.clinichistory.requests.servicerequests.service.impl;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.ServeDiagnosticReportFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
-import net.pladema.sgx.files.FileService;
+import ar.lamansys.sgx.shared.files.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

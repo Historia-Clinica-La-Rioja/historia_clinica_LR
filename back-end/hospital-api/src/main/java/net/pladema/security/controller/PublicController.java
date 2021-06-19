@@ -1,9 +1,9 @@
 package net.pladema.security.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.flavor.service.FlavorService;
+import ar.lamansys.sgx.shared.flavor.FlavorService;
 import net.pladema.security.controller.dto.PublicInfoDto;
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.recaptcha.controller.dto.RecaptchaPublicConfigDto;
 import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
 import net.pladema.security.controller.dto.ApplicationVersionDto;

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.pladema.clinichistory.documents.controller.dto.NewEffectiveClinicalObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewEffectiveClinicalObservationDto;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;

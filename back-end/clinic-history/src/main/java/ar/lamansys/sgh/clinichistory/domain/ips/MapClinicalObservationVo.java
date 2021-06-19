@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import lombok.Getter;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

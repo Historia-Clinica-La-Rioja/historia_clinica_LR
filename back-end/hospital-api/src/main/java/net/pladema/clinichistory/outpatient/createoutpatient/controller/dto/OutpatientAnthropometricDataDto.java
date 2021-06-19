@@ -3,9 +3,9 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.controller.dto.ClinicalObservationDto;
-import net.pladema.clinichistory.ips.controller.constraints.HeightDataValid;
-import net.pladema.clinichistory.ips.controller.constraints.WeightDataValid;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ClinicalObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.constraints.HeightDataValid;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.constraints.WeightDataValid;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

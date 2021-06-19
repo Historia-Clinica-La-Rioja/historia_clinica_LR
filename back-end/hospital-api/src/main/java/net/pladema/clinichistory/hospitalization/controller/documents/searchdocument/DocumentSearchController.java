@@ -1,13 +1,14 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.searchdocument;
 
+import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.dto.DocumentHistoricDto;
-import net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.dto.DocumentSearchFilterDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.searchDocument.dto.DocumentSearchFilterDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.mapper.DocumentSearchMapper;
-import net.pladema.clinichistory.documents.service.searchdocument.DocumentSearchService;
-import net.pladema.clinichistory.documents.service.searchdocument.domain.DocumentHistoricBo;
+import ar.lamansys.sgh.clinichistory.application.searchDocument.DocumentSearchService;
+import ar.lamansys.sgh.clinichistory.application.searchDocument.DocumentHistoricBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -52,17 +53,24 @@ public class DocumentSearchController {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, searchFilter {}",
                 institutionId, internmentEpisodeId, searchFilterStr);
 
-        DocumentSearchFilterDto filter = null;
+        DocumentSearchFilterBo filter = mapFilter(searchFilterStr);
+        DocumentHistoricBo documentHistoric = documentSearchService.
+                historicalListDocuments(internmentEpisodeId, filter);
+        DocumentHistoricDto result = documentSearchMapper.toDocumentHistoricDto(documentHistoric);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok(result);
+    }
+
+    private DocumentSearchFilterBo mapFilter(String searchFilterStr) {
         try {
-            if(searchFilterStr != null && !searchFilterStr.equals("undefined"))
-                filter  = jackson.readValue(searchFilterStr, DocumentSearchFilterDto.class);
+            if(searchFilterStr != null && !searchFilterStr.equals("undefined")) {
+                DocumentSearchFilterDto filterDto = jackson.readValue(searchFilterStr, DocumentSearchFilterDto.class);
+                return new DocumentSearchFilterBo(filterDto.getPlainText(), filterDto.getSearchType());
+            }
         }
         catch(IOException e){
             LOG.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
         }
-        DocumentHistoricBo documentHistoric = documentSearchService.historicalListDocuments(internmentEpisodeId, filter);
-        DocumentHistoricDto result = documentSearchMapper.toDocumentHistoricDto(documentHistoric);
-        LOG.debug(OUTPUT, result);
-        return ResponseEntity.ok(result);
+        return null;
     }
 }

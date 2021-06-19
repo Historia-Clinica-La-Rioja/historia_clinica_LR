@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;

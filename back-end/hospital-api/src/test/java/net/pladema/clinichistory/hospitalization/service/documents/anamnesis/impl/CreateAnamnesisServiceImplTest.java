@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;

@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.hospitalization.controller.maindiagnoses;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
+import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.mapper.MainDiagnosesMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.ChangeMainDiagnosesService;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
@@ -38,17 +38,17 @@ public class MainDiagnosesController {
 
     private final ChangeMainDiagnosesService changeMainDiagnosesService;
 
-    private final HealthConditionMapper healthConditionMapper;
+    private final MainDiagnosesMapper mainDiagnosesMapper;
 
     private final PatientExternalService patientExternalService;
 
     public MainDiagnosesController(InternmentEpisodeService internmentEpisodeService,
                                    ChangeMainDiagnosesService changeMainDiagnosesService,
-                                   HealthConditionMapper healthConditionMapper,
+                                   MainDiagnosesMapper mainDiagnosesMapper,
                                    PatientExternalService patientExternalService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.changeMainDiagnosesService = changeMainDiagnosesService;
-        this.healthConditionMapper = healthConditionMapper;
+        this.mainDiagnosesMapper = mainDiagnosesMapper;
         this.patientExternalService = patientExternalService;
     }
 
@@ -60,7 +60,7 @@ public class MainDiagnosesController {
             @RequestBody @Valid MainDiagnosisDto mainDiagnosis) {
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, mainDiagnosis {}",
                 institutionId, internmentEpisodeId, mainDiagnosis);
-        MainDiagnosisBo mainDiagnoseBo = healthConditionMapper.fromMainDiagnoseDto(mainDiagnosis);
+        MainDiagnosisBo mainDiagnoseBo = mainDiagnosesMapper.fromMainDiagnoseDto(mainDiagnosis);
         internmentEpisodeService.getPatient(internmentEpisodeId)
                 .map(patientExternalService::getBasicDataFromPatient)
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))

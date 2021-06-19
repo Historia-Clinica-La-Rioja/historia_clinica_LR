@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.patient.controller.dto.BasicPatientDto;

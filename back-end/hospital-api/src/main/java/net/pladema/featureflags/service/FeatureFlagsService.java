@@ -1,6 +1,6 @@
 package net.pladema.featureflags.service;
 
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 public interface FeatureFlagsService {
 

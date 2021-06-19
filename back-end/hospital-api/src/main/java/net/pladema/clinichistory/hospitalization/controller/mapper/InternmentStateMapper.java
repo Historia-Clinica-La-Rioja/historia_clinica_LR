@@ -1,12 +1,12 @@
 package net.pladema.clinichistory.hospitalization.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.*;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
-import net.pladema.clinichistory.hospitalization.controller.dto.internmentstate.DiagnosesGeneralStateDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.*;
-import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
-import net.pladema.clinichistory.hospitalization.service.domain.Last2VitalSignsBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
+import ar.lamansys.sgh.clinichistory.domain.ips.Last2VitalSignsBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -48,7 +48,7 @@ public interface InternmentStateMapper {
     @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
     @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "toListVitalSignDto")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
-    InternmentGeneralStateDto toInternmentGeneralStateDto(EncounterGeneralState interment);
+    InternmentGeneralStateDto toInternmentGeneralStateDto(HospitalizationGeneralState interment);
 
     @Named("toAnthropometricDataDto")
     AnthropometricDataDto toAnthropometricDataDto(AnthropometricDataBo anthropometricData);

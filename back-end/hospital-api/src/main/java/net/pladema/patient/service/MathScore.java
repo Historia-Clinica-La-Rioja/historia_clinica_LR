@@ -1,7 +1,7 @@
 package net.pladema.patient.service;
 
-import static net.pladema.patient.service.StringHelper.isNullOrWhiteSpace;
-import static net.pladema.patient.service.StringHelper.soundex;
+import static ar.lamansys.sgx.shared.strings.StringHelper.isNullOrWhiteSpace;
+import static ar.lamansys.sgx.shared.strings.StringHelper.soundex;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

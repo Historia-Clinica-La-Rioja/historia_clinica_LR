@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.generalstate.HealthConditionGeneralStateService;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
@@ -34,14 +34,14 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final HealthConditionGeneralStateService healthConditionGeneralStateService;
+    private final FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
     public CreateEvolutionNoteServiceImpl(DocumentFactory documentFactory,
                                           InternmentEpisodeService internmentEpisodeService,
-                                          HealthConditionGeneralStateService healthConditionGeneralStateService) {
+                                          FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.healthConditionGeneralStateService = healthConditionGeneralStateService;
+        this.fetchHospitalizationHealthConditionState = fetchHospitalizationHealthConditionState;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     private void assertDiagnosisValid(EvolutionNoteBo evolutionNote, InternmentEpisode internmentEpisode) {
         if (evolutionNote.getDiagnosis() == null || evolutionNote.getDiagnosis().isEmpty())
             return;
-        HealthConditionBo mainDiagnosis = healthConditionGeneralStateService.getMainDiagnosisGeneralState(internmentEpisode.getId());
+        HealthConditionBo mainDiagnosis = fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(internmentEpisode.getId());
         if (mainDiagnosis == null)
             return;
         if (evolutionNote.getDiagnosis().stream()

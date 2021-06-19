@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 
 public interface DeleteDiagnosticReportService {
     Integer execute(PatientInfoBo patient, Integer diagnosticReportId);

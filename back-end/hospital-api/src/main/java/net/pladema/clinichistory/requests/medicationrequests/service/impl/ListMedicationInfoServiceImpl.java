@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;

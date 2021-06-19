@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;

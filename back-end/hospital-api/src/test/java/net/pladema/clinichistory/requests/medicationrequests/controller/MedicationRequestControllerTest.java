@@ -9,7 +9,7 @@ import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicati
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.sgx.pdf.PdfService;
+import ar.lamansys.sgx.shared.pdf.PdfService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Ignore;

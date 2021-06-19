@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

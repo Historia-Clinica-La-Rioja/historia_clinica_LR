@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis;
 
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationGeneralState;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralState;
-import net.pladema.clinichistory.documents.service.generalstate.EncounterGeneralStateBuilder;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisDto;
@@ -44,7 +44,7 @@ public class EpicrisisController {
 
     private final EpicrisisMapper epicrisisMapper;
 
-    private final EncounterGeneralStateBuilder encounterGeneralStateBuilder;
+    private final FetchHospitalizationGeneralState fetchHospitalizationGeneralState;
 
     private final PatientExternalService patientExternalService;
 
@@ -53,14 +53,14 @@ public class EpicrisisController {
             CreateEpicrisisService createEpicrisisService,
             EpicrisisService epicrisisService,
             EpicrisisMapper epicrisisMapper,
-            EncounterGeneralStateBuilder encounterGeneralStateBuilder,
+            FetchHospitalizationGeneralState fetchHospitalizationGeneralState,
             PatientExternalService patientExternalService
     ) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
         this.epicrisisService = epicrisisService;
         this.epicrisisMapper = epicrisisMapper;
-        this.encounterGeneralStateBuilder = encounterGeneralStateBuilder;
+        this.fetchHospitalizationGeneralState = fetchHospitalizationGeneralState;
         this.patientExternalService = patientExternalService;
     }
 
@@ -107,7 +107,7 @@ public class EpicrisisController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-        EncounterGeneralState interment = encounterGeneralStateBuilder.getInternmentGeneralState(internmentEpisodeId);
+        HospitalizationGeneralState interment = fetchHospitalizationGeneralState.getInternmentGeneralState(internmentEpisodeId);
         EpicrisisGeneralStateDto result = epicrisisMapper.toEpicrisisGeneralStateDto(interment);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
@@ -20,7 +19,7 @@ public class OutpatientEvolutionSummaryBo {
 
     private Integer consultationID;
 
-    private ClinicalSpecialtyBo clinicalSpecialty;
+    private OutpatientClinicalSpecialtyBo clinicalSpecialty;
 
     private List<HealthConditionSummaryBo> healthConditions;
 
@@ -44,7 +43,7 @@ public class OutpatientEvolutionSummaryBo {
     public OutpatientEvolutionSummaryBo(OutpatientEvolutionSummaryVo outpatientEvolutionSummaryVo){
         this.consultationID = outpatientEvolutionSummaryVo.getConsultationID();
         if(outpatientEvolutionSummaryVo.getClinicalSpecialty() != null)
-            this.clinicalSpecialty = new ClinicalSpecialtyBo(outpatientEvolutionSummaryVo.getClinicalSpecialty());
+            this.clinicalSpecialty = new OutpatientClinicalSpecialtyBo(outpatientEvolutionSummaryVo.getClinicalSpecialty());
         this.startDate = outpatientEvolutionSummaryVo.getStartDate();
         this.medic = new HealthcareProfessionalBo(outpatientEvolutionSummaryVo.getMedic(), outpatientEvolutionSummaryVo.getPerson());
         this.evolutionNote = outpatientEvolutionSummaryVo.getEvolutionNote();

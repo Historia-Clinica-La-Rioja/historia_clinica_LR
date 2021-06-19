@@ -1,16 +1,17 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
-import net.pladema.clinichistory.documents.service.ips.SnomedService;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
@@ -34,7 +35,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
     private static final Logger LOG = LoggerFactory.getLogger(ChangeStateMedicationServiceImpl.class);
 
-    private final CreateMedicationService createMedicationService;
+    private final LoadMedications loadMedications;
 
     private final DocumentService documentService;
 
@@ -51,7 +52,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
     private final DateTimeProvider dateTimeProvider;
     
     public ChangeStateMedicationServiceImpl(MedicationStatementRepository medicationStatementRepository,
-                                            CreateMedicationService createMedicationService,
+                                            LoadMedications loadMedications,
                                             DosageRepository dosageRepository,
                                             DocumentService documentService,
                                             SnomedService snomedService,
@@ -59,7 +60,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
                                             NoteService noteService,
                                             DateTimeProvider dateTimeProvider) {
         this.medicationStatementRepository = medicationStatementRepository;
-        this.createMedicationService = createMedicationService;
+        this.loadMedications = loadMedications;
         this.dosageRepository = dosageRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
@@ -85,7 +86,7 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
                 MedicationBo newMedication = updateMedication(medication, dosage, newStatusId, duration, changeStateMedicationRequestBo.getObservations());
 
                 var documentMedication = documentService.getDocumentFromMedication(mid);
-                createMedicationService.execute(patient, documentMedication.getDocumentId(), List.of(newMedication));
+                loadMedications.run(patient, documentMedication.getDocumentId(), List.of(newMedication));
             })
         );
     }

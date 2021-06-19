@@ -16,7 +16,7 @@ import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnost
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepositoryImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.DiagnosticReportInfoServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;

@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthConditionPK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.HealthConditionVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +16,7 @@ import java.util.List;
 public interface DocumentHealthConditionRepository extends JpaRepository<DocumentHealthCondition, DocumentHealthConditionPK> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.HealthConditionVo(" +
+    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo(" +
             "hc.id, s, hc.statusId, hc.main, hc.verificationStatusId, " +
             "hc.problemId, hc.startDate, " +
             "n.id as noteId, n.description as note) " +
@@ -29,7 +29,7 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
     List<HealthConditionVo> getHealthConditionFromDocument(@Param("documentId") Long documentId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.HealthConditionVo(" +
+    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo(" +
             "hc.id, s, hc.statusId, ccs.description as status, hc.main, " +
             "hc.verificationStatusId, cvs.description as verification, " +
             "hc.problemId, hc.startDate, " +

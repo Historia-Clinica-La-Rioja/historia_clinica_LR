@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.medicalrequests.service.impl;
 
-import net.pladema.clinichistory.documents.service.NoteService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import net.pladema.clinichistory.requests.medicalrequests.repository.MedicalRequestRepository;
 import net.pladema.clinichistory.requests.medicalrequests.repository.entity.MedicalRequest;
 import net.pladema.clinichistory.requests.medicalrequests.service.CreateMedicalRequestService;

@@ -6,9 +6,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.emergencycare.controller.DischargeTypeMasterDataExternalService;
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
-import net.pladema.sgx.masterdata.repository.MasterDataProjection;
-import net.pladema.sgx.masterdata.service.MasterDataService;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.output.repository.MasterDataProjection;
+import ar.lamansys.sgx.shared.masterdata.application.MasterDataService;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.repository.entity.ClinicalSpecialtyType;
 import org.slf4j.Logger;

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.validation.Valid;
 
-import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import net.pladema.sgx.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 
 import java.util.List;
 

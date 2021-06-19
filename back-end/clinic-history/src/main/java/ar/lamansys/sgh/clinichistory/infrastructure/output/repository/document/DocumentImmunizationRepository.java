@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunizationPK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ImmunizationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.InmunizationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +17,7 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ImmunizationVo(" +
+    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo(" +
             "i.id, s, i.statusId, i.administrationDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +
@@ -30,7 +30,7 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ImmunizationVo(" +
+    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo(" +
             "i.id, s, i.statusId, iss.description as status, i.administrationDate, " +
             "n.id as noteId, n.description as note) " +
             "FROM DocumentInmunization di " +

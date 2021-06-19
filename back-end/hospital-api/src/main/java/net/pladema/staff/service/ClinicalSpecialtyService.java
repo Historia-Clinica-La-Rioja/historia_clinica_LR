@@ -1,6 +1,6 @@
 package net.pladema.staff.service;
 
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 import java.util.Optional;
 

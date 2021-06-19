@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
-import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
@@ -11,8 +11,8 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.Outp
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.OutpatientSummaryService;
-import net.pladema.clinichistory.documents.core.ReasonService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
@@ -22,7 +22,6 @@ import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
-import net.pladema.staff.service.ClinicalSpecialtyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,9 +52,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final CreateOutpatientDocumentService createOutpatientDocumentService;
 
-    private final ReasonService reasonService;
-
-    private final ClinicalSpecialtyService clinicalSpecialtyService;
+    private final OutpatientReasonService outpatientReasonService;
 
     private final HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService;
 
@@ -74,23 +71,21 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     public OutpatientConsultationController(CreateOutpatientConsultationService createOutpatientConsultationService,
                                             CreateOutpatientDocumentService createOutpatientDocumentService,
-                                            ReasonService reasonService,
+                                            OutpatientReasonService outpatientReasonService,
                                             HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService,
                                             OutpatientConsultationMapper outpatientConsultationMapper,
                                             AppointmentExternalService appointmentExternalService,
                                             DateTimeProvider dateTimeProvider,
                                             OutpatientSummaryService outpatientSummaryService,
-                                            ClinicalSpecialtyService clinicalSpecialtyService,
                                             PatientExternalService patientExternalService) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
-        this.reasonService = reasonService;
+        this.outpatientReasonService = outpatientReasonService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.outpatientConsultationMapper = outpatientConsultationMapper;
         this.appointmentExternalService = appointmentExternalService;
         this.dateTimeProvider = dateTimeProvider;
         this.outpatientSummaryService = outpatientSummaryService;
-        this.clinicalSpecialtyService = clinicalSpecialtyService;
         this.patientExternalService = patientExternalService;
     }
 
@@ -114,11 +109,10 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setPatientId(patientId);
 
         List<ReasonBo> reasons = outpatientConsultationMapper.fromListReasonDto(createOutpatientDto.getReasons());
-        reasons = reasonService.addReasons(newOutPatient.getId(), reasons);
         outpatient.setReasons(reasons);
+        outpatientReasonService.addReasons(newOutPatient.getId(), reasons);
 
-        outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(createOutpatientDto.getClinicalSpecialtyId())
-                .orElse(null));
+        outpatient.setGetClinicalSpecialtyId(createOutpatientDto.getClinicalSpecialtyId());
 
         createOutpatientDocumentService.execute(outpatient);
 
@@ -152,8 +146,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setEvolutionNote(extractNotes(vaccineDto));
         outpatient.setImmunizations(extractImmunizations(vaccineDto,institutionId));
 
-        outpatient.setClinicalSpecialty(clinicalSpecialtyService.getClinicalSpecialty(clinicalSpecialtyId)
-                .orElse(null));
+        outpatient.setGetClinicalSpecialtyId(clinicalSpecialtyId);
 
         createOutpatientDocumentService.execute(outpatient);
 

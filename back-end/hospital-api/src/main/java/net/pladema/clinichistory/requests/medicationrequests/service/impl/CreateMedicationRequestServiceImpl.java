@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.DosageValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;

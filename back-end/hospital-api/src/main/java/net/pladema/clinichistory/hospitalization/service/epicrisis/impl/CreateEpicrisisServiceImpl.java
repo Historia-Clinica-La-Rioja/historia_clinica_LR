@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;

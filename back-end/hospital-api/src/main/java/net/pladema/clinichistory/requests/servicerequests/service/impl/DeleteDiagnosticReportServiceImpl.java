@@ -1,16 +1,16 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.DiagnosticReportService;
-import net.pladema.clinichistory.documents.service.ips.SnomedService;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,22 +23,20 @@ import java.util.Optional;
 public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReportService {
 
     private final DiagnosticReportRepository diagnosticReportRepository;
-    private final NoteService noteService;
     private final DocumentService documentService;
-    private final DiagnosticReportService diagnosticReportService;
+    private final LoadDiagnosticReports loadDiagnosticReports;
     private final SnomedService snomedService;
 
     private static final Logger LOG = LoggerFactory.getLogger(DeleteDiagnosticReportServiceImpl.class);
     private final String OUTPUT = "Output -> {}";
 
     public DeleteDiagnosticReportServiceImpl(DiagnosticReportRepository diagnosticReportRepository,
-                                             NoteService noteService,
                                              DocumentService documentService,
-                                             DiagnosticReportService diagnosticReportService, SnomedService snomedService){
+                                             LoadDiagnosticReports loadDiagnosticReports,
+                                             SnomedService snomedService){
         this.diagnosticReportRepository = diagnosticReportRepository;
-        this.noteService = noteService;
         this.documentService = documentService;
-        this.diagnosticReportService = diagnosticReportService;
+        this.loadDiagnosticReports = loadDiagnosticReports;
         this.snomedService = snomedService;
     }
     @Override
@@ -52,7 +50,7 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
 
             DiagnosticReportBo diagnosticReportBo = getCancelledDiagnosticReport(dr);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            Integer result = diagnosticReportService.loadDiagnosticReport(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
+            Integer result = loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
             LOG.trace(OUTPUT, result);
             return result;
         }

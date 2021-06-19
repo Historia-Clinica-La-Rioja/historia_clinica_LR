@@ -3,7 +3,6 @@ package net.pladema.patient.repository;
 import ar.lamansys.sgx.shared.repositories.QueryStringHelper;
 import lombok.NoArgsConstructor;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
-import net.pladema.patient.service.StringHelper;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.entity.Person;
 import ar.lamansys.sgx.shared.repositories.QueryPart;

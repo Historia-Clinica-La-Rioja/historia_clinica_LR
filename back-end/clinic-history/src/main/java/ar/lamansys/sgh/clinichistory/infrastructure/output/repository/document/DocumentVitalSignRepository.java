@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentVitalSign;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentVitalSignPK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +17,7 @@ public interface DocumentVitalSignRepository extends JpaRepository<DocumentVital
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ClinicalObservationVo(" +
+    @Query("SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo(" +
             "ovs.id, s.sctid, ovs.statusId, ovs.value, ovs.effectiveTime) " +
             "FROM DocumentVitalSign dvs " +
             "JOIN ObservationVitalSign ovs ON (dvs.pk.observationVitalSignId = ovs.id) " +

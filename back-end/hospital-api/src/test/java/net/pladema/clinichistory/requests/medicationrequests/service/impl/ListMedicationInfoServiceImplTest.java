@@ -7,7 +7,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import net.pladema.UnitRepository;
-import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;

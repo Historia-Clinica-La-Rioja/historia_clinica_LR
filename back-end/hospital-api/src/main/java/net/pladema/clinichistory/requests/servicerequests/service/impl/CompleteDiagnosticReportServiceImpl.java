@@ -1,16 +1,16 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.DiagnosticReportService;
-import net.pladema.clinichistory.documents.service.ips.SnomedService;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.CompleteDiagnosticReportBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +24,17 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
 
     private final DiagnosticReportRepository diagnosticReportRepository;
     private final DocumentService documentService;
-    private final DiagnosticReportService diagnosticReportService;
+    private final LoadDiagnosticReports loadDiagnosticReports;
     private final SnomedService snomedService;
 
     private static final Logger LOG = LoggerFactory.getLogger(CompleteDiagnosticReportServiceImpl.class);
     private final String OUTPUT = "Output -> {}";
 
     public CompleteDiagnosticReportServiceImpl(DiagnosticReportRepository diagnosticReportRepository, DocumentService documentService,
-                                               DiagnosticReportService diagnosticReportService, SnomedService snomedService){
+                                               LoadDiagnosticReports loadDiagnosticReports, SnomedService snomedService){
         this.diagnosticReportRepository = diagnosticReportRepository;
         this.documentService = documentService;
-        this.diagnosticReportService = diagnosticReportService;
+        this.loadDiagnosticReports = loadDiagnosticReports;
         this.snomedService = snomedService;
     }
 
@@ -47,7 +47,7 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
 
             DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr, completeDiagnosticReportBo);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            return diagnosticReportService.loadDiagnosticReport(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
+            return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
         }).findFirst().orElse(-1);
         LOG.debug(OUTPUT, result);
         return result;

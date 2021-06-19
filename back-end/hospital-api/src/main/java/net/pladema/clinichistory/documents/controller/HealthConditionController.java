@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.documents.controller;
 
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.HealthConditionMapper;
-import net.pladema.clinichistory.documents.controller.dto.HealthConditionNewConsultationDto;
-import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

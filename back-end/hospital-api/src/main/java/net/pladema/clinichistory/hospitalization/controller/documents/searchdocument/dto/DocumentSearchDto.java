@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.P
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentObservationsDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
 
 import java.io.Serializable;

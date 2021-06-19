@@ -1,9 +1,8 @@
 package net.pladema.settings.service.impl;
 
-import net.pladema.clinichistory.requests.servicerequests.controller.ServiceRequestController;
 import net.pladema.settings.service.SettingsService;
 import net.pladema.assets.service.domain.Assets;
-import net.pladema.sgx.files.FileService;
+import ar.lamansys.sgx.shared.files.FileService;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

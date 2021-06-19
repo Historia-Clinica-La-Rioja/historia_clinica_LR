@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.documents.validation;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;

@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.evolution
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentObservationsDto;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;

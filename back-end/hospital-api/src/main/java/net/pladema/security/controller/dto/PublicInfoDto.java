@@ -2,7 +2,7 @@ package net.pladema.security.controller.dto;
 
 import java.util.Set;
 
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 public class PublicInfoDto {
 	public final String flavor;

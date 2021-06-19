@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.evolution
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.constraints.EvolutionNoteValid;

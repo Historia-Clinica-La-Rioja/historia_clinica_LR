@@ -5,7 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.domain.DiagnosticReportFilterVo;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

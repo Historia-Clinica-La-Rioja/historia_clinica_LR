@@ -3,7 +3,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.controller.dto.EffectiveClinicalObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.EffectiveClinicalObservationDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

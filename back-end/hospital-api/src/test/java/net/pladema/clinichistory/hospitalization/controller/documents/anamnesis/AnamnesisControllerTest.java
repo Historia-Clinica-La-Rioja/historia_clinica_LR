@@ -4,10 +4,10 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.AuthorMapper;
 import net.pladema.UnitController;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
-import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
@@ -58,7 +58,7 @@ public class AnamnesisControllerTest extends UnitController {
 	private PatientExternalService patientExternalService;
 
 	@MockBean
-	private ResponsibleDoctorMapper responsibleDoctorMapper;
+	private AuthorMapper responsibleDoctorMapper;
 
 	@MockBean
 	private InternmentEpisodeRepository internmentEpisodeRepository;

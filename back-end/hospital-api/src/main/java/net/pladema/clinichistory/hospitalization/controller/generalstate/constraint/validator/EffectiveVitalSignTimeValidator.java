@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator;
 
-import net.pladema.clinichistory.documents.controller.dto.EffectiveClinicalObservationDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.VitalSignDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.EffectiveClinicalObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.EffectiveVitalSignTimeValid;

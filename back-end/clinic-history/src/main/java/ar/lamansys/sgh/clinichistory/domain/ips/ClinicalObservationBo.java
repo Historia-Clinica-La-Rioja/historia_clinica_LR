@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 import lombok.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.generalstate.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import javax.validation.constraints.NotNull;

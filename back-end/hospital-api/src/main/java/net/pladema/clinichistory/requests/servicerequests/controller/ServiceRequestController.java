@@ -1,13 +1,13 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.*;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.*;
 import net.pladema.clinichistory.requests.servicerequests.service.*;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
@@ -16,8 +16,8 @@ import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
-import net.pladema.sgx.pdf.PDFDocumentException;
-import net.pladema.sgx.pdf.PdfService;
+import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.pdf.PdfService;
 import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;

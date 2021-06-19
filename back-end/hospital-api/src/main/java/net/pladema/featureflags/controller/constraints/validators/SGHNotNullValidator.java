@@ -2,7 +2,7 @@ package net.pladema.featureflags.controller.constraints.validators;
 
 import net.pladema.featureflags.controller.constraints.SGHNotNull;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

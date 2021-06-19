@@ -2,7 +2,7 @@ package net.pladema.clinichistory.documents.controller.service;
 
 import net.pladema.clinichistory.documents.controller.dto.HCEAllergyDto;
 import net.pladema.clinichistory.documents.controller.mapper.HCEGeneralStateMapper;
-import net.pladema.clinichistory.documents.service.hce.HCEAllergyService;
+import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEAllergyService;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
