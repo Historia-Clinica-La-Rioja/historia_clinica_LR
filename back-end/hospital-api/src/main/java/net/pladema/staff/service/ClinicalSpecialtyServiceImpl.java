@@ -17,6 +17,6 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 
     @Override
     public Optional<ClinicalSpecialtyBo> getClinicalSpecialty(Integer clinicalSpecialtyId) {
-        return Optional.of(clinicalSpecialtyRepository.findClinicalSpecialtyBoById(clinicalSpecialtyId));
+        return Optional.ofNullable(clinicalSpecialtyRepository.findClinicalSpecialtyBoById(clinicalSpecialtyId));
     }
 }

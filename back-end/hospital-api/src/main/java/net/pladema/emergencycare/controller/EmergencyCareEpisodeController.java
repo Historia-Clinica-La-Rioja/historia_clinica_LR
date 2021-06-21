@@ -3,7 +3,7 @@ package net.pladema.emergencycare.controller;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternalService;
 import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
-import net.pladema.clinichistory.documents.controller.service.VitalSignExternalService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.VitalSignExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;

@@ -63,7 +63,7 @@ public class DocumentSearchController {
 
     private DocumentSearchFilterBo mapFilter(String searchFilterStr) {
         try {
-            if(searchFilterStr != null && !searchFilterStr.equals("undefined")) {
+            if(searchFilterStr != null && !searchFilterStr.equals("undefined") && !searchFilterStr.equals("null")) {
                 DocumentSearchFilterDto filterDto = jackson.readValue(searchFilterStr, DocumentSearchFilterDto.class);
                 return new DocumentSearchFilterBo(filterDto.getPlainText(), filterDto.getSearchType());
             }

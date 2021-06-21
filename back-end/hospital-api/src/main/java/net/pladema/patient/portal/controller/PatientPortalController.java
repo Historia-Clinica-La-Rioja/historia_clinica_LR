@@ -1,15 +1,15 @@
 package net.pladema.patient.portal.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.controller.dto.HCEAllergyDto;
-import net.pladema.clinichistory.documents.controller.dto.HCEAnthropometricDataDto;
-import net.pladema.clinichistory.documents.controller.dto.HCELast2VitalSignsDto;
-import net.pladema.clinichistory.documents.controller.dto.HCEMedicationDto;
-import net.pladema.clinichistory.documents.controller.dto.HCEPersonalHistoryDto;
-import net.pladema.clinichistory.documents.controller.service.HCEAllergyExternalService;
-import net.pladema.clinichistory.documents.controller.service.HCEClinicalObservationExternalService;
-import net.pladema.clinichistory.documents.controller.service.HCEHealthConditionsExternalService;
-import net.pladema.clinichistory.documents.controller.service.HCEMedicationExternalService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEAllergyExternalService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEClinicalObservationExternalService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEHealthConditionsExternalService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEMedicationExternalService;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
