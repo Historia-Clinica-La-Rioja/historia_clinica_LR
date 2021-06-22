@@ -37,6 +37,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>immunization</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.pladema</groupId>
             <artifactId>hospital-api</artifactId>
             <version>${revision}</version>
@@ -59,6 +65,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>immunization</artifactId>
+            <version>1.18.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <profiles>

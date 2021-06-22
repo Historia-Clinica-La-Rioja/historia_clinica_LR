@@ -7,9 +7,6 @@
 	<groupId>net.pladema.hospital</groupId>
 	<artifactId>hospital-parent</artifactId>
 	<version>${revision}</version>
-	<modules>
-		<module>backend/sgx-auth</module>
-	</modules>
 	<packaging>pom</packaging>
 	<inceptionYear>2020</inceptionYear>
 
