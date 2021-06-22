@@ -1,7 +1,9 @@
 package ar.lamansys.sgx.shared.reports.util.struct;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 
 import java.util.Iterator;
 
@@ -49,8 +51,24 @@ public class ExcelSheet implements ISheet {
     }
 
     @Override
-    public void addMergedRegion(int firstRow, int lastRow, int firstCol, int lastCol) {
-        this.sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+    public void addMergedRegion(int firstRow, int lastRow, int firstCol, int lastCol, boolean withBorders) {
+        CellRangeAddress range = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);
+        if(withBorders){
+            RegionUtil.setBorderLeft(BorderStyle.THIN, range, this.sheet);
+            RegionUtil.setBorderTop(BorderStyle.THIN, range, this.sheet);
+            RegionUtil.setBorderRight(BorderStyle.THIN, range, this.sheet);
+            RegionUtil.setBorderBottom(BorderStyle.THIN, range, this.sheet);
+        }
+        this.sheet.addMergedRegion(range);
+    }
+
+    @Override
+    public String getCellRangeAsString(int firstRow, int lastRow, int firstCol, int lastCol) {
+        try {
+            return new CellRangeAddress(firstRow, lastRow, firstCol, lastCol).formatAsString();
+        } catch (IllegalArgumentException ex){
+            return null;
+        }
     }
 
     @Override

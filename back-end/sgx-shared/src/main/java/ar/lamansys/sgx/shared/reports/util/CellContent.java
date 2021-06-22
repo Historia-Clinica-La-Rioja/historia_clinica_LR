@@ -1,19 +1,19 @@
 package ar.lamansys.sgx.shared.reports.util;
 
 import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class CellContent {
 
     private int row;
     private int column;
     private int numRows;
     private int numColumns;
+
+    private boolean cellRange;
 
     private Object value;
     private boolean formula;
@@ -49,6 +49,7 @@ public class CellContent {
         this.column=column;
         this.numRows=numRows;
         this.numColumns=numColumns;
+        this.cellRange = numRows > 1 || numColumns > 1;
         this.value=value;
         this.formula=isFormula(value);
         this.style=style;
@@ -57,6 +58,5 @@ public class CellContent {
 
     private boolean isFormula(Object value) {
         return String.valueOf(value).startsWith("=");
-
     }
 }

@@ -10,5 +10,5 @@ public interface ICell {
 
     void setCellValue(CellContent content);
 
-     void setCellStyle(ICellStyle cellStyle);
+    void setCellStyle(ICellStyle cellStyle);
 }

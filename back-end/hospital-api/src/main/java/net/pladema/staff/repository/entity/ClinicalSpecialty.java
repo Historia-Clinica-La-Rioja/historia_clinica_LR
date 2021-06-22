@@ -23,7 +23,7 @@ import lombok.ToString;
 public class ClinicalSpecialty implements Serializable, Comparable<ClinicalSpecialty> {
 
 	private static final long serialVersionUID = -5082786259164464584L;
-	private static final String FIX_NAME = "ERRÓNEA-";
+	public static final String FIX_NAME = "ERRÓNEA-";
 	
 	@Id
 	@Column(name = "id")

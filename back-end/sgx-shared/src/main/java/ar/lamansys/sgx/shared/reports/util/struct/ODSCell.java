@@ -1,7 +1,6 @@
 package ar.lamansys.sgx.shared.reports.util.struct;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
-
 import org.odftoolkit.simple.table.Cell;
 
 public class ODSCell implements ICell {

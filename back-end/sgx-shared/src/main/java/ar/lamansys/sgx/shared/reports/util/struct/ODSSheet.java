@@ -48,8 +48,14 @@ public class ODSSheet implements ISheet{
     }
 
     @Override
-    public void addMergedRegion(int firstRow, int lastRow, int firstCol, int lastCol) {
+    public void addMergedRegion(int firstRow, int lastRow, int firstCol, int lastCol, boolean withBorders) {
         //TODO review
+    }
+
+    @Override
+    public String getCellRangeAsString(int firstRow, int lastRow, int firstCol, int lastCol) {
+        //TODO review
+        return null;
     }
 
     @Override
