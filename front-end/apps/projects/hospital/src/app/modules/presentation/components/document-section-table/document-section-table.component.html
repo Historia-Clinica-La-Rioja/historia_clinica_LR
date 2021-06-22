@@ -3,7 +3,7 @@
  	and those are loaded only if app-cell-templates is here -->
 <app-cell-templates #cellTemplates [id]="cellTemplates"></app-cell-templates>
 
-<section *ngIf="columns && data">
+<section *ngIf="columns && data.length > 0">
 	<h3 class="mat-body-2" [translate]="tableTitle"></h3>
 
 	<table mat-table [dataSource]="data" class="secondary">
@@ -15,7 +15,7 @@
 							  [ngTemplateOutletContext]="{
 								  data: element,
 								  text: (column.text) ? column.text(element) : null,
-								  action: (column.action) ? column.action : null,
+								  action: column.action,
 								  rowIndex: i}">
 				</ng-container>
 			</td>
@@ -24,6 +24,4 @@
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 	</table>
-	<app-no-data class="secondary" *ngIf="data.length === 0"></app-no-data>
-
 </section>
