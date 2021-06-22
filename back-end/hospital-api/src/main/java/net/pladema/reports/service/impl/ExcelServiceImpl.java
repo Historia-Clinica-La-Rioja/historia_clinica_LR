@@ -1,12 +1,12 @@
-package ar.lamansys.sgx.shared.reports.service.impl;
+package net.pladema.reports.service.impl;
 
-import ar.lamansys.sgx.shared.reports.service.ExcelService;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
 import ar.lamansys.sgx.shared.reports.util.struct.CellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.ICell;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.reports.service.ExcelService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Query;

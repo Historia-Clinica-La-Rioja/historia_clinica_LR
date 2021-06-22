@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.reports.util;
+package net.pladema.reports.repository;
 
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,9 @@
-package ar.lamansys.sgx.shared.reports.controller;
+package net.pladema.reports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.reports.service.ExcelService;
-import ar.lamansys.sgx.shared.reports.util.QueryFactory;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.reports.repository.QueryFactory;
+import net.pladema.reports.service.ExcelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,8 +50,8 @@ public class ReportsController {
 
         String title = "Informe mensual de consultorio externo - Hoja 2 (IMCE)";
         String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Tipo documento",
-        "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", "Obra social/ Prepaga", "Nro de afiliado",
-        "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta"};
+                "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", "Obra social/ Prepaga", "Nro de afiliado",
+                "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta"};
 
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);

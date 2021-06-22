@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.reports.service;
+package net.pladema.reports.service;
 
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 
