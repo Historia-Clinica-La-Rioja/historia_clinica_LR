@@ -33,8 +33,10 @@ export class NewEpisodeAdminTriageComponent {
 		this.emergencyCareDto.triage = this.triage;
 		this.emergencyCareDto.administrative = this.newEpisodeService.getAdministrativeAdmissionDto();
 		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
-			emergencyCareId =>
-				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + emergencyCareId]),
+			emergencyCareId => {
+					this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + emergencyCareId])
+					this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
+				},
 			error =>
 				error?.text ?
 					this.snackBarService.showError(error.text) : this.snackBarService.showError('guardia.new-episode.ERROR')
