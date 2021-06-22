@@ -1624,6 +1624,30 @@ export interface VMedicalDischargeDto extends MedicalDischargeDto {
     snomedPtProblems: string[];
 }
 
+export interface VaccineConditionsDto {
+    description: string;
+    id: number;
+    schemes: VaccineSchemeDto[];
+}
+
+export interface VaccineDoseDto {
+    description: string;
+    id: number;
+    order: number;
+}
+
+export interface VaccineInformationDto {
+    conditions: VaccineConditionsDto[];
+    description: string;
+    id: number;
+}
+
+export interface VaccineSchemeDto {
+    description: string;
+    doses: VaccineDoseDto[];
+    id: number;
+}
+
 export interface VitalSignDto extends Serializable {
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
     diastolicBloodPressure?: EffectiveClinicalObservationDto;
