@@ -18,7 +18,7 @@ public interface SGXAuditableEntityJPARepository<T extends SGXAuditableEntity<ID
     @Query("UPDATE #{#entityName} e  "
             + "SET e.deleteable.deleted = true "
             + ", e.deleteable.deletedOn = CURRENT_TIMESTAMP "
-            + ", e.deleteable.deletedBy = ?#{ principal?.userId } "
+            + ", e.deleteable.deletedBy = ?#{ principal } "
             + "WHERE e.id = :id ")
     void deleteById(@Param("id") ID var1);
 
@@ -40,7 +40,7 @@ public interface SGXAuditableEntityJPARepository<T extends SGXAuditableEntity<ID
     @Modifying(clearAutomatically = true)
     @Query("UPDATE #{#entityName} e  "
             + "SET e.deleteable.deleted = true "
-            + ", e.deleteable.deletedBy = ?#{ principal?.userId } "
+            + ", e.deleteable.deletedBy = ?#{ principal } "
             + ", e.deleteable.deletedOn = CURRENT_TIMESTAMP ")
     void deleteAll();
 }
