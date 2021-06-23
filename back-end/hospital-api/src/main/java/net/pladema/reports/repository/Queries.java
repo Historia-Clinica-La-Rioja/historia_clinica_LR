@@ -38,6 +38,7 @@ public class Queries {
             "   LEFT JOIN reasons r ON (ocr.reason_id = r.description) " +
            "WHERE" +
             "   i.id = :institutionId " +
+            "   AND oc.billable = true " +
             "   AND oc.start_date between :startDate AND :endDate " +
             "       %s " + // filtro especialidadId
             "       %s ";  // filtro doctorId
