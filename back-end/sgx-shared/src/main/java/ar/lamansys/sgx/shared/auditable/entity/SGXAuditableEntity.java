@@ -38,6 +38,7 @@ public abstract class SGXAuditableEntity<ID> implements CreationableEntity<Integ
 		return null;
 	}
 
+
 	@Override
 	public void setCreatedBy(Integer user) {
 		if (creationable == null)
@@ -130,4 +131,11 @@ public abstract class SGXAuditableEntity<ID> implements CreationableEntity<Integ
 			deleteable = new Deleteable();
 		deleteable.setDeleted(deleted);
 	}
+
+	public void initializeAuditableFields() {
+		this.creationable = new Creationable();
+		this.updateable = new Updateable();
+		this.deleteable = new Deleteable();
+	}
+
 }

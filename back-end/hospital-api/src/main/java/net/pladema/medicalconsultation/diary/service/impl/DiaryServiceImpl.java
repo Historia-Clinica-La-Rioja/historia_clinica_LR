@@ -103,7 +103,7 @@ public class DiaryServiceImpl implements DiaryService {
 		Diary diaryToDelete = diaryRepository.findById(diaryId)
 				.orElseThrow(() -> new EntityNotFoundException("diary.invalid.id"));
 		diaryToDelete.setDeleted(Boolean.TRUE);
-		diaryToDelete.setDeleteBy(getCurrentAuditor());
+		diaryToDelete.setDeletedBy(getCurrentAuditor());
 		diaryToDelete.setDeletedOn(LocalDateTime.now());
 		diaryToDelete.setActive(false);
 		diaryRepository.save(diaryToDelete);

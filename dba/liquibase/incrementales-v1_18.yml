@@ -565,4 +565,40 @@ databaseChangeLog:
                     type: INTEGER
                 - column:
                     name: deleted_on
-                    type: DATETIME                    
+                    type: DATETIME           
+
+    - changeSet:
+        id: add-auditable-columns-healthcare_professional_specialty
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: healthcare_professional_specialty
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME     
+                - column:
+                    name: created_on
+                    type: datetime
+                - column:
+                    name: updated_on
+                    type: datetime
+                - column:
+                    name: created_by
+                    type: int
+                    constraints:
+                        nullable: true
+                - column:
+                    name: updated_by
+                    type: int
+                    constraints:
+                        nullable: true            

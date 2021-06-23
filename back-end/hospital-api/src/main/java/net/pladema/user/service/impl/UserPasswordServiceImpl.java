@@ -1,6 +1,5 @@
 package net.pladema.user.service.impl;
 
-import ar.lamansys.sgx.shared.auditable.entity.Audit;
 import net.pladema.user.repository.UserPasswordRepository;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserPassword;
@@ -42,7 +41,8 @@ public class UserPasswordServiceImpl implements UserPasswordService {
 		userPassword.setPassword(bCryptPasswordEncoder.encode(password));
 		userPassword.setHashAlgorithm("hashAlgorithm");
 		userPassword.setSalt("salt");
-		userPassword.setAudit(new Audit());
+		userPassword.initializeAuditableFields();
+
 		return userPassword;
 	}
 

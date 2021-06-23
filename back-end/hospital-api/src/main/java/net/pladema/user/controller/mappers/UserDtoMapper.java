@@ -17,7 +17,6 @@ public interface UserDtoMapper {
 	User toModel(BackofficeUserDto dto);
 
 	@Named("userWithDto")
-	@Mapping(target = "audit", ignore = true)
 	@Mapping(target = "personId", ignore = true)
 	@Mapping(target = "lastLogin", ignore = true)
 	@Mapping(target = "id", ignore = true)

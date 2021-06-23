@@ -1,8 +1,7 @@
 package net.pladema.seeds.data;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import net.pladema.address.repository.AddressRepository;
-import ar.lamansys.sgx.shared.auditable.entity.Audit;
-import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.person.repository.PersonRepository;
@@ -64,12 +63,15 @@ public class SampleData {
 		userPasswordRepository.saveAll(fix(sampleProperties.getUserPasswords()));
 	}
 
-	private <E extends AuditableEntity> List<E> fix(List<E> auditableEntities) {
+	private <E extends SGXAuditableEntity> List<E> fix(List<E> auditableEntities) {
 		return auditableEntities.stream().map(auditableEntity -> {
-			auditableEntity.setAudit(new Audit());
+			fixEntity(auditableEntity);
 			return auditableEntity;
 		}).collect(Collectors.toList());
 	}
 
+	private void fixEntity(SGXAuditableEntity auditableEntity) {
+		auditableEntity.initializeAuditableFields();
+	}
 
 }

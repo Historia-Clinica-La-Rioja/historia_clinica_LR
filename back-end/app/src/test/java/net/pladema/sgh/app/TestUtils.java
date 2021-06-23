@@ -1,37 +1,34 @@
 package net.pladema.sgh.app;
 
-import ar.lamansys.sgx.shared.auditable.entity.Audit;
-import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
-
-import java.util.Optional;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtils {
 
+	private static SGXAuditableEntity e;
+
 	private TestUtils() {
-		
+
 	}
-	
-	public static void assertCreateAuditableEntity(AuditableEntity e) {
-		Optional<Audit> optAudit = e.getAudit();
-		assertThat(optAudit.isPresent())
-			.isTrue();
-	
-		assertThat(optAudit.get().getCreatedOn())
-			.isNotNull();
-	
-		assertThat(optAudit.get().getUpdatedOn())
-			.isNotNull();
+
+	public static void assertCreateAuditableEntity(SGXAuditableEntity e) {
+
+		assertThat(e.getCreatedOn())
+				.isNotNull();
+
+		assertThat(e.getUpdatedOn())
+				.isNotNull();
 	}
-	
-	public static void assertUpdateAuditableEntity(AuditableEntity e) {
-		Optional<Audit> optAudit = e.getAudit();
-		
-		assertThat(optAudit.isPresent())
-			.isTrue();
-		
-		assertThat(optAudit.get().getUpdatedOn())
-			.isNotNull();	
+
+	public static void assertUpdateAuditableEntity(SGXAuditableEntity e) {
+
+		assertThat(e.getUpdatedOn())
+				.isNotNull();
+	}
+
+	public static void assertDeleteAuditableEntity(SGXAuditableEntity e) {
+
+		assertThat(e.isDeleted()).isTrue();
 	}
 }
