@@ -10,12 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 @Entity
 @Table(name = "historic_patient_bed_relocation")
@@ -23,7 +23,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 @Getter
 @Setter
 @ToString
-public class HistoricPatientBedRelocation extends SGXAuditableEntity {
+public class HistoricPatientBedRelocation extends SGXAuditableEntity<Integer> {
 	
 	/**
 	 * 

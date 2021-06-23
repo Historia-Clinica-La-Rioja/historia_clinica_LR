@@ -1,12 +1,12 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.InmunizationStatus;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Inmunization extends SGXAuditableEntity {
+public class Inmunization extends SGXAuditableEntity<Integer> {
 
 	/**
 	 * 

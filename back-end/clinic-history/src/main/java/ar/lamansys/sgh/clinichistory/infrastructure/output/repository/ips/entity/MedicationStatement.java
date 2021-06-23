@@ -1,11 +1,11 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class MedicationStatement extends SGXAuditableEntity {
+public class MedicationStatement extends SGXAuditableEntity<Integer> {
 
 	/**
 	 * 

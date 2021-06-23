@@ -3,7 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entit
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 import lombok.*;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Procedure extends SGXAuditableEntity {
+public class Procedure extends SGXAuditableEntity<Integer> {
 
 	/**
 	 *

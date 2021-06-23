@@ -2,11 +2,11 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entit
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.Column;
@@ -26,7 +26,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class AllergyIntolerance extends SGXAuditableEntity {
+public class AllergyIntolerance extends SGXAuditableEntity<Integer> {
 
 	/**
 	 * 

@@ -14,7 +14,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class ClinicalObservation extends SGXAuditableEntity {
+public abstract class ClinicalObservation extends SGXAuditableEntity<Integer> {
 
     @Id
     @Column(name = "id")

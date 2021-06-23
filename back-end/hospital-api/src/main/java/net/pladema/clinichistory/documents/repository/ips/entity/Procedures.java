@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.documents.repository.ips.entity;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.*;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProceduresStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Procedures extends SGXAuditableEntity {
+public class Procedures extends SGXAuditableEntity<Integer> {
 
 	/**
 	 *

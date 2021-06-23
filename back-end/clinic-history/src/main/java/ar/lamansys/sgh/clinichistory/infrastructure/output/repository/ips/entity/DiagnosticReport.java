@@ -1,11 +1,11 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class DiagnosticReport extends SGXAuditableEntity {
+public class DiagnosticReport extends SGXAuditableEntity<Integer> {
 
 	@Id
 	@Column(name = "id")

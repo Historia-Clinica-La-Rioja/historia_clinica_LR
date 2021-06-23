@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.outpatient.repository.domain;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class OutpatientConsultation extends SGXAuditableEntity {
+public class OutpatientConsultation extends SGXAuditableEntity<Integer> {
 
     /**
      *

@@ -17,7 +17,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class DocumentFile extends SGXAuditableEntity {
+public class DocumentFile extends SGXAuditableEntity<Long> {
 
 	/**
 	 * 

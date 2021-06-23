@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +29,7 @@ import org.hibernate.annotations.ColumnDefault;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Appointment extends SGXAuditableEntity {
+public class Appointment extends SGXAuditableEntity<Integer> {
 
     @Id
     @Column(name = "id")

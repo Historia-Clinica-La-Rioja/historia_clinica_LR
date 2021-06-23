@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.hospitalization.repository.domain;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class PatientDischarge extends SGXAuditableEntity {
+public class PatientDischarge extends SGXAuditableEntity<Integer> {
 
 
 	/**
@@ -46,4 +46,7 @@ public class PatientDischarge extends SGXAuditableEntity {
 		this.dischargeTypeId = patientDischargeBo.getDischargeTypeId();
 	}
 
+	public Integer getId() {
+		return this.internmentEpisodeId;
+	}
 }

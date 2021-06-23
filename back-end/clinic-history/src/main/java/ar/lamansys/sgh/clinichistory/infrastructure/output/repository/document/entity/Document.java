@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Document extends SGXAuditableEntity {
+public class Document extends SGXAuditableEntity<Long> {
 
 	/**
 	 * 

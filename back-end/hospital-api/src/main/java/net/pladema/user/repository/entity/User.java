@@ -11,10 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 
 @Entity
@@ -23,7 +23,7 @@ import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User extends AuditableEntity {
+public class User extends SGXAuditableEntity<Integer> {
 
 	/**
 	 * 

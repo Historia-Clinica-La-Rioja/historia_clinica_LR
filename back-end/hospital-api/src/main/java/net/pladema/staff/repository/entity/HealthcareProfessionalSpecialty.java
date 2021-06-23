@@ -1,16 +1,13 @@
 package net.pladema.staff.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -19,7 +16,9 @@ import java.io.Serializable;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class HealthcareProfessionalSpecialty implements Serializable {
+@EntityListeners(SGXAuditListener.class)
+
+public class HealthcareProfessionalSpecialty extends SGXAuditableEntity<Integer> implements Serializable {
 	
 	private static final long serialVersionUID = -5292560767942911734L;
 
