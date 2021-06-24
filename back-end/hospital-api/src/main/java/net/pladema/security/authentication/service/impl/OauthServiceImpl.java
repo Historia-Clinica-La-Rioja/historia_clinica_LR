@@ -20,9 +20,6 @@ import net.pladema.security.authentication.service.OauthService;
 import net.pladema.security.configuration.OAuthConfiguration;
 import net.pladema.security.token.service.TokenService;
 import net.pladema.security.token.service.domain.JWToken;
-import net.pladema.user.repository.entity.User;
-import net.pladema.user.service.UserPasswordService;
-import net.pladema.user.service.UserService;
 
 @Service
 public class OauthServiceImpl implements OauthService {

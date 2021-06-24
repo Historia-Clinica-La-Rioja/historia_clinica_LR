@@ -14,7 +14,7 @@ import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidator;
 import ar.lamansys.immunization.domain.user.RolePermissionException;
 import ar.lamansys.immunization.domain.user.RolesExceptionEnum;
-import ar.lamansys.immunization.domain.user.UserStorage;
+import ar.lamansys.immunization.domain.user.ImmunizationUserStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
@@ -41,7 +41,7 @@ public class ImmunizePatient {
 
     private final ImmunizationDocumentStorage immunizationDocumentStorage;
 
-    private final UserStorage userStorage;
+    private final ImmunizationUserStorage immunizationUserStorage;
 
     private final VaccineConsultationStorage vaccineConsultationStorage;
 
@@ -54,7 +54,7 @@ public class ImmunizePatient {
                            DateTimeProvider dateTimeProvider,
                            DoctorStorage doctorStorage,
                            ImmunizationDocumentStorage immunizationDocumentStorage,
-                           UserStorage userStorage,
+                           ImmunizationUserStorage immunizationUserStorage,
                            VaccineConditionApplicationStorage vaccineConditionApplicationStorage,
                            VaccineConsultationStorage vaccineConsultationStorage,
                            VaccineRuleStorage vaccineRuleStorage,
@@ -63,7 +63,7 @@ public class ImmunizePatient {
         this.vaccineConsultationStorage = vaccineConsultationStorage;
         this.immunizationDocumentStorage = immunizationDocumentStorage;
         this.doctorStorage = doctorStorage;
-        this.userStorage = userStorage;
+        this.immunizationUserStorage = immunizationUserStorage;
         this.vaccineConditionApplicationStorage = vaccineConditionApplicationStorage;
         this.vaccineSchemeStorage = vaccineSchemeStorage;
         this.vaccineRuleStorage = vaccineRuleStorage;
@@ -133,7 +133,7 @@ public class ImmunizePatient {
     }
 
     private void validatePermission(Integer institutionId, List<ImmunizationInfoBo> immunizations) {
-        var rolesOverInstitution = userStorage.fetchLoggedUserRoles().stream()
+        var rolesOverInstitution = immunizationUserStorage.fetchLoggedUserRoles().stream()
                 .filter(roleInfoBo -> institutionId.equals(roleInfoBo.getInstitution()))
                 .collect(Collectors.toList());
         if (rolesOverInstitution.stream().noneMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("ENFERMERO", "PROFESIONAL_DE_SALUD", "ESPECIALISTA_EN_ODONTOLOGIA", "ESPECIALISTA_MEDICO"))))

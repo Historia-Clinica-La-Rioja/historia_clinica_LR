@@ -1,14 +1,16 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
-import net.pladema.permissions.repository.enums.ERole;
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter.AuthenticationTokenFilter;
 import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
-import net.pladema.sgh.app.security.infraestructure.filters.AuthenticationTokenFilter;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.sgh.app.security.infraestructure.filters.AuthorizationFilter;
 import net.pladema.sgh.app.security.infraestructure.filters.PublicApiAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -51,13 +53,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private final ActuatorConfiguration actuatorConfiguration;
 
+	private final AuthorizationFilter authorizationFilter;
+
 	private final PublicApiAuthenticationFilter publicApiAuthenticationFilter;
 
 	public WebSecurityConfiguration(AuthenticationTokenFilter authenticationTokenFilter,
 									ActuatorConfiguration actuatorConfiguration,
+									AuthorizationFilter authorizationFilter,
 									PublicApiAuthenticationFilter publicApiAuthenticationFilter) {
 		this.authenticationTokenFilter = authenticationTokenFilter;
 		this.actuatorConfiguration = actuatorConfiguration;
+		this.authorizationFilter = authorizationFilter;
 		this.publicApiAuthenticationFilter = publicApiAuthenticationFilter;
 	}
 
@@ -96,6 +102,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		httpSecurity.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 		httpSecurity.addFilterAfter(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 		httpSecurity.addFilterAfter(publicApiAuthenticationFilter, AuthenticationTokenFilter.class);
+		httpSecurity.addFilterAfter(authorizationFilter, PublicApiAuthenticationFilter.class);
 	}
 
 }

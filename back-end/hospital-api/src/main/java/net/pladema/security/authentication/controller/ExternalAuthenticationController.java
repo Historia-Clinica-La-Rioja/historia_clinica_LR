@@ -1,8 +1,6 @@
 package net.pladema.security.authentication.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.security.authentication.controller.dto.JWTokenDto;
-import net.pladema.security.authentication.controller.dto.OauthConfigDto;
 import net.pladema.security.authentication.controller.mapper.JWTokenMapper;
 import net.pladema.security.authentication.service.OauthService;
 import org.slf4j.Logger;

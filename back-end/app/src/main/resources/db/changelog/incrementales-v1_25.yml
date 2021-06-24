@@ -217,5 +217,64 @@ databaseChangeLog:
                     referencedTableName: tooth
                     validate: true
 
+    - changeSet:
+        id: user_person-createTable
+        comment: Create table user_person
+        author: etrapani
+        changes:
+          - createTable:
+              tableName: user_person
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: user_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: person_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: user_id, person_id
+              constraintName: pk_user_person
+              tableName: user_person
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: user_person
+              constraintName: FK_user_person_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: person_id
+              baseTableName: user_person
+              constraintName: FK_user_person_person_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: person
+              validate: true
 
+    - changeSet:
+        id: populate-user-person
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO user_person(user_id,person_id) SELECT id, person_id FROM users
+                WHERE person_id IS NOT NULL
+                AND person_id IN (SELECT id FROM person);
 
+    - changeSet:
+        id: dropColumn-person_id_from_table_user
+        author: etrapani
+        changes:
+          - dropColumn:
+              columnName: person_id
+              tableName: users

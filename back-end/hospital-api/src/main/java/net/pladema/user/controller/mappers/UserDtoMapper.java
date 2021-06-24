@@ -1,7 +1,7 @@
 package net.pladema.user.controller.mappers;
 
+import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import net.pladema.user.controller.dto.BackofficeUserDto;
-import net.pladema.user.repository.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

@@ -19,8 +19,8 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 	@Query(value = " SELECT new net.pladema.staff.service.domain.HealthcarePersonBo(hp.id, hp.licenseNumber, p)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
-			+ " INNER JOIN User u ON u.personId = p.id"
-			+ " INNER JOIN UserRole ur ON u.id = ur.userRolePK.userId"
+			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
+			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userRolePK.userId"
 			+ " WHERE ur.userRolePK.roleId = 3 " // Role 'Especialista Medico'
 			+ " AND ur.userRolePK.institutionId = :institutionId "
 			+ " AND hp.deleteable.deleted = false")
@@ -30,9 +30,8 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 	@Query(value = " SELECT hp.id "
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON (hp.personId = p.id) "
-			+ " INNER JOIN User u ON (u.personId = p.id) "
-			+ " WHERE u.id = :userId "
-			+ " AND hp.deleteable.deleted = false")
+			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
+			+ " WHERE up.pk.userId = :userId ")
     Integer getProfessionalId(@Param("userId") Integer userId);
 
 	@Transactional(readOnly = true)
@@ -40,8 +39,8 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
-			+ " INNER JOIN User u ON u.personId = p.id"
-			+ " INNER JOIN UserRole ur ON u.id = ur.userRolePK.userId"
+			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
+			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userRolePK.userId"
 			+ " WHERE ur.userRolePK.institutionId = :institutionId "
 			+ " AND hp.deleteable.deleted = false "
 			+ " ORDER BY p.lastName, p.firstName")
@@ -52,8 +51,8 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON (hp.personId = p.id)"
-			+ " WHERE hp.id = :id "
-			+ "AND hp.deleteable.deleted = false")
+			+ " WHERE hp.id = :id"
+			+ " AND hp.deleteable.deleted = false")
 	Optional<HealthcareProfessionalVo> findProfessionalById(@Param("id") Integer id);
 
 

@@ -1,13 +1,13 @@
 package net.pladema.permissions.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
-
-import lombok.EqualsAndHashCode;
-import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 @Entity
 @Table(name = "user_role")
@@ -29,10 +29,12 @@ public class UserRole extends SGXAuditableEntity<UserRolePK> {
 
 	public UserRole(Integer userId, Short roleId) {
 		userRolePK = new UserRolePK(userId, roleId);
+		setDeleted(false);
 	}
 	
 	public UserRole(Integer userId, Short roleId, Integer institutionId) {
 		userRolePK = new UserRolePK(userId, roleId, institutionId);
+		setDeleted(false);
 	}
 	
 	public void setUserId(Integer userId) {

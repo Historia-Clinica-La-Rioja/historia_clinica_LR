@@ -14,7 +14,7 @@ import ar.lamansys.immunization.infrastructure.output.repository.consultation.Va
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultationRepository;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultationStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.document.ImmunizationDocumentStorageImpl;
-import ar.lamansys.immunization.infrastructure.output.repository.user.UserStorageImpl;
+import ar.lamansys.immunization.infrastructure.output.repository.user.ImmunizationUserStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineConditionApplicationRepository;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineConditionApplicationStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineSchemeRepository;
@@ -90,7 +90,7 @@ class ImmunizePatientTest {
                 dateTimeProvider,
                 new DoctorStorageImpl(sharedStaffPort),
                 new ImmunizationDocumentStorageImpl(documentExternalFactory, localDateMapper),
-                new UserStorageImpl(sharedPermissionPort),
+                new ImmunizationUserStorageImpl(sharedPermissionPort),
                 new VaccineConditionApplicationStorageImpl(vaccineConditionApplicationRepository),
                 new VaccineConsultationStorageImpl(vaccineConsultationRepository),
                 vaccineRuleStorage,

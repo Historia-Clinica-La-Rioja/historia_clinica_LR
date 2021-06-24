@@ -1078,7 +1078,7 @@ export interface InternmentSummaryDto {
     totalInternmentDays: number;
 }
 
-export interface JWTokenDto extends Serializable {
+export interface JWTokenDto {
     refreshToken: string;
     token: string;
 }
@@ -1091,6 +1091,17 @@ export interface Last2VitalSignsDto extends Serializable {
 export interface LimitedPatientSearchDto {
     actualPatientSearchSize: number;
     patientList: PatientSearchDto[];
+}
+
+export interface LoggedPersonDto extends Serializable {
+    firstName: string;
+    lastName: string;
+}
+
+export interface LoggedUserDto {
+    email: string;
+    id: number;
+    personDto: LoggedPersonDto;
 }
 
 export interface LoginDto extends Serializable {
@@ -1440,6 +1451,10 @@ export interface Overlapping<T> {
 export interface PasswordResetDto {
     password: string;
     token: string;
+}
+
+export interface PasswordResetResponseDto {
+    username: string;
 }
 
 export interface PatientBedRelocationDto extends Serializable {
@@ -1874,11 +1889,20 @@ export interface UIPageDto {
 export interface UserDto extends AbstractUserDto {
     email: string;
     id: number;
-    personDto?: UserPersonDto;
+    personDto: UserPersonDto;
+    personId: number;
+}
+
+export interface UserInfoDto {
+    enabled: boolean;
+    id: number;
+    password: string;
+    username: string;
 }
 
 export interface UserPersonDto extends Serializable {
     firstName: string;
+    id?: number;
     lastName: string;
 }
 
