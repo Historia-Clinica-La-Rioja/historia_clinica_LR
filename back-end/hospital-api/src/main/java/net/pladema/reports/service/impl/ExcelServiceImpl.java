@@ -1,8 +1,8 @@
 package net.pladema.reports.service.impl;
 
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
-import ar.lamansys.sgx.shared.reports.util.struct.CellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.ICell;
+import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
@@ -34,11 +34,11 @@ public class ExcelServiceImpl implements ExcelService {
         // creo la columna de headers
         IRow headerRow = sheet.createRow(rowNumber.getAndIncrement());
 
-        CellStyle styleHeader = createHeaderStyle();
+        ICellStyle styleHeader = createHeaderStyle(wb);
 
         fillRow(headerRow, headers, styleHeader);
 
-        CellStyle styleDataRow = createDataRowStyle();
+        ICellStyle styleDataRow = createDataRowStyle(wb);
 
         // itero el resultado creando una row para cada uno
         result.stream().forEach(
@@ -53,22 +53,22 @@ public class ExcelServiceImpl implements ExcelService {
         return wb;
     }
 
-    private CellStyle createHeaderStyle(){
-        CellStyle cellStyle = new CellStyle();
+    private ICellStyle createHeaderStyle(IWorkbook workbook){
+        ICellStyle cellStyle = workbook.createStyle();
         cellStyle.setBold(true);
         cellStyle.setFontSize(FONT_SIZE);
 
         return cellStyle;
     }
 
-    private CellStyle createDataRowStyle(){
-        CellStyle cellStyle = new CellStyle();
+    private ICellStyle createDataRowStyle(IWorkbook workbook){
+        ICellStyle cellStyle = workbook.createStyle();
         cellStyle.setFontSize(FONT_SIZE);
 
         return cellStyle;
     }
 
-    private void fillRow(IRow row, Object[] content, CellStyle style){
+    private void fillRow(IRow row, Object[] content, ICellStyle style){
         AtomicInteger rowNumber = new AtomicInteger(0);
         Arrays.stream(content).forEach(
                 item -> {

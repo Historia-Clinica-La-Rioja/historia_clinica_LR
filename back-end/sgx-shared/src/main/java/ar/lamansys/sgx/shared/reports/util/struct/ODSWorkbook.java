@@ -24,6 +24,11 @@ public class ODSWorkbook implements IWorkbook {
     }
 
     @Override
+    public ICellStyle createStyle() {
+        return null;
+    }
+
+    @Override
     public void write(OutputStream out) throws Exception {
         this.doc.save(out);
     }

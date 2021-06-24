@@ -24,6 +24,11 @@ public class ExcelWorkbook implements IWorkbook {
     }
 
     @Override
+    public ICellStyle createStyle() {
+        return new ExcelCellStyle(this.workbook);
+    }
+
+    @Override
     public void write(OutputStream out) throws Exception {
         this.workbook.write(out);
     }

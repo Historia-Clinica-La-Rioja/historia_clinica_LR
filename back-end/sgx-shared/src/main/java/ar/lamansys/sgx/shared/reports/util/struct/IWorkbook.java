@@ -8,6 +8,8 @@ public interface IWorkbook {
 
     ISheet createSheet(String sheetName);
 
+    ICellStyle createStyle();
+
     void write(OutputStream out) throws Exception;
 
     String getExtension();

@@ -2,8 +2,9 @@ package net.pladema.reports.service.domain;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
-import ar.lamansys.sgx.shared.reports.util.struct.CellStyle;
+
 import ar.lamansys.sgx.shared.reports.util.struct.ICell;
+import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
@@ -16,20 +17,16 @@ import java.util.stream.Collectors;
 
 public class ResumenMensualCE {
 
-    private IWorkbook workbook;
+    private ICellStyle basicStyle;
+    private ICellStyle titleStyle;
+    private ICellStyle wrapStyle;
+    private ICellStyle fieldStyle;
 
-    private CellStyle basicStyle;
-    private CellStyle titleStyle;
-    private CellStyle wrapStyle;
-    private CellStyle fieldStyle;
-
-    public ResumenMensualCE(){
-        workbook = WorkbookCreator.createExcelWorkbook();
-        createCellStyle();
-    }
 
     public IWorkbook build() {
         try {
+            IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
+            createCellStyle(workbook);
             ISheet sheet = workbook.createSheet("Hoja 2.1");
 
             /* Fill Data*/
@@ -123,39 +120,39 @@ public class ResumenMensualCE {
         return data;
     }
 
-    private void createCellStyle(){
-        basicStyle = new CellStyle();
+    private void createCellStyle(IWorkbook workbook){
+        basicStyle = workbook.createStyle();
         basicStyle.setFontSize((short)10);
         basicStyle.setBold(false);
         basicStyle.setWrap(false);
         basicStyle.setBorders(true);
-        basicStyle.setHalign(CellStyle.HALIGNMENT.CENTER);
-        basicStyle.setVAlign(CellStyle.VALIGNMENT.CENTER);
+        basicStyle.setHAlign(ICellStyle.HALIGNMENT.CENTER);
+        basicStyle.setVAlign(ICellStyle.VALIGNMENT.CENTER);
 
 
-        titleStyle = new CellStyle();
+        titleStyle = workbook.createStyle();
         titleStyle.setFontSize((short)25);
         titleStyle.setBold(true);
         titleStyle.setWrap(false);
         titleStyle.setBorders(true);
-        titleStyle.setHalign(CellStyle.HALIGNMENT.CENTER);
-        titleStyle.setVAlign(CellStyle.VALIGNMENT.CENTER);
+        titleStyle.setHAlign(ICellStyle.HALIGNMENT.CENTER);
+        titleStyle.setVAlign(ICellStyle.VALIGNMENT.CENTER);
 
-        wrapStyle = new CellStyle();
+        wrapStyle = workbook.createStyle();
         wrapStyle.setFontSize((short)10);
         wrapStyle.setBold(false);
         wrapStyle.setWrap(true);
         wrapStyle.setBorders(true);
-        wrapStyle.setHalign(CellStyle.HALIGNMENT.CENTER);
-        wrapStyle.setVAlign(CellStyle.VALIGNMENT.CENTER);
+        wrapStyle.setHAlign(ICellStyle.HALIGNMENT.CENTER);
+        wrapStyle.setVAlign(ICellStyle.VALIGNMENT.CENTER);
 
-        fieldStyle = new CellStyle();
+        fieldStyle = workbook.createStyle();
         fieldStyle.setFontSize((short)10);
         fieldStyle.setBold(false);
         fieldStyle.setWrap(true);
         fieldStyle.setBorders(true);
-        fieldStyle.setHalign(CellStyle.HALIGNMENT.LEFT);
-        fieldStyle.setVAlign(CellStyle.VALIGNMENT.BOTTOM);
+        fieldStyle.setHAlign(ICellStyle.HALIGNMENT.LEFT);
+        fieldStyle.setVAlign(ICellStyle.VALIGNMENT.BOTTOM);
 
     }
 
@@ -194,7 +191,7 @@ public class ResumenMensualCE {
 
         ICell cell = row.createCell(data.getColumn());
         cell.setCellStyle(data.getStyle());
-        cell.setCellValue(data.getValue());
+        cell.setCellValue(data);
 
         CellRangeAddress combined = new CellRangeAddress(nRow, data.lastRow(), nColumn, data.lastCol());
         if(combined.getNumberOfCells() > 1)

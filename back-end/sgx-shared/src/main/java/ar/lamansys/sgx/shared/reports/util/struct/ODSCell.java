@@ -1,8 +1,7 @@
 package ar.lamansys.sgx.shared.reports.util.struct;
 
-import org.odftoolkit.odfdom.type.Color;
-import org.odftoolkit.simple.style.Font;
-import org.odftoolkit.simple.style.StyleTypeDefinitions;
+import ar.lamansys.sgx.shared.reports.util.CellContent;
+
 import org.odftoolkit.simple.table.Cell;
 
 public class ODSCell implements ICell {
@@ -24,14 +23,15 @@ public class ODSCell implements ICell {
     }
 
     @Override
-    public void setCellStyle(CellStyle cellStyle) {
-        Font font = new Font(
-                "Arial",
-                cellStyle.isBold() ?
-                        StyleTypeDefinitions.FontStyle.BOLD :
-                        StyleTypeDefinitions.FontStyle.REGULAR,
-                cellStyle.getFontSize() != null ? cellStyle.getFontSize() : 11,
-                cellStyle.getColor() != null ? new Color(cellStyle.getColor().getODSValue()) : Color.BLACK);
-        this.cell.setFont(font);
+    public void setCellValue(CellContent content) {
+        if(content.isFormula())
+            this.cell.setFormula((String)content.getValue());
+        else
+            setCellValue((String)content.getValue());
+    }
+
+    @Override
+    public void setCellStyle(ICellStyle cellStyle) {
+        this.cell.setFont(((ODSStyle)cellStyle).getFont());
     }
 }
