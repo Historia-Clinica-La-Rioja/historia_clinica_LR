@@ -27,7 +27,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @ToString
-public class Diary extends SGXAuditableEntity<Integer> implements DeleteableEntity<Integer> {
+public class Diary extends SGXAuditableEntity<Integer> {
 
     /**
 	 * 
