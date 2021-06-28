@@ -50,7 +50,7 @@ public class ReportsController {
 
         String title = "Informe mensual de consultorio externo - Hoja 2 (IMCE)";
         String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Tipo documento",
-                "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", "Obra social/ Prepaga", "Nro de afiliado",
+                "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", //"Obra social/ Prepaga", "Nro de afiliado",
                 "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta"};
 
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);

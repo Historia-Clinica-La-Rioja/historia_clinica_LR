@@ -8,7 +8,7 @@ public class Queries {
             " CONCAT(pe.last_name, ' ', pe.other_last_names) as apellidosPaciente, CONCAT(pe.first_name, ' ', pe.middle_names) as nombresPaciente, " +
             " it.description as tipoDocumento, pe.identification_number as numeroDocumento, to_char(pe.birth_date,'DD/MM/YYYY') as fechaNacimiento, " +
             " g.description as genero, CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as domicilio, " +
-            " px.phone_number as numeroTelefono, px.email as email, coverage.nombreCobertura as nombreCobertura, coverage.affiliate_number, " +
+            " px.phone_number as numeroTelefono, px.email as email, " + //coverage.nombreCobertura as nombreCobertura, coverage.affiliate_number, " +
             " to_char(oc.start_date,'DD/MM/YYYY') as fechaInicio, cs.name as especialidad, " +
             " CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as nombresApellidosProfesional, r.description as razonConsulta " +
             "FROM " +
@@ -25,12 +25,12 @@ public class Queries {
             "   LEFT JOIN gender g ON (px.gender_self_determination = g.id) " +
             "   LEFT JOIN address a2 ON (px.address_id = a2.id) " +
             "   LEFT JOIN city c2 ON (a2.city_id = c2.id) " +
-            "   LEFT JOIN ( " +
+            /*"   LEFT JOIN ( " +
             "       SELECT distinct on (pmc.patient_id)pmc.patient_id, pmc.affiliate_number, mc.name AS nombreCobertura " +
             "           FROM patient_medical_coverage pmc " +
             "           JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
             "           LEFT JOIN appointment ap ON (pmc.id = ap.patient_medical_coverage_id) " +
-            "        ) coverage ON (pa.id = coverage.patient_id) " +
+            "        ) coverage ON (pa.id = coverage.patient_id) " +*/
             "   LEFT JOIN clinical_specialty cs ON (oc.clinical_specialty_id = cs.id) " +
             "   JOIN healthcare_professional hp ON (oc.doctor_id = hp.id) " +
             "   JOIN person p2 ON (hp.person_id = p2.id) " +
