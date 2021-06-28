@@ -7,23 +7,27 @@
 	<mat-card>
 		<h2 [translate]="'reportes.form.TITLE'"></h2>
 		<form [formGroup]="form">
-
-			<div id="report-type" fxLayout="column" fxLayoutGap="5px">
-				<div>
-					<mat-label [translate]="'reportes.form.REPORT_TYPE'"></mat-label>
-				</div>
-				<mat-radio-group fxLayout="column" id="report-type-radio-group" formControlName="reportType">
-					<mat-radio-button *ngFor="let reportType of REPORT_TYPES" [value]="reportType.id">
-						<span>{{reportType.description}}</span>
-					</mat-radio-button>
-				</mat-radio-group>
-				<mat-error
-					*ngIf="submitted && this.form.controls.reportType.hasError('required')"
-					[translate]="'forms.REQUIRED'">
+	<div id="report-type" fxLayout="column">
+		<div>
+			<mat-label [translate]="'reportes.form.REPORT_TYPE'"></mat-label>
+		</div>
+		<div fxLayout="row">
+			<mat-form-field fxFlex.gt-xs="50%" appearance="outline">
+				<mat-select id="report-type-select-group"
+							name="reportTypeSelectGroup"
+							formControlName="reportType"
+							placeholder="{{'pacientes.form.SELECT' | translate}}">
+					<mat-option *ngFor="let reportType of REPORT_TYPES"
+								[value]="reportType.id">
+						{{reportType.description}}
+					</mat-option>
+				</mat-select>
+				<mat-error *ngIf="submitted && hasError(form, 'required', 'reportType')">
+					<span translate="forms.REQUIRED"></span>
 				</mat-error>
-			</div>
-
-
+			</mat-form-field>
+		</div>
+	</div>
 			<div fxLayout="row" fxLayoutGap="30px" style="padding-top: 10px">
 				<div id="start-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
 					<div>

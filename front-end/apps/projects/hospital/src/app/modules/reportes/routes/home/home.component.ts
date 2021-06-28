@@ -10,6 +10,7 @@ import {REPORT_TYPES} from '../../constants/report-types';
 import {dateToMoment, newMoment} from '@core/utils/moment.utils';
 import {Moment} from 'moment';
 import {ReportsService} from '@api-rest/services/reports.service';
+import {hasError} from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-home',
@@ -19,7 +20,9 @@ import {ReportsService} from '@api-rest/services/reports.service';
 export class HomeComponent implements OnInit {
 
 	form: FormGroup;
-	submitted = false;
+	public submitted = false;
+
+	public hasError = hasError;
 
 	professionalsTypeahead: TypeaheadOption<ProfessionalDto>[];
 	professionalInitValue: TypeaheadOption<ProfessionalDto>;
@@ -42,13 +45,12 @@ export class HomeComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
-			reportType: [this.REPORT_TYPES[0].id, Validators.required],
+			reportType: [null, Validators.required],
 			startDate: [this.firstDayOfThisMonth(), Validators.required],
 			endDate: [this.lastDayOfThisMonth(), Validators.required],
 			specialtyId: [null],
 			professionalId: [null],
 		});
-
 		this.healthcareProfessionalService.getAll().subscribe(professionals => {
 			this.professionals = professionals;
 			this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(professionals);
@@ -161,7 +163,16 @@ export class HomeComponent implements OnInit {
 				specialtyId: this.form.controls.specialtyId.value,
 				professionalId: this.form.controls.professionalId.value
 			}
-			this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe();
+			const reportId = this.form.controls.reportType.value;
+			switch (reportId){
+				case 1: 
+					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe();
+					break;
+				case 2:
+					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe();
+					break;
+				default:
+			}
 		}
 	}
 
