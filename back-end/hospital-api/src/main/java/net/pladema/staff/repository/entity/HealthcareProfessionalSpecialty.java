@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(SGXAuditListener.class)
-
+@Where(clause = "deleted=false")
 public class HealthcareProfessionalSpecialty extends SGXAuditableEntity<Integer> implements Serializable {
 	
 	private static final long serialVersionUID = -5292560767942911734L;
