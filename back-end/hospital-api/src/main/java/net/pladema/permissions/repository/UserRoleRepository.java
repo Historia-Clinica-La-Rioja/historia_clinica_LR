@@ -1,6 +1,5 @@
 package net.pladema.permissions.repository;
 
-import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.entity.UserRolePK;
 import net.pladema.permissions.service.dto.RoleAssignment;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface UserRoleRepository extends SGXAuditableEntityJPARepository<UserRole, UserRolePK> {
+public interface UserRoleRepository extends JpaRepository<UserRole, UserRolePK> {
 
 	// @formatter:off
 	@Transactional(readOnly = true)
