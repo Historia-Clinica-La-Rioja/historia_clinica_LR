@@ -10,7 +10,7 @@ public class Queries {
             " g.description as genero, CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as domicilio, " +
             " px.phone_number as numeroTelefono, px.email as email, " + //coverage.nombreCobertura as nombreCobertura, coverage.affiliate_number, " +
             " to_char(oc.start_date,'DD/MM/YYYY') as fechaInicio, cs.name as especialidad, " +
-            " CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as nombresApellidosProfesional, r.description as razonConsulta " +
+            " CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as nombresApellidosProfesional, ocr.reasons as razonConsulta " +
             "FROM " +
             "   outpatient_consultation oc " +
             "   JOIN institution i ON (oc.institution_id = i.id) " +
@@ -34,8 +34,12 @@ public class Queries {
             "   LEFT JOIN clinical_specialty cs ON (oc.clinical_specialty_id = cs.id) " +
             "   JOIN healthcare_professional hp ON (oc.doctor_id = hp.id) " +
             "   JOIN person p2 ON (hp.person_id = p2.id) " +
-            "   LEFT JOIN outpatient_consultation_reasons ocr ON (oc.id = ocr.outpatient_consultation_id) " +
-            "   LEFT JOIN reasons r ON (ocr.reason_id = r.description) " +
+            "   LEFT JOIN (" +
+            "       SELECT ocr.outpatient_consultation_id as id, ARRAY_AGG(r.description) as reasons " +
+            "          FROM outpatient_consultation_reasons ocr " +
+            "          JOIN reasons r on (ocr.reason_id = r.id) " +
+            "          GROUP BY ocr.outpatient_consultation_id "  +
+            "  ) ocr ON (oc.id = ocr.id )  "  +
            "WHERE" +
             "   i.id = :institutionId " +
             "   AND oc.billable = true " +
