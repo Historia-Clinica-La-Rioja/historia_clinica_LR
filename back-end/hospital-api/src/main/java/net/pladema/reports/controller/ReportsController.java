@@ -54,7 +54,7 @@ public class ReportsController {
         LOG.debug("Se creará el excel {}", institutionId);
         LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}", institutionId, fromDate, toDate);
 
-        String title = "Informe mensual de consultorio externo - Hoja 2 (IMCE)";
+        String title = "DNCE-Hoja 2";
         String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Tipo documento",
                 "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", //"Obra social/ Prepaga", "Nro de afiliado",
                 "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta"};
