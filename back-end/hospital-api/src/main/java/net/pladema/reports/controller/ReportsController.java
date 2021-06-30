@@ -57,7 +57,7 @@ public class ReportsController {
         String title = "DNCE-Hoja 2";
         String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Tipo documento",
                 "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", //"Obra social/ Prepaga", "Nro de afiliado",
-                "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta"};
+                "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta", "Problemas de Salud/Diagnóstico", "Peso", "Talla", "Tensión sistólica", "Tensión diastólica"};
 
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);

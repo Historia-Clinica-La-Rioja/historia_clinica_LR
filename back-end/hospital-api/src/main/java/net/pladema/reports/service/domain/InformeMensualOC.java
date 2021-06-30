@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class RowVo {
+public class InformeMensualOC {
 
     private String provincia;
 
@@ -44,5 +44,15 @@ public class RowVo {
     private String apellidosProfesional;
 
     private String razonesConsulta;
+
+    private String problemas;
+
+    private String peso;
+
+    private String talla;
+
+    private String tensionSistolica;
+
+    private String tensionDiastolica;
 
 }

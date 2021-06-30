@@ -10,8 +10,9 @@ public class Queries {
             " g.description as genero, CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as domicilio, " +
             " px.phone_number as numeroTelefono, px.email as email, " + //coverage.nombreCobertura as nombreCobertura, coverage.affiliate_number, " +
             " to_char(oc.start_date,'DD/MM/YYYY') as fechaInicio, cs.name as especialidad, " +
-            " CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as nombresApellidosProfesional, ocr.reasons as razonConsulta " +
-            "FROM " +
+            " CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as nombresApellidosProfesional, ocr.reasons as razonConsulta, " +
+            " prob.descriptions as problems, vs.weight, vs.heigth, vs.systolic, vs.diastolic " +
+            " FROM " +
             "   outpatient_consultation oc " +
             "   JOIN institution i ON (oc.institution_id = i.id) " +
             "   JOIN address a ON (i.address_id = a.id) " +
@@ -40,7 +41,28 @@ public class Queries {
             "          JOIN reasons r on (ocr.reason_id = r.id) " +
             "          GROUP BY ocr.outpatient_consultation_id "  +
             "  ) ocr ON (oc.id = ocr.id )  "  +
-           "WHERE" +
+            "   LEFT JOIN (" +
+            "       SELECT oc.id, ARRAY_AGG(sno.pt) as descriptions " +
+            "           FROM outpatient_consultation oc " +
+            "           JOIN document doc ON (oc.document_id = doc.id)" +
+            "           JOIN document_health_condition dhc ON (doc.id = dhc.document_id)" +
+            "           JOIN health_condition hc ON (dhc.health_condition_id = hc.id)" +
+            "           JOIN snomed sno ON (hc.snomed_id = sno.id) " +
+            "           GROUP BY oc.id " +
+            "  ) prob ON (oc.id = prob.id) " +
+            "   LEFT JOIN (" +
+            "       select oc.id, " +
+            "           max(case when ovs.loinc_code='8480-6' then ovs.value end) as systolic, " +
+            "           max(case when ovs.loinc_code='8462-4' then ovs.value end) as diastolic, " +
+            "           max(case when ovs.loinc_code='8302-2' then ovs.value end) as heigth, " +
+            "           max(case when ovs.loinc_code='29463-7' then ovs.value end) as weight " +
+            "       from outpatient_consultation oc " +
+            "       join document_vital_sign dvs on (oc.document_id = dvs.document_id) " +
+            "       join observation_vital_sign ovs on (dvs.observation_vital_sign_id = ovs.id) " +
+            "       group by oc.id " +
+            "       order by oc.id "+
+            " ) vs ON (oc.id = vs.id) " +
+            "WHERE" +
             "   i.id = :institutionId " +
             "   AND oc.billable = true " +
             "   AND oc.start_date between :startDate AND :endDate " +
