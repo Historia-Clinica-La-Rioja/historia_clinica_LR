@@ -57,7 +57,7 @@ public class SampleData {
 		addressRepository.saveAll(sampleProperties.getAddresses());
 		institutionRepository.saveAll(sampleProperties.getInstitutions());
 		personRepository.saveAll(sampleProperties.getPeople());
-		healthcareProfessionalRepository.saveAll(sampleProperties.getHealthcareProfessionals());
+		healthcareProfessionalRepository.saveAll(fix(sampleProperties.getHealthcareProfessionals()));
 		userRepository.saveAll(fix(sampleProperties.getUsers()));
 		userRoleRepository.saveAll(fix(sampleProperties.getUserRoles()));
 		userPasswordRepository.saveAll(fix(sampleProperties.getUserPasswords()));

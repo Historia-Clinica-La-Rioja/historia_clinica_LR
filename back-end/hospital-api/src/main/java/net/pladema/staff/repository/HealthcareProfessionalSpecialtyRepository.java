@@ -44,7 +44,8 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
             "(hps.healthcareProfessionalId, cs) " +
             "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
-            + "WHERE hps.healthcareProfessionalId IN :professionalsIds")
+            + "WHERE hps.healthcareProfessionalId IN :professionalsIds "
+            + "AND hps.deleteable.deleted = false")
     List<ProfessionalClinicalSpecialtyVo> getAllByProfessionals(@Param("professionalsIds") List<Integer> professionalsIds);
 
 }
