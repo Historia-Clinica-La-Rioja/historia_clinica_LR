@@ -22,6 +22,7 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
 
     private final HealthcareProfessionalMapper healthcareProfessionalMapper;
 
+
     public HealthcareProfessionalExternalServiceImpl(HealthcareProfessionalService healthcareProfessionalService,
                                                      HealthCareProfessionalGroupMapper healthCareProfessionalGroupMapper,
                                                      HealthcareProfessionalMapper healthcareProfessionalMapper){
@@ -65,4 +66,6 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
         LOG.debug("Output -> {}", result);
         return result;
     }
+
+
 }

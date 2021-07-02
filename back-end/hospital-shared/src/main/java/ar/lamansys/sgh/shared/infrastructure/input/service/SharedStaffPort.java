@@ -8,4 +8,6 @@ public interface SharedStaffPort {
     Integer getProfessionalId(Integer userId);
 
     Optional<ClinicalSpecialtyDto> getClinicalSpecialty(Integer clinicalSpecialtyId);
+
+    ProfessionalInfoDto getProfessionalCompleteInfo(Integer userId);
 }

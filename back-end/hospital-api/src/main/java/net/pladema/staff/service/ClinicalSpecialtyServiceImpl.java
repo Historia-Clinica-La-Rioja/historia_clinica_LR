@@ -1,10 +1,13 @@
 package net.pladema.staff.service;
 
 import net.pladema.staff.repository.ClinicalSpecialtyRepository;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
@@ -18,5 +21,14 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
     @Override
     public Optional<ClinicalSpecialtyBo> getClinicalSpecialty(Integer clinicalSpecialtyId) {
         return Optional.ofNullable(clinicalSpecialtyRepository.findClinicalSpecialtyBoById(clinicalSpecialtyId));
+    }
+
+    @Override
+    public List<ClinicalSpecialtyBo> getSpecialtiesByProfessional(Integer professionalId) {
+        return clinicalSpecialtyRepository.getAllByProfessional(professionalId)
+                .stream()
+                .filter(ClinicalSpecialty::isSpecialty)
+                .map(clinicalSpecialty -> new ClinicalSpecialtyBo(clinicalSpecialty.getId(), clinicalSpecialty.getName()))
+                .collect(Collectors.toList());
     }
 }
