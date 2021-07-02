@@ -1,7 +1,7 @@
 package ar.lamansys.immunization.application.FetchVaccines;
 
 import ar.lamansys.immunization.application.FetchVaccines.exceptions.FetchVaccinesByPatientException;
-import ar.lamansys.immunization.domain.patient.PatientInfoBO;
+import ar.lamansys.immunization.domain.patient.PatientInfoBo;
 import ar.lamansys.immunization.domain.patient.PatientInfoPort;
 import ar.lamansys.immunization.domain.vaccine.VaccineBo;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineByFilterMockPortImpl;
@@ -36,7 +36,7 @@ class FetchVaccinesByPatientTest {
     @Test
     void patientNeedVaccines() {
         when(patientInfoPort.getPatientInfo(any()))
-                .thenReturn(Optional.of(new PatientInfoBO(1, LocalDate.of(1991,5,4))));
+                .thenReturn(Optional.of(new PatientInfoBo(1, LocalDate.of(1991,5,4))));
         List<VaccineBo> result = fetchVaccinesByPatient.run(1, LocalDate.of(2021,6,25));
 
 
@@ -46,7 +46,7 @@ class FetchVaccinesByPatientTest {
     @Test
     void patientDontNeedVaccines() {
         when(patientInfoPort.getPatientInfo(any()))
-                .thenReturn(Optional.of(new PatientInfoBO(1, LocalDate.of(2021,6,4))));
+                .thenReturn(Optional.of(new PatientInfoBo(1, LocalDate.of(2021,6,4))));
         List<VaccineBo> result = fetchVaccinesByPatient.run(1, LocalDate.of(2021,6,25));
 
 

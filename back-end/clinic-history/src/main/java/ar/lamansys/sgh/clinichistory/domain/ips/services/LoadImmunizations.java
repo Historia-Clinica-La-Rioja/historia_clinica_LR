@@ -56,6 +56,8 @@ public class LoadImmunizations {
         immunizations.forEach(i -> {
             Integer snomedId = snomedService.getSnomedId(i.getSnomed())
                     .orElseGet(() -> snomedService.createSnomedTerm(i.getSnomed()));
+            Integer snomedCommercialId = snomedService.getSnomedId(i.getSnomedCommercial())
+                    .orElseGet(() -> snomedService.createSnomedTerm(i.getSnomedCommercial()));
             String cie10Codes = calculateCie10Facade.execute(i.getSnomed().getSctid(),
                     new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
 
@@ -64,7 +66,7 @@ public class LoadImmunizations {
                 noteId.set(loadNote(n))
             );
 
-            Inmunization immunization = saveImmunization(patientInfo.getId(), i, snomedId, cie10Codes, noteId.get());
+            Inmunization immunization = saveImmunization(patientInfo.getId(), i, snomedId, snomedCommercialId, cie10Codes, noteId.get());
 
             i.setId(immunization.getId());
             i.setStatusId(immunization.getStatusId());
@@ -78,10 +80,21 @@ public class LoadImmunizations {
         return result;
     }
 
-    private Inmunization saveImmunization(Integer patientId, ImmunizationBo immunizationBo, Integer snomedId, String cie10Codes, Long noteId) {
-        LOG.debug("Input parameters -> patientId {}, immunizationBo {}, snomedId {}, noteId {}", patientId, immunizationBo, snomedId, noteId);
-        Inmunization immunization = new Inmunization(patientId, snomedId, cie10Codes, immunizationBo.getStatusId()
-                , immunizationBo.getAdministrationDate(), immunizationBo.getInstitutionId(), noteId);
+    private Inmunization saveImmunization(Integer patientId, ImmunizationBo immunizationBo,
+                                          Integer snomedId,
+                                          Integer snomedCommercialId,
+                                          String cie10Codes, Long noteId) {
+        LOG.debug("Input parameters -> patientId {}, immunizationBo {}, snomedId {}, snomedCommercialId {},noteId {}",
+                patientId, immunizationBo, snomedId, snomedCommercialId, noteId);
+        Inmunization immunization = new Inmunization(patientId, snomedId, snomedCommercialId, cie10Codes,
+                immunizationBo.getStatusId(),
+                immunizationBo.getAdministrationDate(),
+                immunizationBo.getInstitutionId(),
+                immunizationBo.getConditionId(),
+                immunizationBo.getSchemeId(),
+                immunizationBo.getDoseId(),
+                noteId,
+                immunizationBo.getBatchNumber());
         immunization = immunizationRepository.save(immunization);
         LOG.debug("Immunization saved -> {}", immunization.getId());
         LOG.debug(OUTPUT, immunization);

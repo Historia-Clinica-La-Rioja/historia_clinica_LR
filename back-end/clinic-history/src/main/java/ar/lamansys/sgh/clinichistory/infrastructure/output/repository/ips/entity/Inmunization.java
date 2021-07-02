@@ -37,6 +37,9 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 	@Column(name = "snomed_id", nullable = false)
 	private Integer snomedId;
 
+	@Column(name = "snomed_commercial_id")
+	private Integer snomedCommercialId;
+
 	@Column(name = "cie10_codes", length = 255, nullable = true)
 	private String cie10Codes;
 
@@ -49,22 +52,48 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 	@Column(name = "administration_date")
 	private LocalDate administrationDate;
 
+ 	@Column(name = "condition_id")
+	private Short conditionId;
+
+	@Column(name = "scheme_id")
+	private Short schemeId;
+
+	@Column(name = "dose_id")
+	private Short doseId;
+
 	@Column(name = "institution_id")
 	private Integer institutionId;
+
+	@Column(name = "batch_number")
+	private String batchNumber;
 
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Inmunization(Integer patientId, Integer snomedId, String cie10Codes, String statusId, LocalDate administrationDate,
-						Integer institutionId, Long noteId) {
+	public Inmunization(Integer patientId,
+						Integer snomedId,
+						Integer snomedCommercialId,
+						String cie10Codes, String statusId,
+						LocalDate administrationDate,
+						Integer institutionId,
+						Short conditionId,
+						Short schemeId,
+						Short doseId,
+						Long noteId,
+						String batchNumber) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
+		this.snomedCommercialId = snomedCommercialId;
 		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;
 		this.institutionId = institutionId;
+		this.conditionId = conditionId;
+		this.schemeId = schemeId;
+		this.doseId = doseId;
+		this.batchNumber = batchNumber;
 		this.administrationDate = administrationDate;
 	}
 

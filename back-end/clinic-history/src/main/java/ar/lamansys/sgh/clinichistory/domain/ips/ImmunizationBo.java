@@ -1,10 +1,10 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo;
 
 import java.time.LocalDate;
 
@@ -19,6 +19,16 @@ public class ImmunizationBo extends ClinicalTerm {
     private String note;
 
     private Integer institutionId;
+
+    private Short doseId;
+
+    private Short conditionId;
+
+    private Short schemeId;
+
+    private String batchNumber;
+
+    private SnomedBo snomedCommercial;
 
     public ImmunizationBo(ImmunizationVo immunizationVo) {
         super();

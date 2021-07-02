@@ -18,6 +18,7 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 public class SourceType implements Serializable {
+
     /**
      *
      */
@@ -28,6 +29,7 @@ public class SourceType implements Serializable {
     public static final short RECIPE = (short)2;
     public static final short ORDER = (short)3;
     public static final short EMERGENCY_CARE = (short)4;
+    public static final short IMMUNIZATION = (short)5;
 
     @Id
     @Column(name = "id", nullable = false)

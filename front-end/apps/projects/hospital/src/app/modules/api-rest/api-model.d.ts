@@ -873,7 +873,13 @@ export interface IdentifierDto extends Serializable {
 
 export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
+    batchNumber?: string;
+    conditionId?: number;
+    doseId?: number;
+    institutionId?: number;
     note: string;
+    schemeId?: number;
+    snomedCommercial?: SnomedDto;
 }
 
 export interface ImmunizationInteroperabilityDto {
@@ -1682,6 +1688,13 @@ export interface VaccineConditionsDto {
     description: string;
     id: number;
     schemes: VaccineSchemeDto[];
+}
+
+export interface VaccineConsultationDto {
+    administrationDate: string;
+    clinicalSpecialtyId?: number;
+    note: string;
+    snomed: SnomedDto;
 }
 
 export interface VaccineDoseDto {

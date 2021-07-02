@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+	<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+</head>
+<body>
+	<div th:replace="fragments/general.html :: header(title='Nueva consulta', subtitle='Vacunación')"></div>
+	<div th:replace="fragments/general.html :: clinicalSpecialty(message='Especialidad clínica')"></div>
+	<div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
+	<div th:replace="fragments/general.html :: immunizations"></div>
+	<div th:replace="fragments/general.html :: notes-outpatient"></div>
+</body>
+<footer>
+	<div th:replace="fragments/general.html :: footer"></div>
+</footer>
+</html>

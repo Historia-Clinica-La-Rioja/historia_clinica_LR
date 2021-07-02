@@ -4,5 +4,5 @@ import java.util.Optional;
 
 public interface PatientInfoPort {
 
-    Optional<PatientInfoBO> getPatientInfo(Integer patientId);
+    Optional<PatientInfoBo> getPatientInfo(Integer patientId);
 }

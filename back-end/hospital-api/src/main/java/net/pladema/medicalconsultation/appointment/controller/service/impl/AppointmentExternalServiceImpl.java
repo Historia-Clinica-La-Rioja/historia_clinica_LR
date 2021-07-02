@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-public class AppointmentExternalServiceImpl implements AppointmentExternalService {
+public class AppointmentExternalServiceImpl implements AppointmentExternalService, SharedAppointmentPort {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppointmentExternalServiceImpl.class);
 	private static final String OUTPUT = "Output -> {}";

@@ -10,6 +10,7 @@ public enum ESourceType {
     RECIPE(2, "recipes"),
     ORDER(3, "orders"),
     EMERGENCY_CARE(4, "emergency_care"),
+    IMMUNIZATION(5, "immunization"),
     ;
 
     private Short id;
