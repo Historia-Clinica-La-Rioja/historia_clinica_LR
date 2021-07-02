@@ -18,7 +18,7 @@ import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;

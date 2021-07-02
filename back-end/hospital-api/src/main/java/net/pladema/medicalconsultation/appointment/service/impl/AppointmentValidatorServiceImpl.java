@@ -1,23 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ABSENT;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ASSIGNED;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CANCELLED;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CONFIRMED;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.SERVED;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.ValidationException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -25,8 +8,19 @@ import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.service.HealthcareProfessionalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.validation.ValidationException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.*;
 
 @Service
 public class AppointmentValidatorServiceImpl implements AppointmentValidatorService {

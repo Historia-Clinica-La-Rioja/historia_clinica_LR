@@ -1,9 +1,11 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
@@ -11,16 +13,14 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.Outp
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.OutpatientSummaryService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

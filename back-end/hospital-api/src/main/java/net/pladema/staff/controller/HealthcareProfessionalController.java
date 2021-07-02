@@ -3,7 +3,7 @@ package net.pladema.staff.controller;
 import io.swagger.annotations.Api;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;

@@ -12,7 +12,7 @@ import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

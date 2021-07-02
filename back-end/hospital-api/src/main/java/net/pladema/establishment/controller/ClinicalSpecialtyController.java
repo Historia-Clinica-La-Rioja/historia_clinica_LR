@@ -5,7 +5,7 @@ import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialt
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalsByClinicalSpecialtyDto;
 import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;

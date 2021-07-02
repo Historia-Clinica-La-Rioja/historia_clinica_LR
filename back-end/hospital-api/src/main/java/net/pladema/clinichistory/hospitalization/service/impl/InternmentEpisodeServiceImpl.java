@@ -14,7 +14,7 @@ import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummar
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -169,7 +169,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	private PatientDischarge updatePatientDischarge(PatientDischarge patientDischarge, PatientDischargeBo patientDischargeBo) {
-		LOG.debug(INPUT_PARAMETERS, patientDischargeBo, patientDischarge);
+		LOG.debug("Input parameters -> patientDischargeBo {} , patientDischarge {}", patientDischargeBo, patientDischarge);
 		patientDischarge.setInternmentEpisodeId(patientDischargeBo.getInternmentEpisodeId());
 		patientDischarge.setDischargeTypeId(patientDischargeBo.getDischargeTypeId());
 		patientDischarge.setAdministrativeDischargeDate(patientDischargeBo.getAdministrativeDischargeDate());

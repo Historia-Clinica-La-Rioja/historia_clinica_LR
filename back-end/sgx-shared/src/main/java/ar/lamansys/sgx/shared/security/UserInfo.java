@@ -1,4 +1,4 @@
-package net.pladema.sgx.security.utils;
+package ar.lamansys.sgx.shared.security;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 

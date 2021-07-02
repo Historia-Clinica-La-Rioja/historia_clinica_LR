@@ -17,7 +17,7 @@ import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
