@@ -36,13 +36,13 @@ public class Queries {
             "   JOIN healthcare_professional hp ON (oc.doctor_id = hp.id) " +
             "   JOIN person p2 ON (hp.person_id = p2.id) " +
             "   LEFT JOIN (" +
-            "       SELECT ocr.outpatient_consultation_id as id, ARRAY_AGG(r.description) as reasons " +
+            "       SELECT ocr.outpatient_consultation_id as id, STRING_AGG(r.description, ', ') as reasons " +
             "          FROM outpatient_consultation_reasons ocr " +
-            "          JOIN reasons r on (ocr.reason_id = r.id) " +
+            "          JOIN reasons r ON (ocr.reason_id = r.id) " +
             "          GROUP BY ocr.outpatient_consultation_id "  +
             "  ) ocr ON (oc.id = ocr.id )  "  +
             "   LEFT JOIN (" +
-            "       SELECT oc.id, ARRAY_AGG(sno.pt) as descriptions " +
+            "       SELECT oc.id, STRING_AGG(sno.pt, ', ') as descriptions " +
             "           FROM outpatient_consultation oc " +
             "           JOIN document doc ON (oc.document_id = doc.id)" +
             "           JOIN document_health_condition dhc ON (doc.id = dhc.document_id)" +
@@ -51,21 +51,21 @@ public class Queries {
             "           GROUP BY oc.id " +
             "  ) prob ON (oc.id = prob.id) " +
             "   LEFT JOIN (" +
-            "       select oc.id, " +
-            "           max(case when ovs.loinc_code='8480-6' then ovs.value end) as systolic, " +
-            "           max(case when ovs.loinc_code='8462-4' then ovs.value end) as diastolic, " +
-            "           max(case when ovs.loinc_code='8302-2' then ovs.value end) as heigth, " +
-            "           max(case when ovs.loinc_code='29463-7' then ovs.value end) as weight " +
-            "       from outpatient_consultation oc " +
-            "       join document_vital_sign dvs on (oc.document_id = dvs.document_id) " +
-            "       join observation_vital_sign ovs on (dvs.observation_vital_sign_id = ovs.id) " +
-            "       group by oc.id " +
-            "       order by oc.id "+
+            "       SELECT oc.id, " +
+            "           MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolic, " +
+            "           MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolic, " +
+            "           MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as heigth, " +
+            "           MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight " +
+            "       FROM outpatient_consultation oc " +
+            "       LEFT JOIN document_vital_sign dvs ON (oc.document_id = dvs.document_id) " +
+            "       LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
+            "       GROUP BY oc.id " +
+            "       ORDER BY oc.id "+
             " ) vs ON (oc.id = vs.id) " +
             "WHERE" +
             "   i.id = :institutionId " +
             "   AND oc.billable = true " +
-            "   AND oc.start_date between :startDate AND :endDate " +
+            "   AND oc.start_date BETWEEN :startDate AND :endDate " +
             "       %s " + // filtro especialidadId
             "       %s ";  // filtro doctorId
 }

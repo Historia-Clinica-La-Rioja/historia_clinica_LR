@@ -48,7 +48,7 @@ public class ExcelServiceImpl implements ExcelService {
                 formatedContent.add(new InformeMensualOC((String) r[0], (String) r[1], (String) r[2], (String) r[3], (String) r[4],
                         (String) r[5], (String) r[6], (String) r[7], (String) r[8], (String) r[9], (String) r[10],
                         (String) r[11], (String) r[12], (String) r[13], (String) r[14], (String) r[15],
-                        ListToString(r[16]), ListToString(r[17]), (String) r[18], (String) r[19], (String) r[20], (String) r[21]))
+                        (String) r[16], (String) r[17], (String) r[18], (String) r[19], (String) r[20], (String) r[21]))
         );
 
         // itero el resultado creando una row para cada uno
@@ -62,16 +62,6 @@ public class ExcelServiceImpl implements ExcelService {
         sheet.autoSizeColumns();
 
         return wb;
-    }
-
-    private String ListToString(Object obj) {
-        if (obj != null) {
-            Object[] array = (Object[]) obj;
-            return Arrays.stream(array)
-                    .map(Object::toString)
-                    .collect(Collectors.joining(", "));
-        }
-        return null;
     }
 
     private ICellStyle createHeaderStyle(IWorkbook workbook){

@@ -13,7 +13,5 @@ public class CustomPostgreSQLDialect extends PostgreSQL95Dialect {
     public CustomPostgreSQLDialect() {
         super();
         registerHibernateType(Types.ARRAY, ObjectArrayUserType.INSTANCE.getClass().getName());
-        Type arrayType = new CustomType(ObjectArrayUserType.INSTANCE);
-        registerFunction("array_agg", new StandardSQLFunction("array_agg", arrayType));
     }
 }
