@@ -12,4 +12,6 @@ public interface MedicationMapper {
     @Named("toMedicationDto")
     MedicationDto toMedicationDto(MedicationBo medicationBo);
 
+    @Named("toMedicationBo")
+    MedicationBo toMedicationBo(MedicationDto medicationDto);
 }

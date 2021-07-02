@@ -429,6 +429,18 @@ export interface DiagnosisDto extends HealthConditionDto {
     presumptive?: boolean;
 }
 
+export interface DiagnosticReportDto extends ClinicalTermDto {
+    effectiveTime: Date;
+    encounterId: number;
+    files: FileDto[];
+    healthCondition: HealthConditionDto;
+    healthConditionId: number;
+    link: string;
+    noteId: number;
+    observations: string;
+    userId: number;
+}
+
 export interface DiagnosticReportInfoDto {
     doctor: DoctorInfoDto;
     healthCondition: HealthConditionInfoDto;
@@ -488,6 +500,31 @@ export interface DoctorsOfficeDto {
     description: string;
     id: number;
     openingTime: string;
+}
+
+export interface DocumentDto {
+    allergies: AllergyConditionDto[];
+    anthropometricData: AnthropometricDataDto;
+    clinicalSpecialtyId: number;
+    diagnosis: DiagnosisDto[];
+    diagnosticReports: DiagnosticReportDto[];
+    documentSource: number;
+    documentType: number;
+    encounterId: number;
+    familyHistories: HealthHistoryConditionDto[];
+    id: number;
+    immunizations: ImmunizationDto[];
+    institutionId: number;
+    mainDiagnosis: HealthConditionDto;
+    medicalCoverageId: number;
+    medications: MedicationDto[];
+    notes: DocumentObservationsDto;
+    patientId: number;
+    personalHistories: HealthHistoryConditionDto[];
+    problems: ProblemDto[];
+    procedures: ProcedureDto[];
+    reasons: ReasonDto[];
+    vitalSigns: VitalSignDto;
 }
 
 export interface DocumentHistoricDto {
@@ -1227,6 +1264,12 @@ export interface PatientDto {
     lastName: string;
 }
 
+export interface PatientInfoDto {
+    age: number;
+    genderId: number;
+    id: number;
+}
+
 export interface PatientInteroperabilityDto {
     birthdate: string;
     firstname: string;
@@ -1346,6 +1389,18 @@ export interface PrivateHealthInsuranceDto extends CoverageDto {
 
 export interface ProbableDischargeDateDto {
     probableDischargeDate: string;
+}
+
+export interface ProblemDto extends HealthConditionDto {
+    chronic: boolean;
+    endDate: Date;
+    severity: string;
+    startDate: Date;
+}
+
+export interface ProcedureDto {
+    performedDate?: string;
+    snomed: SnomedDto;
 }
 
 export interface ProcedureReduced {

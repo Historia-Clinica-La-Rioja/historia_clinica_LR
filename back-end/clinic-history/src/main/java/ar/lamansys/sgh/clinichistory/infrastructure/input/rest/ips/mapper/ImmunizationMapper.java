@@ -11,4 +11,7 @@ public interface ImmunizationMapper {
     @Named("toImmunizationDto")
     ImmunizationDto toImmunizationDto(ImmunizationBo immunizationBo);
 
+    @Named("toImmunizationBo")
+    ImmunizationBo toImmunizationBo(ImmunizationDto immunizationDto);
+
 }

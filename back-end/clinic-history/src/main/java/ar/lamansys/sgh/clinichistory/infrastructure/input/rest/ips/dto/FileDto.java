@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.servicerequests.controller.dto;
+package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 
 import lombok.Getter;

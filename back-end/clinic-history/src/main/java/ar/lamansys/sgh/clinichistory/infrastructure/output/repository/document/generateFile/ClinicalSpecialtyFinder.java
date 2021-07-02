@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public interface SharedStaffPort {
 
-    Optional<ClinicalSpecialtyDto> getClinicalSpecialty(Integer clinicalSpecialtyId);
+    Integer getProfessionalId(Integer userId);
 
+    Optional<ClinicalSpecialtyDto> getClinicalSpecialty(Integer clinicalSpecialtyId);
 }

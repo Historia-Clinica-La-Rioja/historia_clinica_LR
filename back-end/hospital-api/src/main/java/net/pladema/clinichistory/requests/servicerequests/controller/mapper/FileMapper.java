@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.FileDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FileDto;
 import ar.lamansys.sgh.clinichistory.domain.ips.FileBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;

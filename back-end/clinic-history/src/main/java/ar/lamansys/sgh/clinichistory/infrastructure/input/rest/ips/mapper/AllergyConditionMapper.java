@@ -11,4 +11,7 @@ public interface AllergyConditionMapper {
 
     @Named("toAllergyConditionDto")
     AllergyConditionDto toAllergyConditionDto(AllergyConditionBo allergyConditionBo);
+
+    @Named("toAllergyConditionBo")
+    AllergyConditionBo toAllergyConditionBo(AllergyConditionDto allergyConditionDto);
 }

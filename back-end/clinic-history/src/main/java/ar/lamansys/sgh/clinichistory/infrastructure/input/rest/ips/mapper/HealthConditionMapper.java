@@ -16,6 +16,9 @@ public interface HealthConditionMapper {
     @Named("toHealthHistoryConditionDto")
     HealthHistoryConditionDto toHealthHistoryConditionDto(HealthHistoryConditionBo healthConditionBo);
 
+    @Named("toHealthHistoryConditionBo")
+    HealthHistoryConditionBo toHealthHistoryConditionBo(HealthHistoryConditionDto healthHistoryConditionDto);
+
     @Named("toDiagnosisDto")
     DiagnosisDto toDiagnosisDto(DiagnosisBo diagnosisBo);
 
