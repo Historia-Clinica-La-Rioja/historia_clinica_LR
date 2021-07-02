@@ -111,7 +111,7 @@ export interface AllergyIntoleranceDto {
     verificationStatus: FhirCodeDto;
 }
 
-export interface AnamnesisDto extends DocumentDto, Serializable {
+export interface AnamnesisDto extends Serializable {
     allergies: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
@@ -123,6 +123,7 @@ export interface AnamnesisDto extends DocumentDto, Serializable {
     notes?: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
     procedures?: HospitalizationProcedureDto[];
+    vitalSigns?: VitalSignDto;
 }
 
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
@@ -225,6 +226,7 @@ export interface BMPersonDto extends APersonDto {
 
 export interface BackofficeHealthcareProfessionalCompleteDto {
     clinicalSpecialtyId: number;
+    deleted: boolean;
     id: number;
     licenseNumber: string;
     personId: number;
@@ -488,10 +490,6 @@ export interface DoctorsOfficeDto {
     openingTime: string;
 }
 
-export interface DocumentDto {
-    vitalSigns?: VitalSignDto;
-}
-
 export interface DocumentHistoricDto {
     documents: DocumentSearchDto[];
     message: string;
@@ -662,7 +660,7 @@ export interface EvolutionDiagnosisDto extends Serializable {
     notes?: DocumentObservationsDto;
 }
 
-export interface EvolutionNoteDto extends DocumentDto, Serializable {
+export interface EvolutionNoteDto extends Serializable {
     allergies?: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
@@ -671,6 +669,7 @@ export interface EvolutionNoteDto extends DocumentDto, Serializable {
     mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
     procedures?: HospitalizationProcedureDto[];
+    vitalSigns?: VitalSignDto;
 }
 
 export interface FhirAddressDto {

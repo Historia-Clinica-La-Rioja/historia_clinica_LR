@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.documents.DocumentDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentObservationsDto;
 import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.*;
 
@@ -18,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class EvolutionNoteDto implements DocumentDto, Serializable {
+public class EvolutionNoteDto implements Serializable {
 
     @NotNull
     private boolean confirmed = false;
