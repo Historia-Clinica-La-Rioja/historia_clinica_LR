@@ -1,5 +1,6 @@
 package net.pladema.reports.service.impl;
 
+import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
 import ar.lamansys.sgx.shared.reports.util.struct.ICell;
 import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
@@ -12,20 +13,24 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
 public class ExcelServiceImpl implements ExcelService {
 
-    private static short FONT_SIZE = 12;
+    private ICellStyle basicStyle;
+    private ICellStyle titleStyle;
+    private ICellStyle fieldStyle;
+    private ICellStyle subTitleStyle;
 
     @Override
     public IWorkbook buildExcelFromQuery(String title, String[] headers, Query query) {
         // creo el workbook de excel
         IWorkbook wb = WorkbookCreator.createExcelWorkbook();
+        createCellStyle(wb);
 
         // obtengo los resultados desde la query
         List<Object[]> result = query.getResultList();
@@ -33,13 +38,10 @@ public class ExcelServiceImpl implements ExcelService {
         // creo la hoja con el titulo pasado como parametro
         ISheet sheet = wb.createSheet(title);
 
-        AtomicInteger rowNumber = new AtomicInteger(0);
-        // creo la columna de headers
-        IRow headerRow = sheet.createRow(rowNumber.getAndIncrement());
+        // Header
+        fillRow(sheet, getHeaderData(headers));
 
-        ICellStyle styleHeader = createHeaderStyle(wb);
-
-        fillRow(headerRow, headers, styleHeader);
+        AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
         ICellStyle styleDataRow = createDataRowStyle(wb);
 
@@ -59,35 +61,128 @@ public class ExcelServiceImpl implements ExcelService {
                 }
         );
 
-        sheet.autoSizeColumns();
-
+        setDimensions(sheet);
         return wb;
     }
 
-    private ICellStyle createHeaderStyle(IWorkbook workbook){
-        ICellStyle cellStyle = workbook.createStyle();
-        cellStyle.setBold(true);
-        cellStyle.setFontSize(FONT_SIZE);
+    private void createCellStyle(IWorkbook workbook) {
+        basicStyle = workbook.createStyle();
+        basicStyle.setFontSize((short)12);
+        basicStyle.setBold(false);
+        basicStyle.setWrap(false);
+        basicStyle.setBorders(true);
+        basicStyle.setHAlign(ICellStyle.HALIGNMENT.CENTER);
+        basicStyle.setVAlign(ICellStyle.VALIGNMENT.CENTER);
 
-        return cellStyle;
+        titleStyle = workbook.createStyle();
+        titleStyle.setFontSize((short)25);
+        titleStyle.setBold(true);
+        titleStyle.setWrap(false);
+        titleStyle.setBorders(true);
+        titleStyle.setHAlign(ICellStyle.HALIGNMENT.CENTER);
+        titleStyle.setVAlign(ICellStyle.VALIGNMENT.CENTER);
+
+        fieldStyle = workbook.createStyle();
+        fieldStyle.setFontSize((short)10);
+        fieldStyle.setBold(false);
+        fieldStyle.setWrap(false);
+        fieldStyle.setBorders(true);
+        fieldStyle.setHAlign(ICellStyle.HALIGNMENT.LEFT);
+        fieldStyle.setVAlign(ICellStyle.VALIGNMENT.BOTTOM);
+
+        subTitleStyle = workbook.createStyle();
+        subTitleStyle.setFontSize((short)12);
+        subTitleStyle.setBold(true);
+        subTitleStyle.setWrap(false);
+        subTitleStyle.setBorders(true);
+        subTitleStyle.setHAlign(ICellStyle.HALIGNMENT.LEFT);
+        subTitleStyle.setVAlign(ICellStyle.VALIGNMENT.BOTTOM);
+    }
+
+    private List<CellContent> getHeaderData(String[] subtitles) {
+        List<CellContent> data = new ArrayList<>();
+
+        int nRow = 0;
+
+        data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
+        data.add(new CellContent(nRow, 2, 2, 1, "2", titleStyle));
+        data.add(new CellContent(nRow, 3, 2, 14,
+                "Detalle nominal de consultorios externos", titleStyle));
+        data.add(new CellContent(nRow, 17, 1, 3, "1. Hoja N°", fieldStyle));
+        data.add(new CellContent(nRow, 20, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 21, 1, 1, "", basicStyle));
+
+        nRow++;
+        data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
+        data.add(new CellContent(nRow, 17, 1, 5, "", basicStyle));
+
+        nRow++;
+        data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO", fieldStyle));
+        data.add(new CellContent(nRow, 2, 1, 12, "", basicStyle));
+        data.add(new CellContent(nRow, 14, 1, 1, "3. MES", fieldStyle));
+        data.add(new CellContent(nRow, 15, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 16, 1, 1, "4. AÑO", fieldStyle));
+        data.add(new CellContent(nRow, 17, 1, 5, "", basicStyle));
+
+        nRow++;
+        data.add(new CellContent(nRow, 0, 1, 2, "5. PARTIDO", fieldStyle));
+        data.add(new CellContent(nRow, 2, 1, 8, "", basicStyle));
+        data.add(new CellContent(nRow, 10, 1, 1, "6. REGIÓN SANITARIA", fieldStyle));
+        data.add(new CellContent(nRow, 11, 1, 3, "", basicStyle));
+        data.add(new CellContent(nRow, 14, 1, 3, "7. SERVICIO", fieldStyle));
+        data.add(new CellContent(nRow, 17, 1, 3, "", basicStyle));
+        data.add(new CellContent(nRow, 20, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 21, 1, 1, "", basicStyle));
+
+        nRow++;
+        int column = 0;
+        for(String subtitle : subtitles)
+            data.add(new CellContent(nRow, column++, 1, 1, subtitle, subTitleStyle));
+
+        return data;
+    }
+
+    private void setDimensions(ISheet sheet){
+        //Column's width
+        sheet.autoSizeColumns();
+        //Row's height
+        int nRow=0;
+        sheet.setRowHeight(nRow++, 50);
+        sheet.setRowHeight(nRow++, 40);
+        sheet.setRowHeight(nRow++, 35);
+
+        while(nRow < sheet.getCantRows())
+            sheet.setRowHeight(nRow++, 21);
     }
 
     private ICellStyle createDataRowStyle(IWorkbook workbook){
         ICellStyle cellStyle = workbook.createStyle();
-        cellStyle.setFontSize(FONT_SIZE);
-
+        cellStyle.setFontSize((short)12);
+        cellStyle.setBorders(true);
         return cellStyle;
     }
 
-    private void fillRow(IRow row, Object[] content, ICellStyle style){
-        AtomicInteger rowNumber = new AtomicInteger(0);
-        Arrays.stream(content).forEach(
-                item -> {
-                    ICell cell = row.createCell(rowNumber.getAndIncrement());
-                    cell.setCellValue(item != null ? item.toString() : "");
-                    cell.setCellStyle(style);
-                }
-        );
+    private void fillRow(ISheet sheet, List<CellContent> data){
+        Map<Integer, List<CellContent>> cellByRow = data.stream()
+                .collect(Collectors.groupingBy(CellContent::getRow));
+
+        for(Map.Entry<Integer, List<CellContent>> entry : cellByRow.entrySet()){
+            int nRow = entry.getKey();
+            IRow row = sheet.createRow(nRow);
+            entry.getValue().forEach(cell -> createCell(sheet, row, nRow, cell));
+        }
+    }
+
+    private void createCell(ISheet sheet, IRow row, int nRow, CellContent data){
+
+        int nColumn = data.getColumn();
+
+        ICell cell = row.createCell(data.getColumn());
+        cell.setCellStyle(data.getStyle());
+        cell.setCellValue(data);
+
+        if(data.isCellRange())
+            sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
     }
 
     private void fillRowContent(IRow row, InformeMensualOC content, ICellStyle style){
