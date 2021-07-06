@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.infrastructure.controller.mapper;
 
 import ar.lamansys.odontology.domain.DiagnosticBo;
+import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.infrastructure.controller.dto.OdontologyConceptDto;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -17,5 +18,12 @@ public interface OdontologyConceptMapper {
     @Named("fromDiagnosticBoList")
     @IterableMapping(qualifiedByName = "fromDiagnosticBo")
     List<OdontologyConceptDto> fromDiagnosticBoList(List<DiagnosticBo> diagnosticBoList);
+
+    @Named("fromProcedureBo")
+    OdontologyConceptDto fromProcedureBo(ProcedureBo procedureBo);
+
+    @Named("fromProcedureBoList")
+    @IterableMapping(qualifiedByName = "fromProcedureBo")
+    List<OdontologyConceptDto> fromProcedureBoList(List<ProcedureBo> procedureBoList);
 
 }
