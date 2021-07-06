@@ -897,6 +897,11 @@ export interface ImmunizationInteroperabilityDto {
     vaccineTerm: string;
 }
 
+export interface ImmunizePatientDto {
+    clinicalSpecialtyId: number;
+    immunizations: ImmunizationDto[];
+}
+
 export interface InstitutionAddressDto extends Serializable {
     addressId: number;
     apartment: string;
@@ -1688,13 +1693,6 @@ export interface VaccineConditionsDto {
     description: string;
     id: number;
     schemes: VaccineSchemeDto[];
-}
-
-export interface VaccineConsultationDto {
-    administrationDate: string;
-    clinicalSpecialtyId?: number;
-    note: string;
-    snomed: SnomedDto;
 }
 
 export interface VaccineDoseDto {
