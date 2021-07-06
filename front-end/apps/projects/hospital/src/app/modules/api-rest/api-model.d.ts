@@ -1137,6 +1137,12 @@ export interface OdontogramQuadrantDto {
     top: boolean;
 }
 
+export interface OdontologyConceptDto extends Serializable {
+    applicableToSurface: boolean;
+    applicableToTooth: boolean;
+    snomed: OdontologySnomedDto;
+}
+
 export interface OdontologySnomedDto {
     id: number;
     pt: string;
