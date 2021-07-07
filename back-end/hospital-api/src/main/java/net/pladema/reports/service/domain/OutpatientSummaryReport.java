@@ -10,7 +10,6 @@ import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.reports.repository.OutpatientSummary;
 import net.pladema.reports.repository.QueryFactory;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,9 +47,9 @@ public class OutpatientSummaryReport {
 
         //The report must show summary information of the outpatient—consultations
         // organized by specialty, sex and age.
-
+        IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
         try {
-            IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
+
             createCellStyle(workbook);
             ISheet sheet = workbook.createSheet("RMCE-Hoja 2.1");
 
@@ -69,12 +68,11 @@ public class OutpatientSummaryReport {
 
             /* Set Column-Width and Row-Height for whole sheet*/
             setDimensions(sheet);
-            return workbook;
         }
         catch(Exception e){
             LOG.debug("OutpatientSummaryReport -> {}", e.getMessage());
-            return null;
         }
+        return workbook;
     }
 
     private Map<Integer, List<OutpatientSummary>> processData(Integer institutionId, LocalDate from, LocalDate to,
@@ -139,16 +137,16 @@ public class OutpatientSummaryReport {
 
             content.add(new CellContent(row, column++, SINGLECELL, SINGLECELL, formula, basicStyle));
 
-            //TODO: enabled when medical coverage is available
+
             //Register total number of outpatient and with/out medical coverage for the specific clinical—specialty
-            /*int count = consultations.size();
+            int count = consultations.size();
 
             double withCoverage = consultations.stream().filter(OutpatientSummary::isCoverage).count();
-            double withoutCoverage = count - withCoverage;*/
+            double withoutCoverage = count - withCoverage;
 
-            content.add(new CellContent(row, column++, SINGLECELL, SINGLECELL, null,
-                    basicStyle));
-            content.add(new CellContent(row, column, SINGLECELL, SINGLECELL, null,
+            content.add(new CellContent(row, column++, SINGLECELL, SINGLECELL, withCoverage,
+                    basicStyle, CellContent.DATAFORMAT.DOUBLE));
+            content.add(new CellContent(row, column, SINGLECELL, SINGLECELL, withoutCoverage,
                     basicStyle, CellContent.DATAFORMAT.DOUBLE));
 
             row++;
@@ -218,8 +216,7 @@ public class OutpatientSummaryReport {
         data.add(new CellContent(nRow, 1, 3, 3, "9. CÓDIGO", basicStyle));
         data.add(new CellContent(nRow, 4, 1, 18, "10. EDAD Y SEXO", basicStyle));
         data.add(new CellContent(nRow, 22, 3, 1, "11. TOTAL", basicStyle));
-        //TODO: replace with value=12. OBRA SOCIAL when medical coverage is available
-        data.add(new CellContent(nRow, 23, 2, 2, "", basicStyle));
+        data.add(new CellContent(nRow, 23, 2, 2, "12. OBRA SOCIAL", basicStyle));
 
         nRow++;
         data.add(new CellContent(nRow, 4, 1, 2, "< 1 año", basicStyle));
@@ -236,9 +233,8 @@ public class OutpatientSummaryReport {
         String[] sexo = new String[]{"V","M"};
         for(int i=FIRST_COLUMN_DATA; i<LAST_COLUMN_DATA; i++)
             data.add(new CellContent(nRow, i, 1, 1, sexo[i%2], basicStyle));
-        //TODO: replace with value= SI and value=NO when medical coverage is available
-        data.add(new CellContent(nRow, LAST_COLUMN_DATA+1, SINGLECELL, SINGLECELL, "", basicStyle));
-        data.add(new CellContent(nRow, LAST_COLUMN_DATA+2, SINGLECELL, SINGLECELL, "", basicStyle));
+        data.add(new CellContent(nRow, LAST_COLUMN_DATA+1, SINGLECELL, SINGLECELL, "SI", basicStyle));
+        data.add(new CellContent(nRow, LAST_COLUMN_DATA+2, SINGLECELL, SINGLECELL, "NO", basicStyle));
 
         return data;
     }
@@ -248,13 +244,10 @@ public class OutpatientSummaryReport {
         int nColumn = 0;
         data.add(new CellContent(lastRow, nColumn,SINGLECELL, 4, "13. TOTALES", fieldStyle));
         nColumn=FIRST_COLUMN_DATA;
-        while(nColumn <= LAST_COLUMN_DATA) {
+        while(nColumn < 25) {
             String formula = getSumFunction(sheet, firstRow, lastRow-1, nColumn, nColumn);
             data.add(new CellContent(lastRow, nColumn++, SINGLECELL, SINGLECELL, formula, basicStyle));
         }
-        //TODO change <= LAST_COLUMN_DATA to <= 25 and remove the follow two lines
-        data.add(new CellContent(lastRow, nColumn++, SINGLECELL, SINGLECELL, null, basicStyle));
-        data.add(new CellContent(lastRow, nColumn, SINGLECELL, SINGLECELL, null, basicStyle));
         return data;
     }
 
@@ -340,6 +333,6 @@ public class OutpatientSummaryReport {
 
     private String getSumFunction(ISheet sheet, int row, int lastRow, int column, int lastCol){
         String range = sheet.getCellRangeAsString(row, lastRow, column, lastCol);
-        return range != null ? "=sum(" + range + ")" : range;
+        return range != null ? "=sum(" + range + ")" : null;
     }
 }
