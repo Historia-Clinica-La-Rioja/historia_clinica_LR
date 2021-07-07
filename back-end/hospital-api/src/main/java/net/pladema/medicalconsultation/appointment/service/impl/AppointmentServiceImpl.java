@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -103,5 +104,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return Boolean.TRUE;
 	}
 
-
+	@Override
+	public Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId,
+											LocalDate currentDate) {
+		List<Integer> medicalCoverages = appointmentRepository.getMedicalCoverage(patientId, currentDate,
+				AppointmentState.CONFIRMED, healthcareProfessionalId);
+		Integer patientMedicalCoverageId = medicalCoverages.stream().findAny().orElse(null);
+		LOG.debug(OUTPUT, patientMedicalCoverageId);
+		return patientMedicalCoverageId;
+	}
 }

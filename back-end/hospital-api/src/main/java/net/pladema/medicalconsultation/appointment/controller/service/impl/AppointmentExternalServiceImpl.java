@@ -38,4 +38,16 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		appointmentService.updateState(appointmentId, AppointmentState.SERVED, UserInfo.getCurrentAuditor(), null);
 		LOG.debug(OUTPUT, Boolean.TRUE);
 	}
+
+	@Override
+	public Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId) {
+		LOG.debug("Appointment Service -> method: {}", "getMedicalCoverage");
+		LOG.debug("Input parameters -> patientId {}, healthcareProfessionalId {}", patientId, healthcareProfessionalId);
+
+		LocalDate currentDate = LocalDate.now();
+		Integer medicalCoverage = appointmentService
+				.getMedicalCoverage(patientId, healthcareProfessionalId, currentDate);
+		LOG.debug(OUTPUT, medicalCoverage);
+		return medicalCoverage;
+	}
 }

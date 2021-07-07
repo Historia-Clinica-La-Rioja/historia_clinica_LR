@@ -258,4 +258,23 @@
             <column name="OS" class="java.lang.Boolean"/>
         </constructor-result>
     </sql-result-set-mapping>
+
+    <!-- ========================================== -->
+    <!-- ============== Appointment =============== -->
+    <!-- ========================================== -->
+
+    <named-native-query name="Appointment.medicalCoverage">
+        <query>select ap.patient_medical_coverage_id
+            from appointment ap
+            join appointment_assn apassn on (ap.id = apassn.appointment_id)
+            join diary d on (apassn.diary_id = d.id)
+            where ap.patient_id = :patientId and
+            ap.date_type_id = :currentDate and
+            ap.patient_medical_coverage_id is not null and
+            ap.appointment_state_id = :appointmentState and
+            d.healthcare_professional_id = :professionalId
+            order by hour asc
+            limit 1
+        </query>
+    </named-native-query>
 </entity-mappings>
