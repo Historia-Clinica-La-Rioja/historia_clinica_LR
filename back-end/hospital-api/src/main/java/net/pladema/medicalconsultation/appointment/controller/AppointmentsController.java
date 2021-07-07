@@ -186,6 +186,19 @@ public class AppointmentsController {
         return ResponseEntity.ok().body(result);
     }
 
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PutMapping(value = "/{appointmentId}/update-medical-coverage")
+    public ResponseEntity<Boolean> updateMedicalCoverage(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "appointmentId") Integer appointmentId,
+            @RequestParam(name = "patientMedicalCoverageId") Integer patientMedicalCoverageId) {
+        LOG.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}",
+                institutionId, appointmentId, patientMedicalCoverageId);
+        boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
     @GetMapping("/getDailyAmounts")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
