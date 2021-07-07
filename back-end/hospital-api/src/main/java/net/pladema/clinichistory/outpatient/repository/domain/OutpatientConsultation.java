@@ -53,7 +53,8 @@ public class OutpatientConsultation extends SGXAuditableEntity<Integer> {
     @Column(name = "patient_medical_coverage_id")
     private Integer patientMedicalCoverageId;
 
-    public OutpatientConsultation(Integer institutionId, Integer patientId, Integer doctorId, boolean billable, Integer clinicalSpecialtyId) {
+    public OutpatientConsultation(Integer institutionId, Integer patientId, Integer doctorId, boolean billable,
+                                  Integer clinicalSpecialtyId, Integer patientMedicalCoverageId) {
         super();
         this.institutionId = institutionId;
         this.patientId = patientId;
@@ -61,5 +62,6 @@ public class OutpatientConsultation extends SGXAuditableEntity<Integer> {
         this.startDate = LocalDate.now();
         this.doctorId = doctorId;
         this.clinicalSpecialtyId = clinicalSpecialtyId;
+        this.patientMedicalCoverageId = patientMedicalCoverageId;
     }
 }
