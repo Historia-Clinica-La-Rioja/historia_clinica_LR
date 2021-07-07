@@ -279,3 +279,39 @@ databaseChangeLog:
                    name: billable
                    type: BOOLEAN
                    defaultValue: ${boolean.false}
+    - changeSet:
+        id: outpatient_consultation-addColumn-patient_medical_coverage_id
+        author: saguero
+        changes:
+        - addColumn:
+            tableName: outpatient_consultation
+            columns:
+            - column:
+                name: patient_medical_coverage_id
+                type: int
+                constraints: 
+                    nullable: true
+    
+    - changeSet:
+        id: set-medical_coverage-outpatient_consultation
+        comment: Set medical coverage to outpatient_consultation
+        author: saguero
+        dbms: postgresql
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE outpatient_consultation 
+                    SET patient_medical_coverage_id = subquery.patient_medical_coverage_id 
+                    FROM (
+                        SELECT distinct on (ap.patient_id) ap.patient_id, ap.patient_medical_coverage_id,
+                            d.healthcare_professional_id, ap.date_type_id
+                        FROM appointment ap
+                        JOIN appointment_assn apassn on (ap.id = apassn.appointment_id)
+                        JOIN diary d on (apassn.diary_id = d.id)
+                        WHERE ap.patient_medical_coverage_id is not null
+                        ORDER BY patient_id, "hour"
+                    ) subquery
+                    WHERE outpatient_consultation.patient_id = subquery.patient_id
+                    AND outpatient_consultation.doctor_id = subquery.healthcare_professional_id
+                    AND outpatient_consultation.start_date = subquery.date_type_id
