@@ -1,3 +1,138 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_20 
 
+    - changeSet:
+        id: applicable_procedure-createTable
+        comment: Create table applicable_procedure
+        author: tmedina
+        changes:
+            - createTable:
+                  tableName: applicable_procedure
+                  columns:
+                    - column:
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_applicable_procedure
+                        name: sctid
+                        type: varchar(20)
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_c
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_p
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_o
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporal_c
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporal_e
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporal_o
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_surface
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_tooth
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_quadrant
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_soft_tissue
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_mouth
+                        type: boolean
+          
+    - changeSet:
+        id: applicable_diagnostic-createTable
+        comment: Create table applicable_diagnostic
+        author: tmedina
+        changes:
+            - createTable:
+                tableName: applicable_diagnostic
+                columns:
+                    - column:
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_applicable_diagnostic
+                        name: sctid
+                        type: varchar(20)
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_c
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_p
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_o
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporal_c
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporal_e
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporal_o
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_surface
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_tooth
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_quadrant
+                        type: boolean
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: applicable_to_soft_tissue
+                        type: boolean
+
