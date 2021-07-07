@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ToothDto } from '@api-rest/api-model';
+import { ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
 import { OdontogramService } from '../../api-rest/odontogram.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { ToothTreatment, CommonActions } from '../tooth/tooth.component';
@@ -28,7 +28,8 @@ export class ToothDialogComponent implements OnInit {
 
 	selectedSurfaces: string[] = [];
 
-	private surfacesDto;
+	private surfacesDto: ToothSurfacesDto;
+
 	findings = [{
 		id: '399271000221103',
 		description: 'Corona'
@@ -89,7 +90,7 @@ export class ToothDialogComponent implements OnInit {
 			}
 		);
 
-		this.odontogramService.getSurfaces().subscribe(surfaces => this.surfacesDto = surfaces);
+		this.odontogramService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
 	}
 
 	confirm() {
