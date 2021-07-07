@@ -105,6 +105,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	public boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage) {
+		appointmentRepository.findById(appointmentId).ifPresent(a -> {
+			if(a.isAssigned()) {
+				a.setPatientMedicalCoverageId(patientMedicalCoverage);
+				appointmentRepository.save(a);
+			}
+		});
+		LOG.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
+	}
+
+	@Override
 	public Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId,
 											LocalDate currentDate) {
 		List<Integer> medicalCoverages = appointmentRepository.getMedicalCoverage(patientId, currentDate,

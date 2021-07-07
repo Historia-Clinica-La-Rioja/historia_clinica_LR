@@ -70,4 +70,8 @@ public class Appointment extends SGXAuditableEntity<Integer> {
         return result;
         
     }
+
+    public boolean isAssigned(){
+        return Short.valueOf(AppointmentState.ASSIGNED).equals(appointmentStateId);
+    }
 }
