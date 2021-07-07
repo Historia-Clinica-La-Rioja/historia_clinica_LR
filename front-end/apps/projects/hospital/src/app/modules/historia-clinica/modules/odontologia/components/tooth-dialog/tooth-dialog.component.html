@@ -1,0 +1,59 @@
+<div>
+
+	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+		<app-tooth [toothTreatment]="toothTreatment"
+			></app-tooth>
+		<div fxLayout="column">
+			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
+		</div>
+	</div>
+
+	<div fxLayout="column">
+		<form [formGroup]="form" (ngSubmit)="confirm()" fxLayout="column">
+			<mat-form-field appearance="outline">
+				<mat-label>Seleccione hallazgo</mat-label>
+				<mat-select formControlName="findingId" name="findingId"
+				 >
+					<mat-option *ngFor="let finding of findings" [value]="finding.id">
+						<span>{{finding.description}}</span>
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<div fxLayout="column" formGroupName="procedures" >
+
+				<mat-form-field appearance="outline">
+					<mat-label>Seleccione 1er procedimiento</mat-label>
+					<mat-select formControlName="firstProcedureId" name="firstProcedureId"
+						>
+						<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
+							<span>{{procedure.description}}</span>
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+					<mat-form-field appearance="outline">
+						<mat-label>Seleccione 2do procedimiento</mat-label>
+						<mat-select formControlName="secondProcedureId" name="secondProcedureId"
+							>
+							<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
+								<span>{{procedure.description}}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline">
+						<mat-label>Seleccione 3er procedimiento</mat-label>
+						<mat-select formControlName="thirdProcedureId" name="thirdProcedureId"
+							>
+							<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
+								<span>{{procedure.description}}</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+
+			</div>
+		</form>
+	</div>
+</div>

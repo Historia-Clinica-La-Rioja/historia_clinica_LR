@@ -2,8 +2,7 @@
 	<div fxLayout="row-reverse" class="mouth-right-column">
 		<div *ngFor="let tooth of quadrants?.quadrant1.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant1.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant1.code)"
 				matTooltip="Pieza {{quadrants.quadrant1.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>
@@ -12,8 +11,7 @@
 	<div fxLayout="row">
 		<div *ngFor="let tooth of quadrants?.quadrant2.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant2.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant2.code)"
 				matTooltip="Pieza {{quadrants.quadrant2.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>
@@ -21,8 +19,7 @@
 	<div fxLayout="row-reverse" class="mouth-right-column">
 		<div *ngFor="let tooth of quadrants?.quadrant5.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant5.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant5.code)"
 				matTooltip="Pieza {{quadrants.quadrant5.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>
@@ -30,17 +27,15 @@
 	<div fxLayout="row">
 		<div *ngFor="let tooth of quadrants?.quadrant6.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant6.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant6.code)"
 				matTooltip="Pieza {{quadrants.quadrant6.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>
 	</div>
-	<div fxLayout="row-reverse" class="mouth-right-column" >
+	<div fxLayout="row-reverse" class="mouth-right-column">
 		<div *ngFor="let tooth of quadrants?.quadrant8.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant8.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant8.code)"
 				matTooltip="Pieza {{quadrants.quadrant8.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>
@@ -48,8 +43,7 @@
 	<div fxLayout="row">
 		<div *ngFor="let tooth of quadrants?.quadrant7.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant7.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant7.code)"
 				matTooltip="Pieza {{quadrants.quadrant7.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>
@@ -57,8 +51,7 @@
 	<div fxLayout="row-reverse" class="mouth-right-column">
 		<div *ngFor="let tooth of quadrants?.quadrant4.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant4.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant4.code)"
 				matTooltip="Pieza {{quadrants.quadrant4.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>
@@ -66,8 +59,7 @@
 	<div fxLayout="row">
 		<div *ngFor="let tooth of quadrants?.quadrant3.teeth" fxLayout="column" fxLayoutAlign="center center">
 			<span>{{quadrants.quadrant3.code}}{{tooth.code}}</span>
-			<app-tooth [toothTreatment]="toothTreatment" [toothId]="tooth.snomed.id"
-				(mouseClickEmitter)="openToothDialog($event)"
+			<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant3.code)"
 				matTooltip="Pieza {{quadrants.quadrant3.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip">
 			</app-tooth>
 		</div>

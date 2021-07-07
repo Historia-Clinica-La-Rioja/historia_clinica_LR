@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ToothDto } from '@api-rest/api-model';
 import { OdontogramService } from '../../api-rest/odontogram.service';
+import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
 import { ToothTreatment } from '../tooth/tooth.component';
 
 @Component({
@@ -11,6 +14,7 @@ export class OdontogramComponent implements OnInit {
 
 	constructor(
 		private odontogramService: OdontogramService,
+		private dialog: MatDialog
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
@@ -36,8 +40,14 @@ export class OdontogramComponent implements OnInit {
 		);
 	}
 
-	openToothDialog(toothId) {
-		console.log(toothId);
+	openToothDialog(tooth: ToothDto, quadrantCode: number) {
+		this.dialog.open(ToothDialogComponent, {
+			width: '464px',
+			data: {
+				tooth,
+				quadrantCode
+			}
+		});
 	}
 
 
