@@ -29,6 +29,9 @@
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'maxlength', 'identifNumber')"
 							   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 11}">
 					</mat-error>
+					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'pattern', 'identifNumber')">
+						<span translate="forms.FORMAT_WHITOUT_BLANK_SPACES"></span>
+					</mat-error>
 				</mat-form-field>
 			</div>
 			<div>
@@ -41,7 +44,7 @@
 						</mat-radio-button>
 					</mat-radio-group>
 					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'gender')">
-						Género requerido
+						<span translate="forms.REQUIRED"></span>
 					</mat-error>
 				</div>
 			</div>
@@ -65,7 +68,7 @@
 							</mat-option>
 						</mat-select>
 						<mat-error>
-							El campo es requerido
+							<span translate="forms.REQUIRED"></span>
 						</mat-error>
 					</mat-form-field>
 					<mat-form-field appearance="outline" fxFlex="50">

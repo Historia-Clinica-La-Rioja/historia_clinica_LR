@@ -49,6 +49,7 @@
 		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy",
 		"FORMAT_NUMERIC": "El valor debe ser numérico",
 		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",
+		"FORMAT_WHITOUT_BLANK_SPACES":"El valor no puede contener espacios en blanco",
 		"YES": "Si",
 		"NO":"No"
 	},
