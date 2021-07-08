@@ -1,7 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/internal/operators/map';
+import { ConceptsService } from '../../api-rest/concepts.service';
 import { OdontogramService } from '../../api-rest/odontogram.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { ToothTreatment, CommonActions } from '../tooth/tooth.component';
@@ -14,9 +17,10 @@ import { ToothTreatment, CommonActions } from '../tooth/tooth.component';
 export class ToothDialogComponent implements OnInit {
 
 	constructor(
-		private formBuilder: FormBuilder,
-		private odontogramService: OdontogramService,
-		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number }
+		private readonly formBuilder: FormBuilder,
+		private readonly odontogramService: OdontogramService,
+		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number },
+		private readonly conceptsService: ConceptsService
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
@@ -30,50 +34,11 @@ export class ToothDialogComponent implements OnInit {
 
 	private surfacesDto: ToothSurfacesDto;
 
-	findings = [{
-		id: '399271000221103',
-		description: 'Corona'
-	},
-	{
-		id: 'blue_oval',
-		description: 'Mancha Blanca'
-	},
-	{
-		id: 4,
-		description: 'Sellador'
-	},
-	{
-		id: '699685006',
-		description: 'surco oclusal profundo'
-	},
-	{
-		id: 'restos_radiculares',
-		description: 'Restos radiculares'
-	},
-	{
-		id: '109564008', // ID PARA HALLAZGOS QUE SE PINTAN DE AZUL
-		description: 'caries dental asociada con hipomineralización del esmalte (trastorno)'
-	},
-	{
-		id: '399031000221108',
-		description: 'obturación con amalgama cavidad compuesta'
-	}
-	];
+	private diagnostics$: Observable<OdontologyConceptDto[]>;
+	filteredDiagnostics$: Observable<OdontologyConceptDto[]>;
 
-	procedures = [{
-		id: '404198007',
-		description: 'extracción dentaria simple'
-	}, {
-		id: '789147006',
-		description: 'implante'
-	},
-	{ // No tiene dibujo, se pinta de rojo
-		id: '702645001',
-		description: 'incrustacion estética'
-	}, {
-		id: 8,
-		description: 'Sellador'
-	}];
+	private procedures$: Observable<OdontologyConceptDto[]>;
+	filteredProcedures$: Observable<OdontologyConceptDto[]>;
 
 	outputProcedures;
 
@@ -91,6 +56,8 @@ export class ToothDialogComponent implements OnInit {
 		);
 
 		this.odontogramService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
+		this.diagnostics$ = this.conceptsService.getDiagnostics();
+		this.procedures$ = this.conceptsService.getProcedures();
 	}
 
 	confirm() {
@@ -99,6 +66,14 @@ export class ToothDialogComponent implements OnInit {
 	reciveSelectedSurfaces(surfaces: string[]) {
 		this.selectedSurfaces = surfaces;
 		this.concatNames();
+
+		let filterFuncion = (diagnostic: OdontologyConceptDto) => { return diagnostic.applicableToTooth }
+		if (surfaces.length) {
+			filterFuncion = (diagnostic: OdontologyConceptDto) => { return diagnostic.applicableToSurface }
+		}
+
+		this.filteredDiagnostics$ = this.diagnostics$?.pipe(map(diagnostics => diagnostics.filter(filterFuncion)));
+		this.filteredProcedures$ = this.procedures$?.pipe(map(procedures => procedures.filter(filterFuncion)));
 	}
 
 	findingChanged(hallazgoId) {

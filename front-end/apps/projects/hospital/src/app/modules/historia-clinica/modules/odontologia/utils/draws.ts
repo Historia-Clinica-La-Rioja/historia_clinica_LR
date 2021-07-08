@@ -4,10 +4,13 @@ const htmlDraws = {
 		'399271000221103', '399301000221101', '398871000221107', '285065008', '399121000221106'],
 	short_vertical_red_line: ['789147006'],
 	two_long_blue_lines: ['404198007', '173291009'],
-	red_cross: [],
+	red_cross: ['16958000', '9984005', '109531008', '37320007', '441935006', '1085521000119100', '109673006'],
 	blue_horizontal_line: ['699685006'],
-	restos_radiculares: ['restos_radiculares'],
-	blue_oval: ['blue_oval']
+	restos_radiculares: ['-2000'],
+	blue_oval: ['-1000'],
+	red_horizontal_line: ['234713009', '399191000221108'],
+	red_cross_and_red_vertical_line: ['278123008'],
+	TC: ['399001000221103', '399011000221100']
 };
 
 export const getHtmlName = (sctid: string): string => {
@@ -22,23 +25,23 @@ export const getHtmlName = (sctid: string): string => {
 const surfacesCenterPoint = {
 	left: {
 		x: 5,
-		y: 20
+		y: 48
 	},
 	right: {
 		x: 35,
-		y: 20
+		y: 48
 	},
 	central: {
 		x: 20,
-		y: 20
+		y: 48
 	},
 	external: {
 		x: 20,
-		y: 0
+		y: 33
 	},
 	internal: {
 		x: 20,
-		y: 40
+		y: 66
 	},
 
 };
@@ -51,9 +54,8 @@ export const getDraw = (toothPartId: string, svgName: string) => {
 	const newDrawNodes: HTMLElement[] = [];
 	document.getElementById(svgName).childNodes.forEach(nodes => {
 		const nodeToAdd = nodes.cloneNode() as HTMLElement;
-
 		const toTransformX = surfacesCenterPoint[toothPartId].x - (width / 2);
-		const toTransformY = surfacesCenterPoint[toothPartId].y - (height / 2);
+		const toTransformY = surfacesCenterPoint[toothPartId].y - (height / 2) + moveCenter(svgName);
 		nodeToAdd.style.transform = `translate(${toTransformX}px,${toTransformY}px)`;
 		newDrawNodes.push(nodeToAdd);
 	});
@@ -61,6 +63,13 @@ export const getDraw = (toothPartId: string, svgName: string) => {
 	return newDrawNodes;
 };
 
+const moveCenter = (svgName: string): number => {
+	let toTransformY = 0;
+	if (svgName === 'red_cross_and_red_vertical_line') {
+		toTransformY -= 19.5;
+	}
+	return toTransformY;
+}
 
 enum Actions {
 	FILL = 'fill',

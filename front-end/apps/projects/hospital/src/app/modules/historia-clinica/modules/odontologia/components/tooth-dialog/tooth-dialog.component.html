@@ -1,12 +1,9 @@
 <div>
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-		<app-tooth [toothTreatment]="toothTreatment"
-		(selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
-			[newFinding]="newHallazgoId"
-			(commonActionsEmitter)="reciveCommonActions($event)"
-			[setProcedure]=outputProcedures
-			></app-tooth>
+		<app-tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
+			[newFinding]="newHallazgoId" (commonActionsEmitter)="reciveCommonActions($event)"
+			[setProcedure]=outputProcedures></app-tooth>
 		<div fxLayout="column">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
 			<span class="subtitle">{{selectedSurfacesText}}</span>
@@ -17,24 +14,22 @@
 		<form [formGroup]="form" (ngSubmit)="confirm()" fxLayout="column">
 			<mat-form-field appearance="outline">
 				<mat-label>Seleccione hallazgo</mat-label>
-				<mat-select formControlName="findingId" name="findingId"
-				 (selectionChange)="findingChanged($event)"
-				 >
-					<mat-option *ngFor="let finding of findings" [value]="finding.id">
-						<span>{{finding.description}}</span>
+				<mat-select formControlName="findingId" name="findingId" (selectionChange)="findingChanged($event)">
+					<mat-option *ngFor="let finding of (filteredDiagnostics$ | async )" [value]="finding.snomed.sctid">
+						<span>{{finding.snomed.pt}}</span>
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
 
-			<div fxLayout="column" formGroupName="procedures" >
+			<div fxLayout="column" formGroupName="procedures">
 
 				<mat-form-field appearance="outline">
 					<mat-label>Seleccione 1er procedimiento</mat-label>
 					<mat-select formControlName="firstProcedureId" name="firstProcedureId"
-						(selectionChange)="procedureChanged()"
-						>
-						<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
-							<span>{{procedure.description}}</span>
+						(selectionChange)="procedureChanged()">
+						<mat-option *ngFor="let procedure of  (filteredProcedures$| async )"
+							[value]="procedure.snomed.sctid">
+							<span>{{procedure.snomed.pt}}</span>
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
@@ -43,10 +38,10 @@
 					<mat-form-field appearance="outline">
 						<mat-label>Seleccione 2do procedimiento</mat-label>
 						<mat-select formControlName="secondProcedureId" name="secondProcedureId"
-							(selectionChange)="procedureChanged()"
-							>
-							<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
-								<span>{{procedure.description}}</span>
+							(selectionChange)="procedureChanged()">
+							<mat-option *ngFor="let procedure of (filteredProcedures$| async )"
+								[value]="procedure.snomed.sctid">
+								<span>{{procedure.snomed.pt}}</span>
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
@@ -54,10 +49,10 @@
 					<mat-form-field appearance="outline">
 						<mat-label>Seleccione 3er procedimiento</mat-label>
 						<mat-select formControlName="thirdProcedureId" name="thirdProcedureId"
-							(selectionChange)="procedureChanged()"
-							>
-							<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
-								<span>{{procedure.description}}</span>
+							(selectionChange)="procedureChanged()">
+							<mat-option *ngFor="let procedure of (filteredProcedures$| async )"
+								[value]="procedure.snomed.sctid">
+								<span>{{procedure.snomed.pt}}</span>
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
