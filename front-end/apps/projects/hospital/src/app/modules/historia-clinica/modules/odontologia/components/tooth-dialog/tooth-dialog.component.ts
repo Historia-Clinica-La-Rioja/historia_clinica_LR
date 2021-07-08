@@ -2,7 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToothDto } from '@api-rest/api-model';
-import { ToothTreatment } from '../tooth/tooth.component';
+import { OdontogramService } from '../../api-rest/odontogram.service';
+import { getSurfaceShortName } from '../../utils/surfaces';
+import { ToothTreatment, CommonActions } from '../tooth/tooth.component';
 
 @Component({
 	selector: 'app-tooth-dialog',
@@ -13,12 +15,20 @@ export class ToothDialogComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
+		private odontogramService: OdontogramService,
 		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number }
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
 
 	form: FormGroup;
+	newHallazgoId: number;
+
+	selectedSurfacesText: string;
+
+	selectedSurfaces: string[] = [];
+
+	private surfacesDto;
 	findings = [{
 		id: '399271000221103',
 		description: 'Corona'
@@ -79,11 +89,57 @@ export class ToothDialogComponent implements OnInit {
 			}
 		);
 
+		this.odontogramService.getSurfaces().subscribe(surfaces => this.surfacesDto = surfaces);
 	}
 
 	confirm() {
 	}
 
+	reciveSelectedSurfaces(surfaces: string[]) {
+		this.selectedSurfaces = surfaces;
+		this.concatNames();
+	}
+
+	findingChanged(hallazgoId) {
+		this.newHallazgoId = hallazgoId.value;
+	}
+
+	reciveCommonActions(inCommon: CommonActions) {
+		if (this.form) {
+			if (inCommon?.findingId) {
+				this.form.controls.findingId.setValue(inCommon.findingId);
+			} else {
+				this.form.controls.findingId.setValue(undefined);
+				this.newHallazgoId = undefined;
+			}
+			const procedures = {
+				firstProcedureId: inCommon.procedures?.firstProcedureId,
+				secondProcedureId: inCommon.procedures?.secondProcedureId,
+				thirdProcedureId: inCommon.procedures?.thirdProcedureId
+			};
+			this.form.patchValue({
+				procedures
+			});
+		}
+	}
+
+	private concatNames() {
+		this.selectedSurfacesText = '';
+		if (this.selectedSurfaces.length) {
+			this.selectedSurfacesText = this.selectedSurfaces.length === 1 ? 'Cara ' : 'Caras ';
+			const mappedNames = this.selectedSurfaces.map(surface => this.findSutableName(surface));
+			this.selectedSurfacesText += mappedNames.filter(Boolean).join(', ');
+		}
+	}
+
+	private findSutableName(surface: string): string {
+		const sctid = this.surfacesDto[surface].sctid;
+		return getSurfaceShortName(sctid);
+	}
+
+	procedureChanged() {
+		this.outputProcedures = this.form.value.procedures;
+	}
 
 }
 

@@ -2,9 +2,14 @@
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 		<app-tooth [toothTreatment]="toothTreatment"
+		(selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
+			[newFinding]="newHallazgoId"
+			(commonActionsEmitter)="reciveCommonActions($event)"
+			[setProcedure]=outputProcedures
 			></app-tooth>
 		<div fxLayout="column">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
+			<span class="subtitle">{{selectedSurfacesText}}</span>
 		</div>
 	</div>
 
@@ -13,6 +18,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label>Seleccione hallazgo</mat-label>
 				<mat-select formControlName="findingId" name="findingId"
+				 (selectionChange)="findingChanged($event)"
 				 >
 					<mat-option *ngFor="let finding of findings" [value]="finding.id">
 						<span>{{finding.description}}</span>
@@ -25,6 +31,7 @@
 				<mat-form-field appearance="outline">
 					<mat-label>Seleccione 1er procedimiento</mat-label>
 					<mat-select formControlName="firstProcedureId" name="firstProcedureId"
+						(selectionChange)="procedureChanged()"
 						>
 						<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
 							<span>{{procedure.description}}</span>
@@ -32,9 +39,11 @@
 					</mat-select>
 				</mat-form-field>
 
+				<div *ngIf="!selectedSurfaces.length" fxLayout="column">
 					<mat-form-field appearance="outline">
 						<mat-label>Seleccione 2do procedimiento</mat-label>
 						<mat-select formControlName="secondProcedureId" name="secondProcedureId"
+							(selectionChange)="procedureChanged()"
 							>
 							<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
 								<span>{{procedure.description}}</span>
@@ -45,12 +54,14 @@
 					<mat-form-field appearance="outline">
 						<mat-label>Seleccione 3er procedimiento</mat-label>
 						<mat-select formControlName="thirdProcedureId" name="thirdProcedureId"
+							(selectionChange)="procedureChanged()"
 							>
 							<mat-option *ngFor="let procedure of procedures" [value]="procedure.id">
 								<span>{{procedure.description}}</span>
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
+				</div>
 
 
 			</div>
