@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class QueryFactory {
@@ -19,21 +20,21 @@ public class QueryFactory {
         this.entityManager = entityManager;
     }
 
-    public Query query(Integer institutionId, LocalDate startDate, LocalDate endDate, Integer clinicalSpecialtyId, Integer doctorId) {
+    @SuppressWarnings("unchecked")
+    public List<OutpatientDetail> query(Integer institutionId, LocalDate startDate, LocalDate endDate,
+                                        Integer clinicalSpecialtyId, Integer doctorId) {
 
-        String clinicalSpecialtyIdCondition = clinicalSpecialtyId != null? String.format("AND oc.clinical_specialty_id=%d ", clinicalSpecialtyId) : "";
-        String doctorIdCondition = doctorId != null? String.format("AND oc.doctor_id=%d ", doctorId) : "";
-
-        String finalQuery = String.format(
-                Queries.GET_MONTHLY_REPORT,
-                clinicalSpecialtyIdCondition,
-                doctorIdCondition);
-
-        Query query = entityManager.createNativeQuery(finalQuery);
+        Query query = entityManager.createNamedQuery("Reports.OutpatientDetail");
         query.setParameter("institutionId", institutionId);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
-        return query;
+        List<OutpatientDetail> data = query.getResultList();
+
+        //Optional filter: by specialty or professional if specified
+        return data.stream()
+                .filter(doctorId != null ? oc -> oc.getProfessionalId().equals(doctorId) : c -> true)
+                .filter(clinicalSpecialtyId != null ? oc -> oc.getClinicalSpecialtyId().equals(clinicalSpecialtyId) : c -> true)
+                .collect(Collectors.toList());
     }
 
     @SuppressWarnings("unchecked")
