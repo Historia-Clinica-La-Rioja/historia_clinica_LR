@@ -255,3 +255,11 @@ databaseChangeLog:
                 INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (72,'Viaje a Zona Endémica',241,22265);
                 INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (90,'Residencia en Zona Endémica',5475,36500);
 
+    - changeSet:
+        id:  rename batch-number column  in immunization table
+        author:  etrapani
+        changes:
+        -  renameColumn:
+             newColumnName:  lot_number
+             oldColumnName:  batch_number
+             tableName:  inmunization

@@ -67,7 +67,7 @@ public class ImmunizationDocumentStorageImpl implements ImmunizationDocumentStor
         result.setSnomed(new SnomedDto(
                 immunizationInfoBo.getVaccine().getSctid(),
                 immunizationInfoBo.getVaccine().getPt()));
-        result.setBatchNumber(immunizationInfoBo.getBatchNumber());
+        result.setLotNumber(immunizationInfoBo.getLotNumber());
         return result;
     }
 }

@@ -71,6 +71,7 @@ public class LoadImmunizations {
             i.setStatus(getStatus(i.getStatusId()));
             i.setAdministrationDate(immunization.getAdministrationDate());
 
+
             documentService.createImmunization(documentId, immunization.getId());
         });
         List<ImmunizationBo> result = immunizations;
@@ -91,7 +92,7 @@ public class LoadImmunizations {
                 immunizationBo.getSchemeId(),
                 immunizationBo.getDoseId(),
                 noteId,
-                immunizationBo.getBatchNumber());
+                immunizationBo.getLotNumber());
         immunization = immunizationRepository.save(immunization);
         LOG.debug("Immunization saved -> {}", immunization.getId());
         LOG.debug(OUTPUT, immunization);

@@ -33,6 +33,7 @@ public class ImmunizationDto extends ClinicalTermDto {
     private Short schemeId;
 
     @Nullable
-    private String batchNumber;
+    private String lotNumber;
+
 
 }

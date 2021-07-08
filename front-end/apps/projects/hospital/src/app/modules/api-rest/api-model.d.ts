@@ -873,10 +873,10 @@ export interface IdentifierDto extends Serializable {
 
 export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
-    batchNumber?: string;
     conditionId?: number;
     doseId?: number;
     institutionId?: number;
+    lotNumber?: string;
     note: string;
     schemeId?: number;
 }

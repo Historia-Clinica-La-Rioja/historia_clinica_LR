@@ -132,7 +132,7 @@ class ImmunizePatientTest {
         Assertions.assertEquals("2020-12-12",
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getAdministrationDate());
         Assertions.assertEquals("LOTE",
-                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getBatchNumber());
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getLotNumber());
         Assertions.assertEquals("Nota de vacuna",
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getNote());
 

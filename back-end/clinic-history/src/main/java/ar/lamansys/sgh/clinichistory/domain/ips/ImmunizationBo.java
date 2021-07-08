@@ -26,7 +26,7 @@ public class ImmunizationBo extends ClinicalTerm {
 
     private Short schemeId;
 
-    private String batchNumber;
+    private String lotNumber;
 
     public ImmunizationBo(ImmunizationVo immunizationVo) {
         super();

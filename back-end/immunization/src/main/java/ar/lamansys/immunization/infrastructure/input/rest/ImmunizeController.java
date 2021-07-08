@@ -69,7 +69,7 @@ public class ImmunizeController {
                     immunizationDto.getSchemeId(),
                     immunizationDto.getDoseId(),
                     localDateMapper.fromStringToLocalDate(immunizationDto.getAdministrationDate()),
-                    immunizationDto.getBatchNumber(),
+                    immunizationDto.getLotNumber(),
                     immunizationDto.getNote());
 
     }

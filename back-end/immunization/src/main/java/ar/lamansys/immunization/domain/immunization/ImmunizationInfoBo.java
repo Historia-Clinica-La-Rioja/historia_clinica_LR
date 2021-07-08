@@ -24,7 +24,7 @@ public class ImmunizationInfoBo {
 
     private final LocalDate administrationDate;
 
-    private final String batchNumber;
+    private final String lotNumber;
 
     private final String note;
 
@@ -35,7 +35,7 @@ public class ImmunizationInfoBo {
                               Short schemeId,
                               Short doseId,
                               LocalDate administrationDate,
-                              String batchNumber,
+                              String lotNumber,
                               String note) {
         this.id = id;
         this.institutionId = institutionId;
@@ -44,7 +44,7 @@ public class ImmunizationInfoBo {
         this.condition = VaccineConditionApplicationBo.map(conditionId);
         this.schemeId = schemeId;
         this.administrationDate = administrationDate;
-        this.batchNumber = batchNumber;
+        this.lotNumber = lotNumber;
         this.note = note;
     }
 

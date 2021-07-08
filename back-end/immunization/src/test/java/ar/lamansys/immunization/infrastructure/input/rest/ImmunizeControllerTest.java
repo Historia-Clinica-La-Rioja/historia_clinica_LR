@@ -78,7 +78,7 @@ class ImmunizeControllerTest {
                 .getImmunizations().get(0).getNote());
 
         Assertions.assertEquals("BATCH", immunizePatientBoArgumentCaptor.getValue()
-                .getImmunizations().get(0).getBatchNumber());
+                .getImmunizations().get(0).getLotNumber());
     }
 
 
@@ -121,7 +121,7 @@ class ImmunizeControllerTest {
         result.setDoseId((short)1);
         result.setConditionId((short)3);
         result.setSchemeId((short)1);
-        result.setBatchNumber("BATCH");
+        result.setLotNumber("BATCH");
         return result;
     }
 
