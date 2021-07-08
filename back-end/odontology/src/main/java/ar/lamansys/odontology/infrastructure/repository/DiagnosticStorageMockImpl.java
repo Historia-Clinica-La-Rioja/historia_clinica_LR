@@ -2,6 +2,7 @@ package ar.lamansys.odontology.infrastructure.repository;
 
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
+import ar.lamansys.odontology.domain.ProcedureBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,23 @@ public class DiagnosticStorageMockImpl implements DiagnosticStorage {
         List<DiagnosticBo> result = new ArrayList<>();
         result.add(new DiagnosticBo("16958000", "ausencia congénita completa de dientes (trastorno)", true, false));
         result.add(new DiagnosticBo("64969001", "ausencia parcial congénita de los dientes (trastorno)", true, false));
-        result.add(new DiagnosticBo("367534004", "diente supernumerario (trastorno)", true, false));
-        result.add(new DiagnosticBo("29553002", "dientes con forma de clavija (trastorno)", true, false));
-        result.add(new DiagnosticBo("109473003", "amelogénesis imperfecta, tipo hipoplásica con microdoncia (trastorno)", true, true));
-        result.add(new DiagnosticBo("266415009", "anomalía de desarrollo del tamaño y la forma de diente (trastorno)", true, false));
-        result.add(new DiagnosticBo("30265004", "surco oclusal profundo (hallazgo)", false, true));
-        result.add(new DiagnosticBo("49414002", "opacidades del esmalte no causadas por flúor (trastorno)", true, true));
+        result.add(new DiagnosticBo("699685006", "surco oclusal profundo (hallazgo)", false, true));
+        result.add(new DiagnosticBo("109564008", "caries dental asociada con hipomineralización del esmalte (trastorno)", false, true));
+        result.add(new DiagnosticBo("-1000", "Mancha Blanca", false, true));
+        result.add(new DiagnosticBo("-2000", "restos radiculares", true, false));
+        result.add(new DiagnosticBo("9984005", "exfoliación de dientes por enfermedad sistémica (trastorno)", true, false));
+        result.add(new DiagnosticBo("112481000119103", "restauración dental insatisfactoria (hallazgo)", false, true));
+        // procedures that act as diagnostics
         result.add(new DiagnosticBo("80764003", "incrustacion estética", true, true));
-        result.add(new DiagnosticBo("57673005", "incrustación metalica", false, true));
-        result.add(new DiagnosticBo("398891000221108", "carilla dental", false, true));
+        result.add(new DiagnosticBo("468785006", "barra metalica sobre implantes", true, false));
         result.add(new DiagnosticBo("398981000221101", "corona de acero provisoria por destrucción coronaria.", true, false));
+        result.add(new DiagnosticBo("789147006", "implante dental", true, false));
+        result.add(new DiagnosticBo("278123008", "implante osteointegrado con forma radicular", true, true));
+        result.add(new DiagnosticBo("4721000221105", "inactivación de caries", false, true));
+        result.add(new DiagnosticBo("399041000221101", "obturación con amalgama cavidad simple", false, true));
+        result.add(new DiagnosticBo("398791000221100", "puente por tecnologia cad cam", true, false));
+        result.add(new DiagnosticBo("234713009", "selladores de surcos, fosas y fisuras", false, true));
+        result.add(new DiagnosticBo("398761000221105", "tramo de puente", true, false));
         LOG.trace("Output -> {}", result);
         return result;
     }

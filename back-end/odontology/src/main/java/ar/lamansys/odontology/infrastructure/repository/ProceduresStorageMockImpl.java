@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.infrastructure.repository;
 
+import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.ProceduresStorage;
 import org.slf4j.Logger;
@@ -22,18 +23,17 @@ public class ProceduresStorageMockImpl implements ProceduresStorage {
     public List<ProcedureBo> getProcedures() {
         LOG.debug("No input parameters");
         List<ProcedureBo> result = new ArrayList<>();
-        result.add(new ProcedureBo("183120001", "desgaste de prótesis", false, false));
-        result.add(new ProcedureBo("31890001", "alargamiento quirurgico de corona clinica", true, true));
-        result.add(new ProcedureBo("398911000221105", "apicectomia", true, false));
-        result.add(new ProcedureBo("398921000221100", "aplicación de cariostáticos en piezas dentarias", true, true));
-        result.add(new ProcedureBo("234710007", "medicación intermedia intraconducto", true, false));
-        result.add(new ProcedureBo("313042009", "barniz fluorado", true, false));
-        result.add(new ProcedureBo("35889000", "topicación de fluor", true, false));
         result.add(new ProcedureBo("80764003", "incrustacion estética", true, true));
-        result.add(new ProcedureBo("57673005", "incrustación metalica", false, true));
         result.add(new ProcedureBo("468785006", "barra metalica sobre implantes", true, false));
-        result.add(new ProcedureBo("48635004", "biopsia por aspiracion", false, false));
-        result.add(new ProcedureBo("129249002", "biopsia por puncion", false, false));
+        result.add(new ProcedureBo("398981000221101", "corona de acero provisoria por destrucción coronaria.", true, false));
+        result.add(new ProcedureBo("789147006", "implante dental", true, false));
+        result.add(new ProcedureBo("278123008", "implante osteointegrado con forma radicular", true, true));
+        result.add(new ProcedureBo("4721000221105", "inactivación de caries", false, true));
+        result.add(new ProcedureBo("399041000221101", "obturación con amalgama cavidad simple", false, true));
+        result.add(new ProcedureBo("398791000221100", "puente por tecnologia cad cam", true, false));
+        result.add(new ProcedureBo("234713009", "selladores de surcos, fosas y fisuras", false, true));
+        result.add(new ProcedureBo("398761000221105", "tramo de puente", true, false));
+        result.add(new ProcedureBo("404198007", "extracción dentaria de retenidos", true, false));
         LOG.trace("Output -> {}", result);
         return result;
     }
