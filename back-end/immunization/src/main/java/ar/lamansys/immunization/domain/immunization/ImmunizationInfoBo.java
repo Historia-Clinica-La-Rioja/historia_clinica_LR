@@ -16,8 +16,6 @@ public class ImmunizationInfoBo {
 
     private final SnomedBo vaccine;
 
-    private final SnomedBo commercialVaccine;
-
     private final VaccineDoseBo dose;
 
     private final VaccineConditionApplicationBo condition;
@@ -33,7 +31,6 @@ public class ImmunizationInfoBo {
     public ImmunizationInfoBo(Integer id,
                               Integer institutionId,
                               SnomedBo vaccine,
-                              SnomedBo commercialVaccine,
                               Short conditionId,
                               Short schemeId,
                               Short doseId,
@@ -43,7 +40,6 @@ public class ImmunizationInfoBo {
         this.id = id;
         this.institutionId = institutionId;
         this.vaccine = vaccine;
-        this.commercialVaccine = commercialVaccine;
         this.dose = VaccineDoseBo.map(doseId);
         this.condition = VaccineConditionApplicationBo.map(conditionId);
         this.schemeId = schemeId;

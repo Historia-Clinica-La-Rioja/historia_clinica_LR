@@ -136,9 +136,6 @@ class ImmunizePatientTest {
         Assertions.assertEquals("Nota de vacuna",
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getNote());
 
-        Assertions.assertEquals(new SnomedDto("SCTID_2","PT_ANTIGRIPAL_COMERCIAL"),
-                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getSnomedCommercial());
-
         verify(sharedAppointmentPort, times(1)).serveAppointment(eq(14), eq(1), eq(LocalDate.of(2020,12,13)));
 
     }
@@ -213,7 +210,6 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo validImmunization() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                new SnomedBo(null, "SCTID_2","PT_ANTIGRIPAL_COMERCIAL", "PARENT_COMERCIAL_ID", "ANTIGRIPAL_COMERCIAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 (short) 1,
                 VaccineDoseBo.DOSE_1.getId(),

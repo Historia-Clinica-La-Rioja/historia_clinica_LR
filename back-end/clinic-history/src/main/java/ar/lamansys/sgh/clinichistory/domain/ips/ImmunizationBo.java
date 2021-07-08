@@ -28,8 +28,6 @@ public class ImmunizationBo extends ClinicalTerm {
 
     private String batchNumber;
 
-    private SnomedBo snomedCommercial;
-
     public ImmunizationBo(ImmunizationVo immunizationVo) {
         super();
         setId(immunizationVo.getId());

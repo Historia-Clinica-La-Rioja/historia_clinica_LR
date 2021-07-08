@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Nullable;
-import javax.validation.Valid;
 
 @Getter
 @Setter
@@ -35,9 +34,5 @@ public class ImmunizationDto extends ClinicalTermDto {
 
     @Nullable
     private String batchNumber;
-
-    @Nullable
-    @Valid
-    private SnomedDto snomedCommercial;
 
 }

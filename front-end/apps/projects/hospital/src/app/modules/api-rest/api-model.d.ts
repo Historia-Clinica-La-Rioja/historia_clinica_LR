@@ -879,7 +879,6 @@ export interface ImmunizationDto extends ClinicalTermDto {
     institutionId?: number;
     note: string;
     schemeId?: number;
-    snomedCommercial?: SnomedDto;
 }
 
 export interface ImmunizationInteroperabilityDto {

@@ -65,7 +65,6 @@ public class ImmunizeController {
         return new ImmunizationInfoBo(null,
                     institutionId,
                     mapSnomed(immunizationDto.getSnomed()),
-                    mapSnomed(immunizationDto.getSnomedCommercial()),
                     immunizationDto.getConditionId(),
                     immunizationDto.getSchemeId(),
                     immunizationDto.getDoseId(),

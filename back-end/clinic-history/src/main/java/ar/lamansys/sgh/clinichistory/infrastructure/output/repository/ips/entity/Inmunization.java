@@ -37,10 +37,7 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 	@Column(name = "snomed_id", nullable = false)
 	private Integer snomedId;
 
-	@Column(name = "snomed_commercial_id")
-	private Integer snomedCommercialId;
-
-	@Column(name = "cie10_codes", length = 255, nullable = true)
+	@Column(name = "cie10_codes")
 	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
@@ -72,7 +69,6 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 
 	public Inmunization(Integer patientId,
 						Integer snomedId,
-						Integer snomedCommercialId,
 						String cie10Codes, String statusId,
 						LocalDate administrationDate,
 						Integer institutionId,
@@ -84,7 +80,6 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
-		this.snomedCommercialId = snomedCommercialId;
 		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;

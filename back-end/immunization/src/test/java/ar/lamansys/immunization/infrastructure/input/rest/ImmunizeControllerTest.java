@@ -122,7 +122,6 @@ class ImmunizeControllerTest {
         result.setConditionId((short)3);
         result.setSchemeId((short)1);
         result.setBatchNumber("BATCH");
-        result.setSnomedCommercial(new SnomedDto("SNOMED_COMERCIAL_ID", "SNOMED_COMERCIAL_PT"));
         return result;
     }
 
