@@ -1,6 +1,7 @@
 package ar.lamansys.immunization.infrastructure.output.repository.vaccine;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = "vaccine_scheme")
+@NoArgsConstructor
 public class VaccineScheme {
 
     @Id
