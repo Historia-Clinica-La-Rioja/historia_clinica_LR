@@ -1,7 +1,7 @@
 package ar.lamansys.odontology.infrastructure.repository;
 
 import ar.lamansys.odontology.domain.ProcedureBo;
-import ar.lamansys.odontology.domain.ProceduresStorage;
+import ar.lamansys.odontology.domain.ProcedureStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Primary
-public class ProceduresStorageImpl implements ProceduresStorage {
+public class ProcedureStorageImpl implements ProcedureStorage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProceduresStorageImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcedureStorageImpl.class);
 
     private final ProcedureRepository procedureRepository;
 
-    public ProceduresStorageImpl(ProcedureRepository procedureRepository) {
+    public ProcedureStorageImpl(ProcedureRepository procedureRepository) {
         this.procedureRepository = procedureRepository;
     }
 

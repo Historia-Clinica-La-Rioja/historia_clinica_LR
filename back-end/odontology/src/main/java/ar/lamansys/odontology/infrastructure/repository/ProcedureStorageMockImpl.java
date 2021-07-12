@@ -1,7 +1,7 @@
 package ar.lamansys.odontology.infrastructure.repository;
 
 import ar.lamansys.odontology.domain.ProcedureBo;
-import ar.lamansys.odontology.domain.ProceduresStorage;
+import ar.lamansys.odontology.domain.ProcedureStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProceduresStorageMockImpl implements ProceduresStorage {
+public class ProcedureStorageMockImpl implements ProcedureStorage {
 
     private final Logger LOG;
 
-    public ProceduresStorageMockImpl() {
+    public ProcedureStorageMockImpl() {
         LOG = LoggerFactory.getLogger(getClass());
     }
 

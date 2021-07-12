@@ -1,8 +1,8 @@
 package ar.lamansys.odontology.application.procedure;
 
 import ar.lamansys.odontology.domain.ProcedureBo;
-import ar.lamansys.odontology.domain.ProceduresStorage;
-import ar.lamansys.odontology.infrastructure.repository.ProceduresStorageMockImpl;
+import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.infrastructure.repository.ProcedureStorageMockImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +19,8 @@ class GetProceduresServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ProceduresStorage proceduresStorage = new ProceduresStorageMockImpl();
-        getProceduresService = new GetProceduresServiceImpl(proceduresStorage);
+        ProcedureStorage procedureStorage = new ProcedureStorageMockImpl();
+        getProceduresService = new GetProceduresServiceImpl(procedureStorage);
     }
 
     @Test

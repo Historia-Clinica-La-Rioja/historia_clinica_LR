@@ -2,7 +2,7 @@ package ar.lamansys.odontology.domain;
 
 import java.util.List;
 
-public interface ProceduresStorage {
+public interface ProcedureStorage {
 
     List<ProcedureBo> getProcedures();
 
