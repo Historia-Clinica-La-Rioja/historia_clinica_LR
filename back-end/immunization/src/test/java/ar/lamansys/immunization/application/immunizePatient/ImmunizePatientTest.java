@@ -149,7 +149,6 @@ class ImmunizePatientTest {
                 .thenReturn(new ProfessionalInfoDto(1,
                         List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                                 new ClinicalSpecialtyDto(2, "Especialidad1"))));
-        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
         when(vaccineConsultationRepository.save(any()))
                 .thenReturn(new VaccineConsultation(1, 20, 14, 1, 65,
                         LocalDate.of(2020, 12, 12), true));
@@ -216,7 +215,56 @@ class ImmunizePatientTest {
         );
         assertEquals("La información de la vacuna es obligatoria", exception.getMessage());
 
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(billableImmunizationWithoutInstitution())))
+        );
+        assertEquals("La institución es obligatoria para una vacuna facturable", exception.getMessage());
 
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(billableImmunizationWithoutAdministrationDate())))
+        );
+        assertEquals("La fecha de administración es obligatoria para una vacuna facturable", exception.getMessage());
+
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(billableImmunizationWithoutAdministrationDate())))
+        );
+        assertEquals("La fecha de administración es obligatoria para una vacuna facturable", exception.getMessage());
+
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(billableImmunizationWithoutCondition())))
+        );
+        assertEquals("La condición de aplicación es obligatoria para una vacuna facturable", exception.getMessage());
+
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(billableImmunizationWithoutScheme())))
+        );
+        assertEquals("El esquema es obligatorio para una vacuna facturable", exception.getMessage());
+
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(false);
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(validImmunizePatient())
+        );
+        assertEquals("La vacuna PT_ANTIGRIPAL tiene un esquema invalido 1", exception.getMessage());
+
+
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad2"))));
+
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 1,
+                        List.of(billableImmunizationWithoutDoses())))
+        );
+        assertEquals("La dosis es obligatoria para una vacuna facturable", exception.getMessage());
 
     }
 

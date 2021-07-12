@@ -26,7 +26,7 @@ public class ImmunizationValidator {
         if (immunizationInfoBo.isBillable() && immunizationInfoBo.getSchemeId() == null)
             throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.NULL_SCHEME_ID,
                     "El esquema es obligatorio para una vacuna facturable");
-        if (!vaccineSchemeStorage.isValidScheme(immunizationInfoBo.getSchemeId()))
+        if (immunizationInfoBo.getSchemeId() != null && !vaccineSchemeStorage.isValidScheme(immunizationInfoBo.getSchemeId()))
             throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INVALID_SCHEME_ID,
                     String.format("La vacuna %s tiene un esquema invalido %s", immunizationInfoBo.getVaccineName(),
                             immunizationInfoBo.getSchemeId()));
