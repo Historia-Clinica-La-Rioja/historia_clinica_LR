@@ -67,6 +67,9 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "billable")
+	private Boolean billable;
+
 	public Inmunization(Integer patientId,
 						Integer snomedId,
 						String cie10Codes, String statusId,
@@ -76,7 +79,8 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 						Short schemeId,
 						Short doseId,
 						Long noteId,
-						String lotNumber) {
+						String lotNumber,
+						boolean billable) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
@@ -90,6 +94,7 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 		this.doseId = doseId;
 		this.lotNumber = lotNumber;
 		this.administrationDate = administrationDate;
+		this.billable = billable;
 	}
 
 	@Override

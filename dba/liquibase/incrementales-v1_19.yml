@@ -263,3 +263,19 @@ databaseChangeLog:
              newColumnName:  lot_number
              oldColumnName:  batch_number
              tableName:  inmunization
+
+
+    - changeSet:
+       id: add billable column immunization
+       author: etrapani
+       comment: Add billable column immunizations table
+       changes:
+         - addColumn:
+             tableName: inmunization
+             columns:
+               - column:
+                   constraints:
+                     nullable: false
+                   name: billable
+                   type: BOOLEAN
+                   defaultValue: ${boolean.false}

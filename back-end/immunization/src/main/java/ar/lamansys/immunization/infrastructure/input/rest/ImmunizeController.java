@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -63,14 +62,15 @@ public class ImmunizeController {
 
     private ImmunizationInfoBo mapImmunization(ImmunizationDto immunizationDto, Integer institutionId) {
         return new ImmunizationInfoBo(null,
-                    institutionId,
+                    immunizationDto.isBillable() ? institutionId : immunizationDto.getInstitutionId(),
                     mapSnomed(immunizationDto.getSnomed()),
                     immunizationDto.getConditionId(),
                     immunizationDto.getSchemeId(),
                     immunizationDto.getDoseId(),
                     localDateMapper.fromStringToLocalDate(immunizationDto.getAdministrationDate()),
                     immunizationDto.getLotNumber(),
-                    immunizationDto.getNote());
+                    immunizationDto.getNote(),
+                    immunizationDto.isBillable());
 
     }
 
@@ -80,16 +80,6 @@ public class ImmunizeController {
         return new SnomedBo(snomed.getId(),
                 snomed.getSctid(), snomed.getPt(),
                 snomed.getParentId(), snomed.getParentFsn());
-    }
-
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
-    @ResponseStatus(code = HttpStatus.OK)
-    @PostMapping("/register")
-    public boolean registerImmunization(@PathVariable(name = "institutionId") Integer institutionId,
-                                      @PathVariable(name = "patientId")  Integer patientId,
-                                      @RequestBody @Valid List<ImmunizePatientDto> vaccineDto) {
-        logger.debug("Input parameters -> institutionId {}, patientId {}, vaccineDto {}", institutionId, patientId, vaccineDto);
-        return true;
     }
 
 }

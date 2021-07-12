@@ -28,6 +28,8 @@ public class ImmunizationBo extends ClinicalTerm {
 
     private String lotNumber;
 
+    private boolean billable = false;
+
     public ImmunizationBo(ImmunizationVo immunizationVo) {
         super();
         setId(immunizationVo.getId());

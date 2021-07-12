@@ -85,7 +85,7 @@ class ImmunizePatientTest {
 
 
     @Test
-    void success() {
+    void successMixBillableAndNonBillableImmunization() {
         when(localDateMapper.fromLocalDateToString(any())).thenReturn("2020-12-12");
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020,12,13));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
@@ -119,7 +119,7 @@ class ImmunizePatientTest {
         Assertions.assertEquals(DocumentType.IMMUNIZATION, documentDtoArgumentCaptor.getValue().getDocumentType());
         Assertions.assertEquals(SourceType.IMMUNIZATION, documentDtoArgumentCaptor.getValue().getDocumentSource());
 
-        Assertions.assertEquals(1,
+        Assertions.assertEquals(2,
                 documentDtoArgumentCaptor.getValue().getImmunizations().size());
         Assertions.assertEquals(new SnomedDto("SCTID_1","PT_ANTIGRIPAL"),
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getSnomed());
@@ -135,14 +135,36 @@ class ImmunizePatientTest {
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getLotNumber());
         Assertions.assertEquals("Nota de vacuna",
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getNote());
+        Assertions.assertTrue(documentDtoArgumentCaptor.getValue().getImmunizations().get(0).isBillable());
 
-        verify(sharedAppointmentPort, times(1)).serveAppointment(eq(14), eq(1), eq(LocalDate.of(2020,12,13)));
+        verify(sharedAppointmentPort, times(1)).serveAppointment(14, 1, LocalDate.of(2020,12,13));
 
     }
 
+    @Test
+    void successNonBillableImmunizationCheckBillableConsultation() {
+        when(localDateMapper.fromLocalDateToString(any())).thenReturn("2020-12-12");
+        when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 13));
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1,
+                        List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                                new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(vaccineConsultationRepository.save(any()))
+                .thenReturn(new VaccineConsultation(1, 20, 14, 1, 65,
+                        LocalDate.of(2020, 12, 12), true));
+        when(sharedAppointmentPort.hasConfirmedAppointment(any(), any(), any())).thenReturn(true);
+        immunizePatient.run(new ImmunizePatientBo(14, 20, 65,
+                List.of(noBillableImmunizationValid(), noBillableImmunizationValid())));
+
+
+        ArgumentCaptor<VaccineConsultation> vaccineConsultationArgumentCaptor = ArgumentCaptor.forClass(VaccineConsultation.class);
+        verify(vaccineConsultationRepository, times(1)).save(vaccineConsultationArgumentCaptor.capture());
+        Assertions.assertFalse(vaccineConsultationArgumentCaptor.getValue().getBillable());
+    }
 
     @Test
-    void invalidInputData() {
+    void invalidImmunizePatientData() {
         Exception exception = Assertions.assertThrows(ImmunizePatientException.class, () ->
                 immunizePatient.run(null)
         );
@@ -178,36 +200,61 @@ class ImmunizePatientTest {
                 immunizePatient.run(invalidClinicalSpecialty())
         );
         assertEquals("La especialidad no pertenece al médico", exception.getMessage());
+    }
 
-        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(65, "Especialidad1"), new ClinicalSpecialtyDto(2, "Especialidad1"))));
-        when(vaccineSchemeRepository.existsById(any())).thenReturn(false);
-        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
-                immunizePatient.run(validImmunizePatient())
+
+
+    @Test
+    void billableImmunizationInfoInvalidInputData() {
+
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(noBillableImmunizationWithoutVaccine())))
         );
-        assertEquals("La vacuna PT_ANTIGRIPAL tiene un esquema invalido 1", exception.getMessage());
+        assertEquals("La información de la vacuna es obligatoria", exception.getMessage());
+
+
+
+    }
+
+
+    @Test
+    void nonBillableImmunizationInvalidData() {
+
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(noBillableImmunizationWithoutVaccine())))
+        );
+        assertEquals("La información de la vacuna es obligatoria", exception.getMessage());
     }
 
     private ImmunizePatientBo validImmunizePatient(){
-        return new ImmunizePatientBo(14, 20, 65, List.of(validImmunization()));
+        return new ImmunizePatientBo(14, 20, 65, List.of(validBillableImmunization(), noBillableImmunizationValid()));
     }
 
     private ImmunizePatientBo nullInstitution() {
-        return new ImmunizePatientBo(14, null, 65, List.of(validImmunization()));
+        return new ImmunizePatientBo(14, null, 65, List.of(validBillableImmunization()));
     }
 
     private ImmunizePatientBo nullPatient() {
-        return new ImmunizePatientBo(null, 23, 65, List.of(validImmunization()));
+        return new ImmunizePatientBo(null, 23, 65, List.of(validBillableImmunization()));
     }
 
     private ImmunizePatientBo nullClinicalSpecialty() {
-        return new ImmunizePatientBo(43, 23, null, List.of(validImmunization()));
+        return new ImmunizePatientBo(43, 23, null, List.of(validBillableImmunization()));
     }
 
     private ImmunizePatientBo invalidClinicalSpecialty() {
-        return new ImmunizePatientBo(43, 23, 44, List.of(validImmunization()));
+        return new ImmunizePatientBo(43, 23, 44, List.of(validBillableImmunization()));
     }
 
-    private ImmunizationInfoBo validImmunization() {
+    private ImmunizationInfoBo validBillableImmunization() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
@@ -215,8 +262,105 @@ class ImmunizePatientTest {
                 VaccineDoseBo.DOSE_1.getId(),
                 LocalDate.of(2020, 12,12),
                 "LOTE",
-                "Nota de vacuna");
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo billableImmunizationWithoutVaccineInformation() {
+        return new ImmunizationInfoBo(null, 20,
+                null,
+                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 1,
+                VaccineDoseBo.DOSE_1.getId(),
+                LocalDate.of(2020, 12,12),
+                "LOTE",
+                "Nota de vacuna",
+                true);
     }
 
 
+    private ImmunizationInfoBo billableImmunizationWithoutInstitution() {
+        return new ImmunizationInfoBo(null, null,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 1,
+                VaccineDoseBo.DOSE_1.getId(),
+                LocalDate.of(2020, 12,12),
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+
+    private ImmunizationInfoBo billableImmunizationWithoutAdministrationDate() {
+        return new ImmunizationInfoBo(null, 20,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 1,
+                VaccineDoseBo.DOSE_1.getId(),
+                null,
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo billableImmunizationWithoutCondition() {
+        return new ImmunizationInfoBo(null, 20,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                null,
+                (short) 1,
+                VaccineDoseBo.DOSE_1.getId(),
+                LocalDate.of(2020, 12,12),
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo billableImmunizationWithoutScheme() {
+        return new ImmunizationInfoBo(null, 20,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                null,
+                VaccineDoseBo.DOSE_1.getId(),
+                LocalDate.of(2020, 12,12),
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo billableImmunizationWithoutDoses() {
+        return new ImmunizationInfoBo(null, 20,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 1,
+                null,
+                LocalDate.of(2020, 12,12),
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo noBillableImmunizationValid() {
+        return new ImmunizationInfoBo(null, null,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                null,
+                null,
+                null,
+                null,
+                "LOTE",
+                "Nota de vacuna",
+                false);
+    }
+
+    private ImmunizationInfoBo noBillableImmunizationWithoutVaccine() {
+        return new ImmunizationInfoBo(null, null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOTE",
+                "Nota de vacuna",
+                false);
+    }
 }

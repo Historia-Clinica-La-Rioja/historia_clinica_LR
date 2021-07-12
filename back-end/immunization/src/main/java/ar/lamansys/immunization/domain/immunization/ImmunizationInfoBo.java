@@ -28,6 +28,8 @@ public class ImmunizationInfoBo {
 
     private final String note;
 
+    private final boolean billable;
+
     public ImmunizationInfoBo(Integer id,
                               Integer institutionId,
                               SnomedBo vaccine,
@@ -36,19 +38,29 @@ public class ImmunizationInfoBo {
                               Short doseId,
                               LocalDate administrationDate,
                               String lotNumber,
-                              String note) {
+                              String note,
+                              boolean billable) {
         this.id = id;
         this.institutionId = institutionId;
         this.vaccine = vaccine;
-        this.dose = VaccineDoseBo.map(doseId);
-        this.condition = VaccineConditionApplicationBo.map(conditionId);
+        this.dose = doseId != null ? VaccineDoseBo.map(doseId) : null;
+        this.condition = conditionId != null ? VaccineConditionApplicationBo.map(conditionId) : null;
         this.schemeId = schemeId;
         this.administrationDate = administrationDate;
         this.lotNumber = lotNumber;
         this.note = note;
+        this.billable = billable;
     }
 
     public String getVaccineName() {
         return vaccine.getPt();
+    }
+
+    public Short getDoseId() {
+        return dose == null ? null : dose.getId();
+    }
+
+    public Short getConditionId() {
+        return condition == null ? null : condition.getId();
     }
 }

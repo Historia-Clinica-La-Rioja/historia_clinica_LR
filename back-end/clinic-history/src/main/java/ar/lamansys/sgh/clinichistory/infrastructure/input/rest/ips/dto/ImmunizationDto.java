@@ -35,5 +35,6 @@ public class ImmunizationDto extends ClinicalTermDto {
     @Nullable
     private String lotNumber;
 
-
+    @Nullable
+    private boolean billable = false;
 }

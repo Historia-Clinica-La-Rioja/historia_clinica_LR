@@ -92,7 +92,8 @@ public class LoadImmunizations {
                 immunizationBo.getSchemeId(),
                 immunizationBo.getDoseId(),
                 noteId,
-                immunizationBo.getLotNumber());
+                immunizationBo.getLotNumber(),
+                immunizationBo.isBillable());
         immunization = immunizationRepository.save(immunization);
         LOG.debug("Immunization saved -> {}", immunization.getId());
         LOG.debug(OUTPUT, immunization);

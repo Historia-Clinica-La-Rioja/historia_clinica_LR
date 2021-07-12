@@ -10,6 +10,7 @@ import ar.lamansys.immunization.domain.consultation.VaccineConsultationStorage;
 import ar.lamansys.immunization.domain.doctor.DoctorInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentStorage;
+import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidator;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -70,10 +71,14 @@ public class ImmunizePatient {
                         immunizePatientBo.getInstitutionId(),
                         doctorInfoBo.getId(),
                         now,
-                        true));
+                        isBillable(immunizePatientBo)));
         immunizationDocumentStorage.save(mapTo(immunizePatientBo, encounterId, doctorInfoBo));
 
         serveAppointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
+    }
+
+    private boolean isBillable(ImmunizePatientBo immunizePatientBo) {
+        return immunizePatientBo.getImmunizations().stream().anyMatch(ImmunizationInfoBo::isBillable);
     }
 
     private ImmunizationDocumentBo mapTo(ImmunizePatientBo immunizePatientBo, Integer encounterId, DoctorInfoBo doctorInfoBo) {
