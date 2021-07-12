@@ -262,7 +262,9 @@
             it.description as identificationType, pe.identification_number as identificationNumber,
             to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
             CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
-            px.phone_number as phoneNumber, px.email as email, to_char(oc.start_date,'DD/MM/YYYY') as startDate,
+            px.phone_number as phoneNumber, px.email as email,
+            coverage.coverageName, coverage.affiliateNumber,
+            to_char(oc.start_date,'DD/MM/YYYY') as startDate,
             cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
             hp.id as professionalId,
             CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
@@ -281,6 +283,11 @@
             LEFT JOIN gender g ON (px.gender_self_determination = g.id)
             LEFT JOIN address a2 ON (px.address_id = a2.id)
             LEFT JOIN city c2 ON (a2.city_id = c2.id)
+            LEFT JOIN (
+                select pmc.id, mc."name" AS coverageName, affiliate_number AS affiliateNumber
+                from patient_medical_coverage pmc
+                join medical_coverage mc on (pmc.medical_coverage_id = mc.id)
+            ) coverage ON (oc.patient_medical_coverage_id = coverage.id)
             LEFT JOIN clinical_specialty cs ON (oc.clinical_specialty_id = cs.id)
             JOIN healthcare_professional hp ON (oc.doctor_id = hp.id)
             JOIN person p2 ON (hp.person_id = p2.id)
@@ -331,6 +338,8 @@
             <column name="address" class="java.lang.String"/>
             <column name="phoneNumber" class="java.lang.String"/>
             <column name="email" class="java.lang.String"/>
+            <column name="coverageName" class="java.lang.String"/>
+            <column name="affiliateNumber" class="java.lang.String"/>
             <column name="startDate" class="java.lang.String"/>
             <column name="clinicalSpecialtyId" class="java.lang.Integer"/>
             <column name="clinicalSpecialty" class="java.lang.String"/>

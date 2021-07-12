@@ -37,6 +37,10 @@ public class OutpatientDetail {
 
     private String email;
 
+    private String coverageName;
+
+    private String affiliateNumber;
+
     private String startDate;
 
     private Integer clinicalSpecialtyId;

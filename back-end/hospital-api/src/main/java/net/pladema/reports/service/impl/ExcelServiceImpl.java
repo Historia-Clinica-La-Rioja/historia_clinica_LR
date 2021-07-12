@@ -94,33 +94,33 @@ public class ExcelServiceImpl implements ExcelService {
 
         data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
         data.add(new CellContent(nRow, 2, 2, 1, "2", titleStyle));
-        data.add(new CellContent(nRow, 3, 2, 14,
+        data.add(new CellContent(nRow, 3, 2, 16,
                 "Detalle nominal de consultorios externos", titleStyle));
-        data.add(new CellContent(nRow, 17, 1, 3, "1. Hoja N°", fieldStyle));
-        data.add(new CellContent(nRow, 20, 1, 1, "", basicStyle));
-        data.add(new CellContent(nRow, 21, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 19, 1, 3, "1. Hoja N°", fieldStyle));
+        data.add(new CellContent(nRow, 22, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
 
         nRow++;
         data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
-        data.add(new CellContent(nRow, 17, 1, 5, "", basicStyle));
+        data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
 
         nRow++;
         data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO", fieldStyle));
-        data.add(new CellContent(nRow, 2, 1, 12, "", basicStyle));
-        data.add(new CellContent(nRow, 14, 1, 1, "3. MES", fieldStyle));
-        data.add(new CellContent(nRow, 15, 1, 1, "", basicStyle));
-        data.add(new CellContent(nRow, 16, 1, 1, "4. AÑO", fieldStyle));
-        data.add(new CellContent(nRow, 17, 1, 5, "", basicStyle));
+        data.add(new CellContent(nRow, 2, 1, 14, "", basicStyle));
+        data.add(new CellContent(nRow, 16, 1, 1, "3. MES", fieldStyle));
+        data.add(new CellContent(nRow, 17, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 18, 1, 1, "4. AÑO", fieldStyle));
+        data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
 
         nRow++;
         data.add(new CellContent(nRow, 0, 1, 2, "5. PARTIDO", fieldStyle));
         data.add(new CellContent(nRow, 2, 1, 8, "", basicStyle));
         data.add(new CellContent(nRow, 10, 1, 1, "6. REGIÓN SANITARIA", fieldStyle));
-        data.add(new CellContent(nRow, 11, 1, 3, "", basicStyle));
-        data.add(new CellContent(nRow, 14, 1, 3, "7. SERVICIO", fieldStyle));
-        data.add(new CellContent(nRow, 17, 1, 3, "", basicStyle));
-        data.add(new CellContent(nRow, 20, 1, 1, "", basicStyle));
-        data.add(new CellContent(nRow, 21, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 11, 1, 5, "", basicStyle));
+        data.add(new CellContent(nRow, 16, 1, 3, "7. SERVICIO", fieldStyle));
+        data.add(new CellContent(nRow, 19, 1, 3, "", basicStyle));
+        data.add(new CellContent(nRow, 22, 1, 1, "", basicStyle));
+        data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
 
         nRow++;
         int column = 0;
@@ -214,6 +214,14 @@ public class ExcelServiceImpl implements ExcelService {
             ICell cell13 = row.createCell(rowNumber.getAndIncrement());
             cell13.setCellValue(content.getEmail());
             cell13.setCellStyle(style);
+
+            ICell cell23 = row.createCell(rowNumber.getAndIncrement());
+            cell23.setCellValue(content.getCoverageName());
+            cell23.setCellStyle(style);
+            ICell cell24 = row.createCell(rowNumber.getAndIncrement());
+            cell24.setCellValue(content.getAffiliateNumber());
+            cell24.setCellStyle(style);
+
             ICell cell14 = row.createCell(rowNumber.getAndIncrement());
             cell14.setCellValue(content.getStartDate());
             cell14.setCellStyle(style);
