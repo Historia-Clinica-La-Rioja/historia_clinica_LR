@@ -1,6 +1,5 @@
 package ar.lamansys.odontology.infrastructure.repository;
 
-import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.ProceduresStorage;
 import org.slf4j.Logger;
