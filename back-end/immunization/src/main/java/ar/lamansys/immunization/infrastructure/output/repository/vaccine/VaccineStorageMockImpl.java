@@ -1,7 +1,7 @@
 package ar.lamansys.immunization.infrastructure.output.repository.vaccine;
 
 import ar.lamansys.immunization.domain.vaccine.VaccineBo;
-import ar.lamansys.immunization.domain.vaccine.VaccineByFilterPort;
+import ar.lamansys.immunization.domain.vaccine.VaccineStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
@@ -11,32 +11,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class VaccineByFilterMockPortImpl implements VaccineByFilterPort {
+public class VaccineStorageMockImpl implements VaccineStorage {
 
     private final Logger logger;
 
     private final List<VaccineBo> vaccines;
 
-    public VaccineByFilterMockPortImpl() {
+    public VaccineStorageMockImpl() {
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.vaccines = load();
     }
 
     private List<VaccineBo> load() {
-        VaccineSchemeBo asplenicoGT5 = new VaccineSchemeBo((short)437, "Asplénico mayor de 5 años", 1825, 42000);
-        VaccineSchemeBo asplenicoLT5 = new VaccineSchemeBo((short)436, "Asplénico menor de 5 años", 42, 1824);
-        VaccineSchemeBo atrasadoAdolescente = new VaccineSchemeBo((short)383, "Atrasado Adolescente", 4384, 5474);
-        VaccineSchemeBo atrasadoLactante = new VaccineSchemeBo((short)382, "Atrasado Lactantes", 150, 1459);
-        VaccineSchemeBo regularAdolescente = new VaccineSchemeBo((short)305, "Regular Adolescentes", 3654, 4383);
-        VaccineSchemeBo regularLactante = new VaccineSchemeBo((short)304, "Regular Lactantes", 56, 720);
-        VaccineSchemeBo atrasado = new VaccineSchemeBo((short)184, "Atrasado", 120, 2189);
-        VaccineSchemeBo regular1 = new VaccineSchemeBo((short)75, "Regular", 42, 729);
-        VaccineSchemeBo deficitComplementoGT5 = new VaccineSchemeBo((short)439, "Déficit de complemento mayor de 5 años", 1825, 42000);
-        VaccineSchemeBo deficitComplementoLT5 = new VaccineSchemeBo((short)438, "Déficit de complemento menor de 5 años", 42, 1824);
-        VaccineSchemeBo regular2 = new VaccineSchemeBo((short)200, "Regular", 360, 36500);
+        var asplenicoGT5 = new VaccineSchemeBo((short)437, "Asplénico mayor de 5 años", 1825, 42000);
+        var asplenicoLT5 = new VaccineSchemeBo((short)436, "Asplénico menor de 5 años", 42, 1824);
+        var atrasadoAdolescente = new VaccineSchemeBo((short)383, "Atrasado Adolescente", 4384, 5474);
+        var atrasadoLactante = new VaccineSchemeBo((short)382, "Atrasado Lactantes", 150, 1459);
+        var regularAdolescente = new VaccineSchemeBo((short)305, "Regular Adolescentes", 3654, 4383);
+        var regularLactante = new VaccineSchemeBo((short)304, "Regular Lactantes", 56, 720);
+        var atrasado = new VaccineSchemeBo((short)184, "Atrasado", 120, 2189);
+        var regular1 = new VaccineSchemeBo((short)75, "Regular", 42, 729);
+        var deficitComplementoGT5 = new VaccineSchemeBo((short)439, "Déficit de complemento mayor de 5 años", 1825, 42000);
+        var deficitComplementoLT5 = new VaccineSchemeBo((short)438, "Déficit de complemento menor de 5 años", 42, 1824);
+        var regular2 = new VaccineSchemeBo((short)200, "Regular", 360, 36500);
 
         return List.of(
                 new VaccineBo((short)162, "Meningocócica Tetravalente Conjugada", 56, 23725,
@@ -76,8 +77,10 @@ public class VaccineByFilterMockPortImpl implements VaccineByFilterPort {
     }
 
     @Override
-    public List<VaccineBo> run(Integer days) {
-        logger.debug("Fetch vaccines by filter -> days {}", days);
-        return vaccines.stream().filter(vaccineBo -> vaccineBo.apply(days)).collect(Collectors.toList());
+    public Optional<VaccineBo> findById(Short vaccineId) {
+        logger.debug("Find vaccine by id {}", vaccineId);
+        return vaccines.stream()
+                .filter(vaccineBo -> vaccineBo.getId().equals(vaccineId))
+                .findFirst();
     }
 }

@@ -4,12 +4,14 @@ import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
 import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Getter
+@ToString
 public class VaccineConditionsDto {
 
     private final Short id;

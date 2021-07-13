@@ -1,0 +1,50 @@
+package ar.lamansys.immunization.infrastructure.input.rest;
+
+import ar.lamansys.immunization.application.fetchVaccines.FetchVaccineById;
+import ar.lamansys.immunization.domain.vaccine.VaccineBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineRuleBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
+import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
+import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
+import ar.lamansys.immunization.infrastructure.input.rest.dto.VaccineInformationDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class VaccinesControllerTest {
+
+    private VaccinesController vaccinesController;
+
+    @Mock
+    private FetchVaccineById fetchVaccineById;
+
+    @BeforeEach
+    public void setUp() {
+        vaccinesController = new VaccinesController(fetchVaccineById);
+    }
+
+    @Test
+    void success() {
+        when(fetchVaccineById.run(any()))
+                .thenReturn(new VaccineBo((short)4, "DESC", 4, 5, Lists.emptyList()));
+        var result = vaccinesController.get((short)4);
+
+        Assertions.assertEquals((short)4, result.getId());
+        Assertions.assertEquals("DESC", result.getDescription());
+        Assertions.assertTrue(result.getConditions().isEmpty());
+    }
+
+}

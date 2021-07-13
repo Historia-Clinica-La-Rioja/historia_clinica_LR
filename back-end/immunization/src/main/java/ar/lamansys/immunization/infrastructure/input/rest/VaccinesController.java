@@ -1,6 +1,6 @@
 package ar.lamansys.immunization.infrastructure.input.rest;
 
-import ar.lamansys.immunization.application.fetchVaccines.FetchVaccinesByPatient;
+import ar.lamansys.immunization.application.fetchVaccines.FetchVaccineById;
 import ar.lamansys.immunization.domain.vaccine.VaccineBo;
 import ar.lamansys.immunization.infrastructure.input.rest.dto.VaccineInformationDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
@@ -21,32 +21,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/immunization/vaccines-by-patient/{patientId}")
-@Api(value="Vaccines", tags= { "Vaccines by patient" } )
+@RequestMapping("/vaccines")
+@Api(value="Vaccines", tags= { "Vaccines" } )
 @Validated
-public class VaccinesByPatientController {
+public class VaccinesController {
 
     private final Logger logger;
 
-    private final FetchVaccinesByPatient fetchVaccinesByPatient;
+    private final FetchVaccineById fetchVaccineById;
 
-    private final LocalDateMapper localDateMapper;
-
-    public VaccinesByPatientController(FetchVaccinesByPatient fetchVaccinesByPatient,
-                                       LocalDateMapper localDateMapper) {
-        this.localDateMapper = localDateMapper;
+    public VaccinesController(FetchVaccineById fetchVaccineById) {
         this.logger = LoggerFactory.getLogger(getClass());
-        this.fetchVaccinesByPatient = fetchVaccinesByPatient;
+        this.fetchVaccineById = fetchVaccineById;
     }
 
-    @GetMapping
+    @GetMapping("/{vaccineId}")
     @ResponseBody
-    public List<VaccineInformationDto> get(@PathVariable("patientId") Integer patientId,
-                                           @RequestParam("applicationDate")
-                                           @JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT) String applicationDate) {
-        List<VaccineBo> result = fetchVaccinesByPatient.run(patientId, localDateMapper.fromStringToLocalDate(applicationDate));
+    public VaccineInformationDto get(@RequestParam("vaccineId") Short vaccineId) {
+        var result = new VaccineInformationDto(fetchVaccineById.run(vaccineId));
         logger.debug("Output -> {}", result);
-        return result.stream().map(VaccineInformationDto::new).collect(Collectors.toList());
+        return result;
     }
 
 }

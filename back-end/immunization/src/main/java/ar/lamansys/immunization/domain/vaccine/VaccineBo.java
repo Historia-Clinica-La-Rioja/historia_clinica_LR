@@ -1,10 +1,12 @@
 package ar.lamansys.immunization.domain.vaccine;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Getter
+@ToString
 public class VaccineBo {
 
     private Short id;

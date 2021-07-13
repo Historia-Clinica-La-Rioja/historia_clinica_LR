@@ -1,6 +1,6 @@
 package ar.lamansys.immunization.infrastructure.input.rest.exceptions;
 
-import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccinesByPatientException;
+import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccineByIdException;
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientException;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorException;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationException;
@@ -28,8 +28,8 @@ public class ImmunizationExceptionHandler {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ FetchVaccinesByPatientException.class })
-	protected ApiErrorMessageDto handleFetchVaccinesByPatientException(FetchVaccinesByPatientException ex, Locale locale) {
+	@ExceptionHandler({ FetchVaccineByIdException.class })
+	protected ApiErrorMessageDto handleFetchVaccinesByPatientException(FetchVaccineByIdException ex, Locale locale) {
 		logger.debug("FetchVaccinesByPatientException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}

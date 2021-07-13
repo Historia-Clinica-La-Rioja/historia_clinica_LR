@@ -1,14 +1,18 @@
 package ar.lamansys.immunization.domain.vaccine;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.Objects;
 
 @Getter
+@EqualsAndHashCode
 public class Thresholds {
 
+    @EqualsAndHashCode.Include
     private final Integer minimum;
 
+    @EqualsAndHashCode.Include
     private final Integer maximum;
 
     public Thresholds(Integer minimum, Integer maximum) {
