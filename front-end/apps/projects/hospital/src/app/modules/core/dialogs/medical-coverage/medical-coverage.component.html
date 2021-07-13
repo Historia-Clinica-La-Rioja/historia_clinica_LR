@@ -41,6 +41,7 @@
 							<span class="mat-body">{{getFullHealthInsuranceText(healthInsurance)}}</span>
 						</mat-option>
 					</mat-autocomplete>
+					<mat-error translate="forms.REQUIRED"></mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<input id="healthInsuranceAffiliateNumber" name="healthInsuranceAffiliateNumber"
@@ -98,6 +99,7 @@
 					<mat-form-field appearance="outline">
 						<input type="text" placeholder="{{ 'Ingresar Prepaga' | translate }}" aria-label="Number"
 							formControlName="name" matInput>
+						<mat-error translate="forms.REQUIRED"></mat-error>
 					</mat-form-field>
 					<mat-form-field appearance="outline">
 						<mat-label>Fecha de inicio</mat-label>
