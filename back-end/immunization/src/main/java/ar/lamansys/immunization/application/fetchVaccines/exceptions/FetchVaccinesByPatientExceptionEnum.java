@@ -1,4 +1,4 @@
-package ar.lamansys.immunization.application.FetchVaccines.exceptions;
+package ar.lamansys.immunization.application.fetchVaccines.exceptions;
 
 
 public enum FetchVaccinesByPatientExceptionEnum {

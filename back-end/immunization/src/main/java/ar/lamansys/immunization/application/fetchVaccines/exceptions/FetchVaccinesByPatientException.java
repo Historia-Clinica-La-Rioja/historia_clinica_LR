@@ -1,6 +1,5 @@
-package ar.lamansys.immunization.application.FetchVaccines.exceptions;
+package ar.lamansys.immunization.application.fetchVaccines.exceptions;
 
-import ar.lamansys.immunization.domain.vaccine.VaccineExceptionEnum;
 import lombok.Getter;
 
 @Getter

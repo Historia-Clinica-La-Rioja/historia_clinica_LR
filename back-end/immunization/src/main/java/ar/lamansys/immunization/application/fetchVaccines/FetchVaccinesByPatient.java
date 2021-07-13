@@ -1,7 +1,7 @@
-package ar.lamansys.immunization.application.FetchVaccines;
+package ar.lamansys.immunization.application.fetchVaccines;
 
-import ar.lamansys.immunization.application.FetchVaccines.exceptions.FetchVaccinesByPatientException;
-import ar.lamansys.immunization.application.FetchVaccines.exceptions.FetchVaccinesByPatientExceptionEnum;
+import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccinesByPatientException;
+import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccinesByPatientExceptionEnum;
 import ar.lamansys.immunization.domain.patient.PatientInfoPort;
 import ar.lamansys.immunization.domain.vaccine.VaccineBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineByFilterPort;

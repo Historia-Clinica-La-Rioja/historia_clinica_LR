@@ -1,6 +1,6 @@
 package ar.lamansys.immunization.infrastructure.input.rest.exceptions;
 
-import ar.lamansys.immunization.application.FetchVaccines.exceptions.FetchVaccinesByPatientException;
+import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccinesByPatientException;
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientException;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorException;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationException;

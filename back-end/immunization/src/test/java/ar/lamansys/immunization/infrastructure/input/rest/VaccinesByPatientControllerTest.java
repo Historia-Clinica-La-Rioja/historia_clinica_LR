@@ -1,6 +1,6 @@
 package ar.lamansys.immunization.infrastructure.input.rest;
 
-import ar.lamansys.immunization.application.FetchVaccines.FetchVaccinesByPatient;
+import ar.lamansys.immunization.application.fetchVaccines.FetchVaccinesByPatient;
 import ar.lamansys.immunization.domain.vaccine.VaccineBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
