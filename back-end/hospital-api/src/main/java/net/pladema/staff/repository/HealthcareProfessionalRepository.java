@@ -4,7 +4,6 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -61,4 +60,13 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT hp.id FROM HealthcareProfessional hp WHERE hp.personId = :personId AND hp.deleteable.deleted = false")
 	Optional<Integer> findProfessionalByPersonId(@Param("personId") Integer personId);
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber)"
+			+ " FROM  HealthcareProfessional hp "
+			+ " INNER JOIN Person p ON hp.personId = p.id"
+			+ " AND hp.deleteable.deleted = false "
+			+ " ORDER BY p.lastName, p.firstName")
+	List<HealthcareProfessionalVo> getAllProfessional();
 }

@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface HealthcareProfessionalService {
 
+    List<HealthcareProfessionalBo> getAllProfessional();
+
     List<HealthcarePersonBo> getAllDoctorsByInstitution(Integer institutionId);
 
     List<HealthcareProfessionalBo> getAllByInstitution(Integer institutionId);

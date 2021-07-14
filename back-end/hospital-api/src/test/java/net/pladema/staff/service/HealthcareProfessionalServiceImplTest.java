@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -58,5 +59,21 @@ class HealthcareProfessionalServiceImplTest {
 
 		Assertions.assertThrows(NotFoundException.class, () ->	healthcareProfessionalService.findProfessionalById(1));
 
+	}
+
+	@Test
+	void successFetchAllProfessional() {
+
+		when(healthcareProfessionalRepository.getAllProfessional())
+				.thenReturn(List.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234")));
+
+		var result = healthcareProfessionalService.getAllProfessional();
+
+		Assertions.assertNotNull(result);
+
+		Assertions.assertEquals("Juan", result.get(0).getFirstName());
+		Assertions.assertEquals("Perez", result.get(0).getLastName());
+		Assertions.assertEquals("1234", result.get(0).getIdentificationNumber());
+		Assertions.assertEquals("1234/5", result.get(0).getLicenceNumber());
 	}
 }
