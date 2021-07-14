@@ -14,7 +14,7 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { AplicarVacunaComponent } from './dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AppMaterialModule } from '../../../material/app.material.module';
-import {SolveProblemComponent} from '../../dialogs/solve-problem/solve-problem.component';
+import { SolveProblemComponent } from '../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
@@ -30,9 +30,10 @@ import { CardIndicacionesComponent } from './components/ordenes/card-indicacione
 import { ItemPrescripcionesComponent } from './components/ordenes/item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
-import {ExternalSummaryCardComponent} from '@presentation/components/external-summary-card/external-summary-card.component';
-import {ConfirmarNuevaConsultaPopupComponent} from './dialogs/confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
+import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
+import { ConfirmarNuevaConsultaPopupComponent } from './dialogs/confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
+import { AplicarVacuna2Component } from './dialogs/aplicar-vacuna-2/aplicar-vacuna-2.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { OdontologiaModule } from '../odontologia/odontologia.module';
 		ProblemasComponent,
 		VacunasComponent,
 		AplicarVacunaComponent,
+		AplicarVacuna2Component,
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent,

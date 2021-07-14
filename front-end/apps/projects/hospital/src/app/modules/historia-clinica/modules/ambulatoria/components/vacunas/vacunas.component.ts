@@ -11,6 +11,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
 import { VACUNAS } from '@historia-clinica/constants/summaries';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
+import { AplicarVacuna2Component } from '../../dialogs/aplicar-vacuna-2/aplicar-vacuna-2.component';
 
 @Component({
 	selector: 'app-vacunas',
@@ -46,6 +47,27 @@ export class VacunasComponent implements OnInit {
 
 	goToAplicarVacuna() {
 		const dialogRef = this.dialog.open(AplicarVacunaComponent, {
+			disableClose: true,
+			width: '45%',
+			data: {
+				patientId: this.patientId
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(submitted => {
+			if (submitted) {
+				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
+					this.tableModel = this.buildTable(dataTable);
+				});
+				this.appointmentsService.hasNewConsultationEnabled(this.patientId).subscribe(response => {
+					this.hasConfirmedAppointment = response;
+				});
+			}
+		});
+	}
+
+	goToAplicarVacuna2() {
+		const dialogRef = this.dialog.open(AplicarVacuna2Component, {
 			disableClose: true,
 			width: '45%',
 			data: {

@@ -36,7 +36,7 @@
 				"REGRESAR": "Regresar y completar",
 				"CONFIRMAR": "Confirmar de todos modos",
 				"RECOMENDADO": "*Recomendado",
-				"CAMPOS_SUGERIDOS":"Se sugiere completar los siguientes campos",
+				"CAMPOS_SUGERIDOS": "Se sugiere completar los siguientes campos",
 				"evolucion": {
 					"TITLE": "Evolucion",
 					"DESCRIPCION": "Descripcion"
@@ -213,13 +213,13 @@
 				"TAB_LABEL": "Órdenes y prescripciones",
 				"TITLE": "Órdenes y prescripciones",
 				"MEDICACION": "Medicación",
-				"RECOMENDACIONES":"Recomendaciones generales",
-				"ESTUDIOS":"Estudios",
-				"SIN_RECETA":"Sin receta",
-				"DESDE_HOY":"Desde hoy",
-				"UN_DIA":"Hace 1 día",
-				"APLICACION_DIARIA":"Una aplicación por día",
-				"USO_CRONICO":"Uso crónico",
+				"RECOMENDACIONES": "Recomendaciones generales",
+				"ESTUDIOS": "Estudios",
+				"SIN_RECETA": "Sin receta",
+				"DESDE_HOY": "Desde hoy",
+				"UN_DIA": "Hace 1 día",
+				"APLICACION_DIARIA": "Una aplicación por día",
+				"USO_CRONICO": "Uso crónico",
 				"add_prescription_item_dialog": {
 					"MEDICATION": "Medicación",
 					"MEDICATION_TITLE": "Agregar medicación",
@@ -288,19 +288,19 @@
 					"DOWNLOAD": "Descargar receta",
 					"DOWNLOAD_STUDY": "Descargar orden",
 					"RE_PRESCRIBE": "Volver a recetar",
-					"SUSPEND":"Suspender",
-					"FINALIZE":"Finalizar",
-					"COMPLETE":"Completar",
-					"DELETE":"Eliminar",
+					"SUSPEND": "Suspender",
+					"FINALIZE": "Finalizar",
+					"COMPLETE": "Completar",
+					"DELETE": "Eliminar",
 					"REACTIVATE": "Reactivar",
 					"SHOW_RESULTS": "Ver resultados"
 				},
 				"filter": {
-					"STATE":"Estado",
-					"MEDICATION":"Medicamento",
-					"PROBLEM":"Problema asociado",
-					"STUDY":"Estudio",
-					"CATEGORY":"Categoría",
+					"STATE": "Estado",
+					"MEDICATION": "Medicamento",
+					"PROBLEM": "Problema asociado",
+					"STUDY": "Estudio",
+					"CATEGORY": "Categoría",
 					"BUTTON_FILTER": "Aplicar filtro"
 				}
 			},
@@ -318,6 +318,24 @@
 				"ADD": "Aplicar vacuna",
 				"aplicar": {
 					"TITLE": "Aplicar vacuna",
+					"INMUNIZATION": "Vacuna",
+					"NOTE": "Evolución",
+					"SUBMIT": "Confirmar",
+					"SUBMIT_CONJUNTO_VACUNAS": "Confirmar vacunaciones",
+					"ADMINISTRATION_DATE": "Fecha de vacunación",
+					"save": {
+						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
+						"ERROR": "Error al guardar las vacunas aplicadas",
+						"CHANGE_STATE": "¿Desea aplicar más vacunas?"
+					}
+				}
+			},
+			"vacunas2": {
+				"TAB_LABEL": "Vacunas",
+				"TITLE": "Historial de vacunación",
+				"ADD": "Aplicar vacuna 2",
+				"aplicar": {
+					"TITLE": "Aplicar vacuna 2",
 					"INMUNIZATION": "Vacuna",
 					"NOTE": "Evolución",
 					"SUBMIT": "Confirmar",
