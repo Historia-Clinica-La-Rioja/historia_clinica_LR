@@ -911,6 +911,11 @@ export interface InstitutionAddressDto extends Serializable {
     street: string;
 }
 
+export interface InstitutionBasicInfoDto extends Serializable {
+    id: number;
+    name: string;
+}
+
 export interface InstitutionDto extends Serializable {
     id: number;
     institutionAddressDto: InstitutionAddressDto;

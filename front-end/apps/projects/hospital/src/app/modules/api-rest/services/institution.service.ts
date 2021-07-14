@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
-import { InstitutionDto } from '@api-rest/api-model';
+import {InstitutionBasicInfoDto, InstitutionDto} from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 
 @Injectable({
@@ -24,5 +24,9 @@ export class InstitutionService {
 				params: { ids: `${ids.join(',')}` }
 			}
 		);
+	}
+
+	public getAllInstitutions(): Observable<InstitutionBasicInfoDto[]> {
+		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/all`);
 	}
 }
