@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/healthcareprofessional")
-@Api(value = "Professional", tags = { "Professional" })
-public class HealthcareProfessionalController {
+@Api(value = "Healthcare professionals by institution", tags = { "Healthcare professionals by institution" })
+public class HealthcareProfessionalByInstitutionController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalByInstitutionController.class);
 	public static final String OUTPUT = "Output -> {}";
 
 	private final HealthcareProfessionalService healthcareProfessionalService;
@@ -37,9 +37,9 @@ public class HealthcareProfessionalController {
 
 	private final LoggedUserExternalService loggedUserExternalService;
 
-	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
-											HealthcareProfessionalMapper healthcareProfessionalMapper,
-											LoggedUserExternalService loggedUserExternalService) {
+	public HealthcareProfessionalByInstitutionController(HealthcareProfessionalService healthcareProfessionalService,
+														 HealthcareProfessionalMapper healthcareProfessionalMapper,
+														 LoggedUserExternalService loggedUserExternalService) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.loggedUserExternalService = loggedUserExternalService;
@@ -65,12 +65,12 @@ public class HealthcareProfessionalController {
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public ResponseEntity<List<ProfessionalDto>> getAll(
+	public ResponseEntity<List<ProfessionalDto>> getAllByInstitution(
 			@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
 				List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
-		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAll(institutionId);
+		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		if (!isAdministrativeRole) {
 			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
 			Predicate<HealthcareProfessionalBo> filterByProfessionalId = (hp) -> hp.getId().equals(healthcareProfessionalId);

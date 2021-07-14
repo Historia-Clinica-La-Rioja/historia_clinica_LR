@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {HealthcareProfessionalService} from '@api-rest/services/healthcare-professional.service';
+import {HealthcareProfessionalByInstitutionService} from '@api-rest/services/healthcare-professional-by-institution.service';
 import {ProfessionalDto, ProfessionalsByClinicalSpecialtyDto} from '@api-rest/api-model';
 import {map} from 'rxjs/operators';
 import {TypeaheadOption} from '@core/components/typeahead/typeahead.component';
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly healthcareProfessionalService: HealthcareProfessionalService,
+		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly reportsService: ReportsService,
 	) { }
@@ -165,7 +165,7 @@ export class HomeComponent implements OnInit {
 			}
 			const reportId = this.form.controls.reportType.value;
 			switch (reportId){
-				case 1: 
+				case 1:
 					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe();
 					break;
 				case 2:

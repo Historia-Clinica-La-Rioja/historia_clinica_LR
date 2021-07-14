@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private readonly router: Router,
-		private readonly healthCareProfessionalService: HealthcareProfessionalService,
+		private readonly healthCareProfessionalService: HealthcareProfessionalByInstitutionService,
 		public readonly route: ActivatedRoute,
 		private readonly contextService: ContextService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,

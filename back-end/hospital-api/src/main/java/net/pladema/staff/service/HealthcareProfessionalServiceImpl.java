@@ -39,7 +39,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     }
 
     @Override
-    public List<HealthcareProfessionalBo> getAll(Integer institutionId) {
+    public List<HealthcareProfessionalBo> getAllByInstitution(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
                 .findAllByInstitution(institutionId);

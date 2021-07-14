@@ -10,7 +10,7 @@ public interface HealthcareProfessionalService {
 
     List<HealthcarePersonBo> getAllDoctorsByInstitution(Integer institutionId);
 
-    List<HealthcareProfessionalBo> getAll(Integer institutionId);
+    List<HealthcareProfessionalBo> getAllByInstitution(Integer institutionId);
 
     HealthcareProfessionalGroup addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId);
 

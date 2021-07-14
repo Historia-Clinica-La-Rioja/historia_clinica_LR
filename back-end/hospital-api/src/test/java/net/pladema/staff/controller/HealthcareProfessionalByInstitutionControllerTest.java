@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(HealthcareProfessionalController.class)
-public class HealthcareProfessionalControllerTest extends UnitController {
+@WebMvcTest(HealthcareProfessionalByInstitutionController.class)
+public class HealthcareProfessionalByInstitutionControllerTest extends UnitController {
 
 	@MockBean
 	private HealthcareProfessionalService healthcareProfessionalService;

@@ -8,29 +8,10 @@ import { ContextService } from '@core/services/context.service';
 const BASIC_URL_PREFIX = '/institution';
 const BASIC_URL_SUFIX = '/healthcareprofessional';
 
-const PROFESSIONALS = [
-	{
-		id: 1,
-		person: {
-			firstName: 'juan',
-			lastName: 'perez'
-		},
-		licenceNumber: '123123'
-	},
-	{
-		id: 1,
-		person: {
-			firstName: 'jose',
-			lastName: 'martinez'
-		},
-		licenceNumber: '111222'
-	}
-];
-
 @Injectable({
 	providedIn: 'root'
 })
-export class HealthcareProfessionalService {
+export class HealthcareProfessionalByInstitutionService {
 
 	constructor(
 		private http: HttpClient,
@@ -47,16 +28,6 @@ export class HealthcareProfessionalService {
 		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
 			BASIC_URL_SUFIX + '/doctors';
 		return this.http.get<HealthcareProfessionalDto[]>(url);
-	}
-
-	getAllDoctorsBySector(sectorId: number): Observable<any[]> {
-		return of(PROFESSIONALS);
-	}
-
-	searchByName(name: string): Observable<ProfessionalDto[]> {
-		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
-			BASIC_URL_SUFIX + '/search-by-name';
-		return this.http.get<ProfessionalDto[]>(url, { params: { name } });
 	}
 
 	getOne(healthcareProfessionalId: number): Observable<ProfessionalDto> {
