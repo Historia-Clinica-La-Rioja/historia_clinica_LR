@@ -6,13 +6,13 @@ import ar.lamansys.immunization.domain.vaccine.VaccineRuleBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
 import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnowstormPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class VaccineStorageMockImpl implements VaccineStorage {
@@ -21,7 +21,10 @@ public class VaccineStorageMockImpl implements VaccineStorage {
 
     private final List<VaccineBo> vaccines;
 
-    public VaccineStorageMockImpl() {
+    private final SharedSnowstormPort sharedSnowstormPort;
+
+    public VaccineStorageMockImpl(SharedSnowstormPort sharedSnowstormPort) {
+        this.sharedSnowstormPort = sharedSnowstormPort;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.vaccines = load();
     }
@@ -77,10 +80,10 @@ public class VaccineStorageMockImpl implements VaccineStorage {
     }
 
     @Override
-    public Optional<VaccineBo> findById(Short vaccineId) {
-        logger.debug("Find vaccine by id {}", vaccineId);
-        return vaccines.stream()
-                .filter(vaccineBo -> vaccineBo.getId().equals(vaccineId))
-                .findFirst();
+    public Optional<VaccineBo> findById(String sctid) {
+        logger.debug("Find vaccine by id {}", sctid);
+        return Optional.ofNullable(sharedSnowstormPort.mapSctidToNomivacId(sctid))
+                .map(Short::parseShort)
+                .map(vaccineId -> vaccines.stream().filter(vaccineBo -> vaccineBo.getId().equals(vaccineId)).findFirst().orElse(null));
     }
 }

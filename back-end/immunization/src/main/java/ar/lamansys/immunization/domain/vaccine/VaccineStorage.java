@@ -4,5 +4,5 @@ import java.util.Optional;
 
 public interface VaccineStorage {
 
-    Optional<VaccineBo> findById(Short vaccineId);
+    Optional<VaccineBo> findById(String sctid);
 }

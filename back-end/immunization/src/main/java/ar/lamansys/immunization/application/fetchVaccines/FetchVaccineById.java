@@ -23,18 +23,16 @@ public class FetchVaccineById {
     }
 
 
-    public VaccineBo run(Short id) {
-        logger.debug("FetchVaccineById {}", id);
-        assertInfo(id);
-        var result = vaccineStorage.findById(id)
-                .orElseThrow(() -> new FetchVaccineByIdException(FetchVaccineByIdExceptionEnum.INVALID_VACCINE_ID,
-                        String.format("La vacuna con id %s no existe", id)));
+    public VaccineBo run(String sctid) {
+        logger.debug("FetchVaccineById {}", sctid);
+        assertInfo(sctid);
+        var result = vaccineStorage.findById(sctid).orElse(null);
         logger.trace("Vaccines result -> {}", result);
         return result;
     }
 
-    private void assertInfo(Short vaccineId) {
-        Objects.requireNonNull(vaccineId, () -> {
+    private void assertInfo(String sctid) {
+        Objects.requireNonNull(sctid, () -> {
             throw new FetchVaccineByIdException(FetchVaccineByIdExceptionEnum.NULL_VACCINE_ID, "El identificador de la vacuna es obligatorio");
         });
     }

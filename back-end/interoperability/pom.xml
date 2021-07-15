@@ -25,6 +25,18 @@
     <dependencies>
 
         <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>sgx-shared</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ar.lamansys.sgh</groupId>
+            <artifactId>hospital-shared</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
             <version>${hapifhir.version}</version>
@@ -112,12 +124,7 @@
             <version>0.9.1</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>ar.lamansys</groupId>
-            <artifactId>sgx-shared</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 
     <build>
