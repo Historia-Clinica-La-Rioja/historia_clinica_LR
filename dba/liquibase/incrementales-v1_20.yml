@@ -2089,4 +2089,23 @@ databaseChangeLog:
                   INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '401271000221109','mancha blanca en superficie dentaria','401271000221109','mancha blanca en superficie dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '401271000221109' AND pt = 'mancha blanca en superficie dentaria');
                   INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '401261000221100','restos radiculares','401261000221100','restos radiculares' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '401261000221100' AND pt = 'restos radiculares');
                   INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '703401001','Distancia insuficiente entre el margen de la mucosa peri-implante y la cresta ósea.','703401001','Distancia insuficiente entre el margen de la mucosa peri-implante y la cresta ósea.' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '703401001' AND pt = 'Distancia insuficiente entre el margen de la mucosa peri-implante y la cresta ósea.');
-                  
+
+    - changeSet:            
+        id: applicable_diagnostic-addDiagnostic
+        comment: Agrega dato de Distancia insuficiente entre el margen de la mucosa peri-implante y la cresta ósea
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO applicable_diagnostic(sctid,permanent_c,permanent_p,permanent_o,temporal_c,temporal_e,temporal_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('703401001',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false});
+
+    - changeSet:
+        id: applicable_procedure-addProcedure
+        comment: Agrega dato de condilografia (laminografía)
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO applicable_procedure(sctid,permanent_c,permanent_p,permanent_o,temporal_c,temporal_e,temporal_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue,applicable_to_mouth) VALUES('398901000221107',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true});
