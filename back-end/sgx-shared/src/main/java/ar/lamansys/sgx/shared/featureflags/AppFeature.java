@@ -48,6 +48,8 @@ public enum AppFeature implements Feature {
     @Label("Indica si está habilitado el módulo de Reportes")
     HABILITAR_REPORTES,
 
+    @Label("Indica si está habilitado la nueva versión de aplicación de vacunas")
+    HABILITAR_VACUNAS_V2,
     ;
 
     public boolean isActive() {
