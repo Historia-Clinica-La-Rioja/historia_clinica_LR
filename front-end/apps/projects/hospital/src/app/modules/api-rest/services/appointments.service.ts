@@ -76,6 +76,16 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, {params : queryParams});
 	}
 
+	updateMedicalCoverage(appointmentId: number, patientMedicalCoverageId: number ): Observable<Boolean> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = (patientMedicalCoverageId) ? queryParams.append('patientMedicalCoverageId', JSON.stringify(patientMedicalCoverageId)) : queryParams;
+
+		const url = `${environment.apiBase}/institutions/
+					${this.contextService.institutionId}/medicalConsultations/appointments/
+					${appointmentId}/update-medical-coverage`;
+		return this.http.put<boolean>(url, {}, {params : queryParams});
+	}
+
 	getDailyAmounts(diaryId: number): Observable<AppointmentDailyAmountDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
