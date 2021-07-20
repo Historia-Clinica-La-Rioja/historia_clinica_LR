@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProcedureStorageMockImpl implements ProcedureStorage {
@@ -35,5 +36,13 @@ public class ProcedureStorageMockImpl implements ProcedureStorage {
         result.add(new ProcedureBo("404198007", "extracción dentaria de retenidos", true, false));
         LOG.trace("Output -> {}", result);
         return result;
+    }
+
+    @Override
+    public Optional<ProcedureBo> getProcedure(String sctid) {
+        LOG.debug("Input parameter -> sctid {}", sctid);
+        ProcedureBo procedure = new ProcedureBo(sctid, "obturación con amalgama cavidad simple", false, true);
+        LOG.debug("Output -> {}", procedure);
+        return Optional.of(procedure);
     }
 }

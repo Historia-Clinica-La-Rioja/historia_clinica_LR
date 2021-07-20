@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiagnosticStorageMockImpl implements DiagnosticStorage {
@@ -45,5 +46,13 @@ public class DiagnosticStorageMockImpl implements DiagnosticStorage {
         result.add(new DiagnosticBo("399001000221103", "endodoncia multirradicular", true, false));
         LOG.trace("Output -> {}", result);
         return result;
+    }
+
+    @Override
+    public Optional<DiagnosticBo> getDiagnostic(String sctid) {
+        LOG.debug("Input parameter -> sctid {}", sctid);
+        DiagnosticBo diagnostic = new DiagnosticBo(sctid, "ausencia congénita completa de dientes (trastorno)", true, false);
+        LOG.debug("Output -> {}", diagnostic);
+        return Optional.of(diagnostic);
     }
 }

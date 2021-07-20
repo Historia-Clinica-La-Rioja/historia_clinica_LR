@@ -9,14 +9,22 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 public class ConsultationDentalDiagnosticBo extends ClinicalTermBo {
 
     private OdontologySnomedBo tooth;
 
     private OdontologySnomedBo surface;
+
+    public ConsultationDentalDiagnosticBo(OdontologySnomedBo diagnostic) {
+        super(diagnostic);
+    }
+
+    public ConsultationDentalDiagnosticBo(OdontologySnomedBo diagnostic, OdontologySnomedBo tooth, OdontologySnomedBo surface) {
+        super(diagnostic);
+        this.tooth = tooth;
+        this.surface = surface;
+    }
 
     public Boolean isAppliedToTooth() {
         return (this.tooth != null) && (this.surface == null);

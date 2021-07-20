@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +31,20 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
                 .map(this::parseToDiagnosticBo)
                 .collect(Collectors.toList());
         LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public Optional<DiagnosticBo> getDiagnostic(String sctid) {
+        LOG.debug("Input parameter -> sctid {}", sctid);
+        List<Object[]> diagnostics = diagnosticRepository.getBySctid(sctid);
+        if (diagnostics.isEmpty())
+            return Optional.empty();
+        Optional<DiagnosticBo> result = diagnostics
+                .stream()
+                .findFirst()
+                .map(this::parseToDiagnosticBo);
         LOG.trace("Output -> {}", result);
         return result;
     }

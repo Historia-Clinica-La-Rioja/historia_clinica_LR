@@ -32,4 +32,20 @@ public class DiagnosticRepositoryImpl implements DiagnosticRepository{
         LOG.trace("Output -> {}", result);
         return result;
     }
+
+    @Override
+    public List<Object[]> getBySctid(String sctid) {
+
+        String sqlString = "SELECT s.sctid, s.pt, ad.applicable_to_tooth, ad.applicable_to_surface " +
+                "FROM applicable_diagnostic ad " +
+                "JOIN snomed s ON s.sctid = ad.sctid " +
+                "WHERE ad.sctid = :sctid ";
+
+        Query query = entityManager.createNativeQuery(sqlString)
+                .setParameter("sctid", sctid);
+        List<Object[]> result = query.getResultList();
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
 }

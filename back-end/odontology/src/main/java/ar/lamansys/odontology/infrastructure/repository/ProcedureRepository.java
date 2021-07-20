@@ -6,4 +6,5 @@ public interface ProcedureRepository {
 
     List<Object[]> getAll();
 
+    List<Object[]> getBySctid(String sctid);
 }

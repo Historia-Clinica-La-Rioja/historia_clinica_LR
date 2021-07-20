@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.infrastructure.repository;
 
+import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +32,20 @@ public class ProcedureStorageImpl implements ProcedureStorage {
                 .map(this::parseToProcedureBo)
                 .collect(Collectors.toList());
         LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public Optional<ProcedureBo> getProcedure(String sctid) {
+        LOG.debug("Input parameter -> sctid {}", sctid);
+        List<Object[]> procedures = procedureRepository.getBySctid(sctid);
+        if (procedures.isEmpty())
+            return Optional.empty();
+        Optional<ProcedureBo> result = procedures
+                .stream()
+                .findFirst()
+                .map(this::parseToProcedureBo);
         LOG.trace("Output -> {}", result);
         return result;
     }

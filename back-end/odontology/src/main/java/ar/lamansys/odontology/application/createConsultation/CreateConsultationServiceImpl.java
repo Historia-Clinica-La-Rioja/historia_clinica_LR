@@ -4,19 +4,20 @@ import ar.lamansys.odontology.application.createConsultation.exceptions.CreateCo
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationExceptionEnum;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
-import ar.lamansys.odontology.domain.OdontologyConsultationStorage;
-import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
+import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.ProcedureBo;
-import ar.lamansys.odontology.domain.ProceduresStorage;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalDiagnosticBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalProcedureBo;
-import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -26,20 +27,20 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
 
     private final DiagnosticStorage diagnosticStorage;
 
-    private final ProceduresStorage proceduresStorage;
+    private final ProcedureStorage proceduresStorage;
 
     private final OdontologyConsultationStorage odontologyConsultationStorage;
 
-    private final OdontologyDocumentStorage odontologyDocumentStorage;
+    private final DateTimeProvider dateTimeProvider;
 
     public CreateConsultationServiceImpl(DiagnosticStorage diagnosticStorage,
-                                         ProceduresStorage proceduresStorage,
+                                         ProcedureStorage proceduresStorage,
                                          OdontologyConsultationStorage odontologyConsultationStorage,
-                                         OdontologyDocumentStorage odontologyDocumentStorage) {
+                                         DateTimeProvider dateTimeProvider) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
-        this.odontologyDocumentStorage = odontologyDocumentStorage;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
@@ -51,9 +52,13 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
                     "La información de la consulta es obligatoria");
         assertContextValid(consultationBo);
 
-        Integer encounterId = odontologyConsultationStorage.save();
-
-        odontologyDocumentStorage.save(new OdontologyDocumentBo(consultationBo, encounterId));
+        LocalDate now = dateTimeProvider.nowDate();
+        odontologyConsultationStorage.save(
+                new ConsultationInfoBo(null,
+                        consultationBo,
+                        null,
+                        now,
+                        true));
 
         LOG.debug("No output");
     }
@@ -63,6 +68,46 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
             throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_INSTITUTION_ID, "El id de la institución es obligatorio");
         if (consultationBo.getPatientId() == null)
             throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_PATIENT_ID, "El id del paciente es obligatorio");
+        if (consultationBo.getDentalDiagnostics() != null)
+            consultationBo.getDentalDiagnostics().forEach(this::validateDentalDiagnostic);
+        if (consultationBo.getDentalProcedures() != null)
+            consultationBo.getDentalProcedures().forEach(this::validateDentalProcedure);
+    }
+
+    private void validateDentalDiagnostic(ConsultationDentalDiagnosticBo dentalDiagnostic) {
+        Optional<DiagnosticBo> opDiagnostic = diagnosticStorage.getDiagnostic(dentalDiagnostic.getSctid());
+        if (opDiagnostic.isEmpty())
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_DIAGNOSTIC_NOT_FOUND,
+                    "El diagnóstico con sctid: " + dentalDiagnostic.getSctid() +
+                            " y prefered term: '" + dentalDiagnostic.getPt() + "' no es un diagnóstico dental aplicable");
+
+        DiagnosticBo diagnostic = opDiagnostic.get();
+        if (dentalDiagnostic.isAppliedToTooth() && !diagnostic.isApplicableToTooth())
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.DIAGNOSTIC_NOT_APPLICABLE_TO_TOOTH,
+                    "El diagnóstico con sctid: " + dentalDiagnostic.getSctid() +
+                            " y prefered term: '" + dentalDiagnostic.getPt() + "' no es aplicable a pieza dental");
+        if (dentalDiagnostic.isAppliedToSurface() && !diagnostic.isApplicableToSurface())
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.DIAGNOSTIC_NOT_APPLICABLE_TO_SURFACE,
+                    "El diagnóstico con sctid: " + dentalDiagnostic.getSctid() +
+                            " y prefered term: '" + dentalDiagnostic.getPt() + "' no es aplicable a cara dental");
+    }
+
+    private void validateDentalProcedure(ConsultationDentalProcedureBo dentalProcedure) {
+        Optional<ProcedureBo> opProcedure = proceduresStorage.getProcedure(dentalProcedure.getSctid());
+        if (opProcedure.isEmpty())
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_PROCEDURE_NOT_FOUND,
+                    "El procedimiento con sctid: " + dentalProcedure.getSctid() +
+                            " y prefered term: '" + dentalProcedure.getPt() + "' no es un procedimiento dental aplicable");
+
+        ProcedureBo procedure = opProcedure.get();
+        if (dentalProcedure.isAppliedToTooth() && !procedure.isApplicableToTooth())
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.PROCEDURE_NOT_APPLICABLE_TO_TOOTH,
+                    "El procedimiento con sctid: " + dentalProcedure.getSctid() +
+                            " y prefered term: '" + dentalProcedure.getPt() + "' no es aplicable a pieza dental");
+        if (dentalProcedure.isAppliedToSurface() && !procedure.isApplicableToSurface())
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.PROCEDURE_NOT_APPLICABLE_TO_SURFACE,
+                    "El procedimiento con sctid: " + dentalProcedure.getSctid() +
+                            " y prefered term: '" + dentalProcedure.getPt() + "' no es aplicable a cara dental");
     }
 
 }

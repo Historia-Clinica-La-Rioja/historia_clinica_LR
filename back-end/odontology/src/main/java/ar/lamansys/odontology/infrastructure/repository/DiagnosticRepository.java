@@ -6,4 +6,6 @@ public interface DiagnosticRepository {
 
     List<Object[]> getAll();
 
+    List<Object[]> getBySctid(String sctid);
+
 }

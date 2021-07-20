@@ -32,4 +32,20 @@ public class ProcedureRepositoryImpl implements ProcedureRepository {
         LOG.trace("Output -> {}", result);
         return result;
     }
+
+    @Override
+    public List<Object[]> getBySctid(String sctid) {
+
+        String sqlString = "SELECT s.sctid, s.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
+                "FROM applicable_procedure ap " +
+                "JOIN snomed s ON s.sctid = ap.sctid " +
+                "WHERE ap.sctid = :sctid ";
+
+        Query query = entityManager.createNativeQuery(sqlString)
+                .setParameter("sctid", sctid);
+        List<Object[]> result = query.getResultList();
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
 }

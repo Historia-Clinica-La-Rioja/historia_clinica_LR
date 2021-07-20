@@ -16,6 +16,10 @@ public class ClinicalTermBo {
 
     private OdontologySnomedBo snomed;
 
+    public ClinicalTermBo(String sctid, String pt) {
+        this.snomed = new OdontologySnomedBo(sctid, pt);
+    }
+
     public String getSctid() {
         return this.snomed.getSctid();
     }
