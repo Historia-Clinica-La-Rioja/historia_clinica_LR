@@ -16,8 +16,29 @@ public class HCEImmunizationBo extends  HCEClinicalTermBo{
 
     private LocalDate administrationDate;
 
+    private String note;
+
+    private Integer institutionId;
+
+    private Short doseId;
+
+    private Short conditionId;
+
+    private Short schemeId;
+
+    private String lotNumber;
+
+    private Integer createdByUserId;
+
     public HCEImmunizationBo(HCEImmunizationVo source){
         super(source.getId(), source.getSnomed(), source.getStatusId(), source.getStatus(), source.getPatientId());
         this.administrationDate = source.getAdministrationDate();
+        this.note = source.getNote();
+        this.institutionId = source.getInstitutionId();
+        this.doseId = source.getDoseId();
+        this.conditionId = source.getConditionId();
+        this.schemeId = source.getSchemeId();
+        this.lotNumber = source.getLotNumber();
+        this.createdByUserId = source.getCreatedByUserId();
     }
 }

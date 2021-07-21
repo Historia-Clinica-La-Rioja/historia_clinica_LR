@@ -1,8 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEAllergyService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEHealthConditionsService;
@@ -15,7 +12,20 @@ import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHospitalizationHistoryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEImmunizationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -57,13 +67,22 @@ public class HCEGeneralStateController {
 
     private final LocalDateMapper localDateMapper;
 
+    private final SharedImmunizationPort sharedImmunizationPort;
+
+    private final SharedInstitutionPort sharedInstitutionPort;
+
+    private final SharedStaffPort sharedStaffPort;
+
     public HCEGeneralStateController(HCEHealthConditionsService hceHealthConditionsService,
                                      HCEClinicalObservationService hceClinicalObservationService,
                                      HCEGeneralStateMapper hceGeneralStateMapper,
                                      HCEImmunizationService hceImmunizationService,
                                      HCEMedicationService hceMedicationService,
                                      HCEAllergyService hceAllergyService,
-                                     LocalDateMapper localDateMapper) {
+                                     LocalDateMapper localDateMapper,
+                                     SharedImmunizationPort sharedImmunizationPort,
+                                     SharedInstitutionPort sharedInstitutionPort,
+                                     SharedStaffPort sharedStaffPort) {
         this.hceHealthConditionsService = hceHealthConditionsService;
         this.hceClinicalObservationService = hceClinicalObservationService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
@@ -71,6 +90,9 @@ public class HCEGeneralStateController {
         this.hceMedicationService = hceMedicationService;
         this.hceAllergyService = hceAllergyService;
         this.localDateMapper = localDateMapper;
+        this.sharedImmunizationPort = sharedImmunizationPort;
+        this.sharedInstitutionPort = sharedInstitutionPort;
+        this.sharedStaffPort = sharedStaffPort;
     }
 
     @GetMapping("/personalHistories")
@@ -122,10 +144,27 @@ public class HCEGeneralStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEImmunizationBo> resultService = hceImmunizationService.getImmunization(patientId);
-        List<HCEImmunizationDto> result = hceGeneralStateMapper.toListHCEImmunizationDto(resultService);
+        List<HCEImmunizationDto> result = hceImmunizationService.getImmunization(patientId)
+                .stream().map(this::mapImmunizationResult)
+                .collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
+    }
+
+    private HCEImmunizationDto mapImmunizationResult(HCEImmunizationBo hceImmunizationBo) {
+        HCEImmunizationDto result = new HCEImmunizationDto();
+        result.setId(hceImmunizationBo.getId());
+        result.setSnomed(SnomedDto.from(hceImmunizationBo.getSnomed()));
+        result.setStatusId(hceImmunizationBo.getStatusId());
+        result.setAdministrationDate(localDateMapper.fromLocalDateToString(hceImmunizationBo.getAdministrationDate()));
+        result.setCondition(hceImmunizationBo.getConditionId() != null ? sharedImmunizationPort.fetchVaccineConditionInfo(hceImmunizationBo.getConditionId()) : null);
+        result.setScheme(hceImmunizationBo.getSchemeId() != null ? sharedImmunizationPort.fetchVaccineSchemeInfo(hceImmunizationBo.getSchemeId()) : null);
+        result.setDose(hceImmunizationBo.getDoseId() != null ? sharedImmunizationPort.fetchVaccineDoseInfo(hceImmunizationBo.getDoseId()) : null);
+        result.setNote(hceImmunizationBo.getNote());
+        result.setInstitution(hceImmunizationBo.getInstitutionId() != null ? sharedInstitutionPort.fetchInstitutionById(hceImmunizationBo.getInstitutionId()) : null);
+        result.setLotNumber(hceImmunizationBo.getLotNumber());
+        result.setDoctor(sharedStaffPort.getProfessionalCompleteInfo(hceImmunizationBo.getCreatedByUserId()));
+        return  result;
     }
 
     @GetMapping("/medications")

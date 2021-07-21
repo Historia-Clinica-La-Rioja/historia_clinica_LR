@@ -89,7 +89,7 @@ class ImmunizePatientTest {
         when(localDateMapper.fromLocalDateToString(any())).thenReturn("2020-12-12");
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020,12,13));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1,
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
                         List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                                 new ClinicalSpecialtyDto(2, "Especialidad1"))));
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
@@ -146,7 +146,7 @@ class ImmunizePatientTest {
         when(localDateMapper.fromLocalDateToString(any())).thenReturn("2020-12-12");
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 13));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1,
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
                         List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                                 new ClinicalSpecialtyDto(2, "Especialidad1"))));
         when(vaccineConsultationRepository.save(any()))
@@ -175,26 +175,26 @@ class ImmunizePatientTest {
         );
         assertEquals("El identificador del profesional es invalido", exception.getMessage());
 
-        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, Collections.emptyList()));
+        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", Collections.emptyList()));
         exception = Assertions.assertThrows(ImmunizePatientException.class, () ->
                 immunizePatient.run(nullInstitution())
         );
         assertEquals("El id de la institución es obligatorio", exception.getMessage());
 
-        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, Collections.emptyList()));
+        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", Collections.emptyList()));
         exception = Assertions.assertThrows(ImmunizePatientException.class, () ->
                 immunizePatient.run(nullPatient())
         );
         assertEquals("El id del paciente es obligatorio", exception.getMessage());
 
 
-        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, Collections.emptyList()));
+        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", Collections.emptyList()));
         exception = Assertions.assertThrows(ImmunizePatientException.class, () ->
                 immunizePatient.run(nullClinicalSpecialty())
         );
         assertEquals("El id de la especialidad clínica es obligatorio", exception.getMessage());
 
-        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(1, "Especialidad1"), new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        when(sharedStaffPort.getProfessionalCompleteInfo(any())).thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"), new ClinicalSpecialtyDto(2, "Especialidad1"))));
         exception = Assertions.assertThrows(ImmunizePatientException.class, () ->
                 immunizePatient.run(invalidClinicalSpecialty())
         );
@@ -207,7 +207,7 @@ class ImmunizePatientTest {
     void billableImmunizationInfoInvalidInputData() {
 
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
         Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
@@ -246,7 +246,7 @@ class ImmunizePatientTest {
         assertEquals("El esquema es obligatorio para una vacuna facturable", exception.getMessage());
 
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
         when(vaccineSchemeRepository.existsById(any())).thenReturn(false);
         exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
@@ -256,7 +256,7 @@ class ImmunizePatientTest {
 
 
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad2"))));
 
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
@@ -273,7 +273,7 @@ class ImmunizePatientTest {
     void nonBillableImmunizationInvalidData() {
 
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1, List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
         Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,

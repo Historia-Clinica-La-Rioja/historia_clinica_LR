@@ -18,11 +18,34 @@ public class HCEImmunizationVo extends HCEClinicalTermVo{
 
     private Integer patientId;
 
+    private String note;
+
+    private Integer institutionId;
+
+    private Short doseId;
+
+    private Short conditionId;
+
+    private Short schemeId;
+
+    private String lotNumber;
+
+    private Integer createdByUserId;
+
     public HCEImmunizationVo(Integer id, Snomed snomed, String statusId, LocalDate administrationDate,
-                             LocalDate expirationDate, Integer patientId) {
+                             LocalDate expirationDate, Integer patientId, Integer institutionId,
+                             Short conditionId, Short schemeId, Short doseId, String lotNumber,
+                             String note, Integer createdByUserId) {
         super(id, snomed, statusId);
         this.administrationDate = administrationDate;
         this.expirationDate = expirationDate;
         this.patientId = patientId;
+        this.note = note;
+        this.institutionId = institutionId;
+        this.doseId = doseId;
+        this.conditionId = conditionId;
+        this.schemeId = schemeId;
+        this.lotNumber = lotNumber;
+        this.createdByUserId = createdByUserId;
     }
 }

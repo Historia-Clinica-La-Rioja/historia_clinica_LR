@@ -772,9 +772,16 @@ export interface HCEHospitalizationHistoryDto {
 
 export interface HCEImmunizationDto extends Serializable {
     administrationDate: string;
-    id?: number;
+    condition: VaccineConditionDto;
+    doctor: ProfessionalInfoDto;
+    dose: VaccineDoseInfoDto;
+    id: number;
+    institution: InstitutionInfoDto;
+    lotNumber: string;
+    note: string;
+    scheme: VaccineSchemeInfoDto;
     snomed: SnomedDto;
-    statusId?: string;
+    statusId: string;
 }
 
 export interface HCELast2VitalSignsDto extends Serializable {
@@ -921,6 +928,11 @@ export interface InstitutionDto extends Serializable {
     institutionAddressDto: InstitutionAddressDto;
     name: string;
     website: string;
+}
+
+export interface InstitutionInfoDto extends Serializable {
+    id: number;
+    name: string;
 }
 
 export interface InternmentEpisodeADto {
@@ -1440,6 +1452,16 @@ export interface ProfessionalDto {
     phoneNumber: string;
 }
 
+export interface ProfessionalInfoDto {
+    clinicalSpecialties: ClinicalSpecialtyDto[];
+    firstName: string;
+    id: number;
+    identificationNumber: string;
+    lastName: string;
+    licenceNumber: string;
+    phoneNumber: string;
+}
+
 export interface ProfessionalsByClinicalSpecialtyDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     professionalsIds: number[];
@@ -1700,6 +1722,10 @@ export interface VMedicalDischargeDto extends MedicalDischargeDto {
     snomedPtProblems: string[];
 }
 
+export interface VaccineConditionDto extends AbstractMasterdataDto<number> {
+    id: number;
+}
+
 export interface VaccineConditionsDto {
     description: string;
     id: number;
@@ -1712,6 +1738,10 @@ export interface VaccineDoseDto {
     order: number;
 }
 
+export interface VaccineDoseInfoDto extends AbstractMasterdataDto<number> {
+    id: number;
+}
+
 export interface VaccineInformationDto {
     conditions: VaccineConditionsDto[];
     description: string;
@@ -1721,6 +1751,10 @@ export interface VaccineInformationDto {
 export interface VaccineSchemeDto {
     description: string;
     doses: VaccineDoseDto[];
+    id: number;
+}
+
+export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 

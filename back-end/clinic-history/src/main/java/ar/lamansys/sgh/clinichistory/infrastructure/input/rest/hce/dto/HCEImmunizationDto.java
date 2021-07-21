@@ -1,16 +1,16 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineConditionDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineSchemeInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.Nullable;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -21,16 +21,25 @@ public class HCEImmunizationDto implements Serializable {
 
     private static final long serialVersionUID = 6092032949244933507L;
 
-    @Nullable
     private Integer id;
 
-    @Nullable
     private String statusId;
 
-    @NotNull(message = "{value.mandatory}")
-    @Valid
     private SnomedDto snomed;
 
-    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String administrationDate;
+
+    private String note;
+
+    private InstitutionInfoDto institution;
+
+    private VaccineDoseInfoDto dose;
+
+    private VaccineConditionDto condition;
+
+    private VaccineSchemeInfoDto scheme;
+
+    private String lotNumber;
+
+    private ProfessionalInfoDto doctor;
 }

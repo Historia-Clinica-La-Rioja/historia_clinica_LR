@@ -40,10 +40,12 @@ public class SharedStaffImpl implements SharedStaffPort {
 
     @Override
     public ProfessionalInfoDto getProfessionalCompleteInfo(Integer userId) {
-        return Optional.ofNullable(getProfessionalId(userId))
-                .map(professionalId -> {
-                    var specialties = clinicalSpecialtyService.getSpecialtiesByProfessional(professionalId);
-                    return new ProfessionalInfoDto(professionalId, clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(specialties));
+        return Optional.ofNullable(healthcareProfessionalExternalService.findProfessionalByUserId(userId))
+                .map(professional -> {
+                    var specialties = clinicalSpecialtyService.getSpecialtiesByProfessional(professional.getId());
+                    return new ProfessionalInfoDto(professional.getId(), professional.getLicenceNumber(), professional.getFirstName(),
+                            professional.getLastName(), professional.getIdentificationNumber(), professional.getPhoneNumber(),
+                            clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(specialties));
                 })
                 .get();
     }

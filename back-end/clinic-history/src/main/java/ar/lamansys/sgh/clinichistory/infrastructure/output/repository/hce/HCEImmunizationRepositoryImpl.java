@@ -33,19 +33,22 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
     public List<HCEImmunizationVo> getImmunization(Integer patientId) {
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
-                "   SELECT inm.id, snomed_id, inm.status_id, administration_date, expiration_date, inm.updated_on, " +
-                "   row_number() over (partition by snomed_id, administration_date order by inm.updated_on desc) as rw  " +
+                "   SELECT inm.id, inm.snomed_id, inm.status_id, inm.administration_date, inm.expiration_date,  " +
+                "   inm.condition_id, inm.scheme_id, inm.dose_id, inm.institution_id, inm.lot_number, inm.note_id, inm.updated_on, inm.created_by, " +
+                "   row_number() over (partition by inm.snomed_id, inm.condition_id, inm.scheme_id, inm.dose_id, inm.administration_date order by inm.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_inmunization di on d.id = di.document_id " +
                 "   JOIN inmunization inm on di.inmunization_id = inm.id " +
                 "   WHERE d.status_id = :docStatusId " +
-                "   AND d.type_id = :documentType "+
+                "   AND d.type_id IN :documentType "+
                 "   AND inm.patient_id = :patientId " +
                 "   " +
                 ") " +
-                "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, administration_date, expiration_date " +
+                "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, administration_date, expiration_date, " +
+                "t.institution_id, t.condition_id, t.scheme_id, t.dose_id,  t.lot_number, n.description, t.created_by " +
                 "FROM t " +
                 "JOIN snomed s ON snomed_id = s.id " +
+                "LEFT JOIN note n ON (n.id = t.note_id)" +
                 "WHERE rw = 1 " +
                 "AND status_id <> :immunizationStatusId " +
                 "ORDER BY t.updated_on DESC";
@@ -54,7 +57,7 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                 .setParameter("docStatusId", DocumentStatus.FINAL)
                 .setParameter("immunizationStatusId", InmunizationStatus.ERROR)
                 .setParameter("patientId", patientId)
-                .setParameter("documentType", DocumentType.OUTPATIENT)
+                .setParameter("documentType", List.of(DocumentType.OUTPATIENT, DocumentType.IMMUNIZATION))
                 .getResultList();
 
         List<HCEImmunizationVo> result = new ArrayList<>();
@@ -67,7 +70,14 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                                 (String)h[3],
                                 h[4] != null ? ((Date)h[4]).toLocalDate() : null,
                                 h[5] != null ? ((Date)h[5]).toLocalDate() : null,
-                                patientId
+                                patientId,
+                                (Integer) h[6],
+                                (Short) h[7],
+                                (Short) h[8],
+                                (Short) h[9],
+                                (String) h[10],
+                                (String) h[11],
+                                (Integer) h[12]
                         )
                 )
         );
