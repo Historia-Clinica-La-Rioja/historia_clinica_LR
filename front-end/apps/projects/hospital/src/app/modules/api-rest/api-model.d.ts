@@ -129,6 +129,17 @@ export interface AnamnesisDto extends Serializable {
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
+export interface AnnexIIDto {
+    edadPaciente: number;
+    fechaAtencion: Date;
+    fechaReporte: Date;
+    hospital: string;
+    nombreCompletoPaciente: string;
+    numeroDocumento: string;
+    sexoPaciente: string;
+    tipoDocumento: string;
+}
+
 export interface AnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;
