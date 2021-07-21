@@ -1,9 +1,9 @@
 package net.pladema.establishment.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialtyDto;
 
 import java.util.List;
 

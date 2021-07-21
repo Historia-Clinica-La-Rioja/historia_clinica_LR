@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialtyDto;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 
 import javax.validation.Valid;

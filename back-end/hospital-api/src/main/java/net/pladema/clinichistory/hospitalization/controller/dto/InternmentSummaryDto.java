@@ -1,12 +1,13 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import net.pladema.clinichistory.hospitalization.controller.dto.summary.DocumentsSummaryDto;
 import net.pladema.establishment.controller.dto.BedDto;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;

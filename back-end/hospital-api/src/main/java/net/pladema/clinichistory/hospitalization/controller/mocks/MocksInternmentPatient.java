@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.mocks;
 
-import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentSummaryDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
 import net.pladema.establishment.controller.dto.BedDto;
