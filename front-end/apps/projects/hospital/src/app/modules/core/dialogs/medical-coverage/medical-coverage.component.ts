@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CoverageDtoUnion, HealthInsuranceDto, MedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
@@ -123,19 +123,21 @@ export class MedicalCoverageComponent implements OnInit {
 	}
 	// -----------------------------------------------------------------------------------------------------------------------------
 
-	addHealthInsurance(): void {
+	addHealthInsurance(formDirective: FormGroupDirective): void {
 		if (this.healthInsuranceToAdd && this.healthInsuranceForm.valid) {
 			const toAdd = this.getHealthInsuranceToAdd();
 			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
+			formDirective.resetForm();
 			this.healthInsuranceForm.reset();
 			this.healthInsuranceToAdd = null;
 		}
 	}
 
-	addPrivateHealthInsurance(): void {
+	addPrivateHealthInsurance(formDirective: FormGroupDirective): void {
 		if (this.prepagaForm.valid) {
 			const toAdd = this.getPrivateHealthInsuranceToAdd();
 			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
+			formDirective.resetForm();
 			this.prepagaForm.reset();
 		}
 	}
