@@ -4,7 +4,8 @@
 	</section>
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
-		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto">
+		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]= "personInformation" [personPhoto]="personPhoto" 
+			 [showAdditionalInformation]="true">
 			<div horizontal-content>
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
 					<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
@@ -17,7 +18,7 @@
 			</div>
 		</app-patient-card>
 
-
+		
 		<div class="flex-container" *ngIf="externalInstitutionsEnabled">
 				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center baseline" fxLayoutAlign.lt-md="baseline end">
 					<div fxFlex="55%"></div>

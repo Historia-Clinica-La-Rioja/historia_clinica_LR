@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 
 import { AppFeature } from '@api-rest/api-model';
-import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
+import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto,  AdditionalInfo} from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 
@@ -37,9 +37,10 @@ const RESUMEN_INDEX = 0;
 export class AmbulatoriaPacienteComponent implements OnInit {
 
 	dialogRef: DockPopupRef;
-	patient$: Observable<PatientBasicData>;
+	patient: PatientBasicData;
 	patientId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<Page> }[]>;
+	public personInformation: AdditionalInfo[];
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;
 	public showOrders: boolean;
@@ -66,12 +67,15 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.personInformation = [ ];
 		this.route.paramMap.subscribe((params) => {
 			this.patientId = Number(params.get('idPaciente'));
-			this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
-				map(patient => this.mapperService.toPatientBasicData(patient))
+			this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
+				patient => {
+					this.personInformation.push({description: patient.person.identificationType, data: patient.person.identificationNumber});
+					this.patient = this.mapperService.toPatientBasicData(patient);
+				}
 			);
-
 			this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
 			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 			this.patientService.getPatientPhoto(this.patientId)
