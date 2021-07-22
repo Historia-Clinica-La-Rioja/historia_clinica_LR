@@ -569,7 +569,7 @@
 	</div>
 	<div actions id="buttons">
 		<div align="end">
-			<button class="uppercase" mat-raised-button color="primary" (click)="save()">
+			<button class="uppercase" mat-raised-button color="primary" (click)="save()" [disabled]="disableConfirmButton">
 				<span [translate]="'buttons.CONFIRM'"></span>
 			</button>
 		</div>
