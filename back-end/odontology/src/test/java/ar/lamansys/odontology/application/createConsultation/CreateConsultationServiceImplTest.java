@@ -4,6 +4,9 @@ import ar.lamansys.odontology.application.createConsultation.exceptions.CreateCo
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
+import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
+import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
@@ -41,12 +44,16 @@ class CreateConsultationServiceImplTest {
     @Mock
     private DateTimeProvider dateTimeProvider;
 
+    @Mock
+    private OdontologyDoctorStorage odontologyDoctorStorage;
+
     @BeforeEach
     void setUp() {
         this.createConsultationService = new CreateConsultationServiceImpl(diagnosticStorage,
                 proceduresStorage,
                 odontologyConsultationStorage,
-                dateTimeProvider);
+                dateTimeProvider,
+                odontologyDoctorStorage);
     }
 
     @Test
@@ -61,9 +68,16 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenInstitutionIdIsNull() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(null);
         consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));
@@ -75,9 +89,16 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenPatientIdIsNull() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(1);
         consultation.setPatientId(null);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));
@@ -89,6 +110,12 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenDiagnosticIsNotFound() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         when(diagnosticStorage.getDiagnostic("16958000"))
                 .thenReturn(Optional.of(new DiagnosticBo("16958000", "ausencia congénita completa de dientes (trastorno)", true, false)));
         when(diagnosticStorage.getDiagnostic("64969001"))
@@ -101,6 +128,7 @@ class CreateConsultationServiceImplTest {
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(1);
         consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         List<ConsultationDentalDiagnosticBo> dentalDiagnosticBos = new ArrayList<>();
 
@@ -137,6 +165,12 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenDiagnosticNotApplicableToToothIsAppliedToTooth() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         when(diagnosticStorage.getDiagnostic("16958000"))
                 .thenReturn(Optional.of(new DiagnosticBo("16958000", "ausencia congénita completa de dientes (trastorno)", true, false)));
         when(diagnosticStorage.getDiagnostic("64969001"))
@@ -147,6 +181,7 @@ class CreateConsultationServiceImplTest {
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(1);
         consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         List<ConsultationDentalDiagnosticBo> dentalDiagnosticBos = new ArrayList<>();
 
@@ -177,6 +212,12 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenDiagnosticNotApplicableToSurfaceIsAppliedToSurface() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         when(diagnosticStorage.getDiagnostic("16958000"))
                 .thenReturn(Optional.of(new DiagnosticBo("16958000", "ausencia congénita completa de dientes (trastorno)", true, false)));
         when(diagnosticStorage.getDiagnostic("64969001"))
@@ -185,6 +226,7 @@ class CreateConsultationServiceImplTest {
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(1);
         consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         List<ConsultationDentalDiagnosticBo> dentalDiagnosticBos = new ArrayList<>();
 
@@ -217,6 +259,12 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenProcedureIsNotFound() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         String sctidNotFound = "399041000221101";
         String ptNotFound = "obturación con amalgama cavidad simple";
 
@@ -232,6 +280,7 @@ class CreateConsultationServiceImplTest {
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(1);
         consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         List<ConsultationDentalProcedureBo> dentalProcedureBos = new ArrayList<>();
 
@@ -267,6 +316,12 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenProcedureNotApplicableToToothIsAppliedToTooth() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         String sctidNotApplicable = "4721000221105";
         String ptNotApplicable = "inactivación de caries";
 
@@ -280,6 +335,7 @@ class CreateConsultationServiceImplTest {
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(1);
         consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         List<ConsultationDentalProcedureBo> dentalProcedureBos = new ArrayList<>();
 
@@ -309,6 +365,12 @@ class CreateConsultationServiceImplTest {
 
     @Test
     void shouldThrowErrorWhenProcedureNotApplicableToSurfaceIsAppliedToSurface() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
         String sctidNotApplicable = "4721000221105";
         String ptNotApplicable = "inactivación de caries";
 
@@ -322,6 +384,7 @@ class CreateConsultationServiceImplTest {
         ConsultationBo consultation = new ConsultationBo();
         consultation.setInstitutionId(1);
         consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         List<ConsultationDentalProcedureBo> dentalProcedureBos = new ArrayList<>();
 
@@ -346,6 +409,65 @@ class CreateConsultationServiceImplTest {
 
         String expectedMessage = "El procedimiento con sctid: " + sctidNotApplicable +
                 " y prefered term: '" + ptNotApplicable + "' no es aplicable a cara dental";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenDoctorIsNotFound() {
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.empty());
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(255);
+
+        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createConsultationService.run(consultation));
+
+        String expectedMessage = "El identificador del profesional es inválido";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenDoctorDoesNotHaveSpecialty() {
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(255, "Especialidad 1"));
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(156, "Especialidad 2"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(1000);
+
+        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createConsultationService.run(consultation));
+
+        String expectedMessage = "El doctor no posee la especialidad indicada";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenClinicalSpecialtyIsNull() {
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(255, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(null);
+
+        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createConsultationService.run(consultation));
+
+        String expectedMessage = "El id de especialidad es obligatorio";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
