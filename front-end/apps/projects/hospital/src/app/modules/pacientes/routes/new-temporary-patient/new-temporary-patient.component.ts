@@ -33,6 +33,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
+	public isSubmitButtonDisabled = false;
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
@@ -158,6 +159,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.formSubmitted = true;
 		if (this.form.valid) {
 			const personRequest: APatientDto = this.mapToPersonRequest();
+			this.isSubmitButtonDisabled = true;
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
 					if (this.patientMedicalCoveragesToAdd) {
@@ -168,7 +170,10 @@ export class NewTemporaryPatientComponent implements OnInit {
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
-				}, _ => this.snackBarService.showError('pacientes.new.messages.ERROR'));
+				}, _ => {
+					this.isSubmitButtonDisabled = false;
+					this.snackBarService.showError('pacientes.new.messages.ERROR');
+				});
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
