@@ -1507,3 +1507,178 @@ databaseChangeLog:
                constraintName: FK_vaccine_nomivac_rule_condition_application_id
                referencedColumnNames: id
                referencedTableName: vaccine_condition_application
+
+    - changeSet:      
+          id: odontology_consultation-createTable
+          comment: Create table odontology_consultation
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: odontology_consultation
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_odontology_consultation
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              name: clinical_specialty_id
+                              type: int
+                        - column:
+                              name: institution_id
+                              type: int
+                        - column:
+                              name: performed_date
+                              type: date
+                        - column:
+                              name: doctor_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: billable
+                              type: boolean
+                              defaultValue: ${boolean.false}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                   nullable: false
+                              name: deleted
+                              type: boolean
+                              defaultValue: ${boolean.false}
+                        - column:
+                              name: deleted_by
+                              type: int
+                        - column:
+                              name: deleted_on
+                              type: datetime
+              - addForeignKeyConstraint:
+                     baseColumnNames: patient_id
+                     baseTableName: odontology_consultation
+                     constraintName: FK_odontology_consultation_patient_id
+                     onDelete: NO ACTION
+                     onUpdate: NO ACTION
+                     referencedColumnNames: id
+                     referencedTableName: patient
+                     validate: true
+              - addForeignKeyConstraint:
+                     baseColumnNames: clinical_specialty_id
+                     baseTableName: odontology_consultation
+                     constraintName: FK_odontology_consultation_clinical_specialty_id
+                     onDelete: NO ACTION
+                     onUpdate: NO ACTION
+                     referencedColumnNames: id
+                     referencedTableName: clinical_specialty
+                     validate: true
+              - addForeignKeyConstraint:
+                     baseColumnNames: institution_id
+                     baseTableName: odontology_consultation
+                     constraintName: FK_odontology_consultation_institution_id
+                     onDelete: NO ACTION
+                     onUpdate: NO ACTION
+                     referencedColumnNames: id
+                     referencedTableName: institution
+                     validate: true
+              - addForeignKeyConstraint:
+                     baseColumnNames: doctor_id
+                     baseTableName: odontology_consultation
+                     constraintName: FK_odontology_consultation_healthcare_professional_id
+                     onDelete: NO ACTION
+                     onUpdate: NO ACTION
+                     referencedColumnNames: id
+                     referencedTableName: healthcare_professional
+                     validate: true
+
+    - changeSet:
+        id: odontology_reason-createTable
+        comment: Create table odontology_reason
+        author: tmedina
+        changes:
+            - createTable:
+                tableName: odontology_reason
+                columns:
+                    - column:
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_odontology_reason
+                        name: id
+                        type: varchar(20)
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: description
+                        type: varchar(255)
+
+    - changeSet:
+        id: odontology_consultation_reason-createTable
+        comment: Create table odontology_consultation_reason
+        author: tmedina
+        changes:
+            - createTable:
+                tableName: odontology_consultation_reason
+                columns:
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: reason_id
+                        type: varchar(20)
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: odontology_consultation_id
+                        type: int
+            - addPrimaryKey:
+                clustered: true
+                columnNames: reason_id, odontology_consultation_id
+                constraintName: PK_odontology_consultation_reason
+                tableName: odontology_consultation_reason
+                validate: true
+            - addForeignKeyConstraint:
+                baseColumnNames: odontology_consultation_id
+                baseTableName: odontology_consultation_reason
+                constraintName: FK_odontology_consultation_reason_odontology_consultation_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: odontology_consultation
+                validate: true 
+            - addForeignKeyConstraint:
+                baseColumnNames: reason_id
+                baseTableName: odontology_consultation_reason
+                constraintName: FK_odontology_consultation_reason_reason_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: odontology_reason
+                validate: true 
+
