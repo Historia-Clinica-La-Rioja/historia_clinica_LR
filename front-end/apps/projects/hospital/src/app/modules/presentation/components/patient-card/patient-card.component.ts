@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import { AdditionalInfo, PersonPhotoDto } from '@api-rest/api-model';
+import { PersonPhotoDto } from '@api-rest/api-model';
+import { AdditionalInfo } from '@pacientes/pacientes.model';
 
 const NO_DOCUMENT_TYPE = 'No posee';
 @Component({
@@ -24,24 +25,37 @@ export class PatientCardComponent {
 
 	constructor(private readonly imageDecoderService: ImageDecoderService) { }
 
-	public viewIDAndIdentificationTypeAndNumber(){
-		if(this.showAdditionalInformation){
-			let identificationType: string;
-			let identificationNumber: string;
-			this.personalAdditionalInformation.map(info => {
-				identificationNumber = info.data;
-				identificationType = info.description;
-			})
-			if ((identificationNumber === undefined) && ((identificationType === undefined) || (identificationType ===  NO_DOCUMENT_TYPE))){
-				return ('ID ' + this.patient?.id);
-			}
-			else{
-				const idType = ((identificationType === undefined) || (identificationType ===  NO_DOCUMENT_TYPE)) ? (' · Documento: ') : (' · ' + identificationType + ': ');
-				const idNumber = (identificationNumber === undefined) ? ('Sin Información') : (identificationNumber);
-				return ('ID ' + this.patient?.id + idType + idNumber);
-			}
+	public showID(): string {
+		if (this.patient?.id === undefined) {
+			return ('ID');
 		}
-		return ('ID ' + this.patient?.id);
+		else {
+			return ('ID ' + this.patient?.id);
+		}
+	}
+
+	public showIdentificationTypeAndNumber(): string {
+		let identificationType: string;
+		let identificationNumber: string;
+		this.personalAdditionalInformation.map(info => {
+			identificationNumber = info.data;
+			identificationType = info.description;
+		})
+		if ((identificationNumber === undefined) && ((identificationType === undefined) || (identificationType === NO_DOCUMENT_TYPE))) {
+			return ('');
+		}
+		else {
+			const idType = ((identificationType === undefined) || (identificationType === NO_DOCUMENT_TYPE)) ? (' · Documento: ') : (' · ' + identificationType + ': ');
+			const idNumber = (identificationNumber === undefined) ? ('Sin Información') : (identificationNumber);
+			return (idType + idNumber);
+		}
+	}
+
+	public viewIDAndIdentificationTypeAndNumber() {
+		if (this.showAdditionalInformation) {
+			return (this.showID() + this.showIdentificationTypeAndNumber());
+		}
+		return (this.showID());
 	}
 
 	public viewGenderAge() {

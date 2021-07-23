@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 
 import { AppFeature } from '@api-rest/api-model';
-import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto,  AdditionalInfo} from '@api-rest/api-model';
+import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 
@@ -23,6 +22,7 @@ import { MedicacionesService } from '../../services/medicaciones.service';
 import { MenuItem } from '@presentation/components/menu/menu.component';
 import { Page } from '@presentation/components/page/page.component';
 import { ExtensionPatientService } from '@extensions/services/extension-patient.service';
+import { AdditionalInfo } from '@pacientes/pacientes.model';
 
 
 const RESUMEN_INDEX = 0;

@@ -1747,10 +1747,6 @@ export interface VitalSignsReportDto extends Serializable {
     temperature?: ReportClinicalObservationDto;
 }
 
-export interface AdditionalInfo{
-	description?: string;
-	data?: string;
-}
 
 export type CoverageDtoUnion = HealthInsuranceDto | PrivateHealthInsuranceDto;
 

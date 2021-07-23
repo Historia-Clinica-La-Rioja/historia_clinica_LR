@@ -34,3 +34,8 @@ export class IdentityVerificationStatus {
 	id: number;
 	description: string;
 }
+
+export interface AdditionalInfo{
+	description?: string;
+	data?: string;
+}
