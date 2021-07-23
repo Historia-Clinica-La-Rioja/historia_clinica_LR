@@ -31,6 +31,8 @@ public class AnnexIIVo {
 
     private LocalDate fechaAtencion;
 
+    private String obraSocial;
+
     @JsonIgnore
     public Short getAge(){
         if (fechaNacPaciente == null)

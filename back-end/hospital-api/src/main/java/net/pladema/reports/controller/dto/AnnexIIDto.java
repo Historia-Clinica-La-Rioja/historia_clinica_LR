@@ -26,4 +26,6 @@ public class AnnexIIDto {
     //private Boolean tienePractica;
 
     private LocalDate fechaAtencion;
+
+    private String obraSocial;
 }
