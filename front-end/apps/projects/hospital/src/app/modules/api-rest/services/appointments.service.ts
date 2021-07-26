@@ -5,6 +5,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
+import {DateFormat, momentFormat} from "@core/utils/moment.utils";
+import {DownloadService} from "@core/services/download.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class AppointmentsService {
 	constructor(
 		private http: HttpClient,
 		private contextService: ContextService,
+		private downloadService: DownloadService
 	) { }
 
 
@@ -96,6 +99,16 @@ export class AppointmentsService {
 			{
 				params: queryParams
 			});
+	}
+
+	getAppointmentReport(appointmentData: any): Observable<any> {
+		const appointmentId: number = appointmentData.appointmentId;
+		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
+		const appointmentDate : string = momentFormat(appointmentData.date, DateFormat.FILE_DATE);
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/anexo`;
+		const fileName = `AnexoII_${fullNamePatient}_${appointmentDate}.pdf`;
+
+		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId});
 	}
 
 }

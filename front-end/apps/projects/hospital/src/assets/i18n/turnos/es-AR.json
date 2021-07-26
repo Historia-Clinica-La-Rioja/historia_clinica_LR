@@ -71,6 +71,9 @@
 				"COVERAGE_DATA": "Cobertura Médica",
 				"UPDATE_SUCCESS": "Los datos se han modificado correctamente"
 			}
+		},
+		"report": {
+			"TITLE": "Descargar informe"
 		}
 	}
 }

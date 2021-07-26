@@ -53,6 +53,7 @@ export class AppointmentComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[];
 
 	public hideFilterPanel = false;
+	isEnableDowndloadReportButton = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
@@ -269,6 +270,14 @@ export class AppointmentComponent implements OnInit {
 
 	closeDialog(returnValue?: string) {
 		this.dialogRef.close(returnValue);
+	}
+
+	enableDowndloadReportButton(option: boolean) {
+		this.isEnableDowndloadReportButton = option;
+	}
+
+	getReportAppointment(): void {
+		this.appointmentService.getAppointmentReport(this.appointmentData).subscribe();
 	}
 }
 
