@@ -29,10 +29,10 @@ class VaccinesControllerTest {
     @Test
     void success() {
         when(fetchVaccineById.run(any()))
-                .thenReturn(new VaccineBo((short)4, "DESC", 4, 5, Lists.emptyList()));
+                .thenReturn(new VaccineBo((short)-4, (short)4, "DESC", 4, 5, Lists.emptyList()));
         var result = vaccinesController.get("4");
 
-        Assertions.assertEquals((short)4, result.getId());
+        Assertions.assertEquals((short)-4, result.getId());
         Assertions.assertEquals("DESC", result.getDescription());
         Assertions.assertTrue(result.getConditions().isEmpty());
     }
