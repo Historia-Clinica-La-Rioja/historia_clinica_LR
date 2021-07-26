@@ -32,6 +32,7 @@ public class DocumentType implements Serializable {
 	public static final short ORDER = (short)6;
 	public static final short EMERGENCY_CARE = (short)7;
 	public static final short IMMUNIZATION = (short)8;
+	public static final short ODONTOLOGY = (short)9;
 
 	@Id
 	@Column(name = "id")

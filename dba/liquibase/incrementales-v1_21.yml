@@ -1681,4 +1681,25 @@ databaseChangeLog:
                 referencedColumnNames: id
                 referencedTableName: odontology_reason
                 validate: true 
+                
+    - changeSet:
+        id: document_type-addOdontology
+        comment: Carga de dato document_type de odontologia
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO document_type(id, description) VALUES (9, 'Odontología');
+
+    - changeSet:
+        id: source_type-addOdontology
+        comment: Carga de dato source_type de odontologia
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO source_type(id, description) VALUES (6, 'Odontología');
+
 
