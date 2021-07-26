@@ -50,6 +50,10 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si está habilitado la nueva versión de aplicación de vacunas")
     HABILITAR_VACUNAS_V2,
+    
+    @Label("Indica si está habilitada la funcionalidad para descargar informes en turnos")
+    HABILITAR_INFORMES_TURNOS,
+
     ;
 
     public boolean isActive() {

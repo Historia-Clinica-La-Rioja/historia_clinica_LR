@@ -6,7 +6,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto, CoverageDtoUnion, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDto, CoverageDtoUnion, PatientMedicalCoverageDto, AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
@@ -20,8 +20,8 @@ import {
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable, of } from 'rxjs';
-//import { threadId } from 'node:worker_threads';
+import { Observable } from 'rxjs';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 const TEMPORARY_PATIENT = 3;
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
@@ -54,6 +54,7 @@ export class AppointmentComponent implements OnInit {
 
 	public hideFilterPanel = false;
 	isEnableDowndloadReportButton = false;
+	downdLoadReportIsEnabled: boolean;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
@@ -67,7 +68,10 @@ export class AppointmentComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly permissionsService: PermissionsService,
+		private readonly featureFlagService: FeatureFlagService,
+
 	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES_TURNOS).subscribe(isOn => this.downdLoadReportIsEnabled = isOn);
 	}
 
 	ngOnInit(): void {

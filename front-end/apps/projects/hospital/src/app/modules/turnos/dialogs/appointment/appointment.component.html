@@ -134,22 +134,26 @@
 			</div>
 		</section>
 
-		<section id="report">
-			<span class="mat-body-strong">Descargar informes</span>
-			<section class="example-section">
-				<mat-checkbox class="example-margin" (change)="enableDowndloadReportButton($event.checked)">
-					<span class="mat-body">Anexo II</span>
-				</mat-checkbox>
+		<ng-container *ngIf="downdLoadReportIsEnabled">
+			<section id="report">
+				<span class="mat-body-strong">Descargar informes</span>
+				<section class="example-section">
+					<mat-checkbox class="example-margin" (change)="enableDowndloadReportButton($event.checked)">
+						<span class="mat-body">Anexo II</span>
+					</mat-checkbox>
+				</section>
 			</section>
-		</section>
+		</ng-container>
 	</div>
 
 	<mat-dialog-actions *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 		align="end">
-	   <button type="button" mat-flat-button color="primary" id="report-appointment"
-	       name="report-appointment" (click)="getReportAppointment()" [disabled]="!isEnableDowndloadReportButton">
-		   <span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
-	   </button>
+		<ng-container *ngIf="downdLoadReportIsEnabled">
+			<button type="button" mat-flat-button color="primary" id="report-appointment"
+					name="report-appointment" (click)="getReportAppointment()" [disabled]="!isEnableDowndloadReportButton">
+				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
+			</button>
+		</ng-container>
 		<button type="button" *ngIf="isCancelable()" mat-flat-button color="warn" id="cancel-appointment"
 			name="cancel-appointment" (click)="cancelAppointment()">
 			<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
