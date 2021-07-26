@@ -33,6 +33,8 @@ public class AnnexIIBo {
 
     private String obraSocial;
 
+    private String numeroAfiliado;
+
     public AnnexIIBo(AnnexIIVo annexIIVo){
         this.fechaReporte = LocalDate.now();
         this.hospital = annexIIVo.getHospital();
@@ -46,5 +48,6 @@ public class AnnexIIBo {
         this.fechaAtencion = annexIIVo.getFechaAtencion();
         this.estadoTurno = annexIIVo.getEstadoTurno();
         this.obraSocial = annexIIVo.getObraSocial();
+        this.numeroAfiliado = annexIIVo.getNumeroAfiliado();
     }
 }

@@ -50,7 +50,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         ctx.put("estadoTurno", reportDataDto.getEstadoTurno());
         ctx.put("fechaAtencion", reportDataDto.getFechaAtencion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("obraSocial", reportDataDto.getObraSocial());
-        LOG.debug(OUTPUT, ctx);
+        ctx.put("numeroAfiliado", reportDataDto.getNumeroAfiliado());
         return ctx;
     }
 

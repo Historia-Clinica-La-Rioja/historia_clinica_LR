@@ -28,4 +28,6 @@ public class AnnexIIDto {
     private LocalDate fechaAtencion;
 
     private String obraSocial;
+
+    private String numeroAfiliado;
 }

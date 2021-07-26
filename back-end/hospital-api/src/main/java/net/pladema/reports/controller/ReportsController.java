@@ -132,9 +132,10 @@ public class ReportsController {
         response.flushBuffer();
     }
 
-    @GetMapping("/anexo")
+    @GetMapping("/{institutionId}/anexo")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<InputStreamResource> getAnexoReport(
+            @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
         LOG.debug("Input parameters -> appointmentId {}", appointmentId);

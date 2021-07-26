@@ -136,6 +136,7 @@ export interface AnnexIIDto {
     fechaReporte: Date;
     hospital: string;
     nombreCompletoPaciente: string;
+    numeroAfiliado: string;
     numeroDocumento: string;
     obraSocial: string;
     sexoPaciente: string;

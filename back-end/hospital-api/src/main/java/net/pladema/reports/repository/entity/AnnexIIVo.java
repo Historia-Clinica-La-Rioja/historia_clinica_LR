@@ -39,6 +39,8 @@ public class AnnexIIVo {
 
     private String obraSocial;
 
+    private String numeroAfiliado;
+
     @JsonIgnore
     public Short getAge(){
         if (fechaNacPaciente == null)

@@ -22,7 +22,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     public Optional<AnnexIIVo> getAnexoInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIVo(i.name, pe.firstName, pe.middleNames, " +
                 "           pe.lastName, pe.otherLastNames, it.description, pe.identificationNumber, " +
-                "           g.description, pe.birthDate, aps.description, a.dateTypeId, mc.name) " +
+                "           g.description, pe.birthDate, aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
