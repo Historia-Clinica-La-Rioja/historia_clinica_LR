@@ -2109,3 +2109,24 @@ databaseChangeLog:
           - sql:
               sql: |-
                   INSERT INTO applicable_procedure(sctid,permanent_c,permanent_p,permanent_o,temporal_c,temporal_e,temporal_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue,applicable_to_mouth) VALUES('398901000221107',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true});
+
+    - changeSet:
+        id: tooth_fixToothData
+        comment: Actualiza código de pieza
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE tooth SET quadrant_code = 8 WHERE sctid='67834006';
+
+    - changeSet:
+        id: snomed_fixToothData
+        comment: Actualiza pt y parent_fsn de pieza
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE snomed SET pt = 'incisivo central inferior derecho temporario' WHERE sctid='67834006';
+                    UPDATE snomed SET parent_fsn = 'incisivo central inferior derecho temporario' WHERE sctid='67834006';    
