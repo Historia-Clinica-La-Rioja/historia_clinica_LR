@@ -23,7 +23,7 @@ public class AnnexIIDto {
 
     private Short edadPaciente;
 
-    //private Boolean tienePractica;
+    private String estadoTurno;
 
     private LocalDate fechaAtencion;
 

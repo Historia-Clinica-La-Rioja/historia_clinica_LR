@@ -17,7 +17,13 @@ public class AnnexIIVo {
 
     private String hospital;
 
-    private String nombreCompletoPaciente;
+    private String firstName;
+
+    private String middleNames;
+
+    private String lastName;
+
+    private String otherLastNames;
 
     private String tipoDocumento;
 
@@ -27,7 +33,7 @@ public class AnnexIIVo {
 
     private LocalDate fechaNacPaciente;
 
-    //private Boolean tienePractica;
+    private String estadoTurno;
 
     private LocalDate fechaAtencion;
 

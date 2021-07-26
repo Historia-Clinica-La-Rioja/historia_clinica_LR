@@ -131,6 +131,7 @@ export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 
 export interface AnnexIIDto {
     edadPaciente: number;
+    estadoTurno: string;
     fechaAtencion: Date;
     fechaReporte: Date;
     hospital: string;

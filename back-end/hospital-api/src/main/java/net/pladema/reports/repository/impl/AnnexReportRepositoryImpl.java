@@ -20,14 +20,15 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     @Override
     @Transactional(readOnly = true)
     public Optional<AnnexIIVo> getAnexoInfo(Integer appointmentId) {
-        String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIVo(i.name, " +
-                "           CONCAT(pe.firstName, ' ',pe.lastName) as nombresApellidosPaciente, it.description, pe.identificationNumber, " +
-                "           g.description, pe.birthDate, a.dateTypeId, mc.name) " +
+        String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIVo(i.name, pe.firstName, pe.middleNames, " +
+                "           pe.lastName, pe.otherLastNames, it.description, pe.identificationNumber, " +
+                "           g.description, pe.birthDate, aps.description, a.dateTypeId, mc.name) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
                 "           JOIN DoctorsOffice AS doff ON (d.doctorsOfficeId = doff.id) " +
                 "           JOIN Institution AS i ON (doff.institutionId = i.id) " +
+                "           JOIN AppointmentState AS aps ON (a.appointmentStateId = aps.id) " +
                 "           LEFT JOIN PatientMedicalCoverageAssn AS pmca ON (a.patientMedicalCoverageId = pmca.id) " +
                 "           JOIN MedicalCoverage AS mc ON (pmca.medicalCoverageId = mc.id) " +
                 "           JOIN Patient AS pa ON (a.patientId = pa.id) " +

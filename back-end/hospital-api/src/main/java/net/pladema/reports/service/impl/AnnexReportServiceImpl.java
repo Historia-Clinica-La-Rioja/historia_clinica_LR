@@ -47,7 +47,9 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         ctx.put("numeroDocumento", reportDataDto.getNumeroDocumento());
         ctx.put("sexoPaciente", reportDataDto.getSexoPaciente());
         ctx.put("edadPaciente", reportDataDto.getEdadPaciente());
+        ctx.put("estadoTurno", reportDataDto.getEstadoTurno());
         ctx.put("fechaAtencion", reportDataDto.getFechaAtencion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        ctx.put("obraSocial", reportDataDto.getObraSocial());
         LOG.debug(OUTPUT, ctx);
         return ctx;
     }
