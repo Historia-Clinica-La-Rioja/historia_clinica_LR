@@ -3,6 +3,7 @@ package ar.lamansys.odontology.domain;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -34,6 +35,7 @@ public class OdontogramQuadrantBo {
 
     public void addTooth(ToothBo t) {
         this.teeth.add(t);
+        this.teeth.sort(Comparator.comparing(ToothBo::getToothCode)); // ascending order by toothCode
     }
 
     public static OdontogramQuadrantBo getQuadrant(Short code) {
