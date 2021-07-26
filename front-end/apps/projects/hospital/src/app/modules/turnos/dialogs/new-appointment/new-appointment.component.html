@@ -133,7 +133,7 @@
     <button mat-stroked-button color="primary" mat-dialog-close>
 		<span [translate]="'buttons.CANCEL'"></span>
     </button>
-	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()">
+	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()" [disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>
