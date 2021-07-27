@@ -19,7 +19,7 @@ public final class CodingCode {
                 "No information about current allergies");
         public static final String NOT_KNOWN = "no-known-allergies";
 
-        public static final FhirCode ENTRY = new FhirCode("48765-2", "Allergies and/or adverse reactions");
+        public static final FhirCode ENTRY = new FhirCode("48765-2", "Allergies and adverse reactions Document");
     }
 
     @UtilityClass
@@ -29,7 +29,7 @@ public final class CodingCode {
         public static final FhirCode NOT_KNOWN = new FhirCode(
                 "no-known-problems", "No known problems");
 
-        public static final FhirCode ENTRY = new FhirCode("11450-4", "Problem list");
+        public static final FhirCode ENTRY = new FhirCode("11450-4", "Problem list Reported");
 
         public static final FhirCode CATEGORY = new FhirCode("75326-9", "Problem");
 
@@ -40,7 +40,7 @@ public final class CodingCode {
     public static class Device {
         public static final FhirCode TYPE = new FhirCode(
                 "462894001",
-                "software de aplicación de sistema de información de historias clínicas de pacientes (objeto físico)"
+                "Patient health record information system application software"
         );
     }
 
@@ -50,7 +50,7 @@ public final class CodingCode {
                 "No information about current immunizations");
         public static final String NOT_KNOWN = "no-known-immunization";
 
-        public static final FhirCode ENTRY = new FhirCode("60484-3", "Immunization record");
+        public static final FhirCode ENTRY = new FhirCode("60484-3", "CDC Immunization panel");
     }
 
     @UtilityClass
@@ -60,7 +60,7 @@ public final class CodingCode {
         public static final FhirCode NOT_KNOWN = new FhirCode(
                 "no-known-medications", "No known medications");
 
-        public static final FhirCode ENTRY = new FhirCode("10160-0", "Medication use");
+        public static final FhirCode ENTRY = new FhirCode("10160-0", "History of Medication use Narrative");
 
         public static final FhirCode DOSE = new FhirCode("ordered", "ordered");
     }
