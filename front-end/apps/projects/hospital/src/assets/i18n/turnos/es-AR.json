@@ -66,6 +66,10 @@
 			"phoneNumber": {
 				"SUCCESS": "El teléfono se modificó correctamente",
 				"PHONE_NUMBER": "Teléfono"
+			},
+			"coverageData": {
+				"COVERAGE_DATA": "Cobertura Médica",
+				"UPDATE_SUCCESS": "La cobertura médica se modificó correctamente"
 			}
 		}
 	}

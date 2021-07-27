@@ -1,14 +1,14 @@
 <form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
 	<div mat-dialog-content>
-		<section id="personal-data" fxLayout="column" fxLayoutGap="10px">
+		<section id="personal-data" fxLayout="column" fxLayoutGap="5px">
 
-			<div fxLayout="row" fxLayoutAlign="space-around start">
-				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon> 
+			<div class="header-content" fxLayout="row" fxLayoutAlign="center">
+				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon>
 				<div fxLayout="column" fxLayoutAlign="center start">
 					<span class="mat-body-strong capitalize patient-name-title" *ngIf="appointmentData.patient.fullName"> {{ appointmentData.patient.fullName | uppercase }}</span>
 					<div>
-						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID {{appointmentData.patient.id}}</span> • 
-						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="appointmentData.patient.identificationNumber">DNI {{appointmentData.patient.identificationNumber}}</span> 
+						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID {{appointmentData.patient.id}}</span> •
+						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="appointmentData.patient.identificationNumber">DNI {{appointmentData.patient.identificationNumber}}</span>
 					</div>
 					<div>
 						<a class="mat-body" *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']"
@@ -16,11 +16,9 @@
 							(click)="closeDialog()">Ver historia clínica</a>
 					</div>
 				</div>
-				<div fxFlex="10%">
-					<button mat-icon-button color="primary" *ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
-						<mat-icon>edit</mat-icon>
-					</button>
-				</div>
+				<button mat-icon-button color="primary"  fxFlex="10%" *ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
+					<mat-icon>edit</mat-icon>
+				</button>
 			</div>
 
 			<ng-container *ngIf="!hideFilterPanel else editAppointment">
@@ -67,14 +65,16 @@
 			<mat-divider></mat-divider>
 		</section>
 
-		<section id="appointment" fxLayout="column">
+		<section id="appointment" class="appointment-details" fxLayout="column">
 			<span class="mat-body-strong">Turno</span>
-			<div fxLayout="column" fxLayoutGap="3px">
-				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="space-around center">
+			<div fxLayout="column" fxLayoutGap="5px">
+				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true" id="full-date">
 						calendar_today
 					</mat-icon>
 					<span class="mat-body"> {{appointmentData.date | date:"fullDate"}}</span>
+				</div>
+				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true" id="hour">
 						access_time
 					</mat-icon>

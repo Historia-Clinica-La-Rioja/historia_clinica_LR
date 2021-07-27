@@ -6,7 +6,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDto, CoverageDtoUnion, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
@@ -14,13 +14,13 @@ import { AppointmentsFacadeService } from '../../services/appointments-facade.se
 import { MapperService } from '@core/services/mapper.service';
 import {
 	determineIfIsHealthInsurance,
-	HealthInsurance,
+	HealthInsurance, MedicalCoverage,
 	MedicalCoverageComponent, PatientMedicalCoverage, PrivateHealthInsurance
 } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 //import { threadId } from 'node:worker_threads';
 
 const TEMPORARY_PATIENT = 3;
@@ -66,7 +66,6 @@ export class AppointmentComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly permissionsService: PermissionsService,
-
 	) {
 	}
 
@@ -92,8 +91,7 @@ export class AppointmentComponent implements OnInit {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
 				if (this.appointment.patientMedicalCoverageId) {
-					this.patientMedicalCoverageService.
-						getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
+					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
 						.pipe(
 							map(
 								s => this.patientMedicalCoverages.find(mc => mc.id === s.id)
@@ -101,19 +99,9 @@ export class AppointmentComponent implements OnInit {
 						)
 						.subscribe(coverageData => {
 							if (coverageData) {
-								const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
 								this.coverageData = coverageData;
 								this.formEdit.controls.newCoverageData.setValue(coverageData);
-								if (isHealthInsurance) {
-									let healthInsurance: HealthInsurance;
-									healthInsurance = coverageData.medicalCoverage as HealthInsurance;
-									this.coverageText = healthInsurance.acronym ?
-										healthInsurance.acronym : healthInsurance.name;
-								} else {
-									let privateHealthInsurance: PrivateHealthInsurance;
-									privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
-									this.coverageText = privateHealthInsurance.name;
-								}
+								this.setCoverageText(this.formEdit.controls.newCoverageData.value);
 							}
 						});
 				}
@@ -171,11 +159,15 @@ export class AppointmentComponent implements OnInit {
 
 	edit(): void {
 		if (this.formEdit.valid) {
-			if(this.isAssigned() && this.formEdit.controls.newCoverageData.dirty){
+			if (this.isAssigned()
+				&& this.formEdit.controls.newCoverageData.dirty
+				&& this.formEdit.controls.newCoverageData.value) {
 				const patientMedicalCoverageId = this.formEdit.controls.newCoverageData.value.id;
+				this.coverageData = this.formEdit.controls.newCoverageData.value
 				this.updateCoverageData(patientMedicalCoverageId);
+				this.setCoverageText(this.formEdit.controls.newCoverageData.value);
 			}
-			if(this.formEdit.controls.phoneNumber.dirty)
+			if (this.formEdit.controls.phoneNumber.dirty)
 				this.updatePhoneNumber(this.formEdit.controls.phoneNumber.value);
 		}
 		this.hideFilters();
@@ -209,21 +201,33 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updatePhoneNumber(phoneNumber: string) {
-		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, phoneNumber).
-			subscribe(() => {
-				this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
-			}, error => {
-				processErrors(error, (msg) => this.snackBarService.showError(msg));
-			});
+		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, phoneNumber).subscribe(() => {
+			this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
+		}, error => {
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
 	}
 
 	updateCoverageData(patientMedicalCoverageId: number) {
-		this.appointmentService.updateMedicalCoverage(this.appointmentData.appointmentId, patientMedicalCoverageId).
-			subscribe(() => {
-				this.snackBarService.showSuccess('turnos.appointment.coverageData.SUCCESS');
-			}, error => {
-				processErrors(error, (msg) => this.snackBarService.showError(msg));
-			});
+		this.appointmentService.updateMedicalCoverage(this.appointmentData.appointmentId, patientMedicalCoverageId).subscribe(() => {
+			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
+		}, error => {
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
+	}
+
+	private setCoverageText(coverageData) {
+		const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
+		if (isHealthInsurance) {
+			let healthInsurance: HealthInsurance;
+			healthInsurance = coverageData.medicalCoverage as HealthInsurance;
+			this.coverageText = healthInsurance.acronym ?
+				healthInsurance.acronym : healthInsurance.name;
+		} else {
+			let privateHealthInsurance: PrivateHealthInsurance;
+			privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
+			this.coverageText = privateHealthInsurance.name;
+		}
 	}
 
 	openMedicalCoverageDialog(): void {

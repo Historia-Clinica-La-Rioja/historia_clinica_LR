@@ -4,8 +4,18 @@
 	font-size: 18px;
 }
 
+.header-content {
+	@media screen and (min-width: 959px) {
+		width: 380px;
+	}
+}
+
 .appointment-information {
 	height: auto;
+}
+
+.appointment-details {
+	margin: 10px 0;
 }
 
 .assigned-appointment {
@@ -25,7 +35,7 @@ mat-icon {
 }
 
 a {
-	text-decoration: none; 
+	text-decoration: none;
 	color: #2687C5;
 }
 
@@ -95,10 +105,15 @@ section {
     display: none;
 }
 
+button mat-icon {
+	margin-top: -4px;
+	vertical-align: top;
+}
+
 .coverage-text {
 	display: inline-block;
-    max-width: 130px;
+    max-width: 285px;
     white-space: nowrap;
-    overflow: hidden !important;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
