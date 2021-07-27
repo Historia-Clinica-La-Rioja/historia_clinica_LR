@@ -8,6 +8,11 @@
 	@media screen and (min-width: 959px) {
 		width: 380px;
 	}
+
+	button mat-icon {
+		margin-top: -4px;
+		vertical-align: top;
+	}
 }
 
 .appointment-information {
@@ -103,11 +108,6 @@ section {
 
 .mat-icon-button ::ng-deep .mat-button-focus-overlay {
     display: none;
-}
-
-button mat-icon {
-	margin-top: -4px;
-	vertical-align: top;
 }
 
 .coverage-text {

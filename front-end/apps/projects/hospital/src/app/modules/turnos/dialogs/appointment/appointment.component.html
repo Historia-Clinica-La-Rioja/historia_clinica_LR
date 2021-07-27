@@ -26,10 +26,11 @@
 					<span class="mat-caption">{{'turnos.appointment.coverageData.COVERAGE_DATA' | translate}}</span>
 					<span class="mat-body patient-info coverage-text" *ngIf="coverageData"
 						matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}} </span>
+					<span class="mat-body patient-info coverage-text" *ngIf="!coverageData">{{"Sin información"}} </span>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
-					<span class="mat-body patient-info coverage-text">{{appointmentData.phoneNumber}}</span>
+					<span class="mat-body patient-info coverage-text">{{appointmentData.phoneNumber || "Sin información"}}</span>
 				</div>
 			</ng-container>
 
