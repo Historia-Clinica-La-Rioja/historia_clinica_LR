@@ -51,9 +51,8 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir<AllergyInt
             AllergyIntolerance resource = new AllergyIntolerance();
             resource.setId(allergy.getId());
             resource.setType(AllergyIntolerance.AllergyIntoleranceType.fromCode(allergy.getType()));
-            allergy.getCategories().forEach(c-> resource.addCategory(
-                        AllergyIntolerance.AllergyIntoleranceCategory.fromCode(c))
-            );
+            resource.addCategory(
+                    AllergyIntolerance.AllergyIntoleranceCategory.fromCode(allergy.getCategory()));
             resource.setCriticality(AllergyIntolerance.AllergyIntoleranceCriticality.fromCode(allergy.getCriticality()));
             resource.setPatient(references.get(ResourceType.Patient));
             resource.setCode(newCodeableConcept(CodingSystem.SNOMED, allergy.get()));
@@ -95,7 +94,7 @@ public class AllergyIntoleranceResource extends IMultipleResourceFhir<AllergyInt
         if(resource.hasCategory()){
             AllergyIntolerance.AllergyIntoleranceCategory category = resource
                     .getCategory().get(0).getValue();
-            data.setCategories(Collections.singleton(category.getDisplay()));
+            data.setCategory(category.getDisplay());
         }
 
         if(resource.hasClinicalStatus())

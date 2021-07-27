@@ -110,7 +110,8 @@
     <named-native-query name="HCE.findAllCondition" result-set-mapping="HCE.findAllConditionResult">
         <query>
             WITH t AS(
-            SELECT hc.id, snomed_id, hc.status_id, verification_status_id, start_date, hc.created_on, hc.updated_on,
+            SELECT hc.id, snomed_id, hc.status_id, verification_status_id, start_date, severity,
+            hc.created_on, hc.updated_on,
             row_number() over (partition by snomed_id order by hc.updated_on desc) as rw
             FROM document d
             JOIN document_health_condition dhc on d.id = dhc.document_id
@@ -120,8 +121,8 @@
             AND hc.patient_id = :patientId
             AND hc.problem_id IN :diagnosisId
             )
-            SELECT t.id as id, s.sctid as code, s.pt as term, status_id as clinical_status,
-            verification_status_id, start_date, created_on
+            SELECT t.id as id, s.sctid as code, s.pt as term, t.status_id as clinical_status,
+            t.verification_status_id, t.start_date, t.severity, t.created_on
             FROM t
             JOIN snomed s ON snomed_id = s.id
             WHERE rw = 1
@@ -136,6 +137,7 @@
             <column name="clinical_status" class="java.lang.String"/>
             <column name="verification_status_id" class="java.lang.String"/>
             <column name="start_date" class="java.sql.Date"/>
+            <column name="severity" class="java.lang.String"/>
             <column name="created_on" class="java.sql.Date"/>
         </constructor-result>
     </sql-result-set-mapping>
@@ -175,7 +177,7 @@
         <query>
             with temporal as (
             SELECT DISTINCT ai.id, ai.snomed_id, ai.status_id, ai.verification_status_id,
-            ai.category_id, ai.start_date, ai.updated_on,
+            ai.category_id, ai.criticality, ai.start_date, ai.updated_on,
             row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw
             FROM document d
             JOIN document_allergy_intolerance dai ON d.id = dai.document_id
@@ -185,7 +187,7 @@
             AND ai.patient_id = :patientId
             )
             SELECT t.id AS id, s.sctid AS code, s.pt as term, t.status_id, t.verification_status_id,
-            t.category_id, t.start_date
+            t.category_id, t.criticality, t.start_date
             FROM temporal t
             JOIN snomed s ON t.snomed_id = s.id
             WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus
@@ -199,7 +201,8 @@
             <column name="term" class="java.lang.String"/>
             <column name="status_id" class="java.lang.String"/>
             <column name="verification_status_id" class="java.lang.String"/>
-            <column name="category_id" class="java.lang.String"/>
+            <column name="category_id" class="java.lang.Short"/>
+            <column name="criticality" class="java.lang.Short"/>
             <column name="start_date" class="java.sql.Date"/>
         </constructor-result>
     </sql-result-set-mapping>

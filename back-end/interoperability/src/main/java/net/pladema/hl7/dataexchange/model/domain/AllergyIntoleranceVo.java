@@ -12,18 +12,13 @@ import org.hl7.fhir.r4.model.AllergyIntolerance;
 
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-
-import java.util.Map;
-import java.util.Set;
 
 @Getter
 @Setter
 public class AllergyIntoleranceVo {
 
     private final BidiMap<Short,String> typeCoding;
-    private final Map<String, String> categoryCoding;
+    private final BidiMap<Short, String> categoryCoding;
     private final BidiMap<Short, String> criticalityCoding;
 
     public AllergyIntoleranceVo(){
@@ -31,11 +26,12 @@ public class AllergyIntoleranceVo {
         typeCoding.put((short)1, "allergy");
         typeCoding.put((short)2, "intolerance");
 
-        categoryCoding = new HashMap<>();
-        categoryCoding.put("414285001", "food");
-        categoryCoding.put("416098002", "medication");
-        categoryCoding.put("426232007", "environment");
-        categoryCoding.put("402591008", "biologic");
+        categoryCoding = new DualHashBidiMap<>();
+        categoryCoding.put((short)1, "food");
+        categoryCoding.put((short)2, "medication");
+        categoryCoding.put((short)3, "biologic");
+        categoryCoding.put((short)4, "environment");
+
 
         criticalityCoding = new DualHashBidiMap<>();
         criticalityCoding.put((short)1, "low");
@@ -45,14 +41,15 @@ public class AllergyIntoleranceVo {
 
     public AllergyIntoleranceVo(Integer id, String sctidCode, String sctidTerm,
                                 String clinicalStatus, String verificationStatus,
-                                String category, Date startDate){
+                                Short category, Short criticality, Date startDate){
         this();
         setId(Cast.toString(id));
         setSctidCode(sctidCode);
         setSctidTerm(sctidTerm);
         setClinicalStatus(Cast.toString(clinicalStatus));
         setVerificationStatus(Cast.toString(verificationStatus));
-        setCategories(category);
+        setCategory(category);
+        setCriticality(criticality);
         setStartDate(FhirDateMapper.toLocalDate(startDate));
     }
 
@@ -65,7 +62,7 @@ public class AllergyIntoleranceVo {
     private LocalDate startDate;
 
     private Short type;
-    private final Set<String> categories=new HashSet<>();
+    private Short category;
     private Short criticality;
 
     private String clinicalStatus;
@@ -79,17 +76,16 @@ public class AllergyIntoleranceVo {
         return typeCoding.getOrDefault(type, null);
     }
 
-    public Set<String> setCategories(Set<String> categories){
-        categories.forEach(c-> categories.add(categoryCoding.get(c)));
-        return categories;
+    public String getCategory(){
+        return this.categoryCoding.getOrDefault(this.category, null);
     }
 
-    private void setCategories(String category){
-        categories.add(categoryCoding.get(category));
+    public void setCategory(Short categoryCode){
+        this.category = categoryCode;
     }
 
-    public boolean noInformationAboutCategories(){
-        return categories.isEmpty();
+    public void setCategory(String categoryTerm){
+        this.category = this.categoryCoding.getKey(categoryTerm);
     }
 
     public String getCriticality(){
@@ -106,6 +102,10 @@ public class AllergyIntoleranceVo {
 
     public void setCriticality(String criticality){
         this.criticality = criticalityCoding.getKey(criticality);
+    }
+
+    public void setCriticality(Short criticality){
+        this.criticality = criticality;
     }
 
     public void setType(String type){
