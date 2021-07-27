@@ -167,8 +167,9 @@ export class AppointmentComponent implements OnInit {
 				this.updateCoverageData(patientMedicalCoverageId);
 				this.setCoverageText(this.formEdit.controls.newCoverageData.value);
 			}
-			if (this.formEdit.controls.phoneNumber.dirty)
+			if (this.formEdit.controls.phoneNumber.dirty){
 				this.updatePhoneNumber(this.formEdit.controls.phoneNumber.value);
+			}
 		}
 		this.hideFilters();
 	}
@@ -202,7 +203,7 @@ export class AppointmentComponent implements OnInit {
 
 	updatePhoneNumber(phoneNumber: string) {
 		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, phoneNumber).subscribe(() => {
-			this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
+			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});

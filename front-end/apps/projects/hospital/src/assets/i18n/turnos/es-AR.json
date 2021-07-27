@@ -69,7 +69,7 @@
 			},
 			"coverageData": {
 				"COVERAGE_DATA": "Cobertura Médica",
-				"UPDATE_SUCCESS": "La cobertura médica se modificó correctamente"
+				"UPDATE_SUCCESS": "Los datos se han modificado correctamente"
 			}
 		}
 	}
