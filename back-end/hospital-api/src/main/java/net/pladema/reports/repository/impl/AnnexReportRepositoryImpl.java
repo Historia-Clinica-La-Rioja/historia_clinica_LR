@@ -30,7 +30,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "           JOIN Institution AS i ON (doff.institutionId = i.id) " +
                 "           JOIN AppointmentState AS aps ON (a.appointmentStateId = aps.id) " +
                 "           LEFT JOIN PatientMedicalCoverageAssn AS pmca ON (a.patientMedicalCoverageId = pmca.id) " +
-                "           JOIN MedicalCoverage AS mc ON (pmca.medicalCoverageId = mc.id) " +
+                "           LEFT JOIN MedicalCoverage AS mc ON (pmca.medicalCoverageId = mc.id) " +
                 "           JOIN Patient AS pa ON (a.patientId = pa.id) " +
                 "           LEFT JOIN Person AS pe ON (pe.id = pa.personId) " +
                 "           JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) " +
