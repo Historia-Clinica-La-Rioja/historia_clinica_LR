@@ -33,6 +33,7 @@ public abstract class IResourceFhir {
     private static final String DELIMITER = "/";
 
     private static String dominio;
+    private static String sisaCode;
     private static String systemName;
 
     protected FhirPersistentStore store;
@@ -47,6 +48,11 @@ public abstract class IResourceFhir {
         IResourceFhir.dominio = dominio;
     }
 
+    @Value("${ws.federar.sisaCode}")
+    public void setSisaCode(String sisaCode){
+        IResourceFhir.sisaCode = sisaCode;
+    }
+
     @Value("${system.name:Historia de Salud Integrada}")
     public void setSystemName(String systemName){
         IResourceFhir.systemName = systemName;
@@ -54,6 +60,10 @@ public abstract class IResourceFhir {
 
     public static String getDominio(){
         return IResourceFhir.dominio;
+    }
+
+    public static String getSisaCode(){
+        return IResourceFhir.sisaCode;
     }
 
     public static String getSystemName(){

@@ -116,6 +116,7 @@ Este documento detalla las propiedades configurables del sistema.
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | ---------- | ------ | -------- | -------- | ------------ | ---- |
 | ws.federar.enabled | | - | **Único** | Determina si se utiliza la integracion con Federar (se necesita completar la configuración) | v0.2.0  |
+| ws.federar.sisaCode |	| 10002001110000 | **Obligatorio** |	Código SISA para el dominio | v1.20.0 |
 | ws.federar.claims.iss  |  | http://www.msal.gov.ar | **Obligatorio** | URI del dominio (registrada previamente ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.sub  |  | Ministerio de Salud de la Nación  | **Obligatorio** | Nombre del dominio | v0.2.0  |
 | ws.federar.claims.aud  |  | - | **Único** | URL de autenticación del Federador | v0.2.0  |
