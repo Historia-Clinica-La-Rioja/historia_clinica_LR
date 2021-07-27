@@ -13,7 +13,7 @@
     <named-native-query name="HCE.findAllMedications" result-set-mapping="HCE.findAllMedicationsResult">
         <query>with temporal as (
             SELECT DISTINCT
-            ms.id as medicationStatementId, ms.snomed_id, ms.status_id, ms.updated_on,
+            ms.id as medicationStatementId, ms.snomed_id, ms.status_id, ms.created_on, ms.updated_on,
             dsg.*,
             row_number() OVER (PARTITION by ms.sctid_code ORDER BY ms.updated_on desc) AS rw
             FROM document d
@@ -25,7 +25,8 @@
             AND d.status_id = :documentStatusId
             )
             SELECT  t.medicationStatementId AS id , s.sctid AS sctidCode, s.pt AS sctidTerm, status_id AS status,
-            t.sequence, t.count, t.duration, t.duration_unit, t.frequency, t.period_unit
+            t.sequence, t.count, t.duration, t.duration_unit, t.frequency, t.period_unit,
+            coalesce(t.start_date, t.created_on) as effectiveTime, t.end_date
             FROM temporal t
             JOIN snomed s ON t.snomed_id = s.id
             WHERE rw = 1 AND NOT status_id = :statusId
@@ -44,6 +45,8 @@
             <column name="duration_unit" class="java.lang.String"/>
             <column name="frequency" class="java.lang.Integer"/>
             <column name="period_unit" class="java.lang.String"/>
+            <column name="effectiveTime" class="java.sql.Date"/>
+            <column name="end_date" class="java.sql.Date"/>
         </constructor-result>
     </sql-result-set-mapping>
 

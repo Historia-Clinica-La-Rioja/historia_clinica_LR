@@ -9,7 +9,6 @@
 package net.pladema.hl7.dataexchange.medications;
 
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
 import net.pladema.hl7.dataexchange.model.domain.DosageVo;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
@@ -72,7 +71,9 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
             resource.setId(medication.getStatementId());
             resource.setStatus(MedicationStatement.MedicationStatementStatus.fromCode(medication.getStatus()))
                     .setSubject(references.get(ResourceType.Patient));
-            resource.getEffectivePeriod().setStart(FhirDateMapper.toDate(medication.getEffectiveTime()));
+            resource.getEffectivePeriod()
+                    .setStart(medication.getEffectiveTimeStart())
+                    .setEnd(medication.getEffectiveTimeEnd());
             resource.addDosage(buildDosage(medication.getDosage()));
 
             Medication medicament = medicationResource.fetch(medication);
@@ -172,8 +173,14 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
         }
         if(resource.hasStatus())
             data.setStatus(resource.getStatus().getDisplay());
-        if(resource.hasEffective())
-            data.setEffectiveTime(FhirDateMapper.toLocalDate(resource.getEffectiveDateTimeType().getValue()));
+        if(resource.hasEffective()) {
+            if(resource.getEffective().isDateTime())
+                data.setEffectiveTimeStart(resource.getEffectiveDateTimeType().getValue());
+            else {
+                data.setEffectiveTimeStart(resource.getEffectivePeriod().getStart());
+                data.setEffectiveTimeEnd(resource.getEffectivePeriod().getEnd());
+            }
+        }
 
         //Medication data
         if(resource.hasMedicationReference()) {

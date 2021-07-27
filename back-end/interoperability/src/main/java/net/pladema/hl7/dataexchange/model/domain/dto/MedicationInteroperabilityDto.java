@@ -2,6 +2,7 @@ package net.pladema.hl7.dataexchange.model.domain.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.domain.DosageVo;
 import net.pladema.hl7.dataexchange.model.domain.MedicationVo;
 
@@ -36,7 +37,8 @@ public class MedicationInteroperabilityDto {
             this.doseQuantityUnit = dosage.getDoseQuantityUnit();
         }
         this.status = medicationVo.getStatus();
-        this.effectiveTime = medicationVo.getEffectiveTime();
+        this.effectiveTimeStart = FhirDateMapper.toLocalDate(medicationVo.getEffectiveTimeStart());
+        this.effectiveTimeEnd = FhirDateMapper.toLocalDate(medicationVo.getEffectiveTimeEnd());
 
     }
     private String id;
@@ -68,5 +70,6 @@ public class MedicationInteroperabilityDto {
     private String doseQuantityCode;
     private String doseQuantityUnit;
 
-    private LocalDate effectiveTime;
+    private LocalDate effectiveTimeStart;
+    private LocalDate effectiveTimeEnd;
 }
