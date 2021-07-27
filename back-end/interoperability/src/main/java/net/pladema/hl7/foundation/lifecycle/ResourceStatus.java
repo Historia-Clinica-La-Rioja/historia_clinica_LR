@@ -10,13 +10,14 @@ import java.util.Map;
 public class ResourceStatus {
 
     public static final String ENTERED_IN_ERROR="723510000";
+    public static final String ACTIVE = "55561003";
 
     private static final Map<String, String> status = new HashMap<>();
     private static final Map<String, String> defaults = new HashMap<>();
 
     private ResourceStatus(){
         status.put(null,"");
-        status.put("55561003", "active");
+        status.put(ACTIVE, "active");
         status.put("255594003","completed");
         status.put("59156000","confirmed");
         status.put(ENTERED_IN_ERROR,"entered-in-error");

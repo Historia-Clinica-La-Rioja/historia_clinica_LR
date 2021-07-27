@@ -15,13 +15,13 @@
             SELECT DISTINCT
             ms.id as medicationStatementId, ms.snomed_id, ms.status_id, ms.created_on, ms.updated_on,
             dsg.*,
-            row_number() OVER (PARTITION by ms.sctid_code ORDER BY ms.updated_on desc) AS rw
+            row_number() OVER (PARTITION by ms.snomed_id ORDER BY ms.updated_on desc) AS rw
             FROM document d
             JOIN document_medicamention_statement dms ON d.id = dms.document_id
             JOIN medication_statement ms ON dms.medication_statement_id = ms.id
             LEFT JOIN dosage dsg ON ms.dosage_id = dsg.id
             WHERE ms.patient_id = :patientId
-            AND d.type_id = :documentTypeId
+            AND d.type_id IN :documentTypeId
             AND d.status_id = :documentStatusId
             )
             SELECT  t.medicationStatementId AS id , s.sctid AS sctidCode, s.pt AS sctidTerm, status_id AS status,
@@ -29,7 +29,7 @@
             coalesce(t.start_date, t.created_on) as effectiveTime, t.end_date
             FROM temporal t
             JOIN snomed s ON t.snomed_id = s.id
-            WHERE rw = 1 AND NOT status_id = :statusId
+            WHERE rw = 1 AND status_id = :statusId
             ORDER BY t.updated_on
         </query>
     </named-native-query>
@@ -111,14 +111,14 @@
         <query>
             WITH t AS(
             SELECT hc.id, snomed_id, hc.status_id, verification_status_id, start_date, hc.created_on, hc.updated_on,
-            row_number() over (partition by sctid_code order by hc.updated_on desc) as rw
+            row_number() over (partition by snomed_id order by hc.updated_on desc) as rw
             FROM document d
             JOIN document_health_condition dhc on d.id = dhc.document_id
             JOIN health_condition hc on dhc.health_condition_id = hc.id
             WHERE d.status_id = :docStatusId
             AND d.type_id = :documentTypeId
             AND hc.patient_id = :patientId
-            AND NOT hc.problem_id = :diagnosisId
+            AND hc.problem_id IN :diagnosisId
             )
             SELECT t.id as id, s.sctid as code, s.pt as term, status_id as clinical_status,
             verification_status_id, start_date, created_on
@@ -144,7 +144,7 @@
         <query>
             WITH t AS (
             SELECT inm.id, snomed_id, inm.status_id, administration_date, expiration_date, inm.created_on, inm.updated_on,
-            row_number() over (partition by sctid_code, administration_date order by inm.updated_on desc) as rw
+            row_number() over (partition by snomed_id, administration_date order by inm.updated_on desc) as rw
             FROM document d
             JOIN document_inmunization di on d.id = di.document_id
             JOIN inmunization inm on di.inmunization_id = inm.id
@@ -155,8 +155,7 @@
             SELECT t.id as id, s.sctid as code, s.pt as term, status_id, administration_date, created_on, expiration_date
             FROM t
             JOIN snomed s ON t.snomed_id = s.id
-            WHERE rw = 1
-            AND NOT status_id = :statusId
+            WHERE rw = 1 AND NOT status_id = :statusId
             ORDER BY t.updated_on DESC
         </query>
     </named-native-query>
@@ -177,7 +176,7 @@
             with temporal as (
             SELECT DISTINCT ai.id, ai.snomed_id, ai.status_id, ai.verification_status_id,
             ai.category_id, ai.start_date, ai.updated_on,
-            row_number() over (partition by ai.sctid_code order by ai.updated_on desc) as rw
+            row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw
             FROM document d
             JOIN document_allergy_intolerance dai ON d.id = dai.document_id
             JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id

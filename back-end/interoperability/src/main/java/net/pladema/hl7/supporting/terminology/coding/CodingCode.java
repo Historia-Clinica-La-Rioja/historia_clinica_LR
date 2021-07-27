@@ -33,7 +33,8 @@ public final class CodingCode {
 
         public static final FhirCode CATEGORY = new FhirCode("75326-9", "Problem");
 
-        public static final String DIAGNOSIS = "439401001";
+        public static final String PROBLEM = "55607006";
+        public static final String CHRONIC = "-55607006";
     }
 
     @UtilityClass
@@ -69,6 +70,6 @@ public final class CodingCode {
     public static class DocumentReference {
         public static final String FINAL_STATUS = "445665009";
         public static final short OUTPATIENT_TYPE = (short)4;
-
+        public static final Short RECIPE = (short)5;
     }
 }
