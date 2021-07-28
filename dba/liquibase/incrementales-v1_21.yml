@@ -1681,7 +1681,7 @@ databaseChangeLog:
                 referencedColumnNames: id
                 referencedTableName: odontology_reason
                 validate: true 
-                
+
     - changeSet:
         id: document_type-addOdontology
         comment: Carga de dato document_type de odontologia
@@ -1701,5 +1701,335 @@ databaseChangeLog:
           - sql:
               sql: |-
                   INSERT INTO source_type(id, description) VALUES (6, 'Odontología');
+
+    - changeSet:      
+          id: odontology_procedure-createTable
+          comment: Create table odontology_procedure
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: odontology_procedure
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_odontology_procedure
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: snomed_id
+                              type: int
+                        - column:
+                              name: tooth_id
+                              type: int
+                        - column:
+                              name: surface_id
+                              type: int
+                        - column:
+                              name: cie10_codes
+                              type: varchar(255)
+                        - column:
+                              name: performed_date
+                              type: date
+                        - column:
+                              name: note_id
+                              type: bigint
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: deleted
+                              type: boolean
+                              defaultValue: ${boolean.false}
+                        - column:
+                              name: deleted_by
+                              type: int
+                        - column:
+                              name: deleted_on
+                              type: datetime
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: odontology_procedure
+                    constraintName: FK_odontology_procedure_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: snomed_id
+                    baseTableName: odontology_procedure
+                    constraintName: FK_odontology_procedure_snomed_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: snomed
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: tooth_id
+                    baseTableName: odontology_procedure
+                    constraintName: FK_odontology_procedure_tooth_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: snomed
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: surface_id
+                    baseTableName: odontology_procedure
+                    constraintName: FK_odontology_procedure_surface_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: snomed
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: note_id
+                    baseTableName: odontology_procedure
+                    constraintName: FK_odontology_procedure_note_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: note
+                    validate: true
+
+    - changeSet:      
+          id: document_odontology_procedure-createTable
+          comment: Create table document_odontology_procedure
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: document_odontology_procedure
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: odontology_procedure_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: document_id
+                              type: bigint
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: odontology_procedure_id, document_id
+                    constraintName: PK_document_odontology_procedure
+                    tableName: document_odontology_procedure
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: odontology_procedure_id
+                    baseTableName: document_odontology_procedure
+                    constraintName: FK_document_odontology_procedure_odontology_procedure_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: odontology_procedure
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: document_id
+                    baseTableName: document_odontology_procedure
+                    constraintName: FK_document_odontology_procedure_document_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: document
+                    validate: true 
+
+    - changeSet:      
+          id: odontology_diagnostic-createTable
+          comment: Create table odontology_diagnostic
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: odontology_diagnostic
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_odontology_diagnostic
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: snomed_id
+                              type: int
+                        - column:
+                              name: tooth_id
+                              type: int
+                        - column:
+                              name: surface_id
+                              type: int
+                        - column:
+                              name: cie10_codes
+                              type: varchar(255)
+                        - column:
+                              name: performed_date
+                              type: date
+                        - column:
+                              name: note_id
+                              type: bigint
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: deleted
+                              type: boolean
+                              defaultValue: ${boolean.false}
+                        - column:
+                              name: deleted_by
+                              type: int
+                        - column:
+                              name: deleted_on
+                              type: datetime
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: odontology_diagnostic
+                    constraintName: FK_oodontology_diagnostic_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: snomed_id
+                    baseTableName: odontology_diagnostic
+                    constraintName: FK_odontology_diagnostic_snomed_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: snomed
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: tooth_id
+                    baseTableName: odontology_diagnostic
+                    constraintName: FK_odontology_diagnostic_tooth_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: snomed
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: surface_id
+                    baseTableName: odontology_diagnostic
+                    constraintName: FK_odontology_diagnostic_surface_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: snomed
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: note_id
+                    baseTableName: odontology_diagnostic
+                    constraintName: FK_odontology_diagnostic_note_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: note
+                    validate: true
+
+    - changeSet:      
+          id: document_odontology_diagnostic-createTable
+          comment: Create table document_odontology_diagnostic
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: document_odontology_diagnostic
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: odontology_diagnostic_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: document_id
+                              type: bigint
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: odontology_diagnostic_id, document_id
+                    constraintName: PK_document_odontology_diagnostic
+                    tableName: document_odontology_diagnostic
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: odontology_diagnostic_id
+                    baseTableName: document_odontology_diagnostic
+                    constraintName: FK_document_odontology_diagnostic_odontology_diagnostic_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: odontology_diagnostic
+                    validate: true 
+              - addForeignKeyConstraint:
+                    baseColumnNames: document_id
+                    baseTableName: document_odontology_diagnostic
+                    constraintName: FK_document_odontology_diagnostic_document_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: document
+                    validate: true 
 
 
