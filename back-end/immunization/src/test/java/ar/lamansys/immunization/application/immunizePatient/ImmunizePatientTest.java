@@ -83,7 +83,7 @@ class ImmunizePatientTest {
                 new VaccineConsultationStorageImpl(vaccineConsultationRepository),
                 new ImmunizationDocumentStorageImpl(documentExternalFactory, localDateMapper),
                 new DoctorStorageImpl(sharedStaffPort), new VaccineSchemeStorageImpl(vaccineSchemeRepository),
-                new ServeAppointmentStorageImpl(false, sharedAppointmentPort),
+                vaccineRuleStorage, new ServeAppointmentStorageImpl(false, sharedAppointmentPort),
                 dateTimeProvider);
     }
 
