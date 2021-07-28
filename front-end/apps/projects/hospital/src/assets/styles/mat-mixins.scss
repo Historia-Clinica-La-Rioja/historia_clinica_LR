@@ -292,3 +292,12 @@ $default-color: 50;
 		background-color: mat-color($primary-palette);
 	}
 }
+
+@mixin color-for-inmunization-dose($theme) {
+	$accent-palette: map-get($theme, accent);
+
+	.dose-color {
+		color: mat-color($accent-palette, darker);
+		background-color: mat-color($accent-palette, lighter);
+	}
+}

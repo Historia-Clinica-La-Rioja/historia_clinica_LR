@@ -22,4 +22,5 @@ $theme: mat-light-theme($primary, $accent);
 @include no-data($theme);
 @include general($theme);
 @include header($theme);
-@include mat-theme-color($theme)
+@include mat-theme-color($theme);
+@include color-for-inmunization-dose($theme)

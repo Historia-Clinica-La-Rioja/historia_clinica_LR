@@ -333,13 +333,20 @@
 			"vacunas2": {
 				"TAB_LABEL": "Vacunas",
 				"TITLE": "Historial de vacunación",
-				"ADD": "Aplicar vacuna 2",
-				"aplicar": {
-					"TITLE": "Aplicar vacuna 2",
+				"ADD": "Agregar vacunas",
+				"agregar_vacunas": {
+					"TITLE": "Agregar vacunas",
+					"SPECIALTY": "Especialidad",
+					"ADD_ONE": "Agregar vacuna",
+					"BILLABLE_VACCINE_TITLE": "Aplicación facturable",
+					"PREVIOUS_VACCINE_TITLE": "Registro de vacuna previa",
+					"aplicar_vacuna": {
+						"TITLE": "Agregar vacuna",
+						"BILLABLE_TAB_LABEL": "Vacuna facturable",
+						"PREVIOUS_TAB_LABEL": "Registrar vacuna previa"
+					},
 					"INMUNIZATION": "Vacuna",
 					"NOTE": "Evolución",
-					"SUBMIT": "Confirmar",
-					"SUBMIT_CONJUNTO_VACUNAS": "Confirmar vacunaciones",
 					"ADMINISTRATION_DATE": "Fecha de vacunación",
 					"save": {
 						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
