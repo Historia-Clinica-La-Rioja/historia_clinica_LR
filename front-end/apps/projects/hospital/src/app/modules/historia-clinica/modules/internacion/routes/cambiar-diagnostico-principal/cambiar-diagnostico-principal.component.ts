@@ -114,8 +114,11 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 				}
 			});
 		}
+		else{
+			this.snackBarService.showError('internaciones.clinical-assessment-diagnosis.messages.WITHOUT_NEW_DIAGNOSIS');
+		}
 	}
-
+	
 	openConfirmDialog(): Observable<any> {
 		const previousDiagnosisHTML = `<strong>${this.currentMainDiagnosis.snomed.pt}</strong>`;
 		const newDiagnosisHTML = `<strong>${this.newMainDiagnosis.snomed.pt}</strong>`;
