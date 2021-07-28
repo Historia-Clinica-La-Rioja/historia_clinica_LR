@@ -3,13 +3,13 @@ package ar.lamansys.immunization.infrastructure.input.rest;
 import ar.lamansys.immunization.application.immunizePatient.ImmunizePatient;
 import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
 import ar.lamansys.immunization.domain.snomed.SnomedBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationException;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDosisException;
 import ar.lamansys.immunization.infrastructure.input.rest.dto.ImmunizePatientDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +62,7 @@ class ImmunizeControllerTest {
         Assertions.assertEquals(LocalDate.of(2020,12,12), immunizePatientBoArgumentCaptor.getValue()
                 .getImmunizations().get(0).getAdministrationDate());
 
-        Assertions.assertEquals(VaccineDoseBo.DOSE_0, immunizePatientBoArgumentCaptor.getValue()
+        Assertions.assertEquals(new VaccineDoseBo("dose0", (short)0), immunizePatientBoArgumentCaptor.getValue()
                 .getImmunizations().get(0).getDose());
 
         Assertions.assertEquals(VaccineConditionApplicationBo.NATIONAL_CALENDAR, immunizePatientBoArgumentCaptor.getValue()
@@ -97,28 +97,13 @@ class ImmunizeControllerTest {
 
     }
 
-    @Test
-    void failVaccineDose() {
-        when(localDateMapper.fromStringToLocalDate(any())).thenReturn(LocalDate.of(2020,12,12));
-        var immunizePatientDto = new ImmunizePatientDto();
-        immunizePatientDto.setClinicalSpecialtyId(4);
-        var immunization = createImmunization();
-        immunization.setDoseId((short)-1);
-        immunizePatientDto.setImmunizations(List.of(immunization));
-        Exception exception = Assertions.assertThrows(VaccineDosisException.class, () ->
-                immunizeController.immunizePatient(1, 2, immunizePatientDto)
-        );
-        assertEquals("La dosis -1 no existe", exception.getMessage());
-
-    }
-
     private ImmunizationDto createImmunization() {
         var result = new ImmunizationDto();
         result.setSnomed(new SnomedDto("SNOMED_ID", "SNOMED_PT"));
         result.setAdministrationDate("2020-05-10");
         result.setInstitutionId(null);
         result.setNote("Nota de prueba");
-        result.setDoseId((short)1);
+        result.setDose(new VaccineDoseInfoDto("dose0", (short)0));
         result.setConditionId((short)3);
         result.setSchemeId((short)1);
         result.setLotNumber("BATCH");

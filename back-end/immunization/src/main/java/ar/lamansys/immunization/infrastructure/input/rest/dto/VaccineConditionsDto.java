@@ -2,7 +2,7 @@ package ar.lamansys.immunization.infrastructure.input.rest.dto;
 
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import lombok.Getter;
 import lombok.ToString;
 

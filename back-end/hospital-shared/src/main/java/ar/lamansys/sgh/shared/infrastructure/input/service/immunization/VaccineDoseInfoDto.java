@@ -1,6 +1,27 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.immunization;
 
-import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.AbstractMasterdataDto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.validation.annotation.Validated;
 
-public class VaccineDoseInfoDto extends AbstractMasterdataDto<Short> {
+import javax.validation.constraints.NotNull;
+
+@Getter
+@Setter
+@ToString
+@Validated
+@NoArgsConstructor
+public class VaccineDoseInfoDto {
+
+    @NotNull(message = "{value.mandatory}")
+    private String description;
+
+    @NotNull(message = "{value.mandatory}")
+    private Short order;
+    public VaccineDoseInfoDto(String description, Short order) {
+        this.description = description;
+        this.order = order;
+    }
 }

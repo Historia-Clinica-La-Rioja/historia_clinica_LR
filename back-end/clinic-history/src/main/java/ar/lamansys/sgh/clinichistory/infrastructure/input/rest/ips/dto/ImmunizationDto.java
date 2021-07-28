@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Nullable;
+import javax.validation.Valid;
 
 @Getter
 @Setter
@@ -23,8 +25,9 @@ public class ImmunizationDto extends ClinicalTermDto {
     @Nullable
     private Integer institutionId;
 
+    @Valid
     @Nullable
-    private Short doseId;
+    private VaccineDoseInfoDto dose;
 
     @Nullable
     private Short conditionId;

@@ -1,7 +1,8 @@
 package ar.lamansys.immunization.infrastructure.input.rest.dto;
 
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -15,16 +16,19 @@ public class VaccineSchemeDto {
 
     private final String description;
 
-    private List<VaccineDoseDto> doses;
+    private List<VaccineDoseInfoDto> doses;
 
     public VaccineSchemeDto(VaccineSchemeBo schemeBo, VaccineDoseBo doseBo) {
         this.id = schemeBo.getId();
         this.description = schemeBo.getDescription();
-        this.doses = new ArrayList<>(Collections.singletonList(new VaccineDoseDto(doseBo)));
+        this.doses = doseBo != null ? new ArrayList<>(Collections.singletonList(new VaccineDoseInfoDto(doseBo.getDescription(), doseBo.getOrder()))) : new ArrayList<>();
+
     }
 
     public void add(VaccineDoseBo doseBo) {
-        if (doses.stream().noneMatch(dose -> dose.getId().equals(doseBo.getId())))
-            doses.add(new VaccineDoseDto(doseBo));
+        if (doseBo == null)
+            return;
+        if (doses.stream().noneMatch(dose -> dose.equals(doseBo)))
+            doses.add(new VaccineDoseInfoDto(doseBo.getDescription(), doseBo.getOrder()));
     }
 }

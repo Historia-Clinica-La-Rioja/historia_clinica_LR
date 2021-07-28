@@ -1,10 +1,11 @@
 package ar.lamansys.sgh.clinichistory.domain.hce;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationDoseBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEImmunizationVo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEImmunizationVo;
 
 import java.time.LocalDate;
 
@@ -20,7 +21,7 @@ public class HCEImmunizationBo extends  HCEClinicalTermBo{
 
     private Integer institutionId;
 
-    private Short doseId;
+    private ImmunizationDoseBo dose;
 
     private Short conditionId;
 
@@ -35,7 +36,7 @@ public class HCEImmunizationBo extends  HCEClinicalTermBo{
         this.administrationDate = source.getAdministrationDate();
         this.note = source.getNote();
         this.institutionId = source.getInstitutionId();
-        this.doseId = source.getDoseId();
+        this.dose = new ImmunizationDoseBo(source.getDose(), source.getDoseOrder());
         this.conditionId = source.getConditionId();
         this.schemeId = source.getSchemeId();
         this.lotNumber = source.getLotNumber();

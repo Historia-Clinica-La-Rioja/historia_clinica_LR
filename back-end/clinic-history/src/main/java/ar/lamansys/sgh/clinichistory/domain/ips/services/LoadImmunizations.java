@@ -90,7 +90,8 @@ public class LoadImmunizations {
                 immunizationBo.getInstitutionId(),
                 immunizationBo.getConditionId(),
                 immunizationBo.getSchemeId(),
-                immunizationBo.getDoseId(),
+                immunizationBo.getDose() != null ? immunizationBo.getDose().getDescription() : null,
+                immunizationBo.getDose() != null ? immunizationBo.getDose().getOrder() : null,
                 noteId,
                 immunizationBo.getLotNumber(),
                 immunizationBo.isBillable());

@@ -3,10 +3,8 @@ package ar.lamansys.immunization.infrastructure.input.service;
 import ar.lamansys.immunization.application.fetchVaccineSchemeInfo.FetchVaccineSchemeInfo;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineConditionDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineSchemeInfoDto;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +22,6 @@ public class SharedImmunizationPortImpl implements SharedImmunizationPort {
         VaccineConditionDto result = new VaccineConditionDto();
         result.setId(id);
         result.setDescription(VaccineConditionApplicationBo.map(id).getDescription());
-        return result;
-    }
-
-    @Override
-    public VaccineDoseInfoDto fetchVaccineDoseInfo(Short id) {
-        VaccineDoseInfoDto result = new VaccineDoseInfoDto();
-        result.setId(id);
-        result.setDescription(VaccineDoseBo.map(id).getDescription());
         return result;
     }
 

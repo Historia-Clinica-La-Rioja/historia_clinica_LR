@@ -5,9 +5,11 @@ import ar.lamansys.immunization.application.immunizePatient.ImmunizePatient;
 import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.snomed.SnomedBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import ar.lamansys.immunization.infrastructure.input.rest.dto.ImmunizePatientDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,12 +68,18 @@ public class ImmunizeController {
                     mapSnomed(immunizationDto.getSnomed()),
                     immunizationDto.getConditionId(),
                     immunizationDto.getSchemeId(),
-                    immunizationDto.getDoseId(),
+                    mapDose(immunizationDto.getDose()),
                     localDateMapper.fromStringToLocalDate(immunizationDto.getAdministrationDate()),
                     immunizationDto.getLotNumber(),
                     immunizationDto.getNote(),
                     immunizationDto.isBillable());
 
+    }
+
+    private VaccineDoseBo mapDose(VaccineDoseInfoDto dose) {
+        if (dose == null)
+            return null;
+        return new VaccineDoseBo(dose.getDescription(), dose.getOrder());
     }
 
     private SnomedBo mapSnomed(SnomedDto snomed) {

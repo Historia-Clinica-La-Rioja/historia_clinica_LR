@@ -4,7 +4,6 @@ import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccin
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientException;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorException;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationException;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDosisException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +52,6 @@ public class ImmunizationExceptionHandler {
 	@ExceptionHandler({ VaccineConditionApplicationException.class })
 	protected ApiErrorMessageDto handleVaccineConditionApplicationException(VaccineConditionApplicationException ex, Locale locale) {
 		logger.debug("VaccineConditionApplicationException exception -> {}", ex.getMessage());
-		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
-	}
-
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ VaccineDosisException.class })
-	protected ApiErrorMessageDto handleVaccineDosisException(VaccineDosisException ex, Locale locale) {
-		logger.debug("VaccineDosisException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 

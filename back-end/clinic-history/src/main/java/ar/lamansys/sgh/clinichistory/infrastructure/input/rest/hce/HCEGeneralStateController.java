@@ -12,6 +12,7 @@ import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationDoseBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHospitalizationHistoryDto;
@@ -23,6 +24,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGen
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import io.swagger.annotations.Api;
@@ -159,12 +161,18 @@ public class HCEGeneralStateController {
         result.setAdministrationDate(localDateMapper.fromLocalDateToString(hceImmunizationBo.getAdministrationDate()));
         result.setCondition(hceImmunizationBo.getConditionId() != null ? sharedImmunizationPort.fetchVaccineConditionInfo(hceImmunizationBo.getConditionId()) : null);
         result.setScheme(hceImmunizationBo.getSchemeId() != null ? sharedImmunizationPort.fetchVaccineSchemeInfo(hceImmunizationBo.getSchemeId()) : null);
-        result.setDose(hceImmunizationBo.getDoseId() != null ? sharedImmunizationPort.fetchVaccineDoseInfo(hceImmunizationBo.getDoseId()) : null);
+        result.setDose(mapVaccineDose(hceImmunizationBo.getDose()));
         result.setNote(hceImmunizationBo.getNote());
         result.setInstitution(hceImmunizationBo.getInstitutionId() != null ? sharedInstitutionPort.fetchInstitutionById(hceImmunizationBo.getInstitutionId()) : null);
         result.setLotNumber(hceImmunizationBo.getLotNumber());
         result.setDoctor(sharedStaffPort.getProfessionalCompleteInfo(hceImmunizationBo.getCreatedByUserId()));
         return  result;
+    }
+
+    private VaccineDoseInfoDto mapVaccineDose(ImmunizationDoseBo dose) {
+        if (dose == null)
+            return null;
+        return new VaccineDoseInfoDto(dose.getDescription(), dose.getOrder());
     }
 
     @GetMapping("/medications")

@@ -8,6 +8,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,8 +101,8 @@ public class AuditableContextBuilder {
 				sharedImmunizationPort.fetchVaccineConditionInfo(immunizationBo.getConditionId()) : null);
 		result.setScheme(immunizationBo.getSchemeId() != null ?
 				sharedImmunizationPort.fetchVaccineSchemeInfo(immunizationBo.getSchemeId()) : null);
-		result.setDose(immunizationBo.getDoseId() != null ?
-				sharedImmunizationPort.fetchVaccineDoseInfo(immunizationBo.getDoseId()) : null);
+		result.setDose(immunizationBo.getDose() != null ?
+						new VaccineDoseInfoDto(immunizationBo.getDose().getDescription(), immunizationBo.getDose().getOrder()) : null);
 		return result;
 	}
 

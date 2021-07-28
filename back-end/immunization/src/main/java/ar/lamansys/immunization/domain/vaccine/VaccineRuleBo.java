@@ -1,7 +1,6 @@
 package ar.lamansys.immunization.domain.vaccine;
 
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
 import lombok.Getter;
 import lombok.ToString;
 

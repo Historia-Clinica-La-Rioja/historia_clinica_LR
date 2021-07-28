@@ -1,3 +1,18 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_21 
 
+    - changeSet:
+        id:  update dose info in immunization table
+        author:  etrapani
+        changes:
+          - addColumn:
+              tableName: inmunization
+              columns:
+                - column:
+                    name: dose
+                    type: varchar(40)
+          -  renameColumn:
+               newColumnName:  dose_order
+               oldColumnName:  dose_id
+               tableName:  inmunization
+

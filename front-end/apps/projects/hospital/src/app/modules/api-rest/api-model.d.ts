@@ -896,7 +896,7 @@ export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
     billable?: boolean;
     conditionId?: number;
-    doseId?: number;
+    dose?: VaccineDoseInfoDto;
     institutionId?: number;
     lotNumber?: string;
     note: string;
@@ -1746,14 +1746,9 @@ export interface VaccineConditionsDto {
     schemes: VaccineSchemeDto[];
 }
 
-export interface VaccineDoseDto {
+export interface VaccineDoseInfoDto {
     description: string;
-    id: number;
     order: number;
-}
-
-export interface VaccineDoseInfoDto extends AbstractMasterdataDto<number> {
-    id: number;
 }
 
 export interface VaccineInformationDto {
@@ -1764,7 +1759,7 @@ export interface VaccineInformationDto {
 
 export interface VaccineSchemeDto {
     description: string;
-    doses: VaccineDoseDto[];
+    doses: VaccineDoseInfoDto[];
     id: number;
 }
 
@@ -1794,7 +1789,6 @@ export interface VitalSignsReportDto extends Serializable {
     systolicBloodPressure?: ReportClinicalObservationDto;
     temperature?: ReportClinicalObservationDto;
 }
-
 
 export type CoverageDtoUnion = HealthInsuranceDto | PrivateHealthInsuranceDto;
 

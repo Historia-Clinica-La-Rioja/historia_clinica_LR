@@ -3,12 +3,14 @@ package ar.lamansys.immunization.infrastructure.output.repository.document;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentStorage;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.DocumentExternalFactory;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +63,7 @@ public class ImmunizationDocumentStorageImpl implements ImmunizationDocumentStor
         result.setAdministrationDate(localDateMapper.fromLocalDateToString(immunizationInfoBo.getAdministrationDate()));
         result.setInstitutionId(immunizationInfoBo.getInstitutionId());
         result.setNote(immunizationInfoBo.getNote());
-        result.setDoseId(immunizationInfoBo.getDoseId());
+        result.setDose(mapDose(immunizationInfoBo.getDose()));
         result.setConditionId(immunizationInfoBo.getConditionId());
         result.setSchemeId(immunizationInfoBo.getSchemeId());
         result.setSnomed(new SnomedDto(
@@ -70,5 +72,11 @@ public class ImmunizationDocumentStorageImpl implements ImmunizationDocumentStor
         result.setLotNumber(immunizationInfoBo.getLotNumber());
         result.setBillable(immunizationInfoBo.isBillable());
         return result;
+    }
+
+    private VaccineDoseInfoDto mapDose(VaccineDoseBo dose) {
+        if (dose == null)
+            return null;
+        return new VaccineDoseInfoDto(dose.getDescription(), dose.getOrder());
     }
 }

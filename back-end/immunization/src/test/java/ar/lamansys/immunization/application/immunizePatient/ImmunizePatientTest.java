@@ -5,9 +5,10 @@ import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorException;
 import ar.lamansys.immunization.domain.snomed.SnomedBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
 import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
-import ar.lamansys.immunization.domain.vaccine.doses.VaccineDoseBo;
 import ar.lamansys.immunization.infrastructure.output.repository.appointments.ServeAppointmentStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.DoctorStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultation;
@@ -25,6 +26,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.junit.jupiter.api.Assertions;
@@ -59,6 +61,9 @@ class ImmunizePatientTest {
 
     @Mock
     private VaccineSchemeStorage vaccineSchemeStorage;
+
+    @Mock
+    private VaccineRuleStorage vaccineRuleStorage;
 
     @Mock
     private DateTimeProvider dateTimeProvider;
@@ -125,8 +130,8 @@ class ImmunizePatientTest {
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getSnomed());
         Assertions.assertEquals(20,
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getInstitutionId());
-        Assertions.assertEquals(VaccineDoseBo.DOSE_1.getId(),
-                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getDoseId());
+        Assertions.assertEquals(new VaccineDoseInfoDto("dose1", (short)1),
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getDose());
         Assertions.assertEquals(VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getConditionId());
         Assertions.assertEquals("2020-12-12",
@@ -307,7 +312,7 @@ class ImmunizePatientTest {
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 (short) 1,
-                VaccineDoseBo.DOSE_1.getId(),
+                new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
                 "LOTE",
                 "Nota de vacuna",
@@ -319,7 +324,7 @@ class ImmunizePatientTest {
                 null,
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 (short) 1,
-                VaccineDoseBo.DOSE_1.getId(),
+                new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
                 "LOTE",
                 "Nota de vacuna",
@@ -332,7 +337,7 @@ class ImmunizePatientTest {
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 (short) 1,
-                VaccineDoseBo.DOSE_1.getId(),
+                new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
                 "LOTE",
                 "Nota de vacuna",
@@ -345,7 +350,7 @@ class ImmunizePatientTest {
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 (short) 1,
-                VaccineDoseBo.DOSE_1.getId(),
+                new VaccineDoseBo("Dose1", (short)1),
                 null,
                 "LOTE",
                 "Nota de vacuna",
@@ -357,7 +362,7 @@ class ImmunizePatientTest {
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 null,
                 (short) 1,
-                VaccineDoseBo.DOSE_1.getId(),
+                new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
                 "LOTE",
                 "Nota de vacuna",
@@ -369,7 +374,7 @@ class ImmunizePatientTest {
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 null,
-                VaccineDoseBo.DOSE_1.getId(),
+                new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
                 "LOTE",
                 "Nota de vacuna",
