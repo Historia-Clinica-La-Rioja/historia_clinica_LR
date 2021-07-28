@@ -3,6 +3,7 @@ package ar.lamansys.odontology.application.createConsultation;
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
+import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
@@ -47,13 +48,17 @@ class CreateConsultationServiceImplTest {
     @Mock
     private OdontologyDoctorStorage odontologyDoctorStorage;
 
+    @Mock
+    private OdontologyDocumentStorage odontologyDocumentStorage;
+
     @BeforeEach
     void setUp() {
         this.createConsultationService = new CreateConsultationServiceImpl(diagnosticStorage,
                 proceduresStorage,
                 odontologyConsultationStorage,
                 dateTimeProvider,
-                odontologyDoctorStorage);
+                odontologyDoctorStorage,
+                odontologyDocumentStorage);
     }
 
     @Test

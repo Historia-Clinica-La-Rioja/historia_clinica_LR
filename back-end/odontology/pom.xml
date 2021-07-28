@@ -29,6 +29,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys.sgh</groupId>
+            <artifactId>clinic-history</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ar.lamansys</groupId>
             <artifactId>sgx-shared</artifactId>
             <version>0.0.1-SNAPSHOT</version>

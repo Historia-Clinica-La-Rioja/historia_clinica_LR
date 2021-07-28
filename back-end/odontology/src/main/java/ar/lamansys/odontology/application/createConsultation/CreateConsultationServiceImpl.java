@@ -4,6 +4,7 @@ import ar.lamansys.odontology.application.createConsultation.exceptions.CreateCo
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationExceptionEnum;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
+import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
@@ -13,6 +14,7 @@ import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalDiagnosticBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalProcedureBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
+import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,16 +39,20 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
 
     private final OdontologyDoctorStorage odontologyDoctorStorage;
 
+    private final OdontologyDocumentStorage odontologyDocumentStorage;
+
     public CreateConsultationServiceImpl(DiagnosticStorage diagnosticStorage,
                                          ProcedureStorage proceduresStorage,
                                          OdontologyConsultationStorage odontologyConsultationStorage,
                                          DateTimeProvider dateTimeProvider,
-                                         OdontologyDoctorStorage odontologyDoctorStorage) {
+                                         OdontologyDoctorStorage odontologyDoctorStorage,
+                                         OdontologyDocumentStorage odontologyDocumentStorage) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
         this.dateTimeProvider = dateTimeProvider;
         this.odontologyDoctorStorage = odontologyDoctorStorage;
+        this.odontologyDocumentStorage = odontologyDocumentStorage;
     }
 
     @Override
@@ -63,12 +69,14 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
         assertContextValid(consultationBo, doctorInfoBo);
 
         LocalDate now = dateTimeProvider.nowDate();
-        odontologyConsultationStorage.save(
+        Integer encounterId = odontologyConsultationStorage.save(
                 new ConsultationInfoBo(null,
                         consultationBo,
                         doctorInfoBo.getId(),
                         now,
                         true));
+
+        odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId()));
 
         LOG.debug("No output");
     }

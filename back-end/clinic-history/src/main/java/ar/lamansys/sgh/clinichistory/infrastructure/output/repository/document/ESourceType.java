@@ -11,6 +11,7 @@ public enum ESourceType {
     ORDER(3, "orders"),
     EMERGENCY_CARE(4, "emergency_care"),
     IMMUNIZATION(5, "immunization"),
+    ODONTOLOGY(6, "odontology"),
     ;
 
     private Short id;
