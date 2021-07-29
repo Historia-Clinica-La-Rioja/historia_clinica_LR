@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AllergyConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DentalActionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosticReportDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentObservationsDto;
@@ -65,5 +66,7 @@ public class DocumentDto {
     private VitalSignDto vitalSigns;
 
     private List<ReasonDto> reasons;
+
+    private List<DentalActionDto> dentalActions;
 
 }

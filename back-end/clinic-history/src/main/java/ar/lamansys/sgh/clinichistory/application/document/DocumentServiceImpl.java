@@ -42,6 +42,10 @@ public class  DocumentServiceImpl implements DocumentService {
 
     private final DocumentDiagnosticReportRepository documentDiagnosticReportRepository;
 
+    private final DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository;
+
+    private final DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository;
+
     public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentImmunizationRepository documentImmunizationRepository,
@@ -50,7 +54,8 @@ public class  DocumentServiceImpl implements DocumentService {
                                DocumentLabRepository documentLabRepository,
                                DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
                                DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
-                               DocumentDiagnosticReportRepository documentDiagnosticReportRepository) {
+                               DocumentDiagnosticReportRepository documentDiagnosticReportRepository,
+                               DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository, DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
@@ -60,6 +65,8 @@ public class  DocumentServiceImpl implements DocumentService {
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
         this.documentMedicamentionStatementRepository = documentMedicamentionStatementRepository;
         this.documentDiagnosticReportRepository = documentDiagnosticReportRepository;
+        this.documentOdontologyProcedureRepository = documentOdontologyProcedureRepository;
+        this.documentOdontologyDiagnosticRepository = documentOdontologyDiagnosticRepository;
     }
 
     @Override
@@ -147,6 +154,24 @@ public class  DocumentServiceImpl implements DocumentService {
         LOG.debug("Input parameters -> documentId {}, procedureId {}", documentId, diagnosticReportId);
         DocumentDiagnosticReport result = new DocumentDiagnosticReport(documentId, diagnosticReportId);
         result = documentDiagnosticReportRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public DocumentOdontologyProcedure createDocumentOdontologyProcedure(Long documentId, Integer odontologyProcedureId) {
+        LOG.debug("Input parameters -> documentId {}, odontologyProcedureId {}", documentId, odontologyProcedureId);
+        DocumentOdontologyProcedure result = new DocumentOdontologyProcedure(documentId, odontologyProcedureId);
+        result = documentOdontologyProcedureRepository.save(result);
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public DocumentOdontologyDiagnostic createDocumentOdontologyDiagnostic(Long documentId, Integer odontologyDiagnosticId) {
+        LOG.debug("Input parameters -> documentId {}, odontologyDiagnosticId {}", documentId, odontologyDiagnosticId);
+        DocumentOdontologyDiagnostic result = new DocumentOdontologyDiagnostic(documentId, odontologyDiagnosticId);
+        result = documentOdontologyDiagnosticRepository.save(result);
         LOG.debug(OUTPUT, result);
         return result;
     }

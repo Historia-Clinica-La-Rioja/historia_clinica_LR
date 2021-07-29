@@ -44,11 +44,18 @@ public class DocumentServiceImplTest {
 	@MockBean
 	private DocumentDiagnosticReportRepository documentDiagnosticReportRepository;
 
+	@MockBean
+	private DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository;
+
+	@MockBean
+	private DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository;
+
 	@Before
 	public void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
                 documentImmunizationRepository, documentProcedureRepository, documentVitalSignRepository, documentLabRepository,
-				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository);
+				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
+				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository);
 	}
 
 	@Test

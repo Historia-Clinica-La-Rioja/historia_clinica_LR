@@ -40,6 +40,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private final LoadDiagnosticReports loadDiagnosticReports;
 
+    private final LoadDentalActions loadDentalActions;
+
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -49,7 +51,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                LoadImmunizations loadImmunizations,
                                LoadProcedures loadProcedures,
                                LoadMedications loadMedications,
-                               LoadDiagnosticReports loadDiagnosticReports) {
+                               LoadDiagnosticReports loadDiagnosticReports,
+                               LoadDentalActions loadDentalActions) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -60,6 +63,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         this.loadProcedures = loadProcedures;
         this.loadMedications = loadMedications;
         this.loadDiagnosticReports = loadDiagnosticReports;
+        this.loadDentalActions = loadDentalActions;
     }
 
     @Override
@@ -83,6 +87,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadImmunizations.run(patientInfo, doc.getId(), documentBo.getImmunizations());
         loadMedications.run(patientInfo, doc.getId(), documentBo.getMedications());
         loadProcedures.run(patientInfo, doc.getId(), documentBo.getProcedures());
+        loadDentalActions.run(patientInfo, doc.getId(), documentBo.getDentalActions());
 
         clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getVitalSigns()));
         clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));

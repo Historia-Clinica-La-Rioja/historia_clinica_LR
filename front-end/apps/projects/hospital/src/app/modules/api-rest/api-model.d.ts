@@ -425,6 +425,12 @@ export interface DateTimeDto {
     time: TimeDto;
 }
 
+export interface DentalActionDto extends ClinicalTermDto {
+    diagnostic: boolean;
+    surface: SnomedDto;
+    tooth: SnomedDto;
+}
+
 export interface DepartmentDto extends AbstractMasterdataDto<number> {
     id: number;
 }
@@ -520,6 +526,7 @@ export interface DocumentDto {
     allergies: AllergyConditionDto[];
     anthropometricData: AnthropometricDataDto;
     clinicalSpecialtyId: number;
+    dentalActions: DentalActionDto[];
     diagnosis: DiagnosisDto[];
     diagnosticReports: DiagnosticReportDto[];
     documentSource: number;

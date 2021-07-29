@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.domain.document;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
@@ -67,6 +68,8 @@ public class DocumentBo implements IDocumentBo {
     private List<DiagnosticReportBo> diagnosticReports = new ArrayList<>();
 
     private List<ReasonBo> reasons = new ArrayList<>();
+
+    private List<DentalActionBo> dentalActions = new ArrayList<>();
 
     private VitalSignBo vitalSigns;
 

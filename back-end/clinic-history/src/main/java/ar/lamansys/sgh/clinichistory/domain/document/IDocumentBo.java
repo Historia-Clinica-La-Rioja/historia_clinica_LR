@@ -99,4 +99,8 @@ public interface IDocumentBo {
     default List<DiagnosticReportBo> getDiagnosticReports(){
         return Collections.emptyList();
     };
+
+    default List<DentalActionBo> getDentalActions() {
+        return Collections.emptyList();
+    }
 }

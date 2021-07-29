@@ -29,6 +29,10 @@ public interface DocumentService {
 
     DocumentDiagnosticReport createDocumentDiagnosticReport(Long documentId, Integer diagnosticReportId);
 
+    DocumentOdontologyProcedure createDocumentOdontologyProcedure(Long documentId, Integer odontologyProcedureId);
+
+    DocumentOdontologyDiagnostic createDocumentOdontologyDiagnostic(Long documentId, Integer id);
+
     GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId);
 
     List<ImmunizationBo> getImmunizationStateFromDocument(Long documentId);
