@@ -48,6 +48,7 @@ export class AppointmentComponent implements OnInit {
 	formEdit: FormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
+	coverageNumber: any;
 	coverageData: PatientMedicalCoverage;
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
@@ -224,6 +225,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private setCoverageText(coverageData) {
+		this.coverageNumber = coverageData.affiliateNumber;
 		const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
 		if (isHealthInsurance) {
 			let healthInsurance: HealthInsurance;
@@ -268,7 +270,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
+		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.affiliateNumber]
 			.filter(Boolean).join(' - ');
 		return [medicalCoverageText].filter(Boolean).join(' / ');
 	}
