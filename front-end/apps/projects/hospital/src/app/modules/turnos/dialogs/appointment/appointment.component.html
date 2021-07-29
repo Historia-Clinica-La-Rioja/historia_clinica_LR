@@ -16,7 +16,7 @@
 							(click)="closeDialog()">Ver historia clínica</a>
 					</div>
 				</div>
-				<button mat-icon-button color="primary"  fxFlex="10%" *ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
+				<button type="button" mat-icon-button color="primary"  fxFlex="10%" *ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
 					<mat-icon>edit</mat-icon>
 				</button>
 			</div>
