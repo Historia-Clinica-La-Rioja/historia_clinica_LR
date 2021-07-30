@@ -16,6 +16,7 @@ export class AplicarVacuna2Component implements OnInit {
 	schemes: any[];
 	conditions: any[];
 	billableForm: FormGroup;
+	previousForm: FormGroup;
 	today: Moment = newMoment();
 
 	constructor(
@@ -33,6 +34,17 @@ export class AplicarVacuna2Component implements OnInit {
 			dose: [null, Validators.required],
 			lot: [null],
 			note: [null]
+		});
+
+		this.previousForm = this.formBuilder.group({
+			date: [this.today, Validators.required],
+			snomed: [null, Validators.required],
+			condition: [null, Validators.required],
+			scheme: [null, Validators.required],
+			dose: [null, Validators.required],
+			lot: [null],
+			institution: [null],
+			proffesional: [null]
 		});
 	}
 

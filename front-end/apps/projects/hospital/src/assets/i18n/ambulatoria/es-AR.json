@@ -350,7 +350,9 @@
 						"CONDITION": "Condición o motivo",
 						"SCHEME": "Esquema",
 						"DOSE": "Dosis",
-						"LOT": "Lote"
+						"LOT": "Lote",
+						"INSTITUTION": "Institución",
+						"PROFFESIONAL": "Profesional"
 					},
 					"save": {
 						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
