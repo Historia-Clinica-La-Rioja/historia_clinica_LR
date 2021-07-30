@@ -52,7 +52,8 @@
 				"BUTTON_ADD": "Crear paciente temporal",
 				"BUTTON_SEARCH": "Buscar",
 				"NO_IDENTITY": "No acredita identidad",
-				"TITLE": "Búsqueda / Creación de HC"
+				"TITLE": "Búsqueda / Creación de HC",
+				"BUTTON_SCAN": "Escanear código"
 			}
 		},
 		"new": {

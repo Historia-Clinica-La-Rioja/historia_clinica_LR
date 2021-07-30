@@ -7,6 +7,8 @@ import { PatientMasterDataService } from '@api-rest/services/patient-master-data
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
+import { ScanPatientPopupComponent } from '@pacientes/dialogs/scan-patient-popup/scan-patient-popup.component';
+import { MatDialog } from '@angular/material/dialog';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -26,7 +28,7 @@ export class SearchCreateComponent implements OnInit {
 	public identifyTypeArray;
 	public hasError = hasError;
 	private readonly routePrefix;
-
+	
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -34,6 +36,7 @@ export class SearchCreateComponent implements OnInit {
 		private patientMasterDataService: PatientMasterDataService,
 		private personMasterDataService: PersonMasterDataService,
 		private contextService: ContextService,
+		private dialog: MatDialog,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -129,4 +132,7 @@ export class SearchCreateComponent implements OnInit {
 		}
 	}
 
+	openScanPatientDialog(): void {
+		const dialogRef = this.dialog.open(ScanPatientPopupComponent);
+	}
 }
