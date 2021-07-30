@@ -8,6 +8,8 @@ import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineCondi
 
 public class ImmunizationValidator {
 
+    public static final String INFORMACION_INCOMPLETA = "Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=%s), esquema(id=%s), dosis(description=%s, order=%s)";
+
     private final VaccineSchemeStorage vaccineSchemeStorage;
 
     private final VaccineRuleStorage vaccineRuleStorage;
@@ -18,9 +20,7 @@ public class ImmunizationValidator {
     }
 
     public void isValid(ImmunizationInfoBo immunizationInfoBo){
-        if (immunizationInfoBo.getVaccine() == null)
-            throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.NULL_VACCINE,
-                    "La información de la vacuna es obligatoria");
+        validVaccine(immunizationInfoBo.getVaccine());
         if (immunizationInfoBo.isBillable() && immunizationInfoBo.getInstitutionId() == null)
             throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.NULL_INSTITUTION_ID,
                     "La institución es obligatoria para una vacuna facturable");
@@ -35,29 +35,41 @@ public class ImmunizationValidator {
     }
 
     private void validRule(SnomedBo vaccine, VaccineConditionApplicationBo condition, Short schemeId, VaccineDoseBo dose) {
-        if (vaccineIsNull(vaccine))
-            throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.NULL_VACCINE,
-                    "La información de la vacuna es obligatoria");
-        if (!doseIsNull(dose) && (condition == null || schemeId == null))
+        if (incompleteData(condition, schemeId, dose))
             throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INCOMPLETE_DATA,
-                    String.format("Alguna información esta incompleta condición %s, id de esquema %s, dosis %s", condition, schemeId, dose));
-        if (schemeId != null && (condition == null || doseIsNull(dose)))
-            throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INCOMPLETE_DATA,
-                    String.format("Alguna información esta incompleta condición %s, id de esquema %s, dosis %s", condition, schemeId, dose));
-        if (condition != null && (schemeId == null || doseIsNull(dose)))
-            throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INCOMPLETE_DATA,
-                    String.format("Alguna información esta incompleta condición %s, id de esquema %s, dosis %s", condition, schemeId, dose));
+                    String.format(INFORMACION_INCOMPLETA, condition != null ? condition.getId() : null, schemeId,
+                            dose != null ? dose.getDescription() : null, dose != null ? dose.getOrder() : null));
         if (condition == null && schemeId == null && doseIsNull(dose))
             return;
         if (!vaccineRuleStorage.existRule(vaccine.getSctid(), condition.getId(), schemeId, dose.getDescription(), dose.getOrder()))
             throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INVALID_RULE,
-                    String.format("La combinación de información no es una regla valida para nomivac -> vacuna %s," +
-                            " condición %s, id de esquema %s, dosis %s", vaccine, condition, schemeId, dose));
+                    String.format("La combinación de información no es una regla valida para nomivac -> " +
+                                    "vacuna (sctid=%s, preferredTerm=%s)," +
+                                    " condición (%s), id de esquema (%s), dosis (description=%s, order=%s)"
+                                    , vaccine != null ? vaccine.getSctid() : null, vaccine != null ? vaccine.getPt() : null
+                                    , condition != null ? condition.getId() : null
+                                    , dose != null ? dose.getDescription() : null
+                                    , dose != null ? dose.getOrder() : null));
 
     }
 
-    private boolean vaccineIsNull(SnomedBo vaccine) {
-        return (vaccine == null || vaccine.getSctid() == null || vaccine.getParentFsn() == null);
+    private boolean incompleteData(VaccineConditionApplicationBo condition, Short schemeId, VaccineDoseBo dose) {
+        return (!doseIsNull(dose) && (condition == null || schemeId == null)) ||
+                (schemeId != null && (condition == null || doseIsNull(dose))) ||
+                (condition != null && (schemeId == null || doseIsNull(dose)));
+    }
+
+    private void validVaccine(SnomedBo vaccine){
+        if (vaccine == null)
+            throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INVALID_VACCINE,
+                        "La información de la vacuna es obligatoria");
+
+        if (vaccine.getSctid() == null)
+            throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INVALID_VACCINE,
+                    "El sctid code de la vacuna es obligatoria");
+        if (vaccine.getPt() == null)
+            throw new ImmunizationValidatorException(ImmunizationValidatorExceptionEnum.INVALID_VACCINE,
+                    "El termino de preferencia de la vacuna es obligatoria");
     }
 
     private boolean doseIsNull(VaccineDoseBo dose) {

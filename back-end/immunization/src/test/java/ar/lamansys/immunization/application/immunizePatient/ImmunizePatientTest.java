@@ -206,85 +206,136 @@ class ImmunizePatientTest {
         assertEquals("La especialidad no pertenece al médico", exception.getMessage());
     }
 
-
-
     @Test
-    void billableImmunizationInfoInvalidInputData() {
+    void immunizationInfoWithoutVaccineInformation() {
 
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
         Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
-                        List.of(noBillableImmunizationWithoutVaccine())))
+                        List.of(immunizationWithoutVaccine())))
         );
         assertEquals("La información de la vacuna es obligatoria", exception.getMessage());
 
+
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
         exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(immunizationWithoutVaccineSctid())))
+        );
+        assertEquals("El sctid code de la vacuna es obligatoria", exception.getMessage());
+
+
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(immunizationWithoutVaccinePreferredTerm())))
+        );
+        assertEquals("El termino de preferencia de la vacuna es obligatoria", exception.getMessage());
+    }
+
+    @Test
+    void billableImmunizationInfoWithoutInstitution() {
+
+        Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
                         List.of(billableImmunizationWithoutInstitution())))
         );
         assertEquals("La institución es obligatoria para una vacuna facturable", exception.getMessage());
-
-        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
-                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
-                        List.of(billableImmunizationWithoutAdministrationDate())))
-        );
-        assertEquals("La fecha de administración es obligatoria para una vacuna facturable", exception.getMessage());
-
-        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
-                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
-                        List.of(billableImmunizationWithoutAdministrationDate())))
-        );
-        assertEquals("La fecha de administración es obligatoria para una vacuna facturable", exception.getMessage());
-
-        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
-                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
-                        List.of(billableImmunizationWithoutCondition())))
-        );
-        assertEquals("La condición de aplicación es obligatoria para una vacuna facturable", exception.getMessage());
-
-        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
-                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
-                        List.of(billableImmunizationWithoutScheme())))
-        );
-        assertEquals("El esquema es obligatorio para una vacuna facturable", exception.getMessage());
-
-        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
-                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
-        when(vaccineSchemeRepository.existsById(any())).thenReturn(false);
-        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
-                immunizePatient.run(validImmunizePatient())
-        );
-        assertEquals("La vacuna PT_ANTIGRIPAL tiene un esquema invalido 1", exception.getMessage());
-
-
-        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
-                        new ClinicalSpecialtyDto(2, "Especialidad2"))));
-
-        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
-        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
-                immunizePatient.run(new ImmunizePatientBo(14, 20, 1,
-                        List.of(billableImmunizationWithoutDoses())))
-        );
-        assertEquals("La dosis es obligatoria para una vacuna facturable", exception.getMessage());
-
     }
 
 
     @Test
-    void nonBillableImmunizationInvalidData() {
+    void billableImmunizationInfoWithoutAdministrationDate() {
+        Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(billableImmunizationWithoutAdministrationDate())))
+        );
+        assertEquals("La fecha de administración es obligatoria para una vacuna facturable", exception.getMessage());
+    }
 
+    @Test
+    void immunizationInfoWithInvalidScheme() {
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
-                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(false);
+        Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(validImmunizePatient())
+        );
+        assertEquals("La vacuna PT_ANTIGRIPAL tiene un esquema invalido 1", exception.getMessage());
+    }
+
+
+    @Test
+    void immunizationInfoWithInvalidInformationToValidRule() {
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
         Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
-                        List.of(noBillableImmunizationWithoutVaccine())))
+                        List.of(immunizationWithoutDoses())))
         );
-        assertEquals("La información de la vacuna es obligatoria", exception.getMessage());
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema (id=1), dosis(description=null, order=null)", exception.getMessage());
+
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(immunizationWithoutDoseDescription())))
+        );
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema(id=1), dosis(description=null, order=1)", exception.getMessage());
+
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(immunizationWithoutDoseOrder())))
+        );
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema (id=1), dosis(description=Dose1, order=null)", exception.getMessage());
+
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(immunizationWithoutScheme())))
+        );
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema (id=null), dosis(description=Dose1, order=1)", exception.getMessage());
+
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(immunizationWithoutCondition())))
+        );
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=null), esquema(id=1), dosis(description=Dose1, order=1)", exception.getMessage());
+
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(vaccineRuleStorage.existRule(any(),any(), any(), any(), any())).thenReturn(false);
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
+                        List.of(validBillableImmunization())))
+        );
+        assertEquals("La combinación de información no es una regla valida para nomivac -> " +
+                "vacuna(sctid=SCTID_1, preferredTerm=PT_ANTIGRIPAL)," +
+                " condición(id = 3), esquema(id=1), dosis(description=Dose1, order=1)", exception.getMessage());
     }
 
     private ImmunizePatientBo validImmunizePatient(){
@@ -319,19 +370,6 @@ class ImmunizePatientTest {
                 true);
     }
 
-    private ImmunizationInfoBo billableImmunizationWithoutVaccineInformation() {
-        return new ImmunizationInfoBo(null, 20,
-                null,
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
-                (short) 1,
-                new VaccineDoseBo("Dose1", (short)1),
-                LocalDate.of(2020, 12,12),
-                "LOTE",
-                "Nota de vacuna",
-                true);
-    }
-
-
     private ImmunizationInfoBo billableImmunizationWithoutInstitution() {
         return new ImmunizationInfoBo(null, null,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
@@ -357,7 +395,7 @@ class ImmunizePatientTest {
                 true);
     }
 
-    private ImmunizationInfoBo billableImmunizationWithoutCondition() {
+    private ImmunizationInfoBo immunizationWithoutCondition() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 null,
@@ -369,7 +407,7 @@ class ImmunizePatientTest {
                 true);
     }
 
-    private ImmunizationInfoBo billableImmunizationWithoutScheme() {
+    private ImmunizationInfoBo immunizationWithoutScheme() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
@@ -381,12 +419,36 @@ class ImmunizePatientTest {
                 true);
     }
 
-    private ImmunizationInfoBo billableImmunizationWithoutDoses() {
+    private ImmunizationInfoBo immunizationWithoutDoses() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
                 (short) 1,
                 null,
+                LocalDate.of(2020, 12,12),
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo immunizationWithoutDoseDescription() {
+        return new ImmunizationInfoBo(null, 20,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 1,
+                new VaccineDoseBo(null, (short)1),
+                LocalDate.of(2020, 12,12),
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo immunizationWithoutDoseOrder() {
+        return new ImmunizationInfoBo(null, 20,
+                new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
+                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 1,
+                new VaccineDoseBo("Dose1", null),
                 LocalDate.of(2020, 12,12),
                 "LOTE",
                 "Nota de vacuna",
@@ -405,7 +467,7 @@ class ImmunizePatientTest {
                 false);
     }
 
-    private ImmunizationInfoBo noBillableImmunizationWithoutVaccine() {
+    private ImmunizationInfoBo immunizationWithoutVaccine() {
         return new ImmunizationInfoBo(null, null,
                 null,
                 null,
@@ -414,6 +476,30 @@ class ImmunizePatientTest {
                 null,
                 "LOTE",
                 "Nota de vacuna",
-                false);
+                true);
+    }
+
+    private ImmunizationInfoBo immunizationWithoutVaccineSctid() {
+        return new ImmunizationInfoBo(null, null,
+                new SnomedBo(null, null, "FSN_TERM", null, "PARENT_FSN"),
+                null,
+                null,
+                null,
+                null,
+                "LOTE",
+                "Nota de vacuna",
+                true);
+    }
+
+    private ImmunizationInfoBo immunizationWithoutVaccinePreferredTerm() {
+        return new ImmunizationInfoBo(null, null,
+                new SnomedBo(null, "SCTID", null, null, "PARENT_FSN"),
+                null,
+                null,
+                null,
+                null,
+                "LOTE",
+                "Nota de vacuna",
+                true);
     }
 }
