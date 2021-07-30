@@ -343,11 +343,15 @@
 					"aplicar_vacuna": {
 						"TITLE": "Agregar vacuna",
 						"BILLABLE_TAB_LABEL": "Vacuna facturable",
-						"PREVIOUS_TAB_LABEL": "Registrar vacuna previa"
+						"PREVIOUS_TAB_LABEL": "Registrar vacuna previa",
+						"ADMINISTRATION_DATE": "Fecha de vacunación",
+						"NOTE": "Observaciones",
+						"INMUNIZATION": "Vacuna",
+						"CONDITION": "Condición o motivo",
+						"SCHEME": "Esquema",
+						"DOSE": "Dosis",
+						"LOT": "Lote"
 					},
-					"INMUNIZATION": "Vacuna",
-					"NOTE": "Evolución",
-					"ADMINISTRATION_DATE": "Fecha de vacunación",
 					"save": {
 						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
 						"ERROR": "Error al guardar las vacunas aplicadas",
