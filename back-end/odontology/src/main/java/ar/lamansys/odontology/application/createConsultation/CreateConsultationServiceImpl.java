@@ -11,8 +11,7 @@ import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationDentalDiagnosticBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationDentalProcedureBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -90,13 +89,16 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
             throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CLINICAL_SPECIALTY_ID, "El id de especialidad es obligatorio");
         if (!doctorInfoBo.hasSpecialty(consultationBo.getClinicalSpecialtyId()))
             throw new CreateConsultationException(CreateConsultationExceptionEnum.INVALID_CLINICAL_SPECIALTY_ID, "El doctor no posee la especialidad indicada");
-        if (consultationBo.getDentalDiagnostics() != null)
-            consultationBo.getDentalDiagnostics().forEach(this::validateDentalDiagnostic);
-        if (consultationBo.getDentalProcedures() != null)
-            consultationBo.getDentalProcedures().forEach(this::validateDentalProcedure);
+        if (consultationBo.getDentalActions() != null)
+            consultationBo.getDentalActions().forEach(dentalAction -> {
+                if (dentalAction.isDiagnostic())
+                    this.validateDentalDiagnostic(dentalAction);
+                else
+                    this.validateDentalProcedure(dentalAction);
+            });
     }
 
-    private void validateDentalDiagnostic(ConsultationDentalDiagnosticBo dentalDiagnostic) {
+    private void validateDentalDiagnostic(ConsultationDentalActionBo dentalDiagnostic) {
         Optional<DiagnosticBo> opDiagnostic = diagnosticStorage.getDiagnostic(dentalDiagnostic.getSctid());
         if (opDiagnostic.isEmpty())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_DIAGNOSTIC_NOT_FOUND,
@@ -114,7 +116,7 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
                             " y prefered term: '" + dentalDiagnostic.getPt() + "' no es aplicable a cara dental");
     }
 
-    private void validateDentalProcedure(ConsultationDentalProcedureBo dentalProcedure) {
+    private void validateDentalProcedure(ConsultationDentalActionBo dentalProcedure) {
         Optional<ProcedureBo> opProcedure = proceduresStorage.getProcedure(dentalProcedure.getSctid());
         if (opProcedure.isEmpty())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_PROCEDURE_NOT_FOUND,

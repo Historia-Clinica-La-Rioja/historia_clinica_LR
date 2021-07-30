@@ -42,18 +42,6 @@ public class OdontologyDocumentStorageImpl implements OdontologyDocumentStorage 
 
     private DocumentDto mapTo(OdontologyDocumentBo odontologyDocumentBo) {
         DocumentDto result = odontologyDocumentMapper.fromOdontologyDocumentBo(odontologyDocumentBo);
-
-        List<DentalActionDto> dentalActions = odontologyDocumentBo.getDentalProcedures()
-                .stream()
-                .map(p -> mapToDentalAction(p.getSnomed(), p.getTooth(), p.getSurface(), false))
-                .collect(Collectors.toList());
-        dentalActions.addAll(
-                odontologyDocumentBo.getDentalDiagnostics()
-                .stream()
-                .map(d -> mapToDentalAction(d.getSnomed(), d.getTooth(), d.getSurface(), true))
-                .collect(Collectors.toList()));
-
-        result.setDentalActions(dentalActions);
         result.setDocumentType(DocumentType.ODONTOLOGY);
         result.setDocumentSource(SourceType.ODONTOLOGY);
         return result;

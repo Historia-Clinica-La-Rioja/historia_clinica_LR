@@ -1,29 +1,35 @@
 package ar.lamansys.odontology.domain.consultation;
 
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-public class ConsultationDentalDiagnosticBo extends ClinicalTermBo {
+public class ConsultationDentalActionBo extends ClinicalTermBo {
 
     private OdontologySnomedBo tooth;
 
     private OdontologySnomedBo surface;
 
-    public ConsultationDentalDiagnosticBo(OdontologySnomedBo diagnostic) {
-        super(diagnostic);
+    private boolean diagnostic;
+
+    public ConsultationDentalActionBo(OdontologySnomedBo action, boolean isDiagnostic) {
+        super(action);
+        this.diagnostic = isDiagnostic;
     }
 
-    public ConsultationDentalDiagnosticBo(OdontologySnomedBo diagnostic, OdontologySnomedBo tooth, OdontologySnomedBo surface) {
-        super(diagnostic);
+    public ConsultationDentalActionBo(OdontologySnomedBo action, OdontologySnomedBo tooth, OdontologySnomedBo surface, boolean isDiagnostic) {
+        super(action);
         this.tooth = tooth;
         this.surface = surface;
+        this.diagnostic = isDiagnostic;
+    }
+
+    public boolean isProcedure() {
+        return !this.diagnostic;
     }
 
     public Boolean isAppliedToTooth() {

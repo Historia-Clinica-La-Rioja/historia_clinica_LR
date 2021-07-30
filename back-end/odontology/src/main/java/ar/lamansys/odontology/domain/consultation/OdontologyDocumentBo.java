@@ -25,9 +25,7 @@ public class OdontologyDocumentBo {
 
     private Integer clinicalSpecialtyId;
 
-    private List<ConsultationDentalDiagnosticBo> dentalDiagnostics;
-
-    private List<ConsultationDentalProcedureBo> dentalProcedures;
+    private List<ConsultationDentalActionBo> dentalActions;
 
     private List<ConsultationReasonBo> reasons;
 
@@ -51,8 +49,7 @@ public class OdontologyDocumentBo {
         this.institutionId = consultation.getInstitutionId();
         this.doctorId = doctorId;
         this.clinicalSpecialtyId = consultation.getClinicalSpecialtyId();
-        this.dentalDiagnostics = consultation.getDentalDiagnostics();
-        this.dentalProcedures = consultation.getDentalProcedures();
+        this.dentalActions = consultation.getDentalActions();
         this.reasons = consultation.getReasons();
         this.diagnostics = consultation.getDiagnostics();
         this.procedures = consultation.getProcedures();

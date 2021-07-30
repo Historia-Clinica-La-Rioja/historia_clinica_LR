@@ -12,8 +12,7 @@ import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationDentalDiagnosticBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationDentalProcedureBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -135,29 +134,29 @@ class CreateConsultationServiceImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        List<ConsultationDentalDiagnosticBo> dentalDiagnosticBos = new ArrayList<>();
+        List<ConsultationDentalActionBo> dentalDiagnosticBos = new ArrayList<>();
 
-        ConsultationDentalDiagnosticBo diagnostic1 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("16958000", "ausencia congénita completa de dientes (trastorno)"));
+        ConsultationDentalActionBo diagnostic1 = new ConsultationDentalActionBo(new OdontologySnomedBo("16958000", "ausencia congénita completa de dientes (trastorno)"), true);
         diagnostic1.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         dentalDiagnosticBos.add(diagnostic1);
 
-        ConsultationDentalDiagnosticBo diagnostic2 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("64969001", "ausencia parcial congénita de los dientes (trastorno)"));
+        ConsultationDentalActionBo diagnostic2 = new ConsultationDentalActionBo(new OdontologySnomedBo("64969001", "ausencia parcial congénita de los dientes (trastorno)"), true);
         diagnostic2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         dentalDiagnosticBos.add(diagnostic2);
 
-        ConsultationDentalDiagnosticBo diagnostic3 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("699685006", "surco oclusal profundo (hallazgo)"));
+        ConsultationDentalActionBo diagnostic3 = new ConsultationDentalActionBo(new OdontologySnomedBo("699685006", "surco oclusal profundo (hallazgo)"), true);
         diagnostic3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         diagnostic3.setSurface(new OdontologySnomedBo("2", "surface 1"));
         dentalDiagnosticBos.add(diagnostic3);
 
         String sctidNotFound = "9984005";
         String ptNotFound = "ausencia congénita completa de dientes (trastorno)";
-        ConsultationDentalDiagnosticBo diagnostic4 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("9984005", "ausencia congénita completa de dientes (trastorno)"));
+        ConsultationDentalActionBo diagnostic4 = new ConsultationDentalActionBo(new OdontologySnomedBo("9984005", "ausencia congénita completa de dientes (trastorno)"), true);
         diagnostic4.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         diagnostic4.setSurface(new OdontologySnomedBo("2", "surface 1"));
         dentalDiagnosticBos.add(diagnostic4);
 
-        consultation.setDentalDiagnostics(dentalDiagnosticBos);
+        consultation.setDentalActions(dentalDiagnosticBos);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));
@@ -188,23 +187,23 @@ class CreateConsultationServiceImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        List<ConsultationDentalDiagnosticBo> dentalDiagnosticBos = new ArrayList<>();
+        List<ConsultationDentalActionBo> dentalDiagnostics = new ArrayList<>();
 
-        ConsultationDentalDiagnosticBo diagnostic1 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("16958000", "ausencia congénita completa de dientes (trastorno)"));
+        ConsultationDentalActionBo diagnostic1 = new ConsultationDentalActionBo(new OdontologySnomedBo("16958000", "ausencia congénita completa de dientes (trastorno)"), true);
         diagnostic1.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalDiagnosticBos.add(diagnostic1);
+        dentalDiagnostics.add(diagnostic1);
 
-        ConsultationDentalDiagnosticBo diagnostic2 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("64969001", "ausencia parcial congénita de los dientes (trastorno)"));
+        ConsultationDentalActionBo diagnostic2 = new ConsultationDentalActionBo(new OdontologySnomedBo("64969001", "ausencia parcial congénita de los dientes (trastorno)"), true);
         diagnostic2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalDiagnosticBos.add(diagnostic2);
+        dentalDiagnostics.add(diagnostic2);
 
         String diagnosticSctid = "699685006";
         String diagnosticPt = "surco oclusal profundo (hallazgo)";
-        ConsultationDentalDiagnosticBo diagnostic3 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo(diagnosticSctid, diagnosticPt));
+        ConsultationDentalActionBo diagnostic3 = new ConsultationDentalActionBo(new OdontologySnomedBo(diagnosticSctid, diagnosticPt), true);
         diagnostic3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalDiagnosticBos.add(diagnostic3);
+        dentalDiagnostics.add(diagnostic3);
 
-        consultation.setDentalDiagnostics(dentalDiagnosticBos);
+        consultation.setDentalActions(dentalDiagnostics);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));
@@ -233,25 +232,25 @@ class CreateConsultationServiceImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        List<ConsultationDentalDiagnosticBo> dentalDiagnosticBos = new ArrayList<>();
+        List<ConsultationDentalActionBo> dentalDiagnostics = new ArrayList<>();
 
-        ConsultationDentalDiagnosticBo diagnostic1 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("16958000", "ausencia congénita completa de dientes (trastorno)"));
+        ConsultationDentalActionBo diagnostic1 = new ConsultationDentalActionBo(new OdontologySnomedBo("16958000", "ausencia congénita completa de dientes (trastorno)"), true);
         diagnostic1.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalDiagnosticBos.add(diagnostic1);
+        dentalDiagnostics.add(diagnostic1);
 
         String diagnosticSctid = "64969001";
         String diagnosticPt = "ausencia parcial congénita de los dientes (trastorno)";
-        ConsultationDentalDiagnosticBo diagnostic2 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo(diagnosticSctid, diagnosticPt));
+        ConsultationDentalActionBo diagnostic2 = new ConsultationDentalActionBo(new OdontologySnomedBo(diagnosticSctid, diagnosticPt), true);
         diagnostic2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         diagnostic2.setSurface(new OdontologySnomedBo("2", "surface 1"));
-        dentalDiagnosticBos.add(diagnostic2);
+        dentalDiagnostics.add(diagnostic2);
 
-        ConsultationDentalDiagnosticBo diagnostic3 = new ConsultationDentalDiagnosticBo(new OdontologySnomedBo("699685006", "surco oclusal profundo (hallazgo)"));
+        ConsultationDentalActionBo diagnostic3 = new ConsultationDentalActionBo(new OdontologySnomedBo("699685006", "surco oclusal profundo (hallazgo)"), true);
         diagnostic3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         diagnostic3.setSurface(new OdontologySnomedBo("2", "surface 1"));
-        dentalDiagnosticBos.add(diagnostic3);
+        dentalDiagnostics.add(diagnostic3);
 
-        consultation.setDentalDiagnostics(dentalDiagnosticBos);
+        consultation.setDentalActions(dentalDiagnostics);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));
@@ -287,27 +286,27 @@ class CreateConsultationServiceImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        List<ConsultationDentalProcedureBo> dentalProcedureBos = new ArrayList<>();
+        List<ConsultationDentalActionBo> dentalProcedures = new ArrayList<>();
 
-        ConsultationDentalProcedureBo procedure1 = new ConsultationDentalProcedureBo(new OdontologySnomedBo("789147006", "implante dental"));
+        ConsultationDentalActionBo procedure1 = new ConsultationDentalActionBo(new OdontologySnomedBo("789147006", "implante dental"), false);
         procedure1.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalProcedureBos.add(procedure1);
+        dentalProcedures.add(procedure1);
 
-        ConsultationDentalProcedureBo procedure2 = new ConsultationDentalProcedureBo(new OdontologySnomedBo("278123008", "implante osteointegrado con forma radicular"));
+        ConsultationDentalActionBo procedure2 = new ConsultationDentalActionBo(new OdontologySnomedBo("278123008", "implante osteointegrado con forma radicular"), false);
         procedure2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalProcedureBos.add(procedure2);
+        dentalProcedures.add(procedure2);
 
-        ConsultationDentalProcedureBo procedure3 = new ConsultationDentalProcedureBo(new OdontologySnomedBo("4721000221105", "inactivación de caries"));
+        ConsultationDentalActionBo procedure3 = new ConsultationDentalActionBo(new OdontologySnomedBo("4721000221105", "inactivación de caries"), false);
         procedure3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         procedure3.setSurface(new OdontologySnomedBo("2", "surface 1"));
-        dentalProcedureBos.add(procedure3);
+        dentalProcedures.add(procedure3);
 
-        ConsultationDentalProcedureBo procedure4 = new ConsultationDentalProcedureBo(new OdontologySnomedBo(sctidNotFound, ptNotFound));
+        ConsultationDentalActionBo procedure4 = new ConsultationDentalActionBo(new OdontologySnomedBo(sctidNotFound, ptNotFound), false);
         procedure4.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         procedure4.setSurface(new OdontologySnomedBo("2", "surface 1"));
-        dentalProcedureBos.add(procedure4);
+        dentalProcedures.add(procedure4);
 
-        consultation.setDentalProcedures(dentalProcedureBos);
+        consultation.setDentalActions(dentalProcedures);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));
@@ -342,22 +341,22 @@ class CreateConsultationServiceImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        List<ConsultationDentalProcedureBo> dentalProcedureBos = new ArrayList<>();
+        List<ConsultationDentalActionBo> dentalProcedures = new ArrayList<>();
 
-        ConsultationDentalProcedureBo procedure1 = new ConsultationDentalProcedureBo(new OdontologySnomedBo("789147006", "implante dental"));
+        ConsultationDentalActionBo procedure1 = new ConsultationDentalActionBo(new OdontologySnomedBo("789147006", "implante dental"), false);
         procedure1.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalProcedureBos.add(procedure1);
+        dentalProcedures.add(procedure1);
 
-        ConsultationDentalProcedureBo procedure2 = new ConsultationDentalProcedureBo(new OdontologySnomedBo("278123008", "implante osteointegrado con forma radicular"));
+        ConsultationDentalActionBo procedure2 = new ConsultationDentalActionBo(new OdontologySnomedBo("278123008", "implante osteointegrado con forma radicular"), false);
         procedure2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         procedure2.setSurface(new OdontologySnomedBo("2", "surface 1"));
-        dentalProcedureBos.add(procedure2);
+        dentalProcedures.add(procedure2);
 
-        ConsultationDentalProcedureBo procedure3 = new ConsultationDentalProcedureBo(new OdontologySnomedBo(sctidNotApplicable, ptNotApplicable));
+        ConsultationDentalActionBo procedure3 = new ConsultationDentalActionBo(new OdontologySnomedBo(sctidNotApplicable, ptNotApplicable), false);
         procedure3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalProcedureBos.add(procedure3);
+        dentalProcedures.add(procedure3);
 
-        consultation.setDentalProcedures(dentalProcedureBos);
+        consultation.setDentalActions(dentalProcedures);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));
@@ -391,23 +390,23 @@ class CreateConsultationServiceImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        List<ConsultationDentalProcedureBo> dentalProcedureBos = new ArrayList<>();
+        List<ConsultationDentalActionBo> dentalProcedures = new ArrayList<>();
 
-        ConsultationDentalProcedureBo procedure1 = new ConsultationDentalProcedureBo(new OdontologySnomedBo("789147006", "implante dental"));
+        ConsultationDentalActionBo procedure1 = new ConsultationDentalActionBo(new OdontologySnomedBo("789147006", "implante dental"), false);
         procedure1.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        dentalProcedureBos.add(procedure1);
+        dentalProcedures.add(procedure1);
 
-        ConsultationDentalProcedureBo procedure2 = new ConsultationDentalProcedureBo(new OdontologySnomedBo("278123008", "implante osteointegrado con forma radicular"));
+        ConsultationDentalActionBo procedure2 = new ConsultationDentalActionBo(new OdontologySnomedBo("278123008", "implante osteointegrado con forma radicular"), false);
         procedure2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         procedure2.setSurface(new OdontologySnomedBo("2", "surface 1"));
-        dentalProcedureBos.add(procedure2);
+        dentalProcedures.add(procedure2);
 
-        ConsultationDentalProcedureBo procedure3 = new ConsultationDentalProcedureBo(new OdontologySnomedBo(sctidNotApplicable, ptNotApplicable));
+        ConsultationDentalActionBo procedure3 = new ConsultationDentalActionBo(new OdontologySnomedBo(sctidNotApplicable, ptNotApplicable), false);
         procedure3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
         procedure3.setSurface(new OdontologySnomedBo("2", "surface 1"));
-        dentalProcedureBos.add(procedure3);
+        dentalProcedures.add(procedure3);
 
-        consultation.setDentalProcedures(dentalProcedureBos);
+        consultation.setDentalActions(dentalProcedures);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createConsultationService.run(consultation));

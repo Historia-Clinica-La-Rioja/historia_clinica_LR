@@ -21,9 +21,7 @@ public class ConsultationBo {
 
     private Integer clinicalSpecialtyId;
 
-    private List<ConsultationDentalDiagnosticBo> dentalDiagnostics;
-
-    private List<ConsultationDentalProcedureBo> dentalProcedures;
+    private List<ConsultationDentalActionBo> dentalActions;
 
     private List<ConsultationReasonBo> reasons;
 
