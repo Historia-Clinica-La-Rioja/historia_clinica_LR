@@ -100,7 +100,7 @@ export interface AllergyConditionDto extends HealthConditionDto {
 }
 
 export interface AllergyIntoleranceDto {
-    categories: string[];
+    category: string;
     clinicalStatus: FhirCodeDto;
     criticality: string;
     id: string;
@@ -1100,7 +1100,8 @@ export interface MedicationInteroperabilityDto {
     doseQuantityCode: string;
     doseQuantityUnit: string;
     doseQuantityValue: number;
-    effectiveTime: Date;
+    effectiveTimeEnd: Date;
+    effectiveTimeStart: Date;
     formCode: string;
     formTerm: string;
     id: string;
@@ -1808,7 +1809,7 @@ export const enum AppFeature {
     HABILITAR_ODONTOLOGY = "HABILITAR_ODONTOLOGY",
     HABILITAR_REPORTES = "HABILITAR_REPORTES",
     HABILITAR_VACUNAS_V2 = "HABILITAR_VACUNAS_V2",
-	HABILITAR_INFORMES_TURNOS = "HABILITAR_INFORMES_TURNOS",
+    HABILITAR_INFORMES_TURNOS = "HABILITAR_INFORMES_TURNOS",
 }
 
 export const enum EDocumentSearch {
