@@ -7,14 +7,14 @@ import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorExcepti
 import ar.lamansys.immunization.domain.snomed.SnomedBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
-import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
-import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
 import ar.lamansys.immunization.infrastructure.output.repository.appointments.ServeAppointmentStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.DoctorStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultation;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultationRepository;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultationStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.document.ImmunizationDocumentStorageImpl;
+import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineConditionApplicationRepository;
+import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineConditionApplicationStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineSchemeRepository;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineSchemeStorageImpl;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
@@ -60,9 +60,6 @@ class ImmunizePatientTest {
     private SharedStaffPort sharedStaffPort;
 
     @Mock
-    private VaccineSchemeStorage vaccineSchemeStorage;
-
-    @Mock
     private VaccineRuleStorage vaccineRuleStorage;
 
     @Mock
@@ -77,12 +74,17 @@ class ImmunizePatientTest {
     @Mock
     private VaccineSchemeRepository vaccineSchemeRepository;
 
+    @Mock
+    private VaccineConditionApplicationRepository vaccineConditionApplicationRepository;
+
     @BeforeEach
     public void setUp() {
         immunizePatient = new ImmunizePatient(
                 new VaccineConsultationStorageImpl(vaccineConsultationRepository),
                 new ImmunizationDocumentStorageImpl(documentExternalFactory, localDateMapper),
-                new DoctorStorageImpl(sharedStaffPort), new VaccineSchemeStorageImpl(vaccineSchemeRepository),
+                new DoctorStorageImpl(sharedStaffPort),
+                new VaccineConditionApplicationStorageImpl(vaccineConditionApplicationRepository),
+                new VaccineSchemeStorageImpl(vaccineSchemeRepository),
                 vaccineRuleStorage, new ServeAppointmentStorageImpl(false, sharedAppointmentPort),
                 dateTimeProvider);
     }
@@ -98,10 +100,12 @@ class ImmunizePatientTest {
                         List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                                 new ClinicalSpecialtyDto(2, "Especialidad1"))));
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(vaccineConditionApplicationRepository.existsById(any())).thenReturn(true);
         when(vaccineConsultationRepository.save(any()))
                 .thenReturn(new VaccineConsultation(1, 20,14,1,65,
                         LocalDate.of(2020,12,12),true));
         when(sharedAppointmentPort.hasConfirmedAppointment(any(), any(), any())).thenReturn(true);
+        when(vaccineRuleStorage.existRule(any(), any(), any(), any(), any())).thenReturn(true);
         immunizePatient.run(validImmunizePatient());
 
 
@@ -130,9 +134,9 @@ class ImmunizePatientTest {
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getSnomed());
         Assertions.assertEquals(20,
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getInstitutionId());
-        Assertions.assertEquals(new VaccineDoseInfoDto("dose1", (short)1),
+        Assertions.assertEquals(new VaccineDoseInfoDto("Dose1", (short)1),
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getDose());
-        Assertions.assertEquals(VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+        Assertions.assertEquals((short)3,
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getConditionId());
         Assertions.assertEquals("2020-12-12",
                 documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getAdministrationDate());
@@ -241,7 +245,10 @@ class ImmunizePatientTest {
 
     @Test
     void billableImmunizationInfoWithoutInstitution() {
-
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
+                        List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                                new ClinicalSpecialtyDto(2, "Especialidad1"))));
         Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
                         List.of(billableImmunizationWithoutInstitution())))
@@ -252,6 +259,10 @@ class ImmunizePatientTest {
 
     @Test
     void billableImmunizationInfoWithoutAdministrationDate() {
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
+                        List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                                new ClinicalSpecialtyDto(2, "Especialidad1"))));
         Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
                         List.of(billableImmunizationWithoutAdministrationDate())))
@@ -260,20 +271,34 @@ class ImmunizePatientTest {
     }
 
     @Test
+    void immunizationInfoWithInvalidContionApplicationcheme() {
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                        new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        when(vaccineConditionApplicationRepository.existsById(any())).thenReturn(false);
+        Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
+                immunizePatient.run(validImmunizePatient())
+        );
+        assertEquals("La vacuna PT_ANTIGRIPAL tiene una condición de aplicación invalida id=3", exception.getMessage());
+    }
+
+    @Test
     void immunizationInfoWithInvalidScheme() {
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        when(vaccineConditionApplicationRepository.existsById(any())).thenReturn(true);
         when(vaccineSchemeRepository.existsById(any())).thenReturn(false);
         Exception exception = Assertions.assertThrows(ImmunizationValidatorException.class, () ->
                 immunizePatient.run(validImmunizePatient())
         );
-        assertEquals("La vacuna PT_ANTIGRIPAL tiene un esquema invalido 1", exception.getMessage());
+        assertEquals("La vacuna PT_ANTIGRIPAL tiene un esquema invalido id=1", exception.getMessage());
     }
 
 
     @Test
     void immunizationInfoWithInvalidInformationToValidRule() {
+        when(vaccineConditionApplicationRepository.existsById(any())).thenReturn(true);
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
@@ -282,7 +307,7 @@ class ImmunizePatientTest {
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
                         List.of(immunizationWithoutDoses())))
         );
-        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema (id=1), dosis(description=null, order=null)", exception.getMessage());
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema(id=1), dosis(description=null, order=null)", exception.getMessage());
 
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
@@ -302,7 +327,7 @@ class ImmunizePatientTest {
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
                         List.of(immunizationWithoutDoseOrder())))
         );
-        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema (id=1), dosis(description=Dose1, order=null)", exception.getMessage());
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema(id=1), dosis(description=Dose1, order=null)", exception.getMessage());
 
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
@@ -312,7 +337,7 @@ class ImmunizePatientTest {
                 immunizePatient.run(new ImmunizePatientBo(14, 20, 2,
                         List.of(immunizationWithoutScheme())))
         );
-        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema (id=null), dosis(description=Dose1, order=1)", exception.getMessage());
+        assertEquals("Para validar las reglas de cada vacuna todos los datos siguientes son obligatorios: condición(id=3), esquema(id=null), dosis(description=Dose1, order=1)", exception.getMessage());
 
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
@@ -335,7 +360,7 @@ class ImmunizePatientTest {
         );
         assertEquals("La combinación de información no es una regla valida para nomivac -> " +
                 "vacuna(sctid=SCTID_1, preferredTerm=PT_ANTIGRIPAL)," +
-                " condición(id = 3), esquema(id=1), dosis(description=Dose1, order=1)", exception.getMessage());
+                " condición(id=3), esquema(id=1), dosis(description=Dose1, order=1)", exception.getMessage());
     }
 
     private ImmunizePatientBo validImmunizePatient(){
@@ -361,7 +386,7 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo validBillableImmunization() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 3,
                 (short) 1,
                 new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
@@ -373,7 +398,7 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo billableImmunizationWithoutInstitution() {
         return new ImmunizationInfoBo(null, null,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 3,
                 (short) 1,
                 new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
@@ -386,7 +411,7 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo billableImmunizationWithoutAdministrationDate() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 3,
                 (short) 1,
                 new VaccineDoseBo("Dose1", (short)1),
                 null,
@@ -410,7 +435,7 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo immunizationWithoutScheme() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short)3,
                 null,
                 new VaccineDoseBo("Dose1", (short)1),
                 LocalDate.of(2020, 12,12),
@@ -422,7 +447,7 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo immunizationWithoutDoses() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short)3,
                 (short) 1,
                 null,
                 LocalDate.of(2020, 12,12),
@@ -434,7 +459,7 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo immunizationWithoutDoseDescription() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short)3,
                 (short) 1,
                 new VaccineDoseBo(null, (short)1),
                 LocalDate.of(2020, 12,12),
@@ -446,7 +471,7 @@ class ImmunizePatientTest {
     private ImmunizationInfoBo immunizationWithoutDoseOrder() {
         return new ImmunizationInfoBo(null, 20,
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
-                VaccineConditionApplicationBo.NATIONAL_CALENDAR.getId(),
+                (short) 3,
                 (short) 1,
                 new VaccineDoseBo("Dose1", null),
                 LocalDate.of(2020, 12,12),

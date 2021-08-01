@@ -1,8 +1,9 @@
 package ar.lamansys.immunization.infrastructure.input.service;
 
+import ar.lamansys.immunization.application.fetchVaccineConditionApplicationInfo.FetchVaccineConditionApplicationInfo;
 import ar.lamansys.immunization.application.fetchVaccineSchemeInfo.FetchVaccineSchemeInfo;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
-import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineConditionDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineSchemeInfoDto;
@@ -13,15 +14,20 @@ public class SharedImmunizationPortImpl implements SharedImmunizationPort {
 
     private final FetchVaccineSchemeInfo fetchVaccineSchemeInfo;
 
-    public SharedImmunizationPortImpl(FetchVaccineSchemeInfo fetchVaccineSchemeInfo) {
+    private final FetchVaccineConditionApplicationInfo fetchVaccineConditionApplicationInfo;
+
+    public SharedImmunizationPortImpl(FetchVaccineSchemeInfo fetchVaccineSchemeInfo,
+                                      FetchVaccineConditionApplicationInfo fetchVaccineConditionApplicationInfo) {
         this.fetchVaccineSchemeInfo = fetchVaccineSchemeInfo;
+        this.fetchVaccineConditionApplicationInfo = fetchVaccineConditionApplicationInfo;
     }
 
     @Override
     public VaccineConditionDto fetchVaccineConditionInfo(Short id) {
+        VaccineConditionApplicationBo vaccineConditionApplicationBo = fetchVaccineConditionApplicationInfo.run(id);
         VaccineConditionDto result = new VaccineConditionDto();
         result.setId(id);
-        result.setDescription(VaccineConditionApplicationBo.map(id).getDescription());
+        result.setDescription(vaccineConditionApplicationBo.getDescription());
         return result;
     }
 

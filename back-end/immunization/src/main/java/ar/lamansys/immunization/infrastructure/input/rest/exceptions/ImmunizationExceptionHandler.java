@@ -1,9 +1,10 @@
 package ar.lamansys.immunization.infrastructure.input.rest.exceptions;
 
+import ar.lamansys.immunization.application.fetchVaccineConditionApplicationInfo.exceptions.FetchVaccineConditionApplicationException;
+import ar.lamansys.immunization.application.fetchVaccineSchemeInfo.exceptions.FetchVaccineSchemeException;
 import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccineByIdException;
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientException;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorException;
-import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +48,17 @@ public class ImmunizationExceptionHandler {
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ FetchVaccineConditionApplicationException.class })
+	protected ApiErrorMessageDto handleFetchVaccineConditionApplicationException(FetchVaccineConditionApplicationException ex, Locale locale) {
+		logger.debug("FetchVaccineConditionApplicationException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ VaccineConditionApplicationException.class })
-	protected ApiErrorMessageDto handleVaccineConditionApplicationException(VaccineConditionApplicationException ex, Locale locale) {
-		logger.debug("VaccineConditionApplicationException exception -> {}", ex.getMessage());
+	@ExceptionHandler({ FetchVaccineSchemeException.class })
+	protected ApiErrorMessageDto handleFetchVaccineSchemeException(FetchVaccineSchemeException ex, Locale locale) {
+		logger.debug("FetchVaccineSchemeException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 

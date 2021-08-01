@@ -431,7 +431,6 @@ databaseChangeLog:
                      referencedColumnNames: id
                      referencedTableName: vaccine_scheme
 
-
     - changeSet:
           id: nomivac_snomed_map-createTable
           comment: Create table nomivac_snomed_map
@@ -1430,3 +1429,81 @@ databaseChangeLog:
                       INSERT INTO vaccine_nomivac_rule(sisa_code, condition_application_id, scheme_id, dose, dose_order, minimum_threshold_days, maximum_threshold_days, time_between_doses_days) VALUES (183,7,262,'1er Dosis',1,0,0,0);
                       INSERT INTO vaccine_nomivac_rule(sisa_code, condition_application_id, scheme_id, dose, dose_order, minimum_threshold_days, maximum_threshold_days, time_between_doses_days) VALUES (183,7,262,'2da Dosis',2,0,0,26);
                       INSERT INTO vaccine_nomivac_rule(sisa_code, condition_application_id, scheme_id, dose, dose_order, minimum_threshold_days, maximum_threshold_days, time_between_doses_days) VALUES (183,7,262,'3er Dosis',3,0,0,82);
+
+
+
+    - changeSet:
+        id: vaccine_condition_application-createTable
+        comment: Create table vaccine_condition_application
+        author: etrapani
+        changes:
+          - createTable:
+              tableName: vaccine_condition_application
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_vaccine_condition_application
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+
+    - changeSet:
+        id: vaccine_application_condition-data
+        comment: Cargar datos de vaccine_application_condition
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO vaccine_condition_application(id, description) VALUES (3,'Calendario Nacional');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (4,'Conviviente Inmunocomprometido');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (5,'Embarazo');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (7,'Personas con factores de riesgo');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (13,'Asplénico');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (16,'Inmunocomprometido');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (17,'Personal de Salud');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (18,'Profilaxis Post Exposición - Contacto con Animal Muerto o Desaparecido');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (19,'Profilaxis Post Exposición - Contacto con Animal Observado');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (20,'Profilaxis Preexposicion');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (22,'Viaje a Zona Endémica');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (23,'Zona Endemica');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (25,'Otros');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (26,'Puerperio');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (29,'Personal Esencial');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (30,'Cardiológico');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (31,'Respiratorio');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (32,'Diabético');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (34,'Obesidad Mórbida');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (35,'Inmunodeficiencia');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (36,'Mayor de 65 años');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (37,'Campaña');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (38,'Mayor de 50 años');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (39,'Prescripción médica');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (40,'Déficit de complemento');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (41,'Personal Estratégico');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (42,'60 o más años');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (43,'18 a 59 años CON Factores de Riesgo');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (44,'18 a 39 años SIN Factores de Riesgo');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (45,'40 a 49 años SIN Factores de Riesgo');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (46,'50 a 59 años SIN Factores de Riesgo');
+                INSERT INTO vaccine_condition_application(id, description) VALUES (47,'12 a 17 años CON Factores de Riesgo');
+
+
+    - changeSet:
+        id: vaccine_nomivac_rule-add-fk-condition-application
+        comment: Add FK to new table vaccine_condition_application
+        author: etrapani
+        changes:
+          -  addForeignKeyConstraint:
+               baseColumnNames: condition_application_id
+               baseTableName: vaccine_nomivac_rule
+               constraintName: FK_vaccine_nomivac_rule_condition_application_id
+               referencedColumnNames: id
+               referencedTableName: vaccine_condition_application

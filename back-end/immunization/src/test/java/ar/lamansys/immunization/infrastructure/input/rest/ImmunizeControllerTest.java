@@ -4,8 +4,6 @@ import ar.lamansys.immunization.application.immunizePatient.ImmunizePatient;
 import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
 import ar.lamansys.immunization.domain.snomed.SnomedBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
-import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
-import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationException;
 import ar.lamansys.immunization.infrastructure.input.rest.dto.ImmunizePatientDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
@@ -22,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -65,8 +62,8 @@ class ImmunizeControllerTest {
         Assertions.assertEquals(new VaccineDoseBo("dose0", (short)0), immunizePatientBoArgumentCaptor.getValue()
                 .getImmunizations().get(0).getDose());
 
-        Assertions.assertEquals(VaccineConditionApplicationBo.NATIONAL_CALENDAR, immunizePatientBoArgumentCaptor.getValue()
-                .getImmunizations().get(0).getCondition());
+        Assertions.assertEquals((short)3 , immunizePatientBoArgumentCaptor.getValue()
+                .getImmunizations().get(0).getConditionId());
 
         Assertions.assertEquals((short)1, immunizePatientBoArgumentCaptor.getValue()
                 .getImmunizations().get(0).getSchemeId());
@@ -81,21 +78,6 @@ class ImmunizeControllerTest {
                 .getImmunizations().get(0).getLotNumber());
     }
 
-
-    @Test
-    void failVaccineCondition() {
-        when(localDateMapper.fromStringToLocalDate(any())).thenReturn(LocalDate.of(2020,12,12));
-        var immunizePatientDto = new ImmunizePatientDto();
-        immunizePatientDto.setClinicalSpecialtyId(4);
-        var immunization = createImmunization();
-        immunization.setConditionId((short)1);
-        immunizePatientDto.setImmunizations(List.of(immunization));
-        Exception exception = Assertions.assertThrows(VaccineConditionApplicationException.class, () ->
-                immunizeController.immunizePatient(1, 2, immunizePatientDto)
-        );
-        assertEquals("La condición de aplicación 1 no existe", exception.getMessage());
-
-    }
 
     private ImmunizationDto createImmunization() {
         var result = new ImmunizationDto();

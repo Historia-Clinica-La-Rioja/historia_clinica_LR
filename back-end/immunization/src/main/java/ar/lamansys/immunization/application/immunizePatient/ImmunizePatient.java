@@ -12,6 +12,7 @@ import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentStorage;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidator;
+import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -33,6 +34,8 @@ public class ImmunizePatient {
 
     private final DoctorStorage doctorStorage;
 
+    private final VaccineConditionApplicationStorage vaccineConditionApplicationStorage;
+
     private final VaccineSchemeStorage vaccineSchemeStorage;
 
     private final VaccineRuleStorage vaccineRuleStorage;
@@ -44,6 +47,7 @@ public class ImmunizePatient {
     public ImmunizePatient(VaccineConsultationStorage vaccineConsultationStorage,
                            ImmunizationDocumentStorage immunizationDocumentStorage,
                            DoctorStorage doctorStorage,
+                           VaccineConditionApplicationStorage vaccineConditionApplicationStorage,
                            VaccineSchemeStorage vaccineSchemeStorage,
                            VaccineRuleStorage vaccineRuleStorage,
                            ServeAppointmentStorage serveAppointmentStorage,
@@ -51,6 +55,7 @@ public class ImmunizePatient {
         this.vaccineConsultationStorage = vaccineConsultationStorage;
         this.immunizationDocumentStorage = immunizationDocumentStorage;
         this.doctorStorage = doctorStorage;
+        this.vaccineConditionApplicationStorage = vaccineConditionApplicationStorage;
         this.vaccineSchemeStorage = vaccineSchemeStorage;
         this.vaccineRuleStorage = vaccineRuleStorage;
         this.serveAppointmentStorage = serveAppointmentStorage;
@@ -106,7 +111,7 @@ public class ImmunizePatient {
             throw new ImmunizePatientException(ImmunizePatientExceptionEnum.NULL_CLINICAL_SPECIALTY_ID, "El id de la especialidad clínica es obligatorio");
         if (!doctorInfoBo.hasSpecialty(immunizePatientBo.getClinicalSpecialtyId()))
             throw new ImmunizePatientException(ImmunizePatientExceptionEnum.INVALID_CLINICAL_SPECIALTY_ID, "La especialidad no pertenece al médico");
-        var immunizationValidator = new ImmunizationValidator(vaccineSchemeStorage, vaccineRuleStorage);
+        var immunizationValidator = new ImmunizationValidator(vaccineConditionApplicationStorage, vaccineSchemeStorage, vaccineRuleStorage);
         immunizePatientBo.getImmunizations().forEach(immunizationValidator::isValid);
     }
 }

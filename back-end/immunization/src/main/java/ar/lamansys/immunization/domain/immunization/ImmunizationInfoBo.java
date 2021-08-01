@@ -2,24 +2,31 @@ package ar.lamansys.immunization.domain.immunization;
 
 import ar.lamansys.immunization.domain.snomed.SnomedBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
-import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
+@ToString
 public class ImmunizationInfoBo {
 
+    @ToString.Include
     private final Integer id;
 
+    @ToString.Include
     private final Integer institutionId;
 
+    @ToString.Include
     private final SnomedBo vaccine;
 
+    @ToString.Include
     private final VaccineDoseBo dose;
 
-    private final VaccineConditionApplicationBo condition;
+    @ToString.Include
+    private final Short conditionId;
 
+    @ToString.Include
     private final Short schemeId;
 
     private final LocalDate administrationDate;
@@ -44,7 +51,7 @@ public class ImmunizationInfoBo {
         this.institutionId = institutionId;
         this.vaccine = vaccine;
         this.dose = dose;
-        this.condition = conditionId != null ? VaccineConditionApplicationBo.map(conditionId) : null;
+        this.conditionId = conditionId;
         this.schemeId = schemeId;
         this.administrationDate = administrationDate;
         this.lotNumber = lotNumber;
@@ -54,9 +61,5 @@ public class ImmunizationInfoBo {
 
     public String getVaccineName() {
         return vaccine.getPt();
-    }
-
-    public Short getConditionId() {
-        return condition == null ? null : condition.getId();
     }
 }

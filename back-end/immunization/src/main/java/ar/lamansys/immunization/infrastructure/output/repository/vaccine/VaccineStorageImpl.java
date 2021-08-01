@@ -5,7 +5,7 @@ import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineStorage;
-import ar.lamansys.immunization.domain.vaccine.conditionapplication.VaccineConditionApplicationBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -35,7 +35,7 @@ public class VaccineStorageImpl implements VaccineStorage {
         String sqlString = "" +
                 "SELECT v.id AS vaccine_id, v.sisa_code, v.description AS vaccine_description, " +
                 "       v.minimum_threshold_days AS vaccine_minimum_threshold_days, v.maximum_threshold_days AS vaccine_maximum_threshold_days, " +
-                "       vr.condition_application_id, " +
+                "       vr.condition_application_id, vca.description as condition_application, " +
                 "       vr.dose, vr.dose_order, " +
                 "       vs.id AS scheme_id, vs.description AS scheme_description, " +
                 "       vs.minimum_threshold_days AS scheme_minimum_threshold_days, vs.maximum_threshold_days AS scheme_maximum_threshold_days, " +
@@ -43,6 +43,7 @@ public class VaccineStorageImpl implements VaccineStorage {
                 "       vr.time_between_doses_days " +
                 "FROM vaccine_nomivac_rule vr " +
                 "JOIN vaccine v ON (v.sisa_code = vr.sisa_code) " +
+                "JOIN vaccine_condition_application vca ON (vca.id = vr.condition_application_id) " +
                 "JOIN vaccine_scheme vs ON (vs.id = vr.scheme_id) " +
                 "JOIN nomivac_snomed_map nsm ON (nsm.sisa_code = v.sisa_code) " +
                 "WHERE nsm.sctid = :sctid ";
@@ -59,10 +60,10 @@ public class VaccineStorageImpl implements VaccineStorage {
         if (rows.isEmpty())
             return null;
         List<VaccineRuleBo> rules = rows.stream().map(row ->
-                new VaccineRuleBo((Integer) row[12], (Integer) row[13], (Integer) row[14],
-                        new VaccineSchemeBo((Short) row[8], (String) row[9], (Integer) row[10], (Integer) row[11]),
-                        new VaccineDoseBo((String) row[6], (Short) row[7]),
-                        VaccineConditionApplicationBo.map((Short) row[5]))
+                new VaccineRuleBo((Integer) row[13], (Integer) row[14], (Integer) row[15],
+                        new VaccineSchemeBo((Short) row[9], (String) row[10], (Integer) row[11], (Integer) row[12]),
+                        new VaccineDoseBo((String) row[7], (Short) row[8]),
+                        new VaccineConditionApplicationBo((Short) row[5], (String) row[6]))
         ).collect(Collectors.toList());
         return new VaccineBo((Short) rows.get(0)[0], (Short) rows.get(0)[1],(String) rows.get(0)[2],
                 (Integer) rows.get(0)[3], (Integer) rows.get(0)[4], rules);
