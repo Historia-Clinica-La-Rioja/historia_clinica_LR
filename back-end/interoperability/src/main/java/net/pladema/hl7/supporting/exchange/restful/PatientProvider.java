@@ -124,8 +124,9 @@ public class PatientProvider {
             DocumentReference.DocumentReferenceContentComponent content = document.getContent().get(0);
             if (content.hasAttachment()) {
                 String url = content.getAttachment().getUrl();
-                PatientSummaryDto psdto = new PatientSummaryDto(bundleResource.encodeResourceToSummary(
-                        client.getResourceById(new IdType(url))));
+                Bundle bundle = client.getResourceById(new IdType(url));
+                PatientSummaryDto psdto = new PatientSummaryDto(
+                        bundleResource.encodeResourceToSummary(bundle));
                 formatDto(psdto, custodian);
                 return ResponseEntity.ok(psdto);
             }

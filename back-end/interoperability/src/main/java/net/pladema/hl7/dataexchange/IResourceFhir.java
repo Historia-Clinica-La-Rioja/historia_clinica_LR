@@ -104,9 +104,11 @@ public abstract class IResourceFhir {
 
     public static FhirAddress decodeAddress(Address address){
         FhirAddress data = new FhirAddress(address.getUse());
-        StringType fullAddress = address.getLine().get(0);
-        data.setAddress(fullAddress.getValue())
-                .setCity(address.getCity())
+        if(address.hasLine()) {
+            StringType fullAddress = address.getLine().get(0);
+            data.setAddress(fullAddress.getValue());
+        }
+        data.setCity(address.getCity())
                 .setProvince(address.getState())
                 .setCountry(address.getCountry())
                 .setPostcode(address.getPostalCode());

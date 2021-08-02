@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -142,7 +143,7 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
         return entries;
     }
 
-    public static MedicationVo encode(Resource baseResource, Resource baseResource2) {
+    public static MedicationVo encode(Resource baseResource, Optional<Resource> baseResource2) {
         MedicationVo data = new MedicationVo();
         MedicationStatement resource = (MedicationStatement) baseResource;
 
@@ -183,8 +184,8 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
         }
 
         //Medication data
-        if(resource.hasMedicationReference()) {
-            Medication medication = (Medication) baseResource2;
+        if(resource.hasMedicationReference() && baseResource2.isPresent()) {
+            Medication medication = (Medication) baseResource2.get();
             MedicationResource.encode(data, medication);
         }
         else if(resource.hasMedicationCodeableConcept()){
