@@ -1,28 +1,24 @@
 package ar.lamansys.sgx.auth.apiKey.application.login;
 
-import ar.lamansys.sgx.auth.UnitRepository;
-import ar.lamansys.sgx.auth.apiKey.domain.ApiKeyStorage;
-import ar.lamansys.sgx.auth.apiKey.infrastructure.output.repository.userkey.ApiKeyStorageImpl;
-import ar.lamansys.sgx.auth.apiKey.infrastructure.output.repository.userkey.UserKey;
-import ar.lamansys.sgx.auth.apiKey.infrastructure.output.repository.userkey.UserKeyRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import ar.lamansys.sgx.auth.apiKey.infrastructure.output.repository.userkey.ApiKeyStorageImpl;
+import ar.lamansys.sgx.auth.apiKey.infrastructure.output.repository.userkey.UserKey;
+import ar.lamansys.sgx.auth.apiKey.infrastructure.output.repository.userkey.UserKeyRepository;
 
 @ExtendWith(MockitoExtension.class)
-@DataJpaTest(showSql = false)
-class ApiKeyLoginTest extends UnitRepository {
+class ApiKeyLoginTest {
 
     private ApiKeyLogin login;
 
