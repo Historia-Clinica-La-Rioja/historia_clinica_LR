@@ -72,17 +72,20 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		const actions = this.data.currentActions?.filter(a => !a.surfaceId);
 		const currentProcedures = actions?.filter(a => a.isProcedure);
 		const currentFinding = actions?.find(a => !a.isProcedure);
+
+		const filterFunction = this.getFilterFuction(false);
+
 		this.conceptsService.getDiagnostics().subscribe(
 			diagnostics => {
 				this.diagnostics = diagnostics;
-				this.filteredDiagnostics = diagnostics;
+				this.setAppropiateFindings(filterFunction);
 				this.form.controls.findingId.patchValue(currentFinding?.actionSctid);
 			}
 		);
 		this.conceptsService.getProcedures().subscribe(
 			procedures => {
 				this.procedures = procedures;
-				this.filteredProcedures = procedures;
+				this.setAppropiateProcedures(filterFunction);
 				this.form.controls.procedures.patchValue({
 					firstProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
 					secondProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
@@ -99,13 +102,30 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	reciveSelectedSurfaces(surfaces: string[]) {
 		this.selectedSurfaces = surfaces;
 		this.concatNames();
+		this.setAppropiateActions(surfaces.length != 0)
+	}
 
+	private setAppropiateActions(surfacesSelected: boolean) {
+
+		const filterFuncion = this.getFilterFuction(surfacesSelected);
+
+		this.setAppropiateFindings(filterFuncion);
+		this.setAppropiateProcedures(filterFuncion);
+	}
+
+	private getFilterFuction(surfacesSelected: boolean) : Function {
 		let filterFuncion = (diagnostic: OdontologyConceptDto) => { return diagnostic.applicableToTooth }
-		if (surfaces.length) {
+		if (surfacesSelected) {
 			filterFuncion = (diagnostic: OdontologyConceptDto) => { return diagnostic.applicableToSurface }
 		}
+		return filterFuncion;
+	}
 
+	private setAppropiateFindings(filterFuncion) {
 		this.filteredDiagnostics = this.diagnostics?.filter(filterFuncion);
+	}
+
+	private setAppropiateProcedures(filterFuncion) {
 		this.filteredProcedures = this.procedures?.filter(filterFuncion);
 	}
 
