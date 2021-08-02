@@ -1,21 +1,15 @@
 package ar.lamansys.sgx.shared.configuration;
 
-import org.junit.Before;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @RunWith(SpringRunner.class)
 public class ActuatorConfigurationTest {
-
-
-	@Before
-	public void setUp() {
-	}
 
 	@Test
 	public void test_not_authenticated() {
