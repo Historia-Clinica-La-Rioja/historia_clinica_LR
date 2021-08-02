@@ -1,9 +1,12 @@
 <div>
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-		<app-tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
+		<app-tooth #tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
 			[newFinding]="newHallazgoId" (commonActionsEmitter)="reciveCommonActions($event)"
-			[setProcedure]=outputProcedures></app-tooth>
+			[setFirstProcedure]="firstProcedureId" [setSecondProcedure]="secondProcedureId"
+			[setThirdProcedure]="thirdProcedureId"
+			[findingsAndProcedures]="odontogramService.getActionsFrom(data.tooth.snomed.sctid)">
+		</app-tooth>
 		<div fxLayout="column">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
 			<span class="subtitle">{{selectedSurfacesText}}</span>
@@ -15,7 +18,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label>Seleccione hallazgo</mat-label>
 				<mat-select formControlName="findingId" name="findingId" (selectionChange)="findingChanged($event)">
-					<mat-option *ngFor="let finding of (filteredDiagnostics$ | async )" [value]="finding.snomed.sctid">
+					<mat-option *ngFor="let finding of filteredDiagnostics" [value]="finding.snomed.sctid">
 						<span>{{finding.snomed.pt}}</span>
 					</mat-option>
 				</mat-select>
@@ -26,9 +29,8 @@
 				<mat-form-field appearance="outline">
 					<mat-label>Seleccione 1er procedimiento</mat-label>
 					<mat-select formControlName="firstProcedureId" name="firstProcedureId"
-						(selectionChange)="procedureChanged()">
-						<mat-option *ngFor="let procedure of  (filteredProcedures$| async )"
-							[value]="procedure.snomed.sctid">
+						(selectionChange)="firstProcedureChanged()">
+						<mat-option *ngFor="let procedure of filteredProcedures" [value]="procedure.snomed.sctid">
 							<span>{{procedure.snomed.pt}}</span>
 						</mat-option>
 					</mat-select>
@@ -38,9 +40,8 @@
 					<mat-form-field appearance="outline">
 						<mat-label>Seleccione 2do procedimiento</mat-label>
 						<mat-select formControlName="secondProcedureId" name="secondProcedureId"
-							(selectionChange)="procedureChanged()">
-							<mat-option *ngFor="let procedure of (filteredProcedures$| async )"
-								[value]="procedure.snomed.sctid">
+							(selectionChange)="secondProcedureChanged()">
+							<mat-option *ngFor="let procedure of filteredProcedures" [value]="procedure.snomed.sctid">
 								<span>{{procedure.snomed.pt}}</span>
 							</mat-option>
 						</mat-select>
@@ -49,9 +50,8 @@
 					<mat-form-field appearance="outline">
 						<mat-label>Seleccione 3er procedimiento</mat-label>
 						<mat-select formControlName="thirdProcedureId" name="thirdProcedureId"
-							(selectionChange)="procedureChanged()">
-							<mat-option *ngFor="let procedure of (filteredProcedures$| async )"
-								[value]="procedure.snomed.sctid">
+							(selectionChange)="thirdProcedureChanged()">
+							<mat-option *ngFor="let procedure of filteredProcedures" [value]="procedure.snomed.sctid">
 								<span>{{procedure.snomed.pt}}</span>
 							</mat-option>
 						</mat-select>
@@ -60,6 +60,11 @@
 
 
 			</div>
+
+			<mat-dialog-actions fxLayoutAlign="end end">
+				<button mat-stroked-button color="primary" mat-dialog-close type="button">Cancelar </button>
+				<button mat-raised-button color="primary">Confirmar </button>
+			</mat-dialog-actions>
 		</form>
 	</div>
 </div>

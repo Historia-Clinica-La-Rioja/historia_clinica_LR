@@ -113,5 +113,5 @@ export interface ActionAndColor {
 	color: Colors;
 }
 export const getPaint = (sctid: string): ActionAndColor[] => {
-	return colorsInSurface.find(s => s.ids.includes(sctid)).toDo;
+	return sctid ? colorsInSurface.find(s => s.ids.includes(sctid)).toDo : null;
 };

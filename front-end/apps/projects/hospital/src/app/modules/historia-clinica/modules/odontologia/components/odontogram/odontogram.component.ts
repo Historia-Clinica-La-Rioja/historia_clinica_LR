@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToothDto } from '@api-rest/api-model';
-import { OdontogramService } from '../../api-rest/odontogram.service';
+import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
+import { ToothAction } from '../../services/actions-service.service';
+import { OdontogramService } from '../../services/odontogram.service';
+import { ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
-import { ToothTreatment } from '../tooth/tooth.component';
 
 @Component({
 	selector: 'app-odontogram',
@@ -13,17 +15,19 @@ import { ToothTreatment } from '../tooth/tooth.component';
 export class OdontogramComponent implements OnInit {
 
 	constructor(
-		private odontogramService: OdontogramService,
-		private dialog: MatDialog
+		private odontogramRestService: OdontogramRestService,
+		private dialog: MatDialog,
+		public odontogramService: OdontogramService
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
 
 	quadrants;
+
+	findingsAndProcedures = {};
 	ngOnInit(): void {
 
-
-		this.odontogramService.getOdontogram().subscribe(
+		this.odontogramRestService.getOdontogram().subscribe(
 			odontogram => {
 
 				const quadrant1 = odontogram.find(q => q.permanent && !q.left && q.top);
@@ -41,14 +45,24 @@ export class OdontogramComponent implements OnInit {
 	}
 
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
-		this.dialog.open(ToothDialogComponent, {
+		const dialogRef = this.dialog.open(ToothDialogComponent, {
 			width: '464px',
 			data: {
 				tooth,
-				quadrantCode
+				quadrantCode,
+				currentActions: this.odontogramService.getActionsFrom(tooth.snomed.sctid)
+			}
+		});
+
+		dialogRef.afterClosed().subscribe((findingsAndProcedures: ToothAction[]) => {
+			if (findingsAndProcedures) {
+				this.odontogramService.setActionsTo(findingsAndProcedures, tooth.snomed.sctid);
 			}
 		});
 	}
 
+	clearOdontogram() {
+		this.odontogramService.resetOdontogram();
+	}
 
 }

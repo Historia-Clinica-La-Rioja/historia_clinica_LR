@@ -1,27 +1,34 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/internal/operators/map';
 import { ConceptsService } from '../../api-rest/concepts.service';
-import { OdontogramService } from '../../api-rest/odontogram.service';
+import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
+import { ProcedureOrder, ToothAction } from '../../services/actions-service.service';
+import { OdontogramService } from '../../services/odontogram.service';
+import { ToothTreatment } from '../../services/surface-drawer.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
-import { ToothTreatment, CommonActions } from '../tooth/tooth.component';
+import { CommonActions, ToothComponent } from '../tooth/tooth.component';
 
 @Component({
 	selector: 'app-tooth-dialog',
 	templateUrl: './tooth-dialog.component.html',
 	styleUrls: ['./tooth-dialog.component.scss']
 })
-export class ToothDialogComponent implements OnInit {
+export class ToothDialogComponent implements OnInit, AfterViewInit {
+
+	@ViewChild('tooth') toothComponent: ToothComponent;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly odontogramService: OdontogramService,
-		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number },
-		private readonly conceptsService: ConceptsService
-	) { }
+		private readonly odontogramRestService: OdontogramRestService,
+		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[] },
+		private readonly conceptsService: ConceptsService,
+		private dialogRef: MatDialogRef<ToothDialogComponent>,
+		public odontogramService: OdontogramService
+	) {
+
+	}
 
 	readonly toothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
 
@@ -34,13 +41,19 @@ export class ToothDialogComponent implements OnInit {
 
 	private surfacesDto: ToothSurfacesDto;
 
-	private diagnostics$: Observable<OdontologyConceptDto[]>;
-	filteredDiagnostics$: Observable<OdontologyConceptDto[]>;
+	private diagnostics: OdontologyConceptDto[];
+	filteredDiagnostics: OdontologyConceptDto[];
 
-	private procedures$: Observable<OdontologyConceptDto[]>;
-	filteredProcedures$: Observable<OdontologyConceptDto[]>;
+	private procedures: OdontologyConceptDto[];
+	filteredProcedures: OdontologyConceptDto[];
 
-	outputProcedures;
+	firstProcedureId: string;
+	secondProcedureId: string;
+	thirdProcedureId: string;
+
+	ngAfterViewInit(): void {
+		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);
+	}
 
 	ngOnInit(): void {
 
@@ -55,12 +68,32 @@ export class ToothDialogComponent implements OnInit {
 			}
 		);
 
-		this.odontogramService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
-		this.diagnostics$ = this.conceptsService.getDiagnostics();
-		this.procedures$ = this.conceptsService.getProcedures();
+		this.odontogramRestService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
+		const actions = this.data.currentActions?.filter(a => !a.surfaceId);
+		const currentProcedures = actions?.filter(a => a.isProcedure);
+		const currentFinding = actions?.find(a => !a.isProcedure);
+		this.conceptsService.getDiagnostics().subscribe(
+			diagnostics => {
+				this.diagnostics = diagnostics;
+				this.filteredDiagnostics = diagnostics;
+				this.form.controls.findingId.patchValue(currentFinding?.actionSctid);
+			}
+		);
+		this.conceptsService.getProcedures().subscribe(
+			procedures => {
+				this.procedures = procedures;
+				this.filteredProcedures = procedures;
+				this.form.controls.procedures.patchValue({
+					firstProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
+					secondProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
+					thirdProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.THIRD)?.actionSctid,
+				})
+			}
+		);
 	}
 
 	confirm() {
+		this.dialogRef.close(this.toothComponent.getFindingsAndProcedures());
 	}
 
 	reciveSelectedSurfaces(surfaces: string[]) {
@@ -72,8 +105,8 @@ export class ToothDialogComponent implements OnInit {
 			filterFuncion = (diagnostic: OdontologyConceptDto) => { return diagnostic.applicableToSurface }
 		}
 
-		this.filteredDiagnostics$ = this.diagnostics$?.pipe(map(diagnostics => diagnostics.filter(filterFuncion)));
-		this.filteredProcedures$ = this.procedures$?.pipe(map(procedures => procedures.filter(filterFuncion)));
+		this.filteredDiagnostics = this.diagnostics?.filter(filterFuncion);
+		this.filteredProcedures = this.procedures?.filter(filterFuncion);
 	}
 
 	findingChanged(hallazgoId) {
@@ -83,9 +116,9 @@ export class ToothDialogComponent implements OnInit {
 	reciveCommonActions(inCommon: CommonActions) {
 		if (this.form) {
 			if (inCommon?.findingId) {
-				this.form.controls.findingId.setValue(inCommon.findingId);
+				this.form.controls.findingId.patchValue(inCommon.findingId);
 			} else {
-				this.form.controls.findingId.setValue(undefined);
+				this.form.controls.findingId.patchValue(undefined);
 				this.newHallazgoId = undefined;
 			}
 			const procedures = {
@@ -113,8 +146,16 @@ export class ToothDialogComponent implements OnInit {
 		return getSurfaceShortName(sctid);
 	}
 
-	procedureChanged() {
-		this.outputProcedures = this.form.value.procedures;
+	firstProcedureChanged() {
+		this.firstProcedureId = this.form.value.procedures.firstProcedureId;
+	}
+
+	secondProcedureChanged() {
+		this.secondProcedureId = this.form.value.procedures.secondProcedureId;
+	}
+
+	thirdProcedureChanged() {
+		this.thirdProcedureId = this.form.value.procedures.thirdProcedureId;
 	}
 
 }
