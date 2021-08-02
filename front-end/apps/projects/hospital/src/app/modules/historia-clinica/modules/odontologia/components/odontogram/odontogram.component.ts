@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToothDto } from '@api-rest/api-model';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
-import { ToothAction } from '../../services/actions-service.service';
+import { ToothAction } from '../../services/actions.service';
 import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';

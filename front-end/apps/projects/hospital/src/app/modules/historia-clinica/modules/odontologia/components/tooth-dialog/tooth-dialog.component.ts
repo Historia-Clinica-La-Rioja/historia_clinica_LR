@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
 import { ConceptsService } from '../../api-rest/concepts.service';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
-import { ProcedureOrder, ToothAction } from '../../services/actions-service.service';
+import { ProcedureOrder, ToothAction } from '../../services/actions.service';
 import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { getSurfaceShortName } from '../../utils/surfaces';

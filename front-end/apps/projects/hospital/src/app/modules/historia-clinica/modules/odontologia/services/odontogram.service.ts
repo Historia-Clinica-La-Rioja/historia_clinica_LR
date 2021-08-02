@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToothAction } from './actions-service.service';
+import { ToothAction } from './actions.service';
 @Injectable({
 	providedIn: 'root'
 })

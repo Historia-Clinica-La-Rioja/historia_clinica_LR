@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ActionsServiceService, CurrentDraw, ProcedureOrder, ToothAction } from '../../services/actions-service.service';
+import { ActionsService, CurrentDraw, ProcedureOrder, ToothAction } from '../../services/actions.service';
 import { SurfaceDrawerService, ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothDrawerService } from '../../services/tooth-drawer.service';
 import { Surface } from '../../utils/Surface';
@@ -16,7 +16,7 @@ export class ToothComponent implements AfterViewInit {
 
 	@ViewChild('svg') svg: ElementRef<HTMLElement>;
 
-	private actionsService = new ActionsServiceService();
+	private actionsService = new ActionsService();
 	private surfacesHandler: Surface[] = [];
 	private svgGroup: ChildNode;
 

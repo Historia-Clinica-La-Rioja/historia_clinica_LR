@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-export class ActionsServiceService {
+export class ActionsService {
 
 
 	private actionsOnTeeth: ToothAction[] = [];
