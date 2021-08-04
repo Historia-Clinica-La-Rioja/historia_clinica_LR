@@ -55,7 +55,9 @@ export class AppointmentComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[];
 
 	public hideFilterPanel = false;
-	isEnableDowndloadReportButton = false;
+
+	isCheckedDowndloadAnexo = false;
+	isCheckedDowndloadFormulario = false;
 	downdLoadReportIsEnabled: boolean;
 
 	constructor(
@@ -283,12 +285,20 @@ export class AppointmentComponent implements OnInit {
 		this.dialogRef.close(returnValue);
 	}
 
-	enableDowndloadReportButton(option: boolean) {
-		this.isEnableDowndloadReportButton = option;
+	enableDowndloadAnexo(option: boolean) {
+		this.isCheckedDowndloadAnexo = option;
+	}
+
+	enableDowndloadFormulario(option: boolean) {
+		this.isCheckedDowndloadFormulario = option;
 	}
 
 	getReportAppointment(): void {
-		this.appointmentService.getAppointmentReport(this.params.appointmentData).subscribe();
+		if (this.isCheckedDowndloadAnexo && this.isCheckedDowndloadFormulario) {
+			this.appointmentService.getAppointmentReport(this.params.appointmentData).subscribe();
+		} else if (this.isCheckedDowndloadAnexo && !this.isCheckedDowndloadFormulario) {
+			this.appointmentService.getAppointmentReport(this.params.appointmentData).subscribe();
+		}
 	}
 }
 
