@@ -793,14 +793,14 @@ export interface HCEHospitalizationHistoryDto {
 
 export interface HCEImmunizationDto extends Serializable {
     administrationDate: string;
-    condition: VaccineConditionDto;
-    doctor: ProfessionalInfoDto;
-    dose: VaccineDoseInfoDto;
+    condition?: VaccineConditionDto;
+    doctor?: ProfessionalInfoDto;
+    dose?: VaccineDoseInfoDto;
     id: number;
-    institution: InstitutionInfoDto;
+    institution?: InstitutionInfoDto;
     lotNumber: string;
     note: string;
-    scheme: VaccineSchemeInfoDto;
+    scheme?: VaccineSchemeInfoDto;
     snomed: SnomedDto;
     statusId: string;
 }

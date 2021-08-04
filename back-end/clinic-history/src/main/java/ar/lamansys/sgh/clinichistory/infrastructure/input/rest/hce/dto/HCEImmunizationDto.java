@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 @Getter
@@ -31,15 +32,20 @@ public class HCEImmunizationDto implements Serializable {
 
     private String note;
 
+    @Nullable
     private InstitutionInfoDto institution;
 
+    @Nullable
     private VaccineDoseInfoDto dose;
 
+    @Nullable
     private VaccineConditionDto condition;
 
+    @Nullable
     private VaccineSchemeInfoDto scheme;
 
     private String lotNumber;
 
+    @Nullable
     private ProfessionalInfoDto doctor;
 }
