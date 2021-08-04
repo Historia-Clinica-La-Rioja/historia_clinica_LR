@@ -151,7 +151,7 @@ public class ReportsController {
 
     private ResponseEntity<InputStreamResource> generatePdfResponse(Map<String, Object> context, String outputFileName) throws PDFDocumentException {
         LOG.debug("Input parameters -> context {}, outputFileName {}", context, outputFileName);
-        ByteArrayOutputStream outputStream = pdfService.writer("anexo", context);
+        ByteArrayOutputStream outputStream = pdfService.writer("appointments_report_anexo", context);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
         InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
         ResponseEntity<InputStreamResource> response;
