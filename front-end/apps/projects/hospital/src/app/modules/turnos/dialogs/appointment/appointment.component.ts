@@ -59,7 +59,7 @@ export class AppointmentComponent implements OnInit {
 	downdLoadReportIsEnabled: boolean;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
+		@Inject(MAT_DIALOG_DATA) public params : { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
@@ -89,8 +89,8 @@ export class AppointmentComponent implements OnInit {
 		});
 
 		this.setMedicalCoverages();
-		this.formEdit.controls.phoneNumber.setValue(this.appointmentData.phoneNumber);
-		this.appointmentService.get(this.appointmentData.appointmentId)
+		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
+		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
 				this.estadoSelected = this.appointment?.appointmentStateId;
@@ -120,7 +120,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private setMedicalCoverages(): void {
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.appointmentData.patient.id))
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.params.appointmentData.patient.id))
 			.pipe(
 				map(
 					patientMedicalCoveragesDto =>
@@ -149,7 +149,7 @@ export class AppointmentComponent implements OnInit {
 
 	cancelAppointment(): void {
 		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
-			data: this.appointmentData.appointmentId
+			data: this.params.appointmentData.appointmentId
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
@@ -196,8 +196,12 @@ export class AppointmentComponent implements OnInit {
 				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED);
 	}
 
+	isAbsent(): boolean {
+		return this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
+	}
+
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
-		this.appointmentFacade.changeState(this.appointmentData.appointmentId, newStateId, motivo)
+		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
 				this.closeDialog('statuschanged');
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
@@ -209,7 +213,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updatePhoneNumber(phoneNumber: string) {
-		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, phoneNumber).subscribe(() => {
+		this.appointmentFacade.updatePhoneNumber(this.params.appointmentData.appointmentId, phoneNumber).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -217,7 +221,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updateCoverageData(patientMedicalCoverageId: number) {
-		this.appointmentService.updateMedicalCoverage(this.appointmentData.appointmentId, patientMedicalCoverageId).subscribe(() => {
+		this.appointmentService.updateMedicalCoverage(this.params.appointmentData.appointmentId, patientMedicalCoverageId).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -242,7 +246,7 @@ export class AppointmentComponent implements OnInit {
 	openMedicalCoverageDialog(): void {
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {
-				identificationNumber: this.appointmentData.patient.identificationNumber,
+				identificationNumber: this.params.appointmentData.patient.identificationNumber,
 				initValues: this.patientMedicalCoverages,
 			}
 		});
@@ -253,7 +257,7 @@ export class AppointmentComponent implements OnInit {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.appointmentData.patient.id), patientCoverages).subscribe(
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.params.appointmentData.patient.id), patientCoverages).subscribe(
 						_ => {
 							this.setMedicalCoverages();
 							this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
@@ -284,7 +288,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	getReportAppointment(): void {
-		this.appointmentService.getAppointmentReport(this.appointmentData).subscribe();
+		this.appointmentService.getAppointmentReport(this.params.appointmentData).subscribe();
 	}
 }
 

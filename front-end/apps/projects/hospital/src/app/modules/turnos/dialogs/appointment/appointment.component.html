@@ -5,14 +5,14 @@
 			<div class="header-content" fxLayout="row" fxLayoutAlign="center">
 				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon>
 				<div fxLayout="column" fxLayoutAlign="center start">
-					<span class="mat-body-strong capitalize patient-name-title" *ngIf="appointmentData.patient.fullName"> {{ appointmentData.patient.fullName | uppercase }}</span>
+					<span class="mat-body-strong capitalize patient-name-title" *ngIf="params.appointmentData.patient.fullName"> {{ params.appointmentData.patient.fullName | uppercase }}</span>
 					<div>
-						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID {{appointmentData.patient.id}}</span> •
-						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="appointmentData.patient.identificationNumber">DNI {{appointmentData.patient.identificationNumber}}</span>
+						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID {{params.appointmentData.patient.id}}</span> •
+						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="params.appointmentData.patient.identificationNumber">DNI {{params.appointmentData.patient.identificationNumber}}</span>
 					</div>
 					<div>
 						<a class="mat-body" *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']"
-							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + appointmentData?.patient?.id"
+							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
 							(click)="closeDialog()">Ver historia clínica</a>
 					</div>
 				</div>
@@ -33,7 +33,7 @@
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
-					<span class="mat-body patient-info coverage-text">{{appointmentData.phoneNumber || "Sin información"}}</span>
+					<span class="mat-body patient-info coverage-text">{{params.appointmentData.phoneNumber || "Sin información"}}</span>
 				</div>
 			</ng-container>
 
@@ -76,13 +76,13 @@
 					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true" id="full-date">
 						calendar_today
 					</mat-icon>
-					<span class="mat-body"> {{appointmentData.date | date:"fullDate"}}</span>
+					<span class="mat-body"> {{params.appointmentData.date | date:"fullDate"}}</span>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true" id="hour">
 						access_time
 					</mat-icon>
-					<span class="mat-body"> {{appointmentData.date | date:"HH:mm"}} hs</span>
+					<span class="mat-body"> {{params.appointmentData.date | date:"HH:mm"}} hs</span>
 				</div>
 			</div>
 		</section>
@@ -137,7 +137,7 @@
 			</div>
 		</section>
 
-		<ng-container *ngIf="downdLoadReportIsEnabled">
+		<ng-container *ngIf="downdLoadReportIsEnabled && !isAbsent() && params.hasPermissionToAssignShift">
 			<section id="report">
 				<span class="mat-body-strong">Descargar informes</span>
 				<section class="example-section">
@@ -151,7 +151,7 @@
 
 	<mat-dialog-actions *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 		align="end">
-		<ng-container *ngIf="downdLoadReportIsEnabled">
+		<ng-container *ngIf="downdLoadReportIsEnabled && !isAbsent() && params.hasPermissionToAssignShift">
 			<button type="button" mat-flat-button color="primary" id="report-appointment"
 					name="report-appointment" (click)="getReportAppointment()" [disabled]="!isEnableDowndloadReportButton">
 				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
