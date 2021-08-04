@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.domain.consultation;
 
+import ar.lamansys.odontology.domain.ESurfacePosition;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,8 @@ public class ConsultationDentalActionBo extends ClinicalTermBo {
 
     private OdontologySnomedBo surface;
 
+    private ESurfacePosition surfacePosition;
+
     private boolean diagnostic;
 
     public ConsultationDentalActionBo(OdontologySnomedBo action, boolean isDiagnostic) {
@@ -21,10 +24,10 @@ public class ConsultationDentalActionBo extends ClinicalTermBo {
         this.diagnostic = isDiagnostic;
     }
 
-    public ConsultationDentalActionBo(OdontologySnomedBo action, OdontologySnomedBo tooth, OdontologySnomedBo surface, boolean isDiagnostic) {
+    public ConsultationDentalActionBo(OdontologySnomedBo action, OdontologySnomedBo tooth, ESurfacePosition surfacePosition, boolean isDiagnostic) {
         super(action);
         this.tooth = tooth;
-        this.surface = surface;
+        this.surfacePosition = surfacePosition;
         this.diagnostic = isDiagnostic;
     }
 
@@ -32,12 +35,12 @@ public class ConsultationDentalActionBo extends ClinicalTermBo {
         return !this.diagnostic;
     }
 
-    public Boolean isAppliedToTooth() {
-        return (this.tooth != null) && (this.surface == null);
+    public boolean isAppliedToTooth() {
+        return (this.tooth != null) && (this.surfacePosition == null);
     }
 
-    public Boolean isAppliedToSurface() {
-        return (this.tooth != null) && (this.surface != null);
+    public boolean isAppliedToSurface() {
+        return (this.tooth != null) && (this.surfacePosition != null);
     }
 
 }

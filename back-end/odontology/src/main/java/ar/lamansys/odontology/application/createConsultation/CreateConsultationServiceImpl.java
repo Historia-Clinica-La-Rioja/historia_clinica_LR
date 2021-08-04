@@ -40,18 +40,22 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
 
     private final OdontologyDocumentStorage odontologyDocumentStorage;
 
+    private final DrawOdontogramService drawOdontogramService;
+
     public CreateConsultationServiceImpl(DiagnosticStorage diagnosticStorage,
                                          ProcedureStorage proceduresStorage,
                                          OdontologyConsultationStorage odontologyConsultationStorage,
                                          DateTimeProvider dateTimeProvider,
                                          OdontologyDoctorStorage odontologyDoctorStorage,
-                                         OdontologyDocumentStorage odontologyDocumentStorage) {
+                                         OdontologyDocumentStorage odontologyDocumentStorage,
+                                         DrawOdontogramService drawOdontogramService) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
         this.dateTimeProvider = dateTimeProvider;
         this.odontologyDoctorStorage = odontologyDoctorStorage;
         this.odontologyDocumentStorage = odontologyDocumentStorage;
+        this.drawOdontogramService = drawOdontogramService;
     }
 
     @Override
@@ -66,6 +70,8 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
                 new CreateConsultationException(CreateConsultationExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es inválido"));
 
         assertContextValid(consultationBo, doctorInfoBo);
+
+        drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
         LocalDate now = dateTimeProvider.nowDate();
         Integer encounterId = odontologyConsultationStorage.save(
