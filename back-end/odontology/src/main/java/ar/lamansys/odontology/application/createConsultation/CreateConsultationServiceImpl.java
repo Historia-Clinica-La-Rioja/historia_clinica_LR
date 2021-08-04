@@ -2,10 +2,12 @@ package ar.lamansys.odontology.application.createConsultation;
 
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationExceptionEnum;
+import ar.lamansys.odontology.application.odontogram.GetToothSurfacesService;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.ToothSurfacesBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
@@ -21,7 +23,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CreateConsultationServiceImpl implements CreateConsultationService {
@@ -42,13 +47,16 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
 
     private final DrawOdontogramService drawOdontogramService;
 
+    private final GetToothSurfacesService getToothSurfacesService;
+
     public CreateConsultationServiceImpl(DiagnosticStorage diagnosticStorage,
                                          ProcedureStorage proceduresStorage,
                                          OdontologyConsultationStorage odontologyConsultationStorage,
                                          DateTimeProvider dateTimeProvider,
                                          OdontologyDoctorStorage odontologyDoctorStorage,
                                          OdontologyDocumentStorage odontologyDocumentStorage,
-                                         DrawOdontogramService drawOdontogramService) {
+                                         DrawOdontogramService drawOdontogramService,
+                                         GetToothSurfacesService getToothSurfacesService) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
@@ -56,6 +64,7 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
         this.odontologyDoctorStorage = odontologyDoctorStorage;
         this.odontologyDocumentStorage = odontologyDocumentStorage;
         this.drawOdontogramService = drawOdontogramService;
+        this.getToothSurfacesService = getToothSurfacesService;
     }
 
     @Override
@@ -71,6 +80,8 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
 
         assertContextValid(consultationBo, doctorInfoBo);
 
+        setSurfaceSctids(consultationBo);
+
         drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
         LocalDate now = dateTimeProvider.nowDate();
@@ -84,6 +95,21 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
         odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId()));
 
         LOG.debug("No output");
+    }
+
+    private void setSurfaceSctids(ConsultationBo consultationBo) {
+        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+        Map<String, List<ConsultationDentalActionBo>> actionsByToothSctid = consultationBo.getDentalActions()
+                .stream()
+                .collect(Collectors.groupingBy(ConsultationDentalActionBo::getToothSctid));
+
+        actionsByToothSctid.keySet().forEach(toothId -> {
+            ToothSurfacesBo toothSurfaces = getToothSurfacesService.run(toothId);
+            actionsByToothSctid.get(toothId).forEach(actionBo -> {
+                if (actionBo.isAppliedToSurface())
+                    actionBo.setSurface(toothSurfaces.getSurface(actionBo.getSurfacePosition()));
+            });
+        });
     }
 
     private void assertContextValid(ConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {

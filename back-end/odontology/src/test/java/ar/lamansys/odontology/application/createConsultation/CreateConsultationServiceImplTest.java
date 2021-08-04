@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.application.createConsultation;
 
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
+import ar.lamansys.odontology.application.odontogram.GetToothSurfacesService;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.ESurfacePosition;
@@ -54,6 +55,9 @@ class CreateConsultationServiceImplTest {
     @Mock
     private DrawOdontogramService drawOdontogramService;
 
+    @Mock
+    private GetToothSurfacesService getToothSurfacesService;
+
     @BeforeEach
     void setUp() {
         this.createConsultationService = new CreateConsultationServiceImpl(diagnosticStorage,
@@ -62,7 +66,8 @@ class CreateConsultationServiceImplTest {
                 dateTimeProvider,
                 odontologyDoctorStorage,
                 odontologyDocumentStorage,
-                drawOdontogramService);
+                drawOdontogramService,
+                getToothSurfacesService);
     }
 
     @Test

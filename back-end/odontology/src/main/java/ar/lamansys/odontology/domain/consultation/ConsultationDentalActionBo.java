@@ -31,6 +31,10 @@ public class ConsultationDentalActionBo extends ClinicalTermBo {
         this.diagnostic = isDiagnostic;
     }
 
+    public String getToothSctid() {
+        return this.tooth.getSctid();
+    }
+
     public boolean isProcedure() {
         return !this.diagnostic;
     }
