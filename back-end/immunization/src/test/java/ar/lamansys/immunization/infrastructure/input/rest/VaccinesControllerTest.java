@@ -30,7 +30,7 @@ class VaccinesControllerTest {
     void success() {
         when(fetchVaccineById.run(any()))
                 .thenReturn(new VaccineBo((short)-4, (short)4, "DESC", 4, 5, Lists.emptyList()));
-        var result = vaccinesController.get("4");
+        var result = vaccinesController.vaccineInformation("4");
 
         Assertions.assertEquals((short)-4, result.getId());
         Assertions.assertEquals("DESC", result.getDescription());
@@ -42,7 +42,7 @@ class VaccinesControllerTest {
     void unknownVaccine() {
         when(fetchVaccineById.run(any()))
                 .thenReturn(null);
-        var result = vaccinesController.get("4");
+        var result = vaccinesController.vaccineInformation("4");
 
         Assertions.assertNull(result);
     }
