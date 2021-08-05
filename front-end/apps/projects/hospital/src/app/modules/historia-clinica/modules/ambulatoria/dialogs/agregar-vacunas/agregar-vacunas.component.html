@@ -13,9 +13,8 @@
     </div>
     <div fxLayout="row" [formGroup]="form">
         <mat-form-field appearance="outline">
-            <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty" formControlName="clinicalSpecialty"
-                (selectionChange)="setDefaultSpecialty()" [attr.disabled]="fixedSpecialty">
-                <mat-option *ngFor="let clinicalSpecialty of this.specialties" [value]="clinicalSpecialty">
+            <mat-select formControlName="clinicalSpecialty" [attr.disabled]="fixedSpecialty" required>
+                <mat-option *ngFor="let clinicalSpecialty of this.specialties; index as i" [value]="i">
                     <span class="mat-body">{{clinicalSpecialty.name}}</span>
                 </mat-option>
             </mat-select>
@@ -25,16 +24,16 @@
 
     <div class="aplied-vaccines">
 
-        <ng-container *ngFor="let vaccine of this.appliedVaccines">
+        <ng-container *ngFor="let vaccine of this.appliedVaccines; index as i">
 
             <div fxLayout="row" fxLayoutAlign="space-between end" class="separation">
-                <ng-container *ngIf="vaccine.billable else noFacturable">
+                <ng-container *ngIf="vaccine.billable else notBillable">
                     <div class="mat-h5 color-primary">
                         {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.BILLABLE_VACCINE_TITLE' |
                         translate | uppercase }}
                     </div>
                 </ng-container>
-                <ng-template #noFacturable>
+                <ng-template #notBillable>
                     <div class="mat-h5 color-primary">
                         {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.PREVIOUS_VACCINE_TITLE' |
                         translate | uppercase }}
@@ -42,26 +41,25 @@
                 </ng-template>
 
                 <div>
-                    <button mat-icon-button tabindex="-1" (click)="edit(vaccine)">
+                    <button mat-icon-button tabindex="-1" (click)="edit(i)">
                         <mat-icon color="primary">mode_edit_outline</mat-icon>
                     </button>
-                    <button mat-icon-button tabindex="-1" (click)="remove(vaccine);">
+                    <button mat-icon-button tabindex="-1" (click)="remove(i);">
                         <mat-icon color="warn">delete_outline</mat-icon>
                     </button>
                 </div>
             </div>
 
             <div fxLayout="row" class="mat-body">
-                {{ vaccine.note }}
-                <!-- need change -->
+                {{ vaccine.snomed.pt }}
             </div>
 
             <div class="mat-h5 separation" fxLayout="row" fxLayoutAlign="end">
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <div class="dose dose-color">
-                        <strong>{{ vaccine.doseId | uppercase }}</strong> <!-- need change -->
+                        <strong>{{ vaccine.dose.description | uppercase }}</strong>
                     </div>
-                    <div> {{ this.displayDate(vaccine) }}</div>
+                    <div> {{ this.displayDate(vaccine.administrationDate) }}</div>
                 </div>
             </div>
 

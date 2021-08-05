@@ -1,6 +1,6 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
 	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.TITLE'"> </div>
-	<button mat-button class="close-icon" [mat-dialog-close]="true" tabindex="-1">
+	<button mat-button class="close-icon" (click)="dialogRef.close();" tabindex="-1">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
@@ -17,8 +17,8 @@
 						{{ 'ambulatoria.paciente.vacunas.aplicar.ADMINISTRATION_DATE' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
-						<input placeholder="mm/dd/yyyy" matInput [value]="this.today" [matDatepicker]="myDatepicker"
-							formControlName="date" [max]="this.today" required>
+						<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
+							[matDatepicker]="myDatepicker" formControlName="date" [max]="this.today" required>
 						<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
 						<mat-datepicker #myDatepicker startView="multi-year" (yearSelected)="chosenYearHandler($event)"
 							(monthSelected)="chosenMonthHandler($event)">
@@ -26,21 +26,41 @@
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.INMUNIZATION' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<input matInput required formControlName="snomed">
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-					</mat-form-field>
+					<ng-container *ngIf="snomedConcept else searchImmunizations">
+						<mat-label>
+							{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.INMUNIZATION' | translate
+							}}
+						</mat-label>
+						<mat-form-field appearance="outline">
+							<input matInput required readonly formControlName="snomed"
+								matTooltip="{{ snomedConcept.pt }}">
+							<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+								(click)="resetConcept()">
+								<mat-icon>close</mat-icon>
+							</button>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</ng-container>
+
+					<ng-template #searchImmunizations>
+						<app-concepts-search [label]="'ambulatoria.paciente.vacunas.aplicar.INMUNIZATION'"
+							(search)="onSearch($event)">
+						</app-concepts-search>
+						<div class="spinner">
+							<mat-spinner diameter="70" color="primary" *ngIf="searching"></mat-spinner>
+						</div>
+						<app-table *ngIf="!searching && !snomedConcept" [model]="conceptsResultsTable"></app-table>
+					</ng-template>
+
+
 
 					<mat-label>
 						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.CONDITION' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
-						<mat-select required formControlName="condition">
-							<mat-option *ngFor="let condition of conditions" [value]="condition">
-								{{condition}}
+						<mat-select required formControlName="condition" (selectionChange)="loadSchemes($event.value)">
+							<mat-option *ngFor="let condition of conditions; index as i" [value]="i">
+								{{ condition.description }}
 							</mat-option>
 						</mat-select>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -52,9 +72,10 @@
 								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.SCHEME' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
-								<mat-select required formControlName="scheme">
-									<mat-option *ngFor="let scheme of schemes" [value]="scheme">
-										{{scheme}}
+								<mat-select required formControlName="scheme"
+									(selectionChange)="loadDoses($event.value)">
+									<mat-option *ngFor="let scheme of schemes; index as i" [value]="i">
+										{{ scheme.description }}
 									</mat-option>
 								</mat-select>
 								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -66,8 +87,8 @@
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<mat-select required formControlName="dose">
-									<mat-option *ngFor="let dose of doses" [value]="dose">
-										{{dose}}
+									<mat-option *ngFor="let dose of doses; index as i" [value]="i">
+										{{ dose.description }}
 									</mat-option>
 								</mat-select>
 								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -176,6 +197,7 @@
 
 					<mat-label>
 						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.INSTITUTION' | translate }}
+						{{ 'forms.MAX_LENGTH_ERROR' | translate: {max: 10 } }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input matInput formControlName="institution">

@@ -1,8 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { newMoment } from '@core/utils/moment.utils';
+import { MatDialogRef } from '@angular/material/dialog';
+import { DateFormat, newMoment } from '@core/utils/moment.utils';
+import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
+import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
+import { ImmunizationDto, SnomedDto, VaccineConditionsDto, VaccineDoseInfoDto, VaccineSchemeDto } from '@api-rest/api-model';
+import { VaccineService } from '@api-rest/services/vaccine.service';
 
 
 @Component({
@@ -12,18 +17,23 @@ import { newMoment } from '@core/utils/moment.utils';
 })
 export class AplicarVacuna2Component implements OnInit {
 
-	doses: any[];
-	schemes: any[];
-	conditions: any[];
+	doses: VaccineDoseInfoDto[];
+	schemes: VaccineSchemeDto[];
+	conditions: VaccineConditionsDto[];
 	billableForm: FormGroup;
 	previousForm: FormGroup;
 	today: Moment = newMoment();
+	searching = false;
+	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+	conceptsResultsTable: TableModel<any>;
+	snomedConcept: SnomedDto;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { patientId: number },
 		private readonly formBuilder: FormBuilder,
-	) {
-	}
+		private readonly snowstormService: SnowstormService,
+		private readonly vaccineService: VaccineService,
+		public dialogRef: MatDialogRef<AplicarVacuna2Component>
+	) { }
 
 	ngOnInit(): void {
 		this.billableForm = this.formBuilder.group({
@@ -48,7 +58,7 @@ export class AplicarVacuna2Component implements OnInit {
 		});
 	}
 
-	chosenYearHandler(newDate: Moment) {
+	public chosenYearHandler(newDate: Moment): void {
 		if (this.billableForm.controls.date.value !== null) {
 			const ctrlDate: Moment = this.billableForm.controls.date.value;
 			ctrlDate.year(newDate.year());
@@ -58,7 +68,7 @@ export class AplicarVacuna2Component implements OnInit {
 		}
 	}
 
-	chosenMonthHandler(newDate: Moment) {
+	public chosenMonthHandler(newDate: Moment): void {
 		if (this.billableForm.controls.date.value !== null) {
 			const ctrlDate: Moment = this.billableForm.controls.date.value;
 			ctrlDate.month(newDate.month());
@@ -68,6 +78,102 @@ export class AplicarVacuna2Component implements OnInit {
 		}
 	}
 
-	submit() { }
+	public submit(): void {
+		if (this.billableForm.valid) {
+			const appliedVaccine: ImmunizationDto = {
+				snomed: this.snomedConcept,
+				administrationDate: this.billableForm.value.date.format(DateFormat.API_DATE),
+				billable: true,
+				conditionId: this.conditions[this.billableForm.value.condition].id,
+				dose: this.doses[this.billableForm.value.dose],
+				lotNumber: this.billableForm.value.lot,
+				note: this.billableForm.value.note,
+				schemeId: this.schemes[this.billableForm.value.scheme].id
+			};
+			this.dialogRef.close(appliedVaccine);
+		}
+	}
+
+	public onSearch(searchValue: string): void {
+		if (searchValue) {
+			this.searching = true;
+			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
+				.subscribe(
+					results => {
+						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
+						this.searching = false;
+					}
+				);
+		}
+	}
+
+	private buildConceptsResultsTable(data: SnomedDto[]): TableModel<SnomedDto> {
+		return {
+			columns: [
+				{
+					columnDef: '1',
+					header: 'Descripción SNOMED',
+					text: concept => concept.pt
+				},
+				{
+					columnDef: 'select',
+					action: {
+						displayType: ActionDisplays.BUTTON,
+						display: 'Seleccionar',
+						matColor: 'primary',
+						do: concept => this.setConcept(concept)
+					}
+				}
+			],
+			data,
+			enablePagination: true
+		};
+	}
+
+	private setConcept(selectedConcept: SnomedDto): void {
+		this.snomedConcept = selectedConcept;
+		const pt = selectedConcept ? selectedConcept.pt : '';
+		this.billableForm.controls.snomed.setValue(pt);
+		const sctId = selectedConcept ? selectedConcept.sctid : '';
+		this.loadConditions(sctId);
+	}
+
+	public resetConcept(): void {
+		delete this.snomedConcept;
+		delete this.conceptsResultsTable;
+		delete this.conditions;
+		delete this.schemes;
+		delete this.doses;
+		this.billableForm.get("condition").setValue(null);
+		this.billableForm.get("scheme").setValue(null);
+		this.billableForm.get("dose").setValue(null);
+	}
+
+	private loadConditions(sctid: string): void {
+		this.vaccineService.vaccineInformation(sctid).subscribe(
+			vaccineInformation => {
+				this.conditions = vaccineInformation.conditions;
+				this.billableForm.get("condition").setValue(null);
+
+				delete this.schemes;
+				delete this.doses;
+				this.billableForm.get("scheme").setValue(null);
+				this.billableForm.get("dose").setValue(null);
+			}
+		);
+	}
+
+	public loadSchemes(conditionIndex: number): void {
+		this.schemes = this.conditions[conditionIndex].schemes;
+		this.billableForm.get("scheme").setValue(null);
+
+		delete this.doses;
+		this.billableForm.get("dose").setValue(null);
+	}
+
+	public loadDoses(schemeIndex: number): void {
+		this.doses = this.schemes[schemeIndex].doses;
+		this.billableForm.get("dose").setValue(null);
+	}
 
 }

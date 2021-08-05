@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ClinicalSpecialtyDto, ImmunizationDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { AplicarVacuna2Component } from '../aplicar-vacuna-2/aplicar-vacuna-2.component';
 
 @Component({
@@ -15,7 +15,6 @@ export class AgregarVacunasComponent implements OnInit {
 
   form: FormGroup;
   fixedSpecialty = true;
-  defaultSpecialty: ClinicalSpecialtyDto;
   specialties: ClinicalSpecialtyDto[];
   appliedVaccines: ImmunizationDto[];
 
@@ -30,62 +29,50 @@ export class AgregarVacunasComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      clinicalSpecialty: []
+      clinicalSpecialty: [null, Validators.required]
     });
 
     this.setLoggedProfessionalSpecialties();
   }
 
-  setLoggedProfessionalSpecialties() {
+  public setLoggedProfessionalSpecialties(): void {
     this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
       this.specialties = specialties;
       this.fixedSpecialty = false;
-      this.defaultSpecialty = specialties[0];
-      this.form.get('clinicalSpecialty').setValue(this.defaultSpecialty);
+      this.form.get('clinicalSpecialty').setValue(0);
     });
   }
 
-  setDefaultSpecialty() {
-    this.defaultSpecialty = this.form.controls.clinicalSpecialty.value;
+  public displayDate(administrationDate: string): string {
+    return momentFormat(momentParseDate(administrationDate), DateFormat.VIEW_DATE);
   }
 
-  displayDate(vaccine: ImmunizationDto): string {
-    return momentFormat(momentParseDate(vaccine.administrationDate));
+  public remove(vaccineIndex: number): void {
+    this.appliedVaccines.splice(vaccineIndex, 1);
   }
 
-  remove(vaccine: ImmunizationDto) {
-    this.appliedVaccines.forEach((value, index) => {
-      if (value.snomed.sctid == vaccine.snomed.sctid) // need change
-        this.appliedVaccines.splice(index, 1);
-    });
-  }
-
-  edit(vaccine: ImmunizationDto) {
-    const dialogRef = this.dialog.open(AplicarVacuna2Component, { // maybe need change
+  public edit(vaccineIndex: number): void {
+    const dialogRef = this.dialog.open(AplicarVacuna2Component, {
       disableClose: true,
       width: '45%',
       data: {
-        patientId: this.data.patientId,
-        immunization: vaccine
+        immunization: this.appliedVaccines[vaccineIndex]
       }
     });
 
     dialogRef.afterClosed().subscribe(submitted => {
       if (submitted) {
-        this.remove(vaccine);
+        this.remove(vaccineIndex);
         this.appliedVaccines.push(submitted);
       }
     });
 
   }
 
-  addVaccine() {
-    const dialogRef = this.dialog.open(AplicarVacuna2Component, { // maybe need change
+  public addVaccine(): void {
+    const dialogRef = this.dialog.open(AplicarVacuna2Component, {
       disableClose: true,
-      width: '45%',
-      data: {
-        patientId: this.data.patientId
-      }
+      width: '45%'
     });
 
     dialogRef.afterClosed().subscribe(submitted => {
