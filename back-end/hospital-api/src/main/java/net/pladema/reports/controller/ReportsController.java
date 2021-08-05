@@ -150,7 +150,7 @@ public class ReportsController {
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
         Map<String, Object> context = annexReportService.createContext(reportDataDto);
         String outputFileName = annexReportService.createOutputFileName(appointmentId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "anexo");
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_anexo");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }

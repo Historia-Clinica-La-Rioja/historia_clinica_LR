@@ -15,7 +15,7 @@ import java.time.Period;
 @NoArgsConstructor
 public class AnnexIIVo {
 
-    private String hospital;
+    private String establishment;
 
     private String firstName;
 
@@ -25,28 +25,28 @@ public class AnnexIIVo {
 
     private String otherLastNames;
 
-    private String tipoDocumento;
+    private String documentType;
 
-    private String numeroDocumento;
+    private String documentNumber;
 
-    private String sexoPaciente;
+    private String patientGender;
 
-    private LocalDate fechaNacPaciente;
+    private LocalDate patientBirthDate;
 
-    private String estadoTurno;
+    private String appointmentState;
 
-    private LocalDate fechaAtencion;
+    private LocalDate attentionDate;
 
-    private String obraSocial;
+    private String medicalCoverage;
 
-    private String numeroAfiliado;
+    private String affiliateNumber;
 
     @JsonIgnore
     public Short getAge(){
-        if (fechaNacPaciente == null)
+        if (patientBirthDate == null)
             return null;
         LocalDate today = LocalDate.now();
-        Period p = Period.between(fechaNacPaciente, today);
+        Period p = Period.between(patientBirthDate, today);
         return (short) p.getYears();
     }
 }

@@ -13,41 +13,41 @@ import java.util.stream.Stream;
 @Setter
 public class AnnexIIBo {
 
-    private LocalDate fechaReporte;
+    private LocalDate reportDate;
 
-    private String hospital;
+    private String establishment;
 
-    private String nombreCompletoPaciente;
+    private String completePatientName;
 
-    private String tipoDocumento;
+    private String documentType;
 
-    private String numeroDocumento;
+    private String documentNumber;
 
-    private String sexoPaciente;
+    private String patientGender;
 
-    private Short edadPaciente;
+    private Short patientAge;
 
-    private String estadoTurno;
+    private String appointmentState;
 
-    private LocalDate fechaAtencion;
+    private LocalDate attentionDate;
 
-    private String obraSocial;
+    private String medicalCoverage;
 
-    private String numeroAfiliado;
+    private String affiliateNumber;
 
     public AnnexIIBo(AnnexIIVo annexIIVo){
-        this.fechaReporte = LocalDate.now();
-        this.hospital = annexIIVo.getHospital();
-        this.nombreCompletoPaciente = Stream.of(annexIIVo.getFirstName(), annexIIVo.getMiddleNames(), annexIIVo.getLastName(),annexIIVo.getOtherLastNames())
+        this.reportDate = LocalDate.now();
+        this.establishment = annexIIVo.getEstablishment();
+        this.completePatientName = Stream.of(annexIIVo.getFirstName(), annexIIVo.getMiddleNames(), annexIIVo.getLastName(),annexIIVo.getOtherLastNames())
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
-        this.tipoDocumento = annexIIVo.getTipoDocumento ();
-        this.numeroDocumento = annexIIVo.getNumeroDocumento();
-        this.sexoPaciente = annexIIVo.getSexoPaciente();
-        this.edadPaciente = annexIIVo.getAge();
-        this.fechaAtencion = annexIIVo.getFechaAtencion();
-        this.estadoTurno = annexIIVo.getEstadoTurno();
-        this.obraSocial = annexIIVo.getObraSocial();
-        this.numeroAfiliado = annexIIVo.getNumeroAfiliado();
+        this.documentType = annexIIVo.getDocumentType ();
+        this.documentNumber = annexIIVo.getDocumentNumber();
+        this.patientGender = annexIIVo.getPatientGender();
+        this.patientAge = annexIIVo.getAge();
+        this.attentionDate = annexIIVo.getAttentionDate();
+        this.appointmentState = annexIIVo.getAppointmentState();
+        this.medicalCoverage = annexIIVo.getMedicalCoverage();
+        this.affiliateNumber = annexIIVo.getAffiliateNumber();
     }
 }

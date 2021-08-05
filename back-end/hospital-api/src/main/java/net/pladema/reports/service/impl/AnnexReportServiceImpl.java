@@ -40,17 +40,17 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     public Map<String, Object> createContext(AnnexIIDto reportDataDto){
         LOG.debug("Input parameters -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = new HashMap<>();
-        ctx.put("fechaReporte", reportDataDto.getFechaReporte().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        ctx.put("hospital", reportDataDto.getHospital());
-        ctx.put("nombreCompletoPaciente", reportDataDto.getNombreCompletoPaciente());
-        ctx.put("tipoDocumento", reportDataDto.getTipoDocumento());
-        ctx.put("numeroDocumento", reportDataDto.getNumeroDocumento());
-        ctx.put("sexoPaciente", reportDataDto.getSexoPaciente());
-        ctx.put("edadPaciente", reportDataDto.getEdadPaciente());
-        ctx.put("estadoTurno", reportDataDto.getEstadoTurno());
-        ctx.put("fechaAtencion", reportDataDto.getFechaAtencion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        ctx.put("obraSocial", reportDataDto.getObraSocial());
-        ctx.put("numeroAfiliado", reportDataDto.getNumeroAfiliado());
+        ctx.put("reportDate", reportDataDto.getReportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        ctx.put("establishment", reportDataDto.getEstablishment());
+        ctx.put("completePatientName", reportDataDto.getCompletePatientName());
+        ctx.put("documentType", reportDataDto.getDocumentType());
+        ctx.put("documentNumber", reportDataDto.getDocumentNumber());
+        ctx.put("patientGender", reportDataDto.getPatientGender());
+        ctx.put("patientAge", reportDataDto.getPatientAge());
+        ctx.put("appointmentState", reportDataDto.getAppointmentState());
+        ctx.put("attentionDate", reportDataDto.getAttentionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
+        ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
         return ctx;
     }
 

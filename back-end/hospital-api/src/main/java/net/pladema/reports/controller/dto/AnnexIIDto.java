@@ -9,25 +9,25 @@ import java.time.LocalDate;
 @Setter
 public class AnnexIIDto {
 
-    private LocalDate fechaReporte;
+    private LocalDate reportDate;
 
-    private String hospital;
+    private String establishment;
 
-    private String nombreCompletoPaciente;
+    private String completePatientName;
 
-    private String tipoDocumento;
+    private String documentType;
 
-    private String numeroDocumento;
+    private String documentNumber;
 
-    private String sexoPaciente;
+    private String patientGender;
 
-    private Short edadPaciente;
+    private Short patientAge;
 
-    private String estadoTurno;
+    private String appointmentState;
 
-    private LocalDate fechaAtencion;
+    private LocalDate attentionDate;
 
-    private String obraSocial;
+    private String medicalCoverage;
 
-    private String numeroAfiliado;
+    private String affiliateNumber;
 }

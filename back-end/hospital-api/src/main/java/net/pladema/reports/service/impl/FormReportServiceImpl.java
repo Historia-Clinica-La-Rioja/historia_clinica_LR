@@ -56,7 +56,7 @@ public class FormReportServiceImpl implements FormReportService {
     public String createOutputFileName(Integer appointmentId, ZonedDateTime consultedDate){
         LOG.debug("Input parameters -> appointmentId {}, consultedDate {}", appointmentId, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        String outputFileName = String.format("%s. AnexoII %s.pdf", appointmentId, formattedDate);
+        String outputFileName = String.format("%s. FormV %s.pdf", appointmentId, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

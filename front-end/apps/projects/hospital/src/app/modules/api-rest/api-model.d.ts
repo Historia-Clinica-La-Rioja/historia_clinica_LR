@@ -130,17 +130,17 @@ export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface AnnexIIDto {
-    edadPaciente: number;
-    estadoTurno: string;
-    fechaAtencion: Date;
-    fechaReporte: Date;
-    hospital: string;
-    nombreCompletoPaciente: string;
-    numeroAfiliado: string;
-    numeroDocumento: string;
-    obraSocial: string;
-    sexoPaciente: string;
-    tipoDocumento: string;
+    affiliateNumber: string;
+    appointmentState: string;
+    attentionDate: Date;
+    completePatientName: string;
+    documentNumber: string;
+    documentType: string;
+    establishment: string;
+    medicalCoverage: string;
+    patientAge: number;
+    patientGender: string;
+    reportDate: Date;
 }
 
 export interface AnthropometricDataDto extends Serializable {
