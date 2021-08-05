@@ -6,11 +6,14 @@ import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.reports.controller.dto.AnnexIIDto;
+import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
 import net.pladema.reports.repository.QueryFactory;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.ExcelService;
+import net.pladema.reports.service.FormReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
+import net.pladema.reports.service.domain.FormVBo;
 import net.pladema.reports.service.domain.OutpatientSummaryReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,16 +58,19 @@ public class ReportsController {
 
     private final AnnexReportService annexReportService;
 
+    private final FormReportService formReportService;
+
     private final ReportsMapper reportsMapper;
 
     public ReportsController(ExcelService excelService, OutpatientSummaryReport outpatientSummaryReport,
-                             QueryFactory queryFactory, LocalDateMapper localDateMapper, PdfService pdfService, AnnexReportService annexReportService, ReportsMapper reportsMapper){
+                             QueryFactory queryFactory, LocalDateMapper localDateMapper, PdfService pdfService, AnnexReportService annexReportService, FormReportService formReportService, ReportsMapper reportsMapper){
         this.excelService = excelService;
         this.outpatientSummaryReport = outpatientSummaryReport;
         this.queryFactory = queryFactory;
         this.localDateMapper = localDateMapper;
         this.pdfService = pdfService;
         this.annexReportService = annexReportService;
+        this.formReportService = formReportService;
         this.reportsMapper = reportsMapper;
     }
 
@@ -144,14 +150,31 @@ public class ReportsController {
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
         Map<String, Object> context = annexReportService.createContext(reportDataDto);
         String outputFileName = annexReportService.createOutputFileName(appointmentId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "anexo");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
 
-    private ResponseEntity<InputStreamResource> generatePdfResponse(Map<String, Object> context, String outputFileName) throws PDFDocumentException {
+    @GetMapping("/{institutionId}/formv")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    public ResponseEntity<InputStreamResource> getFormVReport(
+            @PathVariable Integer institutionId,
+            @RequestParam(name = "appointmentId") Integer appointmentId)
+            throws PDFDocumentException {
+        LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+        FormVBo reportDataBo = formReportService.execute(appointmentId);
+        FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
+        Map<String, Object> context = formReportService.createContext(reportDataDto);
+        String outputFileName = formReportService.createOutputFileName(appointmentId, now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_form");
+        LOG.debug(OUTPUT, reportDataDto);
+        return response;
+    }
+
+    private ResponseEntity<InputStreamResource> generatePdfResponse(Map<String, Object> context, String outputFileName, String templateName) throws PDFDocumentException {
         LOG.debug("Input parameters -> context {}, outputFileName {}", context, outputFileName);
-        ByteArrayOutputStream outputStream = pdfService.writer("appointments_report_anexo", context);
+        ByteArrayOutputStream outputStream = pdfService.writer(templateName, context);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
         InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
         ResponseEntity<InputStreamResource> response;
