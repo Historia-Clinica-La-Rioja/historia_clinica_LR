@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.application.createConsultation;
 
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +17,17 @@ public class DrawOdontogramServiceImpl implements DrawOdontogramService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DrawOdontogramServiceImpl.class);
 
+    private final OdontogramDrawingStorage odontogramDrawingStorage;
+
+    public DrawOdontogramServiceImpl(OdontogramDrawingStorage odontogramDrawingStorage) {
+        this.odontogramDrawingStorage = odontogramDrawingStorage;
+    }
+
     public List<ToothDrawingsBo> run(Integer patientId, List<ConsultationDentalActionBo> actions) {
         LOG.debug("Input parameters -> patientId {}, actions {}", patientId, actions);
         // TODO: load previous drawings
         List<ToothDrawingsBo> teethDrawings = computeDrawings(actions);
-        // TODO: save drawings
+        odontogramDrawingStorage.save(patientId, teethDrawings);
         LOG.debug("Output size -> {}", teethDrawings.size());
         LOG.trace("Output -> {}", teethDrawings);
         return teethDrawings;

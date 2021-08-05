@@ -14,9 +14,13 @@ import lombok.ToString;
 @ToString
 public class DrawingBo {
 
-    private OdontologySnomedBo snomedBo;
+    private OdontologySnomedBo snomed;
 
     private boolean diagnostic;
+
+    public String getSctid() {
+        return this.snomed != null ? this.snomed.getSctid() : null;
+    }
 
     public boolean isProcedure () {
         return !diagnostic;

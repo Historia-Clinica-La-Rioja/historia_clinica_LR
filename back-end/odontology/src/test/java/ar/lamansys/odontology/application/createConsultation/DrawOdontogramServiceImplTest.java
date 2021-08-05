@@ -3,11 +3,13 @@ package ar.lamansys.odontology.application.createConsultation;
 import ar.lamansys.odontology.domain.ESurfacePosition;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -18,9 +20,12 @@ class DrawOdontogramServiceImplTest {
 
     private DrawOdontogramService drawOdontogramService;
 
+    @Mock
+    private OdontogramDrawingStorage odontogramDrawingStorage;
+
     @BeforeEach
     void setUp() {
-        drawOdontogramService = new DrawOdontogramServiceImpl();
+        drawOdontogramService = new DrawOdontogramServiceImpl(odontogramDrawingStorage);
     }
 
     @Test
@@ -41,10 +46,10 @@ class DrawOdontogramServiceImplTest {
 
         ToothDrawingsBo toothDrawings = odontogramDrawings.get(0);
         Assertions.assertEquals("tooth 1", toothDrawings.getToothId());
-        Assertions.assertEquals("action 1", toothDrawings.getWholeDrawing().getSnomedBo().getSctid());
+        Assertions.assertEquals("action 1", toothDrawings.getWholeDrawing().getSnomed().getSctid());
         Assertions.assertNull(toothDrawings.getInternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getExternalSurfaceDrawing());
-        Assertions.assertEquals("action 2",toothDrawings.getRightSurfaceDrawing().getSnomedBo().getSctid());
+        Assertions.assertEquals("action 2",toothDrawings.getRightSurfaceDrawing().getSnomed().getSctid());
         Assertions.assertNull(toothDrawings.getLeftSurfaceDrawing());
 
     }
@@ -69,7 +74,7 @@ class DrawOdontogramServiceImplTest {
 
         ToothDrawingsBo toothDrawings = odontogramDrawings.get(0);
         Assertions.assertEquals("tooth 1", toothDrawings.getToothId());
-        Assertions.assertEquals("action 3", toothDrawings.getWholeDrawing().getSnomedBo().getSctid());
+        Assertions.assertEquals("action 3", toothDrawings.getWholeDrawing().getSnomed().getSctid());
         Assertions.assertNull(toothDrawings.getInternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getExternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getRightSurfaceDrawing());
@@ -97,11 +102,11 @@ class DrawOdontogramServiceImplTest {
 
         ToothDrawingsBo toothDrawings = odontogramDrawings.get(0);
         Assertions.assertEquals("tooth 1", toothDrawings.getToothId());
-        Assertions.assertEquals("action 1", toothDrawings.getWholeDrawing().getSnomedBo().getSctid());
+        Assertions.assertEquals("action 1", toothDrawings.getWholeDrawing().getSnomed().getSctid());
         Assertions.assertNull(toothDrawings.getInternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getExternalSurfaceDrawing());
-        Assertions.assertEquals("action 2", toothDrawings.getRightSurfaceDrawing().getSnomedBo().getSctid());
-        Assertions.assertEquals("action 3", toothDrawings.getLeftSurfaceDrawing().getSnomedBo().getSctid());
+        Assertions.assertEquals("action 2", toothDrawings.getRightSurfaceDrawing().getSnomed().getSctid());
+        Assertions.assertEquals("action 3", toothDrawings.getLeftSurfaceDrawing().getSnomed().getSctid());
 
     }
 
@@ -124,7 +129,7 @@ class DrawOdontogramServiceImplTest {
 
         ToothDrawingsBo toothDrawings = odontogramDrawings.get(0);
         Assertions.assertEquals("tooth 1", toothDrawings.getToothId());
-        Assertions.assertEquals("action 2", toothDrawings.getWholeDrawing().getSnomedBo().getSctid());
+        Assertions.assertEquals("action 2", toothDrawings.getWholeDrawing().getSnomed().getSctid());
         Assertions.assertNull(toothDrawings.getInternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getExternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getRightSurfaceDrawing());
@@ -152,7 +157,7 @@ class DrawOdontogramServiceImplTest {
 
         ToothDrawingsBo toothDrawings = odontogramDrawings.get(0);
         Assertions.assertEquals("tooth 1", toothDrawings.getToothId());
-        Assertions.assertEquals("action 3", toothDrawings.getWholeDrawing().getSnomedBo().getSctid());
+        Assertions.assertEquals("action 3", toothDrawings.getWholeDrawing().getSnomed().getSctid());
         Assertions.assertNull(toothDrawings.getInternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getExternalSurfaceDrawing());
         Assertions.assertNull(toothDrawings.getRightSurfaceDrawing());
