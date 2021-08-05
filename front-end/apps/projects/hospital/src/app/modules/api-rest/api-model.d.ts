@@ -748,6 +748,18 @@ export interface FileDto {
     fileName: string;
 }
 
+export interface FormVDto {
+    address: string;
+    affiliateNumber: string;
+    completePatientName: string;
+    documentType: string;
+    establishment: string;
+    medicalCoverage: string;
+    patientAge: number;
+    patientGender: string;
+    reportDate: Date;
+}
+
 export interface GenderDto extends AbstractMasterdataDto<number> {
     id: number;
 }
