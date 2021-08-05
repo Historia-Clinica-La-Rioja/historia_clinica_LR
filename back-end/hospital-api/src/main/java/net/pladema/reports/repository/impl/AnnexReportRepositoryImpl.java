@@ -41,6 +41,5 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 .setParameter("appointmentId", appointmentId)
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
-
     }
 }
