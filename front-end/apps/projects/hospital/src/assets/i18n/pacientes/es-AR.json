@@ -92,7 +92,13 @@
 			},
 			"PATIENT_NOT_FOUND":"Paciente no encontrado",
 			"PROVES_IDENTITY": "Acredita identidad",
-			"PATIENT_ID":"ID Paciente"
+			"PATIENT_ID":"ID Paciente",
+			"scan":{
+				"TITLE": "Buscar paciente por escaneo de código de DNI",
+				"ITEM_1": "Disponga de una Lectora de código",
+				"ITEM_2": "Escanee el código del DNI ubicado en la parte inferior derecha del frente mismo",
+				"ITEM_3": "La búsqueda se realizará de forma automática al detectar el código"
+			}
 		}
 	}
 }

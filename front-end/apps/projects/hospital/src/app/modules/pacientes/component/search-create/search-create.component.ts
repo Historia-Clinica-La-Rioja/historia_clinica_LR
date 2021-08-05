@@ -24,11 +24,12 @@ export class SearchCreateComponent implements OnInit {
 	public formSearchSubmitted = false;
 	public genderOptions;
 	public noIdentity = false;
+	public disableButtonScan = false;
 	public identityVerificationStatusArray;
 	public identifyTypeArray;
 	public hasError = hasError;
 	private readonly routePrefix;
-	
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -104,12 +105,14 @@ export class SearchCreateComponent implements OnInit {
 	noIdentityChange() {
 		this.noIdentity = !this.noIdentity;
 		if (this.noIdentity) {
+			this.disableButtonScan = true;
 			this.formSearch.controls.identifType.clearValidators();
 			this.formSearch.controls.identifNumber.clearValidators();
 			this.formSearch.controls.gender.clearValidators();
 			this.formSearch.controls.IdentityVerificationStatus.setValidators(Validators.required);
 			updateForm(this.formSearch);
 		} else {
+			this.disableButtonScan = false;
 			this.formSearch.controls.identifType.setValidators(Validators.required);
 			this.formSearch.controls.gender.setValidators(Validators.required);
 			this.formSearch.controls.IdentityVerificationStatus.clearValidators();
@@ -124,9 +127,11 @@ export class SearchCreateComponent implements OnInit {
 		const identifTypeID = this.formSearch.controls.identifType.value;
 
 		if (identifTypeID === IDENTIFICATION_TYPE_IDS.NO_POSEE) {
+			this.disableButtonScan = true;
 			this.formSearch.controls.identifNumber.clearValidators();
 			updateForm(this.formSearch);
 		} else {
+			this.disableButtonScan = false;
 			this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]);
 			updateForm(this.formSearch);
 		}

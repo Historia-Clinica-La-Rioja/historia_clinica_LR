@@ -1,1 +1,30 @@
-<p>scan-patient-popup works!</p>
+<div>
+	<h1 mat-dialog-title [translate]="'pacientes.search_patient.scan.TITLE'"></h1>
+	<div mat-dialog-content>
+		<ol class="numeration-list">
+			<li>
+				<span [translate]="'pacientes.search_patient.scan.ITEM_1'"></span>
+			</li>
+			<li>
+				<span [translate]="'pacientes.search_patient.scan.ITEM_2'"></span>
+			</li>
+			<li>
+				<span [translate]="'pacientes.search_patient.scan.ITEM_3'"></span>
+			</li>
+		</ol>
+		
+		<div class="image">
+			<img src='assets/images/example-scan.png'>
+		</div>
+		<form [formGroup]="formScanPatient">
+			<mat-form-field appearance="outline" fxFlex="100%">
+				<input matInput class="mat-input" name="information" formControlName="informationPatient">
+			</mat-form-field>
+		</form>
+		<div>
+			<button class= "close" type="button" mat-icon-button matSuffix>
+				<mat-icon>close</mat-icon>
+			</button>
+		</div>
+	</div>
+</div>
