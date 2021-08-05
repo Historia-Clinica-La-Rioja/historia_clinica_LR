@@ -2032,4 +2032,64 @@ databaseChangeLog:
                     referencedTableName: document
                     validate: true 
 
+    - changeSet:      
+          id: last_odontogram_drawing-createTable
+          comment: Create table last_odontogram_drawing
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: last_odontogram_drawing
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: tooth_id
+                              type: varchar(20)
+                        - column:
+                              name: whole_tooth
+                              type: varchar(20)
+                        - column:
+                              name: internal_surface
+                              type: varchar(20)
+                        - column:
+                              name: external_surface
+                              type: varchar(20)
+                        - column:
+                              name: central_surface
+                              type: varchar(20)
+                        - column:
+                              name: left_surface
+                              type: varchar(20)
+                        - column:
+                              name: right_surface
+                              type: varchar(20)
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: patient_id, tooth_id
+                    constraintName: PK_last_odontogram_drawing
+                    tableName: last_odontogram_drawing
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: last_odontogram_drawing
+                    constraintName: FK_last_odontogram_drawing_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: tooth_id
+                    baseTableName: last_odontogram_drawing
+                    constraintName: FK_last_odontogram_drawing_tooth_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: sctid
+                    referencedTableName: tooth
+                    validate: true
 
