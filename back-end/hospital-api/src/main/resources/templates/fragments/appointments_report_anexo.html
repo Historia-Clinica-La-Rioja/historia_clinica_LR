@@ -166,12 +166,12 @@
         </div>
         <div class="date">
             <div class="border-bottom">FECHA</div>
-            <div th:text="${fechaReporte}"></div>
+            <div th:text="${reportDate}"></div>
         </div>
     </div>
     <div class="row-space"></div>
     <div>
-        <div class="hospital" th:text="${'HOSPITAL: ' + hospital}"></div>
+        <div class="hospital" th:text="${'HOSPITAL: ' + establishment}"></div>
         <div class="code-hpgd">
             <div class="border-bottom">Código HPGD</div>
             <div>&nbsp;</div>
@@ -181,15 +181,15 @@
     <div>
         <div class="complete-name">
             <div class="border-bottom">APELLIDOS Y NOMBRES</div>
-            <div th:text="${nombreCompletoPaciente}"></div>
+            <div th:text="${completePatientName}"></div>
         </div>
         <div class="doc-type">
             <div class="border-bottom">Tipo doc</div>
-            <div th:text="${tipoDocumento}"></div>
+            <div th:text="${documentType}"></div>
         </div>
         <div class="doc-number">
             <div class="border-bottom">N° Documento</div>
-            <div th:text="${numeroDocumento}"></div>
+            <div th:text="${documentNumber}"></div>
         </div>
     </div>
     <div class="row-space"></div>
@@ -214,22 +214,22 @@
                 <div>Otro</div>
             </div>
         </div>
-        <div class="gender" th:text="${sexoPaciente}"></div>
-        <div class="age" th:text="${edadPaciente}"></div>
+        <div class="gender" th:text="${patientGender}"></div>
+        <div class="age" th:text="${patientAge}"></div>
     </div>
     <div class="row-space"></div>
     <div>
         <div class="attention-type">TIPO DE ATENCIÓN</div>
         <div class="date">
             <div class="border-bottom">FECHA</div>
-            <div th:text="${fechaAtencion}"></div>
+            <div th:text="${attentionDate}"></div>
         </div>
     </div>
     <div>
         <div class="consultation">CONSULTA</div>
         <div class="cell">
-            <label th:if="${estadoTurno == 'Atendido'}">X</label>
-            <label th:if="${estadoTurno != 'Atendido'}">&nbsp;</label>
+            <label th:if="${appointmentState == 'Atendido'}">X</label>
+            <label th:if="${appointmentState != 'Atendido'}">&nbsp;</label>
         </div>
         <div class="specialty">Especialidad:</div>
     </div>
@@ -256,7 +256,7 @@
     <div>
         <div class="coverage-data">
             <div class="border-bottom">DATOS DE LA OBRA SOCIAL: Nombre completo</div>
-            <div th:text="${obraSocial}"></div>
+            <div th:text="${medicalCoverage}"></div>
         </div>
         <div class="coverage-code">
             <div class="border-bottom">Código</div>
@@ -267,7 +267,7 @@
     <div>
         <div class="coverage-number">
             <div class="border-bottom">N° de Carnet de Obra Social</div>
-            <div th:text="${numeroAfiliado}"></div>
+            <div th:text="${affiliateNumber}"></div>
         </div>
         <div class="coverage-emision-date">
             <div class="border-bottom">Fecha de Emisión</div>
