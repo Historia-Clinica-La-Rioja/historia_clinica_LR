@@ -101,12 +101,23 @@ export class AppointmentsService {
 			});
 	}
 
-	getAppointmentReport(appointmentData: any): Observable<any> {
+	getAnexoPdf(appointmentData: any): Observable<any> {
+		const pdfName = "AnexoII";
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/anexo`;
+		return this.getAppointmentReport(url, appointmentData, pdfName);
+	}
+
+	getFormPdf(appointmentData: any): Observable<any> {
+		const pdfName = "FormularioV";
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/formv`;
+		return this.getAppointmentReport(url, appointmentData, pdfName);
+	}
+
+	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
 		const appointmentId: number = appointmentData.appointmentId;
 		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
 		const appointmentDate : string = momentFormat(appointmentData.date, DateFormat.FILE_DATE);
-		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/anexo`;
-		const fileName = `AnexoII_${fullNamePatient}_${appointmentDate}.pdf`;
+		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
 
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId});
 	}

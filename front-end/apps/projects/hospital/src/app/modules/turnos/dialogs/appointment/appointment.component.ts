@@ -295,9 +295,12 @@ export class AppointmentComponent implements OnInit {
 
 	getReportAppointment(): void {
 		if (this.isCheckedDowndloadAnexo && this.isCheckedDowndloadFormulario) {
-			this.appointmentService.getAppointmentReport(this.params.appointmentData).subscribe();
+			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
+			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
 		} else if (this.isCheckedDowndloadAnexo && !this.isCheckedDowndloadFormulario) {
-			this.appointmentService.getAppointmentReport(this.params.appointmentData).subscribe();
+			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
+		} else {
+			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
 		}
 	}
 }
