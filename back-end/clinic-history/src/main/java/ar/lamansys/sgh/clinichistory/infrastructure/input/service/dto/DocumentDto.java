@@ -67,6 +67,6 @@ public class DocumentDto {
 
     private List<ReasonDto> reasons;
 
-    private List<DentalActionDto> dentalActions;
+    private List<DentalActionDto> dentalActions  = new ArrayList<>();
 
 }

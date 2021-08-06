@@ -33,7 +33,8 @@ public class OdontologyConsultationStorageImpl implements OdontologyConsultation
         LOG.debug("Input parameters -> consultationInfo {}", consultationInfo);
         OdontologyConsultation odontologyConsultation = new OdontologyConsultation(consultationInfo);
         Integer odontologyConsultationId = odontologyConsultationRepository.save(odontologyConsultation).getId();
-        saveReasons(consultationInfo.getReasons(), odontologyConsultationId);
+        if (consultationInfo.getReasons() != null)
+            saveReasons(consultationInfo.getReasons(), odontologyConsultationId);
         LOG.debug("Output -> {}", odontologyConsultationId);
         return odontologyConsultationId;
     }
