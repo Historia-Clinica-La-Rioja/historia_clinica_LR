@@ -1,6 +1,4 @@
 import { getDraw, getHtmlName } from '../utils/draws';
-import { SurfaceDrawerService } from './surface-drawer.service';
-
 export class ToothDrawerService {
 
 	constructor(public toothNode: ChildNode) { }

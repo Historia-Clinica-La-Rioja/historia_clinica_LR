@@ -6,8 +6,8 @@ const htmlDraws = {
 	two_long_blue_lines: ['404198007', '173291009'],
 	red_cross: ['16958000', '9984005', '109531008', '37320007', '441935006', '1085521000119100', '109673006'],
 	blue_horizontal_line: ['699685006'],
-	restos_radiculares: ['-2000'],
-	blue_oval: ['-1000'],
+	two_short_blue_lines: ['401261000221100'],
+	blue_oval: ['401271000221109'],
 	red_horizontal_line: ['234713009', '399191000221108'],
 	red_cross_and_red_vertical_line: ['278123008'],
 	TC: ['399001000221103', '399011000221100']
@@ -113,5 +113,5 @@ export interface ActionAndColor {
 	color: Colors;
 }
 export const getPaint = (sctid: string): ActionAndColor[] => {
-	return sctid ? colorsInSurface.find(s => s.ids.includes(sctid)).toDo : null;
+	return sctid ? colorsInSurface.find(s => s.ids.includes(sctid))?.toDo : null;
 };
