@@ -2,8 +2,7 @@
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 		<app-tooth #tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
-			[newFinding]="newHallazgoId" (commonActionsEmitter)="reciveCommonActions($event)"
-			[setFirstProcedure]="firstProcedureId" [setSecondProcedure]="secondProcedureId"
+			[newFinding]="newHallazgoId" [setFirstProcedure]="firstProcedureId" [setSecondProcedure]="secondProcedureId"
 			[setThirdProcedure]="thirdProcedureId"
 			[findingsAndProcedures]="odontogramService.getActionsFrom(data.tooth.snomed.sctid)">
 		</app-tooth>

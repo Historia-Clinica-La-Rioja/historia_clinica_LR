@@ -59,7 +59,8 @@ export class ToothComponent implements AfterViewInit {
 	@Input() toothTreatment: ToothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
 
 	@Output() selectedSurfacesEmitter = new BehaviorSubject<any[]>([]);
-	@Output() commonActionsEmitter = new BehaviorSubject<CommonActions>(null);
+	private actionsSubject = new BehaviorSubject<CommonActions>(null);
+	actionsSubject$ = this.actionsSubject.asObservable();
 
 	ngAfterViewInit(): void {
 		this.svgGroup = this.svg.nativeElement.firstChild;
@@ -97,8 +98,9 @@ export class ToothComponent implements AfterViewInit {
 					this.surfacesHandler.find(s => s.id === key)?.surfaceDrawerService.setNewDraw(currentDraw[key].sctid);
 				}
 			})
-		})
+		});
 
+		this.emitFindingAndProcedures();
 	}
 
 	getFindingsAndProcedures(): ToothAction[] {
@@ -111,9 +113,8 @@ export class ToothComponent implements AfterViewInit {
 
 	private emitFindingAndProcedures() {
 		const result = this.findCommonActions();
-		this.commonActionsEmitter.next(result);
+		this.actionsSubject.next(result);
 	}
-
 
 	private findCommonActions(): CommonActions {
 

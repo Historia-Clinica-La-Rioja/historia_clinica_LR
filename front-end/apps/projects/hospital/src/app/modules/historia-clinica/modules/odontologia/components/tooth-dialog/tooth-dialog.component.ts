@@ -53,6 +53,10 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit(): void {
 		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);
+
+		this.toothComponent.actionsSubject$.subscribe(actionsSctids => {
+			this.reciveCommonActions(actionsSctids)
+		});
 	}
 
 	ngOnInit(): void {
@@ -113,7 +117,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.setAppropiateProcedures(filterFuncion);
 	}
 
-	private getFilterFuction(surfacesSelected: boolean) : Function {
+	private getFilterFuction(surfacesSelected: boolean): Function {
 		let filterFuncion = (diagnostic: OdontologyConceptDto) => { return diagnostic.applicableToTooth }
 		if (surfacesSelected) {
 			filterFuncion = (diagnostic: OdontologyConceptDto) => { return diagnostic.applicableToSurface }
@@ -133,23 +137,21 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.newHallazgoId = hallazgoId.value;
 	}
 
-	reciveCommonActions(inCommon: CommonActions) {
-		if (this.form) {
-			if (inCommon?.findingId) {
-				this.form.controls.findingId.patchValue(inCommon.findingId);
-			} else {
-				this.form.controls.findingId.patchValue(undefined);
-				this.newHallazgoId = undefined;
-			}
-			const procedures = {
-				firstProcedureId: inCommon.procedures?.firstProcedureId,
-				secondProcedureId: inCommon.procedures?.secondProcedureId,
-				thirdProcedureId: inCommon.procedures?.thirdProcedureId
-			};
-			this.form.patchValue({
-				procedures
-			});
+	private reciveCommonActions(inCommon: CommonActions) {
+		if (inCommon?.findingId) {
+			this.form.controls.findingId.patchValue(inCommon.findingId);
+		} else {
+			this.form.controls.findingId.patchValue(undefined);
+			this.newHallazgoId = undefined;
 		}
+		const procedures = {
+			firstProcedureId: inCommon.procedures?.firstProcedureId,
+			secondProcedureId: inCommon.procedures?.secondProcedureId,
+			thirdProcedureId: inCommon.procedures?.thirdProcedureId
+		};
+		this.form.patchValue({
+			procedures
+		});
 	}
 
 	private concatNames() {
