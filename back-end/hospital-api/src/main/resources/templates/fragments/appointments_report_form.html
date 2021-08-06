@@ -25,15 +25,17 @@
         }
 
         .space {
-            height: 20px;
+            height: 25px;
             border: 1px solid black;
+            padding-top: 10px;
+            padding-bottom: 5px;
         }
 
         .border-bottom, .authorization-title, .total-billing-data {
             border-bottom: 1px solid black;
         }
 
-        .concept-title, .signature, .billing, .data-billing div, .affiliate-billing, .authorization-title,
+        .space, .concept-title, .signature, .billing, .data-billing div, .affiliate-billing, .authorization-title,
         .authorization .professional-signature, .delegation-stamp,
         .practice-autor, .practice-autor .professional-signature {
             text-align: center;
@@ -43,7 +45,7 @@
             width: 500px;
         }
 
-        .code, .condition, .data-billing {
+        .code, .data-billing {
             width: 150px;
         }
 
@@ -51,8 +53,12 @@
             display: inline-block;
         }
 
-        .complete-name .space {
+        .complete-name {
             width: 350px;
+        }
+
+        .doc-number, .condition, .billing {
+            width: 140px;
         }
 
         .address, .practice-autor, .practice-autor .professional-signature {
@@ -71,19 +77,15 @@
             width: 55px;
         }
 
-        .doc-number {
-            width: 140px;
-        }
-
         .bed {
             width: 60px;
         }
 
         .coverage {
-            width: 250px;
+            width: 260px;
         }
 
-        .affiliate-type, .affiliate-number {
+        .affiliate-type {
             width: 130px;
         }
 
@@ -91,7 +93,7 @@
             width: 600px;
         }
 
-        .cant-code {
+        .cant-code, .affiliate-number {
             width: 120px;
         }
 
@@ -102,6 +104,7 @@
         .rp-concept {
             font-style: italic;
             margin-left: 10px;
+            text-align: left;
         }
 
         .cant-code .space, .concept .space, .unitary .space, .total .space {
@@ -126,10 +129,6 @@
 
         .total-billing-data p {
             padding-top: 10%;
-        }
-
-        .billing {
-            width: 140px;
         }
 
         .billing div, .signature div, .data-billing div, .total-billing-data {
@@ -186,7 +185,7 @@
     <div class="row">
         <div class="hospital">
             <div>1. ESTABLECIMIENTO</div>
-            <div class="space">&nbsp;</div>
+            <div class="space" th:text="${establishment}"></div>
         </div>
         <div class="code">
             <div>CÓDIGO</div>
@@ -196,33 +195,33 @@
     <div class="row">
         <div class="complete-name">
             <div>2. APELLIDOS Y NOMBRES</div>
-            <div class="space"></div>
+            <div class="space" th:text="${completePatientName}"></div>
         </div>
         <div class="address">
             <div>DOMICILIO</div>
-            <div class="space"></div>
+            <div class="space" th:text="${address}"></div>
         </div>
         <div class="date">
             <div>3. FECHA</div>
-            <div class="space"></div>
+            <div class="space" th:text="${reportDate}"></div>
         </div>
     </div>
     <div class="row">
         <div class="gender">
             <div>4. SEXO</div>
-            <div class="space"></div>
+            <div class="space" th:text="${patientGender}"></div>
         </div>
         <div class="age">
             <div>5. EDAD</div>
-            <div class="space"></div>
+            <div class="space" th:text="${patientAge}"></div>
         </div>
         <div class="doc-number">
             <div>6. N° DE DOCUMENTO</div>
-            <div class="space"></div>
+            <div class="space" th:text="${documentNumber}"></div>
         </div>
         <div class="doc-type">
             <div>7. TIPO. DOC</div>
-            <div class="space"></div>
+            <div class="space" th:text="${documentType}"></div>
         </div>
         <div class="ce">
             <div>8. C.E.</div>
@@ -248,7 +247,7 @@
         </div>
         <div class="coverage">
             <div>13. OBRA SOCIAL O MUTUAL</div>
-            <div class="space"></div>
+            <div class="space" th:text="${medicalCoverage}"></div>
         </div>
         <div class="affiliate-type">
             <div>14. TIPO DE AFILIADO</div>
@@ -256,7 +255,7 @@
         </div>
         <div class="affiliate-number">
             <div>15. N° DE AFILIADO</div>
-            <div class="space"></div>
+            <div class="space" th:text="${affiliateNumber}"></div>
         </div>
     </div>
     <div class="row">
