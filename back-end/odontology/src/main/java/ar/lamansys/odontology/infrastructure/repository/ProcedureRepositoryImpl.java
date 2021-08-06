@@ -24,7 +24,8 @@ public class ProcedureRepositoryImpl implements ProcedureRepository {
 
         String sqlString = "SELECT s.sctid, s.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
                 "FROM applicable_procedure ap " +
-                "JOIN snomed s ON s.sctid = ap.sctid";
+                "JOIN snomed s ON s.sctid = ap.sctid " +
+                "ORDER BY s.pt ASC";
 
         Query query = entityManager.createNativeQuery(sqlString);
         List<Object[]> result = query.getResultList();
