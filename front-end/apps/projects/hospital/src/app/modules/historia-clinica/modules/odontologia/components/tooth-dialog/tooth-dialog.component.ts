@@ -53,7 +53,6 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit(): void {
 		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);
-
 		this.toothComponent.actionsSubject$.subscribe(actionsSctids => {
 			this.reciveCommonActions(actionsSctids)
 		});

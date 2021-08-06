@@ -21,7 +21,7 @@ export class ActionsService {
 	}
 
 	addProcedure(actionSctid: string, surfacesIds: string[], order: ProcedureOrder) {
-		this.execute(actionSctid, surfacesIds, true, (setAction: ToothAction) => setAction.wholeProcedureOrder === order && !setAction.surfaceId);
+		this.execute(actionSctid, surfacesIds, true, (setAction: ToothAction) => setAction.wholeProcedureOrder === order && !setAction.surfaceId, order);
 	}
 
 	setFinding(actionSctid: string, surfacesIds: string[]) {
@@ -38,13 +38,13 @@ export class ActionsService {
 		return this.actionsOnTeeth;
 	}
 
-	private execute(actionSctid: string, surfacesIds: string[], isProcedure: boolean, filterFuncion) {
+	private execute(actionSctid: string, surfacesIds: string[], isProcedure: boolean, filterFuncion, order?: ProcedureOrder) {
 		if (!surfacesIds.length) {
 			const toothAction = this.actionsOnTeeth.find(filterFuncion);
 			if (toothAction) {
 				toothAction.actionSctid = actionSctid;
 			} else {
-				this.addToothAction(actionSctid, isProcedure);
+				this.addToothAction(actionSctid, isProcedure, order);
 			}
 		} else {
 			surfacesIds.forEach(id => {
