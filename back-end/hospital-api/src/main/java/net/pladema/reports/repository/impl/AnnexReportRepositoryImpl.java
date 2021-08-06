@@ -33,8 +33,8 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "           LEFT JOIN MedicalCoverage AS mc ON (pmca.medicalCoverageId = mc.id) " +
                 "           JOIN Patient AS pa ON (a.patientId = pa.id) " +
                 "           LEFT JOIN Person AS pe ON (pe.id = pa.personId) " +
-                "           JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) " +
-                "           JOIN Gender AS g ON (pe.genderId = g.id) " +
+                "           LEFT JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) " +
+                "           LEFT JOIN Gender AS g ON (pe.genderId = g.id) " +
                 "       WHERE a.id = :appointmentId ";
 
         return entityManager.createQuery(query)

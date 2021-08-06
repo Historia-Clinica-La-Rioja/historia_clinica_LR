@@ -29,13 +29,13 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "           JOIN DoctorsOffice AS doff ON (d.doctorsOfficeId = doff.id) "+
                 "           JOIN Institution AS i ON (doff.institutionId = i.id) "+
                 "           LEFT JOIN PatientMedicalCoverageAssn AS pmca ON (a.patientMedicalCoverageId = pmca.id) "+
-                "           JOIN MedicalCoverage AS mc ON (pmca.medicalCoverageId = mc.id) "+
+                "           LEFT JOIN MedicalCoverage AS mc ON (pmca.medicalCoverageId = mc.id) "+
                 "           JOIN Patient AS pa ON (a.patientId = pa.id) "+
                 "           LEFT JOIN Person AS pe ON (pe.id = pa.personId) "+
                 "           LEFT JOIN PersonExtended AS pex ON (pe.id = pex.id) " +
                 "           LEFT JOIN Address AS ad ON (pex.addressId = ad.id)" +
-                "           JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) "+
-                "           JOIN Gender AS g ON (pe.genderId = g.id) "+
+                "           LEFT JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) "+
+                "           LEFT JOIN Gender AS g ON (pe.genderId = g.id) "+
                 "       WHERE a.id = :appointmentId ";
         return entityManager.createQuery(query)
                 .setParameter("appointmentId", appointmentId)
