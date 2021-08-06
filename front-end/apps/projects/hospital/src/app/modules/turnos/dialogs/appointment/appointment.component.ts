@@ -28,6 +28,8 @@ const TEMPORARY_PATIENT = 3;
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
 const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
+
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -52,13 +54,14 @@ export class AppointmentComponent implements OnInit {
 	coverageData: PatientMedicalCoverage;
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
+	hasRoleToDownloadReports$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 
 	public hideFilterPanel = false;
 
-	isCheckedDowndloadAnexo = false;
-	isCheckedDowndloadFormulario = false;
-	downdLoadReportIsEnabled: boolean;
+	isCheckedDownloadAnexo = false;
+	isCheckedDownloadFormulario = false;
+	downloadReportIsEnabled: boolean;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params : { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -75,7 +78,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES_TURNOS).subscribe(isOn => this.downdLoadReportIsEnabled = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES_TURNOS).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 	}
 
 	ngOnInit(): void {
@@ -119,6 +122,8 @@ export class AppointmentComponent implements OnInit {
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
 
 		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
+
+		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
 	}
 
 	private setMedicalCoverages(): void {
@@ -286,18 +291,18 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	enableDowndloadAnexo(option: boolean) {
-		this.isCheckedDowndloadAnexo = option;
+		this.isCheckedDownloadAnexo = option;
 	}
 
 	enableDowndloadFormulario(option: boolean) {
-		this.isCheckedDowndloadFormulario = option;
+		this.isCheckedDownloadFormulario = option;
 	}
 
 	getReportAppointment(): void {
-		if (this.isCheckedDowndloadAnexo && this.isCheckedDowndloadFormulario) {
+		if (this.isCheckedDownloadAnexo && this.isCheckedDownloadFormulario) {
 			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
 			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
-		} else if (this.isCheckedDowndloadAnexo && !this.isCheckedDowndloadFormulario) {
+		} else if (this.isCheckedDownloadAnexo && !this.isCheckedDownloadFormulario) {
 			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
 		} else {
 			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();

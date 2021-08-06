@@ -137,7 +137,7 @@
 			</div>
 		</section>
 
-		<ng-container *ngIf="downdLoadReportIsEnabled && !isAbsent() && params.hasPermissionToAssignShift">
+		<ng-container *ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
 			<section id="report" fxLayout="column">
 				<span class="mat-body-strong" fxLayout="row">Descargar informes</span>
 				<section class="example-section">
@@ -154,9 +154,9 @@
 
 	<mat-dialog-actions *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
 		align="end">
-		<ng-container *ngIf="downdLoadReportIsEnabled && !isAbsent() && params.hasPermissionToAssignShift">
+		<ng-container *ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
 			<button type="button" mat-flat-button color="primary" id="report-appointment"
-					name="report-appointment" (click)="getReportAppointment()" [disabled]="!isCheckedDowndloadAnexo && !isCheckedDowndloadFormulario">
+					name="report-appointment" (click)="getReportAppointment()" [disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
 				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
 			</button>
 		</ng-container>
