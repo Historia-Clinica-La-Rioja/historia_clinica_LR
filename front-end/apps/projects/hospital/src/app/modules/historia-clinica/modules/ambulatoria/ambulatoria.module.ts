@@ -33,8 +33,9 @@ import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/
 import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
 import { ConfirmarNuevaConsultaPopupComponent } from './dialogs/confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
-import { AplicarVacuna2Component } from './dialogs/aplicar-vacuna-2/aplicar-vacuna-2.component';
+import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
 import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacunas.component';
+import { SuccesMessageDialogComponent } from './dialogs/succes-message-dialog/succes-message-dialog.component';
 
 
 @NgModule({
@@ -46,8 +47,6 @@ import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacun
 		ProblemasComponent,
 		VacunasComponent,
 		AplicarVacunaComponent,
-		AplicarVacuna2Component,
-		AgregarVacunasComponent,
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent,
@@ -64,7 +63,9 @@ import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacun
 		VerResultadosEstudioComponent,
 		ExternalSummaryCardComponent,
 		ConfirmarNuevaConsultaPopupComponent,
-		AgregarVacunasComponent
+		AgregarVacunasComponent,
+		AgregarVacunaComponent,
+		SuccesMessageDialogComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,

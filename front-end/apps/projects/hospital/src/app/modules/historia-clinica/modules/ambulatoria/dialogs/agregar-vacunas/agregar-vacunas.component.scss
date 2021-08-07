@@ -1,3 +1,9 @@
+@import '../../../../../../../assets/styles/mixins';
+
+div.spinner {
+  @include centered-spinner;
+  margin-bottom: 20px;
+}
 .margin-bottom-0 {
     margin-bottom: 0;
 }
@@ -8,4 +14,7 @@
     margin-right: 10px;
     border-radius: 5px;
     padding: 5px;
+}
+.margin-top {
+    margin-top: 20px;
 }

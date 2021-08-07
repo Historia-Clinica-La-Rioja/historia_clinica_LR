@@ -337,13 +337,15 @@
 				"agregar_vacunas": {
 					"TITLE": "Agregar vacunas",
 					"SPECIALTY": "Especialidad",
-					"ADD_ONE": "Agregar vacuna",
-					"BILLABLE_VACCINE_TITLE": "Aplicación facturable",
+					"ADD": "Agregar vacuna",
+					"NEW_VACCINE_TITLE": "Aplicación de vacuna",
 					"PREVIOUS_VACCINE_TITLE": "Registro de vacuna previa",
-					"aplicar_vacuna": {
+					"SUCCESS": "Vacunas agregadas exitosamente",
+					"ERROR": "Error al guardar las vacunas agregadas",
+					"agregar_vacuna": {
 						"TITLE": "Agregar vacuna",
-						"BILLABLE_TAB_LABEL": "Vacuna facturable",
-						"PREVIOUS_TAB_LABEL": "Registrar vacuna previa",
+						"NEW_VACCINE_TAB": "Aplicar vacuna",
+						"PREVIOUS_VACCINE_TAB": "Registrar vacuna previa",
 						"ADMINISTRATION_DATE": "Fecha de vacunación",
 						"NOTE": "Observaciones",
 						"INMUNIZATION": "Vacuna",
@@ -352,12 +354,7 @@
 						"DOSE": "Dosis",
 						"LOT": "Lote",
 						"INSTITUTION": "Institución",
-						"PROFFESIONAL": "Profesional"
-					},
-					"save": {
-						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
-						"ERROR": "Error al guardar las vacunas aplicadas",
-						"CHANGE_STATE": "¿Desea aplicar más vacunas?"
+						"PROFESSIONAL": "Profesional"
 					}
 				}
 			}

@@ -6,16 +6,17 @@ import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { ImmunizationDto, SnomedDto, VaccineConditionsDto, VaccineDoseInfoDto, VaccineSchemeDto } from '@api-rest/api-model';
+import { ImmunizationDto, SnomedDto, SnomedResponseDto, VaccineConditionsDto, VaccineDoseInfoDto, VaccineInformationDto, VaccineSchemeDto } from '@api-rest/api-model';
 import { VaccineService } from '@api-rest/services/vaccine.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 
 @Component({
-	selector: 'app-aplicar-vacuna-2',
-	templateUrl: './aplicar-vacuna-2.component.html',
-	styleUrls: ['./aplicar-vacuna-2.component.scss']
+	selector: 'app-agregar-vacuna',
+	templateUrl: './agregar-vacuna.component.html',
+	styleUrls: ['./agregar-vacuna.component.scss']
 })
-export class AplicarVacuna2Component implements OnInit {
+export class AgregarVacunaComponent implements OnInit {
 
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
@@ -32,16 +33,17 @@ export class AplicarVacuna2Component implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly vaccineService: VaccineService,
-		public dialogRef: MatDialogRef<AplicarVacuna2Component>
+		private readonly snackBarService: SnackBarService,
+		public dialogRef: MatDialogRef<AgregarVacunaComponent>
 	) { }
 
 	ngOnInit(): void {
 		this.billableForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
 			snomed: [null, Validators.required],
-			condition: [null, Validators.required],
-			scheme: [null, Validators.required],
-			dose: [null, Validators.required],
+			condition: [{ value: null, disabled: true }, Validators.required],
+			scheme: [{ value: null, disabled: true }, Validators.required],
+			dose: [{ value: null, disabled: true }, Validators.required],
 			lot: [null],
 			note: [null]
 		});
@@ -99,9 +101,13 @@ export class AplicarVacuna2Component implements OnInit {
 			this.searching = true;
 			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
-					results => {
+					(results: SnomedResponseDto) => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
 						this.searching = false;
+					},
+					_ => {
+						this.searching = false;
+						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
 					}
 				);
 		}
@@ -151,8 +157,9 @@ export class AplicarVacuna2Component implements OnInit {
 
 	private loadConditions(sctid: string): void {
 		this.vaccineService.vaccineInformation(sctid).subscribe(
-			vaccineInformation => {
+			(vaccineInformation: VaccineInformationDto) => {
 				this.conditions = vaccineInformation.conditions;
+				this.billableForm.get("condition").enable();
 				this.billableForm.get("condition").setValue(null);
 
 				delete this.schemes;
@@ -165,6 +172,7 @@ export class AplicarVacuna2Component implements OnInit {
 
 	public loadSchemes(conditionIndex: number): void {
 		this.schemes = this.conditions[conditionIndex].schemes;
+		this.billableForm.get("scheme").enable();
 		this.billableForm.get("scheme").setValue(null);
 
 		delete this.doses;
@@ -173,6 +181,7 @@ export class AplicarVacuna2Component implements OnInit {
 
 	public loadDoses(schemeIndex: number): void {
 		this.doses = this.schemes[schemeIndex].doses;
+		this.billableForm.get("dose").enable();
 		this.billableForm.get("dose").setValue(null);
 	}
 

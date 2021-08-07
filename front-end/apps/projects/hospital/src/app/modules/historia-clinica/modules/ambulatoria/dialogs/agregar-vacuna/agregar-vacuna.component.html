@@ -1,6 +1,6 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.TITLE'"> </div>
-	<button mat-button class="close-icon" (click)="dialogRef.close();" tabindex="-1">
+	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.TITLE'"></div>
+	<button mat-button (click)="dialogRef.close();" tabindex="-1">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
@@ -9,12 +9,13 @@
 
 	<mat-tab-group mat-align-tabs="center">
 		<mat-tab
-			label="{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.BILLABLE_TAB_LABEL' | translate }}">
+			label="{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NEW_VACCINE_TAB' | translate }}">
 
 			<form [formGroup]="billableForm" (submit)="submit()">
 				<div fxLayout="column">
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas.aplicar.ADMINISTRATION_DATE' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
+						translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
@@ -28,13 +29,13 @@
 
 					<ng-container *ngIf="snomedConcept else searchImmunizations">
 						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.INMUNIZATION' | translate
+							{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION' | translate
 							}}
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input matInput required readonly formControlName="snomed"
 								matTooltip="{{ snomedConcept.pt }}">
-							<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+							<button type="button" id="clear" mat-button matSuffix color="warn" mat-icon-button
 								(click)="resetConcept()">
 								<mat-icon>close</mat-icon>
 							</button>
@@ -43,7 +44,8 @@
 					</ng-container>
 
 					<ng-template #searchImmunizations>
-						<app-concepts-search [label]="'ambulatoria.paciente.vacunas.aplicar.INMUNIZATION'"
+						<app-concepts-search
+							[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION'"
 							(search)="onSearch($event)">
 						</app-concepts-search>
 						<div class="spinner">
@@ -52,10 +54,8 @@
 						<app-table *ngIf="!searching && !snomedConcept" [model]="conceptsResultsTable"></app-table>
 					</ng-template>
 
-
-
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.CONDITION' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<mat-select required formControlName="condition" (selectionChange)="loadSchemes($event.value)">
@@ -69,7 +69,7 @@
 					<div fxLayout="row" fxLayoutAlign="space-between">
 						<div fxLayout="column" fxFlex="50%">
 							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.SCHEME' | translate }}
+								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.SCHEME' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<mat-select required formControlName="scheme"
@@ -83,7 +83,7 @@
 						</div>
 						<div fxLayout="column" fxFlex="50%">
 							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.DOSE' | translate }}
+								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<mat-select required formControlName="dose">
@@ -97,14 +97,14 @@
 					</div>
 
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.LOT' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.LOT' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input matInput formControlName="lot">
 					</mat-form-field>
 
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.NOTE' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOTE' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<textarea matInput formControlName="note" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5">
@@ -122,12 +122,13 @@
 		</mat-tab>
 
 		<mat-tab
-			label="{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.PREVIOUS_TAB_LABEL' | translate }}">
+			label="{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB' | translate }}">
 
 			<form [formGroup]="previousForm" (submit)="submit()">
 				<div fxLayout="column">
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas.aplicar.ADMINISTRATION_DATE' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
+						translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input placeholder="mm/dd/yyyy" matInput [value]="this.today"
@@ -140,7 +141,7 @@
 					</mat-form-field>
 
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.INMUNIZATION' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input matInput required formControlName="snomed">
@@ -148,7 +149,7 @@
 					</mat-form-field>
 
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.CONDITION' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<mat-select required formControlName="condition">
@@ -162,7 +163,7 @@
 					<div fxLayout="row" fxLayoutAlign="space-between">
 						<div fxLayout="column" fxFlex="50%">
 							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.SCHEME' | translate }}
+								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.SCHEME' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<mat-select required formControlName="scheme">
@@ -175,7 +176,7 @@
 						</div>
 						<div fxLayout="column" fxFlex="50%">
 							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.DOSE' | translate }}
+								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<mat-select required formControlName="dose">
@@ -189,22 +190,21 @@
 					</div>
 
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.LOT' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.LOT' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input matInput formControlName="lot">
 					</mat-form-field>
 
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.INSTITUTION' | translate }}
-						{{ 'forms.MAX_LENGTH_ERROR' | translate: {max: 10 } }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INSTITUTION' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input matInput formControlName="institution">
 					</mat-form-field>
 
 					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.aplicar_vacuna.PROFFESIONAL' | translate }}
+						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.PROFESSIONAL' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
 						<input matInput formControlName="proffesional">
