@@ -30,9 +30,9 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreateConsultationServiceImplTest {
+class CreateOdontologyConsultationImplTest {
 
-    private CreateConsultationService createConsultationService;
+    private CreateOdontologyConsultation createOdontologyConsultation;
 
     @Mock
     private OdontologyConsultationStorage odontologyConsultationStorage;
@@ -60,7 +60,7 @@ class CreateConsultationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        this.createConsultationService = new CreateConsultationServiceImpl(diagnosticStorage,
+        this.createOdontologyConsultation = new CreateOdontologyConsultationImpl(diagnosticStorage,
                 proceduresStorage,
                 odontologyConsultationStorage,
                 dateTimeProvider,
@@ -73,7 +73,7 @@ class CreateConsultationServiceImplTest {
     @Test
     void shouldThrowErrorWhenConsultationIsNull() {
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                        createConsultationService.run(null));
+                        createOdontologyConsultation.run(null));
 
         String expectedMessage = "La información de la consulta es obligatoria";
         String actualMessage = exception.getMessage();
@@ -94,7 +94,7 @@ class CreateConsultationServiceImplTest {
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El id de la institución es obligatorio";
         String actualMessage = exception.getMessage();
@@ -115,7 +115,7 @@ class CreateConsultationServiceImplTest {
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El id del paciente es obligatorio";
         String actualMessage = exception.getMessage();
@@ -169,7 +169,7 @@ class CreateConsultationServiceImplTest {
         consultation.setDentalActions(dentalDiagnosticBos);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El diagnóstico con sctid: " + sctidNotFound +
                 " y prefered term: '" + ptNotFound + "' no es un diagnóstico dental aplicable";
@@ -216,7 +216,7 @@ class CreateConsultationServiceImplTest {
         consultation.setDentalActions(dentalDiagnostics);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El diagnóstico con sctid: " + diagnosticSctid +
                 " y prefered term: '" + diagnosticPt + "' no es aplicable a pieza dental";
@@ -263,7 +263,7 @@ class CreateConsultationServiceImplTest {
         consultation.setDentalActions(dentalDiagnostics);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El diagnóstico con sctid: " + diagnosticSctid +
                 " y prefered term: '" + diagnosticPt + "' no es aplicable a cara dental";
@@ -319,7 +319,7 @@ class CreateConsultationServiceImplTest {
         consultation.setDentalActions(dentalProcedures);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El procedimiento con sctid: " + sctidNotFound +
                 " y prefered term: '" + ptNotFound + "' no es un procedimiento dental aplicable";
@@ -369,7 +369,7 @@ class CreateConsultationServiceImplTest {
         consultation.setDentalActions(dentalProcedures);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El procedimiento con sctid: " + sctidNotApplicable +
                 " y prefered term: '" + ptNotApplicable + "' no es aplicable a pieza dental";
@@ -419,7 +419,7 @@ class CreateConsultationServiceImplTest {
         consultation.setDentalActions(dentalProcedures);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El procedimiento con sctid: " + sctidNotApplicable +
                 " y prefered term: '" + ptNotApplicable + "' no es aplicable a cara dental";
@@ -438,7 +438,7 @@ class CreateConsultationServiceImplTest {
         consultation.setClinicalSpecialtyId(255);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El identificador del profesional es inválido";
         String actualMessage = exception.getMessage();
@@ -459,7 +459,7 @@ class CreateConsultationServiceImplTest {
         consultation.setClinicalSpecialtyId(1000);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El doctor no posee la especialidad indicada";
         String actualMessage = exception.getMessage();
@@ -479,7 +479,7 @@ class CreateConsultationServiceImplTest {
         consultation.setClinicalSpecialtyId(null);
 
         Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createConsultationService.run(consultation));
+                createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El id de especialidad es obligatorio";
         String actualMessage = exception.getMessage();

@@ -29,9 +29,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CreateConsultationServiceImpl implements CreateConsultationService {
+public class CreateOdontologyConsultationImpl implements CreateOdontologyConsultation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateConsultationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateOdontologyConsultationImpl.class);
 
     private final DiagnosticStorage diagnosticStorage;
 
@@ -49,14 +49,14 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
 
     private final GetToothSurfacesService getToothSurfacesService;
 
-    public CreateConsultationServiceImpl(DiagnosticStorage diagnosticStorage,
-                                         ProcedureStorage proceduresStorage,
-                                         OdontologyConsultationStorage odontologyConsultationStorage,
-                                         DateTimeProvider dateTimeProvider,
-                                         OdontologyDoctorStorage odontologyDoctorStorage,
-                                         OdontologyDocumentStorage odontologyDocumentStorage,
-                                         DrawOdontogramService drawOdontogramService,
-                                         GetToothSurfacesService getToothSurfacesService) {
+    public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage,
+                                            ProcedureStorage proceduresStorage,
+                                            OdontologyConsultationStorage odontologyConsultationStorage,
+                                            DateTimeProvider dateTimeProvider,
+                                            OdontologyDoctorStorage odontologyDoctorStorage,
+                                            OdontologyDocumentStorage odontologyDocumentStorage,
+                                            DrawOdontogramService drawOdontogramService,
+                                            GetToothSurfacesService getToothSurfacesService) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
