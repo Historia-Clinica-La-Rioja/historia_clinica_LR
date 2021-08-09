@@ -99,6 +99,8 @@ public class CreateConsultationServiceImpl implements CreateConsultationService 
 
     private void setSurfaceSctids(ConsultationBo consultationBo) {
         LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+        if (consultationBo.getDentalActions() == null) return;
+
         Map<String, List<ConsultationDentalActionBo>> actionsByToothSctid = consultationBo.getDentalActions()
                 .stream()
                 .collect(Collectors.groupingBy(ConsultationDentalActionBo::getToothSctid));

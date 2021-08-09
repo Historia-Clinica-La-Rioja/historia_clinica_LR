@@ -35,6 +35,7 @@ public class DrawOdontogramServiceImpl implements DrawOdontogramService {
 
     private List<ToothDrawingsBo> computeDrawings(List<ConsultationDentalActionBo> actions) {
         LOG.debug("Input parameter -> actions {}", actions);
+        if (actions == null) return new ArrayList<>();
         Map<String, ToothDrawingsBo> teethDrawings = new HashMap<>();
         actions.forEach(action -> {
             String toothSctid = action.getTooth().getSctid();
