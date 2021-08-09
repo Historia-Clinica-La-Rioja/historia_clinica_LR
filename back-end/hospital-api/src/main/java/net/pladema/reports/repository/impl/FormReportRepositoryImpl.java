@@ -22,7 +22,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     public Optional<FormVVo> getFormVInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.FormVVo(i.name, pe.firstName, pe.middleNames, "+
                 "               pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, "+
-                "               pe.identificationNumber, mc.name, pmca.affiliateNumber, ad.street, ad.number) "+
+                "               pe.identificationNumber, mc.name, pmca.affiliateNumber, ad.street, ad.number, ci.description) "+
                 "       FROM Appointment AS a "+
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) "+
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) "+
@@ -33,7 +33,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "           JOIN Patient AS pa ON (a.patientId = pa.id) "+
                 "           LEFT JOIN Person AS pe ON (pe.id = pa.personId) "+
                 "           LEFT JOIN PersonExtended AS pex ON (pe.id = pex.id) " +
-                "           LEFT JOIN Address AS ad ON (pex.addressId = ad.id)" +
+                "           LEFT JOIN Address AS ad ON (pex.addressId = ad.id) " +
+                "           LEFT JOIN City AS ci ON (ad.cityId = ci.id) " +
                 "           LEFT JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) "+
                 "           LEFT JOIN Gender AS g ON (pe.genderId = g.id) "+
                 "       WHERE a.id = :appointmentId ";

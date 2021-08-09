@@ -41,6 +41,8 @@ public class FormVVo {
 
     private String streetNumber;
 
+    private String city;
+
     @JsonIgnore
     public Short getAge(){
         if (patientBirthDate == null)

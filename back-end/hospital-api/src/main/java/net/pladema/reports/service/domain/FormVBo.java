@@ -45,7 +45,7 @@ public class FormVBo {
         this.documentNumber = formVVo.getDocumentNumber();
         this.medicalCoverage = formVVo.getMedicalCoverage();
         this.affiliateNumber = formVVo.getAffiliateNumber();
-        this.address = Stream.of(formVVo.getStreetName(), formVVo.getStreetNumber())
+        this.address = Stream.of(formVVo.getStreetName(), formVVo.getStreetNumber(), formVVo.getCity())
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
     }
