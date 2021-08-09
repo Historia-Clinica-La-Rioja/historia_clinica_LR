@@ -27,6 +27,8 @@ public class FormVBo {
 
     private String documentType;
 
+    private String documentNumber;
+
     private String medicalCoverage;
 
     private String affiliateNumber;
@@ -40,6 +42,7 @@ public class FormVBo {
         this.patientGender = formVVo.getPatientGender();
         this.patientAge = formVVo.getAge();
         this.documentType = formVVo.getDocumentType();
+        this.documentNumber = formVVo.getDocumentNumber();
         this.medicalCoverage = formVVo.getMedicalCoverage();
         this.affiliateNumber = formVVo.getAffiliateNumber();
         this.address = Stream.of(formVVo.getStreetName(), formVVo.getStreetNumber())

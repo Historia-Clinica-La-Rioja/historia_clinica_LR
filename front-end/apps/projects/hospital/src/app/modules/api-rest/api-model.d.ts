@@ -752,6 +752,7 @@ export interface FormVDto {
     address: string;
     affiliateNumber: string;
     completePatientName: string;
+    documentNumber: string;
     documentType: string;
     establishment: string;
     medicalCoverage: string;

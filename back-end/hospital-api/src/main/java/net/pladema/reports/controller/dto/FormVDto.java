@@ -23,6 +23,8 @@ public class FormVDto {
 
     private String documentType;
 
+    private String documentNumber;
+
     private String medicalCoverage;
 
     private String affiliateNumber;
