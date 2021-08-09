@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.application.createConsultation;
 
-import ar.lamansys.odontology.domain.ESurfacePosition;
+import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
@@ -37,7 +37,7 @@ class DrawOdontogramServiceImplTest {
         OdontologySnomedBo tooth1 = new OdontologySnomedBo("tooth 1", "tooth 1");
 
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, null, true));
-        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePosition.RIGHT, true));
+        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.RIGHT, true));
 
 
         List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
@@ -64,7 +64,7 @@ class DrawOdontogramServiceImplTest {
         OdontologySnomedBo tooth1 = new OdontologySnomedBo("tooth 1", "tooth 1");
 
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, null, true));
-        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePosition.RIGHT, true));
+        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.RIGHT, true));
         dentalActions.add(new ConsultationDentalActionBo(action3, tooth1, null, false));
 
         List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
@@ -92,8 +92,8 @@ class DrawOdontogramServiceImplTest {
         OdontologySnomedBo tooth1 = new OdontologySnomedBo("tooth 1", "tooth 1");
 
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, null, false));
-        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePosition.RIGHT, false));
-        dentalActions.add(new ConsultationDentalActionBo(action3, tooth1, ESurfacePosition.LEFT, false));
+        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.RIGHT, false));
+        dentalActions.add(new ConsultationDentalActionBo(action3, tooth1, ESurfacePositionBo.LEFT, false));
 
         List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
 
@@ -147,7 +147,7 @@ class DrawOdontogramServiceImplTest {
         OdontologySnomedBo tooth1 = new OdontologySnomedBo("tooth 1", "tooth 1");
 
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, null, false));
-        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePosition.CENTRAL, false));
+        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.CENTRAL, false));
         dentalActions.add(new ConsultationDentalActionBo(action3, tooth1, null, false));
 
         List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
@@ -177,9 +177,9 @@ class DrawOdontogramServiceImplTest {
         OdontologySnomedBo tooth3 = new OdontologySnomedBo("tooth 3", "tooth 3");
 
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, null, false));
-        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePosition.CENTRAL, false));
+        dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.CENTRAL, false));
 
-        dentalActions.add(new ConsultationDentalActionBo(action3, tooth2, ESurfacePosition.RIGHT, true));
+        dentalActions.add(new ConsultationDentalActionBo(action3, tooth2, ESurfacePositionBo.RIGHT, true));
 
         dentalActions.add(new ConsultationDentalActionBo(action3, tooth3, null, false));
 

@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.domain.consultation.odontogramDrawings;
 
-import ar.lamansys.odontology.domain.ESurfacePosition;
+import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -56,7 +56,7 @@ public class ToothDrawingsBo {
         }
     }
 
-    private DrawingBo getSurfaceDrawing(ESurfacePosition surfacePosition) {
+    private DrawingBo getSurfaceDrawing(ESurfacePositionBo surfacePosition) {
         switch (surfacePosition) {
             case INTERNAL:
                 return this.internalSurfaceDrawing;

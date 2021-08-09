@@ -1195,6 +1195,18 @@ export interface OdontologyConceptDto extends Serializable {
     snomed: OdontologySnomedDto;
 }
 
+export interface OdontologyConsultationDto extends Serializable {
+    clinicalSpecialtyId: number;
+    dentalActions?: OdontologyDentalActionDto[];
+}
+
+export interface OdontologyDentalActionDto extends Serializable {
+    diagnostic: boolean;
+    snomed: SnomedDto;
+    surfacePosition?: ESurfacePositionDto;
+    tooth: SnomedDto;
+}
+
 export interface OdontologySnomedDto {
     id: number;
     pt: string;
@@ -1849,4 +1861,12 @@ export const enum ERole {
     ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE = "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE",
     ADMINISTRADOR_AGENDA = "ADMINISTRADOR_AGENDA",
     API_CONSUMER = "API_CONSUMER",
+}
+
+export const enum ESurfacePositionDto {
+    INTERNAL = "INTERNAL",
+    EXTERNAL = "EXTERNAL",
+    LEFT = "LEFT",
+    RIGHT = "RIGHT",
+    CENTRAL = "CENTRAL",
 }

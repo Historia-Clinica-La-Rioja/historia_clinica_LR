@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.domain;
 
-public enum ESurfacePosition {
+public enum ESurfacePositionBo {
 
     INTERNAL("internal"),
     EXTERNAL("external"),
@@ -10,7 +10,7 @@ public enum ESurfacePosition {
 
     private final String value;
 
-    ESurfacePosition(String value) {
+    ESurfacePositionBo(String value) {
         this.value = value;
     }
 

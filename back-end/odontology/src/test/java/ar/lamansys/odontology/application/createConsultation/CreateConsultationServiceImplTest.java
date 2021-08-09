@@ -4,7 +4,7 @@ import ar.lamansys.odontology.application.createConsultation.exceptions.CreateCo
 import ar.lamansys.odontology.application.odontogram.GetToothSurfacesService;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
-import ar.lamansys.odontology.domain.ESurfacePosition;
+import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
@@ -156,14 +156,14 @@ class CreateConsultationServiceImplTest {
 
         ConsultationDentalActionBo diagnostic3 = new ConsultationDentalActionBo(new OdontologySnomedBo("699685006", "surco oclusal profundo (hallazgo)"), true);
         diagnostic3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        diagnostic3.setSurfacePosition(ESurfacePosition.RIGHT);
+        diagnostic3.setSurfacePosition(ESurfacePositionBo.RIGHT);
         dentalDiagnosticBos.add(diagnostic3);
 
         String sctidNotFound = "9984005";
         String ptNotFound = "ausencia congénita completa de dientes (trastorno)";
         ConsultationDentalActionBo diagnostic4 = new ConsultationDentalActionBo(new OdontologySnomedBo("9984005", "ausencia congénita completa de dientes (trastorno)"), true);
         diagnostic4.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        diagnostic4.setSurfacePosition(ESurfacePosition.RIGHT);
+        diagnostic4.setSurfacePosition(ESurfacePositionBo.RIGHT);
         dentalDiagnosticBos.add(diagnostic4);
 
         consultation.setDentalActions(dentalDiagnosticBos);
@@ -252,12 +252,12 @@ class CreateConsultationServiceImplTest {
         String diagnosticPt = "ausencia parcial congénita de los dientes (trastorno)";
         ConsultationDentalActionBo diagnostic2 = new ConsultationDentalActionBo(new OdontologySnomedBo(diagnosticSctid, diagnosticPt), true);
         diagnostic2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        diagnostic2.setSurfacePosition(ESurfacePosition.INTERNAL);
+        diagnostic2.setSurfacePosition(ESurfacePositionBo.INTERNAL);
         dentalDiagnostics.add(diagnostic2);
 
         ConsultationDentalActionBo diagnostic3 = new ConsultationDentalActionBo(new OdontologySnomedBo("699685006", "surco oclusal profundo (hallazgo)"), true);
         diagnostic3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        diagnostic3.setSurfacePosition(ESurfacePosition.LEFT);
+        diagnostic3.setSurfacePosition(ESurfacePositionBo.LEFT);
         dentalDiagnostics.add(diagnostic3);
 
         consultation.setDentalActions(dentalDiagnostics);
@@ -308,12 +308,12 @@ class CreateConsultationServiceImplTest {
 
         ConsultationDentalActionBo procedure3 = new ConsultationDentalActionBo(new OdontologySnomedBo("4721000221105", "inactivación de caries"), false);
         procedure3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        procedure3.setSurfacePosition(ESurfacePosition.EXTERNAL);
+        procedure3.setSurfacePosition(ESurfacePositionBo.EXTERNAL);
         dentalProcedures.add(procedure3);
 
         ConsultationDentalActionBo procedure4 = new ConsultationDentalActionBo(new OdontologySnomedBo(sctidNotFound, ptNotFound), false);
         procedure4.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        procedure4.setSurfacePosition(ESurfacePosition.CENTRAL);
+        procedure4.setSurfacePosition(ESurfacePositionBo.CENTRAL);
         dentalProcedures.add(procedure4);
 
         consultation.setDentalActions(dentalProcedures);
@@ -408,12 +408,12 @@ class CreateConsultationServiceImplTest {
 
         ConsultationDentalActionBo procedure2 = new ConsultationDentalActionBo(new OdontologySnomedBo("278123008", "implante osteointegrado con forma radicular"), false);
         procedure2.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        procedure2.setSurfacePosition(ESurfacePosition.INTERNAL);
+        procedure2.setSurfacePosition(ESurfacePositionBo.INTERNAL);
         dentalProcedures.add(procedure2);
 
         ConsultationDentalActionBo procedure3 = new ConsultationDentalActionBo(new OdontologySnomedBo(sctidNotApplicable, ptNotApplicable), false);
         procedure3.setTooth(new OdontologySnomedBo("1", "tooth 1"));
-        procedure3.setSurfacePosition(ESurfacePosition.CENTRAL);
+        procedure3.setSurfacePosition(ESurfacePositionBo.CENTRAL);
         dentalProcedures.add(procedure3);
 
         consultation.setDentalActions(dentalProcedures);

@@ -1,21 +1,23 @@
 package ar.lamansys.odontology.domain.consultation;
 
-import ar.lamansys.odontology.domain.ESurfacePosition;
+import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class ConsultationDentalActionBo extends ClinicalTermBo {
 
     private OdontologySnomedBo tooth;
 
     private OdontologySnomedBo surface;
 
-    private ESurfacePosition surfacePosition;
+    private ESurfacePositionBo surfacePosition;
 
     private boolean diagnostic;
 
@@ -24,7 +26,7 @@ public class ConsultationDentalActionBo extends ClinicalTermBo {
         this.diagnostic = isDiagnostic;
     }
 
-    public ConsultationDentalActionBo(OdontologySnomedBo action, OdontologySnomedBo tooth, ESurfacePosition surfacePosition, boolean isDiagnostic) {
+    public ConsultationDentalActionBo(OdontologySnomedBo action, OdontologySnomedBo tooth, ESurfacePositionBo surfacePosition, boolean isDiagnostic) {
         super(action);
         this.tooth = tooth;
         this.surfacePosition = surfacePosition;
