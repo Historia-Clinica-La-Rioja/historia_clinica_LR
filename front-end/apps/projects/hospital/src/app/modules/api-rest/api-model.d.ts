@@ -1189,6 +1189,15 @@ export interface OdontogramQuadrantDto {
     top: boolean;
 }
 
+export interface OdontologyAllergyConditionDto extends Serializable {
+    categoryId: string;
+    criticalityId: number;
+    snomed: SnomedDto;
+    startDate: DateDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
 export interface OdontologyConceptDto extends Serializable {
     applicableToSurface: boolean;
     applicableToTooth: boolean;
@@ -1196,8 +1205,14 @@ export interface OdontologyConceptDto extends Serializable {
 }
 
 export interface OdontologyConsultationDto extends Serializable {
+    allergies?: OdontologyAllergyConditionDto[];
     clinicalSpecialtyId: number;
     dentalActions?: OdontologyDentalActionDto[];
+    diagnostics?: OdontologyDiagnosticDto[];
+    evolutionNote?: string;
+    personalHistories?: OdontologyPersonalHistoryDto[];
+    procedures?: OdontologyProcedureDto[];
+    reasons?: OdontologyReasonDto[];
 }
 
 export interface OdontologyDentalActionDto extends Serializable {
@@ -1205,6 +1220,26 @@ export interface OdontologyDentalActionDto extends Serializable {
     snomed: SnomedDto;
     surfacePosition?: ESurfacePositionDto;
     tooth: SnomedDto;
+}
+
+export interface OdontologyDiagnosticDto extends Serializable {
+    snomed: SnomedDto;
+}
+
+export interface OdontologyPersonalHistoryDto extends Serializable {
+    snomed: SnomedDto;
+    startDate: DateDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface OdontologyProcedureDto extends Serializable {
+    performedDate?: DateDto;
+    snomed: SnomedDto;
+}
+
+export interface OdontologyReasonDto extends Serializable {
+    snomed: SnomedDto;
 }
 
 export interface OdontologySnomedDto {

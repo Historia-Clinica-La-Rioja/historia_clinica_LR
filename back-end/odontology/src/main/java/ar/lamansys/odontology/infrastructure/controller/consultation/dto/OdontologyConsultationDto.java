@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,7 +26,25 @@ public class OdontologyConsultationDto implements Serializable {
     private Integer clinicalSpecialtyId;
 
     @Nullable
-    @Valid
-    private List<OdontologyDentalActionDto> dentalActions;
+    private List<@Valid OdontologyDentalActionDto> dentalActions = new ArrayList<>();
+
+    @Nullable
+    private List<@Valid OdontologyAllergyConditionDto> allergies = new ArrayList<>();
+
+    @Nullable
+    private List<@Valid OdontologyReasonDto> reasons = new ArrayList<>();
+
+    @Nullable
+    private List<@Valid OdontologyDiagnosticDto> diagnostics = new ArrayList<>();
+
+    @Nullable
+    private List<@Valid OdontologyProcedureDto> procedures = new ArrayList<>();
+
+    @Nullable
+    private List<@Valid OdontologyPersonalHistoryDto> personalHistories = new ArrayList<>();
+
+    @Nullable
+    private String evolutionNote;
+
 
 }
