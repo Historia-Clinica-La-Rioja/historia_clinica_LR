@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HCEImmunizationDto, OutpatientImmunizationDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +13,7 @@ import { HceImmunizationService } from '@api-rest/services/hce-immunization.serv
 import { VACUNAS } from '@historia-clinica/constants/summaries';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-vacunas.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-vacunas',
@@ -20,6 +22,7 @@ import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-v
 })
 export class VacunasComponent implements OnInit {
 
+	enableVaccineV2: boolean; // for feature flag
 	private patientId: number;
 	public readonly vacunasSummary = VACUNAS;
 	public tableModel: TableModel<HCEImmunizationDto>;
@@ -31,11 +34,18 @@ export class VacunasComponent implements OnInit {
 		private readonly appointmentsService: AppointmentsService,
 		public dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
-		private readonly hceImmunizationService: HceImmunizationService
+		private readonly hceImmunizationService: HceImmunizationService,
+		private featureFlagService: FeatureFlagService
 	) {
 	}
 
 	ngOnInit(): void {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_VACUNAS_V2).subscribe(
+			(isOn: boolean) => {
+				this.enableVaccineV2 = isOn;
+			}
+		);
+
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));

@@ -4,8 +4,7 @@
 			<h2 [translate]="'ambulatoria.paciente.vacunas.TITLE'"></h2>
 		</div>
 		<div id="add_button" *appHasRole="['ENFERMERO']">
-			<ng-container>
-				<!-- *ngIf="hasConfirmedAppointment" -->
+			<ng-container *ngIf="hasConfirmedAppointment">
 				<button mat-flat-button color="primary" (click)=goToAplicarVacuna()>
 					<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
 				</button>
@@ -13,7 +12,7 @@
 		</div>
 
 		<div id="add_button" *appHasRole="['ENFERMERO']">
-			<ng-container>
+			<ng-container *ngIf="enableVaccineV2">
 				<button mat-flat-button color="primary" (click)=goToAgregarVacunas()>
 					<span>{{'ambulatoria.paciente.vacunas2.ADD' | translate | uppercase }}</span>
 				</button>
