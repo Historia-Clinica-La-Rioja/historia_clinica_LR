@@ -68,7 +68,8 @@ export class AgregarVacunasComponent implements OnInit {
       disableClose: true,
       width: '45%',
       data: {
-        immunization: this.appliedVaccines[vaccineIndex]
+        immunization: this.appliedVaccines[vaccineIndex],
+        edit: true
       }
     });
 

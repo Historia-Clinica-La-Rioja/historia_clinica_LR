@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
-import { MatDialogRef } from '@angular/material/dialog';
-import { DateFormat, newMoment } from '@core/utils/moment.utils';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DateFormat, momentParseDate, newMoment } from '@core/utils/moment.utils';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { ImmunizationDto, SnomedDto, SnomedResponseDto, VaccineConditionsDto, VaccineDoseInfoDto, VaccineInformationDto, VaccineSchemeDto } from '@api-rest/api-model';
 import { VaccineService } from '@api-rest/services/vaccine.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -23,13 +22,18 @@ export class AgregarVacunaComponent implements OnInit {
 	conditions: VaccineConditionsDto[];
 	billableForm: FormGroup;
 	previousForm: FormGroup;
+	snomedConcept: SnomedDto;
 	today: Moment = newMoment();
 	searching = false;
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+	private readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 	conceptsResultsTable: TableModel<any>;
-	snomedConcept: SnomedDto;
 
 	constructor(
+		@Inject(MAT_DIALOG_DATA) public data:
+			{
+				immunization?: ImmunizationDto,
+				edit?: boolean
+			},
 		private readonly formBuilder: FormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly vaccineService: VaccineService,
@@ -38,15 +42,6 @@ export class AgregarVacunaComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.billableForm = this.formBuilder.group({
-			date: [this.today, Validators.required],
-			snomed: [null, Validators.required],
-			condition: [{ value: null, disabled: true }, Validators.required],
-			scheme: [{ value: null, disabled: true }, Validators.required],
-			dose: [{ value: null, disabled: true }, Validators.required],
-			lot: [null],
-			note: [null]
-		});
 
 		this.previousForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
@@ -58,6 +53,59 @@ export class AgregarVacunaComponent implements OnInit {
 			institution: [null],
 			proffesional: [null]
 		});
+
+		this.billableForm = this.formBuilder.group({
+			date: [this.today, Validators.required],
+			snomed: [null, Validators.required],
+			condition: [{ value: null, disabled: true }, Validators.required],
+			scheme: [{ value: null, disabled: true }, Validators.required],
+			dose: [{ value: null, disabled: true }, Validators.required],
+			lot: [null],
+			note: [null]
+		});
+
+		if (this.data?.edit) { // then load information to form fields and class attributes
+			if (this.data.immunization?.billable) { // its the only case for now
+
+				this.billableForm.controls.date.setValue(momentParseDate(this.data.immunization.administrationDate));
+
+				this.snomedConcept = this.data.immunization.snomed;
+				this.billableForm.controls.snomed.setValue(this.snomedConcept.pt);
+
+				this.billableForm.controls.note.setValue(this.data.immunization.note);
+
+				if (this.data.immunization.lotNumber)
+					this.billableForm.controls.lot.setValue(this.data.immunization.lotNumber);
+
+				this.vaccineService.vaccineInformation(this.snomedConcept.sctid).subscribe(
+					(vaccineInformation: VaccineInformationDto) => {
+						this.conditions = vaccineInformation.conditions;
+						this.billableForm.get("condition").enable();
+						const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
+						if (conditionIndex >= 0) // mean that a condition was selected therefore also a scheme and dose
+						{
+							this.billableForm.get("condition").setValue(conditionIndex);
+
+							this.schemes = this.conditions[conditionIndex].schemes;
+							this.billableForm.get("scheme").enable();
+							const schemeIndex: number = this.schemes.findIndex(scheme => scheme.id === this.data.immunization.schemeId);
+							if (schemeIndex >= 0) {
+								this.billableForm.get("scheme").setValue(schemeIndex);
+
+								this.doses = this.schemes[schemeIndex].doses;
+								this.billableForm.get("dose").enable();
+								const doseIndex: number = this.doses.findIndex(dose => (dose.order == this.data.immunization.dose.order) && (dose.description == this.data.immunization.dose.description));
+								if (doseIndex >= 0)
+									this.billableForm.get("dose").setValue(doseIndex);
+							}
+						}
+
+					}
+				);
+
+			}
+		}
+
 	}
 
 	public chosenYearHandler(newDate: Moment): void {
