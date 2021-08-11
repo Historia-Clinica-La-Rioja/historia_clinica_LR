@@ -23,9 +23,9 @@ public class ToothRepositoryImpl implements ToothRepository {
     @Transactional(readOnly = true)
     public List<Object[]> getAll() {
 
-        String sqlString = "SELECT s.sctid, s.pt, t.code, t.quadrant_code " +
+        String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code " +
                 "FROM tooth t " +
-                "JOIN snomed s ON s.sctid = t.sctid";
+                "JOIN body_part bp ON bp.sctid = t.sctid";
 
         Query query = entityManager.createNativeQuery(sqlString);
         List<Object[]> result = query.getResultList();
@@ -36,9 +36,9 @@ public class ToothRepositoryImpl implements ToothRepository {
     @Transactional(readOnly = true)
     public Object[] get(String toothId) {
         logger.debug("Input -> {}", toothId);
-        String sqlString = "SELECT s.sctid, s.pt, t.code, t.quadrant_code " +
+        String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code " +
                 "FROM tooth t " +
-                "JOIN snomed s ON s.sctid = t.sctid " +
+                "JOIN body_part bp ON bp.sctid = t.sctid " +
                 "WHERE t.sctid = :toothId ";
 
         Query query = entityManager.createNativeQuery(sqlString);

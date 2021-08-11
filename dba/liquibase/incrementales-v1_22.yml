@@ -1,3 +1,77 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_22 
 
+    - changeSet:
+         id: body_part-addPtColumn
+         comment: Create column pt to body_part
+         author: tmedina
+         changes:
+            - addColumn:
+                  columns:
+                  - column:
+                        name: pt
+                        type: varchar(255)
+                  tableName: body_part    
+
+    - changeSet:
+          id: body_part-updatePtData
+          comment: Set values of preferred terms in body_part
+          author: tmedina
+          context: "!schema-only"
+          changes:
+              - sql:
+                    sql: |-
+                      UPDATE body_part SET pt = 'tercer molar superior derecho permanente' WHERE sctid='245566003';
+                      UPDATE body_part SET pt = 'tercer molar superior izquierdo permanente' WHERE sctid='87704003';
+                      UPDATE body_part SET pt = 'tercer molar inferior derecho permanente' WHERE sctid='38994002';
+                      UPDATE body_part SET pt = 'tercer molar inferior izquierdo permanente' WHERE sctid='74344005';
+                      UPDATE body_part SET pt = 'segundo molar superior izquierdo permanente' WHERE sctid='45578004';
+                      UPDATE body_part SET pt = 'segundo molar inferior izquierdo permanente' WHERE sctid='245603001';
+                      UPDATE body_part SET pt = 'segundo molar inferior derecho permanente' WHERE sctid='245591003';
+                      UPDATE body_part SET pt = 'segundo molar superior derecho permanente' WHERE sctid='245567007';
+                      UPDATE body_part SET pt = 'segundo molar  superior derecho temporario' WHERE sctid='27855007';
+                      UPDATE body_part SET pt = 'segundo molar superior izquierdo temporario' WHERE sctid='245622005';
+                      UPDATE body_part SET pt = 'segundo molar inferior izquierdo temporario' WHERE sctid='49330006';
+                      UPDATE body_part SET pt = 'segundo molar  inferior derecho temporario' WHERE sctid='61868007';
+                      UPDATE body_part SET pt = 'primer molar inferior derecho permanente' WHERE sctid='45592005';
+                      UPDATE body_part SET pt = 'primer molar superior derecho permanente' WHERE sctid='245568002';
+                      UPDATE body_part SET pt = 'primer molar inferior izquierdo permanente' WHERE sctid='245604007';
+                      UPDATE body_part SET pt = 'primer molar superior izquierdo permanente' WHERE sctid='245579007';
+                      UPDATE body_part SET pt = 'primer molar  superior izquierdo temporario' WHERE sctid='45234009';
+                      UPDATE body_part SET pt = 'primer molar superior derecho temporario' WHERE sctid='17505006';
+                      UPDATE body_part SET pt = 'primer molar inferior derecho temporario' WHERE sctid='58646007';
+                      UPDATE body_part SET pt = 'primer molar inferior izquierdo temporario' WHERE sctid='38896004';
+                      UPDATE body_part SET pt = 'primer premolar inferior izquierdo permanente' WHERE sctid='245607000';
+                      UPDATE body_part SET pt = 'primer premolar superior izquierdo permanente' WHERE sctid='245583007';
+                      UPDATE body_part SET pt = 'primer premolar superior derecho permanente' WHERE sctid='245571005';
+                      UPDATE body_part SET pt = 'primer premolar inferior derecho permanente' WHERE sctid='245596008';
+                      UPDATE body_part SET pt = 'segundo premolar superior derecho' WHERE sctid='36492000';
+                      UPDATE body_part SET pt = 'segundo premolar superior izquierdo permanente' WHERE sctid='23226009';
+                      UPDATE body_part SET pt = 'segundo premolar inferior derecho permanente' WHERE sctid='8873007';
+                      UPDATE body_part SET pt = 'segundo premolar inferior izquierdo permanente' WHERE sctid='24573005';
+                      UPDATE body_part SET pt = 'canino superior derecho permanente' WHERE sctid='245572003';
+                      UPDATE body_part SET pt = 'canino superior izquierdo permanente' WHERE sctid='245584001';
+                      UPDATE body_part SET pt = 'canino inferior derecho permanente' WHERE sctid='245597004';
+                      UPDATE body_part SET pt = 'canino inferior izquierdo permanente' WHERE sctid='860782001';
+                      UPDATE body_part SET pt = 'canino  superior izquierdo temporario' WHERE sctid='73937000';
+                      UPDATE body_part SET pt = 'canino superior derecho temporario' WHERE sctid='30618001';
+                      UPDATE body_part SET pt = 'canino inferior derecho temporario' WHERE sctid='6062009';
+                      UPDATE body_part SET pt = 'canino inferior izquierdo temporario' WHERE sctid='43281008';
+                      UPDATE body_part SET pt = 'incisivo central superior derecho permanente' WHERE sctid='245575001';
+                      UPDATE body_part SET pt = 'incisivo central inferior derecho permanente' WHERE sctid='245598009';
+                      UPDATE body_part SET pt = 'incisivo central superior izquierdo permanente' WHERE sctid='245587008';
+                      UPDATE body_part SET pt = 'incisivo central inferior izquierdo permanente' WHERE sctid='245611006';
+                      UPDATE body_part SET pt = 'incisivo central superior derecho temporario' WHERE sctid='88824007';
+                      UPDATE body_part SET pt = 'incisivo  central superior izquierdo temporario' WHERE sctid='51678005';
+                      UPDATE body_part SET pt = 'incisivo central inferior derecho temporario' WHERE sctid='67834006';
+                      UPDATE body_part SET pt = 'incisivo central inferior izquierdo temporario' WHERE sctid='89552004';
+                      UPDATE body_part SET pt = 'incisivo lateral superior derecho permanente' WHERE sctid='245574002';
+                      UPDATE body_part SET pt = 'incisivo lateral superior izquierdo permanente' WHERE sctid='245586004';
+                      UPDATE body_part SET pt = 'incisivo lateral inferior izquierdo permanente' WHERE sctid='245610007';
+                      UPDATE body_part SET pt = 'incisivo lateral inferior derecho permanente' WHERE sctid='245599001';
+                      UPDATE body_part SET pt = 'incisivo lateral superior derecho temporario' WHERE sctid='245618000';
+                      UPDATE body_part SET pt = 'incisivo lateral superior izquierdo temporario' WHERE sctid='245625007';
+                      UPDATE body_part SET pt = 'incisivo  lateral inferior derecho temporario' WHERE sctid='245633008';
+                      UPDATE body_part SET pt = 'incisivo lateral inferior izquierdo temporario' WHERE sctid='245640009';
+
+
