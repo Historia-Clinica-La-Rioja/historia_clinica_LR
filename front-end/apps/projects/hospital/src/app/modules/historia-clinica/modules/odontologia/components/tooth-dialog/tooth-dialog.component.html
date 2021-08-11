@@ -3,8 +3,7 @@
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 		<app-tooth #tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
 			[newFinding]="newHallazgoId" [setFirstProcedure]="firstProcedureId" [setSecondProcedure]="secondProcedureId"
-			[setThirdProcedure]="thirdProcedureId"
-			[findingsAndProcedures]="odontogramService.getActionsFrom(data.tooth.snomed.sctid)">
+			[setThirdProcedure]="thirdProcedureId">
 		</app-tooth>
 		<div fxLayout="column">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>

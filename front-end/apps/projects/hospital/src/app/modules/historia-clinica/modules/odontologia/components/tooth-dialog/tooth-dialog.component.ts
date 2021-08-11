@@ -5,7 +5,6 @@ import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-
 import { ConceptsService } from '../../api-rest/concepts.service';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
 import { ProcedureOrder, ToothAction } from '../../services/actions.service';
-import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { CommonActions, ToothComponent } from '../tooth/tooth.component';
@@ -25,7 +24,6 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[] },
 		private readonly conceptsService: ConceptsService,
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
-		public odontogramService: OdontogramService
 	) {
 
 	}

@@ -24,7 +24,7 @@ export class OdontogramComponent implements OnInit {
 
 	quadrants;
 
-	findingsAndProcedures = {};
+	actionsFrom = {};
 	ngOnInit(): void {
 
 		this.odontogramRestService.getOdontogram().subscribe(
@@ -42,6 +42,10 @@ export class OdontogramComponent implements OnInit {
 				this.quadrants = { quadrant1, quadrant2, quadrant3, quadrant4, quadrant5, quadrant6, quadrant7, quadrant8 };
 			}
 		);
+
+		this.odontogramService.actionsSubject$.subscribe(actionedTooth => {
+			this.actionsFrom[actionedTooth.sctid] = actionedTooth.actions;
+		})
 	}
 
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
