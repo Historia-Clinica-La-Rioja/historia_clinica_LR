@@ -36,6 +36,7 @@ import { OdontologiaModule } from '../odontologia/odontologia.module';
 import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
 import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacunas.component';
 import { SuccesMessageDialogComponent } from './dialogs/succes-message-dialog/succes-message-dialog.component';
+import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.component';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import { SuccesMessageDialogComponent } from './dialogs/succes-message-dialog/su
 		ConfirmarNuevaConsultaPopupComponent,
 		AgregarVacunasComponent,
 		AgregarVacunaComponent,
-		SuccesMessageDialogComponent
+		SuccesMessageDialogComponent,
+		DetalleVacunaComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,

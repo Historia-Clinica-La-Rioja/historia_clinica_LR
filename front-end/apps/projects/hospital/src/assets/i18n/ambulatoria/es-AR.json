@@ -316,6 +316,7 @@
 				"TAB_LABEL": "Vacunas",
 				"TITLE": "Historial de vacunación",
 				"ADD": "Aplicar vacuna",
+				"DETAILS": "Ver detalle",
 				"aplicar": {
 					"TITLE": "Aplicar vacuna",
 					"INMUNIZATION": "Vacuna",
@@ -328,6 +329,17 @@
 						"ERROR": "Error al guardar las vacunas aplicadas",
 						"CHANGE_STATE": "¿Desea aplicar más vacunas?"
 					}
+				},
+				"details": {
+					"DOSE": "Dosis",
+					"DATE": "Fecha",
+					"lotNumber": "Lote",
+					"name_commercial": "Nombre comercial",
+					"institution": "Institución",
+					"professional": "Profesional",
+					"condition_motive":"Condición o motivo",
+					"scheme":"Esquema",
+					"tradename":"Nombre comercial"
 				}
 			},
 			"vacunas2": {
