@@ -22,10 +22,9 @@ public class ProcedureRepositoryImpl implements ProcedureRepository {
     @Override
     public List<Object[]> getAll() {
 
-        String sqlString = "SELECT s.sctid, s.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
+        String sqlString = "SELECT ap.sctid, ap.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
                 "FROM applicable_procedure ap " +
-                "JOIN snomed s ON s.sctid = ap.sctid " +
-                "ORDER BY s.pt ASC";
+                "ORDER BY ap.pt ASC";
 
         Query query = entityManager.createNativeQuery(sqlString);
         List<Object[]> result = query.getResultList();
@@ -37,9 +36,8 @@ public class ProcedureRepositoryImpl implements ProcedureRepository {
     @Override
     public List<Object[]> getBySctid(String sctid) {
 
-        String sqlString = "SELECT s.sctid, s.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
+        String sqlString = "SELECT ap.sctid, ap.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
                 "FROM applicable_procedure ap " +
-                "JOIN snomed s ON s.sctid = ap.sctid " +
                 "WHERE ap.sctid = :sctid ";
 
         Query query = entityManager.createNativeQuery(sqlString)

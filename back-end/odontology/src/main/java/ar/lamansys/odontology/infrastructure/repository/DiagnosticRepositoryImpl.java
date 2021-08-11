@@ -22,10 +22,9 @@ public class DiagnosticRepositoryImpl implements DiagnosticRepository{
     @Override
     public List<Object[]> getAll() {
 
-        String sqlString = "SELECT s.sctid, s.pt, ad.applicable_to_tooth, ad.applicable_to_surface " +
+        String sqlString = "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface " +
                 "FROM applicable_diagnostic ad " +
-                "JOIN snomed s ON s.sctid = ad.sctid " +
-                "ORDER BY s.pt ASC";
+                "ORDER BY ad.pt ASC";
 
         Query query = entityManager.createNativeQuery(sqlString);
         List<Object[]> result = query.getResultList();
@@ -37,9 +36,8 @@ public class DiagnosticRepositoryImpl implements DiagnosticRepository{
     @Override
     public List<Object[]> getBySctid(String sctid) {
 
-        String sqlString = "SELECT s.sctid, s.pt, ad.applicable_to_tooth, ad.applicable_to_surface " +
+        String sqlString = "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface " +
                 "FROM applicable_diagnostic ad " +
-                "JOIN snomed s ON s.sctid = ad.sctid " +
                 "WHERE ad.sctid = :sctid ";
 
         Query query = entityManager.createNativeQuery(sqlString)
