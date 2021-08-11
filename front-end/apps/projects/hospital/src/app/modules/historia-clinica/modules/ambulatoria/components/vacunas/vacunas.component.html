@@ -1,5 +1,5 @@
 <app-content width="full">
-	<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
+	<!-- <div id="header" fxLayout="row" fxLayoutAlign="space-between center">
 		<div id="title">
 			<h2 [translate]="'ambulatoria.paciente.vacunas.TITLE'"></h2>
 		</div>
@@ -32,5 +32,44 @@
 				</ng-template>
 			</app-summary-card>
 		</div>
+	</div> -->
+
+	<div fxLayout="column" fxLayoutGap="20px">
+		<div fxFlex="100%">
+			<app-summary-card [header]="vacunasSummary" [tooltip]="'historia-clinica.summary-card.vacunas.TOOLTIP'"
+				[canEdit]="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO']" [editable]="true"
+				(openInNew)="openDialog()">
+				<ng-container *ngFor="let vacuna of vacunas; let i = index">
+					<div fxLayout="row" fxLayoutAlign="center center">
+						<div fxFlex="50%">
+							<div mat-line class="capitalize-first-letter">	{{vacuna.snomed.pt}}</div>
+						</div>
+						<div fxFlex="25%" fxLayoutAlign="center">
+							<ng-container *ngIf="vacuna.dose.description"><strong class="dose">{{vacuna.dose.description}}</strong></ng-container>
+						</div>
+						<div fxFlex="20%" class="padding-to-align-chip">
+							<ng-container *ngIf="vacuna.administrationDate">{{this.toFormatDate(vacuna.administrationDate)}}</ng-container>
+						</div>
+						<div fxFlex="5%">
+						 <button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button
+								[matMenuTriggerFor]="menu">
+								<mat-icon>more_vert</mat-icon>
+							</button>
+							<mat-menu #menu="matMenu">
+								<button mat-menu-item (click)="goToDetailsVaccine(vacuna)">
+								<span [translate]="'ambulatoria.paciente.vacunas.DETAILS'"></span>
+							</button>
+							</mat-menu>
+						</div>
+					</div>
+					<mat-divider></mat-divider>
+				</ng-container>
+			</app-summary-card>
+		</div>
 	</div>
 </app-content>
+
+
+<ng-template #noInfo>
+	<app-no-data></app-no-data>
+</ng-template>

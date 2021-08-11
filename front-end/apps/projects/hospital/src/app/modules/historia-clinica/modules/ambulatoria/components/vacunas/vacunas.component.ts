@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AplicarVacunaComponent } from '../../dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AddInmunizationComponent, Immunization } from '@historia-clinica/dialogs/add-inmunization/add-inmunization.component';
-import { TableModel } from '@presentation/components/table/table.component';
+import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { momentFormat, momentParseDate, DateFormat } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
@@ -14,6 +14,10 @@ import { VACUNAS } from '@historia-clinica/constants/summaries';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-vacunas.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { Observable } from 'rxjs';
+import { stringify } from '@angular/compiler/src/util';
+import { Problem } from '../../services/historical-problems-facade.service';
+import { DetalleVacunaComponent } from '../../dialogs/detalle-vacuna/detalle-vacuna.component';
 
 @Component({
 	selector: 'app-vacunas',
@@ -23,10 +27,15 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 export class VacunasComponent implements OnInit {
 
 	enableVaccineV2: boolean; // for feature flag
+	public hasNewConsultationEnabled$: Observable<boolean>;
+
 	private patientId: number;
 	public readonly vacunasSummary = VACUNAS;
 	public tableModel: TableModel<HCEImmunizationDto>;
+	public vacunas: HCEImmunizationDto[];
+
 	@Input() hasConfirmedAppointment: boolean;
+	dialogRef: any;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -51,6 +60,8 @@ export class VacunasComponent implements OnInit {
 				this.patientId = Number(params.get('idPaciente'));
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
 					this.tableModel = this.buildTable(dataTable);
+					this.vacunas = dataTable;
+
 				});
 			});
 	}
@@ -134,13 +145,42 @@ export class VacunasComponent implements OnInit {
 					header: 'Vacuna',
 					text: (row) => row.snomed.pt
 				},
+
 				{
 					columnDef: 'fecha',
-					header: 'Fecha de vacunación',
+					header: ' Fecha de vacunación',
 					text: (row) => row.administrationDate ? momentFormat(momentParseDate(row.administrationDate), DateFormat.VIEW_DATE) : undefined
+				},
+				{
+					columnDef: 'estado',
+					text: (row) => row.dose?.description
 				}
 			],
-			data
+			data,
+
 		};
+	}
+
+	goToDetailsVaccine(vaccine: HCEImmunizationDto) {
+		const dialogRef = this.dialog.open(DetalleVacunaComponent, {
+			disableClose: false,
+			width: '30%',
+			data: {
+				title:  vaccine.snomed.pt,
+				dose:vaccine.dose.description,
+				date: vaccine.administrationDate,
+				lot:vaccine.lotNumber,
+				institution:vaccine.institution.name,
+				professional:vaccine.doctor.firstName,
+				terms:vaccine.condition.description,
+				scheme:vaccine.scheme,
+				observations:vaccine.note,
+			}
+		});
+	}
+
+	toFormatDate = (administrationDate: string) => {
+		return momentFormat(momentParseDate(administrationDate), DateFormat.VIEW_DATE);
+		;
 	}
 }
