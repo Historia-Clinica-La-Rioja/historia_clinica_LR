@@ -124,13 +124,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.federar.claims.name  |  | Prueba Jose | **Obligatorio** | Apellido y Nombres del Usuario que accede (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.role |  | Project Manager | **Obligatorio** | Especialidad del Usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.ident  |  | 0001 | **Obligatorio** | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
-| ws.federar.auth.grantType |   | client_credentials  | Único | Propiedades definidas por Federar | v0.2.0  |
-| ws.federar.auth.scope |   | Patient/\*.read,Patient/\*.write  | Único | Propiedades definidas por Federar | v0.2.0  |
-| ws.federar.auth.clientAssertionType |   | urn:ietf:params:oauth:client-assertion-type:jwt-bearer  | Único | Propiedades definidas por Federar | v0.2.0  |
 | ws.federar.auth.signKey |   | federar | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
-| ws.federar.url.validateToken |   | /bus-auth/tokeninfo | Único |  URL relativa del servicio para validar el token obtenido | v0.2.0  |
-| ws.federar.url.localIdSearch |   | /masterfile-federacion-service/fhir/Patient | Único |  URL relativa del servicio para buscar por id paciente nacional  | v0.2.0  |
-| ws.federar.url.federate |   | /masterfile-federacion-service/fhir/Patient | Único |  URL relativa del servicio para federar un paciente  | v0.2.0  |
 
 
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |

@@ -58,14 +58,14 @@ public class FederarServiceImpl extends RestClient implements FederarService {
 	}
 
 	private Optional<LocalIdSearchResponse> searchByLocalId(Integer localId) {
-		String urlWithParams = federarWSConfig.getLocalSearchIdUrl() + "?identifier=" + federarWSConfig.getIss() + "|"
+		String urlWithParams = federarWSConfig.getPatientService() + "?identifier=" + federarWSConfig.getIss() + "|"
 				+ localId;
 		ResponseEntity<LocalIdSearchResponse> response = exchangeGet(urlWithParams, LocalIdSearchResponse.class);
 		return Optional.ofNullable(response.getBody());
 	}
 
 	private ResponseEntity<FederarErrorResponse> callFederateWS(FederarResourcePayload requestBody) {
-		String urlWithParams = federarWSConfig.getFederateUrl();
+		String urlWithParams = federarWSConfig.getPatientService();
 		return exchangePost(urlWithParams, requestBody, FederarErrorResponse.class);
 	}
 
