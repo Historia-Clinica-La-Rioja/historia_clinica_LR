@@ -110,11 +110,8 @@ Este documento detalla las propiedades configurables del sistema.
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | -------- | ------ | -------- | ------ | -------------- | ---- |
 | ws.renaper.enabled   | | - | **Único** | Determina si se utiliza la integracion con Renaper (se necesita completar la configuracion) | v0.2.0  |
-| ws.renaper.url.cobertura |   | /personas/cobertura | Único | URL relativa para consumir el servicio de Cobertura Medica | v0.2.0 |
-| ws.renaper.url.persona |   | /personas/renaper | Único | URL relativa para consumir el servicio de Datos de Persona | v0.2.0 |
 | ws.renaper.nombre |  | - | **Obligatorio**  | Nombre que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
 | ws.renaper.clave |  | - | **Obligatorio** | Clave que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
-| ws.renaper.dominio |  | DOMINIOSINAUTORIZACIONDEALTA | Único  | Código de dominio | v0.2.0  |
 
 
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
