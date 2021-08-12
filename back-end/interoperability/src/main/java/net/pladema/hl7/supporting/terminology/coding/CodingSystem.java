@@ -16,8 +16,7 @@ public final class CodingSystem {
 
     @UtilityClass
     public static class SERVER {
-        public static final String TESTAPP="https://testapp.hospitalitaliano.org.ar/masterfile-federacion-service/fhir/";
-        public static final String BUS="http://mhd.sisa.msal.gov.ar/fhir/";
+        public static final String PATIENT_SERVICE="/masterfile-federacion-service/fhir/";
     }
 
     @UtilityClass
