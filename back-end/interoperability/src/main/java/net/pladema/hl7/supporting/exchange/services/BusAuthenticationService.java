@@ -24,9 +24,6 @@ public class BusAuthenticationService extends RestTemplate {
 
     private final FederarWSConfig configuration;
 
-    @Value("${ws.federar.url.login}")
-    private String relativeUrl;
-
     public BusAuthenticationService(FederarWSConfig configuration){
         this.configuration=configuration;
     }
@@ -34,7 +31,7 @@ public class BusAuthenticationService extends RestTemplate {
     public ResponseEntity<FederarLoginResponse> callLogin() throws RestClientException {
         ResponseEntity<FederarLoginResponse> result;
         try {
-            result = exchangePost(relativeUrl,
+            result = exchangePost(configuration.getAuthenticationPath(),
                     new FederarLoginPayload(configuration.getGrantType(), configuration.getScope(),
                             configuration.getClientAssertionType(), generateClientAssertion()));
         } catch (RestClientException e) {

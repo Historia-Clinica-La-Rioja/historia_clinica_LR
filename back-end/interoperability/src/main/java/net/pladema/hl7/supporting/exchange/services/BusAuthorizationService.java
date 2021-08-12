@@ -9,7 +9,6 @@ import lombok.ToString;
 import net.pladema.federar.configuration.FederarWSConfig;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,9 +23,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Service
 @Conditional(InteroperabilityCondition.class)
 public class BusAuthorizationService extends RestTemplate {
-
-    @Value("${ws.federar.url.validateToken:/bus-auth/tokeninfo}")
-    private String relativeUrl;
 
     private final FederarWSConfig configuration;
 
@@ -55,7 +51,7 @@ public class BusAuthorizationService extends RestTemplate {
     public ResponseEntity<FederarLoginResponse> validate(String accessToken) throws RestClientException {
         ResponseEntity<FederarLoginResponse> result;
         try {
-            result = exchangePost(relativeUrl, new AuthorizationPayload(accessToken));
+            result = exchangePost(configuration.getAuthorizationPath(), new AuthorizationPayload(accessToken));
         } catch (RestClientException e) {
             throw new AuthenticationException("Invalid access token: " + e.getMessage() ) ;
         }

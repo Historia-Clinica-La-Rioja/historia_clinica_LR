@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -24,28 +23,28 @@ public class FederarWSConfig extends WSConfig {
 	private static final String NAME = "name";
 	private static final String ROLE = "role";
 	private static final String IDENT = "ident";
-	private static final String GRANT_TYPE="grantType";
-	private static final String SCOPE="scope";
-	private static final String CLIENT_ASSERTION_TYPE="clientAssertionType";
+	private static final String GRANT_TYPE="client_credentials";
+	private static final String SCOPE="Patient/*.read,Patient/*.write";
+	private static final String CLIENT_ASSERTION_TYPE="urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
 	private static final String SIGN_KEY = "signKey";
 	
 	//URL
 	private static final String TOKEN_VALID="validateToken";
-	private static final String SEARCH_LOCAL_ID ="localIdSearch";
+	private static final String PATIENT_SERVICE ="/masterfile-federacion-service/fhir/Patient";
 
 	private static final long DEFAULT_TOKEN_EXPIRATION = 180L;
-	private static final String FEDERATE ="federate";
-	
-    private Map<String, String> url;
+
     private Map<String, String> claims;
     private Map<String, String> auth;
     
 	private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
+	private static final String AUTHENTICATION = "/bus-auth/auth";
+	private static final String AUTHORIZATION = "/bus-auth/tokeninfo";
+
 	
 	public FederarWSConfig(@Value("${ws.federar.url.base}") String baseUrl) {
 		super(baseUrl);
-		url = new HashMap<>();
 	}
 	
 	public String getIss() {
@@ -77,7 +76,7 @@ public class FederarWSConfig extends WSConfig {
 	}
 	
 	public String getGrantType() {
-		return auth.get(GRANT_TYPE);
+		return GRANT_TYPE;
 	}
 	
 	public String getSignKey() {
@@ -85,22 +84,22 @@ public class FederarWSConfig extends WSConfig {
 	}
 	
 	public String getScope() {
-		return auth.get(SCOPE);
+		return SCOPE;
 	}
 
 	public String getClientAssertionType() {
-		return auth.get(CLIENT_ASSERTION_TYPE);
+		return CLIENT_ASSERTION_TYPE;
+	}
+
+	public String getAuthenticationPath(){
+		return AUTHENTICATION;
 	}
 	
-	public String getTokenValidationURL() {
-		return url.get(TOKEN_VALID);
+	public String getAuthorizationPath() {
+		return AUTHORIZATION;
 	}
 	
-	public String getLocalSearchIdUrl() {
-		return url.get(SEARCH_LOCAL_ID);
-	}
-	
-	public String getFederateUrl() {
-		return url.get(FEDERATE);
+	public String getPatientService() {
+		return PATIENT_SERVICE;
 	}
 }
