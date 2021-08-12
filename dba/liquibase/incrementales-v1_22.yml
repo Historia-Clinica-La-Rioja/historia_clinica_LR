@@ -635,4 +635,14 @@ databaseChangeLog:
                         UPDATE applicable_procedure SET pt = 'tratamiento de osteomielitis' WHERE sctid = '399171000221107';
                         UPDATE applicable_procedure SET pt = 'condilografia (laminografía)' WHERE sctid = '398901000221107';
 
-
+    - changeSet:
+         id: odontology_consultation-addPatientMedicalCoverageIdColumn
+         comment: Create column patient_medical_coverage_id in odontology_consultation
+         author: tmedina
+         changes:
+            - addColumn:
+                  columns:
+                  - column:
+                        name: patient_medical_coverage_id
+                        type: int
+                  tableName: odontology_consultation

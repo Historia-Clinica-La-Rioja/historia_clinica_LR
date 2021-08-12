@@ -16,6 +16,7 @@ import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
+import ar.lamansys.odontology.domain.consultation.AppointmentStorage;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +50,17 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final GetToothSurfacesService getToothSurfacesService;
 
+    private final AppointmentStorage appointmentStorage;
+
     public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage,
-                                            ProcedureStorage proceduresStorage,
-                                            OdontologyConsultationStorage odontologyConsultationStorage,
-                                            DateTimeProvider dateTimeProvider,
-                                            OdontologyDoctorStorage odontologyDoctorStorage,
-                                            OdontologyDocumentStorage odontologyDocumentStorage,
-                                            DrawOdontogramService drawOdontogramService,
-                                            GetToothSurfacesService getToothSurfacesService) {
+                                         ProcedureStorage proceduresStorage,
+                                         OdontologyConsultationStorage odontologyConsultationStorage,
+                                         DateTimeProvider dateTimeProvider,
+                                         OdontologyDoctorStorage odontologyDoctorStorage,
+                                         OdontologyDocumentStorage odontologyDocumentStorage,
+                                         DrawOdontogramService drawOdontogramService,
+                                         GetToothSurfacesService getToothSurfacesService,
+                                         AppointmentStorage appointmentStorage) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
@@ -65,6 +69,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         this.odontologyDocumentStorage = odontologyDocumentStorage;
         this.drawOdontogramService = drawOdontogramService;
         this.getToothSurfacesService = getToothSurfacesService;
+        this.appointmentStorage = appointmentStorage;
     }
 
     @Override
@@ -84,15 +89,18 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
         drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
+        Integer medicalCoverageId = appointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
         LocalDate now = dateTimeProvider.nowDate();
         Integer encounterId = odontologyConsultationStorage.save(
                 new ConsultationInfoBo(null,
                         consultationBo,
+                        medicalCoverageId,
                         doctorInfoBo.getId(),
                         now,
                         true));
 
         odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId()));
+        appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
 
         LOG.debug("No output");
     }

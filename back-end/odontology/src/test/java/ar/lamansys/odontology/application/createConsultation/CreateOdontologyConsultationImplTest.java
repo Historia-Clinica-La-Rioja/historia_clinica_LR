@@ -15,6 +15,7 @@ import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.domain.consultation.AppointmentStorage;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,6 +59,9 @@ class CreateOdontologyConsultationImplTest {
     @Mock
     private GetToothSurfacesService getToothSurfacesService;
 
+    @Mock
+    private AppointmentStorage appointmentStorage;
+
     @BeforeEach
     void setUp() {
         this.createOdontologyConsultation = new CreateOdontologyConsultationImpl(diagnosticStorage,
@@ -67,7 +71,8 @@ class CreateOdontologyConsultationImplTest {
                 odontologyDoctorStorage,
                 odontologyDocumentStorage,
                 drawOdontogramService,
-                getToothSurfacesService);
+                getToothSurfacesService,
+                appointmentStorage);
     }
 
     @Test
