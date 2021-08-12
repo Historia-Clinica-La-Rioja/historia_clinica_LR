@@ -104,6 +104,11 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | -------- | ------ | -------- | ------ | -------------- | ---- |
+| ws.bus.url.base   | | - | **Obligatorio** | URL productiva del BUS de interoperabilidad utilizada al solicitar historia clínica de pacientes federados en otros dominios.| v1.21.0  |
+
+
+| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
+| -------- | ------ | -------- | ------ | -------------- | ---- |
 | ws.renaper.enabled   | | - | **Único** | Determina si se utiliza la integracion con Renaper (se necesita completar la configuracion) | v0.2.0  |
 | ws.renaper.url.base |   |  https://federador.msal.gob.ar/masterfile-federacion-service/api | **Obligatorio** | URL base donde se van a consumir los servicios Renaper  | v0.2.0  |
 | ws.renaper.url.cobertura |   | /personas/cobertura | Único | URL relativa para consumir el servicio de Cobertura Medica | v0.2.0 |
