@@ -601,6 +601,15 @@ export interface DosageInfoDto extends Serializable {
     startDate: DateDto;
 }
 
+export interface DrawingsDto extends Serializable {
+    central?: string;
+    external?: string;
+    internal?: string;
+    left?: string;
+    right?: string;
+    whole?: string;
+}
+
 export interface ECAdministrativeDto extends Serializable {
     administrative: NewEmergencyCareDto;
     triage: TriageAdministrativeDto;
@@ -1676,6 +1685,11 @@ export interface TimeDto {
 export interface TimeRangeDto {
     from: string;
     to: string;
+}
+
+export interface ToothDrawingsDto extends Serializable {
+    drawings: DrawingsDto;
+    toothSctid: string;
 }
 
 export interface ToothDto {

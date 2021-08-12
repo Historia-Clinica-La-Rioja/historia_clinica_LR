@@ -8,4 +8,6 @@ public interface OdontogramDrawingStorage {
 
     void save(Integer patientId, List<ToothDrawingsBo> teethDrawings);
 
+    List<ToothDrawingsBo> getDrawings(Integer patientId);
+
 }

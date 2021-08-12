@@ -18,6 +18,10 @@ public class DrawingBo {
 
     private boolean diagnostic;
 
+    public DrawingBo(String sctid) {
+        this.snomed = new OdontologySnomedBo(sctid, null);
+    }
+
     public String getSctid() {
         return this.snomed != null ? this.snomed.getSctid() : null;
     }

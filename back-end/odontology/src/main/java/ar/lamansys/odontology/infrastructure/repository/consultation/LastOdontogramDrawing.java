@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "last_odontogram_drawing")
 @NoArgsConstructor
+@Getter
 public class LastOdontogramDrawing {
 
     @EmbeddedId
@@ -42,6 +44,10 @@ public class LastOdontogramDrawing {
         this.centralSurface = (toothDrawings.getCentralSurfaceDrawing() != null) ? toothDrawings.getCentralSurfaceDrawing().getSctid() : null;
         this.leftSurface = (toothDrawings.getLeftSurfaceDrawing() != null) ? toothDrawings.getLeftSurfaceDrawing().getSctid() : null;
         this.rightSurface = (toothDrawings.getRightSurfaceDrawing() != null) ? toothDrawings.getRightSurfaceDrawing().getSctid() : null;
+    }
+
+    public String getToothId() {
+        return this.pk.getToothId();
     }
 
 }

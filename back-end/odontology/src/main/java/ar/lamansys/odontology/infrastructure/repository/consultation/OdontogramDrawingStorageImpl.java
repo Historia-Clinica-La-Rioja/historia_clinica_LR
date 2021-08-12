@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OdontogramDrawingStorageImpl implements OdontogramDrawingStorage {
@@ -26,5 +27,17 @@ public class OdontogramDrawingStorageImpl implements OdontogramDrawingStorage {
                 toothDrawings -> lastOdontogramDrawingRepository.save(new LastOdontogramDrawing(patientId, toothDrawings))
         );
         LOG.debug("No output");
+    }
+
+    @Override
+    public List<ToothDrawingsBo> getDrawings(Integer patientId) {
+        LOG.debug("Input parameter -> patientId {}", patientId);
+        List<ToothDrawingsBo> result = lastOdontogramDrawingRepository.getByPatientId(patientId)
+                .stream()
+                .map(ToothDrawingsBo::new)
+                .collect(Collectors.toList());
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
     }
 }
