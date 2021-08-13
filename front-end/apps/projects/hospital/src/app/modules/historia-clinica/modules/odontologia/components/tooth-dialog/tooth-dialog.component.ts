@@ -71,8 +71,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 		this.odontogramRestService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
 		const actions = this.data.currentActions?.filter(a => !a.surfaceId);
-		const currentProcedures = actions?.filter(a => a.type === ActionType.PROCEDURE);
-		const currentFinding = actions?.find(a => a.type === ActionType.DIAGNOSTIC);
+		const currentProcedures = actions?.filter(a => a.action.type === ActionType.PROCEDURE);
+		const currentFinding = actions?.find(a => a.action.type === ActionType.DIAGNOSTIC);
 
 		const filterFunction = this.getFilterFuction(false);
 
@@ -80,7 +80,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			diagnostics => {
 				this.diagnostics = diagnostics;
 				this.setAppropiateFindings(filterFunction);
-				this.form.controls.findingId.patchValue(currentFinding?.actionSctid);
+				this.form.controls.findingId.patchValue(currentFinding?.action.sctid);
 			}
 		);
 		this.conceptsService.getProcedures().subscribe(
@@ -88,9 +88,9 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				this.procedures = procedures;
 				this.setAppropiateProcedures(filterFunction);
 				this.form.controls.procedures.patchValue({
-					firstProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
-					secondProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
-					thirdProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.THIRD)?.actionSctid,
+					firstProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid,
+					secondProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.SECOND)?.action.sctid,
+					thirdProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.THIRD)?.action.sctid,
 				})
 			}
 		);

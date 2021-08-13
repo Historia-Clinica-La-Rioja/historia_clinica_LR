@@ -124,19 +124,19 @@ export class ToothComponent implements AfterViewInit {
 
 			const actions = this.actionsService.getActions();
 			return {
-				findingId: actions.find(a => a.type === ActionType.DIAGNOSTIC)?.actionSctid,
+				findingId: actions.find(a => a.action.type === ActionType.DIAGNOSTIC)?.action.sctid,
 				procedures: {
-					firstProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
-					secondProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
-					thirdProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.THIRD)?.actionSctid
+					firstProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid,
+					secondProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.SECOND)?.action.sctid,
+					thirdProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.THIRD)?.action.sctid
 				}
 			}
 		}
 
 
 		const actions: ToothAction[] = this.actionsService.getActions(selectedSurfacesIds);
-		const findingsSctids: string[] = actions.filter(a => a.type === ActionType.DIAGNOSTIC).map(a => a.actionSctid);
-		const proceduresSctids: string[] = actions.filter(a => a.type === ActionType.PROCEDURE).map(a => a.actionSctid);
+		const findingsSctids: string[] = actions.filter(a => a.action.type === ActionType.DIAGNOSTIC).map(a => a.action.sctid);
+		const proceduresSctids: string[] = actions.filter(a => a.action.type === ActionType.PROCEDURE).map(a => a.action.sctid);
 
 		const count = (array: string[]) =>
 			array.reduce((a, b) => ({
