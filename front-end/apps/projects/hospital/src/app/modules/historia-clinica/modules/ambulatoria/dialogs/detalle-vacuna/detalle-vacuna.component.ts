@@ -8,7 +8,7 @@ import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.ut
 	templateUrl: './detalle-vacuna.component.html',
 	styleUrls: ['./detalle-vacuna.component.scss']
 })
-export class DetalleVacunaComponent implements OnInit {
+export class DetalleVacunaComponent {
 
 	private readonly name: string;
 
@@ -16,7 +16,6 @@ export class DetalleVacunaComponent implements OnInit {
 		public dialogRef: MatDialogRef<HCEImmunizationDto>,
 		@Inject(MAT_DIALOG_DATA) public data: {
 			title: string,
-			tradename: string,
 			dose: string,
 			date: string,
 			lot: number,
@@ -26,9 +25,6 @@ export class DetalleVacunaComponent implements OnInit {
 			scheme: string,
 			observations: string,
 		}) { }
-
-	ngOnInit(): void {
-	}
 
 	toFormatDate = (date: string) => {
 		return momentFormat(momentParseDate(date), DateFormat.VIEW_DATE);

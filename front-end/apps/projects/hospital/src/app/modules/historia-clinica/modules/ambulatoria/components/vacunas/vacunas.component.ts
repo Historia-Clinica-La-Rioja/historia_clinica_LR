@@ -31,8 +31,7 @@ export class VacunasComponent implements OnInit {
 
 	private patientId: number;
 	public readonly vacunasSummary = VACUNAS;
-	public tableModel: TableModel<HCEImmunizationDto>;
-	public vacunas: HCEImmunizationDto[];
+	public vaccines: HCEImmunizationDto[];
 
 	@Input() hasConfirmedAppointment: boolean;
 	dialogRef: any;
@@ -59,9 +58,7 @@ export class VacunasComponent implements OnInit {
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
-					this.tableModel = this.buildTable(dataTable);
-					this.vacunas = dataTable;
-
+					this.vaccines = dataTable;
 				});
 			});
 	}
@@ -78,7 +75,7 @@ export class VacunasComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
-					this.tableModel = this.buildTable(dataTable);
+					this.vaccines = dataTable;
 				});
 				this.appointmentsService.hasNewConsultationEnabled(this.patientId).subscribe(response => {
 					this.hasConfirmedAppointment = response;
@@ -117,7 +114,7 @@ export class VacunasComponent implements OnInit {
 			if (submitted) {
 				this.hceImmunizationService.updateImmunization(this.buildApplyImmunization(submitted), this.patientId).subscribe(_ => {
 					this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
-						this.tableModel = this.buildTable(dataTable);
+						this.vaccines = dataTable;
 					});
 					this.snackBarService.showSuccess('internaciones.internacion-paciente.vacunas-summary.save.SUCCESS');
 
@@ -137,44 +134,20 @@ export class VacunasComponent implements OnInit {
 		};
 	}
 
-	private buildTable(data: HCEImmunizationDto[]): TableModel<HCEImmunizationDto> {
-		return {
-			columns: [
-				{
-					columnDef: 'vacuna',
-					header: 'Vacuna',
-					text: (row) => row.snomed.pt
-				},
-
-				{
-					columnDef: 'fecha',
-					header: ' Fecha de vacunación',
-					text: (row) => row.administrationDate ? momentFormat(momentParseDate(row.administrationDate), DateFormat.VIEW_DATE) : undefined
-				},
-				{
-					columnDef: 'estado',
-					text: (row) => row.dose?.description
-				}
-			],
-			data,
-
-		};
-	}
-
 	goToDetailsVaccine(vaccine: HCEImmunizationDto) {
 		const dialogRef = this.dialog.open(DetalleVacunaComponent, {
 			disableClose: false,
 			width: '30%',
 			data: {
-				title:  vaccine.snomed.pt,
-				dose:vaccine.dose.description,
+				title: vaccine.snomed.pt,
+				dose: vaccine.dose?.description,
 				date: vaccine.administrationDate,
-				lot:vaccine.lotNumber,
-				institution:vaccine.institution.name,
-				professional:vaccine.doctor.firstName,
-				terms:vaccine.condition.description,
-				scheme:vaccine.scheme,
-				observations:vaccine.note,
+				lot: vaccine.lotNumber,
+				institution: vaccine.institution?.name,
+				professional: vaccine.doctor?.firstName,
+				terms: vaccine.condition?.description,
+				scheme: vaccine.scheme?.description,
+				observations: vaccine.note,
 			}
 		});
 	}

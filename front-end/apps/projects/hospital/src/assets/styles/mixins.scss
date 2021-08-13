@@ -54,3 +54,7 @@
 	font-weight: normal;
 	line-height: 14px;
 }
+
+@mixin general-font{
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}

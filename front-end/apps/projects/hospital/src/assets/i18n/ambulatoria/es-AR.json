@@ -339,7 +339,8 @@
 					"professional": "Profesional",
 					"condition_motive":"Condición o motivo",
 					"scheme":"Esquema",
-					"tradename":"Nombre comercial"
+					"tradename":"Nombre comercial",
+					"not-info":"Sin Información"
 				}
 			},
 			"vacunas2": {
