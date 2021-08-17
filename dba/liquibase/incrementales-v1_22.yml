@@ -646,3 +646,19 @@ databaseChangeLog:
                         name: patient_medical_coverage_id
                         type: int
                   tableName: odontology_consultation
+
+
+    - changeSet:
+        id: immunization-add-DoctorInfo_InstitutionInfo
+        comment: Add columns DoctorInfo,InstitutionInfo in immunization table
+        author: etrapani
+        changes:
+            - addColumn:
+                  columns:
+                      - column:
+                            name: doctor_info
+                            type: varchar(255)
+                      - column:
+                            name: institution_info
+                            type: varchar(255)
+                  tableName: inmunization

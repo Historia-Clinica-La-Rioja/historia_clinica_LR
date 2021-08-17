@@ -65,6 +65,8 @@ public class ImmunizeController {
     private ImmunizationInfoBo mapImmunization(ImmunizationDto immunizationDto, Integer institutionId) {
         return new ImmunizationInfoBo(null,
                     immunizationDto.isBillable() ? institutionId : immunizationDto.getInstitutionId(),
+                    immunizationDto.getInstitutionInfo(),
+                    immunizationDto.getDoctorInfo(),
                     mapSnomed(immunizationDto.getSnomed()),
                     immunizationDto.getConditionId(),
                     immunizationDto.getSchemeId(),

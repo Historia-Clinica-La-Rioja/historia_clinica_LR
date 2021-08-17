@@ -254,6 +254,8 @@
                     <dd><strong th:if="${immunization.scheme != null}">Esquema: </strong><label th:if="${immunization.scheme != null}" th:text="${immunization.scheme.description}"></label></dd>
                     <dd><strong th:if="${immunization.dose != null}">Dosis: </strong><label th:if="${immunization.dose != null}" th:text="${immunization.dose.description}"></label></dd>
                     <dd><strong th:if="${immunization.lotNumber != null}">Número de lote: </strong><label th:if="${immunization.lotNumber != null}" th:text="${immunization.lotNumber}"></label></dd>
+                    <dd><strong th:if="${immunization.doctorInfo != null}">Doctor: </strong><label th:if="${immunization.doctorInfo != null}" th:text="${immunization.doctorInfo}"></label></dd>
+                    <dd><strong th:if="${immunization.institutionInfo != null}">Institución: </strong><label th:if="${immunization.institutionInfo != null}" th:text="${immunization.institutionInfo}"></label></dd>
                     <dd><strong th:if="${immunization.note != null}">Observaciones: </strong><label th:if="${immunization.note != null}" th:text="${immunization.note}"></label></dd>
                 </dl>
             </dl>

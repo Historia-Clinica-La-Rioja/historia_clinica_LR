@@ -22,9 +22,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedica
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import io.swagger.annotations.Api;
@@ -163,10 +165,24 @@ public class HCEGeneralStateController {
         result.setScheme(hceImmunizationBo.getSchemeId() != null ? sharedImmunizationPort.fetchVaccineSchemeInfo(hceImmunizationBo.getSchemeId()) : null);
         result.setDose(mapVaccineDose(hceImmunizationBo.getDose()));
         result.setNote(hceImmunizationBo.getNote());
-        result.setInstitution(hceImmunizationBo.getInstitutionId() != null ? sharedInstitutionPort.fetchInstitutionById(hceImmunizationBo.getInstitutionId()) : null);
+        result.setInstitution(mapInstitutionInfo(hceImmunizationBo));
         result.setLotNumber(hceImmunizationBo.getLotNumber());
-        result.setDoctor(sharedStaffPort.getProfessionalCompleteInfo(hceImmunizationBo.getCreatedByUserId()));
+        result.setDoctor(mapProfessionalInfoDto(hceImmunizationBo));
         return  result;
+    }
+
+    private ProfessionalInfoDto mapProfessionalInfoDto(HCEImmunizationBo hceImmunizationBo) {
+        if (hceImmunizationBo.isBillable())
+            return sharedStaffPort.getProfessionalCompleteInfo(hceImmunizationBo.getCreatedByUserId());
+        return new ProfessionalInfoDto(null, null, hceImmunizationBo.getDoctorInfo(), null, null, null, null);
+    }
+
+    private InstitutionInfoDto mapInstitutionInfo(HCEImmunizationBo hceImmunizationBo) {
+        if (hceImmunizationBo.getInstitutionId() == null && hceImmunizationBo.getInstitutionInfo() == null)
+            return null;
+        return hceImmunizationBo.getInstitutionId() != null ?
+                sharedInstitutionPort.fetchInstitutionById(hceImmunizationBo.getInstitutionId()) :
+                new InstitutionInfoDto(null, hceImmunizationBo.getInstitutionInfo());
     }
 
     private VaccineDoseInfoDto mapVaccineDose(ImmunizationDoseBo dose) {

@@ -20,6 +20,10 @@ public class ImmunizationBo extends ClinicalTerm {
 
     private Integer institutionId;
 
+    private String institutionInfo;
+
+    private String doctorInfo;
+
     private ImmunizationDoseBo dose;
 
     private Short conditionId;

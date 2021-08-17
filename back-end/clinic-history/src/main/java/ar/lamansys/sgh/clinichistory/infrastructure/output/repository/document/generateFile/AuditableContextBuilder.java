@@ -96,6 +96,8 @@ public class AuditableContextBuilder {
 		result.setLotNumber(immunizationBo.getLotNumber());
 		result.setSnomed(new SnomedDto(immunizationBo.getSnomed().getSctid(), immunizationBo.getSnomed().getPt()));
 		result.setAdministrationDate(localDateMapper.fromLocalDateToString(immunizationBo.getAdministrationDate()));
+		result.setInstitutionInfo(immunizationBo.getInstitutionInfo());
+		result.setDoctorInfo(immunizationBo.getDoctorInfo());
 		result.setNote(immunizationBo.getNote());
 		result.setCondition(immunizationBo.getConditionId() != null ?
 				sharedImmunizationPort.fetchVaccineConditionInfo(immunizationBo.getConditionId()) : null);

@@ -34,7 +34,8 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
         LOG.debug("Input parameters patientId {}", patientId);
         String sqlString = "WITH t AS (" +
                 "   SELECT inm.id, inm.snomed_id, inm.status_id, inm.administration_date, inm.expiration_date,  " +
-                "   inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.institution_id, inm.lot_number, inm.note_id, inm.updated_on, inm.created_by, " +
+                "   inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.institution_id, inm.lot_number, " +
+                "   inm.note_id, inm.institution_info, inm.doctor_info, inm.updated_on, inm.created_by, inm.billable, " +
                 "   row_number() over (partition by inm.snomed_id, inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.administration_date order by inm.updated_on desc) as rw  " +
                 "   FROM document d " +
                 "   JOIN document_inmunization di on d.id = di.document_id " +
@@ -45,7 +46,8 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                 "   " +
                 ") " +
                 "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, administration_date, expiration_date, " +
-                "t.institution_id, t.condition_id, t.scheme_id, t.dose, t.dose_order,  t.lot_number, n.description, t.created_by " +
+                "t.institution_id, t.condition_id, t.scheme_id, t.dose, t.dose_order,  t.lot_number, n.description, t.created_by," +
+                "t.institution_info, t.doctor_info, t.billable " +
                 "FROM t " +
                 "JOIN snomed s ON snomed_id = s.id " +
                 "LEFT JOIN note n ON (n.id = t.note_id)" +
@@ -78,7 +80,10 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                                 (Short) h[10],
                                 (String) h[11],
                                 (String) h[12],
-                                (Integer) h[13]
+                                (Integer) h[13],
+                                (String) h[14],
+                                (String) h[15],
+                                (Boolean) h[16]
                         )
                 )
         );

@@ -17,6 +17,10 @@ public class ImmunizationInfoBo {
     @ToString.Include
     private final Integer institutionId;
 
+    private final String institutionInfo;
+
+    private final String doctorInfo;
+
     @ToString.Include
     private final SnomedBo vaccine;
 
@@ -29,6 +33,7 @@ public class ImmunizationInfoBo {
     @ToString.Include
     private final Short schemeId;
 
+    @ToString.Include
     private final LocalDate administrationDate;
 
     private final String lotNumber;
@@ -39,6 +44,8 @@ public class ImmunizationInfoBo {
 
     public ImmunizationInfoBo(Integer id,
                               Integer institutionId,
+                              String institutionInfo,
+                              String doctorInfo,
                               SnomedBo vaccine,
                               Short conditionId,
                               Short schemeId,
@@ -49,6 +56,8 @@ public class ImmunizationInfoBo {
                               boolean billable) {
         this.id = id;
         this.institutionId = institutionId;
+        this.institutionInfo = institutionInfo;
+        this.doctorInfo = doctorInfo;
         this.vaccine = vaccine;
         this.dose = dose;
         this.conditionId = conditionId;

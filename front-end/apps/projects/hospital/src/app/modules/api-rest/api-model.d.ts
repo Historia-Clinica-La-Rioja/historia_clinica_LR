@@ -925,8 +925,10 @@ export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
     billable?: boolean;
     conditionId?: number;
+    doctorInfo?: string;
     dose?: VaccineDoseInfoDto;
     institutionId?: number;
+    institutionInfo?: string;
     lotNumber?: string;
     note: string;
     schemeId?: number;

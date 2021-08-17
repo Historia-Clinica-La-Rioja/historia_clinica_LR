@@ -384,7 +384,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo validBillableImmunization() {
-        return new ImmunizationInfoBo(null, 20,
+        return new ImmunizationInfoBo(null, 20, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 (short) 3,
                 (short) 1,
@@ -396,7 +396,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo billableImmunizationWithoutInstitution() {
-        return new ImmunizationInfoBo(null, null,
+        return new ImmunizationInfoBo(null, null, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 (short) 3,
                 (short) 1,
@@ -409,7 +409,7 @@ class ImmunizePatientTest {
 
 
     private ImmunizationInfoBo billableImmunizationWithoutAdministrationDate() {
-        return new ImmunizationInfoBo(null, 20,
+        return new ImmunizationInfoBo(null, 20, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 (short) 3,
                 (short) 1,
@@ -421,7 +421,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutCondition() {
-        return new ImmunizationInfoBo(null, 20,
+        return new ImmunizationInfoBo(null, 20, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 null,
                 (short) 1,
@@ -433,7 +433,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutScheme() {
-        return new ImmunizationInfoBo(null, 20,
+        return new ImmunizationInfoBo(null, 20, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 (short)3,
                 null,
@@ -445,7 +445,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutDoses() {
-        return new ImmunizationInfoBo(null, 20,
+        return new ImmunizationInfoBo(null, 20, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 (short)3,
                 (short) 1,
@@ -457,7 +457,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutDoseDescription() {
-        return new ImmunizationInfoBo(null, 20,
+        return new ImmunizationInfoBo(null, 20, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 (short)3,
                 (short) 1,
@@ -469,7 +469,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutDoseOrder() {
-        return new ImmunizationInfoBo(null, 20,
+        return new ImmunizationInfoBo(null, 20, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 (short) 3,
                 (short) 1,
@@ -481,7 +481,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo noBillableImmunizationValid() {
-        return new ImmunizationInfoBo(null, null,
+        return new ImmunizationInfoBo(null, null, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID_1","PT_ANTIGRIPAL", "PARENT_ID", "ANTIGRIPAL_PARENT"),
                 null,
                 null,
@@ -493,7 +493,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutVaccine() {
-        return new ImmunizationInfoBo(null, null,
+        return new ImmunizationInfoBo(null, null,  "INSTITUTION_INFO", "DOCTOR_INFO",
                 null,
                 null,
                 null,
@@ -505,7 +505,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutVaccineSctid() {
-        return new ImmunizationInfoBo(null, null,
+        return new ImmunizationInfoBo(null, null,  "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, null, "FSN_TERM", null, "PARENT_FSN"),
                 null,
                 null,
@@ -517,7 +517,7 @@ class ImmunizePatientTest {
     }
 
     private ImmunizationInfoBo immunizationWithoutVaccinePreferredTerm() {
-        return new ImmunizationInfoBo(null, null,
+        return new ImmunizationInfoBo(null, null, "INSTITUTION_INFO", "DOCTOR_INFO",
                 new SnomedBo(null, "SCTID", null, null, "PARENT_FSN"),
                 null,
                 null,

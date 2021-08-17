@@ -25,6 +25,12 @@ public class ImmunizationDto extends ClinicalTermDto {
     @Nullable
     private Integer institutionId;
 
+    @Nullable
+    private String institutionInfo;
+
+    @Nullable
+    private String doctorInfo;
+
     @Valid
     @Nullable
     private VaccineDoseInfoDto dose;
