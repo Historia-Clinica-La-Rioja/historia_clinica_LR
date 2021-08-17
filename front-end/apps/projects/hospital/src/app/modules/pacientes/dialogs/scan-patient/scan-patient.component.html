@@ -1,4 +1,4 @@
-<div mat-dialog-content fxLayout="column">
+<div class="mat-dialog">
 	<h1 mat-dialog-title fxLayout="row" [translate]="'pacientes.search_patient.scan.TITLE'"></h1>
 	<ol class="numeration-list" fxLayout="column">
 		<li>
@@ -19,7 +19,7 @@
 			<input matInput name="information" formControlName="informationPatient" (change)="captureInformation($event)">
 		</mat-form-field>
 	</form>
-	<button class="close" type="button" mat-icon-button matSuffix (click)="closeDialog()">
+	<button class="close" type="button" mat-icon-button matSuffix (click)="closeDialog()" fxLayout="column">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>

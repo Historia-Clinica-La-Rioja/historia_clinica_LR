@@ -30,7 +30,7 @@ export class SearchCreateComponent implements OnInit {
 	public identityVerificationStatusArray;
 	public identifyTypeArray;
 	public hasError = hasError;
-	public patientInformationError = 0;
+	public patientInformationError = -1;
 	private readonly routePrefix;
 
 	constructor(
@@ -115,7 +115,12 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.IdentityVerificationStatus.setValidators(Validators.required);
 			updateForm(this.formSearch);
 		} else {
-			this.disableButtonScan = false;
+			if (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.NO_POSEE){
+				this.disableButtonScan = true;
+			}
+			else {
+				this.disableButtonScan = false;
+			}
 			this.formSearch.controls.identifType.setValidators(Validators.required);
 			this.formSearch.controls.gender.setValidators(Validators.required);
 			this.formSearch.controls.IdentityVerificationStatus.clearValidators();
@@ -134,36 +139,42 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.identifNumber.clearValidators();
 			updateForm(this.formSearch);
 		} else {
-			this.disableButtonScan = false;
+			if (this.noIdentity){
+				this.disableButtonScan = true;
+			}
+			else {
+				this.disableButtonScan = false;
+			}
 			this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]);
 			updateForm(this.formSearch);
 		}
 	}
 
 	public openScanPatientDialog(): void {
-		this.patientInformationError = 0;
+		this.patientInformationError = -1;
 		const dialogRef = this.dialog.open(ScanPatientComponent, {
 			width: "32%",
+			height: "650px",
 			data: {
 				genderOptions: this.genderOptions,
 				identifyTypeArray: this.identifyTypeArray,
 			}
 		});
 		dialogRef.afterClosed().subscribe((patientInformationScan) => {
-			if (patientInformationScan !== INVALID_INPUT){
+			if((patientInformationScan !== undefined) && (patientInformationScan !== INVALID_INPUT)){
 				this.formSearch.controls.identifType.setValue(patientInformationScan.identifType);
 				this.formSearch.controls.identifNumber?.setValue(patientInformationScan.identifNumber);
 				this.formSearch.controls.gender?.setValue(patientInformationScan.gender);
 				if (this.formSearch.valid){
-					this.patientInformationError = 1;
+					this.patientInformationError = 0;
 					this.search();
 				}
 				else{
-					this.patientInformationError = 2;
+					this.patientInformationError = 1;
 				}
 			}
 			else {
-				this.patientInformationError = 2;
+				(patientInformationScan === undefined) ? (this.patientInformationError = -1) : (this.patientInformationError = 1);
 			}
 		});
 	}

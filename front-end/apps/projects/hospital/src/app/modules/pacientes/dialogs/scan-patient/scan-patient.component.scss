@@ -2,32 +2,30 @@
     width: 261px;
 	margin-left: 20px;
 	margin-top: 5px;
-	height: 35px;
+	line-height: 30px;
 }
 
 .numeration-list{
 	list-style-type: decimal;
 	list-style-position: outside;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
-	font-weight: 400;
 	font-style: normal;
 	font-size: 16px;
-	line-height : 25px;
-	width: 360px;
-	height: 130px;
-	margin-bottom: 0px;
 
 	li{
 		color: #2687C5;
+		font-weight: bold;
+		padding-bottom: 20px;
 	}
 
 	li span{
 		color: black;
+		font-weight: 400;
 	}
 }
 
 .mat-form-field{
-	margin-bottom: 0px;
+	margin-top: 30px;
 	::ng-deep .mat-form-field-wrapper{
 		padding-bottom: 0;
 		margin: 0;
@@ -48,7 +46,7 @@
 	caret-color: #D2D2D1;
 }
 
-.mat-dialog-content{
+.mat-dialog{
 	position: relative;
 }
 
@@ -56,5 +54,5 @@
 	transform: scale(1.0);
 	position: absolute;
 	top: 0px;
-	right: 30px;
+	right: 0px;
 }

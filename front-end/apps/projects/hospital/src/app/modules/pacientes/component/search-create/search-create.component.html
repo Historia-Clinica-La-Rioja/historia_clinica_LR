@@ -92,8 +92,8 @@
 				</div>
 			</div>
 			<div id="messagesScan" fxLayout="column" fxLayoutGap="20px">
-				<span *ngIf="(patientInformationError == 1)" [translate]="'pacientes.home.find_add_section.scan.messages.SUCCESS'"></span>
-				<mat-error class = "errorScan" *ngIf="(patientInformationError == 2)">
+				<span *ngIf="(patientInformationError == 0)" [translate]="'pacientes.home.find_add_section.scan.messages.SUCCESS'"></span>
+				<mat-error class = "errorScan" *ngIf="(patientInformationError == 1)">
 					<span [translate]="'pacientes.home.find_add_section.scan.messages.ERROR'"></span>
 				</mat-error>
 			</div>

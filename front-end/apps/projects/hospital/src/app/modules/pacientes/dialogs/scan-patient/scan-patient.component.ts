@@ -18,7 +18,6 @@ export class ScanPatientComponent implements OnInit {
 
 	public formScanPatient: FormGroup;
 	patientInformationScan: PatientInformationScan;
-	focusOn = true;
 
 	constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef<ScanPatientComponent>, @Inject(MAT_DIALOG_DATA) public data: {genderOptions: any,
 		identifyTypeArray: any}){}
@@ -53,7 +52,7 @@ export class ScanPatientComponent implements OnInit {
 				valueFormArray = valueForm.target.value.split(DATA_SPLIT_ENGLISH);
 			}
 		}
-		if (valueFormArray.length >= 8 ) {
+		if ((valueFormArray !== undefined) &&(valueFormArray.length >= 8 )) {
 			let identifType = this.data.identifyTypeArray[0].id;
 			let identifNumber;
 			let gender;
