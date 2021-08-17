@@ -17,16 +17,24 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 })
 export class AgregarVacunaComponent implements OnInit {
 
+	// shared attributtes (used on both forms)
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
 	conditions: VaccineConditionsDto[];
-	billableForm: FormGroup;
-	previousForm: FormGroup;
-	snomedConcept: SnomedDto;
-	today: Moment = newMoment();
-	searching = false;
 	private readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+	today: Moment = newMoment();
+
+	// billable form attributes (new vaccine application)
+	billableForm: FormGroup;
+	newVaccineSnomedConcept: SnomedDto;
+	searchingNew = false;
 	conceptsResultsTable: TableModel<any>;
+
+	// previous form attributes (register previous vaccine application)
+	previousForm: FormGroup;
+	previousVaccineSnomedConcept: SnomedDto;
+	searchingPrevious = false;
+	conceptsResultsTablePreviousForm: TableModel<any>;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data:
@@ -51,7 +59,7 @@ export class AgregarVacunaComponent implements OnInit {
 			dose: [null, Validators.required],
 			lot: [null],
 			institution: [null],
-			proffesional: [null]
+			professional: [null]
 		});
 
 		this.billableForm = this.formBuilder.group({
@@ -69,15 +77,15 @@ export class AgregarVacunaComponent implements OnInit {
 
 				this.billableForm.controls.date.setValue(momentParseDate(this.data.immunization.administrationDate));
 
-				this.snomedConcept = this.data.immunization.snomed;
-				this.billableForm.controls.snomed.setValue(this.snomedConcept.pt);
+				this.newVaccineSnomedConcept = this.data.immunization.snomed;
+				this.billableForm.controls.snomed.setValue(this.newVaccineSnomedConcept.pt);
 
 				this.billableForm.controls.note.setValue(this.data.immunization.note);
 
 				if (this.data.immunization.lotNumber)
 					this.billableForm.controls.lot.setValue(this.data.immunization.lotNumber);
 
-				this.vaccineService.vaccineInformation(this.snomedConcept.sctid).subscribe(
+				this.vaccineService.vaccineInformation(this.newVaccineSnomedConcept.sctid).subscribe(
 					(vaccineInformation: VaccineInformationDto) => {
 						this.conditions = vaccineInformation.conditions;
 						this.billableForm.get("condition").enable();
@@ -108,39 +116,39 @@ export class AgregarVacunaComponent implements OnInit {
 
 	}
 
-	public chosenYearHandler(newDate: Moment): void {
-		if (this.billableForm.controls.date.value !== null) {
-			const ctrlDate: Moment = this.billableForm.controls.date.value;
+	public chosenYearHandler(newDate: Moment, form: FormGroup): void {
+		if (form.controls.date.value !== null) {
+			const ctrlDate: Moment = form.controls.date.value;
 			ctrlDate.year(newDate.year());
-			this.billableForm.controls.date.setValue(ctrlDate);
+			form.controls.date.setValue(ctrlDate);
 		} else {
-			this.billableForm.controls.date.setValue(newDate);
+			form.controls.date.setValue(newDate);
 		}
 	}
 
-	public chosenMonthHandler(newDate: Moment): void {
-		if (this.billableForm.controls.date.value !== null) {
-			const ctrlDate: Moment = this.billableForm.controls.date.value;
+	public chosenMonthHandler(newDate: Moment, form: FormGroup): void {
+		if (form.controls.date.value !== null) {
+			const ctrlDate: Moment = form.controls.date.value;
 			ctrlDate.month(newDate.month());
-			this.billableForm.controls.date.setValue(ctrlDate);
+			form.controls.date.setValue(ctrlDate);
 		} else {
-			this.billableForm.controls.date.setValue(newDate);
+			form.controls.date.setValue(newDate);
 		}
 	}
 
 	public submit(): void {
 		if (this.billableForm.valid) {
 			const appliedVaccine: ImmunizationDto = {
-				snomed: this.snomedConcept,
+				snomed: this.newVaccineSnomedConcept,
 				administrationDate: this.billableForm.value.date.format(DateFormat.API_DATE),
 				billable: true,
 				note: this.billableForm.value.note ? this.billableForm.value.note : "",
 			};
 
-			if (this.billableForm.value.lot)
+			if (this.billableForm.controls.lot.value != null)
 				appliedVaccine.lotNumber = this.billableForm.value.lot;
 
-			if (this.conditions && this.billableForm.value.condition) {
+			if (this.conditions && this.billableForm.controls.condition.value != null) {
 				appliedVaccine.conditionId = this.conditions[this.billableForm.value.condition].id;
 				appliedVaccine.schemeId = this.schemes[this.billableForm.value.scheme].id;
 				appliedVaccine.dose = this.doses[this.billableForm.value.dose];
@@ -150,24 +158,62 @@ export class AgregarVacunaComponent implements OnInit {
 		}
 	}
 
-	public onSearch(searchValue: string): void {
+	public submitPreviousForm(): void {
+		if (this.previousForm.valid) {
+			const appliedVaccine: ImmunizationDto = {
+				snomed: this.previousVaccineSnomedConcept,
+				administrationDate: this.previousForm.value.date.format(DateFormat.API_DATE),
+				note: "",
+			};
+
+			if (this.previousForm.controls.lot.value != null)
+				appliedVaccine.lotNumber = this.previousForm.value.lot;
+
+			if (this.conditions && this.previousForm.controls.condition.value != null) {
+				appliedVaccine.conditionId = this.conditions[this.previousForm.value.condition].id;
+				appliedVaccine.schemeId = this.schemes[this.previousForm.value.scheme].id;
+				appliedVaccine.dose = this.doses[this.previousForm.value.dose];
+			}
+
+			this.dialogRef.close(appliedVaccine);
+		}
+	}
+
+	public onSearchBillableForm(searchValue: string): void {
 		if (searchValue) {
-			this.searching = true;
+			this.searchingNew = true;
 			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
 					(results: SnomedResponseDto) => {
-						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
-						this.searching = false;
+						this.conceptsResultsTable = this.buildConceptsResultsTableBillableForm(results.items);
+						this.searchingNew = false;
 					},
 					_ => {
-						this.searching = false;
+						this.searchingNew = false;
 						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
 					}
 				);
 		}
 	}
 
-	private buildConceptsResultsTable(data: SnomedDto[]): TableModel<SnomedDto> {
+	public onSearchPreviousForm(searchValue: string): void {
+		if (searchValue) {
+			this.searchingPrevious = true;
+			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
+				.subscribe(
+					(results: SnomedResponseDto) => {
+						this.conceptsResultsTablePreviousForm = this.buildConceptsResultsTablePreviousForm(results.items);
+						this.searchingPrevious = false;
+					},
+					_ => {
+						this.searchingPrevious = false;
+						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+					}
+				);
+		}
+	}
+
+	private buildConceptsResultsTableBillableForm(data: SnomedDto[]): TableModel<SnomedDto> {
 		return {
 			columns: [
 				{
@@ -181,7 +227,7 @@ export class AgregarVacunaComponent implements OnInit {
 						displayType: ActionDisplays.BUTTON,
 						display: 'Seleccionar',
 						matColor: 'primary',
-						do: concept => this.setConcept(concept)
+						do: concept => this.setConceptBillableForm(concept)
 					}
 				}
 			],
@@ -190,71 +236,110 @@ export class AgregarVacunaComponent implements OnInit {
 		};
 	}
 
-	private setConcept(selectedConcept: SnomedDto): void {
-		this.snomedConcept = selectedConcept;
+	private buildConceptsResultsTablePreviousForm(data: SnomedDto[]): TableModel<SnomedDto> {
+		return {
+			columns: [
+				{
+					columnDef: '1',
+					header: 'Descripción SNOMED',
+					text: concept => concept.pt
+				},
+				{
+					columnDef: 'select',
+					action: {
+						displayType: ActionDisplays.BUTTON,
+						display: 'Seleccionar',
+						matColor: 'primary',
+						do: concept => this.setConceptPreviousForm(concept)
+					}
+				}
+			],
+			data,
+			enablePagination: true
+		};
+	}
+
+	private setConceptBillableForm(selectedConcept: SnomedDto): void {
+		this.newVaccineSnomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.billableForm.controls.snomed.setValue(pt);
 		const sctId = selectedConcept ? selectedConcept.sctid : '';
-		this.loadConditions(sctId);
+		this.loadConditions(sctId, this.billableForm);
 	}
 
-	public resetConcept(): void {
-		delete this.snomedConcept;
+	private setConceptPreviousForm(selectedConcept: SnomedDto): void {
+		this.previousVaccineSnomedConcept = selectedConcept;
+		const pt = selectedConcept ? selectedConcept.pt : '';
+		this.previousForm.controls.snomed.setValue(pt);
+		const sctId = selectedConcept ? selectedConcept.sctid : '';
+		this.loadConditions(sctId, this.previousForm);
+	}
+
+	public resetConceptBillableForm(): void {
+		delete this.newVaccineSnomedConcept;
 		delete this.conceptsResultsTable;
-		this.disableDoses();
-		this.disableSchemes();
-		this.disableConditions();
+		this.disableDoses(this.billableForm);
+		this.disableSchemes(this.billableForm);
+		this.disableConditions(this.billableForm);
 	}
 
-	private loadConditions(sctid: string): void {
+	public resetConceptPreviousForm(): void {
+		delete this.previousVaccineSnomedConcept;
+		delete this.conceptsResultsTablePreviousForm;
+		this.disableDoses(this.previousForm);
+		this.disableSchemes(this.previousForm);
+		this.disableConditions(this.previousForm);
+	}
+
+	private loadConditions(sctid: string, form: FormGroup): void {
 		this.vaccineService.vaccineInformation(sctid).subscribe(
 			(vaccineInformation: VaccineInformationDto) => {
-				this.disableDoses();
-				this.disableSchemes();
+				this.disableDoses(form);
+				this.disableSchemes(form);
 				if (vaccineInformation.conditions.length > 0) {
 					this.conditions = vaccineInformation.conditions;
-					this.billableForm.get("condition").enable();
-					this.billableForm.get("condition").setValue(null);
+					form.get("condition").enable();
+					form.get("condition").setValue(null);
 				}
 				else
-					this.disableConditions();
+					this.disableConditions(form);
 			}
 		);
 	}
 
-	public loadSchemes(conditionIndex: number): void {
-		this.disableDoses();
-		if (this.billableForm.value.condition != null) {
+	public loadSchemes(conditionIndex: number, form: FormGroup): void {
+		this.disableDoses(form);
+		if (form.value.condition != null) {
 			this.schemes = this.conditions[conditionIndex].schemes;
-			this.billableForm.get("scheme").enable();
-			this.billableForm.get("scheme").setValue(null);
+			form.get("scheme").enable();
+			form.get("scheme").setValue(null);
 		}
 		else
-			this.disableSchemes();
+			this.disableSchemes(form);
 	}
 
-	public loadDoses(schemeIndex: number): void {
+	public loadDoses(schemeIndex: number, form: FormGroup): void {
 		this.doses = this.schemes[schemeIndex].doses;
-		this.billableForm.get("dose").enable();
-		this.billableForm.get("dose").setValue(null);
+		form.get("dose").enable();
+		form.get("dose").setValue(null);
 	}
 
-	private disableConditions(): void {
+	private disableConditions(form: FormGroup): void {
 		delete this.conditions;
-		this.billableForm.get("condition").setValue(null);
-		this.billableForm.get("condition").disable();
+		form.get("condition").setValue(null);
+		form.get("condition").disable();
 	}
 
-	private disableSchemes(): void {
+	private disableSchemes(form: FormGroup): void {
 		delete this.schemes;
-		this.billableForm.get("scheme").setValue(null);
-		this.billableForm.get("scheme").disable();
+		form.get("scheme").setValue(null);
+		form.get("scheme").disable();
 	}
 
-	private disableDoses(): void {
+	private disableDoses(form: FormGroup): void {
 		delete this.doses;
-		this.billableForm.get("dose").setValue(null);
-		this.billableForm.get("dose").disable();
+		form.get("dose").setValue(null);
+		form.get("dose").disable();
 	}
 
 }
