@@ -57,9 +57,9 @@ export class AgregarVacunaComponent implements OnInit {
 		this.billableForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
 			snomed: [null, Validators.required],
-			condition: [{ value: null, disabled: true }, Validators.required],
-			scheme: [{ value: null, disabled: true }, Validators.required],
-			dose: [{ value: null, disabled: true }, Validators.required],
+			condition: [{ value: null, disabled: true }],
+			scheme: [{ value: null, disabled: true }],
+			dose: [{ value: null, disabled: true }],
 			lot: [null],
 			note: [null]
 		});
@@ -134,12 +134,18 @@ export class AgregarVacunaComponent implements OnInit {
 				snomed: this.snomedConcept,
 				administrationDate: this.billableForm.value.date.format(DateFormat.API_DATE),
 				billable: true,
-				conditionId: this.conditions[this.billableForm.value.condition].id,
-				dose: this.doses[this.billableForm.value.dose],
-				lotNumber: this.billableForm.value.lot,
-				note: this.billableForm.value.note,
-				schemeId: this.schemes[this.billableForm.value.scheme].id
+				note: this.billableForm.value.note ? this.billableForm.value.note : "",
 			};
+
+			if (this.billableForm.value.lot)
+				appliedVaccine.lotNumber = this.billableForm.value.lot;
+
+			if (this.conditions && this.billableForm.value.condition) {
+				appliedVaccine.conditionId = this.conditions[this.billableForm.value.condition].id;
+				appliedVaccine.schemeId = this.schemes[this.billableForm.value.scheme].id;
+				appliedVaccine.dose = this.doses[this.billableForm.value.dose];
+			}
+
 			this.dialogRef.close(appliedVaccine);
 		}
 	}
@@ -195,42 +201,60 @@ export class AgregarVacunaComponent implements OnInit {
 	public resetConcept(): void {
 		delete this.snomedConcept;
 		delete this.conceptsResultsTable;
-		delete this.conditions;
-		delete this.schemes;
-		delete this.doses;
-		this.billableForm.get("condition").setValue(null);
-		this.billableForm.get("scheme").setValue(null);
-		this.billableForm.get("dose").setValue(null);
+		this.disableDoses();
+		this.disableSchemes();
+		this.disableConditions();
 	}
 
 	private loadConditions(sctid: string): void {
 		this.vaccineService.vaccineInformation(sctid).subscribe(
 			(vaccineInformation: VaccineInformationDto) => {
-				this.conditions = vaccineInformation.conditions;
-				this.billableForm.get("condition").enable();
-				this.billableForm.get("condition").setValue(null);
-
-				delete this.schemes;
-				delete this.doses;
-				this.billableForm.get("scheme").setValue(null);
-				this.billableForm.get("dose").setValue(null);
+				this.disableDoses();
+				this.disableSchemes();
+				if (vaccineInformation.conditions.length > 0) {
+					this.conditions = vaccineInformation.conditions;
+					this.billableForm.get("condition").enable();
+					this.billableForm.get("condition").setValue(null);
+				}
+				else
+					this.disableConditions();
 			}
 		);
 	}
 
 	public loadSchemes(conditionIndex: number): void {
-		this.schemes = this.conditions[conditionIndex].schemes;
-		this.billableForm.get("scheme").enable();
-		this.billableForm.get("scheme").setValue(null);
-
-		delete this.doses;
-		this.billableForm.get("dose").setValue(null);
+		this.disableDoses();
+		if (this.billableForm.value.condition != null) {
+			this.schemes = this.conditions[conditionIndex].schemes;
+			this.billableForm.get("scheme").enable();
+			this.billableForm.get("scheme").setValue(null);
+		}
+		else
+			this.disableSchemes();
 	}
 
 	public loadDoses(schemeIndex: number): void {
 		this.doses = this.schemes[schemeIndex].doses;
 		this.billableForm.get("dose").enable();
 		this.billableForm.get("dose").setValue(null);
+	}
+
+	private disableConditions(): void {
+		delete this.conditions;
+		this.billableForm.get("condition").setValue(null);
+		this.billableForm.get("condition").disable();
+	}
+
+	private disableSchemes(): void {
+		delete this.schemes;
+		this.billableForm.get("scheme").setValue(null);
+		this.billableForm.get("scheme").disable();
+	}
+
+	private disableDoses(): void {
+		delete this.doses;
+		this.billableForm.get("dose").setValue(null);
+		this.billableForm.get("dose").disable();
 	}
 
 }

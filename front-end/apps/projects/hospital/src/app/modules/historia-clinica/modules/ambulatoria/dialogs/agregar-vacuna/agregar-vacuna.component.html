@@ -58,7 +58,8 @@
 						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
 					</mat-label>
 					<mat-form-field appearance="outline">
-						<mat-select required formControlName="condition" (selectionChange)="loadSchemes($event.value)">
+						<mat-select formControlName="condition" (selectionChange)="loadSchemes($event.value)">
+							<mat-option [value]="null"></mat-option>
 							<mat-option *ngFor="let condition of conditions; index as i" [value]="i">
 								{{ condition.description }}
 							</mat-option>
@@ -72,7 +73,7 @@
 								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.SCHEME' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
-								<mat-select required formControlName="scheme"
+								<mat-select formControlName="scheme" [required]="this.billableForm.value.condition"
 									(selectionChange)="loadDoses($event.value)">
 									<mat-option *ngFor="let scheme of schemes; index as i" [value]="i">
 										{{ scheme.description }}
@@ -86,7 +87,7 @@
 								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
-								<mat-select required formControlName="dose">
+								<mat-select formControlName="dose" [required]="this.billableForm.value.scheme">
 									<mat-option *ngFor="let dose of doses; index as i" [value]="i">
 										{{ dose.description }}
 									</mat-option>
