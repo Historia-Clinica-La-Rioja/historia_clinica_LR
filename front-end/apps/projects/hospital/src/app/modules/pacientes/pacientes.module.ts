@@ -12,7 +12,7 @@ import { ProfileComponent } from './routes/profile/profile.component';
 import { PresentationModule } from '../presentation/presentation.module';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { EditPatientComponent } from './routes/edit-patient/edit-patient.component';
-import { ScanPatientPopupComponent } from './dialogs/scan-patient-popup/scan-patient-popup.component';
+import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 
 @NgModule({
 	declarations: [
@@ -25,7 +25,7 @@ import { ScanPatientPopupComponent } from './dialogs/scan-patient-popup/scan-pat
 		SearchComponent,
 		ViewPatientDetailComponent,
 		EditPatientComponent,
-  		ScanPatientPopupComponent,
+  		ScanPatientComponent,
 	],
 	imports: [
 		CoreModule,

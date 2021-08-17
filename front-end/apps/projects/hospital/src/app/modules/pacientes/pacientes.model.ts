@@ -39,3 +39,9 @@ export interface AdditionalInfo{
 	description?: string;
 	data?: string;
 }
+
+export interface PatientInformationScan{
+	identifType: any;
+	identifNumber: any;
+	gender: any;
+}

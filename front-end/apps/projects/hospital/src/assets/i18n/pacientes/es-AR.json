@@ -53,7 +53,13 @@
 				"BUTTON_SEARCH": "Buscar",
 				"NO_IDENTITY": "No acredita identidad",
 				"TITLE": "Búsqueda / Creación de HC",
-				"BUTTON_SCAN": "Escanear código"
+				"scan":{
+					"BUTTON_SCAN": "Escanear código", 
+					"messages":{
+						"ERROR": "El escaneo no pudo completarse correctamente. Intente de nuevo o proceda a una búsqueda manual.",
+						"SUCCESS": "Resultados encontrados."
+					}
+				}
 			}
 		},
 		"new": {

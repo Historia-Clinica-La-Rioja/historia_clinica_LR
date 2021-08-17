@@ -84,12 +84,18 @@
 				<div class="search" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
 					<button mat-stroked-button color="primary" type="button" (click)="openScanPatientDialog()" [disabled]="disableButtonScan">
 						<span class="material-icons" color="primary">crop_free</span>
-						<span [translate]="'pacientes.home.find_add_section.BUTTON_SCAN'"></span>
+						<span [translate]="'pacientes.home.find_add_section.scan.BUTTON_SCAN'"></span>
 					</button>
-					<button mat-flat-button color="primary" type="submit">
+					<button mat-flat-button color="primary" type="submit" [disabled]="disableButtonConfirm">
 						<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
 					</button>
 				</div>
+			</div>
+			<div id="messagesScan" fxLayout="column" fxLayoutGap="20px">
+				<span *ngIf="(patientInformationError == 1)" [translate]="'pacientes.home.find_add_section.scan.messages.SUCCESS'"></span>
+				<mat-error class = "errorScan" *ngIf="(patientInformationError == 2)">
+					<span [translate]="'pacientes.home.find_add_section.scan.messages.ERROR'"></span>
+				</mat-error>
 			</div>
 		</mat-card-content>
 	</form>

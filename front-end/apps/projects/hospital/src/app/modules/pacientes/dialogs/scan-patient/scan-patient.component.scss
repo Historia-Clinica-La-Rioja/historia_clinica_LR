@@ -1,9 +1,8 @@
 .mat-dialog-title{
-	position: static;
-	height: 38px;
     width: 261px;
-	margin:20px;
-	padding:0px;
+	margin-left: 20px;
+	margin-top: 5px;
+	height: 35px;
 }
 
 .numeration-list{
@@ -14,11 +13,9 @@
 	font-style: normal;
 	font-size: 16px;
 	line-height : 25px;
-
 	width: 360px;
-	height: 90px;
-	margin: 40px;
-	padding: 0px;
+	height: 130px;
+	margin-bottom: 0px;
 
 	li{
 		color: #2687C5;
@@ -29,27 +26,19 @@
 	}
 }
 
-.image{
-	height: 230px;
-	text-align: center;
-}
-
 .mat-form-field{
-	margin: 35px;
-	padding:0px;
-	height: 40px;
+	margin-bottom: 0px;
 	::ng-deep .mat-form-field-wrapper{
 		padding-bottom: 0;
 		margin: 0;
 		background-color:#D2D2D1;
 		color: #D2D2D1;
-	}	
+	}
 }
 
 ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
     color: #D2D2D1!important;
 }
-
 
 ::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
     color: #D2D2D1!important;
@@ -59,13 +48,13 @@
 	caret-color: #D2D2D1;
 }
 
+.mat-dialog-content{
+	position: relative;
+}
+
 .close{
-	
-	margin-right: 10px;
 	transform: scale(1.0);
-	
 	position: absolute;
-	top: 100px;
-	right: 530px;
-	
+	top: 0px;
+	right: 30px;
 }

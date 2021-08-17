@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { VALIDATIONS, hasError, updateForm } from '@core/utils/form.utils';
@@ -7,11 +7,12 @@ import { PatientMasterDataService } from '@api-rest/services/patient-master-data
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
-import { ScanPatientPopupComponent } from '@pacientes/dialogs/scan-patient-popup/scan-patient-popup.component';
+import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
 import { MatDialog } from '@angular/material/dialog';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
+const INVALID_INPUT = 'invalid_input';
 
 @Component({
 	selector: 'app-search-create',
@@ -25,9 +26,11 @@ export class SearchCreateComponent implements OnInit {
 	public genderOptions;
 	public noIdentity = false;
 	public disableButtonScan = false;
+	public disableButtonConfirm = false;
 	public identityVerificationStatusArray;
 	public identifyTypeArray;
 	public hasError = hasError;
+	public patientInformationError = 0;
 	private readonly routePrefix;
 
 	constructor(
@@ -59,18 +62,18 @@ export class SearchCreateComponent implements OnInit {
 
 		this.patientMasterDataService.getIdentityVerificationStatus().subscribe(
 			data => { this.identityVerificationStatusArray = data; });
-
 	}
 
 	search(): void {
 		this.formSearchSubmitted = true;
 		if (this.formSearch.valid) {
+			this.disableButtonScan = true;
+			this.disableButtonConfirm = true;
 			const searchRequest = {
 				identificationTypeId: this.formSearch.controls.identifType.value,
 				identificationNumber: this.formSearch.controls.identifNumber.value,
 				genderId: this.formSearch.controls.gender.value,
 			};
-
 			if (this.noIdentity) {
 				this.navigateToSearchPatient();
 			} else {
@@ -137,7 +140,31 @@ export class SearchCreateComponent implements OnInit {
 		}
 	}
 
-	openScanPatientDialog(): void {
-		const dialogRef = this.dialog.open(ScanPatientPopupComponent);
+	public openScanPatientDialog(): void {
+		this.patientInformationError = 0;
+		const dialogRef = this.dialog.open(ScanPatientComponent, {
+			width: "32%",
+			data: {
+				genderOptions: this.genderOptions,
+				identifyTypeArray: this.identifyTypeArray,
+			}
+		});
+		dialogRef.afterClosed().subscribe((patientInformationScan) => {
+			if (patientInformationScan !== INVALID_INPUT){
+				this.formSearch.controls.identifType.setValue(patientInformationScan.identifType);
+				this.formSearch.controls.identifNumber?.setValue(patientInformationScan.identifNumber);
+				this.formSearch.controls.gender?.setValue(patientInformationScan.gender);
+				if (this.formSearch.valid){
+					this.patientInformationError = 1;
+					this.search();
+				}
+				else{
+					this.patientInformationError = 2;
+				}
+			}
+			else {
+				this.patientInformationError = 2;
+			}
+		});
 	}
 }
