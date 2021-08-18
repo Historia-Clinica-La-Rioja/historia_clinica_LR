@@ -751,3 +751,33 @@ databaseChangeLog:
                       - column:
                             name: locked_by
                             type: VARCHAR(255)
+
+    - changeSet:
+          id: sync_error-createTable
+          comment: Create table sync_error
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: sync_error
+                    columns:
+                        - column:
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_sync_error
+                              name: id
+                              type: BIGINT
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: entity
+                              type: VARCHAR(255)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: performed_date
+                              type: DATETIME
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: log
+                              type: VARCHAR(255)

@@ -19,36 +19,43 @@ public class RestClient {
 		this.wsConfig = wsConfig;
 	}
 
-	private static HttpHeaders getHeaders() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(APPLICATION_JSON);
-		return headers;
-	}
-
 	public <T> ResponseEntity<T> exchangeGet(String relUrl, Class<T> responseType) {
 		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
 		HttpEntity<String> entity = new HttpEntity<>(getHeaders());
 		return restTemplate.exchange(fullUrl, HttpMethod.GET, entity, responseType);
 	}
 
-	protected <T> ResponseEntity<T> exchangeDelete(String relUrl, Class<T> responseType) {
+	public <T> ResponseEntity<T> exchangeDelete(String relUrl, Class<T> responseType) {
 		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
 		HttpEntity<String> entity = new HttpEntity<>(getHeaders());
 		return restTemplate.exchange(fullUrl, HttpMethod.DELETE, entity, responseType);
 	}
 
-	protected <ResponseBody, RequestBody> ResponseEntity<ResponseBody> exchangePost(String relUrl,
-			RequestBody requestBody, Class<ResponseBody> responseType) {
+	public <ResponseBody, RequestBody> ResponseEntity<ResponseBody> exchangePost(String relUrl,
+																				 RequestBody requestBody, Class<ResponseBody> responseType) {
 		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
 		HttpEntity<RequestBody> entity = new HttpEntity<>(requestBody, getHeaders());
 		return restTemplate.exchange(fullUrl, HttpMethod.POST, entity, responseType);
 	}
 
-	protected <ResponseBody, RequestBody> ResponseEntity<ResponseBody> exchangePut(String relUrl,
-			RequestBody requestBody, Class<ResponseBody> responseType) {
+	public <ResponseBody, RequestBody> ResponseEntity<ResponseBody> exchangePut(String relUrl,
+																				RequestBody requestBody, Class<ResponseBody> responseType) {
 		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
 		HttpEntity<RequestBody> entity = new HttpEntity<>(requestBody, getHeaders());
 		return restTemplate.exchange(fullUrl, HttpMethod.PUT, entity, responseType);
 	}
 
+	public HttpHeaders getHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(APPLICATION_JSON);
+		return headers;
+	}
+
+	public String getBaseUrl() {
+		return wsConfig != null ? wsConfig.getBaseUrl() : null;
+	}
+
+	public boolean isMocked() {
+		return wsConfig != null ? wsConfig.isMocked() : null;
+	}
 }

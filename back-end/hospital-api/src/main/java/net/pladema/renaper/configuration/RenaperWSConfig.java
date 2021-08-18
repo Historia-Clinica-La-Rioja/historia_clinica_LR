@@ -1,12 +1,11 @@
 package net.pladema.renaper.configuration;
 
+import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
-
-import lombok.Getter;
-import lombok.Setter;
-import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
 
 @Component
 @ConfigurationProperties(prefix="ws.renaper")
@@ -29,7 +28,7 @@ public class RenaperWSConfig extends WSConfig{
 
 	
 	public RenaperWSConfig() {
-		super(BASE);
+		super(BASE, false);
 	}
 
 	public String getUrlCobertura() {

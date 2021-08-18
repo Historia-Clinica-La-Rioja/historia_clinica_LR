@@ -2,12 +2,16 @@ package ar.lamansys.sgx.shared.restclient.configuration;
 
 import org.springframework.util.Assert;
 
+
 public class WSConfig {
 	
     protected String baseUrl;
 
-    public WSConfig(String baseUrl) {
+    protected boolean mocked;
+
+    public WSConfig(String baseUrl, Boolean mocked) {
 		this.baseUrl = baseUrl;
+		this.mocked = mocked;
 	}
 
 	public String getBaseUrl(){
@@ -28,5 +32,7 @@ public class WSConfig {
         return String.format("%s/%s", prefix.replaceAll("/$", ""), suffix.replaceAll("^/", ""));
     }
 
-
+    public boolean isMocked() {
+        return mocked;
+    }
 }

@@ -17,6 +17,6 @@ public class RestExtensionWsConfig extends WSConfig {
     private Integer timeout;
 
     public RestExtensionWsConfig(@Value("${hsi.extensions.rest.url:}") String baseUrl) {
-        super(baseUrl);
+        super(baseUrl, false);
     }
 }
