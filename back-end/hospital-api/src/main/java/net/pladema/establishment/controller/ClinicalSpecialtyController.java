@@ -11,6 +11,7 @@ import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import net.pladema.staff.repository.ClinicalSpecialtyRepository;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import net.pladema.staff.service.ClinicalSpecialtyService;
 import net.pladema.staff.service.HealthcareProfessionalSpecialtyService;
 import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
 import org.slf4j.Logger;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "ClinicalSpecialty", tags = { "Clinical Specialty" })
@@ -34,6 +34,7 @@ public class ClinicalSpecialtyController {
     private static final Logger LOG = LoggerFactory.getLogger(ClinicalSpecialtyController.class);
 
     private final ClinicalSpecialtyRepository clinicalSpecialtyRepository;
+    private final ClinicalSpecialtyService clinicalSpecialtyService;
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
     private final AppointmentService appointmentService;
     private final DateTimeProvider dateTimeProvider;
@@ -41,12 +42,14 @@ public class ClinicalSpecialtyController {
     private final HealthcareProfessionalSpecialtyService healthcareProfessionalSpecialtyService;
 
     public ClinicalSpecialtyController(ClinicalSpecialtyRepository clinicalSpecialtyRepository,
+                                       ClinicalSpecialtyService clinicalSpecialtyService,
                                        HealthcareProfessionalSpecialtyService healthcareProfessionalSpecialtyService,
                                        HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                                        AppointmentService appointmentService,
                                        DateTimeProvider dateTimeProvider,
                                        ClinicalSpecialtyMapper clinicalSpecialtyMapper) {
         this.clinicalSpecialtyRepository = clinicalSpecialtyRepository;
+        this.clinicalSpecialtyService = clinicalSpecialtyService;
         this.healthcareProfessionalSpecialtyService = healthcareProfessionalSpecialtyService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.appointmentService = appointmentService;
@@ -56,18 +59,14 @@ public class ClinicalSpecialtyController {
 
     @GetMapping("/professional/{professionalId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
-    public ResponseEntity<List<ClinicalSpecialty>> getAllSpecialtyByProfessional(
+    public ResponseEntity<List<ClinicalSpecialtyDto>> getAllSpecialtyByProfessional(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "professionalId") Integer professionalId) {
-        List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtyRepository
-                .getAllByProfessional(professionalId);
-        clinicalSpecialties = clinicalSpecialties.stream()
-                .filter(ClinicalSpecialty::isSpecialty)
-                .collect(Collectors.toList()
-                );
+        var clinicalSpecialties = clinicalSpecialtyService.getSpecialtiesByProfessional(professionalId);
+        var result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties);
         LOG.debug("Get all Clinical Specialty by Professional {} and Institution {} => {}", professionalId, institutionId,
-                clinicalSpecialties);
-        return ResponseEntity.ok(clinicalSpecialties);
+                result);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping(value = "/professional", params = "professionalsIds")
@@ -107,15 +106,14 @@ public class ClinicalSpecialtyController {
 
     @GetMapping("/loggedProfessionalClinicalSpecialty")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
-    public ResponseEntity<List<ClinicalSpecialty>> getLoggedInProfessionalClinicalSpecialties(
+    public ResponseEntity<List<ClinicalSpecialtyDto>> getLoggedInProfessionalClinicalSpecialties(
             @PathVariable(name = "institutionId") Integer institutionId) {
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        List<ClinicalSpecialty> clinicalSpecialties = clinicalSpecialtyRepository
-                .getAllByProfessional(professionalId);
-        clinicalSpecialties.forEach(ClinicalSpecialty::fixSpecialtyType);
+        var clinicalSpecialties = clinicalSpecialtyService.getSpecialtiesByProfessional(professionalId);
+        var result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties);
         LOG.debug("Get all Clinical Specialty by Professional {} and Institution {} => {}", professionalId, institutionId,
-                clinicalSpecialties);
-        return ResponseEntity.ok(clinicalSpecialties);
+                result);
+        return ResponseEntity.ok(result);
     }
 
 }

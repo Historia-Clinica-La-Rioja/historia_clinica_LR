@@ -19,4 +19,8 @@ public class ProfessionalClinicalSpecialtyVo {
         clinicalSpecialty.fixSpecialtyType();
         this.clinicalSpecialty = clinicalSpecialty;
     }
+
+    public boolean isSpecialty() {
+        return clinicalSpecialty.isSpecialty();
+    }
 }

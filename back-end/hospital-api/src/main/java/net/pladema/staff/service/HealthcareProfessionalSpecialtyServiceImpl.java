@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,10 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
     public List<ProfessionalsByClinicalSpecialtyBo> getProfessionalsByClinicalSpecialtyBo(List<Integer> professionalsIds) {
 
         List<ProfessionalClinicalSpecialtyVo> professionalsSpecialties = this.healthcareProfessionalSpecialtyRepository
-                .getAllByProfessionals(professionalsIds);
+                .getAllByProfessionals(professionalsIds)
+                .stream()
+                .filter(ProfessionalClinicalSpecialtyVo::isSpecialty)
+                .collect(Collectors.toList());
 
         List<ProfessionalsByClinicalSpecialtyBo> professionalsBySpecialty = new ArrayList<>();
 
