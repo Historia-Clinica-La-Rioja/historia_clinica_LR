@@ -157,6 +157,19 @@
 			<version>2.6.1.Final</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>net.javacrumbs.shedlock</groupId>
+			<artifactId>shedlock-spring</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.javacrumbs.shedlock</groupId>
+			<artifactId>shedlock-provider-jdbc-template</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

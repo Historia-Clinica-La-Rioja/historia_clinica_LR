@@ -726,3 +726,28 @@ databaseChangeLog:
                   INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245645004','borde incisal de pieza dentaria','245645004','borde incisal de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245645004' AND pt = 'borde incisal de pieza dentaria');
                   INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245650005','cara palatina de pieza dentaria','245650005','cara palatina de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245650005' AND pt = 'cara palatina de pieza dentaria');
                   INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362104007','cara lingual de pieza dentaria','362104007','cara lingual de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '362104007' AND pt = 'cara lingual de pieza dentaria');
+
+
+    - changeSet:
+        id: shedlock-createTable
+        comment: Create table shedlock
+        author: etrapani
+        changes:
+            - createTable:
+                  tableName: shedlock
+                  columns:
+                      - column:
+                            constraints:
+                                primaryKey: true
+                                primaryKeyName: PK_shedlock
+                            name: name
+                            type: VARCHAR(255)
+                      - column:
+                            name: lock_until
+                            type: TIMESTAMP
+                      - column:
+                            name: locked_at
+                            type: TIMESTAMP
+                      - column:
+                            name: locked_by
+                            type: VARCHAR(255)
