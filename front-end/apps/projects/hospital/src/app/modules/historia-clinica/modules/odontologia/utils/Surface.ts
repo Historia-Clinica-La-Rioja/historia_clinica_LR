@@ -54,3 +54,12 @@ export class Surface {
 	}
 
 }
+
+export enum ToothSurfaceId {
+	WHOLE = 'whole',
+	RIGHT = 'right',
+	LEFT = 'left',
+	EXTERNAL = 'external',
+	INTERNAL = 'internal',
+	CENTRAL = 'central'
+}

@@ -7,6 +7,7 @@ import { ToothDrawingsDto, OdontogramService as OdontogramRestService } from '..
 import { ToothAction, Action, ActionType } from '../../services/actions.service';
 import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
+import { ToothSurfaceId } from '../../utils/Surface';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
 
 @Component({
@@ -93,7 +94,7 @@ const mapRecords = (drawings: Drawings): ToothAction[] => {
 	Object.keys(drawings).forEach(key => {
 		if ([key]) {
 			const action: Action = { sctid: drawings[key], type: ActionType.RECORD };
-			const surfaceId = key !== 'whole' ? key : null;
+			const surfaceId = key !== ToothSurfaceId.WHOLE ? key : null;
 			const toAdd: ToothAction = { surfaceId, action };
 			recordsToAdd.push(toAdd);
 		}
@@ -102,10 +103,10 @@ const mapRecords = (drawings: Drawings): ToothAction[] => {
 }
 
 interface Drawings {
-	internal?: string;
-	external?: string;
-	left?: string;
-	right?: string;
-	central?: string;
-	whole?: string
+	[ToothSurfaceId.INTERNAL]?: string;
+	[ToothSurfaceId.EXTERNAL]?: string;
+	[ToothSurfaceId.LEFT]?: string;
+	[ToothSurfaceId.RIGHT]?: string;
+	[ToothSurfaceId.CENTRAL]?: string;
+	[ToothSurfaceId.WHOLE]?: string
 }

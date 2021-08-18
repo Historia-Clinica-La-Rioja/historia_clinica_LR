@@ -1,4 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ToothSurfaceId } from '../utils/Surface';
 export class ActionsService {
 
 
@@ -6,12 +7,12 @@ export class ActionsService {
 	private records: ToothAction[] = [];
 
 	private currentDrawEmitter = new BehaviorSubject<CurrentDraw>({
-		whole: null,
-		central: null,
-		external: null,
-		right: null,
-		left: null,
-		internal: null,
+		[ToothSurfaceId.WHOLE]: null,
+		[ToothSurfaceId.CENTRAL]: null,
+		[ToothSurfaceId.EXTERNAL]: null,
+		[ToothSurfaceId.RIGHT]: null,
+		[ToothSurfaceId.LEFT]: null,
+		[ToothSurfaceId.INTERNAL]: null,
 	});
 	currentDraw$: Observable<CurrentDraw> = this.currentDrawEmitter.asObservable();
 
@@ -90,11 +91,11 @@ export class ActionsService {
 
 		const getInitialDraw = () => {
 			const whole = this.records.find(r => !r.surfaceId)?.action
-			const central = this.records.find(r => r.surfaceId === 'central')?.action
-			const external = this.records.find(r => r.surfaceId === 'external')?.action
-			const right = this.records.find(r => r.surfaceId === 'right')?.action
-			const left = this.records.find(r => r.surfaceId === 'left')?.action
-			const internal = this.records.find(r => r.surfaceId === 'internal')?.action
+			const central = this.records.find(r => r.surfaceId === ToothSurfaceId.CENTRAL)?.action
+			const external = this.records.find(r => r.surfaceId === ToothSurfaceId.EXTERNAL)?.action
+			const right = this.records.find(r => r.surfaceId === ToothSurfaceId.RIGHT)?.action
+			const left = this.records.find(r => r.surfaceId === ToothSurfaceId.LEFT)?.action
+			const internal = this.records.find(r => r.surfaceId === ToothSurfaceId.INTERNAL)?.action
 
 			return { whole, central, external, right, left, internal };
 		}
@@ -102,12 +103,12 @@ export class ActionsService {
 		const currentDraw: CurrentDraw = getInitialDraw();
 
 		const borrarDibujoCaras = () => {
-			currentDraw.whole = null;
-			currentDraw.central = null;
-			currentDraw.external = null;
-			currentDraw.right = null;
-			currentDraw.left = null;
-			currentDraw.internal = null;
+			currentDraw[ToothSurfaceId.WHOLE] = null;
+			currentDraw[ToothSurfaceId.CENTRAL] = null;
+			currentDraw[ToothSurfaceId.EXTERNAL] = null;
+			currentDraw[ToothSurfaceId.RIGHT] = null;
+			currentDraw[ToothSurfaceId.LEFT] = null;
+			currentDraw[ToothSurfaceId.INTERNAL] = null;
 		};
 
 		const actualizarDibujoCara = (toothAction: ToothAction) => {
@@ -131,7 +132,7 @@ export class ActionsService {
 					removeRecordActions();
 				}
 				if (toothAction.surfaceId) {
-					if (toothAction.action.type === ActionType.DIAGNOSTIC && currentDraw.whole?.type === ActionType.PROCEDURE) {
+					if (toothAction.action.type === ActionType.DIAGNOSTIC && currentDraw[ToothSurfaceId.WHOLE]?.type === ActionType.PROCEDURE) {
 						return;
 					}
 					const surfaceHasProcedure = currentDraw[toothAction.surfaceId]?.type === ActionType.PROCEDURE; // Si es false entonces o no tiene nada o tiene hallazgo ==> dibuja
@@ -141,9 +142,9 @@ export class ActionsService {
 				} else { // Es pieza
 					if (toothAction.action.type === ActionType.PROCEDURE) {
 						borrarDibujoCaras();
-						currentDraw.whole = toothAction.action
-					} else if (currentDraw.whole?.type !== ActionType.PROCEDURE) {
-						currentDraw.whole = toothAction.action
+						currentDraw[ToothSurfaceId.WHOLE] = toothAction.action
+					} else if (currentDraw[ToothSurfaceId.WHOLE]?.type !== ActionType.PROCEDURE) {
+						currentDraw[ToothSurfaceId.WHOLE] = toothAction.action
 					}
 				}
 			}
@@ -166,12 +167,12 @@ export interface Action {
 }
 
 export interface CurrentDraw {
-	whole: Action
-	left: Action,
-	internal: Action,
-	right: Action,
-	external: Action,
-	central: Action,
+	[ToothSurfaceId.WHOLE]: Action
+	[ToothSurfaceId.LEFT]: Action,
+	[ToothSurfaceId.INTERNAL]: Action,
+	[ToothSurfaceId.RIGHT]: Action,
+	[ToothSurfaceId.EXTERNAL]: Action,
+	[ToothSurfaceId.CENTRAL]: Action,
 }
 
 export enum ProcedureOrder {
