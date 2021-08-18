@@ -18,6 +18,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class AgregarVacunaComponent implements OnInit {
 
 	// shared attributtes (used on both forms)
+	selectedTab: number = 0;
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
 	conditions: VaccineConditionsDto[];
@@ -49,14 +50,20 @@ export class AgregarVacunaComponent implements OnInit {
 		public dialogRef: MatDialogRef<AgregarVacunaComponent>
 	) { }
 
+	ngAfterContentInit(): void {
+		if (this.data?.edit)
+			if (!this.data.immunization?.billable)
+				this.setSelectedTab(1);
+	}
+
 	ngOnInit(): void {
 
 		this.previousForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
 			snomed: [null, Validators.required],
-			condition: [null, Validators.required],
-			scheme: [null, Validators.required],
-			dose: [null, Validators.required],
+			condition: [{ value: null, disabled: true }],
+			scheme: [{ value: null, disabled: true }],
+			dose: [{ value: null, disabled: true }],
 			lot: [null],
 			institution: [null],
 			professional: [null]
@@ -73,7 +80,8 @@ export class AgregarVacunaComponent implements OnInit {
 		});
 
 		if (this.data?.edit) { // then load information to form fields and class attributes
-			if (this.data.immunization?.billable) { // its the only case for now
+
+			if (this.data.immunization?.billable) { // then load data to billable form and its attributes
 
 				this.billableForm.controls.date.setValue(momentParseDate(this.data.immunization.administrationDate));
 
@@ -87,24 +95,28 @@ export class AgregarVacunaComponent implements OnInit {
 
 				this.vaccineService.vaccineInformation(this.newVaccineSnomedConcept.sctid).subscribe(
 					(vaccineInformation: VaccineInformationDto) => {
-						this.conditions = vaccineInformation.conditions;
-						this.billableForm.get("condition").enable();
-						const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
-						if (conditionIndex >= 0) // mean that a condition was selected therefore also a scheme and dose
-						{
-							this.billableForm.get("condition").setValue(conditionIndex);
 
-							this.schemes = this.conditions[conditionIndex].schemes;
-							this.billableForm.get("scheme").enable();
-							const schemeIndex: number = this.schemes.findIndex(scheme => scheme.id === this.data.immunization.schemeId);
-							if (schemeIndex >= 0) {
-								this.billableForm.get("scheme").setValue(schemeIndex);
+						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
+						if (vaccineInformation.conditions.length > 0) {
+							this.conditions = vaccineInformation.conditions;
+							this.billableForm.get("condition").enable();
+							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
+							if (conditionIndex >= 0) // mean that a condition was selected therefore also a scheme and dose
+							{
+								this.billableForm.get("condition").setValue(conditionIndex);
 
-								this.doses = this.schemes[schemeIndex].doses;
-								this.billableForm.get("dose").enable();
-								const doseIndex: number = this.doses.findIndex(dose => (dose.order == this.data.immunization.dose.order) && (dose.description == this.data.immunization.dose.description));
-								if (doseIndex >= 0)
-									this.billableForm.get("dose").setValue(doseIndex);
+								this.schemes = this.conditions[conditionIndex].schemes;
+								this.billableForm.get("scheme").enable();
+								const schemeIndex: number = this.schemes.findIndex(scheme => scheme.id === this.data.immunization.schemeId);
+								if (schemeIndex >= 0) { // it should always be >=0 since the condition was loaded 
+									this.billableForm.get("scheme").setValue(schemeIndex);
+
+									this.doses = this.schemes[schemeIndex].doses;
+									this.billableForm.get("dose").enable();
+									const doseIndex: number = this.doses.findIndex(dose => (dose.order == this.data.immunization.dose.order) && (dose.description == this.data.immunization.dose.description));
+									if (doseIndex >= 0)
+										this.billableForm.get("dose").setValue(doseIndex);
+								}
 							}
 						}
 
@@ -112,8 +124,57 @@ export class AgregarVacunaComponent implements OnInit {
 				);
 
 			}
+			else { // then load data to previous form and its attributes
+				this.previousForm.controls.date.setValue(momentParseDate(this.data.immunization.administrationDate));
+
+				this.previousVaccineSnomedConcept = this.data.immunization.snomed;
+				this.previousForm.controls.snomed.setValue(this.previousVaccineSnomedConcept.pt);
+
+				if (this.data.immunization.doctorInfo)
+					this.previousForm.controls.professional.setValue(this.data.immunization.doctorInfo);
+
+				if (this.data.immunization.institutionInfo)
+					this.previousForm.controls.institution.setValue(this.data.immunization.institutionInfo);
+
+				if (this.data.immunization.lotNumber)
+					this.previousForm.controls.lot.setValue(this.data.immunization.lotNumber);
+
+				this.vaccineService.vaccineInformation(this.previousVaccineSnomedConcept.sctid).subscribe(
+					(vaccineInformation: VaccineInformationDto) => {
+
+						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
+						if (vaccineInformation.conditions.length > 0) {
+							this.conditions = vaccineInformation.conditions;
+							this.previousForm.get("condition").enable();
+							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
+							if (conditionIndex >= 0) // mean that a condition was selected therefore also a scheme and dose
+							{
+								this.previousForm.get("condition").setValue(conditionIndex);
+
+								this.schemes = this.conditions[conditionIndex].schemes;
+								this.previousForm.get("scheme").enable();
+								const schemeIndex: number = this.schemes.findIndex(scheme => scheme.id === this.data.immunization.schemeId);
+								if (schemeIndex >= 0) { // it should always be >=0 since the condition was loaded 
+									this.previousForm.get("scheme").setValue(schemeIndex);
+
+									this.doses = this.schemes[schemeIndex].doses;
+									this.previousForm.get("dose").enable();
+									const doseIndex: number = this.doses.findIndex(dose => (dose.order == this.data.immunization.dose.order) && (dose.description == this.data.immunization.dose.description));
+									if (doseIndex >= 0)
+										this.previousForm.get("dose").setValue(doseIndex);
+								}
+							}
+						}
+
+					}
+				);
+			}
 		}
 
+	}
+
+	public setSelectedTab(value: number): void {
+		this.selectedTab = value;
 	}
 
 	public chosenYearHandler(newDate: Moment, form: FormGroup): void {
@@ -168,6 +229,12 @@ export class AgregarVacunaComponent implements OnInit {
 
 			if (this.previousForm.controls.lot.value != null)
 				appliedVaccine.lotNumber = this.previousForm.value.lot;
+
+			if (this.previousForm.controls.institution.value != null || this.previousForm.controls.institution.value !== "")
+				appliedVaccine.institutionInfo = this.previousForm.value.institution;
+
+			if (this.previousForm.controls.professional.value != null || this.previousForm.controls.professional.value !== "")
+				appliedVaccine.doctorInfo = this.previousForm.value.professional;
 
 			if (this.conditions && this.previousForm.controls.condition.value != null) {
 				appliedVaccine.conditionId = this.conditions[this.previousForm.value.condition].id;

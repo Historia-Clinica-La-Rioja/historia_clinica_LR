@@ -7,7 +7,7 @@
 
 <div mat-dialog-content>
 
-	<mat-tab-group mat-align-tabs="center">
+	<mat-tab-group mat-align-tabs="center" [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
 		<mat-tab
 			label="{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NEW_VACCINE_TAB' | translate }}">
 

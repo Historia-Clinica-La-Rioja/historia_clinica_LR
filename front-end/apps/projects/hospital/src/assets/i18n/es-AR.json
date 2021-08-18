@@ -31,8 +31,8 @@
 		"EDIT": "Editar",
 		"NO": "No",
 		"YES": "Si",
-		"SKIP":"Omitir",
-		"RESET":"Restablecer"
+		"SKIP": "Omitir",
+		"RESET": "Restablecer"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
@@ -49,18 +49,19 @@
 		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy",
 		"FORMAT_NUMERIC": "El valor debe ser numérico",
 		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",
-		"FORMAT_WHITOUT_BLANK_SPACES":"El valor no puede contener espacios en blanco",
+		"FORMAT_WHITOUT_BLANK_SPACES": "El valor no puede contener espacios en blanco",
 		"YES": "Si",
-		"NO":"No"
+		"NO": "No"
 	},
 	"messages": {
-		"NO_DATA": "No hay información para mostrar"
+		"NO_DATA": "No hay información para mostrar",
+		"WITHOUT_INFORMATION": "Sin información"
 	},
 	"medical-coverage": {
 		"ACTIVES_HEALTH_INSURANCES": "Obras sociales activas",
 		"ACTIVES_PRIVATE_HEALTH_INSURANCES": "Prepagas activas",
-		"ADD_HEALTH_INSURANCES":"Agregar obra social",
-		"ADD_PRIVATE_HEALTH_INSURANCES":"Agregar prepaga",
+		"ADD_HEALTH_INSURANCES": "Agregar obra social",
+		"ADD_PRIVATE_HEALTH_INSURANCES": "Agregar prepaga",
 		"NEW_HEALTH_INSURANCES": "Agregar nueva obra social",
 		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga"
 	},

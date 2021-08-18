@@ -58,7 +58,12 @@
                     <div class="mat-h5 separation" fxLayout="row" fxLayoutAlign="end">
                         <div fxLayout="row" fxLayoutAlign="center center">
                             <div class="dose dose-color">
-                                <strong>{{ vaccine.dose.description | uppercase }}</strong>
+                                <ng-container *ngIf="vaccine.dose else noInformation">
+                                    <strong>{{ vaccine.dose?.description | uppercase }}</strong>
+                                </ng-container>
+                                <ng-template #noInformation>
+                                    <strong>{{ 'messages.WITHOUT_INFORMATION' | translate }}</strong>
+                                </ng-template>
                             </div>
                             <div> {{ this.displayDate(vaccine.administrationDate) }}</div>
                         </div>
