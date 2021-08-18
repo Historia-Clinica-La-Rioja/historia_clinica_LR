@@ -52,8 +52,14 @@ public class VNomivacImmunizationData implements Serializable, AbstractData<Inte
 	@Column(name = "condition_id")
 	private Short conditionId;
 
+	@Column(name = "condition_description")
+	private String conditionDescription;
+
 	@Column(name = "scheme_id")
 	private Short schemeId;
+
+	@Column(name = "scheme_description")
+	private String schemeDescription;
 
 	@Column(name = "dose")
 	private String dose;
@@ -78,9 +84,10 @@ public class VNomivacImmunizationData implements Serializable, AbstractData<Inte
 
 	public VNomivacImmunizationData(Integer id, Integer patientId, String vaccineSctid, String vaccinePt,
 									String statusId, LocalDate administrationDate, LocalDate expirationDate,
-									Integer institutionId, Short conditionId, Short schemeId, String dose,
-									Short doseOrder, String lotNumber, String note, Boolean billable,
-									LocalDateTime updatedOn, Integer updatedBy) {
+									Integer institutionId, Short conditionId, String conditionDescription,
+									Short schemeId, String schemeDescription, String dose, Short doseOrder,
+									String lotNumber, String note, Boolean billable, LocalDateTime updatedOn,
+									Integer updatedBy) {
 		this.id = id;
 		this.patientId = patientId;
 		this.vaccineSctid = vaccineSctid;
@@ -90,7 +97,9 @@ public class VNomivacImmunizationData implements Serializable, AbstractData<Inte
 		this.expirationDate = expirationDate;
 		this.institutionId = institutionId;
 		this.conditionId = conditionId;
+		this.conditionDescription = conditionDescription;
 		this.schemeId = schemeId;
+		this.schemeDescription = schemeDescription;
 		this.dose = dose;
 		this.doseOrder = doseOrder;
 		this.lotNumber = lotNumber;
@@ -98,13 +107,5 @@ public class VNomivacImmunizationData implements Serializable, AbstractData<Inte
 		this.billable = billable;
 		this.updatedOn = updatedOn;
 		this.updatedBy = updatedBy;
-	}
-
-	public String getSeries() {
-		return null;
-	}
-
-	public boolean isPrimarySource() {
-		return true;
 	}
 }

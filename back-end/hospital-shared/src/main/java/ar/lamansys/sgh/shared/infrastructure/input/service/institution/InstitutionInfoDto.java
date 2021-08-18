@@ -18,8 +18,11 @@ public class InstitutionInfoDto implements Serializable {
 
 	private String name;
 
-	public InstitutionInfoDto(Integer id, String name) {
+	private String sisaCode;
+
+	public InstitutionInfoDto(Integer id, String name, String sisaCode) {
 		this.id = id;
 		this.name = name;
+		this.sisaCode = sisaCode;
 	}
 }

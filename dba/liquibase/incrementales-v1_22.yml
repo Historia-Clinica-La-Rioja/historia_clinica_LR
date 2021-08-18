@@ -825,4 +825,31 @@ databaseChangeLog:
                          AND status_id <> '723510000'
                          ORDER BY t.updated_on DESC;
 
-
+    - changeSet:
+          id: nomivac_immunization_sync-createTable
+          comment: Create table nomivac_immunization_sync
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: nomivac_immunization_sync
+                    columns:
+                        - column:
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_nomivac_immunization_sync
+                              name: immunization_id
+                              type: INT
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: priority
+                              type: INT
+                        - column:
+                              name: synchronized_date
+                              type: DATETIME
+                        - column:
+                              name: external_id
+                              type: VARCHAR(255)
+                        - column:
+                              name: status_code
+                              type: INT

@@ -991,6 +991,7 @@ export interface InstitutionDto extends Serializable {
 export interface InstitutionInfoDto extends Serializable {
     id: number;
     name: string;
+    sisaCode: string;
 }
 
 export interface InternmentEpisodeADto {

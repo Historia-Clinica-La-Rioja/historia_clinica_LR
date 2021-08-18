@@ -22,4 +22,19 @@ public class BasicPatientDto implements Serializable {
 
     private Short typeId;
 
+    public String getFirstName() {
+        return person != null ? person.getFirstName() : null;
+    }
+
+    public String getMiddleName() {
+        return person != null ? person.getMiddleNames() : null;
+    }
+
+    public String getLastName() {
+        return person != null ? person.getLastName() : null;
+    }
+
+    public String getIdentificationNumber(){
+        return person != null ? person.getIdentificationNumber() : null;
+    }
 }

@@ -58,7 +58,7 @@ public class ImmunizationResource extends IMultipleResourceFhir<Immunization> {
             resource.setLocation(references.get(ResourceType.Location));
 
             Extension ext = new Extension(CodingProfile.Immunization.NOMIVAC.URL,
-                    newCodeableConcept(CodingSystem.Immunization.NOMIVAC,
+                    newCodeableConcept(CodingSystem.Immunization.NOMIVACESCHEMA,
                     immunization.get())
             );
             resource.addProtocolApplied()

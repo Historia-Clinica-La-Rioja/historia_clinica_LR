@@ -182,7 +182,7 @@ public class HCEGeneralStateController {
             return null;
         return hceImmunizationBo.getInstitutionId() != null ?
                 sharedInstitutionPort.fetchInstitutionById(hceImmunizationBo.getInstitutionId()) :
-                new InstitutionInfoDto(null, hceImmunizationBo.getInstitutionInfo());
+                new InstitutionInfoDto(null, hceImmunizationBo.getInstitutionInfo(), null);
     }
 
     private VaccineDoseInfoDto mapVaccineDose(ImmunizationDoseBo dose) {

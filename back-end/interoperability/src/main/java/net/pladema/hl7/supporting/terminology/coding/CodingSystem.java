@@ -9,6 +9,8 @@ public final class CodingSystem {
     public static final String SNOMED="http://snomed.info/sct";
     public static final String FEDERADOR="https://federador.msal.gob.ar/uri";
     public static final String REFES="http://fhir.msal.gov.ar/refes";
+    public static final String REFES2="http://www.refesp.gob.ar/codigo";
+    public static final String RENAPER="http://www.renaper.gob.ar/dni";
 
     //Absent and Unknown Data - IPS
     public static final String NODATA = "http://hl7.org/fhir/uv/ips/CodeSystem/absent-unknown-uv-ips";
@@ -33,7 +35,8 @@ public final class CodingSystem {
 
     @UtilityClass
     public static class Immunization {
-        public static final String NOMIVAC="http://fhir.msal.gov.ar/CodeSystem/NOMIVAC-esquema";
+        public static final String NOMIVACESCHEMA ="http://fhir.msal.gov.ar/CodeSystem/NOMIVAC-esquema";
+        public static final String NOMIVACONDITIONCS="http://fhir.msal.gov.ar/Codesystem/nomivac-condicion-aplicacion";
     }
 
     @UtilityClass

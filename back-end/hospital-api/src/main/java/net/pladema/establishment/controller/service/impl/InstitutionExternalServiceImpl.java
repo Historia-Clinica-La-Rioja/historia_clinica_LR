@@ -8,6 +8,7 @@ import net.pladema.establishment.service.domain.InstitutionBo;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
+import java.util.Optional;
 
 @Service
 public class InstitutionExternalServiceImpl implements InstitutionExternalService, SharedInstitutionPort {
@@ -20,20 +21,15 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
 
     @Override
     public ZoneId getTimezone(Integer institutionId) {
-        InstitutionBo institutionBo = this.institutionService.get(institutionId);
+        InstitutionBo institutionBo = institutionService.get(institutionId);
         return ZoneId.of(institutionBo.getTimezone());
     }
 
     @Override
     public InstitutionInfoDto fetchInstitutionById(Integer id) {
-        InstitutionBo institutionBo = this.institutionService.get(id);
-        return map(institutionBo);
+        return Optional.ofNullable(institutionService.get(id))
+                .map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getSisaCode()))
+                .orElse(null);
     }
 
-    private InstitutionInfoDto map(InstitutionBo institutionBo) {
-        InstitutionInfoDto result = new InstitutionInfoDto();
-        result.setId(institutionBo.getId());
-        result.setName(institutionBo.getName());
-        return result;
-    }
 }
