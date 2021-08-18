@@ -28,13 +28,13 @@ export class AgregarVacunaComponent implements OnInit {
 	// billable form attributes (new vaccine application)
 	billableForm: FormGroup;
 	newVaccineSnomedConcept: SnomedDto;
-	searchingNew = false;
+	searchingNew: boolean = false;
 	conceptsResultsTable: TableModel<any>;
 
 	// previous form attributes (register previous vaccine application)
 	previousForm: FormGroup;
 	previousVaccineSnomedConcept: SnomedDto;
-	searchingPrevious = false;
+	searchingPrevious: boolean = false;
 	conceptsResultsTablePreviousForm: TableModel<any>;
 
 	constructor(
@@ -345,6 +345,7 @@ export class AgregarVacunaComponent implements OnInit {
 	public resetConceptBillableForm(): void {
 		delete this.newVaccineSnomedConcept;
 		delete this.conceptsResultsTable;
+		this.billableForm.get("snomed").setValue(null);
 		this.disableDoses(this.billableForm);
 		this.disableSchemes(this.billableForm);
 		this.disableConditions(this.billableForm);
@@ -353,6 +354,7 @@ export class AgregarVacunaComponent implements OnInit {
 	public resetConceptPreviousForm(): void {
 		delete this.previousVaccineSnomedConcept;
 		delete this.conceptsResultsTablePreviousForm;
+		this.previousForm.get("snomed").setValue(null);
 		this.disableDoses(this.previousForm);
 		this.disableSchemes(this.previousForm);
 		this.disableConditions(this.previousForm);
