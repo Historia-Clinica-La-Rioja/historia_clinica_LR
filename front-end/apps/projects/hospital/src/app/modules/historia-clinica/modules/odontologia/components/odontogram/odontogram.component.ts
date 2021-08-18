@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToothDto } from '@api-rest/api-model';
-import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
-import { ToothAction } from '../../services/actions.service';
+import { deepClone } from '@core/utils/core.utils';
+import { ToothDrawingsDto, OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
+import { ToothAction, Action, ActionType } from '../../services/actions.service';
 import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
@@ -23,8 +24,9 @@ export class OdontogramComponent implements OnInit {
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
 
 	quadrants;
-
+	records = {};
 	actionsFrom = {};
+
 	ngOnInit(): void {
 
 		this.odontogramRestService.getOdontogram().subscribe(
@@ -46,6 +48,14 @@ export class OdontogramComponent implements OnInit {
 		this.odontogramService.actionsSubject$.subscribe(actionedTooth => {
 			this.actionsFrom[actionedTooth.sctid] = actionedTooth.actions;
 		})
+
+		this.odontogramRestService.getOdontogramDrawings().subscribe(
+			(records: ToothDrawingsDto[]) => {
+				records.forEach(record => {
+					this.records[record.toothSctid] = mapRecords(record.drawings);
+				})
+			}
+		)
 	}
 
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
@@ -54,7 +64,8 @@ export class OdontogramComponent implements OnInit {
 			data: {
 				tooth,
 				quadrantCode,
-				currentActions: this.odontogramService.getActionsFrom(tooth.snomed.sctid)
+				currentActions: this.odontogramService.getActionsFrom(tooth.snomed.sctid),
+				records: this.records[tooth.snomed.sctid] ? deepClone(this.records[tooth.snomed.sctid]) : []
 			}
 		});
 
@@ -69,4 +80,26 @@ export class OdontogramComponent implements OnInit {
 		this.odontogramService.resetOdontogram();
 	}
 
+}
+
+const mapRecords = (drawings: Drawings): ToothAction[] => {
+	const recordsToAdd: ToothAction[] = []
+	Object.keys(drawings).forEach(key => {
+		if ([key]) {
+			const action: Action = { sctid: drawings[key], type: ActionType.RECORD };
+			const surfaceId = key !== 'whole' ? key : null;
+			const toAdd: ToothAction = { surfaceId, action };
+			recordsToAdd.push(toAdd);
+		}
+	});
+	return recordsToAdd;
+}
+
+interface Drawings  {
+	internal?: string;
+	external?: string;
+	left?: string;
+	right?: string;
+	central?: string;
+	whole?: string
 }

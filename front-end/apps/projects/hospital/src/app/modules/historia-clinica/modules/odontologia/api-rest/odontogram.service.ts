@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { OdontogramQuadrantDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { of } from 'rxjs/internal/observable/of';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,4 +26,23 @@ export class OdontogramService {
 		const url = `${environment.apiBase}${this.BASE_URL}/tooth/${sctid}/surfaces`;
 		return this.http.get<ToothSurfacesDto>(url);
 	}
+
+	getOdontogramDrawings(): Observable<ToothDrawingsDto[]> {
+		return of([]);
+	}
+
 }
+
+
+export interface ToothDrawingsDto {
+	toothSctid: string;
+	drawings: {
+		internal?: string;
+		external?: string;
+		left?: string;
+		right?: string;
+		central?: string;
+		whole?: string
+	}
+}
+

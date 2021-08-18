@@ -23,6 +23,15 @@ export class ToothComponent implements AfterViewInit {
 	private toothDrawerService: ToothDrawerService;
 
 	@Input()
+	set records(records: ToothAction[]) {
+		this.setRecords(records);
+	}
+
+	setRecords(records: ToothAction[]) {
+		this.actionsService.setRecords(records);
+	}
+
+	@Input()
 	set findingsAndProcedures(actions: ToothAction[]) {
 		this.setFindingsAndProcedures(actions);
 	}

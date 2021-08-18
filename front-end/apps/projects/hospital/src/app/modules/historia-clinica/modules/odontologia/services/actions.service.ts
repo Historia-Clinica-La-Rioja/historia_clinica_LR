@@ -3,6 +3,8 @@ export class ActionsService {
 
 
 	private actionsOnTeeth: ToothAction[] = [];
+	private records: ToothAction[] = [];
+
 	private currentDrawEmitter = new BehaviorSubject<CurrentDraw>({
 		whole: null,
 		central: null,
@@ -76,16 +78,28 @@ export class ActionsService {
 		this.actionsOnTeeth = this.actionsOnTeeth.concat(toAdd);
 	}
 
+	setRecords(records: ToothAction[]) {
+		this.records = records || [];
+		if (records?.length) {
+			this.currentDrawEmitter.next(this.getCurrentDraw());
+		}
+	}
+
+
 	private getCurrentDraw(): CurrentDraw {
 
-		const currentDraw: CurrentDraw = {
-			whole: null,
-			central: null,
-			external: null,
-			right: null,
-			left: null,
-			internal: null,
+		const getInitialDraw = () => {
+			const whole = this.records.find(r => !r.surfaceId)?.action
+			const central = this.records.find(r => r.surfaceId === 'central')?.action
+			const external = this.records.find(r => r.surfaceId === 'external')?.action
+			const right = this.records.find(r => r.surfaceId === 'right')?.action
+			const left = this.records.find(r => r.surfaceId === 'left')?.action
+			const internal = this.records.find(r => r.surfaceId === 'internal')?.action
+
+			return { whole, central, external, right, left, internal };
 		}
+
+		const currentDraw: CurrentDraw = getInitialDraw();
 
 		const borrarDibujoCaras = () => {
 			currentDraw.whole = null;
@@ -100,8 +114,22 @@ export class ActionsService {
 			currentDraw[toothAction.surfaceId] = toothAction.action
 		}
 
+
+		const removeRecordActions = () => {
+			Object.keys(currentDraw).forEach(
+				key => {
+					if (currentDraw[key]?.type === ActionType.RECORD) {
+						currentDraw[key] = null;
+					}
+				}
+			);
+		}
+
 		this.actionsOnTeeth?.forEach(
 			toothAction => {
+				if (toothAction.action.type !== ActionType.RECORD) {
+					removeRecordActions();
+				}
 				if (toothAction.surfaceId) {
 					if (toothAction.action.type === ActionType.DIAGNOSTIC && currentDraw.whole?.type === ActionType.PROCEDURE) {
 						return;
@@ -114,7 +142,7 @@ export class ActionsService {
 					if (toothAction.action.type === ActionType.PROCEDURE) {
 						borrarDibujoCaras();
 						currentDraw.whole = toothAction.action
-					} else if (!currentDraw.whole) {
+					} else if (currentDraw.whole?.type !== ActionType.PROCEDURE) {
 						currentDraw.whole = toothAction.action
 					}
 				}
@@ -132,7 +160,7 @@ export interface ToothAction {
 	action: Action
 };
 
-interface Action {
+export interface Action {
 	sctid: string;
 	type: ActionType
 }

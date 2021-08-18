@@ -21,7 +21,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly odontogramRestService: OdontogramRestService,
-		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[] },
+		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[], records: ToothAction[] },
 		private readonly conceptsService: ConceptsService,
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
 	) {
@@ -54,6 +54,10 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.toothComponent.actionsSubject$.subscribe(actionsSctids => {
 			this.reciveCommonActions(actionsSctids)
 		});
+
+		if (this.data.records.length) {
+			this.toothComponent.setRecords(this.data.records);
+		}
 	}
 
 	ngOnInit(): void {
