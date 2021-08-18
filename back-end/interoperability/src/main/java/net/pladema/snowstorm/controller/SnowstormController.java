@@ -34,7 +34,7 @@ public class SnowstormController {
 
     private final SnowstormService snowstormService;
 
-    @Value("${ws.snowstorm.request.timeout:10000}")
+    @Value("${ws.snowstorm.request.timeout:15000}")
     private long requestTimeOut;
 
     @GetMapping(value = CONCEPTS)

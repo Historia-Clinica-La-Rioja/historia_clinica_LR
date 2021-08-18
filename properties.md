@@ -129,7 +129,7 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | ---------- | ------ | -------- | -------- | ------------ | ---- |
-| ws.snowstorm.url.base |   | https://snowstorm-test.msal.gob.ar | **Obligatorio** |  URL base donde se van a consumir los servicios de Snowstorm  | v1.2.0  |
+| ws.snowstorm.url.base |   | https://snowstorm.msal.gob.ar | **Obligatorio** |  URL base donde se van a consumir los servicios de Snowstorm  | v1.2.0  |
 | ws.snowstorm.appKey |   | - | **Obligatorio** |  Key de la aplicación utilizada para autorización de request  | v1.2.0  |
 | ws.snowstorm.appId |   | - | **Obligatorio** |  Id de la aplicación utilizada para autorización de request  | v1.2.0  |
 | ws.snowstorm.params.preferredOrAcceptableIn |   | 450828004 | Único |  Parametros para consulta a servicio Conceptos que indica que la descripción debe ser preferida o aceptable en al menos uno de estos parametros  | v1.2.0  |
@@ -137,6 +137,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.snowstorm.params.termActive |   | true | Único |  Parametro para consulta a servicio Conceptos que indica si el termino a buscar debe estar activo  | v1.2.0  |
 | ws.snowstorm.auth.language |   | es-AR;q=0.8,en-GB;q=0.6 | Único |  Header que indica el lenguaje de los resultados  | v1.2.0  |
 | ws.snowstorm.url.concepts |   | /MAIN/concepts | Único |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
+| ws.snowstorm.request.timeout |   | 15000 (*milisegundos*) | Opcional |  Valor de TimeOut para el servicio — *se recomienda no utilizar valores inferiores a los 15 segundos* —  | v1.2.0  |
 
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |

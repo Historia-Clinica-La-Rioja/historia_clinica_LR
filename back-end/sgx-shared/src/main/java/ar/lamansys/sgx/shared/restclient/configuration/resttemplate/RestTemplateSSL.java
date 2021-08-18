@@ -28,8 +28,8 @@ public class RestTemplateSSL extends RestTemplate {
 	private static HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory() throws Exception {
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
 		clientHttpRequestFactory.setHttpClient(httpClient());
-		clientHttpRequestFactory.setConnectTimeout(5000);
-		clientHttpRequestFactory.setReadTimeout(5000);
+		clientHttpRequestFactory.setConnectTimeout(15000);
+		clientHttpRequestFactory.setReadTimeout(15000);
 		return clientHttpRequestFactory;
 	}
 

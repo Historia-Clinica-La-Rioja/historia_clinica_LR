@@ -31,14 +31,14 @@ const ILLEGALLY_INDUCED_ABORTION = [CHILDREN_AND_SELF_OF, '49632008 |aborto ileg
 
 
 export const SEMANTICS_CONFIG = {
-	diagnosis: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
+	diagnosis: ['( ', CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ') )', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
 	bloodType: [CHILDREN_OF, SemanticsEnum.ABOFinding].join(''),
-	personalRecord: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
-	familyRecord: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
+	personalRecord: ['( ', CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ') )', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
+	familyRecord: ['( ', CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ') )', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
 	allergy: [CHILDREN_OF, SemanticsEnum.AllergicDisposition].join(''),
 	hospitalizationReason: [CHILDREN_OF, SemanticsEnum.ClinicalFinding, OR, SemanticsEnum.Event, OR, SemanticsEnum.Situation, OR, SemanticsEnum.SocialContext].join(''),
 	vaccine: [MEMBER_OF, SemanticsEnum.ReportableInmunizationsRefset].join(''),
 	medicine: [CHILDREN_OF, SemanticsEnum.GenericMedidicine].join(''),
 	procedure: [CHILDREN_OF, SemanticsEnum.Procedure].join(''),
-	consultationReason: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Procedure, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join('')
+	consultationReason: ['( ', CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ') )', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Procedure, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join('')
 };
