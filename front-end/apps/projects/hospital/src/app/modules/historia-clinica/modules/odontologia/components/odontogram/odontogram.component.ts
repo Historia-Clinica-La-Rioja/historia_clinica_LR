@@ -8,6 +8,8 @@ import { ToothAction, Action, ActionType } from '../../services/actions.service'
 import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothSurfaceId } from '../../utils/Surface';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { OdontologyConsultationDockPopupComponent } from '../odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
 
 @Component({
@@ -21,7 +23,8 @@ export class OdontogramComponent implements OnInit {
 		private readonly odontogramRestService: OdontogramRestService,
 		private readonly dialog: MatDialog,
 		public readonly odontogramService: OdontogramService,
-		private readonly activatedRoute: ActivatedRoute
+		private readonly activatedRoute: ActivatedRoute,
+		private readonly dockPopupService: DockPopupService,
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
@@ -87,6 +90,10 @@ export class OdontogramComponent implements OnInit {
 
 	clearOdontogram() {
 		this.odontogramService.resetOdontogram();
+	}
+
+	openConsultationPopup() {
+		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: null });
 	}
 
 }

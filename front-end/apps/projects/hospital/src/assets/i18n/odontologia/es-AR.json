@@ -1,0 +1,18 @@
+{
+	"odontologia": {
+		"nueva-consulta": {
+			"TITLE": "Nueva consulta odontológica",
+			"SUBTITLE": "Completa los siguientes datos.",
+			"TITLE_MENU": "Consulta",
+			"PROBLEMA": "Problema de la consulta",
+			"CONFIRMAR": "Confirmar de todos modos",
+			"RECOMENDADO": "*Recomendado",
+			"CAMPOS_SUGERIDOS":"Se sugiere completar los siguientes campos",
+			"messages": {
+				"ERROR": "Error al guardar documento de nueva consulta odontologica",
+				"SUCCESS": "El documento de consulta odontológica se guardó exitosamente"
+			}
+		}
+
+	}
+}

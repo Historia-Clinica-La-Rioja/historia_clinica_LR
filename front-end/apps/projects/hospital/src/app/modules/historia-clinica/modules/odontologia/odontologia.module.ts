@@ -9,18 +9,21 @@ import { ToothDialogComponent } from './components/tooth-dialog/tooth-dialog.com
 import { ConceptsFacadeService } from './services/concepts-facade.service';
 import { PresentationModule } from '@presentation/presentation.module';
 import { HidableScrollableDataComponent } from './components/hidable-scrollable-data/hidable-scrollable-data.component';
+import { OdontologyConsultationDockPopupComponent } from './components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
+import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 
 
 
 @NgModule({
-	declarations: [ToothComponent, OdontogramComponent, ToothDialogComponent, HidableScrollableDataComponent],
+	declarations: [ToothComponent, OdontogramComponent, ToothDialogComponent, HidableScrollableDataComponent, OdontologyConsultationDockPopupComponent],
 	imports: [
 		CommonModule,
 		FlexModule,
 		FlexLayoutModule,
 		AppMaterialModule,
 		ReactiveFormsModule,
-		PresentationModule
+		PresentationModule,
+		HistoriaClinicaModule
 	],
 	exports: [
 		ToothComponent,

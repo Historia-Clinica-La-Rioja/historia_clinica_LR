@@ -1,0 +1,10 @@
+::ng-deep .cdk-overlay-pane {
+	app-odontology-consultation-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
