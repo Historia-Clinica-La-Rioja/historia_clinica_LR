@@ -2,6 +2,50 @@
 
 	<div body fxLayout="column" fxLayoutGap="20px">
 
+		<div id="reasons">
+
+			<app-new-document-section [sectionTitle]="'odontologia.nueva-consulta.motivo.TITLE'"
+									  [sectionImportance]="'odontologia.nueva-consulta.RECOMENDADO'">
+
+				<ng-container concept-form>
+
+					<app-concepts-search
+						*ngIf="!reasonNewConsultationService.getSnomedConcept() else mainReasonConsultation"
+						[label]="'odontologia.nueva-consulta.motivo.MOTIVO'"
+						(search)="reasonNewConsultationService.openSearchDialog($event)">
+					</app-concepts-search>
+
+					<ng-template #mainReasonConsultation>
+						<form [formGroup]="reasonNewConsultationService.getForm()"
+							  (ngSubmit)="reasonNewConsultationService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+								</mat-label>
+								<input id="reason_input" matInput type="text" formControlName="snomed" name="snomed"
+									   readonly matTooltip="{{reasonNewConsultationService.getSnomedConcept().pt }}">
+								<button id="clear_reasons" mat-button matSuffix color="warn" mat-icon-button
+										(click)="reasonNewConsultationService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+							<div align="end">
+								<button id="submit_reasons" class="uppercase" mat-raised-button color="primary"
+										type="submit">
+									<span class="uppercase"> Agregar motivo </span>
+								</button>
+							</div>
+						</form>
+					</ng-template>
+				</ng-container>
+
+				<app-document-section-table data-display [tableTitle]="'odontologia.nueva-consulta.motivo.table.TITLE'"
+											[columns]="reasonNewConsultationService.getTableColumnConfig()"
+											[data]="reasonNewConsultationService.getMotivosConsulta()">
+
+				</app-document-section-table>
+
+			</app-new-document-section>
+		</div>
 	</div>
 
 </app-dock-popup>

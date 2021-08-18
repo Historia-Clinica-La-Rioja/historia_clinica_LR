@@ -5,6 +5,8 @@ import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { Observable, Subject } from 'rxjs';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
+import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
+import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
 
 export interface MotivoConsulta {
 	snomed: SnomedDto;
@@ -18,6 +20,7 @@ export class MotivoNuevaConsultaService {
 	private motivoConsulta: MotivoConsulta[] = [];
 	private form: FormGroup;
 	private readonly columns: ColumnConfig[];
+	private readonly tableColumnConfig: TableColumnConfig[];
 	private snomedConcept: SnomedDto;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
@@ -36,6 +39,19 @@ export class MotivoNuevaConsultaService {
 				text: a => a.snomed.pt
 			}
 		];
+
+		this.tableColumnConfig = [
+			{
+				def: 'motivo',
+				header: 'ambulatoria.paciente.nueva-consulta.motivo.table.columns.MOTIVO',
+				template: CellTemplates.SNOMED_PROBLEM
+			},
+			{
+				def: 'eliminar',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.remove(rowIndex)
+			},
+		]
 	}
 
 	get error$(): Observable<string> {
@@ -81,6 +97,10 @@ export class MotivoNuevaConsultaService {
 
 	getColumns(): ColumnConfig[] {
 		return this.columns;
+	}
+
+	getTableColumnConfig(): TableColumnConfig[] {
+		return this.tableColumnConfig;
 	}
 
 	add(motivo: MotivoConsulta): void {

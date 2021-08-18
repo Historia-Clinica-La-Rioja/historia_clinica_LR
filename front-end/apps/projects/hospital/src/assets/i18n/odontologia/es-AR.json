@@ -4,10 +4,24 @@
 			"TITLE": "Nueva consulta odontológica",
 			"SUBTITLE": "Completa los siguientes datos.",
 			"TITLE_MENU": "Consulta",
+			"MOTIVO": "Motivos de consulta",
 			"PROBLEMA": "Problema de la consulta",
 			"CONFIRMAR": "Confirmar de todos modos",
 			"RECOMENDADO": "*Recomendado",
+
+			"ADD": "Agregar motivo",
 			"CAMPOS_SUGERIDOS":"Se sugiere completar los siguientes campos",
+			"motivo": {
+				"TITLE": "Motivo de consulta",
+				"MOTIVO": "motivo",
+				"ADD": "Agregar motivo",
+				"table": {
+					"TITLE": "Motivos registrados",
+					"columns": {
+						"MOTIVO": "Motivos"
+					}
+				}
+			},
 			"messages": {
 				"ERROR": "Error al guardar documento de nueva consulta odontologica",
 				"SUCCESS": "El documento de consulta odontológica se guardó exitosamente"
