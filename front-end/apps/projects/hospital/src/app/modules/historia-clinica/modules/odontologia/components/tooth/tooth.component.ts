@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ActionsService, CurrentDraw, ProcedureOrder, ToothAction } from '../../services/actions.service';
+import { ActionsService, CurrentDraw, ProcedureOrder, ToothAction, ActionType } from '../../services/actions.service';
 import { SurfaceDrawerService, ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothDrawerService } from '../../services/tooth-drawer.service';
 import { Surface } from '../../utils/Surface';
@@ -124,7 +124,7 @@ export class ToothComponent implements AfterViewInit {
 
 			const actions = this.actionsService.getActions();
 			return {
-				findingId: actions.find(a => !a.isProcedure)?.actionSctid,
+				findingId: actions.find(a => a.type === ActionType.DIAGNOSTIC)?.actionSctid,
 				procedures: {
 					firstProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
 					secondProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
@@ -135,8 +135,8 @@ export class ToothComponent implements AfterViewInit {
 
 
 		const actions: ToothAction[] = this.actionsService.getActions(selectedSurfacesIds);
-		const findingsSctids: string[] = actions.filter(a => !a.isProcedure).map(a => a.actionSctid);
-		const proceduresSctids: string[] = actions.filter(a => a.isProcedure).map(a => a.actionSctid);
+		const findingsSctids: string[] = actions.filter(a => a.type === ActionType.DIAGNOSTIC).map(a => a.actionSctid);
+		const proceduresSctids: string[] = actions.filter(a => a.type === ActionType.PROCEDURE).map(a => a.actionSctid);
 
 		const count = (array: string[]) =>
 			array.reduce((a, b) => ({

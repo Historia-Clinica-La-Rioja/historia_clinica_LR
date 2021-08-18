@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
 import { ConceptsService } from '../../api-rest/concepts.service';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
-import { ProcedureOrder, ToothAction } from '../../services/actions.service';
+import { ProcedureOrder, ToothAction, ActionType } from '../../services/actions.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { CommonActions, ToothComponent } from '../tooth/tooth.component';
@@ -71,8 +71,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 		this.odontogramRestService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
 		const actions = this.data.currentActions?.filter(a => !a.surfaceId);
-		const currentProcedures = actions?.filter(a => a.isProcedure);
-		const currentFinding = actions?.find(a => !a.isProcedure);
+		const currentProcedures = actions?.filter(a => a.type === ActionType.PROCEDURE);
+		const currentFinding = actions?.find(a => a.type === ActionType.DIAGNOSTIC);
 
 		const filterFunction = this.getFilterFuction(false);
 
