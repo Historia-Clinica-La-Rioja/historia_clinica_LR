@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { ToothDto } from '@api-rest/api-model';
 import { deepClone } from '@core/utils/core.utils';
 import { ToothDrawingsDto, OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
@@ -16,9 +17,10 @@ import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
 export class OdontogramComponent implements OnInit {
 
 	constructor(
-		private odontogramRestService: OdontogramRestService,
-		private dialog: MatDialog,
-		public odontogramService: OdontogramService
+		private readonly odontogramRestService: OdontogramRestService,
+		private readonly dialog: MatDialog,
+		public readonly odontogramService: OdontogramService,
+		private readonly activatedRoute: ActivatedRoute
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
@@ -49,13 +51,17 @@ export class OdontogramComponent implements OnInit {
 			this.actionsFrom[actionedTooth.sctid] = actionedTooth.actions;
 		})
 
-		this.odontogramRestService.getOdontogramDrawings().subscribe(
-			(records: ToothDrawingsDto[]) => {
-				records.forEach(record => {
-					this.records[record.toothSctid] = mapRecords(record.drawings);
-				})
-			}
-		)
+		this.activatedRoute.paramMap.subscribe(
+			(params) => {
+				this.odontogramRestService.getOdontogramDrawings(params.get('idPaciente')).subscribe(
+					(records: ToothDrawingsDto[]) => {
+						records.forEach(record => {
+							this.records[record.toothSctid] = mapRecords(record.drawings);
+						})
+					}
+				)
+			 });
+
 	}
 
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
@@ -95,7 +101,7 @@ const mapRecords = (drawings: Drawings): ToothAction[] => {
 	return recordsToAdd;
 }
 
-interface Drawings  {
+interface Drawings {
 	internal?: string;
 	external?: string;
 	left?: string;
