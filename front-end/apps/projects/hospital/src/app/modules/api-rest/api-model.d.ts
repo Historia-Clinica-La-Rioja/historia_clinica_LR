@@ -761,12 +761,14 @@ export interface FormVDto {
     address: string;
     affiliateNumber: string;
     completePatientName: string;
+    consultationDate: Date;
     documentNumber: string;
     documentType: string;
     establishment: string;
     medicalCoverage: string;
     patientAge: number;
     patientGender: string;
+    problems: string;
     reportDate: Date;
 }
 

@@ -155,19 +155,36 @@ public class ReportsController {
         return response;
     }
 
-    @GetMapping("/{institutionId}/formv")
+    @GetMapping("/{institutionId}/appointmentformv")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
-    public ResponseEntity<InputStreamResource> getFormVReport(
+    public ResponseEntity<InputStreamResource> getFormVAppointmentReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
         LOG.debug("Input parameters -> appointmentId {}", appointmentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        FormVBo reportDataBo = formReportService.execute(appointmentId);
+        FormVBo reportDataBo = formReportService.getAppointmentData(appointmentId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
-        Map<String, Object> context = formReportService.createContext(reportDataDto);
+        Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
         String outputFileName = formReportService.createOutputFileName(appointmentId, now);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_form");
+        LOG.debug(OUTPUT, reportDataDto);
+        return response;
+    }
+
+    @GetMapping("/{institutionId}/outpatientformv")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    public ResponseEntity<InputStreamResource> getFormVOutpatientReport(
+            @PathVariable Integer institutionId,
+            @RequestParam(name = "outpatientId") Integer outpatientId)
+            throws PDFDocumentException {
+        LOG.debug("Input parameters -> appointmentsIdList {}", outpatientId);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+        FormVBo reportDataBo = formReportService.getOutpatientData(outpatientId);
+        FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
+        Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
+        String outputFileNames = formReportService.createOutputFileName(outpatientId, now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileNames, "appointments_report_form");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
