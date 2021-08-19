@@ -5,6 +5,8 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
+import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
+import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
 
 export interface Medicacion {
 	snomed: SnomedDto;
@@ -19,6 +21,7 @@ export class MedicacionesNuevaConsultaService {
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
+	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: Medicacion[];
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
@@ -44,6 +47,21 @@ export class MedicacionesNuevaConsultaService {
 				text: v => v.observaciones
 			},
 		];
+
+		this.tableColumnConfig = [
+			{
+				def: 'medicacion',
+				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.NOMBRE_MEDICACION',
+				template: CellTemplates.TEXT,
+				text: v => v.snomed.pt
+			},
+			{
+				def: 'observaciones',
+				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES',
+				template: CellTemplates.TEXT,
+				text: v => v.observaciones
+			},
+		]
 
 		this.data = [];
 	}
@@ -100,6 +118,10 @@ export class MedicacionesNuevaConsultaService {
 
 	getColumns(): ColumnConfig[] {
 		return this.columns;
+	}
+
+	getTableColumnConfig(): TableColumnConfig[] {
+		return this.tableColumnConfig;
 	}
 
 	getMedicaciones(): Medicacion[] {

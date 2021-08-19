@@ -6,6 +6,9 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { FormBuilder } from '@angular/forms';
 import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -17,6 +20,11 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	reasonNewConsultationService: MotivoNuevaConsultaService;
 	allergiesNewConsultationService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
+	medicationsNewConsultationService: MedicacionesNuevaConsultaService;
+
+
+	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+	public hasError = hasError;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
@@ -24,9 +32,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		) {
+	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
+		this.medicationsNewConsultationService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
 
 	}
 
