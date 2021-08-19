@@ -54,8 +54,7 @@
 		"NO": "No"
 	},
 	"messages": {
-		"NO_DATA": "No hay información para mostrar",
-		"WITHOUT_INFORMATION": "Sin información"
+		"NO_DATA": "No hay información para mostrar"
 	},
 	"medical-coverage": {
 		"ACTIVES_HEALTH_INSURANCES": "Obras sociales activas",
