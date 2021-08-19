@@ -4,13 +4,6 @@
 	@include general-font;
 }
 
-// .dose {
-// 	border-radius: 5px;
-// 	padding: 5px;
-// 	background-color: #2687c533;
-// 	color: #2687c5;
-// }
-
 .mat-list-item {
 	padding-bottom: 5px;
 	padding-top: 15px;
@@ -23,7 +16,7 @@
 	padding-bottom: 30px;
 }
 
-.not-info {
+.no-info {
 	color: #a8a8a8;
 }
 
@@ -31,7 +24,7 @@
 	color:rgba(0, 0, 0, 0.54);
 }
 
-.dose {
+.appliedDoses {
 	border-radius: 2px;
 	padding: 2px;
 	background-color: #2687c533;

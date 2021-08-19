@@ -1,13 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { HCEImmunizationDto, OutpatientImmunizationDto } from '@api-rest/api-model';
+import { HCEImmunizationDto, OutpatientImmunizationDto, ProfessionalInfoDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AplicarVacunaComponent } from '../../dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AddInmunizationComponent, Immunization } from '@historia-clinica/dialogs/add-inmunization/add-inmunization.component';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { momentFormat, momentParseDate, DateFormat } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HceImmunizationService } from '@api-rest/services/hce-immunization.service';
 import { VACUNAS } from '@historia-clinica/constants/summaries';
@@ -15,8 +13,6 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-vacunas.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { Observable } from 'rxjs';
-import { stringify } from '@angular/compiler/src/util';
-import { Problem } from '../../services/historical-problems-facade.service';
 import { DetalleVacunaComponent } from '../../dialogs/detalle-vacuna/detalle-vacuna.component';
 
 @Component({
@@ -96,7 +92,7 @@ export class VacunasComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
-					this.tableModel = this.buildTable(dataTable);
+					this.vaccines = dataTable;
 				});
 				this.appointmentsService.hasNewConsultationEnabled(this.patientId).subscribe(response => {
 					this.hasConfirmedAppointment = response;
@@ -139,21 +135,28 @@ export class VacunasComponent implements OnInit {
 			disableClose: false,
 			width: '30%',
 			data: {
-				title: vaccine.snomed.pt,
-				dose: vaccine.dose?.description,
-				date: vaccine.administrationDate,
-				lot: vaccine.lotNumber,
-				institution: vaccine.institution?.name,
-				professional: vaccine.doctor?.firstName,
-				terms: vaccine.condition?.description,
-				scheme: vaccine.scheme?.description,
-				observations: vaccine.note,
+				vaccineTitleName: vaccine.snomed.pt,
+				appliedDoses: vaccine.dose?.description,
+				applicationDate: vaccine.administrationDate,
+				lotNumber: vaccine.lotNumber,
+				institutionName: vaccine.institution?.name,
+				ProfessionalCompleteName:this.setCompletName(vaccine.doctor),
+				vaccineConditinDescription: vaccine.condition?.description,
+				vaccinationSchemeDescription: vaccine.scheme?.description,
+				vaccineObservations: vaccine.note,
 			}
 		});
 	}
 
-	toFormatDate = (administrationDate: string) => {
-		return momentFormat(momentParseDate(administrationDate), DateFormat.VIEW_DATE);
-		;
+	setCompletName(doctor:ProfessionalInfoDto){
+		if (doctor==null)
+			return null
+		if (doctor.firstName!=null && doctor.lastName==null)
+			return doctor.firstName
+		if (doctor.firstName==null && doctor.lastName!=null)
+			return doctor?.lastName
+		if (doctor.firstName!=null && doctor.lastName!=null)
+			return doctor.firstName +' '+doctor?.lastName
+		return null
 	}
 }
