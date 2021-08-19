@@ -160,6 +160,22 @@
 			</app-new-document-section>
 		</div>
 
+		<div id="evolution">
+			<app-document-section [sectionTitle]="'odontologia.nueva-consulta.evolucion.TITLE'">
+				<ng-container concept-form>
+					<form [formGroup]="formEvolucion">
+						<mat-form-field appearance="outline">
+							<textarea matInput type="text" id="evolution_input" name="evolution" formControlName="evolution"
+									  placeholder="{{'odontologia.nueva-consulta.evolucion.DESCRIPCION' | translate }}"
+							>
+							</textarea>
+						</mat-form-field>
+					</form>
+				</ng-container>
+			</app-document-section>
+		</div>
+
+
 	</div>
 
 </app-dock-popup>

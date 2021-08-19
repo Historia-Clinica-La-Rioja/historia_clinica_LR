@@ -48,9 +48,18 @@
 				"TABLE_TITLE": "Medicaciones registradas",
 				"TITLE": "Medicación habitual"
 			},
+			"evolucion": {
+				"TITLE": "Evolución",
+				"DESCRIPCION": "Descripción"
+			},
 			"messages": {
 				"ERROR": "Error al guardar documento de nueva consulta odontologica",
 				"SUCCESS": "El documento de consulta odontológica se guardó exitosamente"
+			},
+			"errors": {
+				"MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
+				"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
+				"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres"
 			}
 		}
 

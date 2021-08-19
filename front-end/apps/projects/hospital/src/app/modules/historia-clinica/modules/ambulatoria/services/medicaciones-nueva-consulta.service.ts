@@ -61,6 +61,11 @@ export class MedicacionesNuevaConsultaService {
 				template: CellTemplates.TEXT,
 				text: v => v.observaciones
 			},
+			{
+				def: 'eliminar',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.remove(rowIndex)
+			},
 		]
 
 		this.data = [];
