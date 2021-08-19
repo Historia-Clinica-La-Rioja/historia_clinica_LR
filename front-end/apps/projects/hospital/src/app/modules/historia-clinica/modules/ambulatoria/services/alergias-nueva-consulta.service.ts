@@ -3,7 +3,9 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto } from '@api-rest/api-model';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
-import { pushTo } from '@core/utils/array.utils';
+import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
+import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 
 export interface Alergia {
 	snomed: SnomedDto;
@@ -13,6 +15,7 @@ export interface Alergia {
 export class AlergiasNuevaConsultaService {
 
 	private readonly columns: ColumnConfig[];
+	private readonly tableColumnConfig: TableColumnConfig[];
 	private form: FormGroup;
 	private data: Alergia[] = [];
 	private snomedConcept: SnomedDto;
@@ -41,6 +44,25 @@ export class AlergiasNuevaConsultaService {
 			}
 		];
 
+		this.tableColumnConfig = [
+			{
+				def: 'problemType',
+				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.ALLERGY',
+				template: CellTemplates.SNOMED_PROBLEM
+			},
+			{
+				def: 'criticality',
+				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.CRITICALITY',
+				text: (row) => this.getDisplayName(row.criticalityId),
+				template: CellTemplates.ALLERGY_CRITICALITY
+			},
+			{
+				def: 'delete',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.removeAlergia(rowIndex)
+			}
+		]
+
 	}
 
 	private getDisplayName(criticalityId) {
@@ -53,6 +75,10 @@ export class AlergiasNuevaConsultaService {
 
 	getColumns(): ColumnConfig[] {
 		return this.columns;
+	}
+
+	getTableColumnConfig(): TableColumnConfig[] {
+		return this.tableColumnConfig;
 	}
 
 	getAlergias(): Alergia[] {
@@ -71,6 +97,10 @@ export class AlergiasNuevaConsultaService {
 
 	add(alergia: Alergia): void {
 		this.data = pushTo<Alergia>(this.data, alergia);
+	}
+
+	removeAlergia(index: number): void {
+		this.data = removeFrom<Alergia>(this.data, index);
 	}
 
 	addToList() {

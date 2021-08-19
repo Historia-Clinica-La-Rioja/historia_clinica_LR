@@ -11,6 +11,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { HidableScrollableDataComponent } from './components/hidable-scrollable-data/hidable-scrollable-data.component';
 import { OdontologyConsultationDockPopupComponent } from './components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
+import { CoreModule } from "@core/core.module";
 
 
 
@@ -23,7 +24,8 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 		AppMaterialModule,
 		ReactiveFormsModule,
 		PresentationModule,
-		HistoriaClinicaModule
+		HistoriaClinicaModule,
+		CoreModule
 	],
 	exports: [
 		ToothComponent,
