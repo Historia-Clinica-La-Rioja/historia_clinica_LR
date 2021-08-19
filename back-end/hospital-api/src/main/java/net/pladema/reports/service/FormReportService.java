@@ -8,9 +8,13 @@ import java.util.Map;
 
 public interface FormReportService {
 
-    FormVBo execute(Integer appointmentId);
+    FormVBo getAppointmentData(Integer appointmentId);
 
-    Map<String, Object> createContext(FormVDto reportDataDto);
+    FormVBo getOutpatientData(Integer outpatientId);
+
+    Map<String, Object> createAppointmentContext(FormVDto reportDataDto);
+
+    Map<String, Object> createOutpatientContext(FormVDto reportDataDto);
 
     String createOutputFileName(Integer appointmentId, ZonedDateTime consultedDate);
 }

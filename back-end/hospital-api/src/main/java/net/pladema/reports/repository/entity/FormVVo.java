@@ -43,6 +43,48 @@ public class FormVVo {
 
     private String city;
 
+    private LocalDate consultationDate;
+
+    private String problems;
+
+    public FormVVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
+                   LocalDate patientBirthDate, String documentType, String documentNumber, String medicalCoverage, String affiliateNumber,
+                   String streetName, String streetNumber,String city) {
+        this.establishment = establishment;
+        this.firstName = firstName;
+        this.middleNames = middleNames;
+        this.lastName = lastName;
+        this.otherLastNames = otherLastNames;
+        this.patientGender = patientGender;
+        this.patientBirthDate = patientBirthDate;
+        this.documentType = documentType;
+        this.documentNumber = documentNumber;
+        this.medicalCoverage = medicalCoverage;
+        this.affiliateNumber = affiliateNumber;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
+        this.city = city;
+    }
+
+    public FormVVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
+                   LocalDate patientBirthDate, String documentType, String documentNumber, LocalDate consultationDate, String problems,
+                   String streetName, String streetNumber,String city) {
+        this.establishment = establishment;
+        this.firstName = firstName;
+        this.middleNames = middleNames;
+        this.lastName = lastName;
+        this.otherLastNames = otherLastNames;
+        this.patientGender = patientGender;
+        this.patientBirthDate = patientBirthDate;
+        this.documentType = documentType;
+        this.documentNumber = documentNumber;
+        this.consultationDate = consultationDate;
+        this.problems = problems;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
+        this.city = city;
+    }
+
     @JsonIgnore
     public Short getAge(){
         if (patientBirthDate == null)

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface FormReportRepository {
 
-    Optional<FormVVo> getFormVInfo(Integer appointmentId);
+    Optional<FormVVo> getAppointmentFormVInfo(Integer appointmentId);
 
+    Optional<FormVVo> getOutpatientFormVInfo(Integer outpatientId);
 }

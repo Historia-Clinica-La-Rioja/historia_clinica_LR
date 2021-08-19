@@ -28,16 +28,25 @@ public class FormReportServiceImpl implements FormReportService {
     }
 
     @Override
-    public FormVBo execute(Integer appointmentId) {
+    public FormVBo getAppointmentData(Integer appointmentId) {
         LOG.debug("Input parameters -> appointmentId {}", appointmentId);
-        FormVBo result = formReportRepository.getFormVInfo(appointmentId).map(FormVBo::new)
+        FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
         LOG.debug("Output -> {}", result);
         return result;
     }
 
     @Override
-    public Map<String, Object> createContext(FormVDto reportDataDto){
+    public FormVBo getOutpatientData(Integer outpatientId) {
+        LOG.debug("Input parameters -> appointmentId {}", outpatientId);
+        FormVBo result = formReportRepository.getOutpatientFormVInfo(outpatientId).map(FormVBo::new)
+                .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> createAppointmentContext(FormVDto reportDataDto){
         LOG.debug("Input parameters -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("establishment", reportDataDto.getEstablishment());
@@ -50,6 +59,23 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("documentNumber", reportDataDto.getDocumentNumber());
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
+        return ctx;
+    }
+
+    @Override
+    public Map<String, Object> createOutpatientContext(FormVDto reportDataDto){
+        LOG.debug("Input parameters -> reportDataDto {}", reportDataDto);
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("establishment", reportDataDto.getEstablishment());
+        ctx.put("completePatientName", reportDataDto.getCompletePatientName());
+        ctx.put("address", reportDataDto.getAddress());
+        ctx.put("reportDate", reportDataDto.getReportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        ctx.put("patientGender", reportDataDto.getPatientGender());
+        ctx.put("patientAge", reportDataDto.getPatientAge());
+        ctx.put("documentType", reportDataDto.getDocumentType());
+        ctx.put("documentNumber", reportDataDto.getDocumentNumber());
+        ctx.put("consultationDate", reportDataDto.getConsultationDate());
+        ctx.put("problems", reportDataDto.getProblems());
         return ctx;
     }
 

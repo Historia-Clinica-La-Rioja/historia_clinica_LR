@@ -33,6 +33,10 @@ public class FormVBo {
 
     private String affiliateNumber;
 
+    private LocalDate consultationDate;
+
+    private String problems;
+
     public FormVBo(FormVVo formVVo) {
         this.establishment = formVVo.getEstablishment();
         this.completePatientName = Stream.of(formVVo.getFirstName(), formVVo.getMiddleNames(), formVVo.getLastName(), formVVo.getOtherLastNames())
@@ -48,5 +52,7 @@ public class FormVBo {
         this.address = Stream.of(formVVo.getStreetName(), formVVo.getStreetNumber(), formVVo.getCity())
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
+        this.consultationDate = formVVo.getConsultationDate();
+        this.problems = formVVo.getProblems();
     }
 }
