@@ -30,12 +30,14 @@ export class AgregarVacunaComponent implements OnInit {
 	newVaccineSnomedConcept: SnomedDto;
 	searchingNew: boolean = false;
 	conceptsResultsTable: TableModel<any>;
+	tryToSubmit: boolean = false;
 
 	// previous form attributes (register previous vaccine application)
 	previousForm: FormGroup;
 	previousVaccineSnomedConcept: SnomedDto;
 	searchingPrevious: boolean = false;
 	conceptsResultsTablePreviousForm: TableModel<any>;
+	tryToSubmitPrevious: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data:
@@ -199,6 +201,7 @@ export class AgregarVacunaComponent implements OnInit {
 
 	public submit(): void {
 		if (this.billableForm.valid) {
+			this.tryToSubmit = false;
 			const appliedVaccine: ImmunizationDto = {
 				snomed: this.newVaccineSnomedConcept,
 				administrationDate: this.billableForm.value.date.format(DateFormat.API_DATE),
@@ -217,10 +220,13 @@ export class AgregarVacunaComponent implements OnInit {
 
 			this.dialogRef.close(appliedVaccine);
 		}
+		else
+			this.tryToSubmit = true;
 	}
 
 	public submitPreviousForm(): void {
 		if (this.previousForm.valid) {
+			this.tryToSubmitPrevious = false;
 			const appliedVaccine: ImmunizationDto = {
 				snomed: this.previousVaccineSnomedConcept,
 				administrationDate: this.previousForm.value.date.format(DateFormat.API_DATE),
@@ -244,11 +250,14 @@ export class AgregarVacunaComponent implements OnInit {
 
 			this.dialogRef.close(appliedVaccine);
 		}
+		else
+			this.tryToSubmitPrevious = true;
 	}
 
 	public onSearchBillableForm(searchValue: string): void {
 		if (searchValue) {
 			this.searchingNew = true;
+			this.tryToSubmit = false;
 			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
 					(results: SnomedResponseDto) => {
@@ -266,6 +275,7 @@ export class AgregarVacunaComponent implements OnInit {
 	public onSearchPreviousForm(searchValue: string): void {
 		if (searchValue) {
 			this.searchingPrevious = true;
+			this.tryToSubmitPrevious = false;
 			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
 					(results: SnomedResponseDto) => {
@@ -346,6 +356,7 @@ export class AgregarVacunaComponent implements OnInit {
 		delete this.newVaccineSnomedConcept;
 		delete this.conceptsResultsTable;
 		this.billableForm.get("snomed").setValue(null);
+		this.tryToSubmit = false;
 		this.disableDoses(this.billableForm);
 		this.disableSchemes(this.billableForm);
 		this.disableConditions(this.billableForm);
@@ -355,6 +366,7 @@ export class AgregarVacunaComponent implements OnInit {
 		delete this.previousVaccineSnomedConcept;
 		delete this.conceptsResultsTablePreviousForm;
 		this.previousForm.get("snomed").setValue(null);
+		this.tryToSubmitPrevious = false;
 		this.disableDoses(this.previousForm);
 		this.disableSchemes(this.previousForm);
 		this.disableConditions(this.previousForm);

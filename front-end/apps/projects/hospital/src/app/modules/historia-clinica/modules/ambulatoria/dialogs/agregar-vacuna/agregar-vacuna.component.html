@@ -21,7 +21,7 @@
 						<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
 							[matDatepicker]="newVaccineDatepicker" formControlName="date" [max]="this.today" required>
 						<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
-						<mat-datepicker #newVaccineDatepicker startView="multi-year"
+						<mat-datepicker #newVaccineDatepicker
 							(yearSelected)="chosenYearHandler($event,this.billableForm)"
 							(monthSelected)="chosenMonthHandler($event,this.billableForm)">
 						</mat-datepicker>
@@ -49,11 +49,14 @@
 							[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION'"
 							(search)="onSearchBillableForm($event)">
 						</app-concepts-search>
+						<div class="mat-error"
+							[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+							*ngIf="!searchingNew && tryToSubmit">
+						</div>
 						<div class="spinner">
 							<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
 						</div>
-						<app-table *ngIf="!searchingNew && !newVaccineSnomedConcept" [model]="conceptsResultsTable">
-						</app-table>
+						<app-table *ngIf="!searchingNew" [model]="conceptsResultsTable"></app-table>
 					</ng-template>
 
 					<mat-label>
@@ -67,7 +70,6 @@
 								{{ condition.description }}
 							</mat-option>
 						</mat-select>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 
 					<div fxLayout="row" fxLayoutAlign="space-between">
@@ -82,7 +84,9 @@
 										{{ scheme.description }}
 									</mat-option>
 								</mat-select>
-								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+								<mat-error
+									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
+								</mat-error>
 							</mat-form-field>
 						</div>
 						<div fxLayout="column" fxFlex="50%">
@@ -95,7 +99,9 @@
 										{{ dose.description }}
 									</mat-option>
 								</mat-select>
-								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+								<mat-error
+									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
+								</mat-error>
 							</mat-form-field>
 						</div>
 					</div>
@@ -139,7 +145,7 @@
 							[matDatepicker]="previousVaccineDatepicker" formControlName="date" [max]="this.today"
 							required>
 						<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
-						<mat-datepicker #previousVaccineDatepicker startView="multi-year"
+						<mat-datepicker #previousVaccineDatepicker
 							(yearSelected)="chosenYearHandler($event,this.previousForm)"
 							(monthSelected)="chosenMonthHandler($event,this.previousForm)">
 						</mat-datepicker>
@@ -167,6 +173,10 @@
 							[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION'"
 							(search)="onSearchPreviousForm($event)">
 						</app-concepts-search>
+						<div class="mat-error"
+							[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+							*ngIf="!searchingPrevious && tryToSubmitPrevious">
+						</div>
 						<div class="spinner">
 							<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
 						</div>
@@ -185,7 +195,6 @@
 								{{ condition.description }}
 							</mat-option>
 						</mat-select>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 
 					<div fxLayout="row" fxLayoutAlign="space-between">
@@ -200,7 +209,9 @@
 										{{ scheme.description }}
 									</mat-option>
 								</mat-select>
-								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+								<mat-error
+									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
+								</mat-error>
 							</mat-form-field>
 						</div>
 						<div fxLayout="column" fxFlex="50%">
@@ -213,7 +224,9 @@
 										{{ dose.description }}
 									</mat-option>
 								</mat-select>
-								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+								<mat-error
+									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
+								</mat-error>
 							</mat-form-field>
 						</div>
 					</div>
