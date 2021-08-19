@@ -11,7 +11,7 @@
 		<mat-tab
 			label="{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NEW_VACCINE_TAB' | translate }}">
 
-			<form [formGroup]="billableForm" (submit)="submit()">
+			<form [formGroup]="billableForm" (submit)="submit(vaccineInput)">
 				<div fxLayout="column">
 					<mat-label>
 						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
@@ -27,37 +27,41 @@
 						</mat-datepicker>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
+					<div #vaccineInput>
+						<ng-container *ngIf="newVaccineSnomedConcept else searchImmunizations">
+							<div fxLayout="column" fxFlex="100%">
+								<mat-label>
+									{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+									translate
+									}}
+								</mat-label>
+								<mat-form-field appearance="outline">
+									<input matInput required readonly formControlName="snomed"
+										matTooltip="{{ newVaccineSnomedConcept.pt }}" class="capitalize-first-letter">
+									<button type="button" id="clear" mat-button matSuffix color="warn" mat-icon-button
+										(click)="resetConceptBillableForm()">
+										<mat-icon>close</mat-icon>
+									</button>
+									<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+								</mat-form-field>
+							</div>
+						</ng-container>
 
-					<ng-container *ngIf="newVaccineSnomedConcept else searchImmunizations">
-						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION' | translate
-							}}
-						</mat-label>
-						<mat-form-field appearance="outline">
-							<input matInput required readonly formControlName="snomed"
-								matTooltip="{{ newVaccineSnomedConcept.pt }}">
-							<button type="button" id="clear" mat-button matSuffix color="warn" mat-icon-button
-								(click)="resetConceptBillableForm()">
-								<mat-icon>close</mat-icon>
-							</button>
-							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</ng-container>
-
-					<ng-template #searchImmunizations>
-						<app-concepts-search
-							[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION'"
-							(search)="onSearchBillableForm($event)">
-						</app-concepts-search>
-						<div class="mat-error"
-							[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-							*ngIf="!searchingNew && tryToSubmit">
-						</div>
-						<div class="spinner">
-							<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
-						</div>
-						<app-table *ngIf="!searchingNew" [model]="conceptsResultsTable"></app-table>
-					</ng-template>
+						<ng-template #searchImmunizations>
+							<app-concepts-search
+								[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
+								(search)="onSearchBillableForm($event)">
+							</app-concepts-search>
+							<div class="mat-error"
+								[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+								*ngIf="!searchingNew && tryToSubmit">
+							</div>
+							<div class="spinner">
+								<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
+							</div>
+							<app-table *ngIf="!searchingNew" [model]="conceptsResultsTable"></app-table>
+						</ng-template>
+					</div>
 
 					<mat-label>
 						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
@@ -134,7 +138,7 @@
 		<mat-tab
 			label="{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB' | translate }}">
 
-			<form [formGroup]="previousForm" (submit)="submitPreviousForm()">
+			<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)">
 				<div fxLayout="column">
 					<mat-label>
 						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
@@ -152,37 +156,40 @@
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 
-					<ng-container *ngIf="previousVaccineSnomedConcept else searchImmunizationsPreviousForm">
-						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION' | translate
-							}}
-						</mat-label>
-						<mat-form-field appearance="outline">
-							<input matInput required readonly formControlName="snomed"
-								matTooltip="{{ previousVaccineSnomedConcept.pt }}">
-							<button type="button" id="clear" mat-button matSuffix color="warn" mat-icon-button
-								(click)="resetConceptPreviousForm()">
-								<mat-icon>close</mat-icon>
-							</button>
-							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</ng-container>
+					<div #previousVaccineInput>
+						<ng-container *ngIf="previousVaccineSnomedConcept else searchImmunizationsPreviousForm">
+							<mat-label>
+								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+								translate
+								}}
+							</mat-label>
+							<mat-form-field appearance="outline">
+								<input matInput required readonly formControlName="snomed"
+									matTooltip="{{ previousVaccineSnomedConcept.pt }}" class="capitalize-first-letter">
+								<button type="button" id="clear" mat-button matSuffix color="warn" mat-icon-button
+									(click)="resetConceptPreviousForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+							</mat-form-field>
+						</ng-container>
 
-					<ng-template #searchImmunizationsPreviousForm>
-						<app-concepts-search
-							[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INMUNIZATION'"
-							(search)="onSearchPreviousForm($event)">
-						</app-concepts-search>
-						<div class="mat-error"
-							[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-							*ngIf="!searchingPrevious && tryToSubmitPrevious">
-						</div>
-						<div class="spinner">
-							<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
-						</div>
-						<app-table *ngIf="!searchingPrevious && !previousVaccineSnomedConcept"
-							[model]="conceptsResultsTablePreviousForm"></app-table>
-					</ng-template>
+						<ng-template #searchImmunizationsPreviousForm>
+							<app-concepts-search
+								[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
+								(search)="onSearchPreviousForm($event)">
+							</app-concepts-search>
+							<div class="mat-error"
+								[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+								*ngIf="!searchingPrevious && tryToSubmitPrevious">
+							</div>
+							<div class="spinner">
+								<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
+							</div>
+							<app-table *ngIf="!searchingPrevious && !previousVaccineSnomedConcept"
+								[model]="conceptsResultsTablePreviousForm"></app-table>
+						</ng-template>
+					</div>
 
 					<mat-label>
 						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}

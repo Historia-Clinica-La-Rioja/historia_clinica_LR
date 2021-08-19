@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -199,7 +199,7 @@ export class AgregarVacunaComponent implements OnInit {
 		}
 	}
 
-	public submit(): void {
+	public submit(vaccineInputContainer: HTMLElement): void {
 		if (this.billableForm.valid) {
 			this.tryToSubmit = false;
 			const appliedVaccine: ImmunizationDto = {
@@ -220,11 +220,14 @@ export class AgregarVacunaComponent implements OnInit {
 
 			this.dialogRef.close(appliedVaccine);
 		}
-		else
+		else {
 			this.tryToSubmit = true;
+			if (this.billableForm.controls.snomed.invalid)
+				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
 	}
 
-	public submitPreviousForm(): void {
+	public submitPreviousForm(vaccineInputContainer: HTMLElement): void {
 		if (this.previousForm.valid) {
 			this.tryToSubmitPrevious = false;
 			const appliedVaccine: ImmunizationDto = {
@@ -250,8 +253,11 @@ export class AgregarVacunaComponent implements OnInit {
 
 			this.dialogRef.close(appliedVaccine);
 		}
-		else
+		else {
 			this.tryToSubmitPrevious = true;
+			if (this.previousForm.controls.snomed.invalid)
+				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
 	}
 
 	public onSearchBillableForm(searchValue: string): void {
