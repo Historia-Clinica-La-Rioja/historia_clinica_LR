@@ -140,6 +140,22 @@
 					"ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
 					"FECHA": "Fecha de registro"
 				},
+				"antecedentes-personales": {
+					"buttons": {
+						"ADD": "Agregar antecedente personal"
+					},
+					"table": {
+						"TITLE": "Antecedentes registrados",
+						"columns": {
+							"ANTECEDENTE_PERSONAL": "Antecedente",
+							"FECHA": "Fecha de registro"
+						}
+					},
+					"TITLE": "Antecedentes personales",
+					"ANTECEDENTES_PERSONALES": "Antecedentes personales",
+					"TIPO_DE_PROBLEMA": "Tipo de problema",
+					"FECHA": "Fecha de registro"
+				},
 				"datos-antropometricos": {
 					"TITLE": "Datos antropométricos",
 					"BLOOD_TYPE": "Grupo y factor sanguíneo",
