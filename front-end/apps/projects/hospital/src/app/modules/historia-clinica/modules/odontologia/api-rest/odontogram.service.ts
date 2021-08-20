@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
-import { OdontogramQuadrantDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { DateDto, OdontogramQuadrantDto, SnomedDto, ToothSurfacesDto } from '@api-rest/api-model';
 import { of } from 'rxjs';
 
 @Injectable({
@@ -53,6 +53,29 @@ export class OdontogramService {
 		return this.http.get<ToothDrawingsDto[]>(url);
 		*/
 	}
+
+	getRecords(patientId: string, toothSctid: string): Observable<ToothRecordDto[]> {
+		if (patientId !== '3')
+			return of([]);
+
+		if (toothSctid === '245566003') {
+			return of([
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '4721000221105', pt: 'Restauración con resina' }, surfaceSctid: '362103001' },
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '4721000221105', pt: 'Restauración con resina' }, surfaceSctid: '245653007' },
+			]);
+		}
+		if (toothSctid === '245567007') {
+			return of([
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '399271000221103', pt: 'Corona colada' }, },
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '4721000221105', pt: 'Restauración con resina' }, surfaceSctid: '362103001' },
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '401271000221109', pt: 'mancha blanca en superficie dentaria' }, surfaceSctid: '245653007' },
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '399271000221103', pt: 'Corona colada' } },
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '399271000221103', pt: 'Corona colada' } },
+				{ date: { day: 11, month: 10, year: 2021 }, snomed: { sctid: '399271000221103', pt: 'Corona colada' } },
+			]);
+		}
+		return of([]);
+	}
 }
 
 
@@ -68,3 +91,8 @@ export interface ToothDrawingsDto {
 	}
 }
 
+export interface ToothRecordDto {
+	snomed: SnomedDto,
+	surfaceSctid?: string
+	date: DateDto
+}
