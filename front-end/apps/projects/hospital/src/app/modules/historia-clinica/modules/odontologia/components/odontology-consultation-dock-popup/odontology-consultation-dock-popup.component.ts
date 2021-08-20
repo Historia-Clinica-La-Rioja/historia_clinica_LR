@@ -9,6 +9,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
+import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -20,6 +21,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	reasonNewConsultationService: MotivoNuevaConsultaService;
 	allergiesNewConsultationService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
+	personalHistoriesNewConsultationService: PersonalHistoriesNewConsultationService;
 	medicationsNewConsultationService: MedicacionesNuevaConsultaService;
 	formEvolucion: FormGroup;
 
@@ -38,6 +40,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
 		this.medicationsNewConsultationService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
+		this.personalHistoriesNewConsultationService = new PersonalHistoriesNewConsultationService(formBuilder, this.snomedService);
 
 	}
 

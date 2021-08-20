@@ -39,6 +39,22 @@
 					}
 				}
 			},
+			"antecedentes-personales": {
+				"buttons": {
+					"ADD": "Agregar antecedente personal"
+				},
+				"table": {
+					"TITLE": "Antecedentes registrados",
+					"columns": {
+						"ANTECEDENTE_PERSONAL": "Antecedente",
+						"FECHA": "Fecha de registro"
+					}
+				},
+				"TITLE": "Antecedentes personales",
+				"ANTECEDENTES_PERSONALES": "Antecedentes personales",
+				"TIPO_DE_PROBLEMA": "Tipo de problema",
+				"FECHA": "Fecha de registro"
+			},
 			"medicaciones": {
 				"CONCEPT_LABEL": "Medicación habitual",
 				"DESCRIPCION": "Descripción",

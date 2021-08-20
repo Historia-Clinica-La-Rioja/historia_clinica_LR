@@ -100,6 +100,69 @@
 			</app-new-document-section>
 		</div>
 
+
+		<div id="personal_histories">
+
+			<app-new-document-section [sectionTitle]="'odontologia.nueva-consulta.antecedentes-personales.TITLE'">
+
+				<ng-container concept-form>
+					<app-concepts-search
+						*ngIf="!personalHistoriesNewConsultationService.getSnomedConcept() else personalHistoriesForm"
+						[label]="'odontologia.nueva-consulta.antecedentes-personales.ANTECEDENTES_PERSONALES'"
+						(search)="personalHistoriesNewConsultationService.openSearchDialog($event)">
+					</app-concepts-search>
+					<ng-template #personalHistoriesForm>
+						<form [formGroup]="personalHistoriesNewConsultationService.getForm()"
+							  (ngSubmit)="personalHistoriesNewConsultationService.addToList()">
+
+							<mat-form-field appearance="outline">
+								<mat-label
+									[translate]="'odontologia.nueva-consulta.antecedentes-personales.TIPO_DE_PROBLEMA'">
+								</mat-label>
+								<input id="personal_history_input" matInput type="text" formControlName="snomed"
+									   name="snomed"
+									   readonly
+									   matTooltip="{{personalHistoriesNewConsultationService.getSnomedConcept().pt }}">
+								<button id="clear_history" mat-button matSuffix color="warn" mat-icon-button
+										(click)="personalHistoriesNewConsultationService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label
+									[translate]="'odontologia.nueva-consulta.antecedentes-personales.FECHA'">
+								</mat-label>
+								<input matInput id="history_date" [matDatepicker]="historyDatePicker"
+									   formControlName="fecha"
+									   [max]="personalHistoriesNewConsultationService.getMaxDate()">
+								<mat-datepicker-toggle matSuffix [for]="historyDatePicker"></mat-datepicker-toggle>
+								<mat-datepicker #historyDatePicker></mat-datepicker>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_personal_history" class="uppercase" mat-raised-button
+										color="primary"
+										type="submit">
+									<span class="uppercase"
+								  		[translate]="'odontologia.nueva-consulta.antecedentes-personales.buttons.ADD'"></span>
+								</button>
+							</div>
+						</form>
+					</ng-template>
+				</ng-container>
+
+
+				<app-document-section-table data-display tableTitle="Antecedentes registrados"
+											[columns]="personalHistoriesNewConsultationService.getTableColumnConfig()"
+											[data]="personalHistoriesNewConsultationService.getAntecedentesPersonales()">
+				</app-document-section-table>
+
+
+			</app-new-document-section>
+		</div>
+
+
 		<div id="medications">
 
 			<app-new-document-section sectionTitle="odontologia.nueva-consulta.medicaciones.TITLE">
