@@ -2,9 +2,9 @@ import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
-import { ConceptsService } from '../../api-rest/concepts.service';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
 import { ProcedureOrder, ToothAction, ActionType } from '../../services/actions.service';
+import { ConceptsFacadeService } from '../../services/concepts-facade.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { CommonActions, ToothComponent } from '../tooth/tooth.component';
@@ -12,7 +12,7 @@ import { CommonActions, ToothComponent } from '../tooth/tooth.component';
 @Component({
 	selector: 'app-tooth-dialog',
 	templateUrl: './tooth-dialog.component.html',
-	styleUrls: ['./tooth-dialog.component.scss']
+	styleUrls: ['./tooth-dialog.component.scss'],
 })
 export class ToothDialogComponent implements OnInit, AfterViewInit {
 
@@ -22,8 +22,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly odontogramRestService: OdontogramRestService,
 		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[], records: ToothAction[] },
-		private readonly conceptsService: ConceptsService,
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
+		private conceptsFacadeService: ConceptsFacadeService
 	) {
 
 	}
@@ -80,14 +80,14 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 		const filterFunction = this.getFilterFuction(false);
 
-		this.conceptsService.getDiagnostics().subscribe(
+		this.conceptsFacadeService.getDiagnostics$().subscribe(
 			diagnostics => {
 				this.diagnostics = diagnostics;
 				this.setAppropiateFindings(filterFunction);
 				this.form.controls.findingId.patchValue(currentFinding?.action.sctid);
 			}
 		);
-		this.conceptsService.getProcedures().subscribe(
+		this.conceptsFacadeService.getProcedures$().subscribe(
 			procedures => {
 				this.procedures = procedures;
 				this.setAppropiateProcedures(filterFunction);

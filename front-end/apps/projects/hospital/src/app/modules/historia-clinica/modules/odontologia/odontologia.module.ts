@@ -6,6 +6,7 @@ import { AppMaterialModule } from '@material/app.material.module';
 import { OdontogramComponent } from './components/odontogram/odontogram.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToothDialogComponent } from './components/tooth-dialog/tooth-dialog.component';
+import { ConceptsFacadeService } from './services/concepts-facade.service';
 
 
 
@@ -21,6 +22,7 @@ import { ToothDialogComponent } from './components/tooth-dialog/tooth-dialog.com
 	exports: [
 		ToothComponent,
 		OdontogramComponent
-	]
+	],
+	providers: [ConceptsFacadeService]
 })
 export class OdontologiaModule { }
