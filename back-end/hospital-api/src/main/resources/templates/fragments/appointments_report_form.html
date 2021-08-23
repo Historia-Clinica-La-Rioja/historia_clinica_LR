@@ -210,7 +210,10 @@
     <div class="row-data">
         <div class="complete-name" th:text="${completePatientName}"></div>
         <div class="address" th:text="${address}"></div>
-        <div class="date" th:text="${reportDate}"></div>
+        <div class="date">
+            <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
+            <label th:unless="${consultationDate != null}" th:text="${reportDate}"></label>
+        </div>
     </div>
     <div class="row">
         <div class="gender">4. SEXO</div>
@@ -248,9 +251,17 @@
         <div class="diagnosis">16. DIAGNÓSTICO CLÍNICO</div>
         <div class="code">17. CÓDIGO</div>
     </div>
-    <div class="row-data">
-        <div class="diagnosis">&nbsp;</div>
-        <div class="code">&nbsp;</div>
+    <div th:if="${problems != null}">
+        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,',')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}" >
+            <div class="diagnosis" th:text="${#strings.capitalize(problem)}"></div>
+            <div class="code">&nbsp;</div>
+        </div>
+    </div>
+    <div th:unless="${problems != null}">
+        <div class="row-data">
+            <div class="diagnosis">&nbsp;</div>
+            <div class="code">&nbsp;</div>
+        </div>
     </div>
     <div class="row">
         <div class="cant-code">

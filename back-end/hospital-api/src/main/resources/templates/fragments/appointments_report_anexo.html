@@ -228,14 +228,17 @@
     <div>
         <div class="consultation">CONSULTA</div>
         <div class="cell">
-            <label th:if="${appointmentState == 'Atendido'}">X</label>
-            <label th:if="${appointmentState != 'Atendido'}">&nbsp;</label>
+            <label th:if="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">X</label>
+            <label th:unless="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">&nbsp;</label>
         </div>
-        <div class="specialty">Especialidad:</div>
+        <div class="specialty" th:text="${specialty}">Especialidad:</div>
     </div>
     <div>
         <div class="practice">PRÁCTICA</div>
-        <div class="cell">&nbsp;</div>
+        <div class="cell">
+            <label th:if="${hasProcedure}">X</label>
+            <label th:unless="${hasProcedure}">&nbsp;</label>
+        </div>
         <div class="code-nhpgd">Códigos NHPGD:</div>
     </div>
     <div>
