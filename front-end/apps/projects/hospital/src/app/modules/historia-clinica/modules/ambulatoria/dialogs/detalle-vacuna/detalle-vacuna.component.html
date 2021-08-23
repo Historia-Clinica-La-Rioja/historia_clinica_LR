@@ -1,11 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="end" class="close">
-	<button mat-button [mat-dialog-close]>
+<div fxLayout="row" fxLayoutAlign="end">
+	<button matSuffix color="warn" mat-icon-button [mat-dialog-close]>
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 
 <div mat-dialog-title fxLayout="row">
-	<div class="title">{{data.vaccineTitleName}}</div>
+	<div class="title"	 class="capitalize-first-letter">{{data.vaccineTitleName}}</div>
 </div>
 
 <div mat-dialog-content fxLayoutAlign="start" fxLayout="column">
@@ -38,7 +38,7 @@
 		<span class="sub-title" [translate]="'ambulatoria.paciente.vacunas.details.INSTITUTION'"></span>
 		<ng-container *ngIf="data.institutionName else noInfo">{{data.institutionName}}</ng-container>
 		<span class="sub-title" [translate]="'ambulatoria.paciente.vacunas.details.PROFESSIONAL'"></span>
-		<ng-container *ngIf="data.ProfessionalCompleteName else noInfo" class="inst-prof-values"><div> Dr. {{data.ProfessionalCompleteName}}</div></ng-container>
+		<ng-container *ngIf="data.ProfessionalCompleteName else noInfo" class="inst-prof-values"><div>{{data.ProfessionalCompleteName}}</div></ng-container>
 	</div>
 
 	<mat-divider></mat-divider>
