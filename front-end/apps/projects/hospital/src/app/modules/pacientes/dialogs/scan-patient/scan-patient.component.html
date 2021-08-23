@@ -14,7 +14,7 @@
 	<div class="image" fxLayout="row" fxLayoutAlign="center">
 		<img src='assets/images/example-scan.png'>
 	</div>
-	<form [formGroup]="formScanPatient" fxLayout="row" fxLayoutAlign="center">
+	<form [formGroup]="formScanPatient" fxLayout="row" fxLayoutAlign="center" autocomplete="off">
 		<mat-form-field appearance="outline" fxFlex="83%">
 			<input matInput name="information" formControlName="informationPatient" (change)="captureInformation($event)">
 		</mat-form-field>
