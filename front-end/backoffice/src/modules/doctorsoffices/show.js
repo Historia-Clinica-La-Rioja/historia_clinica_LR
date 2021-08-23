@@ -12,6 +12,8 @@ const DoctorsOfficeShow = props => (
             <ReferenceField source="institutionId" reference="institutions">
                 <TextField source="name" />
             </ReferenceField>
+
+            <TextField source="topic" />
         </SimpleShowLayout>
     </Show>
 );

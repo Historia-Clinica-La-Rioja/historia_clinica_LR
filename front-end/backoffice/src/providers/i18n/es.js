@@ -99,7 +99,8 @@ export default {
               openingTime: 'Horario de apertura',
               closingTime: 'Horario de cierre',
               clinicalSpecialtySectorId: 'Especialidad | Sector',
-              institutionId: 'Institución'
+              institutionId: 'Institución',
+              topic: 'Tópico'
           },
           createRelated: 'Crear Consultorio',
         },

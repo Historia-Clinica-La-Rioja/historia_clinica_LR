@@ -32,6 +32,8 @@ const DoctorsOfficeList = props => (
             <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
                 <TextField source="description"/>
             </ReferenceField>
+
+            <TextField source="topic" />
         </Datagrid>
     </List>
 );
