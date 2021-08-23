@@ -54,7 +54,7 @@
 				"NO_IDENTITY": "No acredita identidad",
 				"TITLE": "Búsqueda / Creación de HC",
 				"scan":{
-					"BUTTON_SCAN": "Escanear código", 
+					"BUTTON_SCAN": "Escanear código",
 					"messages":{
 						"ERROR": "El escaneo no pudo completarse correctamente. Intente de nuevo o proceda a una búsqueda manual.",
 						"SUCCESS": "Resultados encontrados."
@@ -101,9 +101,9 @@
 			"PATIENT_ID":"ID Paciente",
 			"scan":{
 				"TITLE": "Buscar paciente por escaneo de código de DNI",
-				"ITEM_1": "Disponga de una Lectora de código",
-				"ITEM_2": "Escanee el código del DNI ubicado en la parte inferior derecha del frente mismo",
-				"ITEM_3": "La búsqueda se realizará de forma automática al detectar el código"
+				"ITEM_1": "Disponga de una Lectora de código.",
+				"ITEM_2": "Escanee el código del DNI ubicado en la parte inferior derecha del frente mismo.",
+				"ITEM_3": "La búsqueda se realizará de forma automática al detectar el código."
 			}
 		}
 	}

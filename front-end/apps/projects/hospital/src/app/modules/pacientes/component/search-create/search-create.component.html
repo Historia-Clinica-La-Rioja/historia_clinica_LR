@@ -1,5 +1,5 @@
 <mat-card class="mat-typography">
-	<form [formGroup]="formSearch" (ngSubmit)="search()">
+	<form [formGroup]="formSearch" #formDirectiveSearchForm="ngForm" (ngSubmit)="search(formDirectiveSearchForm)">
 		<mat-card-header>
 			<mat-card-title [translate]="'pacientes.home.find_add_section.TITLE'"></mat-card-title>
 			<mat-card-subtitle [translate]="'pacientes.home.SUBTITLE'">
@@ -43,7 +43,7 @@
 							{{gender.description}}
 						</mat-radio-button>
 					</mat-radio-group>
-					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'gender')">
+					<mat-error *ngIf="formSearchSubmitted && !messageOff && hasError(formSearch, 'required', 'gender')">
 						<span translate="forms.REQUIRED"></span>
 					</mat-error>
 				</div>
@@ -82,7 +82,7 @@
 			</div>
 			<div *appHasRole="['ADMINISTRATIVO']" align="end">
 				<div class="search" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-					<button mat-stroked-button color="primary" type="button" (click)="openScanPatientDialog()" [disabled]="disableButtonScan">
+					<button mat-stroked-button color="primary" type="button" (click)="openScanPatientDialog(formDirectiveSearchForm)" [disabled]="disableButtonScan">
 						<span class="material-icons" color="primary">crop_free</span>
 						<span [translate]="'pacientes.home.find_add_section.scan.BUTTON_SCAN'"></span>
 					</button>

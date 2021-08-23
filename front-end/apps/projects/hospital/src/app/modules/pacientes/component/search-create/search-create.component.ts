@@ -1,5 +1,5 @@
 import {Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { VALIDATIONS, hasError, updateForm } from '@core/utils/form.utils';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -31,6 +31,7 @@ export class SearchCreateComponent implements OnInit {
 	public identifyTypeArray;
 	public hasError = hasError;
 	public patientInformationError = -1;
+	public messageOff = false;
 	private readonly routePrefix;
 
 	constructor(
@@ -64,9 +65,10 @@ export class SearchCreateComponent implements OnInit {
 			data => { this.identityVerificationStatusArray = data; });
 	}
 
-	search(): void {
+	search(formDirectiveSearchForm: FormGroupDirective): void {
 		this.formSearchSubmitted = true;
-		if (this.formSearch.valid) {
+		this.validatorsOffInDialog(false, formDirectiveSearchForm);
+		if (this.formSearch.valid)  {
 			this.disableButtonScan = true;
 			this.disableButtonConfirm = true;
 			const searchRequest = {
@@ -150,7 +152,7 @@ export class SearchCreateComponent implements OnInit {
 		}
 	}
 
-	public openScanPatientDialog(): void {
+	public openScanPatientDialog(formGroupeDirective : FormGroupDirective): void {
 		this.patientInformationError = -1;
 		const dialogRef = this.dialog.open(ScanPatientComponent, {
 			width: "32%",
@@ -167,15 +169,39 @@ export class SearchCreateComponent implements OnInit {
 				this.formSearch.controls.gender?.setValue(patientInformationScan.gender);
 				if (this.formSearch.valid){
 					this.patientInformationError = 0;
-					this.search();
+					this.search(formGroupeDirective);
 				}
 				else{
 					this.patientInformationError = 1;
 				}
 			}
 			else {
-				(patientInformationScan === undefined) ? (this.patientInformationError = -1) : (this.patientInformationError = 1);
+				if (patientInformationScan === undefined) {
+					const identifType = this.formSearch.controls.identifType.value;
+					const identifNumber = this.formSearch.controls.identifNumber.value;
+					const gender = this.formSearch.controls.gender.value;
+					this.validatorsOffInDialog(true, formGroupeDirective);
+					this.formSearch.controls.identifType.setValue(identifType);
+					this.formSearch.controls.identifNumber?.setValue(identifNumber);
+					this.formSearch.controls.gender?.setValue(gender);
+					this.patientInformationError = -1
+				}
+				else {
+					this.patientInformationError = 1
+				}
 			}
 		});
+
+	}
+
+	private validatorsOffInDialog(messageOff: boolean, formDirectiveSearchForm: FormGroupDirective): void {
+		if (messageOff) {
+			this.messageOff = true;
+			formDirectiveSearchForm.resetForm();
+			this.formSearch.reset();
+		}
+		else {
+			this.messageOff = false;
+		}
 	}
 }
