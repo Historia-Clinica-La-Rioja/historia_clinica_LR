@@ -20,7 +20,7 @@
 					</ng-container>
 				</div>
 				<div content *appHasRole="['ADMINISTRATIVO']" >
-					<button mat-stroked-button color="primary" class="reports" *ngIf="downloadReportIsEnabled">
+					<button mat-stroked-button color="primary" class="reports" *ngIf="downloadReportIsEnabled" (click)="reports()">
 						<span class="uppercase">INFORMES</span>
 					</button>
 				</div>

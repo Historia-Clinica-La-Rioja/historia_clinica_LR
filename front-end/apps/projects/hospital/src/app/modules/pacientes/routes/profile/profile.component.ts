@@ -12,6 +12,8 @@ import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { MatDialog } from "@angular/material/dialog";
+import { ReportsComponent } from "@pacientes/dialogs/reports/reports.component";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -48,6 +50,7 @@ export class ProfileComponent implements OnInit {
 		private internmentPatientService: InternmentPatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly featureFlagService: FeatureFlagService,
+		public dialog: MatDialog
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES_TURNOS).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -100,6 +103,13 @@ export class ProfileComponent implements OnInit {
 		};
 		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
 			queryParams: person
+		});
+	}
+
+	reports(): void {
+		this.dialog.open(ReportsComponent, {
+			width: '650px',
+			data: { patientId: this.patientId }
 		});
 	}
 

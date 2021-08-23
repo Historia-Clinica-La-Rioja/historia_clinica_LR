@@ -80,10 +80,11 @@ export enum TableStyles {
 export enum ActionDisplays {
 	ICON = 'icon',
 	BUTTON = 'button',
+	CHECKBOX = 'checkbox'
 }
 
 export type TableStyle = TableStyles.PRIMARY | TableStyles.SECONDARY | TableStyles.DEFAULT;
-export type ActionDisplay = ActionDisplays.BUTTON | ActionDisplays.ICON;
+export type ActionDisplay = ActionDisplays.BUTTON | ActionDisplays.ICON | ActionDisplays.CHECKBOX;;
 
 export interface ColumnModel<T> {
 	columnDef: string;
@@ -93,8 +94,9 @@ export interface ColumnModel<T> {
 		displayType: ActionDisplay,
 		display: string,
 		matColor?: ThemePalette,
-		do: (row: T) => void,
-		hide?: (row: T) => boolean
+		do?: (row: T) => void,
+		hide?: (row: T) => boolean,
+		checked?: (row: T, boolean) => void
 	};
 }
 

@@ -105,6 +105,14 @@
 				"ITEM_2": "Escanee el código del DNI ubicado en la parte inferior derecha del frente mismo.",
 				"ITEM_3": "La búsqueda se realizará de forma automática al detectar el código."
 			}
+		},
+		"reports": {
+			"TITLE": "Informes",
+			"SELECT_CONSULTATIONS": "Seleccione consultas",
+			"SELECT_REPORT_TYPE": "Seleccione tipo de informe",
+			"buttons": {
+				"DOWNLOAD_REPORTS": "Descargar informes"
+			}
 		}
 	}
 }
