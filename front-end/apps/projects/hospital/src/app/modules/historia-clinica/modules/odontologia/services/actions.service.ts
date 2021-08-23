@@ -28,7 +28,7 @@ export class ActionsService {
 		this.execute(action, surfacesIds, (setAction: ToothAction) => setAction.wholeProcedureOrder === order && !setAction.surfaceId, order);
 	}
 
-	setFinding(actionSctid: string, surfacesIds: string[]) {
+	addFinding(actionSctid: string, surfacesIds: string[]) {
 		const action: Action = { sctid: actionSctid, type: ActionType.DIAGNOSTIC }
 		this.execute(action, surfacesIds, (setAction: ToothAction) => setAction.action.type === ActionType.DIAGNOSTIC && !setAction.surfaceId)
 	}

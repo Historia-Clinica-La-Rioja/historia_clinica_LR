@@ -40,7 +40,7 @@ export class ToothComponent implements AfterViewInit {
 	set newFinding(newFinding: string) {
 		if (newFinding) {
 			const selectedSurfacesIds: string[] = this.surfacesHandler.filter(node => node.isSelected).map(s => s.id);
-			this.actionsService.setFinding(newFinding, selectedSurfacesIds);
+			this.actionsService.addFinding(newFinding, selectedSurfacesIds);
 		}
 	}
 
