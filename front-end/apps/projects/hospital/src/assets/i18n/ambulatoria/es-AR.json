@@ -317,6 +317,10 @@
 				"TITLE": "Historial de vacunación",
 				"ADD": "Aplicar vacuna",
 				"DETAILS": "Ver detalle",
+				"NO-INFO":"No hay información para mostrar",
+				"NAME":"Nombre",
+				"DOSE":"Dosis",
+				"DATE":"Fecha",
 				"aplicar": {
 					"TITLE": "Aplicar vacuna",
 					"INMUNIZATION": "Vacuna",
