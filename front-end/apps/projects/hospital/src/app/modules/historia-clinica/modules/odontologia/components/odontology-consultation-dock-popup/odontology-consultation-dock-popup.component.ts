@@ -10,6 +10,8 @@ import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambu
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
+import { OtherDiagnosticsNewConsultationService } from "@historia-clinica/modules/odontologia/services/other-diagnostics-new-consultation.service";
+import { newMoment } from "@core/utils/moment.utils";
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -19,6 +21,8 @@ import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modul
 export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	reasonNewConsultationService: MotivoNuevaConsultaService;
+	otherDiagnosticsNewConsultationService: OtherDiagnosticsNewConsultationService;
+	severityTypes: any[];
 	allergiesNewConsultationService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
 	personalHistoriesNewConsultationService: PersonalHistoriesNewConsultationService;
@@ -27,27 +31,34 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
-	errores: string[] = [];
+	errors: string[] = [];
 	public hasError = hasError;
+	public today = newMoment();
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
 		public dockPopupRef: DockPopupRef,
 		private readonly snomedService: SnomedService,
 		private readonly formBuilder: FormBuilder,
-		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly internmentMasterDataService: InternacionMasterDataService,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
 		this.medicationsNewConsultationService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
 		this.personalHistoriesNewConsultationService = new PersonalHistoriesNewConsultationService(formBuilder, this.snomedService);
+		this.otherDiagnosticsNewConsultationService = new OtherDiagnosticsNewConsultationService(formBuilder, this.snomedService);
 
 	}
 
 	ngOnInit(): void {
-		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
+		this.internmentMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
 			this.criticalityTypes = allergyCriticalities;
 			this.allergiesNewConsultationService.setCriticalityTypes(allergyCriticalities);
+		});
+
+		this.internmentMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+			this.severityTypes = healthConditionSeverities;
+			this.otherDiagnosticsNewConsultationService.setSeverityTypes(healthConditionSeverities);
 		});
 
 		this.formEvolucion = this.formBuilder.group({
@@ -56,14 +67,18 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		});
 
 		this.reasonNewConsultationService.error$.subscribe(reasonError => {
-			this.errores[0] = reasonError;
+			this.errors[0] = reasonError;
+		});
+
+		this.otherDiagnosticsNewConsultationService.error$.subscribe(otherDiagnosticsError => {
+			this.errors[1] = otherDiagnosticsError;
 		});
 	}
 
 	private addErrorMessage(): void {
 		hasError(this.formEvolucion, 'maxlength', 'evolution') ?
-			this.errores[1] =  'odontologia.nueva-consulta.errors.MAX_LENGTH_NOTA'
-			: this.errores[1] = undefined;
+			this.errors[1] =  'odontologia.nueva-consulta.errors.MAX_LENGTH_NOTA'
+			: this.errors[1] = undefined;
 	}
 
 }

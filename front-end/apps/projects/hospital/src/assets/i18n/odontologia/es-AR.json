@@ -22,6 +22,28 @@
 					}
 				}
 			},
+			"otros-diagnosticos": {
+				"buttons": {
+					"ADD": "Agregar problema",
+					"SAVE": "Guardar cambios"
+				},
+				"CONCEPT_LABEL": "Problema",
+				"SEVERIDAD": "Severidad",
+				"CRONICO": "Crónico",
+				"errors": {
+					"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio",
+					"FECHA_FIN_MAX": "La fecha de fin no puede ser posterior a la fecha actual"
+				},
+				"FECHA_FIN": "Fecha fin",
+				"FECHA_INICIO": "Fecha inicio",
+				"FECHA": "Fecha",
+				"PROBLEMA": "Problema",
+				"TABLE_TITLE": "Otros diagnósticos registrados",
+				"TITLE": "Otros diagnósticos",
+				"ACLARACION_CRONICO": "(Crónico)",
+				"FECHA_INICIO_PREFIJO": "Desde",
+				"FECHA_FIN_PREFIJO": "Hasta"
+			},
 			"alergias": {
 				"TITLE": "Alergias",
 				"ADD": "Agregar alergia",

@@ -47,6 +47,100 @@
 			</app-new-document-section>
 		</div>
 
+		<div id="other-diagnostics">
+			<app-new-document-section sectionTitle="odontologia.nueva-consulta.otros-diagnosticos.TITLE">
+				<ng-container concept-form>
+					<app-concepts-search *ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm"
+										 [label]="'odontologia.nueva-consulta.otros-diagnosticos.CONCEPT_LABEL'"
+										 (search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
+					</app-concepts-search>
+
+					<ng-template #otherDiagnosticForm>
+						<form [formGroup]="otherDiagnosticsNewConsultationService.getForm()"
+							  (ngSubmit)="otherDiagnosticsNewConsultationService.addToList()">
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.CONCEPT_LABEL'">
+								</mat-label>
+								<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+									   matTooltip="{{ otherDiagnosticsNewConsultationService.getSnomedConcept().pt }}">
+								<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+										(click)="otherDiagnosticsNewConsultationService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.SEVERIDAD'">
+								</mat-label>
+								<mat-select id="severity-select" formControlName="severidad">
+									<mat-option *ngFor="let severityType of severityTypes" [value]="severityType.code">
+										{{severityType.display}}
+									</mat-option>
+								</mat-select>
+								<mat-error translate="forms.REQUIRED"></mat-error>
+							</mat-form-field>
+
+							<div class="margin-checkbox">
+								<mat-checkbox id="chronic-checkbox" formControlName="cronico">
+									<span [translate]="'odontologia.nueva-consulta.otros-diagnosticos.CRONICO'"></span>
+								</mat-checkbox>
+							</div>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.FECHA_INICIO'">
+								</mat-label>
+								<input matInput id="start-date" [matDatepicker]="startDatePicker"
+									   formControlName="fechaInicio" [max]="otherDiagnosticsNewConsultationService.getFechaInicioMax()"
+									   (dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
+								<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+								<mat-datepicker #startDatePicker></mat-datepicker>
+								<mat-error
+									*ngIf="otherDiagnosticsNewConsultationService.hasError('required', 'fechaInicio')"
+									[translate]="'forms.REQUIRED'">
+								</mat-error>
+								<mat-error
+									*ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaInicio')"
+									[translate]="'forms.MAX_DATE_TODAY'">
+								</mat-error>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.FECHA_FIN'">
+								</mat-label>
+								<input matInput id="end-date" [matDatepicker]="endDatePicker" formControlName="fechaFin"
+									   [max]="today" (dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
+								<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+								<mat-datepicker #endDatePicker></mat-datepicker>
+								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('min', 'fechaFin')"
+										   [translate]="'odontologia.nueva-consulta.otros-diagnosticos.errors.FECHA_FIN_MIN'">
+								</mat-error>
+								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaFin')"
+										   [translate]="'forms.MAX_DATE_TODAY'">
+								</mat-error>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_diagnostic" class="uppercase" mat-raised-button color="primary" type="submit">
+									<span [translate]="'odontologia.nueva-consulta.otros-diagnosticos.buttons.ADD'"></span>
+								</button>
+							</div>
+
+						</form>
+					</ng-template>
+
+				</ng-container>
+
+				<app-document-section-table data-display tableTitle="odontologia.nueva-consulta.otros-diagnosticos.TABLE_TITLE"
+											[columns]="otherDiagnosticsNewConsultationService.getTableColumnConfig()"
+											[data]="otherDiagnosticsNewConsultationService.getDiagnostics()">
+				</app-document-section-table>
+
+			</app-new-document-section>
+
+		</div>
+
+
 		<div id="allergies">
 			<app-new-document-section sectionTitle="odontologia.nueva-consulta.alergias.TITLE">
 
