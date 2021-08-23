@@ -1,14 +1,15 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
-import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
-import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ConsultationsBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
+import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
+import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OutpatientSummaryServiceImpl implements OutpatientSummaryService{
+public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OutpatientSummaryServiceImpl.class);
 
@@ -38,7 +39,7 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService{
         List<ReasonSummaryVo> reasons = outpatientConsultationSummaryRepository.getReasonsByPatient(patientId, OutpatientConsultationIds);
         List<ProcedureSummaryVo> procedures = outpatientConsultationSummaryRepository.getProceduresByPatient(patientId, OutpatientConsultationIds);
         List<OutpatientEvolutionSummaryBo> result = new ArrayList<>();
-        for(OutpatientEvolutionSummaryVo oes: queryResult){
+        for (OutpatientEvolutionSummaryVo oes : queryResult) {
             OutpatientEvolutionSummaryBo oesBo = new OutpatientEvolutionSummaryBo(oes);
             oesBo.setHealthConditions(healthcConditions.stream().filter(h -> h.getConsultationID().equals(oes.getConsultationID())).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
             oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationID())).map(ReasonBo::new).collect(Collectors.toList()));
@@ -46,6 +47,15 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService{
             result.add(oesBo);
         }
         LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<ConsultationsBo> getOutpatientConsultations(Integer patientId) {
+        LOG.debug("Input parameter -> patientId {}", patientId);
+        List<ConsultationsBo> result = outpatientConsultationSummaryRepository.getOutpatientConsultations(patientId).stream().map(ConsultationsBo::new)
+                .collect(Collectors.toList());
+        LOG.debug("Output -> {}", result);
         return result;
     }
 }

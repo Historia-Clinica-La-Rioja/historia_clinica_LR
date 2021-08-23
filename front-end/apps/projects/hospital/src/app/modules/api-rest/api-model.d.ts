@@ -384,6 +384,13 @@ export interface ConditionDto {
     verificationStatus: FhirCodeDto;
 }
 
+export interface ConsultationsDto extends Serializable {
+    completeProfessionalName: string;
+    consultationDate: Date;
+    id: number;
+    specialty: string;
+}
+
 export interface CoverageDto extends Serializable {
     id: number;
     name: string;

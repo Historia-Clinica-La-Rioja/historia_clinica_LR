@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.*;
 
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ConsultationsBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
@@ -44,6 +45,13 @@ public interface OutpatientConsultationMapper {
     @Named("fromListOutpatientEvolutionSummaryBo")
     @IterableMapping(qualifiedByName = "fromOutpatientEvolutionSummaryBo")
     List<OutpatientEvolutionSummaryDto> fromListOutpatientEvolutionSummaryBo(List<OutpatientEvolutionSummaryBo> outpatientEvolutionSummaryBos);
+
+    @Named("fromConsultationsBo")
+    ConsultationsDto fromConsultationsBo(ConsultationsBo consultationsBo);
+
+    @Named("fromListConsultationsBo")
+    @IterableMapping(qualifiedByName = "fromConsultationsBo")
+    List<ConsultationsDto> fromListConsultationsBo(List<ConsultationsBo> consultationsBos);
 
 
 }

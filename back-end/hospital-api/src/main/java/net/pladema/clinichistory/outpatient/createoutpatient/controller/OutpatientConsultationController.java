@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.ConsultationsDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
@@ -14,6 +15,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.O
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.OutpatientSummaryService;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ConsultationsBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
@@ -32,6 +34,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -236,6 +239,17 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         createOutpatientDocumentService.execute(outpatient);
 
         return ResponseEntity.ok().body(true);
+    }
+
+    @GetMapping("/outpatientids")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    public ResponseEntity<List<ConsultationsDto>> getOutpatientConsultations(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestParam(name = "patientId") Integer patientId) {
+        LOG.debug("Input parameter -> patientId {}", patientId);
+        List<ConsultationsBo> consultations = outpatientSummaryService.getOutpatientConsultations(patientId);
+        List<ConsultationsDto> result = outpatientConsultationMapper.fromListConsultationsBo(consultations);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/summary-list")
