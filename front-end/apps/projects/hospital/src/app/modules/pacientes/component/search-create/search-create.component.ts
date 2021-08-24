@@ -154,9 +154,16 @@ export class SearchCreateComponent implements OnInit {
 
 	public openScanPatientDialog(formGroupeDirective : FormGroupDirective): void {
 		this.patientInformationError = -1;
+		const identifType = this.formSearch.controls.identifType.value;
+		const identifNumber = this.formSearch.controls.identifNumber.value;
+		const gender = this.formSearch.controls.gender.value;
+		this.validatorsOffInDialog(true, formGroupeDirective);
+		this.formSearch.controls.identifType.setValue(identifType);
+		this.formSearch.controls.identifNumber?.setValue(identifNumber);
+		this.formSearch.controls.gender?.setValue(gender);
 		const dialogRef = this.dialog.open(ScanPatientComponent, {
 			width: "32%",
-			height: "650px",
+			height: "600px",
 			data: {
 				genderOptions: this.genderOptions,
 				identifyTypeArray: this.identifyTypeArray,
@@ -177,13 +184,6 @@ export class SearchCreateComponent implements OnInit {
 			}
 			else {
 				if (patientInformationScan === undefined) {
-					const identifType = this.formSearch.controls.identifType.value;
-					const identifNumber = this.formSearch.controls.identifNumber.value;
-					const gender = this.formSearch.controls.gender.value;
-					this.validatorsOffInDialog(true, formGroupeDirective);
-					this.formSearch.controls.identifType.setValue(identifType);
-					this.formSearch.controls.identifNumber?.setValue(identifNumber);
-					this.formSearch.controls.gender?.setValue(gender);
 					this.patientInformationError = -1
 				}
 				else {

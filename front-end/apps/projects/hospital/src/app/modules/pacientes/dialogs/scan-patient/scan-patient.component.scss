@@ -1,5 +1,5 @@
 .mat-dialog-title{
-    width: 261px;
+	width: 261px;
 	margin-left: 20px;
 	margin-top: 5px;
 	line-height: 30px;
@@ -15,7 +15,7 @@
 	li{
 		color: #2687C5;
 		font-weight: bold;
-		padding-bottom: 20px;
+		padding-bottom: 10px;
 	}
 
 	li span{
@@ -25,7 +25,7 @@
 }
 
 .mat-form-field{
-	margin-top: 30px;
+	margin-top: 10px;
 	::ng-deep .mat-form-field-wrapper{
 		padding-bottom: 0;
 		margin: 0;
@@ -34,12 +34,12 @@
 	}
 }
 
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
-    color: #D2D2D1!important;
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+	color: #D2D2D1!important;
 }
 
-::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
-    color: #D2D2D1!important;
+::ng-deep .input-scan-appearance-outline .input-scan-outline{
+	color: #D2D2D1!important;
 }
 
 ::ng-deep .mat-form-field input{
