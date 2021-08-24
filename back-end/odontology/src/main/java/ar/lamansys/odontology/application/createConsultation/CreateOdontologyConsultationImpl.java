@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -87,6 +88,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
         setSurfaceSctids(consultationBo);
 
+        sortDentalActions(consultationBo);
         drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
         Integer medicalCoverageId = appointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
@@ -103,6 +105,12 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
 
         LOG.debug("No output");
+    }
+
+    private void sortDentalActions(ConsultationBo consultationBo) {
+        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+        // leaves diagnostics at the beginning and procedures at the end
+        consultationBo.getDentalActions().sort(Comparator.comparing(ConsultationDentalActionBo::isProcedure));
     }
 
     private void setSurfaceSctids(ConsultationBo consultationBo) {
