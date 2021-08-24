@@ -81,7 +81,6 @@ export function createTranslateLoader(http: HttpClient, publicService: PublicSer
 			{ prefix: './assets/i18n/internacion/', suffix: '.json' },
 			{ prefix: './assets/i18n/pacientes/', suffix: '.json' },
 			{ prefix: './assets/i18n/ambulatoria/', suffix: '.json' },
-			{ prefix: './assets/i18n/odontologia/', suffix: '.json' },
 			{ prefix: './assets/i18n/historia-clinica/', suffix: '.json' },
 			{ prefix: './assets/i18n/turnos/', suffix: '.json' },
 			{ prefix: './assets/i18n/camas/', suffix: '.json' },

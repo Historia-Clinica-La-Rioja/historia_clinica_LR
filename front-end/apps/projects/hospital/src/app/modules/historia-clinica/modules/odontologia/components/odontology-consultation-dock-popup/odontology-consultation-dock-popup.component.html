@@ -1,17 +1,17 @@
-<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'odontologia.nueva-consulta.TITLE'">
+<app-dock-popup [dockPopupRef]="dockPopupRef" title="Nueva consulta odontológica">
 
 	<div body fxLayout="column" fxLayoutGap="20px">
 
 		<div id="reasons">
 
-			<app-new-document-section [sectionTitle]="'odontologia.nueva-consulta.motivo.TITLE'"
-									  [sectionImportance]="'odontologia.nueva-consulta.RECOMENDADO'">
+			<app-new-document-section sectionTitle="Motivo de consulta"
+									  sectionImportance="*Recomendado">
 
 				<ng-container concept-form>
 
 					<app-concepts-search
 						*ngIf="!reasonNewConsultationService.getSnomedConcept() else mainReasonConsultation"
-						[label]="'odontologia.nueva-consulta.motivo.MOTIVO'"
+						label="Motivo"
 						(search)="reasonNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 
@@ -19,8 +19,7 @@
 						<form [formGroup]="reasonNewConsultationService.getForm()"
 							  (ngSubmit)="reasonNewConsultationService.addToList()">
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
-								</mat-label>
+								<mat-label> Diagnóstico </mat-label>
 								<input id="reason_input" matInput type="text" formControlName="snomed" name="snomed"
 									   readonly matTooltip="{{reasonNewConsultationService.getSnomedConcept().pt }}">
 								<button id="clear_reasons" mat-button matSuffix color="warn" mat-icon-button
@@ -38,7 +37,7 @@
 					</ng-template>
 				</ng-container>
 
-				<app-document-section-table data-display [tableTitle]="'odontologia.nueva-consulta.motivo.table.TITLE'"
+				<app-document-section-table data-display tableTitle="Motivos registrados"
 											[columns]="reasonNewConsultationService.getTableColumnConfig()"
 											[data]="reasonNewConsultationService.getMotivosConsulta()">
 
@@ -48,10 +47,10 @@
 		</div>
 
 		<div id="other-diagnostics">
-			<app-new-document-section sectionTitle="odontologia.nueva-consulta.otros-diagnosticos.TITLE">
+			<app-new-document-section sectionTitle="Otros diagnósticos">
 				<ng-container concept-form>
 					<app-concepts-search *ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm"
-										 [label]="'odontologia.nueva-consulta.otros-diagnosticos.CONCEPT_LABEL'"
+										 label="Problema"
 										 (search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 
@@ -60,8 +59,7 @@
 							  (ngSubmit)="otherDiagnosticsNewConsultationService.addToList()">
 
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.CONCEPT_LABEL'">
-								</mat-label>
+								<mat-label> Problema </mat-label>
 								<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
 									   matTooltip="{{ otherDiagnosticsNewConsultationService.getSnomedConcept().pt }}">
 								<button id="clear" mat-button matSuffix color="warn" mat-icon-button
@@ -71,8 +69,7 @@
 							</mat-form-field>
 
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.SEVERIDAD'">
-								</mat-label>
+								<mat-label> Severidad </mat-label>
 								<mat-select id="severity-select" formControlName="severidad">
 									<mat-option *ngFor="let severityType of severityTypes" [value]="severityType.code">
 										{{severityType.display}}
@@ -82,15 +79,14 @@
 							</mat-form-field>
 
 							<div class="margin-checkbox">
-								<mat-checkbox id="chronic-checkbox" formControlName="cronico">
-									<span [translate]="'odontologia.nueva-consulta.otros-diagnosticos.CRONICO'"></span>
+								<mat-checkbox id="chronic_checkbox" formControlName="cronico">
+									<span> Crónico </span>
 								</mat-checkbox>
 							</div>
 
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.FECHA_INICIO'">
-								</mat-label>
-								<input matInput id="start-date" [matDatepicker]="startDatePicker"
+								<mat-label> Fecha inicio </mat-label>
+								<input matInput id="start_date" [matDatepicker]="startDatePicker"
 									   formControlName="fechaInicio" [max]="otherDiagnosticsNewConsultationService.getFechaInicioMax()"
 									   (dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
 								<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
@@ -106,14 +102,13 @@
 							</mat-form-field>
 
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'odontologia.nueva-consulta.otros-diagnosticos.FECHA_FIN'">
-								</mat-label>
+								<mat-label> Fecha fin </mat-label>
 								<input matInput id="end-date" [matDatepicker]="endDatePicker" formControlName="fechaFin"
 									   [max]="today" (dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
 								<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #endDatePicker></mat-datepicker>
-								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('min', 'fechaFin')"
-										   [translate]="'odontologia.nueva-consulta.otros-diagnosticos.errors.FECHA_FIN_MIN'">
+								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('min', 'fechaFin')">
+									La fecha de fin no puede ser anterior a la fecha de inicio
 								</mat-error>
 								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaFin')"
 										   [translate]="'forms.MAX_DATE_TODAY'">
@@ -122,7 +117,7 @@
 
 							<div align="end">
 								<button id="submit_diagnostic" class="uppercase" mat-raised-button color="primary" type="submit">
-									<span [translate]="'odontologia.nueva-consulta.otros-diagnosticos.buttons.ADD'"></span>
+									<span> Agregar problema </span>
 								</button>
 							</div>
 
@@ -131,7 +126,7 @@
 
 				</ng-container>
 
-				<app-document-section-table data-display tableTitle="odontologia.nueva-consulta.otros-diagnosticos.TABLE_TITLE"
+				<app-document-section-table data-display tableTitle="Otros diagnósticos registrados"
 											[columns]="otherDiagnosticsNewConsultationService.getTableColumnConfig()"
 											[data]="otherDiagnosticsNewConsultationService.getDiagnostics()">
 				</app-document-section-table>
@@ -142,20 +137,19 @@
 
 
 		<div id="allergies">
-			<app-new-document-section sectionTitle="odontologia.nueva-consulta.alergias.TITLE">
+			<app-new-document-section sectionTitle="Alergias">
 
 				<ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!allergiesNewConsultationService.getSnomedConcept() else allergiesForm"
-						[label]="'odontologia.nueva-consulta.alergias.ALLERGY'"
+						label="Alergia"
 						(search)="allergiesNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 					<ng-template #allergiesForm>
 						<form [formGroup]="allergiesNewConsultationService.getForm()"
 							  (ngSubmit)="allergiesNewConsultationService.addToList()">
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'odontologia.nueva-consulta.alergias.ALLERGY'">
-								</mat-label>
+								<mat-label> Alergia </mat-label>
 								<input id="allergies_input" matInput type="text" formControlName="snomed" name="snomed"
 									   readonly matTooltip="{{allergiesNewConsultationService.getSnomedConcept().pt }}">
 								<button id="clear_allergies" mat-button matSuffix color="warn" mat-icon-button
@@ -165,8 +159,7 @@
 							</mat-form-field>
 
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'odontologia.nueva-consulta.alergias.CRITICALITY'">
-								</mat-label>
+								<mat-label> Criticidad </mat-label>
 								<mat-select id="criticality_select" formControlName="criticality">
 									<mat-option *ngFor="let criticalityType of criticalityTypes" [value]="criticalityType.id">
 										{{criticalityType.display}}
@@ -178,15 +171,14 @@
 							<div align="end">
 								<button id="submit_allergies" class="uppercase" mat-raised-button color="primary"
 										type="submit">
-									<span class="uppercase"
-										  [translate]="'odontologia.nueva-consulta.alergias.ADD'"></span>
+									<span class="uppercase"> Agregar alergia </span>
 								</button>
 							</div>
 						</form>
 					</ng-template>
 				</ng-container>
 
-				<app-document-section-table data-display [tableTitle]="'odontologia.nueva-consulta.alergias.table.TITLE'"
+				<app-document-section-table data-display tableTitle="Alergias registradas"
 								[columns]="allergiesNewConsultationService.getTableColumnConfig()"
 								[data]="allergiesNewConsultationService.getAlergias()">
 				</app-document-section-table>
@@ -197,12 +189,12 @@
 
 		<div id="personal_histories">
 
-			<app-new-document-section [sectionTitle]="'odontologia.nueva-consulta.antecedentes-personales.TITLE'">
+			<app-new-document-section sectionTitle="Antecedentes personales">
 
 				<ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!personalHistoriesNewConsultationService.getSnomedConcept() else personalHistoriesForm"
-						[label]="'odontologia.nueva-consulta.antecedentes-personales.ANTECEDENTES_PERSONALES'"
+						label="Antecedentes personales"
 						(search)="personalHistoriesNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 					<ng-template #personalHistoriesForm>
@@ -210,9 +202,7 @@
 							  (ngSubmit)="personalHistoriesNewConsultationService.addToList()">
 
 							<mat-form-field appearance="outline">
-								<mat-label
-									[translate]="'odontologia.nueva-consulta.antecedentes-personales.TIPO_DE_PROBLEMA'">
-								</mat-label>
+								<mat-label> Tipo de problema </mat-label>
 								<input id="personal_history_input" matInput type="text" formControlName="snomed"
 									   name="snomed"
 									   readonly
@@ -224,9 +214,7 @@
 							</mat-form-field>
 
 							<mat-form-field appearance="outline">
-								<mat-label
-									[translate]="'odontologia.nueva-consulta.antecedentes-personales.FECHA'">
-								</mat-label>
+								<mat-label> Fecha de registro </mat-label>
 								<input matInput id="history_date" [matDatepicker]="historyDatePicker"
 									   formControlName="fecha"
 									   [max]="personalHistoriesNewConsultationService.getMaxDate()">
@@ -238,8 +226,7 @@
 								<button id="submit_personal_history" class="uppercase" mat-raised-button
 										color="primary"
 										type="submit">
-									<span class="uppercase"
-								  		[translate]="'odontologia.nueva-consulta.antecedentes-personales.buttons.ADD'"></span>
+									<span class="uppercase"> Agregar antecedente personal </span>
 								</button>
 							</div>
 						</form>
@@ -259,11 +246,11 @@
 
 		<div id="medications">
 
-			<app-new-document-section sectionTitle="odontologia.nueva-consulta.medicaciones.TITLE">
+			<app-new-document-section sectionTitle="Medicación habitual">
 				<div concept-form>
 					<app-concepts-search
 						*ngIf="!medicationsNewConsultationService.getSnomedConcept() else medicationForm"
-						[label]="'odontologia.nueva-consulta.medicaciones.CONCEPT_LABEL'"
+						label="Medicación habitual"
 						(search)="medicationsNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 				</div>
@@ -272,8 +259,7 @@
 					<form [formGroup]="medicationsNewConsultationService.getForm()"
 						  (ngSubmit)="medicationsNewConsultationService.addToList()">
 						<mat-form-field appearance="outline">
-							<mat-label [translate]="'odontologia.nueva-consulta.medicaciones.NOMBRE_MEDICACION'">
-							</mat-label>
+							<mat-label> Nombre de medicación </mat-label>
 							<input matInput type="text" formControlName="snomed" name="snomed" readonly
 								   matTooltip="{{ medicationsNewConsultationService.getSnomedConcept().pt }}">
 							<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
@@ -283,11 +269,10 @@
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
-							<mat-label
-								[translate]="'odontologia.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
+							<mat-label> Observaciones </mat-label>
 							<textarea matInput type="text" id="observations" name="observaciones"
 									  formControlName="observaciones"
-									  placeholder="{{'odontologia.nueva-consulta.medicaciones.DESCRIPCION' | translate }}"
+									  placeholder="Descripción"
 							>
 							</textarea>
 							<mat-error *ngIf="hasError(medicationsNewConsultationService.getForm(), 'maxlength', 'observaciones')" translate="forms.MAX_LENGTH_ERROR"
@@ -297,19 +282,19 @@
 
 						<div class="margin-checkbox">
 							<mat-checkbox formControlName="suspendido">
-								<span [translate]="'odontologia.nueva-consulta.medicaciones.SUSPENDIDO'"></span>
+								<span> Suspendido </span>
 							</mat-checkbox>
 						</div>
 
 						<div align="end">
 							<button class="uppercase" mat-raised-button color="primary" type="submit">
-								<span [translate]="'internaciones.anamnesis.medicacion.ADD'"></span>
+								<span> Agregar medicación </span>
 							</button>
 						</div>
 					</form>
 				</ng-template>
 
-				<app-document-section-table data-display tableTitle="odontologia.nueva-consulta.medicaciones.TABLE_TITLE"
+				<app-document-section-table data-display tableTitle="Medicaciones registradas"
 											[columns]="medicationsNewConsultationService.getTableColumnConfig()"
 											[data]="medicationsNewConsultationService.getMedicaciones()">
 				</app-document-section-table>
@@ -318,12 +303,12 @@
 		</div>
 
 		<div id="evolution">
-			<app-document-section [sectionTitle]="'odontologia.nueva-consulta.evolucion.TITLE'">
+			<app-document-section sectionTitle="Evolución">
 				<ng-container concept-form>
 					<form [formGroup]="formEvolucion">
 						<mat-form-field appearance="outline">
 							<textarea matInput type="text" id="evolution_input" name="evolution" formControlName="evolution"
-									  placeholder="{{'odontologia.nueva-consulta.evolucion.DESCRIPCION' | translate }}"
+									  placeholder="Descripción"
 							>
 							</textarea>
 						</mat-form-field>

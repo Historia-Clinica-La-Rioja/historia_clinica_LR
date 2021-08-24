@@ -76,9 +76,9 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	private addErrorMessage(): void {
-		hasError(this.formEvolucion, 'maxlength', 'evolution') ?
-			this.errors[1] =  'odontologia.nueva-consulta.errors.MAX_LENGTH_NOTA'
-			: this.errors[1] = undefined;
+		this.errors[2] = hasError(this.formEvolucion, 'maxlength', 'evolution') ?
+			'La nota de evolución debe tener como máximo 1024 caracteres'
+			: undefined;
 	}
 
 }
