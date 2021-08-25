@@ -33,6 +33,8 @@ public class ConsultationBo {
 
     private List<ConsultationAllergyBo> allergies;
 
+    private List<ConsultationMedicationBo> medications;
+
     private String evolutionNote;
 
 }

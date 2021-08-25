@@ -44,6 +44,9 @@ public class OdontologyConsultationDto implements Serializable {
     private List<@Valid OdontologyPersonalHistoryDto> personalHistories = new ArrayList<>();
 
     @Nullable
+    private List<@Valid OdontologyMedicationDto> medications = new ArrayList<>();
+
+    @Nullable
     private String evolutionNote;
 
 
