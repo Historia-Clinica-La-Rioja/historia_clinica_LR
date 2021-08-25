@@ -92,8 +92,11 @@ export class ReportsComponent implements OnInit {
 		this.outpatientConsultationsToDownload.forEach(oc => {
 			if (this.isCheckedDownloadAnexo && this.isCheckedDownloadFormulario) {
 				this.patientReportsService.getFormPdf(oc, this.data.patientName).subscribe();
+				this.patientReportsService.getAnnexPdf(oc, this.data.patientName).subscribe();
 			} else if (this.isCheckedDownloadFormulario && !this.isCheckedDownloadAnexo) {
 				this.patientReportsService.getFormPdf(oc, this.data.patientName).subscribe();
+			} else {
+				this.patientReportsService.getAnnexPdf(oc, this.data.patientName).subscribe();
 			}
 		})
 	}

@@ -18,8 +18,14 @@ export class PatientReportsService {
 	}
 
 	getFormPdf(outpatientConsultation: ConsultationsDto, patientName: string): Observable<any> {
-		const pdfPrefixName = "FormularioV";
-		const url = this.URL_PREFIX + "outpatient-formv";
+		const pdfPrefixName = 'FormularioV';
+		const url = this.URL_PREFIX + 'outpatient-formv';
+		return this.getOutpatientConsultationReport(url, outpatientConsultation, pdfPrefixName, patientName);
+	}
+
+	getAnnexPdf(outpatientConsultation: ConsultationsDto, patientName: string): Observable<any> {
+		const pdfPrefixName = 'AnexoII';
+		const url = this.URL_PREFIX + 'outpatient-annex';
 		return this.getOutpatientConsultationReport(url, outpatientConsultation, pdfPrefixName, patientName);
 	}
 
