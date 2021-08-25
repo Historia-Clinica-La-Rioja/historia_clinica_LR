@@ -27,7 +27,7 @@ export class VacunasComponent implements OnInit {
 
 	private patientId: number;
 	public readonly vacunasSummary = VACUNAS;
-	public vaccines: HCEImmunizationDto[];
+	public vaccines: HCEImmunizationDto[]=[];
 
 	@Input() hasConfirmedAppointment: boolean;
 	dialogRef: any;

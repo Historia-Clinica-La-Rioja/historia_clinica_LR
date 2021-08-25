@@ -24,39 +24,41 @@
 
 
 	<div fxLayout="column" fxLayoutGap="20px">
-		<div fxFlex="100%">
+		<div fxFlex="100">
 			<app-summary-card [header]="vacunasSummary" [tooltip]="'historia-clinica.summary-card.vacunas.TOOLTIP'"
 				[canEdit]="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO']" [editable]="true"
 				(openInNew)="openDialog()">
 				<ng-container *ngIf="!vaccines.length">
-						<span class="no-info"  fxLayoutAlign="center" [translate]="'ambulatoria.paciente.vacunas.NO-INFO'"></span>
+					<span class="no-info" fxLayoutAlign="center"
+						[translate]="'ambulatoria.paciente.vacunas.NO-INFO'"></span>
 				</ng-container>
 
 				<ng-container *ngIf="vaccines.length">
-				<div fxLayout="column">
-					<mat-list-item class="vaccines-table-header-text" >
-						<div fxFlex="70%"><span  [translate]="'ambulatoria.paciente.vacunas.NAME'"></span></div>
-						<div fxFlex="15%"><span  [translate]="'ambulatoria.paciente.vacunas.DOSE'"></span></div>
-						<div fxFlex="10%"><span  [translate]="'ambulatoria.paciente.vacunas.DATE'"></span></div>
-					</mat-list-item>
-				</div>
-			</ng-container>
+					<div fxLayout="column">
+						<mat-list-item class="vaccines-table-header-text">
+							<div fxFlex="70"><span [translate]="'ambulatoria.paciente.vacunas.VACCINE'"></span></div>
+							<div fxFlex="15"><span [translate]="'ambulatoria.paciente.vacunas.DOSE'"></span></div>
+							<div fxFlex="10"><span [translate]="'ambulatoria.paciente.vacunas.DATE'"></span></div>
+						</mat-list-item>
+					</div>
+					<mat-divider></mat-divider>
+				</ng-container>
 				<ng-container *ngFor="let vaccine of vaccines; let i = index">
 					<div fxLayout="row" fxLayoutAlign="center center">
-						<div fxFlex="70%">
+						<div class="mat-values" fxFlex="70">
 							<div mat-line class="capitalize-first-letter"> {{vaccine.snomed.pt}}</div>
 						</div>
-						<div fxFlex="15%" >
+						<div fxFlex="15">
 							<ng-container *ngIf="vaccine.dose?.description else noInfo">
 								<strong class="dose">{{vaccine.dose?.description}}</strong>
 							</ng-container>
 						</div>
-						<div fxFlex="10%" class="padding-to-align-chip">
+						<div fxFlex="10" class="padding-to-align-chip">
 							<ng-container *ngIf="vaccine.administrationDate">
 								<span>{{vaccine.administrationDate | viewDate }}</span>
 							</ng-container>
 						</div>
-						<div fxFlex="5%">
+						<div fxFlex="5">
 							<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
 								mat-icon-button [matMenuTriggerFor]="menu">
 								<mat-icon>more_vert</mat-icon>
