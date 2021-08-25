@@ -23,7 +23,7 @@
 
 <mat-dialog-actions align="end">
 	<button type="button" mat-flat-button color="primary" id="download-report" (click)="downloadReports()"
-			[disabled]="((consultationsToDownload.length == 0) || (consultationsToDownload.length > 0 && (!isCheckedDownloadAnexo && !isCheckedDownloadFormulario)))">
+			[disabled]="((outpatientConsultationsToDownload.length == 0) || (outpatientConsultationsToDownload.length > 0 && (!isCheckedDownloadAnexo && !isCheckedDownloadFormulario)))">
 		<span class="uppercase" [translate]="'pacientes.reports.buttons.DOWNLOAD_REPORTS'"></span>
 	</button>
 </mat-dialog-actions>

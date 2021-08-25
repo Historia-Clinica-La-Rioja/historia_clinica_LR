@@ -4,6 +4,7 @@ import {ActionDisplays, TableModel} from "@presentation/components/table/table.c
 import {ConsultationsDto} from "@api-rest/api-model";
 import {OutpatientConsultationService} from "@api-rest/services/outpatient-consultation.service";
 import {DateFormat, momentFormat, momentParseDate} from "@core/utils/moment.utils";
+import {PatientReportsService} from "@api-rest/services/patient-reports.service";
 
 @Component({
 	selector: 'app-reports',
@@ -13,15 +14,16 @@ import {DateFormat, momentFormat, momentParseDate} from "@core/utils/moment.util
 export class ReportsComponent implements OnInit {
 
 	tableModel: TableModel<ConsultationsDto>;
-	consultationsToDownload: ConsultationsDto[] = [];
+	outpatientConsultationsToDownload: ConsultationsDto[] = [];
 
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
 
 	constructor(
 		private readonly dialogRef: MatDialogRef<ReportsComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: { patientId: number },
-		private readonly outpatientConsultationService: OutpatientConsultationService
+		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, patientName: string },
+		private readonly outpatientConsultationService: OutpatientConsultationService,
+		private readonly patientReportsService: PatientReportsService
 	) {
 	}
 
@@ -45,15 +47,15 @@ export class ReportsComponent implements OnInit {
 						display: ' ',
 						check: (row, consultationSelected) => {
 							if (consultationSelected) {
-								this.consultationsToDownload.push(row)
+								this.outpatientConsultationsToDownload.push(row)
 							} else {
-								this.consultationsToDownload.forEach((c, index) => {
-									if (c.id == row.id) this.consultationsToDownload.splice(index, 1);
+								this.outpatientConsultationsToDownload.forEach((oc, index) => {
+									if (oc.id == row.id) this.outpatientConsultationsToDownload.splice(index, 1);
 								});
 							}
 						},
 						isChecked: (row) => {
-							return this.consultationsToDownload.some(c => c.id === row.id);
+							return this.outpatientConsultationsToDownload.some(c => c.id === row.id);
 						}
 					}
 				},
@@ -86,6 +88,14 @@ export class ReportsComponent implements OnInit {
 		this.isCheckedDownloadFormulario = option;
 	}
 
-	downloadReports() {}
+	downloadReports() {
+		this.outpatientConsultationsToDownload.forEach(oc => {
+			if (this.isCheckedDownloadAnexo && this.isCheckedDownloadFormulario) {
+				this.patientReportsService.getFormPdf(oc, this.data.patientName).subscribe();
+			} else if (this.isCheckedDownloadFormulario && !this.isCheckedDownloadAnexo) {
+				this.patientReportsService.getFormPdf(oc, this.data.patientName).subscribe();
+			}
+		})
+	}
 
 }
