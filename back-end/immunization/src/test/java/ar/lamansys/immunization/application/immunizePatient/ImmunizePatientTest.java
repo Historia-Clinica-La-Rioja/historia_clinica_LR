@@ -102,7 +102,7 @@ class ImmunizePatientTest {
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
         when(vaccineConditionApplicationRepository.existsById(any())).thenReturn(true);
         when(vaccineConsultationRepository.save(any()))
-                .thenReturn(new VaccineConsultation(1, 20,14,1,65,
+                .thenReturn(new VaccineConsultation(1, 20,14,45,1,65,
                         LocalDate.of(2020,12,12),true));
         when(sharedAppointmentPort.hasConfirmedAppointment(any(), any(), any())).thenReturn(true);
         when(vaccineRuleStorage.existRule(any(), any(), any(), any(), any())).thenReturn(true);
@@ -159,7 +159,7 @@ class ImmunizePatientTest {
                         List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                                 new ClinicalSpecialtyDto(2, "Especialidad1"))));
         when(vaccineConsultationRepository.save(any()))
-                .thenReturn(new VaccineConsultation(1, 20, 14, 1, 65,
+                .thenReturn(new VaccineConsultation(1, 20, 14, 45, 1, 65,
                         LocalDate.of(2020, 12, 12), true));
         when(sharedAppointmentPort.hasConfirmedAppointment(any(), any(), any())).thenReturn(true);
         immunizePatient.run(new ImmunizePatientBo(14, 20, 65,

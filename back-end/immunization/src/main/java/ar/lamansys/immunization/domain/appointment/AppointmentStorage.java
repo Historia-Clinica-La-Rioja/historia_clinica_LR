@@ -2,7 +2,9 @@ package ar.lamansys.immunization.domain.appointment;
 
 import java.time.LocalDate;
 
-public interface ServeAppointmentStorage {
+public interface AppointmentStorage {
 
     void run(Integer patientId, Integer id, LocalDate nowDate);
+
+    Integer getPatientMedicalCoverageId(Integer patientId, Integer id);
 }

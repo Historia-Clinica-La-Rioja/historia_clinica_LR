@@ -2,7 +2,7 @@ package ar.lamansys.immunization.application.immunizePatient;
 
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientException;
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientExceptionEnum;
-import ar.lamansys.immunization.domain.appointment.ServeAppointmentStorage;
+import ar.lamansys.immunization.domain.appointment.AppointmentStorage;
 import ar.lamansys.immunization.domain.consultation.DoctorStorage;
 import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
 import ar.lamansys.immunization.domain.consultation.VaccineConsultationBo;
@@ -40,7 +40,7 @@ public class ImmunizePatient {
 
     private final VaccineRuleStorage vaccineRuleStorage;
 
-    private final ServeAppointmentStorage serveAppointmentStorage;
+    private final AppointmentStorage appointmentStorage;
 
     private final DateTimeProvider dateTimeProvider;
 
@@ -50,7 +50,7 @@ public class ImmunizePatient {
                            VaccineConditionApplicationStorage vaccineConditionApplicationStorage,
                            VaccineSchemeStorage vaccineSchemeStorage,
                            VaccineRuleStorage vaccineRuleStorage,
-                           ServeAppointmentStorage serveAppointmentStorage,
+                           AppointmentStorage appointmentStorage,
                            DateTimeProvider dateTimeProvider) {
         this.vaccineConsultationStorage = vaccineConsultationStorage;
         this.immunizationDocumentStorage = immunizationDocumentStorage;
@@ -58,7 +58,7 @@ public class ImmunizePatient {
         this.vaccineConditionApplicationStorage = vaccineConditionApplicationStorage;
         this.vaccineSchemeStorage = vaccineSchemeStorage;
         this.vaccineRuleStorage = vaccineRuleStorage;
-        this.serveAppointmentStorage = serveAppointmentStorage;
+        this.appointmentStorage = appointmentStorage;
         this.dateTimeProvider = dateTimeProvider;
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
@@ -74,9 +74,11 @@ public class ImmunizePatient {
         assertContextValid(immunizePatientBo, doctorInfoBo);
 
         LocalDate now = dateTimeProvider.nowDate();
+        Integer medicalCoverageId = appointmentStorage.getPatientMedicalCoverageId(immunizePatientBo.getPatientId(), doctorInfoBo.getId());
         var encounterId = vaccineConsultationStorage.save(
                 new VaccineConsultationBo(null,
                         immunizePatientBo.getPatientId(),
+                        medicalCoverageId,
                         immunizePatientBo.getClinicalSpecialtyId(),
                         immunizePatientBo.getInstitutionId(),
                         doctorInfoBo.getId(),
@@ -84,7 +86,7 @@ public class ImmunizePatient {
                         isBillable(immunizePatientBo)));
         immunizationDocumentStorage.save(mapTo(immunizePatientBo, encounterId, doctorInfoBo));
 
-        serveAppointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
+        appointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
     }
 
     private boolean isBillable(ImmunizePatientBo immunizePatientBo) {

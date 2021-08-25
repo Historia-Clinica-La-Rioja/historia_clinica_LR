@@ -662,3 +662,16 @@ databaseChangeLog:
                             name: institution_info
                             type: varchar(255)
                   tableName: inmunization
+
+
+    - changeSet:
+        id: vaccine_consultation-addPatientMedicalCoverageIdColumn
+        comment: Create column patient_medical_coverage_id in vaccine_consultation
+        author: etrapani
+        changes:
+            - addColumn:
+                  columns:
+                      - column:
+                            name: patient_medical_coverage_id
+                            type: int
+                  tableName: vaccine_consultation
