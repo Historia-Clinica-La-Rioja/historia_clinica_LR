@@ -7,7 +7,7 @@ import { ProcedureOrder, ToothAction, ActionType } from '../../services/actions.
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
-import { CommonActions, ToothComponent } from '../tooth/tooth.component';
+import { Actions, ToothComponent } from '../tooth/tooth.component';
 
 @Component({
 	selector: 'app-tooth-dialog',
@@ -52,7 +52,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit(): void {
 		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);
 		this.toothComponent.actionsSubject$.subscribe(actionsSctids => {
-			this.reciveCommonActions(actionsSctids)
+			this.reciveToothCurrentViewActions(actionsSctids)
 		});
 
 		if (this.data.records.length) {
@@ -128,17 +128,17 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.newHallazgoId = hallazgoId.value;
 	}
 
-	private reciveCommonActions(inCommon: CommonActions) {
-		if (inCommon?.findingId) {
-			this.form.controls.findingId.patchValue(inCommon.findingId);
+	private reciveToothCurrentViewActions(actions: Actions) {
+		if (actions?.findingId) {
+			this.form.controls.findingId.patchValue(actions.findingId);
 		} else {
 			this.form.controls.findingId.patchValue(undefined);
 			this.newHallazgoId = undefined;
 		}
 		const procedures = {
-			firstProcedureId: inCommon.procedures?.firstProcedureId,
-			secondProcedureId: inCommon.procedures?.secondProcedureId,
-			thirdProcedureId: inCommon.procedures?.thirdProcedureId
+			firstProcedureId: actions.procedures?.firstProcedureId,
+			secondProcedureId: actions.procedures?.secondProcedureId,
+			thirdProcedureId: actions.procedures?.thirdProcedureId
 		};
 		this.form.patchValue({
 			procedures
