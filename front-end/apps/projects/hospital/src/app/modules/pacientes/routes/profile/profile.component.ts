@@ -108,7 +108,7 @@ export class ProfileComponent implements OnInit {
 
 	reports(): void {
 		this.dialog.open(ReportsComponent, {
-			width: '650px',
+			width: '700px',
 			data: { patientId: this.patientId }
 		});
 	}

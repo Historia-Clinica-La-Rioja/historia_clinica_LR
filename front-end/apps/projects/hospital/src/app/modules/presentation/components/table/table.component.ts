@@ -92,11 +92,12 @@ export interface ColumnModel<T> {
 	text?: (row: T) => string | number;
 	action?: {
 		displayType: ActionDisplay,
-		display: string,
+		display?: string,
 		matColor?: ThemePalette,
 		do?: (row: T) => void,
 		hide?: (row: T) => boolean,
-		checked?: (row: T, boolean) => void
+		check?: (row: T, boolean) => void,
+		isChecked?: (row: T) => boolean,
 	};
 }
 

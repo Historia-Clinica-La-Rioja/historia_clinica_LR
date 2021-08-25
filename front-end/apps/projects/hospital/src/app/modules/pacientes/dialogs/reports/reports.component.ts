@@ -1,8 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { ActionDisplays, TableModel } from "@presentation/components/table/table.component";
-import { ConsultationsDto } from "@api-rest/api-model";
-import {PatientReportsService} from "@api-rest/services/patient-reports.service";
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {ActionDisplays, TableModel} from "@presentation/components/table/table.component";
+import {ConsultationsDto} from "@api-rest/api-model";
+import {OutpatientConsultationService} from "@api-rest/services/outpatient-consultation.service";
+import {DateFormat, momentFormat, momentParseDate} from "@core/utils/moment.utils";
 
 @Component({
 	selector: 'app-reports',
@@ -20,12 +21,12 @@ export class ReportsComponent implements OnInit {
 	constructor(
 		private readonly dialogRef: MatDialogRef<ReportsComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number },
-		private readonly patientReportsService: PatientReportsService
+		private readonly outpatientConsultationService: OutpatientConsultationService
 	) {
 	}
 
 	ngOnInit(): void {
-		this.patientReportsService.getConsultations(this.data.patientId).subscribe(data => {
+		this.outpatientConsultationService.getOutpatientConsultations(this.data.patientId).subscribe(data => {
 			this.tableModel = this.buildTable(data);
 		});
 	}
@@ -42,31 +43,34 @@ export class ReportsComponent implements OnInit {
 					action: {
 						displayType: ActionDisplays.CHECKBOX,
 						display: ' ',
-						checked: (consultation, consultationSelected) => {
+						check: (row, consultationSelected) => {
 							if (consultationSelected) {
-								this.consultationsToDownload.push(consultation)
+								this.consultationsToDownload.push(row)
 							} else {
 								this.consultationsToDownload.forEach((c, index) => {
-									if (c.id == consultation.id) this.consultationsToDownload.splice(index, 1);
+									if (c.id == row.id) this.consultationsToDownload.splice(index, 1);
 								});
 							}
+						},
+						isChecked: (row) => {
+							return this.consultationsToDownload.some(c => c.id === row.id);
 						}
 					}
 				},
 				{
 					columnDef: 'date',
-					header: 'Fecha',
-					text: (row) => row.date
+					header: 'pacientes.reports.table.columns.DATE',
+					text: (row) => momentFormat(momentParseDate(String(row.consultationDate)), DateFormat.VIEW_DATE)
 				},
 				{
-					columnDef: 'especiality',
-					header: 'Especialidad',
-					text: (row) => row.especiality
+					columnDef: 'specialty',
+					header: 'pacientes.reports.table.columns.SPECIALTY',
+					text: (row) => row.specialty
 				},
 				{
 					columnDef: 'professional',
-					header: 'Profesional',
-					text: (row) => row.professional
+					header: 'pacientes.reports.table.columns.PROFESSIONAL',
+					text: (row) => row.completeProfessionalName
 				},
 			],
 			data,

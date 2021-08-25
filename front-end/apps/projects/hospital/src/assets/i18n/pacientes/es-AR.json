@@ -109,6 +109,13 @@
 		"reports": {
 			"TITLE": "Informes",
 			"SELECT_CONSULTATIONS": "Seleccione consultas",
+			"table": {
+				"columns": {
+					"DATE": "Fecha",
+					"SPECIALTY": "Especialidad",
+					"PROFESSIONAL": "Profesional"
+				}
+			},
 			"SELECT_REPORT_TYPE": "Seleccione tipo de informe",
 			"buttons": {
 				"DOWNLOAD_REPORTS": "Descargar informes"

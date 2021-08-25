@@ -11,7 +11,7 @@
 			<td mat-cell [ngClass]="{'actions': !!column.action}" class="capitalize-first-letter" *matCellDef="let row">
 				<ng-container *ngIf="column.action else default">
 					<ng-container *ngIf="column.action.displayType === ActionDisplays.CHECKBOX">
-						<mat-checkbox (change)="column.action.checked(row, $event.checked)"></mat-checkbox>
+						<mat-checkbox (change)="column.action.check(row, $event.checked)" [checked]="column.action.isChecked(row)"></mat-checkbox>
 					</ng-container>
 					<ng-container *ngIf="column.action.displayType === ActionDisplays.ICON else button">
 						<button mat-icon-button color="{{column.action.matColor}}" *ngIf="!column.action.hide || !column.action.hide(row)" (click)="column.action.do(row)">
