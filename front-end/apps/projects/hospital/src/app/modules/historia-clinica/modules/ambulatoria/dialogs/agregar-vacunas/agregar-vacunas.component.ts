@@ -8,7 +8,6 @@ import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.ut
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AgregarVacunaComponent } from '../agregar-vacuna/agregar-vacuna.component';
-import { SuccesMessageDialogComponent } from '../succes-message-dialog/succes-message-dialog.component';
 
 @Component({
   selector: 'app-agregar-vacunas',
@@ -110,16 +109,6 @@ export class AgregarVacunasComponent implements OnInit {
           if (success) {
             this.dialogRef.close(true);
             this.snackBarService.showSuccess('ambulatoria.paciente.vacunas2.agregar_vacunas.SUCCESS');
-            this.translate.get('ambulatoria.paciente.vacunas2.agregar_vacunas.SUCCESS').subscribe(
-              (msg: string) => {
-                const finishAppointment = this.dialog.open(SuccesMessageDialogComponent, {
-                  width: '30%',
-                  data: {
-                    message: msg
-                  }
-                });
-              }
-            );
           }
         },
         error => {
