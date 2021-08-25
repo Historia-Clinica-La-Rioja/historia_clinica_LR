@@ -1,20 +1,22 @@
-@import '../../../../../../../assets/styles/mixins';
-
 div.spinner {
-  @include centered-spinner;
   margin-bottom: 20px;
 }
 .margin-bottom-0 {
     margin-bottom: 0;
 }
 .separation {
-    margin: 10px auto;
+    margin: 22px auto;
 }
 .dose {
-    margin-right: 10px;
     border-radius: 5px;
     padding: 5px;
+    font-weight: 500;
+    background-color: #2687C533;
+    color: #2687C5;
 }
 .margin-top {
-    margin-top: 20px;
+    margin-top: 10px;
+}
+#add-button {
+    padding: 0 2px;
 }

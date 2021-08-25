@@ -9,6 +9,7 @@ import { ActionDisplays, TableModel } from '@presentation/components/table/table
 import { ImmunizationDto, SnomedDto, SnomedResponseDto, VaccineConditionsDto, VaccineDoseInfoDto, VaccineInformationDto, VaccineSchemeDto } from '@api-rest/api-model';
 import { VaccineService } from '@api-rest/services/vaccine.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -49,7 +50,8 @@ export class AgregarVacunaComponent implements OnInit {
 		private readonly snowstormService: SnowstormService,
 		private readonly vaccineService: VaccineService,
 		private readonly snackBarService: SnackBarService,
-		public dialogRef: MatDialogRef<AgregarVacunaComponent>
+		public dialogRef: MatDialogRef<AgregarVacunaComponent>,
+		private readonly translate: TranslateService
 	) { }
 
 	ngAfterContentInit(): void {
@@ -267,12 +269,13 @@ export class AgregarVacunaComponent implements OnInit {
 			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
 					(results: SnomedResponseDto) => {
-						this.conceptsResultsTable = this.buildConceptsResultsTableBillableForm(results.items);
-						this.searchingNew = false;
+						this.buildConceptsResultsTableBillableForm(results.items);
 					},
 					_ => {
-						this.searchingNew = false;
 						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+					},
+					() => {
+						this.searchingNew = false;
 					}
 				);
 		}
@@ -285,61 +288,70 @@ export class AgregarVacunaComponent implements OnInit {
 			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
 				.subscribe(
 					(results: SnomedResponseDto) => {
-						this.conceptsResultsTablePreviousForm = this.buildConceptsResultsTablePreviousForm(results.items);
-						this.searchingPrevious = false;
+						this.buildConceptsResultsTablePreviousForm(results.items);
 					},
 					_ => {
-						this.searchingPrevious = false;
 						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+					},
+					() => {
+						this.searchingPrevious = false;
 					}
 				);
 		}
 	}
 
-	private buildConceptsResultsTableBillableForm(data: SnomedDto[]): TableModel<SnomedDto> {
-		return {
-			columns: [
-				{
-					columnDef: '1',
-					header: 'Descripción SNOMED',
-					text: concept => concept.pt
-				},
-				{
-					columnDef: 'select',
-					action: {
-						displayType: ActionDisplays.BUTTON,
-						display: 'Seleccionar',
-						matColor: 'primary',
-						do: concept => this.setConceptBillableForm(concept)
-					}
-				}
-			],
-			data,
-			enablePagination: true
-		};
+	private buildConceptsResultsTableBillableForm(data: SnomedDto[]): void {
+		this.translate.get('ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
+			(columnHeader: string) => {
+				this.conceptsResultsTable = {
+					columns: [
+						{
+							columnDef: '1',
+							header: columnHeader,
+							text: concept => concept.pt
+						},
+						{
+							columnDef: 'select',
+							action: {
+								displayType: ActionDisplays.BUTTON,
+								display: this.translate.instant('buttons.SELECT'),
+								matColor: 'primary',
+								do: concept => this.setConceptBillableForm(concept)
+							}
+						}
+					],
+					data,
+					enablePagination: true
+				};
+			}
+		);
 	}
 
-	private buildConceptsResultsTablePreviousForm(data: SnomedDto[]): TableModel<SnomedDto> {
-		return {
-			columns: [
-				{
-					columnDef: '1',
-					header: 'Descripción SNOMED',
-					text: concept => concept.pt
-				},
-				{
-					columnDef: 'select',
-					action: {
-						displayType: ActionDisplays.BUTTON,
-						display: 'Seleccionar',
-						matColor: 'primary',
-						do: concept => this.setConceptPreviousForm(concept)
-					}
-				}
-			],
-			data,
-			enablePagination: true
-		};
+	private buildConceptsResultsTablePreviousForm(data: SnomedDto[]): void {
+		this.translate.get('ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
+			(columnHeader: string) => {
+				this.conceptsResultsTablePreviousForm = {
+					columns: [
+						{
+							columnDef: '1',
+							header: columnHeader,
+							text: concept => concept.pt
+						},
+						{
+							columnDef: 'select',
+							action: {
+								displayType: ActionDisplays.BUTTON,
+								display: this.translate.instant('buttons.SELECT'),
+								matColor: 'primary',
+								do: concept => this.setConceptPreviousForm(concept)
+							}
+						}
+					],
+					data,
+					enablePagination: true
+				};
+			}
+		);
 	}
 
 	private setConceptBillableForm(selectedConcept: SnomedDto): void {

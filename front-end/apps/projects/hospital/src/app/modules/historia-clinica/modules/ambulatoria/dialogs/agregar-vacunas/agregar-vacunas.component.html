@@ -1,6 +1,6 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-    <div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.TITLE'"></div>
-    <button mat-button (click)="dialogRef.close();" tabindex="-1">
+    <div class="mat-h2 margin-bottom-0" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.TITLE'"></div>
+    <button mat-icon-button color="warn" (click)="dialogRef.close();" tabindex="-1">
         <mat-icon>close</mat-icon>
     </button>
 </div>
@@ -8,15 +8,16 @@
 <div mat-dialog-content>
     <ng-container *ngIf="!loading else showSpinner">
         <div fxLayout="row">
-            <div class="mat-h4 margin-bottom-0" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.SPECIALTY'">
+            <div class="mat-body margin-bottom-0"
+                [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.SPECIALTY'">
             </div>
         </div>
         <form [formGroup]="form" (submit)="save()">
-            <div fxLayout="row">
-                <mat-form-field appearance="outline">
+            <div fxLayout="row" class="mat-h4">
+                <mat-form-field appearance="outline" fxFlex="50">
                     <mat-select formControlName="clinicalSpecialty" required>
                         <mat-option *ngFor="let clinicalSpecialty of this.specialties" [value]="clinicalSpecialty.id">
-                            <span class="mat-body">{{clinicalSpecialty.name}}</span>
+                            <span>{{clinicalSpecialty.name}}</span>
                         </mat-option>
                     </mat-select>
                     <mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -25,20 +26,18 @@
 
             <div class="aplied-vaccines">
 
-                <ng-container *ngFor="let vaccine of this.appliedVaccines; index as i">
+                <div *ngFor="let vaccine of this.appliedVaccines; index as i" class="separation">
 
-                    <div fxLayout="row" fxLayoutAlign="space-between end" class="separation">
-                        <ng-container *ngIf="vaccine.billable else previousVaccineApplication">
-                            <div class="mat-h5 color-primary">
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <div class="mat-h5 margin-bottom-0 color-primary">
+                            <ng-container *ngIf="vaccine.billable else previousVaccineApplication">
                                 {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.NEW_VACCINE_TITLE' |
                                 translate | uppercase }}
-                            </div>
-                        </ng-container>
+                            </ng-container>
+                        </div>
                         <ng-template #previousVaccineApplication>
-                            <div class="mat-h5 color-primary">
-                                {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.PREVIOUS_VACCINE_TITLE' |
-                                translate | uppercase }}
-                            </div>
+                            {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.PREVIOUS_VACCINE_TITLE' |
+                            translate | uppercase }}
                         </ng-template>
 
                         <div>
@@ -52,31 +51,29 @@
                     </div>
 
                     <div fxLayout="row" class="mat-body">
-                        {{ vaccine.snomed.pt }}
+                        <span class="capitalize-first-letter">{{ vaccine.snomed.pt }}</span>
                     </div>
 
-                    <div class="mat-h5 separation" fxLayout="row" fxLayoutAlign="end">
-                        <div fxLayout="row" fxLayoutAlign="center center">
-                            <div class="dose dose-color" *ngIf="vaccine.dose">
-                                <strong>{{ vaccine.dose?.description | uppercase }}</strong>
-                            </div>
-                            <div> {{ this.displayDate(vaccine.administrationDate) }}</div>
+                    <div class="mat-h5 margin-top" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div class="dose" *ngIf="vaccine.dose">
+                            <span>{{ vaccine.dose?.description | uppercase }}</span>
                         </div>
+                        <div> {{ this.displayDate(vaccine.administrationDate) }}</div>
                     </div>
 
-                </ng-container>
+                </div>
 
             </div>
 
             <mat-divider></mat-divider>
 
             <div fxLayout="row" class="separation">
-                <button type="button" (click)="addVaccine()" mat-button color="primary" tabindex="-1">
+                <button mat-button type="button" (click)="addVaccine()" color="primary" tabindex="-1" id="add-button">
                     + {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.ADD' | translate }}
                 </button>
             </div>
 
-            <div fxLayout="row" fxLayoutAlign="end" class="margin-top">
+            <div fxLayout="row" fxLayoutAlign="end">
                 <button type="submit" mat-flat-button color="primary" [disabled]="this.appliedVaccines.length == 0">
                     {{ 'buttons.CONFIRM' | translate | uppercase }}
                 </button>
@@ -85,7 +82,7 @@
     </ng-container>
 
     <ng-template #showSpinner>
-        <div class="spinner">
+        <div fxLayout="row" fxLayoutAlign="center center" class="spinner">
             <mat-spinner diameter="100" color="primary"></mat-spinner>
         </div>
     </ng-template>

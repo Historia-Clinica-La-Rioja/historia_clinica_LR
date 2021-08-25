@@ -317,10 +317,10 @@
 				"TITLE": "Historial de vacunación",
 				"ADD": "Aplicar vacuna",
 				"DETAILS": "Ver detalle",
-				"NO-INFO":"No hay información para mostrar",
-				"VACCINE":"Vacuna",
-				"DOSE":"Dosis",
-				"DATE":"Fecha",
+				"NO-INFO": "No hay información para mostrar",
+				"VACCINE": "Vacuna",
+				"DOSE": "Dosis",
+				"DATE": "Fecha",
 				"aplicar": {
 					"TITLE": "Aplicar vacuna",
 					"INMUNIZATION": "Vacuna",
@@ -340,10 +340,10 @@
 					"LOT_NUMBER": "Lote",
 					"INSTITUTION": "Institución",
 					"PROFESSIONAL": "Profesional",
-					"CONDITION_MOTIVE":"Condición o motivo",
-					"SCHEME":"Esquema",
-					"NO-INFO":"Sin información",
-					"NO-OBS":"Sin observaciones"
+					"CONDITION_MOTIVE": "Condición o motivo",
+					"SCHEME": "Esquema",
+					"NO-INFO": "Sin información",
+					"NO-OBS": "Sin observaciones"
 				}
 			},
 			"vacunas2": {
@@ -364,7 +364,7 @@
 						"PREVIOUS_VACCINE_TAB": "Registrar vacuna previa",
 						"ADMINISTRATION_DATE": "Fecha de vacunación",
 						"NOTE": "Observaciones",
-						"INMUNIZATION": "Vacuna",
+						"IMMUNIZATION": "Vacuna",
 						"CONDITION": "Condición o motivo",
 						"SCHEME": "Esquema",
 						"DOSE": "Dosis",
@@ -373,7 +373,9 @@
 						"PROFESSIONAL": "Profesional",
 						"NOT_VACCINE_SELECTED_ERROR": "Debe seleccionar una vacuna",
 						"NOT_SCHEME_SELECTED_ERROR": "Si selecciona una condición, debe elegir un esquema",
-						"NOT_DOSE_SELECTED_ERROR": "Si selecciona un esquema, debe elegir una dosis"
+						"NOT_DOSE_SELECTED_ERROR": "Si selecciona un esquema, debe elegir una dosis",
+						"NULL_OPTION_MESSAGE": "Seleccione una opción",
+						"COLUMN_VACCINE_HEADER": "Descripción SNOMED"
 					}
 				}
 			}

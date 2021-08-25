@@ -1,3 +1,13 @@
 form {
-  font-size: 15px;
+  font-size: 14px;
+  padding-top: 30px ;
+}
+mat-label, mat-form-field.mat-form-field {
+  margin-bottom: 5px;
+}
+app-concepts-search {
+  margin-bottom: 17px;
+}
+.mat-tab-label {
+  font-size: 16px;
 }
