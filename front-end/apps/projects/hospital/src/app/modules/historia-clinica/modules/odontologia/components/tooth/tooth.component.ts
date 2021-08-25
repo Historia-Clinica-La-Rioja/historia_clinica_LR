@@ -118,6 +118,7 @@ export class ToothComponent implements AfterViewInit {
 
 	setFindingsAndProcedures(actions: ToothAction[]) {
 		this.actionsService.setActions(actions);
+		this.emitFindingAndProcedures();
 	}
 
 	private emitFindingAndProcedures() {
