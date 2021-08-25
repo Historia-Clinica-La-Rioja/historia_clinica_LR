@@ -4,6 +4,7 @@ import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
+import ar.lamansys.odontology.domain.consultation.odontogramDrawings.DrawingBo;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,6 +189,73 @@ class DrawOdontogramServiceImplTest {
         List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
 
         Assertions.assertEquals(3, odontogramDrawings.size());
+
+    }
+
+
+    @Test
+    void shouldOverwriteAnyRecordInTheTooth () {
+        Integer patientId = 50;
+
+        List<ToothDrawingsBo> previousDrawings = new ArrayList<>();
+        DrawingBo previousWholeToothDrawing = new DrawingBo("record");
+        ToothDrawingsBo toothDrawings = new ToothDrawingsBo("tooth 1");
+        toothDrawings.setWholeDrawing(previousWholeToothDrawing);
+        previousDrawings.add(toothDrawings);
+
+        when(odontogramDrawingStorage.getDrawings(patientId))
+                .thenReturn(previousDrawings);
+
+        List<ConsultationDentalActionBo> dentalActions = new ArrayList<>();
+
+        OdontologySnomedBo action1 = new OdontologySnomedBo("action 1", "action 1");
+        OdontologySnomedBo tooth1 = new OdontologySnomedBo("tooth 1", "tooth 1");
+        dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, ESurfacePositionBo.RIGHT, true));
+
+
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(patientId, dentalActions);
+
+        Assertions.assertNull(odontogramDrawings.get(0).getWholeDrawing());
+        Assertions.assertTrue(odontogramDrawings.get(0).hasAnyDrawing());
+        Assertions.assertEquals("action 1", odontogramDrawings.get(0).getRightSurfaceDrawing().getSctid());
+
+    }
+
+    @Test
+    void teethThatAreNotAffectedShouldKeepItsRecords () {
+        Integer patientId = 50;
+
+        List<ToothDrawingsBo> previousDrawings = new ArrayList<>();
+        DrawingBo previousWholeToothDrawing = new DrawingBo("record 1");
+        ToothDrawingsBo toothDrawings = new ToothDrawingsBo("tooth 2");
+        toothDrawings.setWholeDrawing(previousWholeToothDrawing);
+        previousDrawings.add(toothDrawings);
+
+        when(odontogramDrawingStorage.getDrawings(patientId))
+                .thenReturn(previousDrawings);
+
+        List<ConsultationDentalActionBo> dentalActions = new ArrayList<>();
+
+        OdontologySnomedBo action1 = new OdontologySnomedBo("action 1", "action 1");
+        OdontologySnomedBo tooth1 = new OdontologySnomedBo("tooth 1", "tooth 1");
+        dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, ESurfacePositionBo.RIGHT, true));
+
+
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(patientId, dentalActions);
+
+        Assertions.assertNotNull(odontogramDrawings.stream()
+                .filter(d -> d.getToothId().equals("tooth 1"))
+                .findFirst()
+                .get());
+
+        ToothDrawingsBo tooth2Drawings = odontogramDrawings.stream()
+                .filter(d -> d.getToothId().equals("tooth 2"))
+                .findFirst()
+                .get();
+
+        Assertions.assertNotNull(tooth2Drawings);
+        Assertions.assertTrue(tooth2Drawings.hasAnyDrawing());
+        Assertions.assertEquals("record 1", tooth2Drawings.getWholeDrawing().getSctid());
 
     }
 

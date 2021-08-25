@@ -25,18 +25,18 @@ public class DrawOdontogramServiceImpl implements DrawOdontogramService {
 
     public List<ToothDrawingsBo> run(Integer patientId, List<ConsultationDentalActionBo> actions) {
         LOG.debug("Input parameters -> patientId {}, actions {}", patientId, actions);
-        // TODO: load previous drawings
-        List<ToothDrawingsBo> teethDrawings = computeDrawings(actions);
-        odontogramDrawingStorage.save(patientId, teethDrawings);
-        LOG.debug("Output size -> {}", teethDrawings.size());
-        LOG.trace("Output -> {}", teethDrawings);
-        return teethDrawings;
+        List<ToothDrawingsBo> previousDrawings = odontogramDrawingStorage.getDrawings(patientId);
+        List<ToothDrawingsBo> updatedDrawings = computeDrawings(previousDrawings, actions);
+        odontogramDrawingStorage.save(patientId, updatedDrawings);
+        LOG.debug("Output size -> {}", updatedDrawings.size());
+        LOG.trace("Output -> {}", updatedDrawings);
+        return updatedDrawings;
     }
 
-    private List<ToothDrawingsBo> computeDrawings(List<ConsultationDentalActionBo> actions) {
-        LOG.debug("Input parameter -> actions {}", actions);
+    private List<ToothDrawingsBo> computeDrawings(List<ToothDrawingsBo> previousDrawings, List<ConsultationDentalActionBo> actions) {
+        LOG.debug("Input parameters -> previousDrawings {}, actions {}", previousDrawings, actions);
         if (actions == null) return new ArrayList<>();
-        Map<String, ToothDrawingsBo> teethDrawings = new HashMap<>();
+        Map<String, ToothDrawingsBo> teethDrawings = toToothDrawingsMap(previousDrawings);
         actions.forEach(action -> {
             String toothSctid = action.getTooth().getSctid();
             ToothDrawingsBo toothDrawings = teethDrawings.get(toothSctid);
@@ -50,6 +50,12 @@ public class DrawOdontogramServiceImpl implements DrawOdontogramService {
         LOG.debug("Output size -> {}", result.size());
         LOG.trace("Output -> {}", result);
         return result;
+    }
+
+    private Map<String, ToothDrawingsBo> toToothDrawingsMap(List<ToothDrawingsBo> previousDrawings) {
+        Map<String, ToothDrawingsBo> teethDrawings = new HashMap<>();
+        previousDrawings.forEach(toothDrawings -> teethDrawings.put(toothDrawings.getToothId(), toothDrawings));
+        return teethDrawings;
     }
 
 }
