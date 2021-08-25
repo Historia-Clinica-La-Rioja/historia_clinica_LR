@@ -102,14 +102,14 @@ export class AppointmentsService {
 	}
 
 	getAnexoPdf(appointmentData: any): Observable<any> {
-		const pdfName = "AnexoII";
-		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/anexo`;
+		const pdfName = 'AnexoII';
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/appointment-annex`;
 		return this.getAppointmentReport(url, appointmentData, pdfName);
 	}
 
 	getFormPdf(appointmentData: any): Observable<any> {
-		const pdfName = "FormularioV";
-		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/formv`;
+		const pdfName = 'FormularioV';
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/appointment-formv`;
 		return this.getAppointmentReport(url, appointmentData, pdfName);
 	}
 
