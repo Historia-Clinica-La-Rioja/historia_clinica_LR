@@ -138,30 +138,47 @@ public class ReportsController {
         response.flushBuffer();
     }
 
-    @GetMapping("/{institutionId}/anexo")
+    @GetMapping("/{institutionId}/appointment-annex")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
-    public ResponseEntity<InputStreamResource> getAnexoReport(
+    public ResponseEntity<InputStreamResource> getAppointmentAnnexReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        AnnexIIBo reportDataBo = annexReportService.execute(appointmentId);
+        AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
-        Map<String, Object> context = annexReportService.createContext(reportDataDto);
+        Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
         String outputFileName = annexReportService.createOutputFileName(appointmentId, now);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_anexo");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
 
-    @GetMapping("/{institutionId}/appointmentformv")
+    @GetMapping("/{institutionId}/outpatient-annex")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    public ResponseEntity<InputStreamResource> getOutpatientAnnexReport(
+            @PathVariable Integer institutionId,
+            @RequestParam(name = "outpatientId") Integer outpatientId)
+            throws PDFDocumentException {
+        LOG.debug("Input parameter -> outpatientId {}", outpatientId);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+        AnnexIIBo reportDataBo = annexReportService.getOutpatientData(outpatientId);
+        AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
+        Map<String, Object> context = annexReportService.createOutpatientContext(reportDataDto);
+        String outputFileName = annexReportService.createOutputFileName(outpatientId, now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_anexo");
+        LOG.debug(OUTPUT, reportDataDto);
+        return response;
+    }
+
+    @GetMapping("/{institutionId}/appointment-formv")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<InputStreamResource> getFormVAppointmentReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
         FormVBo reportDataBo = formReportService.getAppointmentData(appointmentId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
@@ -172,17 +189,17 @@ public class ReportsController {
         return response;
     }
 
-    @GetMapping("/{institutionId}/outpatientformv")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @GetMapping("/{institutionId}/outpatient-formv")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
     public ResponseEntity<InputStreamResource> getFormVOutpatientReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "outpatientId") Integer outpatientId)
             throws PDFDocumentException {
-        LOG.debug("Input parameters -> appointmentsIdList {}", outpatientId);
+        LOG.debug("Input parameter -> outpatientId {}", outpatientId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
         FormVBo reportDataBo = formReportService.getOutpatientData(outpatientId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
-        Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
+        Map<String, Object> context = formReportService.createOutpatientContext(reportDataDto);
         String outputFileNames = formReportService.createOutputFileName(outpatientId, now);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileNames, "appointments_report_form");
         LOG.debug(OUTPUT, reportDataDto);

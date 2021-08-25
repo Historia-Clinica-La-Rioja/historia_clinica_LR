@@ -30,4 +30,12 @@ public class AnnexIIDto {
     private String medicalCoverage;
 
     private String affiliateNumber;
+
+    private Boolean existsConsultation;
+
+    private Boolean hasProcedures;
+
+    private String specialty;
+
+    private LocalDate consultationDate;
 }

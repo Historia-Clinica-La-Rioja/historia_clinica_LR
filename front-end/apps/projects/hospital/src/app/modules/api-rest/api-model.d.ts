@@ -134,13 +134,17 @@ export interface AnnexIIDto {
     appointmentState: string;
     attentionDate: Date;
     completePatientName: string;
+    consultationDate: Date;
     documentNumber: string;
     documentType: string;
     establishment: string;
+    existsConsultation: boolean;
+    hasProcedures: boolean;
     medicalCoverage: string;
     patientAge: number;
     patientGender: string;
     reportDate: Date;
+    specialty: string;
 }
 
 export interface AnthropometricDataDto extends Serializable {

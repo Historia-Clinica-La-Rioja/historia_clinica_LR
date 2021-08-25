@@ -241,11 +241,11 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         return ResponseEntity.ok().body(true);
     }
 
-    @GetMapping("/outpatientids")
+    @GetMapping("/outpatient-consultations")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<List<ConsultationsDto>> getOutpatientConsultations(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestParam(name = "patientId") Integer patientId) {
+            @PathVariable(name = "patientId") Integer patientId){
         LOG.debug("Input parameter -> patientId {}", patientId);
         List<ConsultationsBo> consultations = outpatientSummaryService.getOutpatientConsultations(patientId);
         List<ConsultationsDto> result = outpatientConsultationMapper.fromListConsultationsBo(consultations);
