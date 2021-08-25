@@ -14,8 +14,6 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 
     private final EntityManager entityManager;
 
-    public static final String APPOINTMENT_NOT_FOUND = "appointment.not.found";
-
     public FormReportRepositoryImpl(EntityManager entityManager){
         this.entityManager = entityManager;
     }

@@ -8,9 +8,13 @@ import java.util.Map;
 
 public interface AnnexReportService {
 
-    AnnexIIBo execute(Integer appointmentId);
+    AnnexIIBo getAppointmentData(Integer appointmentId);
 
-    Map<String, Object> createContext(AnnexIIDto reportDataDto);
+    AnnexIIBo getOutpatientData(Integer outpatientId);
+
+    Map<String, Object> createAppointmentContext(AnnexIIDto reportDataDto);
+
+    Map<String, Object> createOutpatientContext(AnnexIIDto reportDataDto);
 
     String createOutputFileName(Integer appointmentId, ZonedDateTime consultedDate);
 }

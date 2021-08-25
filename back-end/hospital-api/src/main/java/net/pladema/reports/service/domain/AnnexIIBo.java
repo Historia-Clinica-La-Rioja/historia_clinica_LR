@@ -35,12 +35,18 @@ public class AnnexIIBo {
 
     private String affiliateNumber;
 
+    private Boolean existsConsultation;
+
+    private Boolean hasProcedures;
+
+    private String specialty;
+
+    private LocalDate consultationDate;
+
     public AnnexIIBo(AnnexIIVo annexIIVo){
         this.reportDate = LocalDate.now();
         this.establishment = annexIIVo.getEstablishment();
-        this.completePatientName = Stream.of(annexIIVo.getFirstName(), annexIIVo.getMiddleNames(), annexIIVo.getLastName(),annexIIVo.getOtherLastNames())
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining(" "));
+        this.completePatientName = annexIIVo.getCompletePatientName();
         this.documentType = annexIIVo.getDocumentType ();
         this.documentNumber = annexIIVo.getDocumentNumber();
         this.patientGender = annexIIVo.getPatientGender();
@@ -49,5 +55,9 @@ public class AnnexIIBo {
         this.appointmentState = annexIIVo.getAppointmentState();
         this.medicalCoverage = annexIIVo.getMedicalCoverage();
         this.affiliateNumber = annexIIVo.getAffiliateNumber();
+        this.existsConsultation = annexIIVo.getExistsConsultation();
+        this.hasProcedures = annexIIVo.getHasProcedures();
+        this.specialty = annexIIVo.getSpecialty();
+        this.consultationDate = annexIIVo.getConsultationDate();
     }
 }

@@ -6,5 +6,7 @@ import java.util.Optional;
 
 public interface AnnexReportRepository {
 
-    Optional<AnnexIIVo> getAnexoInfo(Integer appointmentId);
+    Optional<AnnexIIVo> getAppointmentAnnexInfo(Integer appointmentId);
+
+    Optional<AnnexIIVo> getOutpatientAnnexInfo(Integer outpatientId);
 }
