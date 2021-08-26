@@ -9,4 +9,4 @@ const surfacesNames = {
 	362104007: 'lingual'
 };
 
-export const getSurfaceShortName = (sctid: number) => surfacesNames[sctid];
+export const getSurfaceShortName = (sctid: string) => surfacesNames[sctid];

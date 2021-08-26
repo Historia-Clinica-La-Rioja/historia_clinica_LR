@@ -7,6 +7,7 @@ import { OdontogramComponent } from './components/odontogram/odontogram.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToothDialogComponent } from './components/tooth-dialog/tooth-dialog.component';
 import { ConceptsFacadeService } from './services/concepts-facade.service';
+import { PresentationModule } from '@presentation/presentation.module';
 
 
 
@@ -17,7 +18,8 @@ import { ConceptsFacadeService } from './services/concepts-facade.service';
 		FlexModule,
 		FlexLayoutModule,
 		AppMaterialModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		PresentationModule
 	],
 	exports: [
 		ToothComponent,

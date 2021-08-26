@@ -29,7 +29,7 @@ export class OdontogramComponent implements OnInit {
 	quadrants;
 	records = {};
 	actionsFrom = {};
-
+	private patientId: string;
 	ngOnInit(): void {
 
 		this.odontogramRestService.getOdontogram().subscribe(
@@ -54,14 +54,15 @@ export class OdontogramComponent implements OnInit {
 
 		this.activatedRoute.paramMap.subscribe(
 			(params) => {
-				this.odontogramRestService.getOdontogramDrawings(params.get('idPaciente')).subscribe(
+				this.patientId = params.get('idPaciente');
+				this.odontogramRestService.getOdontogramDrawings(this.patientId).subscribe(
 					(records: ToothDrawingsDto[]) => {
 						records.forEach(record => {
 							this.records[record.toothSctid] = mapRecords(record.drawings);
 						})
 					}
 				)
-			 });
+			});
 
 	}
 
@@ -72,7 +73,8 @@ export class OdontogramComponent implements OnInit {
 				tooth,
 				quadrantCode,
 				currentActions: this.odontogramService.getActionsFrom(tooth.snomed.sctid),
-				records: this.records[tooth.snomed.sctid] ? deepClone(this.records[tooth.snomed.sctid]) : []
+				records: this.records[tooth.snomed.sctid] ? deepClone(this.records[tooth.snomed.sctid]) : [],
+				patientId: this.patientId
 			}
 		});
 

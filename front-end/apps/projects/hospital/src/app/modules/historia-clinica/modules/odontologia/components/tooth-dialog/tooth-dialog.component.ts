@@ -2,7 +2,8 @@ import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
-import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
+import { Observable } from 'rxjs';
+import { OdontogramService as OdontogramRestService,  ToothRecordDto } from '../../api-rest/odontogram.service';
 import { ProcedureOrder, ToothAction, ActionType } from '../../services/actions.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
@@ -21,15 +22,18 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly odontogramRestService: OdontogramRestService,
-		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[], records: ToothAction[] },
+		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[], records: ToothAction[], patientId: string },
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
 		private conceptsFacadeService: ConceptsFacadeService
 	) {
-
+		this.historicalRecords$ = this.odontogramRestService.getRecords(this.data.patientId, this.data.tooth.snomed.sctid);
 	}
+	showOlderRecords = false;
+	readonly shortNameOf = getSurfaceShortName;
 
 	readonly toothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
 
+	historicalRecords$: Observable<ToothRecordDto[]>
 	form: FormGroup;
 	newHallazgoId: number;
 
@@ -149,13 +153,13 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.selectedSurfacesText = '';
 		if (this.selectedSurfaces.length) {
 			this.selectedSurfacesText = this.selectedSurfaces.length === 1 ? 'Cara ' : 'Caras ';
-			const mappedNames = this.selectedSurfaces.map(surface => this.findSutableName(surface));
+			const mappedNames = this.selectedSurfaces.map(surface => this.findSuitableName(surface));
 			this.selectedSurfacesText += mappedNames.filter(Boolean).join(', ');
 		}
 	}
 
-	private findSutableName(surface: string): string {
-		const sctid = this.surfacesDto[surface].sctid;
+	findSuitableName(surface: string): string {
+		const sctid = this.surfacesDto[surface]?.sctid;
 		return getSurfaceShortName(sctid);
 	}
 

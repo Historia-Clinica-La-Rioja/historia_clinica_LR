@@ -23,3 +23,8 @@ div {
 .pointer {
 	cursor: pointer;
 }
+
+.scrolleable-records {
+	overflow-y: scroll;
+	max-height: 70px;
+}
