@@ -53,6 +53,7 @@ public class ToothStorageImpl implements ToothStorage {
         result.setSnomed(odontologySnomedBo);
         result.setToothCode((Short) toothRaw[2]);
         result.setQuadrantCode((Short) toothRaw[3]);
+        result.setPosterior((boolean) toothRaw[4]);
 
         logger.debug("Output -> {}", result);
         return result;

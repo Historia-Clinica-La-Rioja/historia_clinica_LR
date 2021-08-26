@@ -2,7 +2,7 @@
 const surfacesNames = {
 	245653007: 'distal',
 	245652002: 'mesial',
-	245647007: 'vesticular',
+	245647007: 'vestibular',
 	245650005: 'palatina',
 	245645004: 'incisal',
 	362103001: 'oclusal',

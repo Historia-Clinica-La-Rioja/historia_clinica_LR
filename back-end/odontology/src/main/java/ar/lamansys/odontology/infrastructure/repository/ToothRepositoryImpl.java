@@ -23,7 +23,7 @@ public class ToothRepositoryImpl implements ToothRepository {
     @Transactional(readOnly = true)
     public List<Object[]> getAll() {
 
-        String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code " +
+        String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code, t.posterior " +
                 "FROM tooth t " +
                 "JOIN body_part bp ON bp.sctid = t.sctid";
 
@@ -36,7 +36,7 @@ public class ToothRepositoryImpl implements ToothRepository {
     @Transactional(readOnly = true)
     public Object[] get(String toothId) {
         logger.debug("Input -> {}", toothId);
-        String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code " +
+        String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code, t.posterior " +
                 "FROM tooth t " +
                 "JOIN body_part bp ON bp.sctid = t.sctid " +
                 "WHERE t.sctid = :toothId ";

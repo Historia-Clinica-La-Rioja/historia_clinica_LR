@@ -1,7 +1,6 @@
 package ar.lamansys.odontology.application.odontogram;
 
 import ar.lamansys.odontology.domain.OdontogramQuadrantBo;
-import ar.lamansys.odontology.domain.OdontogramQuadrantData;
 import ar.lamansys.odontology.domain.ToothWithPositionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
