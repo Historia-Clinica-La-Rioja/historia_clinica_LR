@@ -150,7 +150,7 @@ public class ReportsController {
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
         Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
         String outputFileName = annexReportService.createOutputFileName(appointmentId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_anexo");
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "annex_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
@@ -167,7 +167,7 @@ public class ReportsController {
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
         Map<String, Object> context = annexReportService.createOutpatientContext(reportDataDto);
         String outputFileName = annexReportService.createOutputFileName(outpatientId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_anexo");
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "annex_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
@@ -184,7 +184,7 @@ public class ReportsController {
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
         Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
         String outputFileName = formReportService.createOutputFileName(appointmentId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_form");
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "form_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
@@ -201,7 +201,7 @@ public class ReportsController {
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
         Map<String, Object> context = formReportService.createOutpatientContext(reportDataDto);
         String outputFileNames = formReportService.createOutputFileName(outpatientId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileNames, "appointments_report_form");
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileNames, "form_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
