@@ -675,3 +675,54 @@ databaseChangeLog:
                             name: patient_medical_coverage_id
                             type: int
                   tableName: vaccine_consultation
+
+    - changeSet:
+        id: snomed-dental-surfaces-data
+        comment: Insert tooth surfaces data in snomed table
+        author: tmedina
+        context: "!schema-only"
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245652002','cara mesial de pieza dentaria','245652002','cara mesial de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245653007','cara distal de pieza dentaria','245653007','cara distal de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245647007','cara vestibular de pieza dentaria','245647007','cara vestibular de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('362103001','cara oclusal de pieza dentaria','362103001','cara oclusal de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245645004','borde incisal de pieza dentaria','245645004','borde incisal de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245650005','cara palatina de pieza dentaria','245650005','cara palatina de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('362104007','cara lingual de pieza dentaria','362104007','cara lingual de pieza dentaria') ON CONFLICT DO NOTHING;
+
+    - changeSet:
+        id: snomed-dental-surfaces-data
+        comment: Insert tooth surfaces data in snomed table
+        author: tmedina
+        context: "!schema-only"
+        dbms: mssql
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245652002','cara mesial de pieza dentaria','245652002','cara mesial de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245652002' AND pt = 'cara mesial de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245653007','cara distal de pieza dentaria','245653007','cara distal de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245653007' AND pt = 'cara distal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245647007','cara vestibular de pieza dentaria','245647007','cara vestibular de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245647007' AND pt = 'cara vestibular de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362103001','cara oclusal de pieza dentaria','362103001','cara oclusal de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '362103001' AND pt = 'cara oclusal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245645004','borde incisal de pieza dentaria','245645004','borde incisal de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245645004' AND pt = 'borde incisal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245650005','cara palatina de pieza dentaria','245650005','cara palatina de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245650005' AND pt = 'cara palatina de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362104007','cara lingual de pieza dentaria','362104007','cara lingual de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '362104007' AND pt = 'cara lingual de pieza dentaria');
+
+    - changeSet:
+        id: snomed-dental-surfaces-data
+        comment: Insert tooth surfaces data in snomed table
+        author: tmedina
+        context: "!schema-only"
+        dbms: db2
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245652002','cara mesial de pieza dentaria','245652002','cara mesial de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245652002' AND pt = 'cara mesial de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245653007','cara distal de pieza dentaria','245653007','cara distal de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245653007' AND pt = 'cara distal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245647007','cara vestibular de pieza dentaria','245647007','cara vestibular de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245647007' AND pt = 'cara vestibular de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362103001','cara oclusal de pieza dentaria','362103001','cara oclusal de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '362103001' AND pt = 'cara oclusal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245645004','borde incisal de pieza dentaria','245645004','borde incisal de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245645004' AND pt = 'borde incisal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245650005','cara palatina de pieza dentaria','245650005','cara palatina de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245650005' AND pt = 'cara palatina de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362104007','cara lingual de pieza dentaria','362104007','cara lingual de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '362104007' AND pt = 'cara lingual de pieza dentaria');
