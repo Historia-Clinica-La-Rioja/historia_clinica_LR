@@ -78,7 +78,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES_TURNOS).subscribe(isOn => this.downloadReportIsEnabled = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 	}
 
 	ngOnInit(): void {
