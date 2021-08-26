@@ -25,7 +25,7 @@ public class RestClient {
 		return headers;
 	}
 
-	protected <T> ResponseEntity<T> exchangeGet(String relUrl, Class<T> responseType) {
+	public <T> ResponseEntity<T> exchangeGet(String relUrl, Class<T> responseType) {
 		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
 		HttpEntity<String> entity = new HttpEntity<>(getHeaders());
 		return restTemplate.exchange(fullUrl, HttpMethod.GET, entity, responseType);

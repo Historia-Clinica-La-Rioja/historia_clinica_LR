@@ -20,16 +20,22 @@ import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingReque
 public class RestTemplateSSL extends RestTemplate {
 	
 	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor) throws Exception {
-		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory()));
+		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory(null)));
 		this.getInterceptors().add(loggingRequestInterceptor);
 		this.setErrorHandler(new RestTemplateExceptionHandler());
 	}
 
-	private static HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory() throws Exception {
+	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor, Integer timeout) throws Exception {
+		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory(timeout)));
+		this.getInterceptors().add(loggingRequestInterceptor);
+		this.setErrorHandler(new RestTemplateExceptionHandler());
+	}
+
+	private static HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory(Integer timeout) throws Exception {
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
 		clientHttpRequestFactory.setHttpClient(httpClient());
-		clientHttpRequestFactory.setConnectTimeout(15000);
-		clientHttpRequestFactory.setReadTimeout(15000);
+		clientHttpRequestFactory.setConnectTimeout((timeout != null) ? timeout : 15000);
+		clientHttpRequestFactory.setReadTimeout((timeout != null) ? timeout :15000);
 		return clientHttpRequestFactory;
 	}
 
