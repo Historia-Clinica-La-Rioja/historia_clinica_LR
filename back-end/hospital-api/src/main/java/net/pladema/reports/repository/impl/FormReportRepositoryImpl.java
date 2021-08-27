@@ -61,7 +61,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "           JOIN Identification_type AS it ON (it.id = pe.identification_type_id) " +
                 "           JOIN Gender AS g ON (pe.gender_id = g.id) " +
                 "           LEFT JOIN ( " +
-                "               SELECT oc.id, STRING_AGG(sno.pt, ', ') as descriptions " +
+                "               SELECT oc.id, STRING_AGG(sno.pt, '| ') as descriptions " +
                 "               FROM outpatient_consultation oc " +
                 "               JOIN document doc ON (oc.document_id = doc.id) " +
                 "               JOIN document_health_condition dhc ON (doc.id = dhc.document_id) " +

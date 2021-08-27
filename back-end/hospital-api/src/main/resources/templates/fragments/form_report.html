@@ -252,7 +252,7 @@
         <div class="code">17. CÓDIGO</div>
     </div>
     <div th:if="${problems != null}">
-        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,',')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}" >
+        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}" >
             <div class="diagnosis" th:text="${#strings.capitalize(problem)}"></div>
             <div class="code">&nbsp;</div>
         </div>
