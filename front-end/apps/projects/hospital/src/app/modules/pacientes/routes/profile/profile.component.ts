@@ -14,6 +14,7 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ReportsComponent } from "@pacientes/dialogs/reports/reports.component";
+import { patientCompleteName } from '@core/utils/patient.utils';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -109,7 +110,7 @@ export class ProfileComponent implements OnInit {
 	reports(): void {
 		this.dialog.open(ReportsComponent, {
 			width: '700px',
-			data: { patientId: this.patientId, patientName: this.patientBasicData.firstName.concat("_", this.patientBasicData.lastName) }
+			data: { patientId: this.patientId, patientName: patientCompleteName(this.patientBasicData) }
 		});
 	}
 
