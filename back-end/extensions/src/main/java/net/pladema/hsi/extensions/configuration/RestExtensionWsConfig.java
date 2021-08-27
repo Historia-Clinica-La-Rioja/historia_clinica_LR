@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Setter
 public class RestExtensionWsConfig extends WSConfig {
 
-    @Value("hsi.extensions.rest.timeout")
+    @Value("${hsi.extensions.rest.timeout:5000}")
     private Integer timeout;
 
-    public RestExtensionWsConfig(@Value("hsi.extensions.rest.url") String baseUrl) {
+    public RestExtensionWsConfig(@Value("${hsi.extensions.rest.url:}") String baseUrl) {
         super(baseUrl);
     }
 }
