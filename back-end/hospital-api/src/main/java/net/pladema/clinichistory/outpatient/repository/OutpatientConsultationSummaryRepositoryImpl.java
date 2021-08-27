@@ -160,7 +160,7 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                 +"  JOIN HealthcareProfessional AS hp ON(hp.id = oc.doctorId) "
                 +"  JOIN Person AS pe ON(pe.id = hp.personId) "
                 +"  WHERE oc.patientId = :patientId "
-                +"  ORDER BY oc.startDate";
+                +"  ORDER BY oc.startDate DESC";
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .getResultList();
