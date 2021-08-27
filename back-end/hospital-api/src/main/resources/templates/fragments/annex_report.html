@@ -267,7 +267,10 @@
                 <label th:if="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">X</label>
                 <label th:unless="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">&nbsp;</label>
             </div>
-            <div class="specialty" th:text="${'Especialidad:  ' + specialty}"></div>
+            <div class="specialty" >
+                <label th:if="${specialty != null}" th:text="${'Especialidad:  ' + specialty}"></label>
+                <label th:unless="${specialty != null}" th:text="${'Especialidad:  '}">&nbsp;</label>
+            </div>
         </div>
         <div>
             <div class="practice">PRÁCTICA</div>
