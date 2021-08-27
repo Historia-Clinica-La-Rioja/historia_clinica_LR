@@ -31,7 +31,7 @@ export class PatientReportsService {
 
 	getOutpatientConsultationReport(url: string, outpatientConsultation: ConsultationsDto, pdfPrefixName: string, patientName: string): Observable<any> {
 		const consultationDate: string = momentFormat(momentParseDate(String(outpatientConsultation.consultationDate)), DateFormat.FILE_DATE);
-		const pdfName = pdfPrefixName + `_${consultationDate}_${patientName}_${outpatientConsultation.completeProfessionalName}`;
+		const pdfName = pdfPrefixName + `_${patientName}_${consultationDate}_${outpatientConsultation.completeProfessionalName}`;
 		const outpatientId = outpatientConsultation.id;
 		return this.downloadService.downloadPdfWithRequestParams(url, pdfName, {outpatientId});
 	}
