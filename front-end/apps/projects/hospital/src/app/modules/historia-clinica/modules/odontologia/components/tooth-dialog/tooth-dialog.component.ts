@@ -2,13 +2,17 @@ import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DateFormat, momentFormatDate } from '@core/utils/moment.utils';
 import { Observable } from 'rxjs';
-import { OdontogramService as OdontogramRestService,  ToothRecordDto } from '../../api-rest/odontogram.service';
-import { ProcedureOrder, ToothAction, ActionType } from '../../services/actions.service';
+import { map } from 'rxjs/operators';
+import { OdontogramService as OdontogramRestService, ToothRecordDto } from '../../api-rest/odontogram.service';
+import { ToothAction } from '../../services/actions.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { Actions, ToothComponent } from '../tooth/tooth.component';
+import { ScrollableData } from '../hidable-scrollable-data/hidable-scrollable-data.component';
 
 @Component({
 	selector: 'app-tooth-dialog',
@@ -26,14 +30,13 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
 		private conceptsFacadeService: ConceptsFacadeService
 	) {
-		this.historicalRecords$ = this.odontogramRestService.getRecords(this.data.patientId, this.data.tooth.snomed.sctid);
 	}
 	showOlderRecords = false;
 	readonly shortNameOf = getSurfaceShortName;
 
 	readonly toothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
 
-	historicalRecords$: Observable<ToothRecordDto[]>
+	historicalRecords$: Observable<ScrollableData[]>
 	form: FormGroup;
 	newHallazgoId: number;
 
@@ -92,6 +95,12 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				this.setAppropiateProcedures(filterFunction);
 			}
 		);
+
+		this.historicalRecords$ =
+			this.odontogramRestService.getRecords(this.data.patientId, this.data.tooth.snomed.sctid)
+				.pipe(
+					map(this.toScrollableData)
+				);
 	}
 
 	confirm() {
@@ -175,5 +184,15 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.thirdProcedureId = this.form.value.procedures.thirdProcedureId;
 	}
 
+	private toScrollableData(toothRecordDtos: ToothRecordDto[]): ScrollableData[] {
+		const toSingleScrolleableData = (toothRecordDto: ToothRecordDto): ScrollableData => {
+			const surfaceText = toothRecordDto.surfaceSctid ? ` ( ${getSurfaceShortName(toothRecordDto.surfaceSctid)} )` : ''
+			return {
+				firstElement: momentFormatDate(dateDtoToDate(toothRecordDto.date), DateFormat.VIEW_DATE),
+				secondElement: toothRecordDto.snomed.pt + surfaceText
+			}
+		}
+		return toothRecordDtos.map(toSingleScrolleableData);
+	}
 }
 

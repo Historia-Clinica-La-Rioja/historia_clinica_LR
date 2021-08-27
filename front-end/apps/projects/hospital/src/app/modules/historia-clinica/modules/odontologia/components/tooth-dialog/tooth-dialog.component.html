@@ -15,49 +15,15 @@
 		<span *ngIf="!historicalRecords.length; else displayRecords" style="color: #A8A8A8;">Sin registros.</span>
 		<ng-template #displayRecords>
 			<div fxLayout="column" fxLayoutGap="10px">
-
 				<div fxLayout="row" fxLayoutGap="5px">
-					<span id="record_date">{{historicalRecords[0].date | viewDateDto : 'date' | date:
-						'dd/MM/yyyy'}}</span>
-					<div>
-						<span id="record_pt">{{historicalRecords[0].snomed.pt}}</span>
-						<span id="record_surface" *ngIf="historicalRecords[0].surfaceSctid"> (
-							{{shortNameOf(historicalRecords[0].surfaceSctid)}} ) </span>
-					</div>
-
+					<span id="firstElement">{{historicalRecords[0].firstElement}}</span>
+					<span id="secondElement">{{historicalRecords[0].secondElement}}</span>
 				</div>
 				<div *ngIf="historicalRecords.length === 1; else olderRecords"></div>
 			</div>
 
 			<ng-template #olderRecords>
-				<div class="color-primary pointer" *ngIf="!showOlderRecords" (click)="showOlderRecords = true"
-					fxLayoutAlign="start center">
-					<mat-icon>arrow_drop_down</mat-icon>
-					<span *ngIf="historicalRecords.length === 2 ; else multipleRecords">Ver 1 registro anterior</span>
-					<ng-template #multipleRecords>
-						<span>Ver {{ historicalRecords.slice(1).length}} registros anteriores</span>
-					</ng-template>
-				</div>
-
-				<div *ngIf="showOlderRecords" fxLayout="column" fxLayoutGap="10px">
-					<div class="scrolleable-records" fxLayout="column" fxLayoutGap="10px">
-						<div id="scrolleable_records" style="color: grey" fxLayout="row" fxLayoutGap="5px"
-							*ngFor="let record of historicalRecords.slice(1) ">
-							<span id="record_date">{{record.date | viewDateDto : 'date' | date: 'dd/MM/yyyy'}}</span>
-							<div>
-								<span id="record_pt">{{record.snomed.pt}}</span>
-								<span id="record_surface" *ngIf="record.surfaceSctid"> (
-									{{shortNameOf(record.surfaceSctid)}} ) </span>
-							</div>
-						</div>
-					</div>
-
-					<div class="color-primary pointer" *ngIf="showOlderRecords" (click)="showOlderRecords = false"
-						fxLayoutAlign="start center">
-						<mat-icon>arrow_drop_up</mat-icon>
-						<span>Ocultar registros anteriores</span>
-					</div>
-				</div>
+				<app-hidable-scrollable-data [data]="historicalRecords.slice(1)"></app-hidable-scrollable-data>
 			</ng-template>
 		</ng-template>
 	</div>

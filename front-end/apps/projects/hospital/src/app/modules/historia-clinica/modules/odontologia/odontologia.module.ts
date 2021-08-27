@@ -8,11 +8,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToothDialogComponent } from './components/tooth-dialog/tooth-dialog.component';
 import { ConceptsFacadeService } from './services/concepts-facade.service';
 import { PresentationModule } from '@presentation/presentation.module';
+import { HidableScrollableDataComponent } from './components/hidable-scrollable-data/hidable-scrollable-data.component';
 
 
 
 @NgModule({
-	declarations: [ToothComponent, OdontogramComponent, ToothDialogComponent],
+	declarations: [ToothComponent, OdontogramComponent, ToothDialogComponent, HidableScrollableDataComponent],
 	imports: [
 		CommonModule,
 		FlexModule,
