@@ -3,18 +3,11 @@
 		<div id="title">
 			<h2 [translate]="'ambulatoria.paciente.vacunas.TITLE'"></h2>
 		</div>
-		<div id="add_button" *appHasRole="['ENFERMERO']">
-			<ng-container *ngIf="hasConfirmedAppointment">
-				<button mat-flat-button color="primary" (click)=goToAplicarVacuna()>
-					<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
-				</button>
-			</ng-container>
-		</div>
 
-		<div id="add_button" *appHasRole="['ENFERMERO']">
-			<ng-container *ngIf="enableVaccineV2">
+		<div id="add_button" *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO']">
+			<ng-container>
 				<button mat-flat-button color="primary" (click)=goToAgregarVacunas()>
-					<span>{{'ambulatoria.paciente.vacunas2.ADD' | translate | uppercase }}</span>
+					<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
 				</button>
 			</ng-container>
 		</div>
@@ -26,8 +19,7 @@
 	<div fxLayout="column" fxLayoutGap="20px">
 		<div fxFlex="100">
 			<app-summary-card [header]="vacunasSummary" [tooltip]="'historia-clinica.summary-card.vacunas.TOOLTIP'"
-				[canEdit]="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO']" [editable]="true"
-				(openInNew)="openDialog()">
+				[editable]="false">
 				<ng-container *ngIf="!vaccines.length">
 					<span class="no-info" fxLayoutAlign="center"
 						[translate]="'ambulatoria.paciente.vacunas.NO-INFO'"></span>

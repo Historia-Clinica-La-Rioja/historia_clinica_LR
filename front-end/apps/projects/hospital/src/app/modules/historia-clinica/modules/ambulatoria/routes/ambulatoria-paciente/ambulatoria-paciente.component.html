@@ -4,43 +4,44 @@
 	</section>
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
-		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]= "personInformation" [personPhoto]="personPhoto" 
-			 [showAdditionalInformation]="true">
+		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]="personInformation"
+			[personPhoto]="personPhoto" [showAdditionalInformation]="true">
 			<div horizontal-content>
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
-					<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
-							id="nueva_consulta"
-							mat-flat-button color="primary"
-							(click)="openNuevaConsulta()">
+					<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" id="nueva_consulta"
+						mat-flat-button color="primary" (click)="openNuevaConsulta()">
 						{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}
 					</button>
 				</ng-container>
 			</div>
 		</app-patient-card>
 
-		
-		<div class="flex-container" *ngIf="externalInstitutionsEnabled">
-				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center baseline" fxLayoutAlign.lt-md="baseline end">
-					<div fxFlex="55%"></div>
 
-					<div fxLayout="column" fxFlex="15%">
-						<h5 class=uppercase [translate]="'ambulatoria.historia-clinica-externa.TITLE'" ></h5>
-					</div>
-					<div fxLayout="column" fxFlex="25%">
-						<mat-form-field>
-							<mat-select [disabled]="!this.loaded" id="externalInstitutionId"
-										name="externalInstitutionId" (click)="this.externalInstitutionsClicked()" [placeholder]="this.externalInstitutionPlaceholder">
-								<mat-option *ngFor="let externalInstitution of this.externalInstitutions"
-											[value]="externalInstitution.name" (click)="this.loadExternalSummary(externalInstitution)">
-									{{externalInstitution.name}}
-								</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
-					<div class="spinner" *ngIf="spinner" fxFlex="5%" fxLayoutGap="7px" fxLayoutAlign="baseline end" >
-						<mat-spinner color="primary" diameter="20" ></mat-spinner>
-					</div>
+		<div class="flex-container" *ngIf="externalInstitutionsEnabled">
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center baseline"
+				fxLayoutAlign.lt-md="baseline end">
+				<div fxFlex="55%"></div>
+
+				<div fxLayout="column" fxFlex="15%">
+					<h5 class=uppercase [translate]="'ambulatoria.historia-clinica-externa.TITLE'"></h5>
 				</div>
+				<div fxLayout="column" fxFlex="25%">
+					<mat-form-field>
+						<mat-select [disabled]="!this.loaded" id="externalInstitutionId" name="externalInstitutionId"
+							(click)="this.externalInstitutionsClicked()"
+							[placeholder]="this.externalInstitutionPlaceholder">
+							<mat-option *ngFor="let externalInstitution of this.externalInstitutions"
+								[value]="externalInstitution.name"
+								(click)="this.loadExternalSummary(externalInstitution)">
+								{{externalInstitution.name}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="spinner" *ngIf="spinner" fxFlex="5%" fxLayoutGap="7px" fxLayoutAlign="baseline end">
+					<mat-spinner color="primary" diameter="20"></mat-spinner>
+				</div>
+			</div>
 		</div>
 
 		<mat-card id="tab_container" class="mat-typography">
@@ -68,7 +69,7 @@
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-resumen [patientExternalSummary]="patientExternalSummary" ></app-resumen>
+							<app-resumen [patientExternalSummary]="patientExternalSummary"></app-resumen>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_vacunas">
@@ -76,7 +77,7 @@
 							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-vacunas [hasConfirmedAppointment]="hasNewConsultationEnabled$ | async"></app-vacunas>
+							<app-vacunas></app-vacunas>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_problemas">
@@ -89,21 +90,20 @@
 					</mat-tab>
 					<mat-tab id="tab_ordenes_prescripciones">
 						<ng-template mat-tab-label>
-							<span>{{ 'ambulatoria.paciente.ordenes_prescripciones.TAB_LABEL' | translate | uppercase }}</span>
+							<span>{{ 'ambulatoria.paciente.ordenes_prescripciones.TAB_LABEL' | translate | uppercase
+								}}</span>
 						</ng-template>
 						<ng-template matTabContent>
 							<app-ordenes [patientId]="patientId"></app-ordenes>
 						</ng-template>
 					</mat-tab>
-					<mat-tab
-						*ngFor="let extensionTab of extensionTabs$ | async"
-						[id]="extensionTab.head.id">
+					<mat-tab *ngFor="let extensionTab of extensionTabs$ | async" [id]="extensionTab.head.id">
 						<ng-template mat-tab-label>
 							<mat-icon>{{extensionTab.head.icon}}</mat-icon>
 							<app-label [label]="extensionTab.head.label"></app-label>
 						</ng-template>
 						<ng-template matTabContent>
-							<ng-container *ngIf="(extensionTab.body$ | async) as tabPage; else loading" >
+							<ng-container *ngIf="(extensionTab.body$ | async) as tabPage; else loading">
 								<app-page [page]="tabPage"></app-page>
 							</ng-container>
 						</ng-template>

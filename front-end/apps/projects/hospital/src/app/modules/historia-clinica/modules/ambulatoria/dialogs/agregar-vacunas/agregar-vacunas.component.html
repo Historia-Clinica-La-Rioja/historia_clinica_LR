@@ -1,5 +1,5 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-    <div class="mat-h2 margin-bottom-0" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.TITLE'"></div>
+    <div class="mat-h2 margin-bottom-0" [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.TITLE'"></div>
     <button mat-icon-button color="warn" (click)="dialogRef.close();" tabindex="-1">
         <mat-icon>close</mat-icon>
     </button>
@@ -9,7 +9,7 @@
     <ng-container *ngIf="!loading else showSpinner">
         <div fxLayout="row">
             <div class="mat-body margin-bottom-0"
-                [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.SPECIALTY'">
+                [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.SPECIALTY'">
             </div>
         </div>
         <form [formGroup]="form" (submit)="save()">
@@ -31,12 +31,12 @@
                     <div fxLayout="row" fxLayoutAlign="space-between center">
                         <div class="mat-h5 margin-bottom-0 color-primary">
                             <ng-container *ngIf="vaccine.billable else previousVaccineApplication">
-                                {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.NEW_VACCINE_TITLE' |
+                                {{ 'ambulatoria.paciente.vacunas.agregar_vacunas.NEW_VACCINE_TITLE' |
                                 translate | uppercase }}
                             </ng-container>
                         </div>
                         <ng-template #previousVaccineApplication>
-                            {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.PREVIOUS_VACCINE_TITLE' |
+                            {{ 'ambulatoria.paciente.vacunas.agregar_vacunas.PREVIOUS_VACCINE_TITLE' |
                             translate | uppercase }}
                         </ng-template>
 
@@ -69,7 +69,7 @@
 
             <div fxLayout="row" class="separation">
                 <button mat-button type="button" (click)="addVaccine()" color="primary" tabindex="-1" id="add-button">
-                    + {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.ADD' | translate }}
+                    + {{ 'ambulatoria.paciente.vacunas.agregar_vacunas.ADD' | translate }}
                 </button>
             </div>
 

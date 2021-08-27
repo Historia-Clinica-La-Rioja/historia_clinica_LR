@@ -5,7 +5,6 @@ import { ClinicalSpecialtyDto, ImmunizationDto, ImmunizePatientDto } from '@api-
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ImmunizationService } from '@api-rest/services/immunization.service';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
-import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AgregarVacunaComponent } from '../agregar-vacuna/agregar-vacuna.component';
 
@@ -28,8 +27,7 @@ export class AgregarVacunasComponent implements OnInit {
     private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
     public dialogRef: MatDialogRef<AgregarVacunasComponent>,
     private immunizationService: ImmunizationService,
-    private readonly snackBarService: SnackBarService,
-    private readonly translate: TranslateService
+    private readonly snackBarService: SnackBarService
   ) {
     this.appliedVaccines = [];
   }
@@ -68,7 +66,8 @@ export class AgregarVacunasComponent implements OnInit {
       width: '45%',
       data: {
         immunization: this.appliedVaccines[vaccineIndex],
-        edit: true
+        edit: true,
+        patientId: this.data.patientId
       }
     });
 
@@ -83,7 +82,10 @@ export class AgregarVacunasComponent implements OnInit {
   public addVaccine(): void {
     const dialogRef = this.dialog.open(AgregarVacunaComponent, {
       disableClose: true,
-      width: '45%'
+      width: '45%',
+      data: {
+        patientId: this.data.patientId
+      }
     });
 
     dialogRef.afterClosed().subscribe(
@@ -108,7 +110,7 @@ export class AgregarVacunasComponent implements OnInit {
           this.loading = false;
           if (success) {
             this.dialogRef.close(true);
-            this.snackBarService.showSuccess('ambulatoria.paciente.vacunas2.agregar_vacunas.SUCCESS');
+            this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.agregar_vacunas.SUCCESS');
           }
         },
         error => {
@@ -116,7 +118,7 @@ export class AgregarVacunasComponent implements OnInit {
           if (error.text)
             this.snackBarService.showError(error.text);
           else
-            this.snackBarService.showError('ambulatoria.paciente.vacunas2.agregar_vacunas.ERROR');
+            this.snackBarService.showError('ambulatoria.paciente.vacunas.agregar_vacunas.ERROR');
         }
       );
 

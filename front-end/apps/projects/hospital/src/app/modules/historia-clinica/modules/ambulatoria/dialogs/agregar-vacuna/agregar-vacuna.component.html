@@ -1,5 +1,5 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.TITLE'"></div>
+	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.TITLE'"></div>
 	<button mat-icon-button color="warn" (click)="dialogRef.close();" tabindex="-1">
 		<mat-icon>close</mat-icon>
 	</button>
@@ -8,284 +8,301 @@
 <div mat-dialog-content>
 
 	<mat-tab-group mat-align-tabs="center" [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
-		<mat-tab>
-			<ng-template mat-tab-label>
-				<span class="color-primary">
-					{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NEW_VACCINE_TAB' | translate |
-					uppercase }}
-				</span>
-			</ng-template>
+		<ng-container *appHasRole="['ENFERMERO']">
+			<ng-container *ngIf="hasConfirmedAppointment">
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span class="color-primary">
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NEW_VACCINE_TAB' | translate
+							|
+							uppercase }}
+						</span>
+					</ng-template>
 
-			<form [formGroup]="billableForm" (submit)="submit(vaccineInput)">
-				<div fxLayout="column">
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
-						translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-							[matDatepicker]="newVaccineDatepicker" formControlName="date" [max]="this.today" required>
-						<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
-						<mat-datepicker #newVaccineDatepicker
-							(yearSelected)="chosenYearHandler($event,this.billableForm)"
-							(monthSelected)="chosenMonthHandler($event,this.billableForm)">
-						</mat-datepicker>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-					</mat-form-field>
-					<div #vaccineInput>
-						<div fxLayout="column" fxFlex="100%">
-							<ng-container *ngIf="newVaccineSnomedConcept else searchImmunizations">
-								<mat-label>
-									{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
-									translate
-									}}
-								</mat-label>
-								<mat-form-field appearance="outline">
-									<input matInput required readonly formControlName="snomed"
-										matTooltip="{{ newVaccineSnomedConcept.pt }}">
-									<button type="button" mat-button matSuffix color="warn" mat-icon-button
-										(click)="resetConceptBillableForm()">
-										<mat-icon>close</mat-icon>
-									</button>
-									<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-								</mat-form-field>
-							</ng-container>
-						</div>
-
-						<ng-template #searchImmunizations>
-							<app-concepts-search
-								[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
-								(search)="onSearchBillableForm($event)">
-							</app-concepts-search>
-							<div class="mat-error"
-								[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-								*ngIf="!searchingNew && tryToSubmit">
-							</div>
-							<div class="spinner" fxLayoutAlign="center center">
-								<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
-							</div>
-							<app-table *ngIf="!searchingNew" [model]="conceptsResultsTable"></app-table>
-						</ng-template>
-					</div>
-
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<mat-select formControlName="condition"
-							(selectionChange)="loadSchemes($event.value,this.billableForm)">
-							<mat-option [value]="null" style="color:gray;">
-								- {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NULL_OPTION_MESSAGE'
-								| translate }} -
-							</mat-option>
-							<mat-option *ngFor="let condition of conditions; index as i" [value]="i">
-								{{ condition.description }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-
-					<div fxLayout="row" fxLayoutAlign="space-between">
-						<div fxLayout="column" fxFlex="47.5">
+					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)">
+						<div fxLayout="column">
 							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.SCHEME' | translate }}
+								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
+								translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
-								<mat-select formControlName="scheme" [required]="this.billableForm.value.condition"
-									(selectionChange)="loadDoses($event.value,this.billableForm)">
-									<mat-option *ngFor="let scheme of schemes; index as i" [value]="i">
-										{{ scheme.description }}
-									</mat-option>
-								</mat-select>
-								<mat-error
-									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
-								</mat-error>
+								<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
+									[matDatepicker]="newVaccineDatepicker" formControlName="date" [max]="this.today"
+									required>
+								<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
+								<mat-datepicker #newVaccineDatepicker
+									(yearSelected)="chosenYearHandler($event,this.billableForm)"
+									(monthSelected)="chosenMonthHandler($event,this.billableForm)">
+								</mat-datepicker>
+								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 							</mat-form-field>
-						</div>
-						<div fxLayout="column" fxFlex="47.5">
+							<div #vaccineInput>
+								<div fxLayout="column" fxFlex="100%">
+									<ng-container *ngIf="newVaccineSnomedConcept else searchImmunizations">
+										<mat-label>
+											{{
+											'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+											translate
+											}}
+										</mat-label>
+										<mat-form-field appearance="outline">
+											<input matInput required readonly formControlName="snomed"
+												matTooltip="{{ newVaccineSnomedConcept.pt }}">
+											<button type="button" mat-button matSuffix color="warn" mat-icon-button
+												(click)="resetConceptBillableForm()">
+												<mat-icon>close</mat-icon>
+											</button>
+											<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+										</mat-form-field>
+									</ng-container>
+								</div>
+
+								<ng-template #searchImmunizations>
+									<app-concepts-search
+										[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
+										(search)="onSearchBillableForm($event)">
+									</app-concepts-search>
+									<div class="mat-error"
+										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+										*ngIf="!searchingNew && tryToSubmit">
+									</div>
+									<div class="spinner" fxLayoutAlign="center center">
+										<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
+									</div>
+									<app-table *ngIf="!searchingNew" [model]="conceptsResultsTable"></app-table>
+								</ng-template>
+							</div>
+
 							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
+								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate
+								}}
 							</mat-label>
 							<mat-form-field appearance="outline">
-								<mat-select formControlName="dose" [required]="this.billableForm.value.scheme">
-									<mat-option *ngFor="let dose of doses; index as i" [value]="i">
-										{{ dose.description }}
+								<mat-select formControlName="condition"
+									(selectionChange)="loadSchemes($event.value,this.billableForm)">
+									<mat-option [value]="null" style="color:gray;">
+										- {{
+										'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NULL_OPTION_MESSAGE'
+										| translate }} -
+									</mat-option>
+									<mat-option *ngFor="let condition of conditions; index as i" [value]="i">
+										{{ condition.description }}
 									</mat-option>
 								</mat-select>
-								<mat-error
-									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
-								</mat-error>
 							</mat-form-field>
-						</div>
-					</div>
 
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.LOT' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<input matInput formControlName="lot">
-					</mat-form-field>
+							<div fxLayout="row" fxLayoutAlign="space-between">
+								<div fxLayout="column" fxFlex="47.5">
+									<mat-label>
+										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' |
+										translate
+										}}
+									</mat-label>
+									<mat-form-field appearance="outline">
+										<mat-select formControlName="scheme"
+											[required]="this.billableForm.value.condition"
+											(selectionChange)="loadDoses($event.value,this.billableForm)">
+											<mat-option *ngFor="let scheme of schemes; index as i" [value]="i">
+												{{ scheme.description }}
+											</mat-option>
+										</mat-select>
+										<mat-error
+											[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
+										</mat-error>
+									</mat-form-field>
+								</div>
+								<div fxLayout="column" fxFlex="47.5">
+									<mat-label>
+										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' |
+										translate }}
+									</mat-label>
+									<mat-form-field appearance="outline">
+										<mat-select formControlName="dose" [required]="this.billableForm.value.scheme">
+											<mat-option *ngFor="let dose of doses; index as i" [value]="i">
+												{{ dose.description }}
+											</mat-option>
+										</mat-select>
+										<mat-error
+											[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</div>
 
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOTE' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<textarea matInput formControlName="note" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5">
+							<mat-label>
+								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.LOT' | translate }}
+							</mat-label>
+							<mat-form-field appearance="outline">
+								<input matInput formControlName="lot">
+							</mat-form-field>
+
+							<mat-label>
+								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOTE' | translate }}
+							</mat-label>
+							<mat-form-field appearance="outline">
+								<textarea matInput formControlName="note" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5">
 						</textarea>
-					</mat-form-field>
+							</mat-form-field>
 
-					<div fxLayout="row" fxLayoutAlign="end">
-						<button type="submit" mat-flat-button color="primary">
-							{{ 'buttons.ADD' | translate | uppercase }}
-						</button>
-					</div>
-				</div>
-			</form>
+							<div fxLayout="row" fxLayoutAlign="end">
+								<button type="submit" mat-flat-button color="primary">
+									{{ 'buttons.ADD' | translate | uppercase }}
+								</button>
+							</div>
+						</div>
+					</form>
+				</mat-tab>
+			</ng-container>
+		</ng-container>
 
-		</mat-tab>
+		<ng-container *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO']">
+			<mat-tab>
+				<ng-template mat-tab-label>
+					<span class="color-primary">
+						{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB' |
+						translate |
+						uppercase }}
+					</span>
+				</ng-template>
 
-		<mat-tab>
-			<ng-template mat-tab-label>
-				<span class="color-primary">
-					{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB' | translate |
-					uppercase }}
-				</span>
-			</ng-template>
+				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)">
+					<div fxLayout="column">
+						<mat-label>
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
+							translate }}
+						</mat-label>
+						<mat-form-field appearance="outline">
+							<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
+								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [max]="this.today"
+								required>
+							<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
+							<mat-datepicker #previousVaccineDatepicker
+								(yearSelected)="chosenYearHandler($event,this.previousForm)"
+								(monthSelected)="chosenMonthHandler($event,this.previousForm)">
+							</mat-datepicker>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
 
-			<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)">
-				<div fxLayout="column">
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
-						translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-							[matDatepicker]="previousVaccineDatepicker" formControlName="date" [max]="this.today"
-							required>
-						<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
-						<mat-datepicker #previousVaccineDatepicker
-							(yearSelected)="chosenYearHandler($event,this.previousForm)"
-							(monthSelected)="chosenMonthHandler($event,this.previousForm)">
-						</mat-datepicker>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-					</mat-form-field>
+						<div #previousVaccineInput>
+							<div fxLayout="column" fxFlex="100%">
+								<ng-container *ngIf="previousVaccineSnomedConcept else searchImmunizationsPreviousForm">
+									<mat-label>
+										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+										translate
+										}}
+									</mat-label>
+									<mat-form-field appearance="outline">
+										<input matInput required readonly formControlName="snomed"
+											matTooltip="{{ previousVaccineSnomedConcept.pt }}">
+										<button type="button" mat-button matSuffix color="warn" mat-icon-button
+											(click)="resetConceptPreviousForm()">
+											<mat-icon>close</mat-icon>
+										</button>
+										<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+									</mat-form-field>
+								</ng-container>
+							</div>
 
-					<div #previousVaccineInput>
-						<div fxLayout="column" fxFlex="100%">
-							<ng-container *ngIf="previousVaccineSnomedConcept else searchImmunizationsPreviousForm">
+							<ng-template #searchImmunizationsPreviousForm>
+								<app-concepts-search
+									[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
+									(search)="onSearchPreviousForm($event)">
+								</app-concepts-search>
+								<div class="mat-error"
+									[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+									*ngIf="!searchingPrevious && tryToSubmitPrevious">
+								</div>
+								<div class="spinner" fxLayoutAlign="center center">
+									<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
+								</div>
+								<app-table *ngIf="!searchingPrevious && !previousVaccineSnomedConcept"
+									[model]="conceptsResultsTablePreviousForm"></app-table>
+							</ng-template>
+						</div>
+
+						<mat-label>
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
+						</mat-label>
+						<mat-form-field appearance="outline">
+							<mat-select formControlName="condition"
+								(selectionChange)="loadSchemes($event.value,this.previousForm)">
+								<mat-option [value]="null" style="color:gray;">
+									- {{
+									'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NULL_OPTION_MESSAGE'
+									| translate }} -
+								</mat-option>
+								<mat-option *ngFor="let condition of conditions; index as i" [value]="i">
+									{{ condition.description }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+
+						<div fxLayout="row" fxLayoutAlign="space-between">
+							<div fxLayout="column" fxFlex="47.5">
 								<mat-label>
-									{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
-									translate
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' | translate
 									}}
 								</mat-label>
 								<mat-form-field appearance="outline">
-									<input matInput required readonly formControlName="snomed"
-										matTooltip="{{ previousVaccineSnomedConcept.pt }}">
-									<button type="button" mat-button matSuffix color="warn" mat-icon-button
-										(click)="resetConceptPreviousForm()">
-										<mat-icon>close</mat-icon>
-									</button>
-									<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+									<mat-select formControlName="scheme" [required]="this.previousForm.value.condition"
+										(selectionChange)="loadDoses($event.value,this.previousForm)">
+										<mat-option *ngFor="let scheme of schemes; index as i" [value]="i">
+											{{ scheme.description }}
+										</mat-option>
+									</mat-select>
+									<mat-error
+										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
+									</mat-error>
 								</mat-form-field>
-							</ng-container>
-						</div>
-
-						<ng-template #searchImmunizationsPreviousForm>
-							<app-concepts-search
-								[label]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
-								(search)="onSearchPreviousForm($event)">
-							</app-concepts-search>
-							<div class="mat-error"
-								[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-								*ngIf="!searchingPrevious && tryToSubmitPrevious">
 							</div>
-							<div class="spinner" fxLayoutAlign="center center">
-								<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
+							<div fxLayout="column" fxFlex="47.5">
+								<mat-label>
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
+								</mat-label>
+								<mat-form-field appearance="outline">
+									<mat-select formControlName="dose" [required]="this.previousForm.value.scheme">
+										<mat-option *ngFor="let dose of doses; index as i" [value]="i">
+											{{ dose.description }}
+										</mat-option>
+									</mat-select>
+									<mat-error
+										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
+									</mat-error>
+								</mat-form-field>
 							</div>
-							<app-table *ngIf="!searchingPrevious && !previousVaccineSnomedConcept"
-								[model]="conceptsResultsTablePreviousForm"></app-table>
-						</ng-template>
-					</div>
-
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<mat-select formControlName="condition"
-							(selectionChange)="loadSchemes($event.value,this.previousForm)">
-							<mat-option [value]="null" style="color:gray;">
-								- {{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NULL_OPTION_MESSAGE'
-								| translate }} -
-							</mat-option>
-							<mat-option *ngFor="let condition of conditions; index as i" [value]="i">
-								{{ condition.description }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-
-					<div fxLayout="row" fxLayoutAlign="space-between">
-						<div fxLayout="column" fxFlex="47.5">
-							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.SCHEME' | translate }}
-							</mat-label>
-							<mat-form-field appearance="outline">
-								<mat-select formControlName="scheme" [required]="this.previousForm.value.condition"
-									(selectionChange)="loadDoses($event.value,this.previousForm)">
-									<mat-option *ngFor="let scheme of schemes; index as i" [value]="i">
-										{{ scheme.description }}
-									</mat-option>
-								</mat-select>
-								<mat-error
-									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
-								</mat-error>
-							</mat-form-field>
 						</div>
-						<div fxLayout="column" fxFlex="47.5">
-							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
-							</mat-label>
-							<mat-form-field appearance="outline">
-								<mat-select formControlName="dose" [required]="this.previousForm.value.scheme">
-									<mat-option *ngFor="let dose of doses; index as i" [value]="i">
-										{{ dose.description }}
-									</mat-option>
-								</mat-select>
-								<mat-error
-									[translate]="'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
-								</mat-error>
-							</mat-form-field>
+
+						<mat-label>
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.LOT' | translate }}
+						</mat-label>
+						<mat-form-field appearance="outline">
+							<input matInput formControlName="lot">
+						</mat-form-field>
+
+						<mat-label>
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.INSTITUTION' | translate }}
+						</mat-label>
+						<mat-form-field appearance="outline">
+							<input matInput formControlName="institution">
+						</mat-form-field>
+
+						<mat-label>
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PROFESSIONAL' | translate }}
+						</mat-label>
+						<mat-form-field appearance="outline">
+							<input matInput formControlName="professional">
+						</mat-form-field>
+
+						<div fxLayout="row" fxLayoutAlign="end">
+							<button type="submit" mat-flat-button color="primary">
+								{{ 'buttons.ADD' | translate | uppercase }}
+							</button>
 						</div>
 					</div>
+				</form>
 
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.LOT' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<input matInput formControlName="lot">
-					</mat-form-field>
-
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.INSTITUTION' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<input matInput formControlName="institution">
-					</mat-form-field>
-
-					<mat-label>
-						{{ 'ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.PROFESSIONAL' | translate }}
-					</mat-label>
-					<mat-form-field appearance="outline">
-						<input matInput formControlName="professional">
-					</mat-form-field>
-
-					<div fxLayout="row" fxLayoutAlign="end">
-						<button type="submit" mat-flat-button color="primary">
-							{{ 'buttons.ADD' | translate | uppercase }}
-						</button>
-					</div>
-				</div>
-			</form>
-
-		</mat-tab>
+			</mat-tab>
+		</ng-container>
 	</mat-tab-group>
 
 </div>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { ImmunizationDto, SnomedDto, SnomedResponseDto, VaccineConditionsDto, Va
 import { VaccineService } from '@api-rest/services/vaccine.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -19,6 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class AgregarVacunaComponent implements OnInit {
 
 	// shared attributtes (used on both forms)
+	@Input() hasConfirmedAppointment: boolean;
 	selectedTab: number = 0;
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
@@ -44,14 +46,16 @@ export class AgregarVacunaComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data:
 			{
 				immunization?: ImmunizationDto,
-				edit?: boolean
+				edit?: boolean,
+				patientId: number
 			},
 		private readonly formBuilder: FormBuilder,
 		private readonly snowstormService: SnowstormService,
 		private readonly vaccineService: VaccineService,
 		private readonly snackBarService: SnackBarService,
 		public dialogRef: MatDialogRef<AgregarVacunaComponent>,
-		private readonly translate: TranslateService
+		private readonly translate: TranslateService,
+		private readonly appointmentsService: AppointmentsService,
 	) { }
 
 	ngAfterContentInit(): void {
@@ -61,6 +65,10 @@ export class AgregarVacunaComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+
+		this.appointmentsService.hasNewConsultationEnabled(this.data.patientId).subscribe(response => {
+			this.hasConfirmedAppointment = response;
+		});
 
 		this.previousForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
@@ -301,7 +309,7 @@ export class AgregarVacunaComponent implements OnInit {
 	}
 
 	private buildConceptsResultsTableBillableForm(data: SnomedDto[]): void {
-		this.translate.get('ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
+		this.translate.get('ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
 			(columnHeader: string) => {
 				this.conceptsResultsTable = {
 					columns: [
@@ -328,7 +336,7 @@ export class AgregarVacunaComponent implements OnInit {
 	}
 
 	private buildConceptsResultsTablePreviousForm(data: SnomedDto[]): void {
-		this.translate.get('ambulatoria.paciente.vacunas2.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
+		this.translate.get('ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
 			(columnHeader: string) => {
 				this.conceptsResultsTablePreviousForm = {
 					columns: [

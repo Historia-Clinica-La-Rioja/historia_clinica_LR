@@ -12,7 +12,6 @@ import { ResumenComponent } from './components/resumen/resumen.component';
 import { ProblemasComponent } from './components/problemas/problemas.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
-import { AplicarVacunaComponent } from './dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AppMaterialModule } from '../../../material/app.material.module';
 import { SolveProblemComponent } from '../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
@@ -46,7 +45,6 @@ import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.
 		ResumenComponent,
 		ProblemasComponent,
 		VacunasComponent,
-		AplicarVacunaComponent,
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent,

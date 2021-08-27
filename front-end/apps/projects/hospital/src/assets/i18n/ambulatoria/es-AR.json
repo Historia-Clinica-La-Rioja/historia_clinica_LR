@@ -331,25 +331,12 @@
 			"vacunas": {
 				"TAB_LABEL": "Vacunas",
 				"TITLE": "Historial de vacunación",
-				"ADD": "Aplicar vacuna",
+				"ADD": "Agregar vacunas",
 				"DETAILS": "Ver detalle",
 				"NO-INFO": "No hay información para mostrar",
 				"VACCINE": "Vacuna",
 				"DOSE": "Dosis",
 				"DATE": "Fecha",
-				"aplicar": {
-					"TITLE": "Aplicar vacuna",
-					"INMUNIZATION": "Vacuna",
-					"NOTE": "Evolución",
-					"SUBMIT": "Confirmar",
-					"SUBMIT_CONJUNTO_VACUNAS": "Confirmar vacunaciones",
-					"ADMINISTRATION_DATE": "Fecha de vacunación",
-					"save": {
-						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
-						"ERROR": "Error al guardar las vacunas aplicadas",
-						"CHANGE_STATE": "¿Desea aplicar más vacunas?"
-					}
-				},
 				"details": {
 					"DOSE": "Dosis",
 					"DATE": "Fecha",
@@ -360,12 +347,7 @@
 					"SCHEME": "Esquema",
 					"NO-INFO": "Sin información",
 					"NO-OBS": "Sin observaciones"
-				}
-			},
-			"vacunas2": {
-				"TAB_LABEL": "Vacunas",
-				"TITLE": "Historial de vacunación",
-				"ADD": "Agregar vacunas",
+				},
 				"agregar_vacunas": {
 					"TITLE": "Agregar vacunas",
 					"SPECIALTY": "Especialidad",
