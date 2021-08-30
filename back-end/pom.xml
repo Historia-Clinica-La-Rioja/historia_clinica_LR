@@ -19,6 +19,7 @@
 	<modules>
 		<module>sgx-shared</module>
 		<module>sgx-dashboards</module>
+		<module>sgx-backoffice</module>
 		<module>interoperability</module>
 		<module>extensions</module>
         <module>odontology</module>
