@@ -83,7 +83,7 @@ export class OdontogramComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((findingsAndProcedures: ToothAction[]) => {
 			if (findingsAndProcedures) {
-				this.odontogramService.setActionsTo(findingsAndProcedures, tooth.snomed.sctid);
+				this.odontogramService.setActionsTo(findingsAndProcedures, tooth.snomed.sctid, `${quadrantCode}${tooth.code}`);
 			}
 		});
 	}
