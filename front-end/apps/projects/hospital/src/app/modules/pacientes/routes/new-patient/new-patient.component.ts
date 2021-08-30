@@ -25,6 +25,7 @@ import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
+import { NavigationService } from '@pacientes/services/navigation.service';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -71,11 +72,13 @@ export class NewPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private mapperService: MapperService,
 		private patientMedicalCoverageService: PatientMedicalCoverageService,
+		public navigationService: NavigationService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
+		this.navigationService.saveURL(this.router.url);
 		this.route.queryParams
 			.subscribe(params => {
 				this.form = this.formBuilder.group({
