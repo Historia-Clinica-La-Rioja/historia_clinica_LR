@@ -12,6 +12,9 @@ import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentStorage;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidator;
+import ar.lamansys.immunization.domain.user.RolePermissionException;
+import ar.lamansys.immunization.domain.user.RolesExceptionEnum;
+import ar.lamansys.immunization.domain.user.UserStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
@@ -22,39 +25,45 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ImmunizePatient {
 
     private final Logger logger;
 
-    private final VaccineConsultationStorage vaccineConsultationStorage;
+    private final AppointmentStorage appointmentStorage;
+
+    private final DoctorStorage doctorStorage;
+
+    private final DateTimeProvider dateTimeProvider;
 
     private final ImmunizationDocumentStorage immunizationDocumentStorage;
 
-    private final DoctorStorage doctorStorage;
+    private final UserStorage userStorage;
+
+    private final VaccineConsultationStorage vaccineConsultationStorage;
 
     private final VaccineConditionApplicationStorage vaccineConditionApplicationStorage;
 
     private final VaccineSchemeStorage vaccineSchemeStorage;
 
     private final VaccineRuleStorage vaccineRuleStorage;
-
-    private final AppointmentStorage appointmentStorage;
-
-    private final DateTimeProvider dateTimeProvider;
-
-    public ImmunizePatient(VaccineConsultationStorage vaccineConsultationStorage,
-                           ImmunizationDocumentStorage immunizationDocumentStorage,
+    public ImmunizePatient(AppointmentStorage appointmentStorage,
+                           DateTimeProvider dateTimeProvider,
                            DoctorStorage doctorStorage,
+                           ImmunizationDocumentStorage immunizationDocumentStorage,
+                           UserStorage userStorage,
                            VaccineConditionApplicationStorage vaccineConditionApplicationStorage,
-                           VaccineSchemeStorage vaccineSchemeStorage,
+                           VaccineConsultationStorage vaccineConsultationStorage,
                            VaccineRuleStorage vaccineRuleStorage,
-                           AppointmentStorage appointmentStorage,
-                           DateTimeProvider dateTimeProvider) {
+                           VaccineSchemeStorage vaccineSchemeStorage
+                           ) {
         this.vaccineConsultationStorage = vaccineConsultationStorage;
         this.immunizationDocumentStorage = immunizationDocumentStorage;
         this.doctorStorage = doctorStorage;
+        this.userStorage = userStorage;
         this.vaccineConditionApplicationStorage = vaccineConditionApplicationStorage;
         this.vaccineSchemeStorage = vaccineSchemeStorage;
         this.vaccineRuleStorage = vaccineRuleStorage;
@@ -107,6 +116,7 @@ public class ImmunizePatient {
     private void assertContextValid(ImmunizePatientBo immunizePatientBo, DoctorInfoBo doctorInfoBo) {
         if (immunizePatientBo.getInstitutionId() == null) //Validar que la institución es correcta.
             throw new ImmunizePatientException(ImmunizePatientExceptionEnum.NULL_INSTITUTION_ID, "El id de la institución es obligatorio");
+        validatePermission(immunizePatientBo.getInstitutionId(), immunizePatientBo.getImmunizations());
         if (immunizePatientBo.getPatientId() == null)
             throw new ImmunizePatientException(ImmunizePatientExceptionEnum.NULL_PATIENT_ID, "El id del paciente es obligatorio");
         if (immunizePatientBo.getClinicalSpecialtyId() == null)
@@ -116,4 +126,18 @@ public class ImmunizePatient {
         var immunizationValidator = new ImmunizationValidator(vaccineConditionApplicationStorage, vaccineSchemeStorage, vaccineRuleStorage);
         immunizePatientBo.getImmunizations().forEach(immunizationValidator::isValid);
     }
+
+    private void validatePermission(Integer institutionId, List<ImmunizationInfoBo> immunizations) {
+        var rolesOverInstitution = userStorage.fetchLoggedUserRoles().stream()
+                .filter(roleInfoBo -> institutionId.equals(roleInfoBo.getInstitution()))
+                .collect(Collectors.toList());
+        if (rolesOverInstitution.stream().noneMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("ENFERMERO", "PROFESIONAL_DE_SALUD", "ESPECIALISTA_MEDICO"))))
+            throw new RolePermissionException(RolesExceptionEnum.INVALID_ROLE, "No tiene los permisos suficientes para inmunizar un paciente");
+        if (rolesOverInstitution.stream().anyMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("ENFERMERO"))))
+            return;
+        if (rolesOverInstitution.stream().anyMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("PROFESIONAL_DE_SALUD", "ESPECIALISTA_MEDICO")))
+            && immunizations.stream().anyMatch(ImmunizationInfoBo::isBillable))
+            throw new RolePermissionException(RolesExceptionEnum.INVALID_ROLE, "El enfermero solo tiene permisos para aplicar vacunas");
+    }
+
 }

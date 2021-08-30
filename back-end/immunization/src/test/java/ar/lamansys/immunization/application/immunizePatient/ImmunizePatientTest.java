@@ -5,6 +5,7 @@ import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorException;
 import ar.lamansys.immunization.domain.snomed.SnomedBo;
+import ar.lamansys.immunization.domain.user.RolePermissionException;
 import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.infrastructure.output.repository.appointments.ServeAppointmentStorageImpl;
@@ -13,6 +14,7 @@ import ar.lamansys.immunization.infrastructure.output.repository.consultation.Va
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultationRepository;
 import ar.lamansys.immunization.infrastructure.output.repository.consultation.VaccineConsultationStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.document.ImmunizationDocumentStorageImpl;
+import ar.lamansys.immunization.infrastructure.output.repository.user.UserStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineConditionApplicationRepository;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineConditionApplicationStorageImpl;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineSchemeRepository;
@@ -24,7 +26,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.RoleInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPermissionPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -60,6 +64,9 @@ class ImmunizePatientTest {
     private SharedStaffPort sharedStaffPort;
 
     @Mock
+    private SharedPermissionPort sharedPermissionPort;
+
+    @Mock
     private VaccineRuleStorage vaccineRuleStorage;
 
     @Mock
@@ -80,19 +87,23 @@ class ImmunizePatientTest {
     @BeforeEach
     public void setUp() {
         immunizePatient = new ImmunizePatient(
-                new VaccineConsultationStorageImpl(vaccineConsultationRepository),
-                new ImmunizationDocumentStorageImpl(documentExternalFactory, localDateMapper),
+                new ServeAppointmentStorageImpl(false, sharedAppointmentPort),
+                dateTimeProvider,
                 new DoctorStorageImpl(sharedStaffPort),
+                new ImmunizationDocumentStorageImpl(documentExternalFactory, localDateMapper),
+                new UserStorageImpl(sharedPermissionPort),
                 new VaccineConditionApplicationStorageImpl(vaccineConditionApplicationRepository),
-                new VaccineSchemeStorageImpl(vaccineSchemeRepository),
-                vaccineRuleStorage, new ServeAppointmentStorageImpl(false, sharedAppointmentPort),
-                dateTimeProvider);
+                new VaccineConsultationStorageImpl(vaccineConsultationRepository),
+                vaccineRuleStorage,
+                new VaccineSchemeStorageImpl(vaccineSchemeRepository)
+               );
     }
 
 
 
     @Test
     void successMixBillableAndNonBillableImmunization() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(localDateMapper.fromLocalDateToString(any())).thenReturn("2020-12-12");
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020,12,13));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
@@ -152,6 +163,7 @@ class ImmunizePatientTest {
 
     @Test
     void successNonBillableImmunizationCheckBillableConsultation() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(localDateMapper.fromLocalDateToString(any())).thenReturn("2020-12-12");
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 13));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
@@ -173,6 +185,7 @@ class ImmunizePatientTest {
 
     @Test
     void invalidImmunizePatientData() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         Exception exception = Assertions.assertThrows(ImmunizePatientException.class, () ->
                 immunizePatient.run(null)
         );
@@ -212,7 +225,7 @@ class ImmunizePatientTest {
 
     @Test
     void immunizationInfoWithoutVaccineInformation() {
-
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(1, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
@@ -245,6 +258,7 @@ class ImmunizePatientTest {
 
     @Test
     void billableImmunizationInfoWithoutInstitution() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
                         List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
@@ -259,6 +273,7 @@ class ImmunizePatientTest {
 
     @Test
     void billableImmunizationInfoWithoutAdministrationDate() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
                         List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
@@ -272,6 +287,7 @@ class ImmunizePatientTest {
 
     @Test
     void immunizationInfoWithInvalidContionApplicationcheme() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
@@ -284,6 +300,7 @@ class ImmunizePatientTest {
 
     @Test
     void immunizationInfoWithInvalidScheme() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
                 .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE", List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
                         new ClinicalSpecialtyDto(2, "Especialidad1"))));
@@ -298,6 +315,7 @@ class ImmunizePatientTest {
 
     @Test
     void immunizationInfoWithInvalidInformationToValidRule() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
         when(vaccineConditionApplicationRepository.existsById(any())).thenReturn(true);
         when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
         when(sharedStaffPort.getProfessionalCompleteInfo(any()))
@@ -363,6 +381,32 @@ class ImmunizePatientTest {
                 " condición(id=3), esquema(id=1), dosis(description=Dose1, order=1)", exception.getMessage());
     }
 
+    @Test
+    void invalidPermissionGettingVaccine() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short) 45, 20, "ESPECIALISTA_MEDICO")));
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
+                        List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                                new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        Exception exception = Assertions.assertThrows(RolePermissionException.class, () ->
+                immunizePatient.run(validImmunizePatient())
+        );
+        assertEquals("El enfermero solo tiene permisos para aplicar vacunas", exception.getMessage());
+
+
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short) 45, 20, "PROFESIONAL_DE_SALUD")));
+        exception = Assertions.assertThrows(RolePermissionException.class, () ->
+                immunizePatient.run(validImmunizePatient())
+        );
+        assertEquals("El enfermero solo tiene permisos para aplicar vacunas", exception.getMessage());
+
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short) 45, 20, "ADMINISTRATIVO")));
+        exception = Assertions.assertThrows(RolePermissionException.class, () ->
+                immunizePatient.run(validImmunizePatient())
+        );
+        assertEquals("No tiene los permisos suficientes para inmunizar un paciente", exception.getMessage());
+    }
+
     private ImmunizePatientBo validImmunizePatient(){
         return new ImmunizePatientBo(14, 20, 65, List.of(validBillableImmunization(), noBillableImmunizationValid()));
     }
@@ -372,15 +416,15 @@ class ImmunizePatientTest {
     }
 
     private ImmunizePatientBo nullPatient() {
-        return new ImmunizePatientBo(null, 23, 65, List.of(validBillableImmunization()));
+        return new ImmunizePatientBo(null, 20, 65, List.of(validBillableImmunization()));
     }
 
     private ImmunizePatientBo nullClinicalSpecialty() {
-        return new ImmunizePatientBo(43, 23, null, List.of(validBillableImmunization()));
+        return new ImmunizePatientBo(43, 20, null, List.of(validBillableImmunization()));
     }
 
     private ImmunizePatientBo invalidClinicalSpecialty() {
-        return new ImmunizePatientBo(43, 23, 44, List.of(validBillableImmunization()));
+        return new ImmunizePatientBo(43, 20, 44, List.of(validBillableImmunization()));
     }
 
     private ImmunizationInfoBo validBillableImmunization() {

@@ -5,6 +5,7 @@ import ar.lamansys.immunization.application.fetchVaccineSchemeInfo.exceptions.Fe
 import ar.lamansys.immunization.application.fetchVaccines.exceptions.FetchVaccineByIdException;
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientException;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidatorException;
+import ar.lamansys.immunization.domain.user.RolePermissionException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,15 @@ public class ImmunizationExceptionHandler {
 		logger.debug("FetchVaccineSchemeException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
+
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler({ RolePermissionException.class })
+	protected ApiErrorMessageDto handleRolePermissionException(RolePermissionException ex, Locale locale) {
+		logger.debug("RolePermissionException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+
 
 }
 
