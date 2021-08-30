@@ -9,7 +9,7 @@
 
 	<mat-tab-group mat-align-tabs="center" [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
 		<ng-container *appHasRole="['ENFERMERO']">
-			<ng-container *ngIf="hasConfirmedAppointment">
+			<ng-container *ngIf="this.data.hasConfirmedAppointment">
 				<mat-tab>
 					<ng-template mat-tab-label>
 						<span class="color-primary">

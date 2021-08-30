@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HCEImmunizationDto, ProfessionalInfoDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute } from '@angular/router';
@@ -17,8 +17,8 @@ export class VacunasComponent implements OnInit {
 	private patientId: number;
 	public readonly vacunasSummary = VACUNAS;
 	public vaccines: HCEImmunizationDto[] = [];
-
-	dialogRef: any;
+	@Input() hasNewConsultationEnabled: boolean;
+	public dialogRef: any;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,

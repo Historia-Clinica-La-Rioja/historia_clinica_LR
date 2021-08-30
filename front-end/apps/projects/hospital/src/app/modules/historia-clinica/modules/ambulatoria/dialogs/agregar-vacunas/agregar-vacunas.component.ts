@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ClinicalSpecialtyDto, ImmunizationDto, ImmunizePatientDto } from '@api-rest/api-model';
@@ -7,6 +7,7 @@ import { ImmunizationService } from '@api-rest/services/immunization.service';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AgregarVacunaComponent } from '../agregar-vacuna/agregar-vacuna.component';
+import { AppointmentsService } from "@api-rest/services/appointments.service";
 
 @Component({
   selector: 'app-agregar-vacunas',
@@ -14,20 +15,23 @@ import { AgregarVacunaComponent } from '../agregar-vacuna/agregar-vacuna.compone
   styleUrls: ['./agregar-vacunas.component.scss']
 })
 export class AgregarVacunasComponent implements OnInit {
-
+  hasConfirmedAppointment: boolean;
   form: FormGroup;
   specialties: ClinicalSpecialtyDto[];
   appliedVaccines: ImmunizationDto[];
   loading: boolean = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { patientId: number },
+    @Inject(MAT_DIALOG_DATA) public data: {
+      patientId: number,
+    },
     private readonly formBuilder: FormBuilder,
     private readonly dialog: MatDialog,
     private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
     public dialogRef: MatDialogRef<AgregarVacunasComponent>,
     private immunizationService: ImmunizationService,
-    private readonly snackBarService: SnackBarService
+    private readonly snackBarService: SnackBarService,
+	private readonly appointmentsService: AppointmentsService
   ) {
     this.appliedVaccines = [];
   }
@@ -36,6 +40,10 @@ export class AgregarVacunasComponent implements OnInit {
     this.form = this.formBuilder.group({
       clinicalSpecialty: [{ value: null, disabled: true }, Validators.required]
     });
+
+	this.appointmentsService.hasNewConsultationEnabled(this.data.patientId).subscribe(response => {
+		this.hasConfirmedAppointment = response;
+	});
 
     this.setLoggedProfessionalSpecialties();
   }
@@ -67,7 +75,8 @@ export class AgregarVacunasComponent implements OnInit {
       data: {
         immunization: this.appliedVaccines[vaccineIndex],
         edit: true,
-        patientId: this.data.patientId
+        patientId: this.data.patientId,
+		hasConfirmedAppointment: this.hasConfirmedAppointment
       }
     });
 
@@ -84,7 +93,8 @@ export class AgregarVacunasComponent implements OnInit {
       disableClose: true,
       width: '45%',
       data: {
-        patientId: this.data.patientId
+        patientId: this.data.patientId,
+		hasConfirmedAppointment: this.hasConfirmedAppointment
       }
     });
 
@@ -111,6 +121,9 @@ export class AgregarVacunasComponent implements OnInit {
           if (success) {
             this.dialogRef.close(true);
             this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.agregar_vacunas.SUCCESS');
+			this.appointmentsService.hasNewConsultationEnabled(this.data.patientId).subscribe(response => {
+			  this.hasConfirmedAppointment = response;
+			});
           }
         },
         error => {
