@@ -95,7 +95,12 @@ public class ImmunizePatient {
                         isBillable(immunizePatientBo)));
         immunizationDocumentStorage.save(mapTo(immunizePatientBo, encounterId, doctorInfoBo));
 
-        appointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
+        if (gettingVaccine(immunizePatientBo.getImmunizations()))
+            appointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
+    }
+
+    private boolean gettingVaccine(List<ImmunizationInfoBo> immunizations) {
+        return immunizations.stream().anyMatch(ImmunizationInfoBo::isBillable);
     }
 
     private boolean isBillable(ImmunizePatientBo immunizePatientBo) {

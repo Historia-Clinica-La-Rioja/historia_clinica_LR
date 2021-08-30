@@ -407,6 +407,65 @@ class ImmunizePatientTest {
         assertEquals("No tiene los permisos suficientes para inmunizar un paciente", exception.getMessage());
     }
 
+    @Test
+    void notCallAppointmentServeWhenNotGettingVaccine() {
+        when(sharedPermissionPort.ferPermissionInfoByUserId(any())).thenReturn(List.of(new RoleInfoDto((short)45, 20, "ENFERMERO")));
+        when(localDateMapper.fromLocalDateToString(any())).thenReturn("2020-12-12");
+        when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020,12,13));
+        when(sharedStaffPort.getProfessionalCompleteInfo(any()))
+                .thenReturn(new ProfessionalInfoDto(1, "LICENCE_NUMBER", "FIRST_NAME", "LAST_NAME", "ID_NUMBER", "PHONE",
+                        List.of(new ClinicalSpecialtyDto(65, "Especialidad1"),
+                                new ClinicalSpecialtyDto(2, "Especialidad1"))));
+        when(vaccineSchemeRepository.existsById(any())).thenReturn(true);
+        when(vaccineConditionApplicationRepository.existsById(any())).thenReturn(true);
+        when(vaccineConsultationRepository.save(any()))
+                .thenReturn(new VaccineConsultation(1, 20,14,45,1,65,
+                        LocalDate.of(2020,12,12),true));
+        when(sharedAppointmentPort.hasConfirmedAppointment(any(), any(), any())).thenReturn(true);
+        when(vaccineRuleStorage.existRule(any(), any(), any(), any(), any())).thenReturn(true);
+        immunizePatient.run(new ImmunizePatientBo(14, 20, 65, List.of(noBillableImmunizationValid())));
+
+
+        ArgumentCaptor<VaccineConsultation> vaccineConsultationArgumentCaptor = ArgumentCaptor.forClass(VaccineConsultation.class);
+        verify(vaccineConsultationRepository, times(1)).save(vaccineConsultationArgumentCaptor.capture());
+        Assertions.assertNull(vaccineConsultationArgumentCaptor.getValue().getId());
+        Assertions.assertEquals(14, vaccineConsultationArgumentCaptor.getValue().getPatientId());
+        Assertions.assertEquals(20, vaccineConsultationArgumentCaptor.getValue().getInstitutionId());
+        Assertions.assertEquals(1, vaccineConsultationArgumentCaptor.getValue().getDoctorId());
+        Assertions.assertTrue(vaccineConsultationArgumentCaptor.getValue().getBillable());
+        Assertions.assertEquals(LocalDate.of(2020,12,13), vaccineConsultationArgumentCaptor.getValue().getPerformedDate());
+        Assertions.assertEquals(65, vaccineConsultationArgumentCaptor.getValue().getClinicalSpecialtyId());
+
+        ArgumentCaptor<DocumentDto> documentDtoArgumentCaptor = ArgumentCaptor.forClass(DocumentDto.class);
+        verify(documentExternalFactory, times(1)).run(documentDtoArgumentCaptor.capture(), eq(true));
+        Assertions.assertNull(documentDtoArgumentCaptor.getValue().getId());
+        Assertions.assertEquals(14, documentDtoArgumentCaptor.getValue().getPatientId());
+        Assertions.assertEquals(20, documentDtoArgumentCaptor.getValue().getInstitutionId());
+        Assertions.assertEquals(1, documentDtoArgumentCaptor.getValue().getEncounterId());
+        Assertions.assertEquals(DocumentType.IMMUNIZATION, documentDtoArgumentCaptor.getValue().getDocumentType());
+        Assertions.assertEquals(SourceType.IMMUNIZATION, documentDtoArgumentCaptor.getValue().getDocumentSource());
+
+        Assertions.assertEquals(2,
+                documentDtoArgumentCaptor.getValue().getImmunizations().size());
+        Assertions.assertEquals(new SnomedDto("SCTID_1","PT_ANTIGRIPAL"),
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getSnomed());
+        Assertions.assertEquals(20,
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getInstitutionId());
+        Assertions.assertEquals(new VaccineDoseInfoDto("Dose1", (short)1),
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getDose());
+        Assertions.assertEquals((short)3,
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getConditionId());
+        Assertions.assertEquals("2020-12-12",
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getAdministrationDate());
+        Assertions.assertEquals("LOTE",
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getLotNumber());
+        Assertions.assertEquals("Nota de vacuna",
+                documentDtoArgumentCaptor.getValue().getImmunizations().get(0).getNote());
+        Assertions.assertTrue(documentDtoArgumentCaptor.getValue().getImmunizations().get(0).isBillable());
+
+        verify(sharedAppointmentPort, times(0)).serveAppointment(14, 1, LocalDate.of(2020,12,13));
+    }
+
     private ImmunizePatientBo validImmunizePatient(){
         return new ImmunizePatientBo(14, 20, 65, List.of(validBillableImmunization(), noBillableImmunizationValid()));
     }
