@@ -5,12 +5,14 @@ import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservation
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEHealthConditionsService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEImmunizationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEMedicationService;
+import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEToothRecordService;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEToothRecordBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationDoseBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
@@ -20,6 +22,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEImmuni
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
@@ -69,6 +72,8 @@ public class HCEGeneralStateController {
 
     private final HCEAllergyService hceAllergyService;
 
+    private final HCEToothRecordService hceToothRecordService;
+
     private final LocalDateMapper localDateMapper;
 
     private final SharedImmunizationPort sharedImmunizationPort;
@@ -83,6 +88,7 @@ public class HCEGeneralStateController {
                                      HCEImmunizationService hceImmunizationService,
                                      HCEMedicationService hceMedicationService,
                                      HCEAllergyService hceAllergyService,
+                                     HCEToothRecordService hceToothRecordService,
                                      LocalDateMapper localDateMapper,
                                      SharedImmunizationPort sharedImmunizationPort,
                                      SharedInstitutionPort sharedInstitutionPort,
@@ -93,6 +99,7 @@ public class HCEGeneralStateController {
         this.hceImmunizationService = hceImmunizationService;
         this.hceMedicationService = hceMedicationService;
         this.hceAllergyService = hceAllergyService;
+        this.hceToothRecordService = hceToothRecordService;
         this.localDateMapper = localDateMapper;
         this.sharedImmunizationPort = sharedImmunizationPort;
         this.sharedInstitutionPort = sharedInstitutionPort;
@@ -243,6 +250,19 @@ public class HCEGeneralStateController {
         List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getSolvedProblems(patientId);
         List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/toothRecords/tooth/{toothSctid}")
+    public ResponseEntity<List<HCEToothRecordDto>> getToothRecords(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId,
+            @PathVariable(name = "toothSctid") String toothSctid) {
+        LOG.debug("Input parameters -> institutionId {}, patientId {}, toothSctid {}", institutionId, patientId, toothSctid);
+        List<HCEToothRecordBo> resultService = hceToothRecordService.getToothRecords(patientId, toothSctid);
+        List<HCEToothRecordDto> result = hceGeneralStateMapper.toListHCEToothRecordDto(resultService);
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 
