@@ -11,9 +11,13 @@ public class NomivacImmunizationPostResponse {
 
     private final Integer statusCode;
 
-    public NomivacImmunizationPostResponse(String nomivacId, String message, Integer statusCode) {
+    private final boolean unsuccessfullyOperation;
+
+    public NomivacImmunizationPostResponse(String nomivacId, String message, Integer statusCode,
+                                           boolean unsuccessfullyOperation) {
         this.nomivacId = nomivacId;
         this.message = message;
         this.statusCode = statusCode;
+        this.unsuccessfullyOperation = unsuccessfullyOperation;
     }
 }

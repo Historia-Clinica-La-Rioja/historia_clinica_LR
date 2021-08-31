@@ -27,7 +27,8 @@ public class SendImmunizationImpl implements SendImmunization {
     public ImmunizationSynchronizedInfoBo run(ImmunizationBo immunizationBo) {
         Immunization immunization = immunizationNomivacResourceMapper.map(immunizationBo);
         NomivacImmunizationPostResponse response = nomivacWebService.postImmunization(immunization);
-        return new ImmunizationSynchronizedInfoBo(immunizationBo.getId(), response.getNomivacId(), response.getStatusCode());
+        return new ImmunizationSynchronizedInfoBo(immunizationBo.getId(), response.getNomivacId(),
+                response.getStatusCode(), response.getMessage(), response.isUnsuccessfullyOperation());
     }
 
 }

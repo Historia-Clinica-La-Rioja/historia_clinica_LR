@@ -100,13 +100,15 @@ Este documento detalla las propiedades configurables del sistema.
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | habilitar.boton.consulta | | false | Opcional | Propiedad de configuración de aplicación para des/habilitar el botón Nueva consulta.| v1.3.0
 
-## Integración con servicios de terceros (Renaper, Federar, Snowstorm ... )
+## Integración con servicios de terceros (Renaper, Federar, Snowstorm, Nomivac ... )
 
+### Bus de interoperabilidad
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | -------- | ------ | -------- | ------ | -------------- | ---- |
 | ws.bus.url.base   | | - | **Obligatorio** | URL productiva del BUS de interoperabilidad utilizada al solicitar historia clínica de pacientes federados en otros dominios.| v1.21.0  |
 
 
+### Renaper
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | -------- | ------ | -------- | ------ | -------------- | ---- |
 | ws.renaper.enabled   | | - | **Único** | Determina si se utiliza la integracion con Renaper (se necesita completar la configuracion) | v0.2.0  |
@@ -114,6 +116,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.renaper.clave |  | - | **Obligatorio** | Clave que provee Renaper para cada dominio que utilice la integracion | v0.2.0  |
 
 
+### Federar
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | ---------- | ------ | -------- | -------- | ------------ | ---- |
 | ws.federar.enabled | | - | **Único** | Determina si se utiliza la integracion con Federar (se necesita completar la configuración) | v0.2.0  |
@@ -126,7 +129,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.federar.claims.ident  |  | 0001 | **Obligatorio** | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.auth.signKey |   | federar | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
 
-
+### Snowstorm
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | ---------- | ------ | -------- | -------- | ------------ | ---- |
 | ws.snowstorm.url.base |   | https://snowstorm.msal.gob.ar | **Obligatorio** |  URL base donde se van a consumir los servicios de Snowstorm  | v1.2.0  |
@@ -138,6 +141,15 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.snowstorm.auth.language |   | es-AR;q=0.8,en-GB;q=0.6 | Único |  Header que indica el lenguaje de los resultados  | v1.2.0  |
 | ws.snowstorm.url.concepts |   | /MAIN/concepts | Único |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
 | ws.snowstorm.request.timeout |   | 15000 (*milisegundos*) | Opcional |  Valor de TimeOut para el servicio — *se recomienda no utilizar valores inferiores a los 15 segundos* —  | v1.2.0  |
+
+### Nomivac sincronización de datos
+
+| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
+| ---------- | ------ | -------- | -------- | ------------ | ---- |
+| ws.federar.enabled | - | - | **Obligatorio** | Determina si se utiliza la integracion con Federar (se necesita completar la configuración) | v0.2.0  |
+| ws.nomivac.synchronization.url.base  | - | localhost | **Obligatorio** | URL del dominio donde se sincroniza las vacunas | v1.22.0  |
+| ws.nomivac.synchronization.cron.config  | - | - | **Obligatorio** | Cron que determina la periodicidad con la que se envia los datos a nomivac | v1.22.0  |
+| app.feature.HABILITAR_BUS_INTEROPERABILIDAD  | - | false | **Obligatorio** | Define si se va a realizar una comunicación con el bus de interoperabilidad | v1.22.0  |
 
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |

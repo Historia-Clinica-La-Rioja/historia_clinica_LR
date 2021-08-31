@@ -36,7 +36,7 @@ public class FhirClientR4 {
     public FhirClientR4(WebApplicationContext webApplicationContext,
                         @Value("${ws.federar.url.base}") String federador,
                         @Value("${ws.bus.url.base}") String bus,
-                        @Value("${ws.nomivac.synchronization.url.base}") String nomivac){
+                        @Value("${ws.nomivac.synchronization.url.base:localhost}") String nomivac){
         super();
 
         FhirContext context = FhirContext.forR4();

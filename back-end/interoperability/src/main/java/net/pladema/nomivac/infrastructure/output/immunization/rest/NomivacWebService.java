@@ -29,12 +29,12 @@ public class NomivacWebService {
             return mapResponse(response);
         } catch (Exception e) {
             logger.error("Error api", e);
-            return new NomivacImmunizationPostResponse(null, e.getMessage(), HttpStatus.BAD_GATEWAY.value());
+            return new NomivacImmunizationPostResponse(null, e.getMessage(), HttpStatus.BAD_GATEWAY.value(), true);
         }
     }
 
     private NomivacImmunizationPostResponse mapResponse(MethodOutcome methodOutcome) {
         logger.debug("Map response from MethodOutcome -> {}", methodOutcome);
-        return new NomivacImmunizationPostResponse(null, null, HttpStatus.BAD_GATEWAY.value());
+        return new NomivacImmunizationPostResponse(null, null, HttpStatus.OK.value(), false);
     }
 }

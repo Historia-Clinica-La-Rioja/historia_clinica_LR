@@ -1,4 +1,4 @@
-package net.pladema.nomivac.infrastructure.output.immunization;
+package net.pladema.nomivac.infrastructure.input.rest.scheduling;
 
 import net.javacrumbs.shedlock.core.SchedulerLock;
 import net.pladema.nomivac.application.synchronizeImmunization.SynchronizeImmunization;
@@ -20,7 +20,7 @@ public class NomivacSynchronizationService {
 		this.logger = LoggerFactory.getLogger(this.getClass());
 	}
 
-	@Scheduled(cron = "${nomivac.synchronization.cron.config:-}")
+	@Scheduled(cron = "${ws.nomivac.synchronization.cron.config:-}")
 	@SchedulerLock(name = "NomivacSynchronizeImmunizations")
 	public void sincronizarLote() {
 		logger.info("Se va a sincronizar vacunas");

@@ -12,6 +12,7 @@ import net.pladema.nomivac.infrastructure.output.immunization.repository.Nomivac
 import net.pladema.nomivac.infrastructure.output.immunization.repository.NomivacImmunizationSync;
 import net.pladema.nomivac.infrastructure.output.immunization.repository.VNomivacImmunizationData;
 import org.junit.Ignore;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,6 +68,9 @@ class SynchronizeImmunizationE2ETest {
                 (short)3, "Calendario Nacional", (short)109, "Regular", "2da dosis", (short)2,
                 "WVX12003",null, true, LocalDateTime.of(2020,10,10,10,10), -1));
         synchronizeImmunization.run();
+        var result = nomivacImmunizationSyncRepository.findById(1);
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(502, result.get().getStatusCode());
     }
 
 
