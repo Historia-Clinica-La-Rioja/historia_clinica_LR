@@ -25,6 +25,9 @@ public class MqttCallAutoConfiguration {
     @Value("${mqtt.server_address}")
     private String mqttServerAddress;
 
+    @Value("${mqtt.client_connection}")
+    private boolean mqttClientConnection;
+
     @Bean
     public IMqttClient connect() {
         MqttClient client = null;
@@ -34,10 +37,13 @@ public class MqttCallAutoConfiguration {
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
             options.setConnectionTimeout(10);
-            client.connect(options);
+            if(mqttClientConnection) {
+                client.connect(options);
+            }
         } catch (MqttException e) {
             e.printStackTrace();
         }
+
 
         return client;
     }
