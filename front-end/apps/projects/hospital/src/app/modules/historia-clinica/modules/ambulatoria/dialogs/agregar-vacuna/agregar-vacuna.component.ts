@@ -20,6 +20,7 @@ import { scrollIntoError } from '@core/utils/form.utils';
 export class AgregarVacunaComponent implements OnInit {
 
 	readonly HALF_COLUMN_WIDTH: number = 47.5;
+	readonly DISABLED_LABEL_COLOR: string = 'rgba(0, 0, 0, 0.38)';
 	selectedTab: number = 0;
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];

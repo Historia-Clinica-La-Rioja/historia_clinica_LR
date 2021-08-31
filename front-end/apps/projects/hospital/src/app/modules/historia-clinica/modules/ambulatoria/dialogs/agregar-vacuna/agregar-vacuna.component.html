@@ -75,7 +75,8 @@
 								</ng-template>
 							</div>
 
-							<mat-label>
+							<mat-label
+								[ngStyle]="{'color': this.billableForm.controls.condition.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
 								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate
 								}}
 							</mat-label>
@@ -95,7 +96,8 @@
 
 							<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between">
 								<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
-									<mat-label>
+									<mat-label
+										[ngStyle]="{'color': this.billableForm.controls.scheme.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
 										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' |
 										translate
 										}}
@@ -114,7 +116,8 @@
 									</mat-form-field>
 								</div>
 								<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
-									<mat-label>
+									<mat-label
+										[ngStyle]="{'color': this.billableForm.controls.dose.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
 										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' |
 										translate }}
 									</mat-label>
@@ -224,7 +227,8 @@
 							</ng-template>
 						</div>
 
-						<mat-label>
+						<mat-label
+							[ngStyle]="{'color': this.previousForm.controls.condition.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
 							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
 						</mat-label>
 						<mat-form-field appearance="outline">
@@ -243,7 +247,8 @@
 
 						<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between">
 							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
-								<mat-label>
+								<mat-label
+									[ngStyle]="{'color': this.previousForm.controls.scheme.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' | translate
 									}}
 								</mat-label>
@@ -260,7 +265,8 @@
 								</mat-form-field>
 							</div>
 							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
-								<mat-label>
+								<mat-label
+									[ngStyle]="{'color': this.previousForm.controls.dose.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
 								</mat-label>
 								<mat-form-field appearance="outline">
