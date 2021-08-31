@@ -96,7 +96,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			callTime: [null],
 			plateNumber: [null, Validators.maxLength(POLICE_OFFICER.PLATE_NUMBER.max_length)],
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
-			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
+			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
 			reasons: [null],
 			patientId: [null]
 		});
