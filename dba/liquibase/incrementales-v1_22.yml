@@ -853,3 +853,14 @@ databaseChangeLog:
                         - column:
                               name: status_code
                               type: INT
+    - changeSet:
+        id: doctorsoffice_topic-addTopicColumn
+        comment: Create column topic in doctors_office
+        author: lmanterola
+        changes:
+            - addColumn:
+                  columns:
+                      - column:
+                            name: topic
+                            type: varchar(255)
+                  tableName: doctors_office

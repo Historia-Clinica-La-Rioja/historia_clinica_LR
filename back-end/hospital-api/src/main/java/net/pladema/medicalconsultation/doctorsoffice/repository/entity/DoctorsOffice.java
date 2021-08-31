@@ -34,6 +34,9 @@ public class DoctorsOffice implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "topic")
+    private String topic;
+
     @Column(name = "opening_time", columnDefinition = "time default '00:00:00'", nullable = false)
     private LocalTime openingTime;
 
