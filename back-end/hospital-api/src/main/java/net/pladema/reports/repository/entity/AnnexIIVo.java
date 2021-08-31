@@ -82,8 +82,8 @@ public class AnnexIIVo {
     public Short getAge(){
         if (patientBirthDate == null)
             return null;
-        LocalDate today = LocalDate.now();
-        Period p = Period.between(patientBirthDate, today);
+        LocalDate reportDate = consultationDate != null ? consultationDate : attentionDate;
+        Period p = Period.between(patientBirthDate, reportDate);
         return (short) p.getYears();
     }
 }
