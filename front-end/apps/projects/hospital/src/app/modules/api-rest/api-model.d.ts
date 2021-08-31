@@ -855,6 +855,12 @@ export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
     startDate: string;
 }
 
+export interface HCEToothRecordDto extends Serializable {
+    date: DateDto;
+    snomed: SnomedDto;
+    surfaceSctid?: string;
+}
+
 export interface HCEVitalSignDto extends Serializable {
     bloodOxygenSaturation?: HCEEffectiveClinicalObservationDto;
     diastolicBloodPressure?: HCEEffectiveClinicalObservationDto;
