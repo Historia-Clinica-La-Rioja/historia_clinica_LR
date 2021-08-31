@@ -66,12 +66,8 @@
 		</div>
 
 		<div id="problemas">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TITLE'"
-								  [sectionImportance]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"
-								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE'"
-								  [columns]="problemasService.getColumns()"
-								  [data]="problemasService.getProblemas()"
-								  [reducedHeaderSize]="true">
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.problemas.TITLE"
+									  sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 				<div concept-form *ngIf="!this.readOnlyProblema else problemaForm">
 					<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
 										 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
@@ -162,7 +158,14 @@
 
 					</form>
 				</ng-template>
-			</app-document-section>
+
+				<app-document-section-table data-display tableTitle="ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE"
+											[columns]="problemasService.getColumns()"
+											[data]="problemasService.getProblemas()">
+				</app-document-section-table>
+
+			</app-new-document-section>
+
 		</div>
 
 		<div id="datos-antropometricos">
@@ -566,7 +569,7 @@
 	</div>
 	<div actions id="buttons">
 		<div align="end">
-			<button class="uppercase" mat-raised-button color="primary" (click)="save()">
+			<button class="uppercase" mat-raised-button color="primary" (click)="save()" [disabled]="disableConfirmButton">
 				<span [translate]="'buttons.CONFIRM'"></span>
 			</button>
 		</div>

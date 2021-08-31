@@ -4,7 +4,7 @@ import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -53,6 +53,7 @@ public class RoleServiceImpl implements RoleService {
 			case ENFERMERO: return "Enfermero";
 			case ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE:  return "Administrador institucional";
 			case ADMINISTRADOR_AGENDA:  return "Administrador agenda";
+			case API_CONSUMER:  return "Api consumer";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}

@@ -30,7 +30,8 @@
 
 		<div>
 			<strong translate="medical-coverage.NEW_HEALTH_INSURANCES"></strong>
-			<form [formGroup]="healthInsuranceForm" fxLayoutGap="5px" class="form">
+			<form [formGroup]="healthInsuranceForm" fxLayoutGap="5px" class="form" #formDirectiveHealthInsuranceForm="ngForm"
+				(ngSubmit)="addHealthInsurance(formDirectiveHealthInsuranceForm)">
 				<mat-form-field appearance="outline">
 					<input type="text" placeholder="{{ 'Buscar obra social' | translate }}" aria-label="Number"
 						formControlName="healthInsurance" matInput [matAutocomplete]="auto">
@@ -41,13 +42,14 @@
 							<span class="mat-body">{{getFullHealthInsuranceText(healthInsurance)}}</span>
 						</mat-option>
 					</mat-autocomplete>
+					<mat-error translate="forms.REQUIRED"></mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<input id="healthInsuranceAffiliateNumber" name="healthInsuranceAffiliateNumber"
 						formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}" matInput>
 				</mat-form-field>
 				<button mat-stroked-button color="primary" class="uppercase margin" id="add-health-insurance"
-					type="button" (click)="addHealthInsurance()" name="add-health-insurance"
+					type="submit" name="add-health-insurance"
 					translate="medical-coverage.ADD_HEALTH_INSURANCES"></button>
 			</form>
 		</div>
@@ -60,7 +62,7 @@
 			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column"
 				fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
-				<span class="color-primary"class="color-primary">Consultando cobertura</span>
+				<span class="color-primary" class="color-primary">Consultando cobertura</span>
 			</div>
 			<ng-template #viewPatientPrivateHealthInsurances>
 				<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()"
@@ -93,11 +95,13 @@
 
 		<div>
 			<strong translate="medical-coverage.NEW_PRIVATE_HEALTH_INSURANCES"></strong>
-			<form [formGroup]="prepagaForm" class="form" fxLayoutGap="5px">
+			<form [formGroup]="prepagaForm" class="form" fxLayoutGap="5px" #formDirectivePrepagaForm='ngForm'
+				(ngSubmit)="addPrivateHealthInsurance(formDirectivePrepagaForm)">
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
 						<input type="text" placeholder="{{ 'Ingresar Prepaga' | translate }}" aria-label="Number"
 							formControlName="name" matInput>
+						<mat-error translate="forms.REQUIRED"></mat-error>
 					</mat-form-field>
 					<mat-form-field appearance="outline">
 						<mat-label>Fecha de inicio</mat-label>
@@ -126,7 +130,7 @@
 							formControlName="plan" matInput>
 					</mat-form-field>
 					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage"
-						type="button" name="add-medical-coverage" (click)="addPrivateHealthInsurance()"
+						type="submit" name="add-medical-coverage"
 						translate="medical-coverage.ADD_PRIVATE_HEALTH_INSURANCES"> </button>
 				</div>
 

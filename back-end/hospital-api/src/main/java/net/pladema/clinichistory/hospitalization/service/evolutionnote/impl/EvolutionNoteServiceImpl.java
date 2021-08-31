@@ -1,13 +1,12 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.service.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.documents.service.ips.domain.GeneralHealthConditionBo;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,6 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
         EvolutionNoteBo r = documentService.findById(documentId).map( document -> {
             EvolutionNoteBo result = new EvolutionNoteBo();
             result.setId(document.getId());
-            result.setConfirmed(document.getStatusId().equalsIgnoreCase(DocumentStatus.FINAL));
 
             GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());

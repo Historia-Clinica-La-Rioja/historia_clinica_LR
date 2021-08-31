@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

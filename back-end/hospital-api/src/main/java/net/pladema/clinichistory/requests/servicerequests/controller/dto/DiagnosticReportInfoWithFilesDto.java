@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FileDto;
 import lombok.*;
 import java.util.List;
 

@@ -1,17 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
 	selector: 'app-content',
 	templateUrl: './content.component.html',
 	styleUrls: ['./content.component.scss']
 })
-export class ContentComponent implements OnInit {
+export class ContentComponent {
 
 	@Input() width = 'full';
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 }

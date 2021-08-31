@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TriageAdministrativeDto } from '@api-rest/api-model';
 
 @Component({
@@ -6,7 +6,7 @@ import { TriageAdministrativeDto } from '@api-rest/api-model';
 	templateUrl: './administrative-triage.component.html',
 	styleUrls: ['./administrative-triage.component.scss']
 })
-export class AdministrativeTriageComponent implements OnInit, OnChanges {
+export class AdministrativeTriageComponent {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
@@ -17,12 +17,6 @@ export class AdministrativeTriageComponent implements OnInit, OnChanges {
 	private doctorsOfficeId: number;
 
 	constructor() {
-	}
-
-	ngOnChanges(changes: SimpleChanges): void {
-	}
-
-	ngOnInit(): void {
 	}
 
 	setTriageCategoryId(triageCategoryId: number): void {

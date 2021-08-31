@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 
 import java.time.LocalDate;
 import java.util.List;

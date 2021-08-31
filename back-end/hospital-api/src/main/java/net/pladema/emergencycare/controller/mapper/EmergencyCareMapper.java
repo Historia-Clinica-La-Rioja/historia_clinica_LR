@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.controller.mapper;
 
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.emergencycare.controller.dto.*;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
@@ -9,7 +9,7 @@ import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.controller.mapper.TriageMapper;
 import net.pladema.medicalconsultation.doctorsoffice.controller.mapper.DoctorsOfficeMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import net.pladema.sgx.masterdata.service.domain.EnumWriter;
+import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import net.pladema.user.controller.dto.UserDto;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.IterableMapping;

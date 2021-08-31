@@ -25,4 +25,8 @@ public interface AppointmentService {
     List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
     boolean updatePhoneNumber(Integer appointmentId, String phoneNumber, Integer userId);
+
+    boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
+
+    Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId, LocalDate currentDate);
 }

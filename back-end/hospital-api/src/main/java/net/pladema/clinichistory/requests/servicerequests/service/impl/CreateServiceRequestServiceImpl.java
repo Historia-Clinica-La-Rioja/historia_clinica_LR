@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,21 +33,22 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
     }
 
     @Override
-    public Integer execute(Integer institutionId, ServiceRequestBo serviceRequestBo) {
+    public Integer execute(ServiceRequestBo serviceRequestBo) {
         LOG.debug("Input parameters -> serviceRequestBo {}", serviceRequestBo);
 
-        assertRequiredFields(institutionId, serviceRequestBo);
+        assertRequiredFields(serviceRequestBo);
         assertNoDuplicatedStudies(serviceRequestBo);
-        ServiceRequest newServiceRequest = createServiceRequest(institutionId, serviceRequestBo);
+        ServiceRequest newServiceRequest = createServiceRequest(serviceRequestBo);
         serviceRequestBo.setEncounterId(newServiceRequest.getId());
-        documentFactory.run(serviceRequestBo);
+        documentFactory.run(serviceRequestBo, false);
 
         LOG.debug(OUTPUT, serviceRequestBo);
         return newServiceRequest.getId();
     }
 
-    private void assertRequiredFields(Integer institutionId, ServiceRequestBo serviceRequestBo) {
-        Assert.notNull(institutionId, "El identificador de la institución es obligatorio");
+    private void assertRequiredFields(ServiceRequestBo serviceRequestBo) {
+        Assert.notNull(serviceRequestBo, "La orden es obligatoria");
+        Assert.notNull(serviceRequestBo.getInstitutionId(), "El identificador de la institución es obligatorio");
         Assert.notNull(serviceRequestBo.getPatientId(), "El paciente es obligatorio");
         Assert.notNull(serviceRequestBo.getDoctorId(), "El identificador del médico es obligatorio");
         Assert.notEmpty(serviceRequestBo.getDiagnosticReports(), "La orden tiene que tener asociada al menos un estudio");
@@ -65,9 +66,9 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
         result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La orden no puede contener más de un estudio con el mismo problema y el mismo concepto snomed"));
     }
 
-    private ServiceRequest createServiceRequest(Integer institutionId, ServiceRequestBo serviceRequestBo) {
+    private ServiceRequest createServiceRequest(ServiceRequestBo serviceRequestBo) {
         ServiceRequest newServiceRequest = new ServiceRequest(
-                institutionId,
+                serviceRequestBo.getInstitutionId(),
                 serviceRequestBo.getPatientId(),
                 serviceRequestBo.getDoctorId(),
                 serviceRequestBo.getMedicalCoverageId(),

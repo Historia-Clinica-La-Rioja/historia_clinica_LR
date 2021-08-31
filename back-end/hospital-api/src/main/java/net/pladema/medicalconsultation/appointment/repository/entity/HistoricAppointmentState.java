@@ -9,11 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 @Entity
@@ -23,7 +23,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 @Setter
 @ToString
 @NoArgsConstructor
-public class HistoricAppointmentState extends SGXAuditableEntity implements Serializable {
+public class HistoricAppointmentState extends SGXAuditableEntity<HistoricAppointmentStatePK> implements Serializable {
 
     /**
 	 * 
@@ -44,5 +44,8 @@ public class HistoricAppointmentState extends SGXAuditableEntity implements Seri
         this.appointmentStateId = appointmentStateId;
         this.reason = reason;
     }
-    
+
+    public HistoricAppointmentStatePK getId(){
+        return this.pk;
+    }
 }

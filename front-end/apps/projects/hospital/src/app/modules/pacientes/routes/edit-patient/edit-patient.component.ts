@@ -257,7 +257,7 @@ export class EditPatientComponent implements OnInit {
 			otherLastNames: this.form.controls.otherLastNames.value && this.form.controls.otherLastNames.value.length ? this.form.controls.otherLastNames.value : null,
 			// Person extended
 			cuil: this.form.controls.cuil.value,
-			email: this.form.controls.email.value,
+			email: this.form.controls.email.value && this.form.controls.email.value.length ? this.form.controls.email.value : null,
 			ethnicityId: this.form.controls.ethnicityId.value,
 			occupationId: this.form.controls.occupationId.value,
 			educationLevelId: this.form.controls.educationLevelId.value,

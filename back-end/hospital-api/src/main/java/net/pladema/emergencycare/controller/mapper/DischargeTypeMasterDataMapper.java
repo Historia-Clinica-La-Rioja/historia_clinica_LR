@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.controller.mapper;
 
 import net.pladema.emergencycare.service.domain.DischargeTypeBo;
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

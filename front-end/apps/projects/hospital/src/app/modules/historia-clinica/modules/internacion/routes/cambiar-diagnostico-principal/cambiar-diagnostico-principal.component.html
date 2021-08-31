@@ -1,6 +1,7 @@
 <app-content class="full">
 	<div fxLayout="row" fxLayoutGap="50px" fxLayout.xs="column">
-		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto" fxFlexOrder="2" fxFlexOrder.xs="1">
+		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto" fxFlexOrder="2"
+			fxFlexOrder.xs="1">
 			<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary$ | async" content>
 			</app-internment-episode-summary>
 		</app-patient-card>
@@ -41,9 +42,11 @@
 					<mat-expansion-panel (opened)="panelOpenState = true; deleteMainDiagnosis()"
 						(closed)="panelOpenState = false; deleteMainDiagnosis()">
 						<mat-expansion-panel-header>
-							<mat-panel-title>
+							<mat-panel-title fxLayout = "column">
 								<span class="mat-body-2"
 									[translate]="'internaciones.change-main-diagnosis.select-new-main.panels.new-diagnosis.TITLE'"></span>
+								<span class="recomendado"
+									[translate]="'internaciones.change-main-diagnosis.select-new-main.panels.new-diagnosis.SUBTITLE'"></span>
 							</mat-panel-title>
 							<mat-panel-description>
 								<span class="mat-body-2"
@@ -53,7 +56,7 @@
 						<app-concepts-search *ngIf="!newMainDiagnosis else newMainDiagnosisTempRef"
 							[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
 							(search)="openSearchDialog($event)">
-						</app-concepts-search>
+						</app-concepts-search>					
 						<ng-template #newMainDiagnosisTempRef>
 							<mat-list>
 								<mat-list-item>
@@ -137,7 +140,7 @@
 						<span class="uppercase" [translate]="'buttons.BACK'"></span>
 					</button>
 					<button id="sign-confirm" mat-raised-button type="submit" color="primary"
-						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
 						<span class="uppercase" [translate]="'buttons.CONFIRM'"></span>
 					</button>
 				</section>

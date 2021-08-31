@@ -30,10 +30,8 @@
 			</mat-form-field>
 		</div>
 
-		<div id="problemas">
-			<app-document-section [sectionTitle]="'guardia.episode.medical_discharge.problems.TITLE'"
-				[tableTitle]="'guardia.episode.medical_discharge.problems.TABLE_TITLE'"
-				[columns]="problemasService.getColumns()" [data]="problemasService.getProblemas()">
+		<div id="problemas" style="padding-bottom: 15px">
+			<app-new-document-section sectionTitle="guardia.episode.medical_discharge.problems.TITLE">
 				<div concept-form>
 					<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
 						[label]="'guardia.episode.medical_discharge.problems.CONCEPT_LABEL'"
@@ -111,7 +109,12 @@
 
 					</form>
 				</ng-template>
-			</app-document-section>
+
+				<app-document-section-table data-display tableTitle="guardia.episode.medical_discharge.problems.TABLE_TITLE"
+											[columns]="problemasService.getColumns()"
+											[data]="problemasService.getProblemas()">
+				</app-document-section-table>
+			</app-new-document-section>
 		</div>
 
 		<div fxLayout="column" fxLayoutGap="6px">

@@ -1,7 +1,7 @@
 package net.pladema.featureflags.controller.constraints;
 
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

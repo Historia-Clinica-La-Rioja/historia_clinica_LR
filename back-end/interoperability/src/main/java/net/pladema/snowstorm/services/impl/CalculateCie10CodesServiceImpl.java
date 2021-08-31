@@ -22,6 +22,10 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
 
     private static final char CODE_DELIMITER = ',';
 
+    public static final String CIE10_REFERENCE_SET_ID = "447562003";
+
+    public static final String CIE10_LIMIT = "500";
+
     private final SnowstormService snowstormService;
 
     public CalculateCie10CodesServiceImpl(SnowstormService snowstormService) {
@@ -31,7 +35,8 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
     @Override
     public String execute(String sctid, Cie10RuleFeature features) {
         LOG.debug("Input parameters -> sctid {}, patient {}", sctid, features);
-        SnowstormCie10RefsetMembersResponse cie10RefsetMembers = snowstormService.getCie10RefsetMembers(sctid);
+        SnowstormCie10RefsetMembersResponse cie10RefsetMembers =
+                snowstormService.getRefsetMembers(sctid, CIE10_REFERENCE_SET_ID, CIE10_LIMIT, SnowstormCie10RefsetMembersResponse.class);
         List<String> cie10CodesList = calculateCie10Codes(cie10RefsetMembers, features);
         String cie10Codes = cie10CodesList.isEmpty() ? null : concatCodes(cie10CodesList);
         LOG.debug(OUTPUT, cie10Codes);

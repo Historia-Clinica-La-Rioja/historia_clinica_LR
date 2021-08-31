@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.triage.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAppearanceDto;
@@ -99,4 +100,10 @@ public interface TriageMapper {
     @Named("toListTriageCategoryDto")
     @IterableMapping(qualifiedByName = "toTriageCategoryDto")
     List<TriageCategoryDto> toListTriageCategoryDto(Collection<TriageCategory> data);
+
+    @Named("fromTriagePediatricDto")
+    @Mapping(target = "heartRate", source = "circulation.heartRate")
+    @Mapping(target = "respiratoryRate", source = "breathing.respiratoryRate")
+    @Mapping(target = "bloodOxygenSaturation", source = "breathing.bloodOxygenSaturation")
+    NewVitalSignsObservationDto fromTriagePediatricDto(TriagePediatricDto triagePediatricDto);
 }

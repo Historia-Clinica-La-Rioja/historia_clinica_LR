@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller.mapper;
 
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DosageInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 	templateUrl: './img-uploader.component.html',
 	styleUrls: ['./img-uploader.component.scss']
 })
-export class ImgUploaderComponent implements OnInit {
+export class ImgUploaderComponent {
 
 	@Input() buttonLabel: string;
 	@Input() icon: string;
@@ -17,9 +17,6 @@ export class ImgUploaderComponent implements OnInit {
 	@ViewChild('fileInput') fileInput: ElementRef;
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 	onSelectFile($event) {
 		const imgFile = $event.target.files[0];

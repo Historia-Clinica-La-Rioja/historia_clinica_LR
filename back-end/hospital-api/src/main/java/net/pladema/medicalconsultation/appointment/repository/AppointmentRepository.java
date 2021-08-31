@@ -1,10 +1,10 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
+public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer> {
 
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
@@ -103,4 +103,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     void updatePhoneNumber(@Param("appointmentId") Integer appointmentId,
                            @Param("phoneNumber") String phoneNumber,
                            @Param("userId") Integer userId);
+
+    @Transactional(readOnly = true)
+    @Query(name = "Appointment.medicalCoverage")
+    List<Integer> getMedicalCoverage(@Param("patientId") Integer patientId,
+                                     @Param("currentDate") LocalDate currentDate,
+                                     @Param("appointmentState") Short appointmentState,
+                                     @Param("professionalId") Integer professionalId);
 }

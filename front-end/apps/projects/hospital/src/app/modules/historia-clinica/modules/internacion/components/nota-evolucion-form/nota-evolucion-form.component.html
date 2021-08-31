@@ -4,11 +4,11 @@
 			<h2 class="page-title" [translate]="'internaciones.nota-evolucion.TITLE'"></h2>
 			<h3 [translate]="'internaciones.nota-evolucion.SUBTITLE'"></h3>
 		</section>
-		<section id="diagnosticos" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+		<section id="diagnosticos" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
 		<section id="procedimientos"
-				 *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+				 *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 			<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
 								  [tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
 								  [columns]="procedimientosService.getColumns()"
@@ -60,11 +60,11 @@
 			</app-document-section>
 		</section>
 		<section id="observations"
-				 *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO']">
+				 *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO']">
 			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
 			<mat-card>
 				<mat-card-content formGroupName="observations">
-					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+					<div *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
@@ -79,7 +79,7 @@
 
 						</mat-form-field>
 					</div>
-					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+					<div *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
 						</mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -94,7 +94,7 @@
 							</mat-error>
 						</mat-form-field>
 					</div>
-					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+					<div *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
@@ -109,7 +109,7 @@
 						</mat-form-field>
 					</div>
 					<div
-						*hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
@@ -123,7 +123,7 @@
 							</mat-error>
 						</mat-form-field>
 					</div>
-					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+					<div *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
@@ -137,7 +137,7 @@
 							</mat-error>
 						</mat-form-field>
 					</div>
-					<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+					<div *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 						<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
 						<mat-form-field [floatLabel]="'never'" appearance="outline">
 							<textarea matInput type="text" id="otherNote" name="otherNote"
@@ -155,7 +155,7 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
-		<section id="signos-vitales" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+		<section id="signos-vitales" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 			<h2 [translate]="'internaciones.anamnesis.vital-signs.form.TITLE'"></h2>
 			<mat-card>
 				<mat-card-content class="vital-signs" formGroupName="vitalSigns">
@@ -265,7 +265,7 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
-		<section id="datos-antropometricos" *hasRole="['ESPECIALISTA_MEDICO','ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+		<section id="datos-antropometricos" *appHasRole="['ESPECIALISTA_MEDICO','ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 			<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
 			<mat-card class="datos-antropometricos-card">
 				<mat-card-content formGroupName="anthropometricData">
@@ -335,10 +335,10 @@
 				</mat-card-content>
 			</mat-card>
 		</section>
-		<section id="alergias" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
+		<section id="alergias" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
 			<app-alergias [(allergies)]="allergies"></app-alergias>
 		</section>
-		<section id="vacunas" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+		<section id="vacunas" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 			<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
 		</section>
 		<section id="validations" *ngIf="apiErrors.length > 0">
@@ -351,7 +351,7 @@
 				<span class="uppercase" [translate]="'buttons.BACK'"></span>
 			</button>
 			<button id="sign-confirm" mat-raised-button type="submit" color="primary"
-					*hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+					*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
 				<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
 			</button>
 		</section>

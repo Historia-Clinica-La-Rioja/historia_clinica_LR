@@ -1,26 +1,35 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.documents.service.Document;
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OutpatientDocumentBo implements Document {
+public class OutpatientDocumentBo implements IDocumentBo {
 
     private Long id;
 
-    private boolean confirmed = true;
+    private Integer patientId;
+
+    private PatientInfoBo patientInfo;
+
+    private Integer encounterId;
+
+    private Integer institutionId;
+
+    private Integer doctorId;
 
     private String reasonId;
 
@@ -44,22 +53,7 @@ public class OutpatientDocumentBo implements Document {
 
     private List<ReasonBo> reasons = new ArrayList<>();
 
-    private ClinicalSpecialtyBo clinicalSpecialty;
-
-    @Override
-    public HealthConditionBo getMainDiagnosis() {
-        return null;
-    }
-
-    @Override
-    public List<DiagnosisBo> getDiagnosis() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getPersonalHistories() {
-        return Collections.emptyList();
-    }
+    private Integer getClinicalSpecialtyId;
 
     @Override
     public DocumentObservationsBo getNotes() {
@@ -71,28 +65,20 @@ public class OutpatientDocumentBo implements Document {
     }
 
     @Override
-    public short getDocumentType() {
-        return 0;
+    public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return patientId;
     }
 
     @Override
-    public Integer getEncounterId() {
-        return null;
+    public short getDocumentType() {
+        return DocumentType.OUTPATIENT;
     }
 
     @Override
     public Short getDocumentSource() {
-        return null;
-    }
-
-    @Override
-    public String getDocumentStatusId() {
-        return null;
-    }
-
-    @Override
-    public Integer getPatientId() {
-        return null;
+        return SourceType.OUTPATIENT;
     }
 
 }

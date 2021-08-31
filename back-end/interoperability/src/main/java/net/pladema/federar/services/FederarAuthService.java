@@ -10,7 +10,6 @@ import net.pladema.federar.services.domain.FederarLoginPayload;
 import net.pladema.federar.services.domain.FederarLoginResponse;
 import net.pladema.federar.services.domain.FederarValidateTokenPayload;
 import net.pladema.federar.services.domain.FederarValidateTokenResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,10 +20,8 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 
 	private FederarWSConfig federarWSConfig;
 
-	public FederarAuthService(
-			@Value("${ws.federar.url.login}") String relUrl,
-			FederarWSConfig wsConfig) throws Exception {
-		super(relUrl, new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
+	public FederarAuthService(FederarWSConfig wsConfig) throws Exception {
+		super(wsConfig.getAuthenticationPath(), new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
 		federarWSConfig = wsConfig;
 	}
 
@@ -49,7 +46,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 	@Override
 	protected void assertValidResponse(FederarLoginResponse loginResponse) throws WSResponseException {
 		super.assertValidResponse(loginResponse);
-		ResponseEntity<FederarValidateTokenResponse> assertTokenResponse = exchangePost(federarWSConfig.getTokenValidationURL(),
+		ResponseEntity<FederarValidateTokenResponse> assertTokenResponse = exchangePost(federarWSConfig.getAuthorizationPath(),
 				new FederarValidateTokenPayload(loginResponse.getAccessToken()),
 				FederarValidateTokenResponse.class);
 		super.assertValidStatusCode(assertTokenResponse);

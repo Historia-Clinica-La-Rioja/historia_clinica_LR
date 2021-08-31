@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,8 +19,6 @@ import net.pladema.clinichistory.hospitalization.repository.domain.processepisod
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
 
 @Repository
 public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpisode, Integer> {

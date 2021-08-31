@@ -5,13 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
-import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
-import ar.lamansys.sgx.shared.auditable.listener.AuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 
 @Entity
 @Table(name = "role_permission")
-@EntityListeners(AuditListener.class)
-public class RolePermission extends AuditableEntity{
+@EntityListeners(SGXAuditListener.class)
+public class RolePermission extends SGXAuditableEntity<RolePermissionPK> {
 
 	/**
 	 * 
@@ -39,5 +39,10 @@ public class RolePermission extends AuditableEntity{
 	
 	public Short getPermissionId() {
 		return rolePermissionPK.getPermissionId();
+	}
+
+	@Override
+	public RolePermissionPK getId() {
+		return this.rolePermissionPK;
 	}
 }

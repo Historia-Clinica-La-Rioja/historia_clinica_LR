@@ -12,12 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.DeleteableEntity;
 import ar.lamansys.sgx.shared.auditable.entity.Deleteable;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -27,7 +27,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @ToString
-public class Diary extends SGXAuditableEntity implements DeleteableEntity<Integer> {
+public class Diary extends SGXAuditableEntity<Integer> {
 
     /**
 	 * 
@@ -72,52 +72,4 @@ public class Diary extends SGXAuditableEntity implements DeleteableEntity<Intege
     @Column(name = "active", nullable = false)
 	@ColumnDefault("true")
     private boolean active = true;
-    
-	@Embedded
-	private Deleteable deleteable = new Deleteable();
-
-	@Override
-	public Integer getDeleteBy() {
-		if (deleteable != null)
-			return deleteable.getDeletedBy();
-		return null;
-	}
-
-	@Override
-	public void setDeleteBy(Integer user) {
-		if (deleteable == null)
-			deleteable = new Deleteable();
-		deleteable.setDeletedBy(user);
-		
-	}
-
-	@Override
-	public LocalDateTime getDeletedOn() {
-		if (deleteable != null)
-			return deleteable.getDeletedOn();
-		return null;
-	}
-
-	@Override
-	public void setDeletedOn(LocalDateTime dateTime) {
-		if (deleteable == null)
-			deleteable = new Deleteable();
-		deleteable.setDeletedOn(dateTime);
-		
-	}
-
-	@Override
-	public boolean isDeleted() {
-		if (deleteable != null)
-			return deleteable.isDeleted();
-		return false;
-	}
-
-	@Override
-	public void setDeleted(Boolean deleted) {
-		if (deleteable == null)
-			deleteable = new Deleteable();
-		deleteable.setDeleted(deleted);
-	}
-
 }

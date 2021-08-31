@@ -19,7 +19,6 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 public class Institution {
 
 	@Id

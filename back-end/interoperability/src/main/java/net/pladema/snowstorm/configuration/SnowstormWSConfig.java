@@ -19,10 +19,6 @@ public class SnowstormWSConfig extends WSConfig {
 
     private static final long DEFAULT_TOKEN_EXPIRATION = -1L;
 
-    public static final String CIE10_REFERENCE_SET_ID = "447562003";
-
-    public static final String CIE10_LIMIT = "500";
-
     //Params
     @Value("#{'${ws.snowstorm.params.preferredOrAcceptableIn:450828004}'.split(',\\s*')}")
     private List<Long> preferredOrAcceptableIn;

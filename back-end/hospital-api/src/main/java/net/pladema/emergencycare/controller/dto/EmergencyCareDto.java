@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 
 import java.io.Serializable;
 import java.util.List;

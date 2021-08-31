@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 
 @Getter
 @Setter

@@ -2,13 +2,13 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
-import net.pladema.clinichistory.outpatient.repository.domain.HealthConditionSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
-import net.pladema.clinichistory.outpatient.repository.domain.ProcedureSummaryVo;
-import net.pladema.clinichistory.outpatient.repository.domain.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

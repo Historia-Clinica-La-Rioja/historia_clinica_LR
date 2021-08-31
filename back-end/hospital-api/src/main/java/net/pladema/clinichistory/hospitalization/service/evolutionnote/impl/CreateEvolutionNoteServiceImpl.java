@@ -1,24 +1,27 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.ips.*;
-import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteService {
@@ -27,92 +30,98 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final DocumentService documentService;
+    private final DocumentFactory documentFactory;
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final NoteService noteService;
+    private final FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
-    private final HealthConditionService healthConditionService;
-
-    private final AllergyService allergyService;
-
-    private final ClinicalObservationService clinicalObservationService;
-
-    private final ImmunizationService immunizationService;
-
-    private final ProceduresService proceduresService;
-
-    public CreateEvolutionNoteServiceImpl(DocumentService documentService,
+    public CreateEvolutionNoteServiceImpl(DocumentFactory documentFactory,
                                           InternmentEpisodeService internmentEpisodeService,
-                                          NoteService noteService,
-                                          HealthConditionService healthConditionService,
-                                          AllergyService allergyService,
-                                          ClinicalObservationService clinicalObservationService,
-                                          ImmunizationService immunizationService, ProceduresService proceduresService) {
-        this.documentService = documentService;
+                                          FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState) {
+        this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.noteService = noteService;
-        this.healthConditionService = healthConditionService;
-        this.allergyService = allergyService;
-        this.clinicalObservationService = clinicalObservationService;
-        this.immunizationService = immunizationService;
-        this.proceduresService = proceduresService;
+        this.fetchHospitalizationHealthConditionState = fetchHospitalizationHealthConditionState;
     }
 
     @Override
-    public EvolutionNoteBo createDocument(Integer internmentEpisodeId, PatientInfoBo patientInfo, EvolutionNoteBo evolutionNote) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientInfo {}, anamnesis {}", internmentEpisodeId, patientInfo, evolutionNote);
+    public EvolutionNoteBo execute(EvolutionNoteBo evolutionNote) {
+        LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
 
-        Document document = new Document(internmentEpisodeId, evolutionNote.getDocumentStatusId(), DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION);
-        loadNotes(document, Optional.ofNullable(evolutionNote.getNotes()));
+        assertContextValid(evolutionNote);
+        var internmentEpisode = internmentEpisodeService
+                .getInternmentEpisode(evolutionNote.getEncounterId(), evolutionNote.getInstitutionId());
+        evolutionNote.setPatientId(internmentEpisode.getPatientId());
 
-        document = documentService.save(document);
 
-        evolutionNote.setDiagnosis(healthConditionService.loadDiagnosis(patientInfo, document.getId(), evolutionNote.getDiagnosis()));
-        evolutionNote.setAllergies(allergyService.loadAllergies(patientInfo, document.getId(), evolutionNote.getAllergies()));
-        evolutionNote.setImmunizations(immunizationService.loadImmunization(patientInfo, document.getId(), evolutionNote.getImmunizations()));
-        evolutionNote.setProcedures(proceduresService.loadProcedures(patientInfo, document.getId(), evolutionNote.getProcedures()));
+        assertDoesNotHaveEpicrisis(internmentEpisode);
+        assertEvolutionNoteValid(evolutionNote);
+        assertEffectiveVitalSignTimeValid(evolutionNote, internmentEpisode.getEntryDate());
+        assertDiagnosisValid(evolutionNote, internmentEpisode);
+        assertAnthropometricData(evolutionNote);
 
-        evolutionNote.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, document.getId(), Optional.ofNullable(evolutionNote.getVitalSigns())));
-        evolutionNote.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, document.getId(), Optional.ofNullable(evolutionNote.getAnthropometricData())));
 
-        internmentEpisodeService.addEvolutionNote(internmentEpisodeId, document.getId());
+        evolutionNote.setId(documentFactory.run(evolutionNote, true));
 
-        evolutionNote.setId(document.getId());
+        internmentEpisodeService.addEvolutionNote(internmentEpisode.getId(), evolutionNote.getId());
 
         LOG.debug(OUTPUT, evolutionNote);
+
         return evolutionNote;
     }
 
-    @Override
-    public Long createEvolutionDiagnosis(Integer internmentEpisodeId, Integer patientId, EvolutionDiagnosisBo evolutionDiagnosis) {
-        LOG.debug("Input parameters -> intermentEpisodeId {}, patientId {}, evolutionDiagnosis {}", internmentEpisodeId, patientId, evolutionDiagnosis);
-
-        Document doc = new Document(internmentEpisodeId, DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION);
-        loadNotes(doc, Optional.ofNullable(evolutionDiagnosis.getNotes()));
-        doc = documentService.save(doc);
-        List<Integer> diagnoses = healthConditionService.copyDiagnoses(evolutionDiagnosis.getDiagnosesId());
-        Long result = doc.getId();
-        diagnoses.forEach( id -> documentService.createDocumentHealthCondition(result, id));
-        internmentEpisodeService.addEvolutionNote(internmentEpisodeId, doc.getId());
-
-        LOG.debug(OUTPUT, result);
-        return result;
+    private void assertContextValid(EvolutionNoteBo evolutionNote) {
+        if (evolutionNote.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (evolutionNote.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 
-    private Document loadNotes(Document evolutionNote, Optional<DocumentObservationsBo> optNotes) {
-        LOG.debug("Input parameters -> evolutionNote {}, notes {}", evolutionNote, optNotes);
-        optNotes.ifPresent(notes -> {
-            evolutionNote.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
-            evolutionNote.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
-            evolutionNote.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
-            evolutionNote.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
-            evolutionNote.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
-            evolutionNote.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
-        });
-        LOG.debug(OUTPUT, evolutionNote);
-        return evolutionNote;
+    private void assertEvolutionNoteValid(EvolutionNoteBo evolutionNote) {
+        evolutionNote.validateSelf();
+        if (repeatedClinicalTerms(evolutionNote.getDiagnosis()))
+            throw new ConstraintViolationException("Diagnósticos secundarios repetidos", Collections.emptySet());
+        if (repeatedClinicalTerms(evolutionNote.getProcedures()))
+            throw new ConstraintViolationException("Procedimientos repetidos", Collections.emptySet());
+    }
+
+    private boolean repeatedClinicalTerms(List<? extends ClinicalTerm> clinicalTerms) {
+        if (clinicalTerms == null || clinicalTerms.isEmpty())
+            return false;
+        final Set<SnomedBo> set = new HashSet<>();
+        for (ClinicalTerm ct : clinicalTerms)
+            if (!set.add(ct.getSnomed()))
+                return true;
+        return false;
+    }
+
+    private void assertAnthropometricData(EvolutionNoteBo evolutionNoteBo) {
+        var validator = new AnthropometricDataValidator();
+        validator.isValid(evolutionNoteBo);
+    }
+
+    private void assertDoesNotHaveEpicrisis(InternmentEpisode internmentEpisode) {
+        if(internmentEpisode.getEpicrisisDocId() != null) {
+            throw new ConstraintViolationException("Esta internación ya posee una epicrisis", Collections.emptySet());
+        }
+    }
+
+    private void assertDiagnosisValid(EvolutionNoteBo evolutionNote, InternmentEpisode internmentEpisode) {
+        if (evolutionNote.getDiagnosis() == null || evolutionNote.getDiagnosis().isEmpty())
+            return;
+        HealthConditionBo mainDiagnosis = fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(internmentEpisode.getId());
+        if (mainDiagnosis == null)
+            return;
+        if (evolutionNote.getDiagnosis().stream()
+                .map(DiagnosisBo::getSnomed)
+                .anyMatch(d -> d.equals(mainDiagnosis.getSnomed()))) {
+            throw new ConstraintViolationException("Diagnostico principal duplicado en los secundarios", Collections.emptySet());
+        }
+    }
+
+    private void assertEffectiveVitalSignTimeValid(EvolutionNoteBo evolutionNote, LocalDate entryDate) {
+        var validator = new EffectiveVitalSignTimeValidator();
+        validator.isValid(evolutionNote, entryDate);
     }
 
 }

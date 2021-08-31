@@ -1,13 +1,14 @@
 package net.pladema.emergencycare.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -24,7 +25,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode
-public class HistoricEmergencyEpisode extends SGXAuditableEntity {
+public class HistoricEmergencyEpisode extends SGXAuditableEntity<HistoricEmergencyEpisodePK> {
 
 	/**
 	 *
@@ -48,5 +49,10 @@ public class HistoricEmergencyEpisode extends SGXAuditableEntity {
 
 	public LocalDateTime getChangeStateDate() {
 		return this.pk.getChangeStateDate();
+	}
+
+	@Override
+	public HistoricEmergencyEpisodePK getId() {
+		return this.pk;
 	}
 }

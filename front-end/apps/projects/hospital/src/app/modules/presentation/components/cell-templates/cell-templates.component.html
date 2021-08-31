@@ -1,0 +1,47 @@
+<ng-template #text let-text="text" appCtrlTemplate="textTemplate">
+	{{text}}
+</ng-template>
+
+<ng-template #errorTemplate let-text="text" appCtrlTemplate="errorTemplate">
+	<mat-error> {{text}} </mat-error>
+</ng-template>
+
+<ng-template #removeButtonTemplate let-action="action" let-rowIndex="rowIndex" appCtrlTemplate="removeButtonTemplate">
+	<button type="button" mat-icon-button color="warn" (click)="action(rowIndex)">
+		<mat-icon>delete_outline</mat-icon>
+	</button>
+</ng-template>
+
+<ng-template #snomedProblemTemplate let-rowData="data" appCtrlTemplate="snomedProblemTemplate">
+	{{rowData.snomed.pt}}
+	<div *ngIf="rowData.cronico" class="mat-small grayText" translate="ambulatoria.paciente.nueva-consulta.problemas.ACLARACION_CRONICO"></div>
+</ng-template>
+
+<ng-template #problemSeverityTemplate let-rowData="data" let-text="text" appCtrlTemplate="problemSeverityTemplate">
+	<ng-container *ngIf="rowData.codigoSeveridad === 'LA6752-5'">
+		<mat-label class="grayText">
+			{{text}}
+		</mat-label>
+	</ng-container>
+	<ng-container *ngIf="rowData.codigoSeveridad === 'LA6751-7'">
+		<mat-label>
+			{{text}}
+		</mat-label>
+	</ng-container>
+	<ng-container *ngIf="rowData.codigoSeveridad === 'LA6750-9'">
+		<mat-error>
+			{{text}}
+		</mat-error>
+	</ng-container>
+</ng-template>
+
+<ng-template #startAndEndDateTemplate let-rowData="data" appCtrlTemplate="startAndEndDateTemplate">
+	<div class="mat-small grayText">
+		<span translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
+		{{formatDate(rowData.fechaInicio)}}
+	</div>
+	<div class="mat-small grayText" *ngIf="rowData.fechaFin">
+		<span translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN_PREFIJO"></span>
+		{{formatDate(rowData.fechaFin)}}
+	</div>
+</ng-template>

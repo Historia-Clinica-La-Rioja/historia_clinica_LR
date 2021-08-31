@@ -1,6 +1,6 @@
 package net.pladema.featureflags.service.domain;
 
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 public class FeatureFlagBo {
     public final AppFeature key;

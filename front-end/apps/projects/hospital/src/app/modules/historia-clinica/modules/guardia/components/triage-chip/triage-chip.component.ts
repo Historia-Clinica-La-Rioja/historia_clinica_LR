@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { Triages } from '../../constants/masterdata';
 
 @Component({
@@ -6,16 +6,13 @@ import { Triages } from '../../constants/masterdata';
 	templateUrl: './triage-chip.component.html',
 	styleUrls: ['./triage-chip.component.scss']
 })
-export class TriageChipComponent implements OnInit {
+export class TriageChipComponent {
 
 	readonly triages = Triages;
 
 	@Input() category: TriageCategory;
 
 	constructor() {
-	}
-
-	ngOnInit(): void {
 	}
 
 }

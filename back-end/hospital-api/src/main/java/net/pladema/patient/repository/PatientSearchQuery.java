@@ -1,11 +1,11 @@
 package net.pladema.patient.repository;
 
+import ar.lamansys.sgx.shared.repositories.QueryStringHelper;
 import lombok.NoArgsConstructor;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
-import net.pladema.patient.service.StringHelper;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.entity.Person;
-import net.pladema.sgx.repository.QueryPart;
+import ar.lamansys.sgx.shared.repositories.QueryPart;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -78,22 +78,22 @@ public class PatientSearchQuery {
         String clauseFormat = getClauseFormat(clauseComparator);
 
         if (firstName != null) {
-            firstName = (StringHelper.escapeSql(firstName)).toUpperCase();
+            firstName = (QueryStringHelper.escapeSql(firstName)).toUpperCase();
             String clause = String.format(clauseFormat, "person.firstName", firstName);
             whereString.add(clause);
         }
         if (lastName != null) {
-            lastName = (StringHelper.escapeSql(lastName)).toUpperCase();
+            lastName = (QueryStringHelper.escapeSql(lastName)).toUpperCase();
             String clause = String.format(clauseFormat, "person.lastName", lastName);
             whereString.add(clause);
         }
         if (identificationNumber != null){
-            identificationNumber = (StringHelper.escapeSql(identificationNumber)).toUpperCase();
+            identificationNumber = (QueryStringHelper.escapeSql(identificationNumber)).toUpperCase();
             String clause = String.format(clauseFormat, "person.identificationNumber", identificationNumber);
             whereString.add(clause);
         }
         if(birthDate != null){
-            String birthDateString = (StringHelper.escapeSql(birthDate.toString())).toUpperCase();
+            String birthDateString = (QueryStringHelper.escapeSql(birthDate.toString())).toUpperCase();
             whereString.add(" (person.birthDate = '"+birthDateString+"') \n");
         }
 
@@ -107,22 +107,22 @@ public class PatientSearchQuery {
         String clauseFormat = getClauseFormat(clauseComparator);
 
         if (firstName != null) {
-            firstName = (StringHelper.escapeSql(firstName)).toUpperCase();
+            firstName = (QueryStringHelper.escapeSql(firstName)).toUpperCase();
             String clause = String.format(clauseFormat, "person.firstName", firstName);
             whereString.add(clause);
         }
         if (middleNames != null) {
-            middleNames = (StringHelper.escapeSql(middleNames)).toUpperCase();
+            middleNames = (QueryStringHelper.escapeSql(middleNames)).toUpperCase();
             String clause = String.format(clauseFormat, "person.middleNames", middleNames);
             whereString.add(clause);
         }
         if (lastName != null) {
-            lastName = (StringHelper.escapeSql(lastName)).toUpperCase();
+            lastName = (QueryStringHelper.escapeSql(lastName)).toUpperCase();
             String clause = String.format(clauseFormat, "person.lastName", lastName);
             whereString.add(clause);
         }
         if (otherLastNames != null) {
-            otherLastNames = (StringHelper.escapeSql(otherLastNames)).toUpperCase();
+            otherLastNames = (QueryStringHelper.escapeSql(otherLastNames)).toUpperCase();
             String clause = String.format(clauseFormat, "person.otherLastNames", otherLastNames);
             whereString.add(clause);
         }
@@ -130,7 +130,7 @@ public class PatientSearchQuery {
             whereString.add(" (person.genderId = '" + genderId + "') \n");
         }
         if (identificationNumber != null){
-            identificationNumber = (StringHelper.escapeSql(identificationNumber)).toUpperCase();
+            identificationNumber = (QueryStringHelper.escapeSql(identificationNumber)).toUpperCase();
             String clause = String.format(clauseFormat, "person.identificationNumber", identificationNumber);
             whereString.add(clause);
         }
@@ -138,7 +138,7 @@ public class PatientSearchQuery {
             whereString.add(" (person.identificationTypeId = '"+identificationTypeId+"') \n");
         }
         if(birthDate != null){
-            String birthDateString = (StringHelper.escapeSql(birthDate.toString())).toUpperCase();
+            String birthDateString = (QueryStringHelper.escapeSql(birthDate.toString())).toUpperCase();
             whereString.add(" (person.birthDate = '"+birthDateString+"') \n");
         }
 

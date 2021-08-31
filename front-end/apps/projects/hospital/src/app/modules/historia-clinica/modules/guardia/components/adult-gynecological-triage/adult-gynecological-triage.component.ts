@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { getError, hasError } from '@core/utils/form.utils';
@@ -10,7 +10,7 @@ import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 	templateUrl: './adult-gynecological-triage.component.html',
 	styleUrls: ['./adult-gynecological-triage.component.scss']
 })
-export class AdultGynecologicalTriageComponent implements OnInit, OnChanges {
+export class AdultGynecologicalTriageComponent implements OnInit {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
@@ -32,9 +32,6 @@ export class AdultGynecologicalTriageComponent implements OnInit, OnChanges {
 		private guardiaMapperService: GuardiaMapperService,
 		public vitalSignsFormService: VitalSignsFormService,
 	) { }
-
-	ngOnChanges(changes: SimpleChanges): void {
-	}
 
 	ngOnInit(): void {
 		this.adultGynecologicalForm = this.formBuilder.group({

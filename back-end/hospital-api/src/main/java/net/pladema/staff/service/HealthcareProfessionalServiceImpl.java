@@ -1,8 +1,8 @@
 package net.pladema.staff.service;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.clinichistory.hospitalization.repository.HealthcareProfessionalGroupRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
-import net.pladema.sgx.exceptions.NotFoundException;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HealthcareProfessionalServiceImpl implements  HealthcareProfessionalService {
@@ -31,6 +32,17 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     }
 
     @Override
+    public List<HealthcareProfessionalBo> getAllProfessional() {
+        LOG.debug("getAllProfessional");
+        List<HealthcareProfessionalBo> result =
+                healthcareProfessionalRepository.getAllProfessional()
+                .stream().map(HealthcareProfessionalBo::new)
+                        .collect(Collectors.toList());
+        LOG.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
     public List<HealthcarePersonBo> getAllDoctorsByInstitution(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         List<HealthcarePersonBo> result = healthcareProfessionalRepository.getAllDoctors(institutionId);
@@ -39,7 +51,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     }
 
     @Override
-    public List<HealthcareProfessionalBo> getAll(Integer institutionId) {
+    public List<HealthcareProfessionalBo> getAllByInstitution(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
                 .findAllByInstitution(institutionId);

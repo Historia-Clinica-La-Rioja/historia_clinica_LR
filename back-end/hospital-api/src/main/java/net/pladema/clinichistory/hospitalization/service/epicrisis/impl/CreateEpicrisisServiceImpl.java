@@ -1,24 +1,24 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.ips.AllergyService;
-import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
-import net.pladema.clinichistory.documents.service.ips.ImmunizationService;
-import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
-import net.pladema.clinichistory.documents.service.ips.domain.DocumentObservationsBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import javax.validation.ConstraintViolationException;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
@@ -27,71 +27,77 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final DocumentService documentService;
+    private final DocumentFactory documentFactory;
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final NoteService noteService;
-
-    private final HealthConditionService healthConditionService;
-
-    private final AllergyService allergyService;
-
-    private final CreateMedicationService createMedicationService;
-
-    private final ImmunizationService immunizationService;
-
-    public CreateEpicrisisServiceImpl(DocumentService documentService,
-                                      InternmentEpisodeService internmentEpisodeService,
-                                      NoteService noteService,
-                                      HealthConditionService healthConditionService,
-                                      AllergyService allergyService,
-                                      ImmunizationService immunizationService,
-                                      CreateMedicationService createMedicationService) {
-        this.documentService = documentService;
+    public CreateEpicrisisServiceImpl(DocumentFactory documentFactory,
+                                      InternmentEpisodeService internmentEpisodeService) {
+        this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.noteService = noteService;
-        this.healthConditionService = healthConditionService;
-        this.allergyService = allergyService;
-        this.immunizationService = immunizationService;
-        this.createMedicationService = createMedicationService;
     }
 
     @Override
-    public EpicrisisBo createDocument(Integer internmentEpisodeId, PatientInfoBo patientInfo, EpicrisisBo epicrisis) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}, patientInfo {}, epicrisis {}", internmentEpisodeId, patientInfo, epicrisis);
+    public EpicrisisBo execute(EpicrisisBo epicrisis) {
+        LOG.debug("Input parameters -> epicrisis {}", epicrisis);
 
-        Document document = new Document(internmentEpisodeId, epicrisis.getDocumentStatusId(), DocumentType.EPICRISIS, SourceType.HOSPITALIZATION);
-        loadNotes(document, Optional.ofNullable(epicrisis.getNotes()));
-        document = documentService.save(document);
+        assertContextValid(epicrisis);
+        var internmentEpisode = internmentEpisodeService.getInternmentEpisode(epicrisis.getEncounterId(), epicrisis.getInstitutionId());
+        epicrisis.setPatientId(internmentEpisode.getPatientId());
+        assertInternmentEpisodeCanCreateEpicrisis(internmentEpisode);
 
-        epicrisis.setMainDiagnosis(healthConditionService.loadMainDiagnosis(patientInfo, document.getId(), Optional.of(epicrisis.getMainDiagnosis())));
-        epicrisis.setDiagnosis(healthConditionService.loadDiagnosis(patientInfo, document.getId(), epicrisis.getDiagnosis()));
-        epicrisis.setPersonalHistories(healthConditionService.loadPersonalHistories(patientInfo, document.getId(), epicrisis.getPersonalHistories()));
-        epicrisis.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, document.getId(), epicrisis.getFamilyHistories()));
-        epicrisis.setAllergies(allergyService.loadAllergies(patientInfo, document.getId(), epicrisis.getAllergies()));
-        epicrisis.setImmunizations(immunizationService.loadImmunization(patientInfo, document.getId(), epicrisis.getImmunizations()));
-        epicrisis.setMedications(createMedicationService.execute(patientInfo, document.getId(), epicrisis.getMedications()));
+        assertEpicrisisValid(epicrisis);
+        assertEffectiveVitalSignTimeValid(epicrisis, internmentEpisode.getEntryDate());
+        assertAnthropometricData(epicrisis);
 
-        internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisodeId, document.getId());
-        epicrisis.setId(document.getId());
+        epicrisis.setId(documentFactory.run(epicrisis, true));
+        internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisode.getId(), epicrisis.getId());
 
         LOG.debug(OUTPUT, epicrisis);
+
         return epicrisis;
     }
 
-    private void loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
-        LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
-        optNotes.ifPresent(notes -> {
-            document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
-            document.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
-            document.setStudiesSummaryNoteId(noteService.createNote(notes.getStudiesSummaryNote()));
-            document.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
-            document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
-            document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
-            document.setIndicationsNoteId(noteService.createNote(notes.getIndicationsNote()));
-            LOG.debug("Notes saved -> {}", notes);
-        });
+    private void assertContextValid(EpicrisisBo epicrisis) {
+        if (epicrisis.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (epicrisis.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 
+    private void assertEpicrisisValid(EpicrisisBo epicrisis) {
+        epicrisis.validateSelf();
+        if (repeatedClinicalTerms(epicrisis.getDiagnosis()))
+            throw new ConstraintViolationException("Diagnósticos secundarios repetidos", Collections.emptySet());
+        if (repeatedClinicalTerms(epicrisis.getPersonalHistories()))
+            throw new ConstraintViolationException("Antecedentes personales repetidos", Collections.emptySet());
+        if (repeatedClinicalTerms(epicrisis.getFamilyHistories()))
+            throw new ConstraintViolationException("Antecedentes familiares repetidos", Collections.emptySet());
+    }
+
+    private boolean repeatedClinicalTerms(List<? extends ClinicalTerm> clinicalTerms) {
+        if (clinicalTerms == null || clinicalTerms.isEmpty())
+            return false;
+        final Set<SnomedBo> set = new HashSet<>();
+        for (ClinicalTerm ct : clinicalTerms)
+            if (!set.add(ct.getSnomed()))
+                return true;
+        return false;
+    }
+
+    private void assertEffectiveVitalSignTimeValid(EpicrisisBo epicrisis, LocalDate entryDate) {
+        var validator = new EffectiveVitalSignTimeValidator();
+        validator.isValid(epicrisis, entryDate);
+    }
+
+    private void assertAnthropometricData(EpicrisisBo epicrisis) {
+        var validator = new AnthropometricDataValidator();
+        validator.isValid(epicrisis);
+    }
+
+    private void assertInternmentEpisodeCanCreateEpicrisis(InternmentEpisode internmentEpisode) {
+        if(!internmentEpisodeService.canCreateEpicrisis(internmentEpisode.getId())) {
+            throw new ConstraintViolationException("Esta internación no puede crear una epicrisis", Collections.emptySet());
+        }
+    }
 }

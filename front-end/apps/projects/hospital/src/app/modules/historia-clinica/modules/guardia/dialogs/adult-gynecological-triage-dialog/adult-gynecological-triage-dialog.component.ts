@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { TriageService } from '@api-rest/services/triage.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 	templateUrl: './adult-gynecological-triage-dialog.component.html',
 	styleUrls: ['./adult-gynecological-triage-dialog.component.scss']
 })
-export class AdultGynecologicalTriageDialogComponent implements OnInit {
+export class AdultGynecologicalTriageDialogComponent {
 
 	private triage: TriageAdultGynecologicalDto;
 	requestPending = false;
@@ -20,9 +20,6 @@ export class AdultGynecologicalTriageDialogComponent implements OnInit {
 		public readonly dialogRef: MatDialogRef<AdultGynecologicalTriageDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public episodeId: number,
 	) {
-	}
-
-	ngOnInit(): void {
 	}
 
 	setTriage(triage: TriageAdultGynecologicalDto): void {

@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.repository.entity.RequestIntentStatus;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ServiceRequest extends SGXAuditableEntity {
+public class ServiceRequest extends SGXAuditableEntity<Integer> {
 
 	@Id
 	@Column(name = "id")

@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.documents.validation;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;

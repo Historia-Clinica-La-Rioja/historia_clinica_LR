@@ -38,7 +38,7 @@ export const ANTECEDENTES_FAMILIARES: SummaryHeader = {
 };
 
 export const MEDICACION: SummaryHeader = {
-	title: 'Medicación habitual',
+	title: 'Medicación',
 	matIcon: 'event_available'
 };
 

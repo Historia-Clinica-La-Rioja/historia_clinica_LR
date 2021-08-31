@@ -32,7 +32,7 @@ import {hasError} from '@core/utils/form.utils';
 	styleUrls: ['./nueva-consulta-dock-popup.component.scss']
 })
 export class NuevaConsultaDockPopupComponent implements OnInit {
-
+	disableConfirmButton = false;
 	formEvolucion: FormGroup;
 	errores: string[] = [];
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
@@ -152,10 +152,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.apiErrors = [];
 		this.addErrorMessage(nuevaConsulta);
 		if (this.isValidConsultation()) {
-			this.suggestedFieldsCompleted(nuevaConsulta) ?
-				this.createConsultation(nuevaConsulta) :
+			if (this.suggestedFieldsCompleted(nuevaConsulta)){
+				this.createConsultation(nuevaConsulta);
+				this.disableConfirmButton = true;
+			}
+			else{
 				this.openDialog(nuevaConsulta);
+			}
 		} else {
+			this.disableConfirmButton = false;
 			this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 		}
 	}
@@ -167,6 +172,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(confirmado => {
 			if (confirmado) {
 				this.createConsultation(nuevaConsulta);
+				this.disableConfirmButton = true;
 			}
 		});
 	}
@@ -190,6 +196,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				Object.getOwnPropertyNames(errors).forEach(val => {
 					this.apiErrors.push(errors[val]);
 				});
+				this.disableConfirmButton = false;
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 			}
 		);

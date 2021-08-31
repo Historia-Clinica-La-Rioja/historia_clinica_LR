@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.outpatient.repository.domain;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class OutpatientConsultation extends SGXAuditableEntity {
+public class OutpatientConsultation extends SGXAuditableEntity<Integer> {
 
     /**
      *
@@ -50,7 +50,11 @@ public class OutpatientConsultation extends SGXAuditableEntity {
     @Column(name = "billable", nullable = false)
     private Boolean billable;
 
-    public OutpatientConsultation(Integer institutionId, Integer patientId, Integer doctorId, boolean billable, Integer clinicalSpecialtyId) {
+    @Column(name = "patient_medical_coverage_id")
+    private Integer patientMedicalCoverageId;
+
+    public OutpatientConsultation(Integer institutionId, Integer patientId, Integer doctorId, boolean billable,
+                                  Integer clinicalSpecialtyId, Integer patientMedicalCoverageId) {
         super();
         this.institutionId = institutionId;
         this.patientId = patientId;
@@ -58,5 +62,6 @@ public class OutpatientConsultation extends SGXAuditableEntity {
         this.startDate = LocalDate.now();
         this.doctorId = doctorId;
         this.clinicalSpecialtyId = clinicalSpecialtyId;
+        this.patientMedicalCoverageId = patientMedicalCoverageId;
     }
 }

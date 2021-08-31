@@ -1,13 +1,13 @@
 package net.pladema.emergencycare.service.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import io.jsonwebtoken.lang.Assert;
-import net.pladema.clinichistory.documents.repository.DocumentHealthConditionRepository;
-import net.pladema.clinichistory.documents.repository.generalstate.domain.HealthConditionVo;
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import net.pladema.emergencycare.controller.EmergencyCareEpisodeMedicalDischargeController;
 import net.pladema.emergencycare.repository.DischargeTypeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeDischargeRepository;
@@ -19,7 +19,7 @@ import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,7 +60,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         validateMedicalDischarge(medicalDischarge, institutionZoneId, institutionId);
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
         emergencyCareEpisodeDischargeRepository.save(newDischarge);
-        documentFactory.run(medicalDischarge);
+        documentFactory.run(medicalDischarge, false);
         return true;
     }
 

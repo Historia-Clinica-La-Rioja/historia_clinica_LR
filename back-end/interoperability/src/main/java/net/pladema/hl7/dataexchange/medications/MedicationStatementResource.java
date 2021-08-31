@@ -9,7 +9,6 @@
 package net.pladema.hl7.dataexchange.medications;
 
 import net.pladema.hl7.dataexchange.IMultipleResourceFhir;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirDateMapper;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
 import net.pladema.hl7.dataexchange.model.domain.DosageVo;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
@@ -36,6 +35,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -72,7 +72,9 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
             resource.setId(medication.getStatementId());
             resource.setStatus(MedicationStatement.MedicationStatementStatus.fromCode(medication.getStatus()))
                     .setSubject(references.get(ResourceType.Patient));
-            resource.getEffectivePeriod().setStart(FhirDateMapper.toDate(medication.getEffectiveTime()));
+            resource.getEffectivePeriod()
+                    .setStart(medication.getEffectiveTimeStart())
+                    .setEnd(medication.getEffectiveTimeEnd());
             resource.addDosage(buildDosage(medication.getDosage()));
 
             Medication medicament = medicationResource.fetch(medication);
@@ -141,7 +143,7 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
         return entries;
     }
 
-    public static MedicationVo encode(Resource baseResource, Resource baseResource2) {
+    public static MedicationVo encode(Resource baseResource, Optional<Resource> baseResource2) {
         MedicationVo data = new MedicationVo();
         MedicationStatement resource = (MedicationStatement) baseResource;
 
@@ -172,12 +174,18 @@ public class MedicationStatementResource extends IMultipleResourceFhir<Medicatio
         }
         if(resource.hasStatus())
             data.setStatus(resource.getStatus().getDisplay());
-        if(resource.hasEffective())
-            data.setEffectiveTime(FhirDateMapper.toLocalDate(resource.getEffectiveDateTimeType().getValue()));
+        if(resource.hasEffective()) {
+            if(resource.getEffective().isDateTime())
+                data.setEffectiveTimeStart(resource.getEffectiveDateTimeType().getValue());
+            else {
+                data.setEffectiveTimeStart(resource.getEffectivePeriod().getStart());
+                data.setEffectiveTimeEnd(resource.getEffectivePeriod().getEnd());
+            }
+        }
 
         //Medication data
-        if(resource.hasMedicationReference()) {
-            Medication medication = (Medication) baseResource2;
+        if(resource.hasMedicationReference() && baseResource2.isPresent()) {
+            Medication medication = (Medication) baseResource2.get();
             MedicationResource.encode(data, medication);
         }
         else if(resource.hasMedicationCodeableConcept()){

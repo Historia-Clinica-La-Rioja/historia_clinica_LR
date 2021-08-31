@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ImageSrc } from '@core/utils/flavored-image-definitions';
+import { ImageSrc } from '@core/utils/image.utils';
 @Component({
 	selector: 'app-logo',
 	templateUrl: './logo.component.html',
@@ -8,7 +8,7 @@ import { ImageSrc } from '@core/utils/flavored-image-definitions';
 export class LogoComponent implements OnInit {
 
 	@Input() isSecondaryLogo = false;
-	public img: ImageSrc = { location: 'assets/logos/logos_salud.png', alt: 'La Rioja' };
+	public img: ImageSrc = { location: 'assets/custom/app_logo.svg', alt: 'logos.app_logo' };
 
 	constructor() {
 	}
@@ -17,7 +17,7 @@ export class LogoComponent implements OnInit {
 		if (this.isSecondaryLogo) {
 			this.img = {
 				location: `assets/custom/sponsor-logo-512x128.png`,
-				alt: 'Sponsor Logo'
+				alt: 'logos.sponsor_logo'
 			};
 		}
 	}

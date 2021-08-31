@@ -1,9 +1,13 @@
 package net.pladema.clinichistory.outpatient.repository;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.ProblemType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.Snomed;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.outpatient.repository.domain.*;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
@@ -71,7 +75,7 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                 +"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
                 +"  AND d.typeId = "+ DocumentType.OUTPATIENT
                 +"  AND hc.patientId = :patientId "
-                +"  AND hc.problemId IN ('"+ ProblemType.PROBLEM+"', '"+ProblemType.CHRONIC+ "')"
+                +"  AND hc.problemId IN ('"+ ProblemType.PROBLEM+"', '"+ ProblemType.CHRONIC+ "')"
                 +"  AND oc.id IN (:outpatientIds) ";
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)

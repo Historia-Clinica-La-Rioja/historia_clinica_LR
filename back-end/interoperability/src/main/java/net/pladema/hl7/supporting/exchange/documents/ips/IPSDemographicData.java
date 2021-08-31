@@ -1,6 +1,7 @@
 package net.pladema.hl7.supporting.exchange.documents.ips;
 
 import net.pladema.hl7.concept.administration.DeviceResource;
+import net.pladema.hl7.concept.administration.LocationResource;
 import net.pladema.hl7.concept.administration.OrganizationResource;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import org.hl7.fhir.r4.model.Bundle;
@@ -22,11 +23,14 @@ public class IPSDemographicData {
 
     private final DeviceResource deviceResource;
     private final OrganizationResource organizationResource;
+    private final LocationResource locationResource;
 
     public IPSDemographicData(DeviceResource deviceResource,
-                              OrganizationResource organizationResource){
+                              OrganizationResource organizationResource,
+                              LocationResource locationResource){
         this.deviceResource = deviceResource;
         this.organizationResource = organizationResource;
+        this.locationResource = locationResource;
     }
 
     public List<Bundle.BundleEntryComponent> fetchEntries(String patientId){
@@ -37,12 +41,12 @@ public class IPSDemographicData {
                 .fetchEntry(patientId, new EnumMap<>(ResourceType.class));
         references.put(ResourceType.Organization, new Reference(entryOrganization.getFullUrl()));
 
-        Reference locationRef = new Reference();
-        locationRef.setId(entryOrganization.getResource().getId());
-        references.put(ResourceType.Location, locationRef);
+        Bundle.BundleEntryComponent entryLocation = locationResource
+                .fetchEntry(patientId, new EnumMap<>(ResourceType.class));
+        references.put(ResourceType.Location, new Reference(entryLocation.getFullUrl()));
 
         entries.add(entryOrganization);
-
+        entries.add(entryLocation);
 
         //===================Device resource===================
         Bundle.BundleEntryComponent entryDevice = deviceResource

@@ -3,6 +3,7 @@ package net.pladema.permissions.repository;
 import static net.pladema.TestUtils.assertCreateAuditableEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import net.pladema.UnitRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import net.pladema.permissions.repository.entity.RolePermission;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class RolePermissionRepositoryTest {
+public class RolePermissionRepositoryTest extends UnitRepository {
 	private final static Short ROLE_ID = (short) 8;
 	private final static Short PERMISSION_ID = (short) 108;
 

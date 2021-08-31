@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.ips.HealthConditionService;
-import net.pladema.clinichistory.documents.service.ips.domain.HealthConditionBo;
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.DosageValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
@@ -44,9 +44,9 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 
     @Override
     @Transactional
-    public Integer execute(Integer institutionId, MedicationRequestBo medicationRequest) {
-        LOG.debug("Input parameters -> {}, {} ", institutionId, medicationRequest);
-        assertRequiredFields(institutionId, medicationRequest);
+    public Integer execute(MedicationRequestBo medicationRequest) {
+        LOG.debug("Input parameters -> medicationRequest {} ", medicationRequest);
+        assertRequiredFields(medicationRequest);
         assertNoDuplicatedMedications(medicationRequest);
 
         Map<Integer, HealthConditionBo> healthConditionMap = healthConditionService.getLastHealthCondition(
@@ -63,16 +63,16 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
                 Assert.isTrue(md.getHealthCondition().isActive(),
                         "El problema asociado tiene que estar activo"));
 
-        MedicationRequest newMR = createMedicationRequest(institutionId, medicationRequest);
+        MedicationRequest newMR = createMedicationRequest(medicationRequest);
         medicationRequest.setEncounterId(newMR.getId());
-        documentFactory.run(medicationRequest);
+        documentFactory.run(medicationRequest, false);
 
         return newMR.getId();
     }
 
-    private void assertRequiredFields(Integer institutionId, MedicationRequestBo medicationRequest) {
-        Assert.notNull(institutionId, "El identificador de la institución es obligatorio");
+    private void assertRequiredFields(MedicationRequestBo medicationRequest) {
         Assert.notNull(medicationRequest, "La receta es obligatoria");
+        Assert.notNull(medicationRequest.getInstitutionId(), "El identificador de la institución es obligatorio");
         PatientInfoValidator patientInfoValidator = new PatientInfoValidator();
         patientInfoValidator.isValid(medicationRequest.getPatientInfo());
         Assert.notNull(medicationRequest.getDoctorId(), "El identificador del médico es obligatorio");
@@ -95,10 +95,10 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
         result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La receta no puede contener más de un medicamento con el mismo problema y el mismo concepto snomed"));
     }
 
-    private MedicationRequest createMedicationRequest(Integer institutionId, MedicationRequestBo medicationRequest) {
+    private MedicationRequest createMedicationRequest(MedicationRequestBo medicationRequest) {
         MedicationRequest result = new MedicationRequest();
         result.setPatientId(medicationRequest.getPatientId());
-        result.setInstitutionId(institutionId);
+        result.setInstitutionId(medicationRequest.getInstitutionId());
         result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
         result.setDoctorId(medicationRequest.getDoctorId());
         result.setHasRecipe(medicationRequest.isHasRecipe());

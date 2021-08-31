@@ -6,19 +6,19 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
-import ar.lamansys.sgx.shared.auditable.listener.AuditListener;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 
 @Entity
 @Table(name = "user_password")
-@EntityListeners(AuditListener.class)
+@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserPassword extends AuditableEntity {
+public class UserPassword extends SGXAuditableEntity<Integer> {
 
 	/**
 	 * 

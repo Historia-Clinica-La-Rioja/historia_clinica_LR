@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.ProblemDates;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 

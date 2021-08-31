@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.controller.mapper;
 
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
@@ -18,9 +18,9 @@ public interface EmergencyCareDischargeMapper {
 
     @Named("toMedicalDischargeBo")
     @Mapping(source = "medicalDischargeDto.problems", target = "problems")
-    @Mapping(source = "patientInfoBo.id", target = "patientId")
-    @Mapping(source = "patientInfoBo", target = "patientInfoBo")
-    MedicalDischargeBo toMedicalDischargeBo(AMedicalDischargeDto medicalDischargeDto, Integer medicalDischargeBy, PatientInfoBo patientInfoBo, Integer sourceId);
+    @Mapping(source = "patientInfo.id", target = "patientId")
+    @Mapping(source = "patientInfo", target = "patientInfo")
+    MedicalDischargeBo toMedicalDischargeBo(AMedicalDischargeDto medicalDischargeDto, Integer medicalDischargeBy, PatientInfoBo patientInfo, Integer sourceId);
 
     @Named("toAdministrativeDischargeBo")
     AdministrativeDischargeBo toAdministrativeDischargeBo(AdministrativeDischargeDto medicalDischargeDto, Integer episodeId, Integer userId);

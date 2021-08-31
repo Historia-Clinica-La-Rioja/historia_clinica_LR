@@ -1,44 +1,42 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
-import net.pladema.clinichistory.documents.repository.EvolutionNoteDocumentRepository;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.exceptions.NotFoundException;
-import net.pladema.sgx.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(SpringRunner.class)
+@ExtendWith(MockitoExtension.class)
 @DataJpaTest(showSql = false)
-public class CreateAnamnesisServiceImplTest {
+class CreateAnamnesisServiceImplTest {
 
 	private CreateAnamnesisServiceImpl createAnamnesisServiceImpl;
 
@@ -51,19 +49,19 @@ public class CreateAnamnesisServiceImplTest {
 	@Autowired
 	private PatientDischargeRepository patientDischargeRepository;
 
-	@MockBean
+	@Mock
 	private DocumentService documentService;
 
-	@MockBean
+	@Mock
 	private DocumentFactory documentFactory;
 
-	@MockBean
+	@Mock
 	private CreateDocumentFile createDocumentFile;
 
-	@MockBean
+	@Mock
 	private FeatureFlagsService featureFlagsService;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
 				internmentEpisodeRepository,
@@ -71,41 +69,72 @@ public class CreateAnamnesisServiceImplTest {
 				patientDischargeRepository,
 				documentService
 		);
-		createAnamnesisServiceImpl = new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, createDocumentFile, featureFlagsService);
-	}
-
-	@Test(expected = NotFoundException.class)
-	public void createDocument_withEpisodeThatNotExists() throws IOException, PDFDocumentException {
-		var anamnesis = validAnamnesis();
-		createAnamnesisServiceImpl.createDocument(8, anamnesis);
-	}
-
-	@Test(expected = ConstraintViolationException.class)
-	public void createDocument_withAnamnesisAlreadyDone() throws IOException, PDFDocumentException {
-		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(1l));
-		var anamnesis = validAnamnesis();
-		anamnesis.setEncounterId(internmentEpisode.getId());
-		createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId(), anamnesis);
-	}
-
-	//TODO: la PK de internación es institucion_id + algo mas
-	@Test(expected = NotFoundException.class)
-	public void createDocument_withInternmentInOtherInstitution() throws IOException, PDFDocumentException {
-		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(null));
-		var anamnesis = validAnamnesis();
-		anamnesis.setEncounterId(internmentEpisode.getId());
-		createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId()+1, anamnesis);
+		createAnamnesisServiceImpl =
+				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, featureFlagsService);
 	}
 
 	@Test
-	public void createDocument_withoutMainDiagnosis() {
+	void createDocumentWithInvalidInstitutionId() {
+		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+				createAnamnesisServiceImpl.execute(validAnamnesis(null, 8))
+		);
+		String expectedMessage = "El id de la institución es obligatorio";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage,expectedMessage);
+	}
+
+	@Test
+	void createDocumentWithInvalidEpisodeId() {
+		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+				createAnamnesisServiceImpl.execute(validAnamnesis(8, null))
+		);
+		String expectedMessage = "El id del encuentro asociado es obligatorio";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage,expectedMessage);
+	}
+
+	@Test
+	void createDocumentWithEpisodeThatNotExists() {
+		Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
+				createAnamnesisServiceImpl.execute(validAnamnesis(8, 10))
+		);
+		String expectedMessage = "internmentepisode.not.found";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage,expectedMessage);
+	}
+
+	//TODO: la PK de internación es institucion_id + algo mas
+	@Test
+	void createDocumentWithInternmentInOtherInstitution() {
+		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(null));
+		Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
+				createAnamnesisServiceImpl.execute(validAnamnesis(internmentEpisode.getInstitutionId()+1 , internmentEpisode.getId()))
+		);
+		String expectedMessage = "internmentepisode.not.found";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage,expectedMessage);
+	}
+
+	@Test
+	void createDocumentWithAnamnesisAlreadyDone() {
+		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(1l));
+		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+			createAnamnesisServiceImpl.
+					execute(validAnamnesis(internmentEpisode.getInstitutionId(), internmentEpisode.getId()))
+		);
+		String expectedMessage = "Esta internación ya posee una anamnesis";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage,expectedMessage);
+	}
+
+	@Test
+	void createDocumentWithoutMainDiagnosis() {
 		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(null));
 		when(featureFlagsService.isOn(any())).thenReturn(true);
-		var anamnesis = validAnamnesis();
-		anamnesis.setEncounterId(internmentEpisode.getId());
+		var anamnesis = validAnamnesis(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 		anamnesis.setMainDiagnosis(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		String expectedMessage = "Diagnóstico principal obligatorio";
 		String actualMessage = exception.getMessage();
@@ -114,15 +143,15 @@ public class CreateAnamnesisServiceImplTest {
 	}
 
 	@Test
-	public void createDocument_withMainDiagnosisDuplicated() {
+	void createDocumentWithMainDiagnosisDuplicated() {
 		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(null));
-		var anamnesis  = validAnamnesis();
+		var anamnesis  = validAnamnesis(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("SECONDARY", "SECONDARY")));
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("SECONDARY", "SECONDARY"))));
 		anamnesis.setEncounterId(internmentEpisode.getId());
 
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisode.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		String expectedMessage = "Diagnostico principal duplicado en los secundarios";
 		String actualMessage = exception.getMessage();
@@ -136,182 +165,181 @@ public class CreateAnamnesisServiceImplTest {
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
-		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setDiagnosis(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("diagnosis: {value.mandatory}"));
 
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED")),
 				new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Diagnósticos secundarios repetidos"));
 
 	}
 
 	@Test
-	public void createDocument_withInvalidPersonalHistories() {
+	void createDocumentWithInvalidPersonalHistories() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setPersonalHistories(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("personalHistories: {value.mandatory}"));
 
 		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
 				new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Antecedentes personales repetidos"));
 
 	}
 
 	@Test
-	public void createDocument_withInvalidFamilyHistories() {
+	void createDocumentWithInvalidFamilyHistories() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setFamilyHistories(null);
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
 		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
 				new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Antecedentes familiares repetidos"));
 	}
 
 	@Test
-	public void createDocument_withInvalidProcedures() {
+	void createDocumentWithInvalidProcedures() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setProcedures(null);
 
 		anamnesis.setProcedures(List.of(new ProcedureBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setProcedures(List.of(new ProcedureBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setProcedures(List.of(new ProcedureBo(new SnomedBo("REPEATED", "REPEATED")),
 				new ProcedureBo(new SnomedBo("REPEATED", "REPEATED"))));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Procedimientos repetidos"));
 	}
 
 	@Test
-	public void createDocument_withInvalidMedications() {
+	void createDocumentWithInvalidMedications() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setMedications(null);
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setMedications(List.of(new MedicationBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setMedications(List.of(new MedicationBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 	}
 
 	@Test
-	public void createDocument_withInvalidImmunizations() {
+	void createDocumentWithInvalidImmunizations() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		anamnesis.setImmunizations(null);
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setImmunizations(List.of(new ImmunizationBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
 		anamnesis.setImmunizations(List.of(new ImmunizationBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 	}
 
 	@Test
-	public void createDocument_withInvalidAnthropometricData() {
+	void createDocumentWithInvalidAnthropometricData() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 
 		LocalDateTime localDateTime = LocalDateTime.of(
@@ -320,52 +348,46 @@ public class CreateAnamnesisServiceImplTest {
 
 		anamnesis.setAnthropometricData(newAnthropometricData("10001", localDateTime));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 
 		anamnesis.setAnthropometricData(newAnthropometricData("-50", null));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 	}
 
 	@Test
-	public void createDocument_withInvalidVitalSign() {
+	void createDocumentWithInvalidVitalSign() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
 		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
 
-		var anamnesis = validAnamnesis();
+		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
 		LocalDateTime localDateTime = LocalDateTime.of(
 				LocalDate.of(2020, 10,29),
 				LocalTime.of(11,20));
 		anamnesis.setVitalSigns(newVitalSigns(null, localDateTime));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("vitalSigns.bloodOxygenSaturation.value: {value.mandatory}"));
 
-	/*	anamnesis.setVitalSigns(newVitalSigns("Value", null));
-		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-			createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
-		);
-		Assertions.assertTrue(exception.getMessage().contains("Saturación de oxigeno: La fecha de medición debe es obligatoria"));*/
-
-
 		anamnesis.setVitalSigns(newVitalSigns("Value", LocalDateTime.of(2020,9,9,1,5,6)));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-				createAnamnesisServiceImpl.createDocument(internmentEpisodeSaved.getInstitutionId(), anamnesis)
+				createAnamnesisServiceImpl.execute(anamnesis)
 		);
 		Assertions.assertTrue(exception.getMessage().contains("Saturación de oxigeno: La fecha de medición debe ser posterior a la fecha de internación"));
 	}
 
 
-	private AnamnesisBo validAnamnesis(){
+	private AnamnesisBo validAnamnesis(Integer institutionId, Integer encounterId){
 		var anamnesis = new AnamnesisBo();
-		anamnesis.setConfirmed(true);
+		anamnesis.setInstitutionId(institutionId);
+		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		anamnesis.setDiagnosis(Lists.emptyList());
 		anamnesis.setPersonalHistories(Lists.emptyList());

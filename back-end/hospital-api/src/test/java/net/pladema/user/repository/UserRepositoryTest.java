@@ -1,23 +1,21 @@
 package net.pladema.user.repository;
 
+import net.pladema.UnitRepository;
 import net.pladema.user.repository.entity.User;
 import net.pladema.user.repository.entity.UserBean;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-import static net.pladema.TestUtils.assertCreateAuditableEntity;
-import static net.pladema.TestUtils.assertUpdateAuditableEntity;
+import static net.pladema.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class UserRepositoryTest {
+public class UserRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -55,7 +53,6 @@ public class UserRepositoryTest {
 		assertThat(updatedUser).isNotNull();
 
 		assertUpdateAuditableEntity(updatedUser);
-
 	}
 
 	@Test

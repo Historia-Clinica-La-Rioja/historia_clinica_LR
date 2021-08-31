@@ -1,13 +1,9 @@
 package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 
-import net.pladema.clinichistory.documents.events.OnGenerateInternmentDocumentEvent;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.EDocumentType;
-import net.pladema.clinichistory.documents.service.CreateDocumentFile;
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.ips.domain.ClinicalTerm;
-import net.pladema.clinichistory.documents.service.ips.domain.DiagnosisBo;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
@@ -15,15 +11,13 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import net.pladema.sgx.featureflags.AppFeature;
-import net.pladema.sgx.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,27 +35,25 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final InternmentEpisodeService internmentEpisodeService;
 
-    private final CreateDocumentFile createDocumentFile;
-
     private final FeatureFlagsService featureFlagsService;
 
     public CreateAnamnesisServiceImpl(DocumentFactory documentFactory,
                                       InternmentEpisodeService internmentEpisodeService,
-                                      CreateDocumentFile createDocumentFile,
                                       FeatureFlagsService featureFlagsService) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
-        this.createDocumentFile = createDocumentFile;
         this.featureFlagsService = featureFlagsService;
     }
 
     @Override
     @Transactional
-    public AnamnesisBo createDocument(Integer institutionId, AnamnesisBo anamnesis)
-            throws IOException, PDFDocumentException {
+    public AnamnesisBo execute(AnamnesisBo anamnesis) {
         LOG.debug("Input parameters -> anamnesis {}", anamnesis);
 
-        var internmentEpisode = internmentEpisodeService.getInternmentEpisode(anamnesis.getEncounterId(), institutionId);
+        assertContextValid(anamnesis);
+        var internmentEpisode = internmentEpisodeService
+                .getInternmentEpisode(anamnesis.getEncounterId(), anamnesis.getInstitutionId());
+
         anamnesis.setPatientId(internmentEpisode.getPatientId());
 
         assertAnamnesisValid(anamnesis);
@@ -70,12 +62,19 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         assertAnthropometricData(anamnesis);
 
         
-        anamnesis.setId(documentFactory.run(anamnesis));
+        anamnesis.setId(documentFactory.run(anamnesis, true));
 
+        internmentEpisodeService.updateAnamnesisDocumentId(anamnesis.getEncounterId(), anamnesis.getId());
         LOG.debug(OUTPUT, anamnesis);
-        generateDocument(anamnesis, institutionId);
 
         return anamnesis;
+    }
+
+    private void assertContextValid(AnamnesisBo anamnesis) {
+        if (anamnesis.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (anamnesis.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 
     private void assertAnamnesisValid(AnamnesisBo anamnesis) {
@@ -132,12 +131,6 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         if(internmentEpisode.getAnamnesisDocId() != null) {
             throw new ConstraintViolationException("Esta internación ya posee una anamnesis", Collections.emptySet());
         }
-    }
-
-    private void generateDocument(AnamnesisBo anamnesis, Integer institutionId) throws IOException, PDFDocumentException {
-        OnGenerateInternmentDocumentEvent event = new OnGenerateInternmentDocumentEvent(anamnesis, institutionId, anamnesis.getEncounterId(),
-                EDocumentType.map(DocumentType.ANAMNESIS), anamnesis.getPatientId());
-        createDocumentFile.execute(event);
     }
 
 }

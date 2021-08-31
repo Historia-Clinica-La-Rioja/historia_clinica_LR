@@ -247,7 +247,7 @@
 					</button>
 				</div>
 
-				<ng-container *featureFlag="'agregarMedicosAdicionales'">
+				<ng-container *appFeatureFlag="'agregarMedicosAdicionales'">
 					<div class="form-row">
 						<div>
 							<div>
@@ -326,7 +326,12 @@
 							<mat-option *ngFor="let occupation of occupations" [value]="occupation.id" matTooltip="{{ occupation.description }}">
 									{{occupation.description}}
 							</mat-option>
+
 						</mat-select>
+						<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value" matSuffix color="warn"
+								mat-icon-button (click)="form.controls.occupationId.reset(); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 				</div>
 				<div>
@@ -339,9 +344,13 @@
 									{{educationLevel.description}}
 							</mat-option>
 						</mat-select>
+						<button id="clear-educationLevel" type="button" mat-button *ngIf="form.controls.educationLevelId.value" matSuffix color="warn"
+								mat-icon-button (click)="form.controls.educationLevelId.reset(); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 				</div>
-				<div *hasRole="['ADMINISTRATIVO']" class="form-buttons">
+				<div *appHasRole="['ADMINISTRATIVO']" class="form-buttons">
 					<button mat-stroked-button type="button" (click)="goBack()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>

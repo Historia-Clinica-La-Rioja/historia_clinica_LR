@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ECPediatricDto, TriagePediatricDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
@@ -12,7 +12,7 @@ import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service'
 	templateUrl: './new-episode-pediatric-triage.component.html',
 	styleUrls: ['./new-episode-pediatric-triage.component.scss']
 })
-export class NewEpisodePediatricTriageComponent implements OnInit {
+export class NewEpisodePediatricTriageComponent {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	constructor(
@@ -23,9 +23,6 @@ export class NewEpisodePediatricTriageComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 
 	) {
-	}
-
-	ngOnInit(): void {
 	}
 
 	confirmEvent(triage: TriagePediatricDto): void {

@@ -25,7 +25,7 @@ public class GetOdontogramServiceImpl implements GetOdontogramService {
 
     public List<OdontogramQuadrantBo> run() {
         var teeth = toothStorage.getAll();
-        Map<Integer, OdontogramQuadrantBo> quadrantMap = OdontogramQuadrantData.getAsMap();
+        Map<Short, OdontogramQuadrantBo> quadrantMap = OdontogramQuadrantData.getAsMap();
         teeth.forEach(t -> quadrantMap.get(t.getQuadrantCode()).addTooth(t));
         var result = new ArrayList<>(quadrantMap.values());
         logger.debug("Output -> {}", result);

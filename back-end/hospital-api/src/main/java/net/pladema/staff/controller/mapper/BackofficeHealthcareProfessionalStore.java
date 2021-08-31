@@ -97,6 +97,7 @@ public class BackofficeHealthcareProfessionalStore implements BackofficeStore<Ba
         HealthcareProfessional hp = new HealthcareProfessional();
         hp.setPersonId(dto.getPersonId());
         hp.setLicenseNumber(dto.getLicenseNumber());
+        hp.setDeleted(dto.isDeleted());
         return hp;
     }
 

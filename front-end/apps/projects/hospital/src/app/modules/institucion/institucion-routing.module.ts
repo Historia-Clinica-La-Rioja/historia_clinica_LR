@@ -39,6 +39,12 @@ const routes: Routes = [
 				loadChildren: () => import('../historia-clinica/modules/guardia/guardia.module').then(m => m.GuardiaModule),
 			},
 			{
+				path: 'reportes',
+				loadChildren: () => import('../reportes/reportes.module').then(m => m.ReportesModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
+			},
+			{
 				path: 'odontologia',
 				loadChildren: () => import('odontology').then(m => m.OdontologyModule),
 				canActivate: [FeatureFlagGuard],

@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
 public class HealthcareProfessionalRepositoryTest extends UnitRepository {
 
 	@Autowired

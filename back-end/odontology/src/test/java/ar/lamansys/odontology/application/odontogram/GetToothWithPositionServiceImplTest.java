@@ -27,22 +27,22 @@ class GetToothWithPositionServiceImplTest {
     @Test
     public void toothPositionCreationSuccess() {
         var toothWithPositionBo = getToothWithPositionService.run("23232311");
-        OdontogramQuadrantBo odontogramQuadrantBo = OdontogramQuadrantData.getAsMap().get(1);
+        OdontogramQuadrantBo odontogramQuadrantBo = OdontogramQuadrantData.getAsMap().get((short)1);
         Assertions.assertThat(toothWithPositionBo.isLeft()).isEqualTo(odontogramQuadrantBo.isLeft());
         Assertions.assertThat(toothWithPositionBo.isTop()).isEqualTo(odontogramQuadrantBo.isTop());
         Assertions.assertThat(toothWithPositionBo.isPosterior()).isEqualTo(false);
         Assertions.assertThat(toothWithPositionBo.getSnomed().getSctid()).isEqualTo("23232311");
-        Assertions.assertThat(toothWithPositionBo.getToothCode()).isEqualTo(1);
+        Assertions.assertThat(toothWithPositionBo.getToothCode()).isEqualTo((short)1);
         Assertions.assertThat(toothWithPositionBo.getQuadrantCode()).isEqualTo(odontogramQuadrantBo.getCode());
 
 
         toothWithPositionBo = getToothWithPositionService.run("23232385");
-        odontogramQuadrantBo = OdontogramQuadrantData.getAsMap().get(8);
+        odontogramQuadrantBo = OdontogramQuadrantData.getAsMap().get((short)8);
         Assertions.assertThat(toothWithPositionBo.isLeft()).isEqualTo(odontogramQuadrantBo.isLeft());
         Assertions.assertThat(toothWithPositionBo.isTop()).isEqualTo(odontogramQuadrantBo.isTop());
         Assertions.assertThat(toothWithPositionBo.isPosterior()).isEqualTo(true);
         Assertions.assertThat(toothWithPositionBo.getSnomed().getSctid()).isEqualTo("23232385");
-        Assertions.assertThat(toothWithPositionBo.getToothCode()).isEqualTo(5);
+        Assertions.assertThat(toothWithPositionBo.getToothCode()).isEqualTo((short)5);
         Assertions.assertThat(toothWithPositionBo.getQuadrantCode()).isEqualTo(odontogramQuadrantBo.getCode());
     }
 

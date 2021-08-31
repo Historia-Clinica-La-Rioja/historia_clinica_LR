@@ -37,14 +37,33 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>immunization</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.pladema</groupId>
             <artifactId>hospital-api</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>sgx-auth</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,12 +1,12 @@
 package net.pladema.emergencycare.triage.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ import javax.persistence.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Triage  extends SGXAuditableEntity {
+public class Triage  extends SGXAuditableEntity<Integer> {
 	/**
 	 *
 	 */

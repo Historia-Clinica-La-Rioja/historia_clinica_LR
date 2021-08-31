@@ -6,7 +6,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto } from '@api-rest/api-model';
+import { AppointmentDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
@@ -14,18 +15,21 @@ import { AppointmentsFacadeService } from '../../services/appointments-facade.se
 import { MapperService } from '@core/services/mapper.service';
 import {
 	determineIfIsHealthInsurance,
-	HealthInsurance,
-	PatientMedicalCoverage, PrivateHealthInsurance
+	HealthInsurance, MedicalCoverage,
+	MedicalCoverageComponent, PatientMedicalCoverage, PrivateHealthInsurance
 } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 const TEMPORARY_PATIENT = 3;
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
-const ROLES_TO_EDIT_PHONE_NUMBER: ERole[]
+const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
+
 @Component({
 	selector: 'app-appointment',
 	templateUrl: './appointment.component.html',
@@ -38,18 +42,29 @@ export class AppointmentComponent implements OnInit {
 	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;
+	medicalCoverageId: number;
 
 	appointment: AppointmentDto;
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
+	formEdit: FormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
+	coverageNumber: any;
 	coverageData: PatientMedicalCoverage;
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
+	hasRoleToDownloadReports$: Observable<boolean>;
+	patientMedicalCoverages: PatientMedicalCoverage[];
+
+	public hideFilterPanel = false;
+
+	isCheckedDownloadAnexo = false;
+	isCheckedDownloadFormulario = false;
+	downloadReportIsEnabled: boolean;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public appointmentData: PatientAppointmentInformation,
+		@Inject(MAT_DIALOG_DATA) public params : { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
@@ -60,8 +75,10 @@ export class AppointmentComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly permissionsService: PermissionsService,
+		private readonly featureFlagService: FeatureFlagService,
 
 	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES_TURNOS).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 	}
 
 	ngOnInit(): void {
@@ -69,7 +86,16 @@ export class AppointmentComponent implements OnInit {
 		this.formMotivo = this.formBuilder.group({
 			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
 		});
-		this.appointmentService.get(this.appointmentData.appointmentId)
+
+		this.formEdit = this.formBuilder.group({
+			//Medical Coverage selected in Edit Mode
+			newCoverageData: null,
+			phoneNumber: null
+		});
+
+		this.setMedicalCoverages();
+		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
+		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
 				this.estadoSelected = this.appointment?.appointmentStateId;
@@ -77,27 +103,17 @@ export class AppointmentComponent implements OnInit {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
 				if (this.appointment.patientMedicalCoverageId) {
-					this.patientMedicalCoverageService.
-						getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
+					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
 						.pipe(
 							map(
-								s => this.mapperService.toPatientMedicalCoverage(s)
+								s => this.patientMedicalCoverages.find(mc => mc.id === s.id)
 							)
 						)
 						.subscribe(coverageData => {
 							if (coverageData) {
-								const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
 								this.coverageData = coverageData;
-								if (isHealthInsurance) {
-									let healthInsurance: HealthInsurance;
-									healthInsurance = coverageData.medicalCoverage as HealthInsurance;
-									this.coverageText = healthInsurance.acronym ?
-										healthInsurance.acronym : healthInsurance.name;
-								} else {
-									let privateHealthInsurance: PrivateHealthInsurance;
-									privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
-									this.coverageText = privateHealthInsurance.name;
-								}
+								this.formEdit.controls.newCoverageData.setValue(coverageData);
+								this.setCoverageText(this.formEdit.controls.newCoverageData.value);
 							}
 						});
 				}
@@ -105,7 +121,20 @@ export class AppointmentComponent implements OnInit {
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
 
-		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT_PHONE_NUMBER).pipe(take(1));
+		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
+
+		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
+	}
+
+	private setMedicalCoverages(): void {
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.params.appointmentData.patient.id))
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+				)
+			)
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
 	}
 
 	changeState(newStateId: APPOINTMENT_STATES_ID): void {
@@ -127,7 +156,7 @@ export class AppointmentComponent implements OnInit {
 
 	cancelAppointment(): void {
 		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
-			data: this.appointmentData.appointmentId
+			data: this.params.appointmentData.appointmentId
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
@@ -142,8 +171,29 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
+	edit(): void {
+		if (this.formEdit.valid) {
+			if (this.isAssigned()
+				&& this.formEdit.controls.newCoverageData.dirty
+				&& this.formEdit.controls.newCoverageData.value) {
+				const patientMedicalCoverageId = this.formEdit.controls.newCoverageData.value.id;
+				this.coverageData = this.formEdit.controls.newCoverageData.value
+				this.updateCoverageData(patientMedicalCoverageId);
+				this.setCoverageText(this.formEdit.controls.newCoverageData.value);
+			}
+			if (this.formEdit.controls.phoneNumber.dirty){
+				this.updatePhoneNumber(this.formEdit.controls.phoneNumber.value);
+			}
+		}
+		this.hideFilters();
+	}
+
 	isMotivoRequired(): boolean {
 		return this.estadoSelected === APPOINTMENT_STATES_ID.ABSENT;
+	}
+
+	isAssigned(): boolean {
+		return this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED;
 	}
 
 	isCancelable(): boolean {
@@ -153,8 +203,12 @@ export class AppointmentComponent implements OnInit {
 				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED);
 	}
 
+	isAbsent(): boolean {
+		return this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
+	}
+
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
-		this.appointmentFacade.changeState(this.appointmentData.appointmentId, newStateId, motivo)
+		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
 				this.closeDialog('statuschanged');
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
@@ -166,16 +220,93 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updatePhoneNumber(phoneNumber: string) {
-		this.appointmentFacade.updatePhoneNumber(this.appointmentData.appointmentId, phoneNumber).
-			subscribe(() => {
-				this.snackBarService.showSuccess('turnos.appointment.phoneNumber.SUCCESS');
-			}, error => {
-				processErrors(error, (msg) => this.snackBarService.showError(msg));
-			});
+		this.appointmentFacade.updatePhoneNumber(this.params.appointmentData.appointmentId, phoneNumber).subscribe(() => {
+			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
+		}, error => {
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
+	}
+
+	updateCoverageData(patientMedicalCoverageId: number) {
+		this.appointmentService.updateMedicalCoverage(this.params.appointmentData.appointmentId, patientMedicalCoverageId).subscribe(() => {
+			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
+		}, error => {
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
+	}
+
+	private setCoverageText(coverageData) {
+		this.coverageNumber = coverageData.affiliateNumber;
+		const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
+		if (isHealthInsurance) {
+			let healthInsurance: HealthInsurance;
+			healthInsurance = coverageData.medicalCoverage as HealthInsurance;
+			this.coverageText = healthInsurance.acronym ?
+				healthInsurance.acronym : healthInsurance.name;
+		} else {
+			let privateHealthInsurance: PrivateHealthInsurance;
+			privateHealthInsurance = coverageData.medicalCoverage as PrivateHealthInsurance;
+			this.coverageText = privateHealthInsurance.name;
+		}
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				identificationNumber: this.params.appointmentData.patient.identificationNumber,
+				initValues: this.patientMedicalCoverages,
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(
+			values => {
+				if (values) {
+					const patientCoverages: PatientMedicalCoverageDto[] =
+						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.params.appointmentData.patient.id), patientCoverages).subscribe(
+						_ => {
+							this.setMedicalCoverages();
+							this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
+						},
+						_ => this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_ERROR')
+					);
+				}
+			}
+		);
+	}
+
+	hideFilters(): void {
+		this.hideFilterPanel = !this.hideFilterPanel;
+	}
+
+	getFullMedicalCoverageText(patientMedicalCoverage): string {
+		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.affiliateNumber]
+			.filter(Boolean).join(' - ');
+		return [medicalCoverageText].filter(Boolean).join(' / ');
 	}
 
 	closeDialog(returnValue?: string) {
 		this.dialogRef.close(returnValue);
+	}
+
+	enableDowndloadAnexo(option: boolean) {
+		this.isCheckedDownloadAnexo = option;
+	}
+
+	enableDowndloadFormulario(option: boolean) {
+		this.isCheckedDownloadFormulario = option;
+	}
+
+	getReportAppointment(): void {
+		if (this.isCheckedDownloadAnexo && this.isCheckedDownloadFormulario) {
+			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
+			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
+		} else if (this.isCheckedDownloadAnexo && !this.isCheckedDownloadFormulario) {
+			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
+		} else {
+			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
+		}
 	}
 }
 

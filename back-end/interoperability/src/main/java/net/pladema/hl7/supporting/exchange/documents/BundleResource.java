@@ -30,7 +30,10 @@ import net.pladema.hl7.supporting.exchange.restful.validator.DocumentReferenceVa
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Medication;
+import org.hl7.fhir.r4.model.MedicationStatement;
 import org.hl7.fhir.r4.model.Meta;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -126,7 +130,8 @@ public class BundleResource extends IResourceFhir {
                     summary.addCondition(ConditionResource.encode(entry.getResource()));
                     break;
                 case MedicationStatement:
-                    summary.addMedication(MedicationStatementResource.encode(entry.getResource(), null));
+                    Optional<Resource> medication = getMedication(entry.getResource(), entries);
+                    summary.addMedication(MedicationStatementResource.encode(entry.getResource(), medication));
                     break;
                 case Immunization:
                     summary.addImmunization(ImmunizationResource.encode(entry.getResource()));
@@ -141,5 +146,17 @@ public class BundleResource extends IResourceFhir {
             }
         });
         return summary;
+    }
+
+    private Optional<Resource> getMedication(Resource resource,
+                                               List<Bundle.BundleEntryComponent> entries) {
+        if( ((MedicationStatement) resource).hasMedicationReference()){
+            String reference = ((MedicationStatement) resource).getMedicationReference().getReference();
+            return entries.stream()
+                    .filter(r -> r.getResource().getId().equals(reference))
+                    .map(Bundle.BundleEntryComponent::getResource)
+                    .findFirst();
+        }
+        return Optional.empty();
     }
 }

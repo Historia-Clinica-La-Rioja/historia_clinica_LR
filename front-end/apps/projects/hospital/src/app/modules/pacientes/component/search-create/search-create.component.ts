@@ -41,7 +41,7 @@ export class SearchCreateComponent implements OnInit {
 	ngOnInit(): void {
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
-			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 			gender: [null, Validators.required],
 			IdentityVerificationStatus: [null],
 			comments: [],
@@ -111,7 +111,7 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.gender.setValidators(Validators.required);
 			this.formSearch.controls.IdentityVerificationStatus.clearValidators();
 			if (this.formSearch.controls.identifType.value !== IDENTIFICATION_TYPE_IDS.NO_POSEE) {
-				this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
+				this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]);
 			}
 			updateForm(this.formSearch);
 		}
@@ -124,7 +124,7 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.identifNumber.clearValidators();
 			updateForm(this.formSearch);
 		} else {
-			this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
+			this.formSearch.controls.identifNumber.setValidators([Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]);
 			updateForm(this.formSearch);
 		}
 	}

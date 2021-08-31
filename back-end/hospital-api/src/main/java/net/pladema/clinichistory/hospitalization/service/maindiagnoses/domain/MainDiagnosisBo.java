@@ -1,123 +1,62 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.documents.service.Document;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.annotation.Nullable;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class MainDiagnosisBo implements Document {
+public class MainDiagnosisBo extends SelfValidating<MainDiagnosisBo> implements IDocumentBo {
 
     private Long id;
 
-    @NotNull
-    private boolean confirmed = false;
+    private Integer patientId;
 
-    @Nullable
+    private PatientInfoBo patientInfo;
+
+    private Integer encounterId;
+
+    private Integer institutionId;
+
+    @NotNull
     private DocumentObservationsBo notes;
 
-    @Nullable
+    @NotNull(message = "{diagnosis.mandatory}")
     private HealthConditionBo mainDiagnosis;
 
+    @Nullable
+    private List<@Valid DiagnosisBo> diagnosis;
+
     @Override
-    public Long getId() {
-        return id;
+    public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return patientId;
     }
 
     @Override
-    public List<DiagnosisBo> getDiagnosis() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ProblemBo> getProblems() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ProcedureBo> getProcedures() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getPersonalHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<HealthHistoryConditionBo> getFamilyHistories() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<MedicationBo> getMedications() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<AllergyConditionBo> getAllergies() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ImmunizationBo> getImmunizations() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public VitalSignBo getVitalSigns() {
-        return null;
-    }
-
-    @Override
-    public AnthropometricDataBo getAnthropometricData() {
-        return null;
-    }
-
-    @Override
-    public List<ReasonBo> getReasons() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public ClinicalSpecialtyBo getClinicalSpecialty() {
-        return null;
-    }
-    
     public short getDocumentType() {
-        return 0;
-    }
-
-    @Override
-    public Integer getEncounterId() {
-        return null;
+        return DocumentType.EVALUATION_NOTE;
     }
 
     @Override
     public Short getDocumentSource() {
-        return null;
+        return SourceType.HOSPITALIZATION;
     }
 
-    @Override
-    public String getDocumentStatusId() {
-        return null;
-    }
-
-    @Override
-    public Integer getPatientId() {
-        return null;
-    }
 
 }

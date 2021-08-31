@@ -18,6 +18,7 @@ import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -27,9 +28,11 @@ import org.springframework.web.context.WebApplicationContext;
 public class FhirClientR4 {
 
     private final IFhirClient busClient;
-    private final IGenericClient testClient;
+    private final IGenericClient federadorClient;
 
-    public FhirClientR4(WebApplicationContext webApplicationContext){
+    public FhirClientR4(WebApplicationContext webApplicationContext,
+                        @Value("${ws.federar.url.base}") String federador,
+                        @Value("${ws.bus.url.base}") String bus){
         super();
 
         FhirContext context = FhirContext.forR4();
@@ -51,11 +54,11 @@ public class FhirClientR4 {
         context.getRestfulClientFactory().setSocketTimeout(20000);
 
         // Create the client
-        this.busClient = context.newRestfulClient(IFhirClient.class, CodingSystem.SERVER.BUS);
+        this.busClient = context.newRestfulClient(IFhirClient.class, bus);
 
         busClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
-        testClient = context.newRestfulGenericClient(CodingSystem.SERVER.TESTAPP);
+        federadorClient = context.newRestfulGenericClient(federador + CodingSystem.SERVER.PATIENT_SERVICE);
     }
 
     public DocumentReference readDocumentReferences(ReferenceParam subject, StringParam custodian, ReferenceParam type) {
@@ -77,7 +80,7 @@ public class FhirClientR4 {
                 .setName(Patient.SP_IDENTIFIER)
                 .setValue(id));
         try {
-            return testClient
+            return federadorClient
                     .operation()
                     .onType(Patient.class)
                     .named("patient-location")

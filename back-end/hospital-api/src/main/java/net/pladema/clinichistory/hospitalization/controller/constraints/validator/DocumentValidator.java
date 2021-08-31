@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.controller.constraints.validator;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
-import net.pladema.clinichistory.documents.repository.DocumentRepository;
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 
 @Component({
@@ -6,7 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 	templateUrl: './external-summary-card.component.html',
 	styleUrls: ['./external-summary-card.component.scss']
 })
-export class ExternalSummaryCardComponent implements OnInit, OnChanges {
+export class ExternalSummaryCardComponent implements OnChanges {
 
 	@Input() header: string;
 	minimized = false;
@@ -14,8 +14,6 @@ export class ExternalSummaryCardComponent implements OnInit, OnChanges {
 	constructor(
 		public dialog: MatDialog
 	) { }
-
-	ngOnInit(): void {}
 
 	ngOnChanges() {
 		this.minimized = false;

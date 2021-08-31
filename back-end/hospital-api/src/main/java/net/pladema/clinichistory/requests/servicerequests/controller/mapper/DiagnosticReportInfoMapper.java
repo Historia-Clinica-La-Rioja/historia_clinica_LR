@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import org.mapstruct.Named;
 import org.slf4j.Logger;

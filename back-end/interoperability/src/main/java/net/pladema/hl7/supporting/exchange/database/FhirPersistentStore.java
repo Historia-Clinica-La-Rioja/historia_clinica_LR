@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -81,7 +82,8 @@ public class FhirPersistentStore {
                 .createNamedQuery("HCE.findAllCondition")
                 .setParameter(PATIENTID, Integer.valueOf(patientId))
                 .setParameter("docStatusId", CodingCode.DocumentReference.FINAL_STATUS)
-                .setParameter("diagnosisId", CodingCode.Condition.DIAGNOSIS)
+                .setParameter("diagnosisId", Arrays.asList(
+                        CodingCode.Condition.PROBLEM, CodingCode.Condition.CHRONIC))
                 .setParameter(STATUSID, ResourceStatus.ENTERED_IN_ERROR)
                 .setParameter(DOCUMENTTYPEID, CodingCode.DocumentReference.OUTPATIENT_TYPE)
                 .getResultList();
@@ -115,8 +117,9 @@ public class FhirPersistentStore {
         return entityManager.createNamedQuery("HCE.findAllMedications")
                 .setParameter(PATIENTID, Integer.valueOf(patientId))
                 .setParameter("documentStatusId", CodingCode.DocumentReference.FINAL_STATUS)
-                .setParameter(STATUSID, ResourceStatus.ENTERED_IN_ERROR)
-                .setParameter(DOCUMENTTYPEID, CodingCode.DocumentReference.OUTPATIENT_TYPE)
+                .setParameter(STATUSID, ResourceStatus.ACTIVE)
+                .setParameter(DOCUMENTTYPEID, List.of(
+                        CodingCode.DocumentReference.OUTPATIENT_TYPE, CodingCode.DocumentReference.RECIPE))
                 .getResultList();
     }
 

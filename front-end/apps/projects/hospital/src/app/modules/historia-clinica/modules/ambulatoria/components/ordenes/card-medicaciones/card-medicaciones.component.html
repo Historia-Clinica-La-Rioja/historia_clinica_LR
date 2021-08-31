@@ -7,8 +7,8 @@
 									(openInNew)="openDialogNewMedication(true)">
 
 	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
-		<button mat-icon-button color="primary" (click)="hideFilters(); clear()">
-			<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
+		<button mat-button class="filter-button" color="primary" (click)="hideFilters(); clear()">
+			<mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
 		</button>
 	</div>
 
@@ -68,20 +68,20 @@
 	</div>
 	<mat-divider></mat-divider>
 
-	<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+	<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 		<div *ngIf="medicationsInfo?.length" class="header-filters" fxLayout="row" fxLayoutGap="15px">
 			<div class="checkbox-div-header" fxFlex="5%">
 				<mat-checkbox (change)="selectAllMedication($event.checked)"></mat-checkbox>
 			</div>
 
 			<div fxFlex="95%">
-				<button mat-button class="element-light-color" (click)="openDialogNewMedication(false)">
+				<button [disabled]="!selectedMedicationList.length" mat-button class="element-light-color" (click)="openDialogNewMedication(false)">
 					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
 				</button>
-				<button mat-button class="element-light-color" *ngIf="checkMedicationStatus(MEDICATION_STATUS.ACTIVE.id)" (click)="openSuspendMedicationDialog()">
+				<button [disabled]="!selectedMedicationList.length" mat-button class="element-light-color" *ngIf="checkMedicationStatus(MEDICATION_STATUS.ACTIVE.id)" (click)="openSuspendMedicationDialog()">
 					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
 				</button>
-				<button mat-button class="element-light-color" *ngIf="checkMedicationStatus(MEDICATION_STATUS.STOPPED.id)" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE)">
+				<button [disabled]="!selectedMedicationList.length" mat-button class="element-light-color" *ngIf="checkMedicationStatus(MEDICATION_STATUS.STOPPED.id)" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE)">
 					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
 				</button>
 			</div>
@@ -94,7 +94,7 @@
                 <div fxLayout="row" *ngFor="let medicationInfo of medicationsInfo; let i=index" [formGroupName]="i">
                     <div class="item-padding" fxFlex="100%" fxLayout="row" fxLayoutGap="15px">
 
-                        <div *hasRole="['ESPECIALISTA_MEDICO']" class="checkbox-div-body" fxFlex="5%">
+                        <div *appHasRole="['ESPECIALISTA_MEDICO']" class="checkbox-div-body" fxFlex="5%">
                             <mat-checkbox formControlName="checked" (change)="checkMedication($event.checked, medicationInfo)"></mat-checkbox>
                         </div>
 
@@ -104,27 +104,27 @@
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu">
-									<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
 										<button mat-menu-item *ngIf="hasRecipe(medicationInfo)" (click)="downloadRecipe(medicationInfo.medicationRequestId)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
 										</button>
 									</ng-container>
-									<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 										<button mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
 										</button>
 									</ng-container>
-									<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 										<button mat-menu-item *ngIf="medicationInfo.statusId === MEDICATION_STATUS.ACTIVE.id" (click)="openSuspendMedicationDialog(medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
 										</button>
 									</ng-container>
-									<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 										<button mat-menu-item *ngIf="medicationInfo.statusId === MEDICATION_STATUS.SUSPENDED.id" (click)="changeMedicationStatus(medicationStatusChange.REACTIVATE, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.REACTIVATE'"></span>
 										</button>
 									</ng-container>
-									<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 										<button mat-menu-item *ngIf="medicationInfo.statusId !== MEDICATION_STATUS.STOPPED.id" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
 										</button>

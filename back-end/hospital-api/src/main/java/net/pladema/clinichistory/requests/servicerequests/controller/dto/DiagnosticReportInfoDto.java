@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
 import lombok.*;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
 

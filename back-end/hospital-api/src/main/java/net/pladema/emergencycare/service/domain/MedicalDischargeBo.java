@@ -1,14 +1,14 @@
 package net.pladema.emergencycare.service.domain;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.Document;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +17,15 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-public class MedicalDischargeBo implements Document {
+public class MedicalDischargeBo implements IDocumentBo {
+
+    private Long id;
+
+    private Integer patientId;
+
+    private PatientInfoBo patientInfo;
+
+    private Integer institutionId;
 
     private Integer sourceId;
 
@@ -30,10 +38,6 @@ public class MedicalDischargeBo implements Document {
     private Boolean autopsy;
 
     private Short dischargeTypeId;
-
-    private Integer patientId;
-
-    private PatientInfoBo patientInfoBo;
 
     @Override
     public short getDocumentType() {
@@ -52,16 +56,9 @@ public class MedicalDischargeBo implements Document {
 
     @Override
     public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
         return patientId;
     }
 
-    @Override
-    public List<ProblemBo> getProblems() {
-        return problems;
-    }
-
-    @Override
-    public PatientInfoBo getPatientInfo() {
-        return patientInfoBo;
-    }
 }

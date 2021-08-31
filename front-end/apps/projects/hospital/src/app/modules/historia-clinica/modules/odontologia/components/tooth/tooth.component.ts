@@ -1,40 +1,177 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, Output, ViewChild } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { ActionsService, CurrentDraw, ProcedureOrder, ToothAction } from '../../services/actions.service';
+import { SurfaceDrawerService, ToothTreatment } from '../../services/surface-drawer.service';
+import { ToothDrawerService } from '../../services/tooth-drawer.service';
+import { Surface } from '../../utils/Surface';
 
 @Component({
 	selector: 'app-tooth',
 	templateUrl: './tooth.component.html',
 	styleUrls: ['./tooth.component.scss']
 })
-export class ToothComponent implements OnInit, AfterViewInit {
+export class ToothComponent implements AfterViewInit {
 
 	constructor() { }
 
-	@ViewChild('svg') view: ElementRef<HTMLInputElement>;
-	arrayTeethParts: any;
+	@ViewChild('svg') svg: ElementRef<HTMLElement>;
 
-	@Input() toothId?;
-	@Input() toothTreatment: ToothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
+	private actionsService = new ActionsService();
+	private surfacesHandler: Surface[] = [];
+	private svgGroup: ChildNode;
 
-	@Output() mouseOverEmitter = new EventEmitter();
-	@Output() mouseClickEmitter = new EventEmitter();
+	private toothDrawerService: ToothDrawerService;
 
-	ngOnInit() {
+	@Input()
+	set findingsAndProcedures(actions: ToothAction[]) {
+		this.setFindingsAndProcedures(actions);
 	}
 
-	ngAfterViewInit(): void {
-
-		this.arrayTeethParts = Array.from(this.view.nativeElement.children.item(0).childNodes);
-
-		if (this.toothTreatment === ToothTreatment.AS_FRACTIONAL_TOOTH) {
-		} else {
-			this.view.nativeElement.addEventListener('mouseover', () => this.view.nativeElement.style.backgroundColor = '#F8F8F8');
-			this.view.nativeElement.addEventListener('mouseout', () => this.view.nativeElement.style.backgroundColor = 'transparent');
-			this.view.nativeElement.addEventListener('click', () => this.mouseClickEmitter.emit(`${this.toothId}`));
+	@Input()
+	set newFinding(newFinding: string) {
+		if (newFinding) {
+			const selectedSurfacesIds: string[] = this.surfacesHandler.filter(node => node.isSelected).map(s => s.id);
+			this.actionsService.setFinding(newFinding, selectedSurfacesIds);
 		}
 	}
 
+	@Input()
+	set setFirstProcedure(sctid: string) {
+		if (sctid) {
+			this.setProcedureInPosition(sctid, ProcedureOrder.FIRST);
+		}
+	}
+
+	@Input()
+	set setSecondProcedure(sctid: string) {
+		if (sctid) {
+			this.setProcedureInPosition(sctid, ProcedureOrder.SECOND);
+		}
+	}
+
+	@Input()
+	set setThirdProcedure(sctid: string) {
+		if (sctid) {
+			this.setProcedureInPosition(sctid, ProcedureOrder.THIRD);
+		}
+	}
+
+	@Input() toothTreatment: ToothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
+
+	@Output() selectedSurfacesEmitter = new BehaviorSubject<any[]>([]);
+	private actionsSubject = new BehaviorSubject<CommonActions>(null);
+	actionsSubject$ = this.actionsSubject.asObservable();
+
+	ngAfterViewInit(): void {
+		this.svgGroup = this.svg.nativeElement.firstChild;
+		this.toothDrawerService = new ToothDrawerService(this.svgGroup);
+		const svgSurfaces: any[] = Array.from(this.svgGroup.firstChild.childNodes);
+		svgSurfaces
+			.forEach(SVGSurface => {
+				const surfaceDrawer = new SurfaceDrawerService(SVGSurface, this.toothTreatment);
+				const surf = new Surface(surfaceDrawer);
+				this.surfacesHandler.push(surf);
+
+				if (this.toothTreatment === ToothTreatment.AS_FRACTIONAL_TOOTH) {
+					surf.isSelected$.subscribe(isSelectedChanged => {
+						this.surfacesHandler.forEach(surface => {
+							const atLeastOneSurfaceSelected = this.surfacesHandler.filter(s => s.isSelected).length > 0;
+							surface.updateOutlineColor(atLeastOneSurfaceSelected);
+						});
+
+						const selectedSurfaces = this.surfacesHandler.filter(s => s.isSelected).map(s => s.id);
+						this.selectedSurfacesEmitter.next(selectedSurfaces);
+
+						this.emitFindingAndProcedures();
+					});
+				} else {
+					this.svg.nativeElement.addEventListener('mouseover', () => this.svg.nativeElement.style.backgroundColor = Colors.TEETH_OVER);
+					this.svg.nativeElement.addEventListener('mouseout', () => this.svg.nativeElement.style.backgroundColor = Colors.TEETH_MOUSE_OUT);
+				}
+			});
+
+		this.actionsService.currentDraw$.subscribe((currentDraw: CurrentDraw) => {
+			this.toothDrawerService.updateDraw(currentDraw?.whole?.sctid);
+			Object.keys(currentDraw).forEach(key => {
+				this.surfacesHandler.find(s => s.id === key)?.surfaceDrawerService.removePreviousDraw();
+				if (currentDraw[key]) {
+					this.surfacesHandler.find(s => s.id === key)?.surfaceDrawerService.setNewDraw(currentDraw[key].sctid);
+				}
+			})
+		});
+
+		this.emitFindingAndProcedures();
+	}
+
+	getFindingsAndProcedures(): ToothAction[] {
+		return this.actionsService.getAllActions();
+	}
+
+	setFindingsAndProcedures(actions: ToothAction[]) {
+		this.actionsService.setActions(actions);
+	}
+
+	private emitFindingAndProcedures() {
+		const result = this.findCommonActions();
+		this.actionsSubject.next(result);
+	}
+
+	private findCommonActions(): CommonActions {
+
+		const selectedSurfacesIds: string[] = this.surfacesHandler.filter(node => node.isSelected).map(surface => surface.id);
+
+		if (!selectedSurfacesIds.length) {
+
+			const actions = this.actionsService.getActions();
+			return {
+				findingId: actions.find(a => !a.isProcedure)?.actionSctid,
+				procedures: {
+					firstProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
+					secondProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
+					thirdProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.THIRD)?.actionSctid
+				}
+			}
+		}
+
+
+		const actions: ToothAction[] = this.actionsService.getActions(selectedSurfacesIds);
+		const findingsSctids: string[] = actions.filter(a => !a.isProcedure).map(a => a.actionSctid);
+		const proceduresSctids: string[] = actions.filter(a => a.isProcedure).map(a => a.actionSctid);
+
+		const count = (array: string[]) =>
+			array.reduce((a, b) => ({
+				...a,
+				[b]: (a[b] || 0) + 1
+			}), {});
+
+		const inCommon = dict =>
+			Object.keys(dict).filter((a) => dict[a] === selectedSurfacesIds.length);
+		return {
+			findingId: inCommon(count(findingsSctids)).pop(),
+			procedures: {
+				firstProcedureId: inCommon(count(proceduresSctids)).pop()
+			}
+		};
+	}
+
+	private setProcedureInPosition(sctid: string, order: ProcedureOrder) {
+		if (sctid) {
+			const selectedSurfacesIds: string[] = this.surfacesHandler.filter(node => node.isSelected).map(s => s.id);
+			this.actionsService.addProcedure(sctid, selectedSurfacesIds, order);
+		}
+	}
 }
 
-export enum ToothTreatment {
-	AS_WHOLE_TOOTH, AS_FRACTIONAL_TOOTH
+export interface CommonActions {
+	findingId: string;
+	procedures: {
+		firstProcedureId: string,
+		secondProcedureId?: string,
+		thirdProcedureId?: string
+	};
+}
+
+enum Colors {
+	TEETH_OVER = '#F8F8F8',
+	TEETH_MOUSE_OUT = 'transparent',
 }

@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.*;
 import net.pladema.UnitController;
-import net.pladema.clinichistory.documents.service.generalstate.*;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.establishment.repository.InstitutionRepository;
@@ -23,22 +23,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class InternmentStateControllerTest extends UnitController {
 
 	@MockBean
-	private EncounterGeneralStateBuilder encounterGeneralStateBuilder;
+	private FetchHospitalizationGeneralState fetchHospitalizationGeneralState;
 
 	@MockBean
-	private HealthConditionGeneralStateService healthConditionGeneralStateService;
+	private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
 	@MockBean
-	private MedicationGeneralStateService medicationGeneralStateService;
+	private FetchHospitalizationMedicationState fetchHospitalizationMedicationState;
 
 	@MockBean
-	private AllergyGeneralStateService allergyGeneralStateServiceService;
+	private FetchHospitalizationAllergyState fetchHospitalizationAllergyState;
 
 	@MockBean
-	private ImmunizationGeneralStateService immunizationGeneralStateService;
+	private FetchHospitalizationImmunizationState fetchHospitalizationImmunizationState;
 
 	@MockBean
-	private ClinicalObservationGeneralStateService clinicalObservationGeneralStateService;
+	private FetchHospitalizationClinicalObservationState fetchHospitalizationClinicalObservationState;
 
 	@MockBean
 	private InternmentStateMapper internmentStateMapper;

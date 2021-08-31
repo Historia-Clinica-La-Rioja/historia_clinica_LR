@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidatorContext;
 import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.sgx.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

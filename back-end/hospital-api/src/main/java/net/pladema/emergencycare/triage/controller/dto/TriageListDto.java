@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareUserDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

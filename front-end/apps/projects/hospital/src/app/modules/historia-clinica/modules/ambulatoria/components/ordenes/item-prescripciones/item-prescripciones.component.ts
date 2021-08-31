@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DoctorInfoDto } from '@api-rest/api-model';
 
 @Component({
@@ -6,14 +6,11 @@ import { DoctorInfoDto } from '@api-rest/api-model';
   templateUrl: './item-prescripciones.component.html',
   styleUrls: ['./item-prescripciones.component.scss']
 })
-export class ItemPrescripcionesComponent implements OnInit {
+export class ItemPrescripcionesComponent {
 
 	@Input() prescriptionItemData: PrescriptionItemData;
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 }
 

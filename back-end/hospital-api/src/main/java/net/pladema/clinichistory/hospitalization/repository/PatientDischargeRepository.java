@@ -1,10 +1,11 @@
 package net.pladema.clinichistory.hospitalization.repository;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PatientDischargeRepository extends JpaRepository<PatientDischarge, Integer> {
+public interface PatientDischargeRepository extends SGXAuditableEntityJPARepository<PatientDischarge, Integer> {
 
 }

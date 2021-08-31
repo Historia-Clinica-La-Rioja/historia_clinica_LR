@@ -16,7 +16,7 @@ import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 @Service
 public class PersonServiceImpl implements PersonService {

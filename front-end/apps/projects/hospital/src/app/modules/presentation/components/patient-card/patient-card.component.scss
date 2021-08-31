@@ -24,10 +24,18 @@ mat-card-header {
 	}
 }
 
-mat-card-title {
+.card-style-1{
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+}
+
+.card-style-2{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-weight: normal;
+	font-size: 14px;
 }
 
 mat-card-subtitle {

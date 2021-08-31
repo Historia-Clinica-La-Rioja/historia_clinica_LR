@@ -4,8 +4,9 @@
 			<h2 class="page-title" [translate]="'internaciones.anamnesis.TITLE'"></h2>
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
 		</section>
-		<ng-container *featureFlag="'mainDiagnosisRequired'">
-			<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+
+		<ng-container *appFeatureFlag="'mainDiagnosisRequired'">
+			<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 				<section id="diagnostico-principal">
 					<app-diagnostico-principal [diagnosis]="mainDiagnosis" (changeMainDiagnosis)="setMainDiagnosis($event)"></app-diagnostico-principal>
 				</section>
@@ -15,7 +16,7 @@
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
 
-		<section id="procedimientos" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+		<section id="procedimientos" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
 			<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
 				[tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
 				[columns]="procedimientosService.getColumns()"
@@ -339,7 +340,7 @@
 					  [translate]="'buttons.BACK'">
 				</span>
 			</button>
-			<button id="sign-confirm" mat-raised-button type="submit" color="primary" *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
+			<button id="sign-confirm" mat-raised-button type="submit" color="primary" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
 				<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
 			</button>
 		</section>

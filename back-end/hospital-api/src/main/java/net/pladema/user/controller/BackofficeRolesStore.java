@@ -2,6 +2,7 @@ package net.pladema.user.controller;
 
 import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.entity.Role;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,13 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 
 	@Override
 	public Page<Role> findAll(Role example, Pageable pageable) {
-		List<Role> content = toList(roleRepository.findAll()).stream().filter(role -> !role.getDescription().equals("ROOT")).collect(Collectors.toList());
+		List<Role> content = toList(roleRepository.findAll()).stream().filter(this::filterRoles).collect(Collectors.toList());
 		return new PageImpl<>(content, pageable, content.size());
+	}
+
+	private boolean filterRoles(Role role) {
+		return !role.getId().equals(ERole.ROOT.getId()) &&
+				!role.getId().equals(ERole.API_CONSUMER.getId());
 	}
 
 	@Override

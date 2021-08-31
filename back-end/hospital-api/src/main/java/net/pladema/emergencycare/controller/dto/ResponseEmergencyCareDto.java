@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 
 import java.util.List;
 

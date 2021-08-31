@@ -1,12 +1,12 @@
 package net.pladema.emergencycare.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
-import net.pladema.clinichistory.documents.controller.dto.NewVitalSignsObservationDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.SnomedDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
 
 import java.io.Serializable;

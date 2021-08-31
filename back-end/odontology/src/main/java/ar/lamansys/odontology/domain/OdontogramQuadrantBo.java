@@ -3,6 +3,7 @@ package ar.lamansys.odontology.domain;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OdontogramQuadrantBo {
     private OdontologySnomedBo snomed;
-    private Integer code;
+    private Short code;
     private boolean left;
     private boolean top;
     private boolean permanent;
@@ -20,7 +21,7 @@ public class OdontogramQuadrantBo {
 
     public OdontogramQuadrantBo(
             OdontologySnomedBo snomed,
-            Integer code,
+            Short code,
             boolean left,
             boolean top,
             boolean permanent) {
@@ -34,9 +35,10 @@ public class OdontogramQuadrantBo {
 
     public void addTooth(ToothBo t) {
         this.teeth.add(t);
+        this.teeth.sort(Comparator.comparing(ToothBo::getToothCode)); // ascending order by toothCode
     }
 
-    public static OdontogramQuadrantBo getQuadrant(Integer code) {
+    public static OdontogramQuadrantBo getQuadrant(Short code) {
         return OdontogramQuadrantData.getAsMap().get(code);
     }
 }

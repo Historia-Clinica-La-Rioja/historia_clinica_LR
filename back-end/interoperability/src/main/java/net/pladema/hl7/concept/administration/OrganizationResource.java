@@ -35,8 +35,8 @@ public class OrganizationResource extends ISingleResourceFhir {
         OrganizationVo organization = store.getOrganization(id);
 
         Organization resource = new Organization();
-        resource.setId(organization.getId());
-        resource.addIdentifier(newIdentifier(CodingSystem.REFES, organization.getId()));
+        resource.setId(getSisaCode());
+        resource.addIdentifier(newIdentifier(CodingSystem.REFES, getSisaCode()));
         resource.setName(organization.getName());
         if(organization.hasPhoneNumber())
             resource.addTelecom(newTelecom(organization.getPhoneNumber(), ContactPoint.ContactPointUse.WORK));

@@ -6,7 +6,7 @@ import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialo
 import {TranslateService} from '@ngx-translate/core';
 import {MatDialog} from '@angular/material/dialog';
 import {DoctorsOfficeService} from '@api-rest/services/doctors-office.service';
-import {HealthcareProfessionalService} from '@api-rest/services/healthcare-professional.service';
+import {HealthcareProfessionalByInstitutionService} from '@api-rest/services/healthcare-professional-by-institution.service';
 import {ContextService} from '@core/services/context.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {APPOINTMENT_DURATIONS, MINUTES_IN_HOUR} from '../../constants/appointment';
@@ -67,7 +67,7 @@ export class AgendaSetupComponent implements OnInit {
 		private translator: TranslateService,
 		private dialog: MatDialog,
 		private doctorsOfficeService: DoctorsOfficeService,
-		private healthcareProfessionalService: HealthcareProfessionalService,
+		private healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly cdr: ChangeDetectorRef,

@@ -1,5 +1,6 @@
 package net.pladema.staff.repository;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface HealthcareProfessionalSpecialtyRepository extends JpaRepository<HealthcareProfessionalSpecialty, Integer> {
-
+public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableEntityJPARepository<HealthcareProfessionalSpecialty, Integer> {
 
     @Transactional(readOnly = true)
     @Query( "SELECT (CASE WHEN COUNT(hps.id)> 0 THEN TRUE ELSE FALSE END) " +
@@ -44,7 +44,8 @@ public interface HealthcareProfessionalSpecialtyRepository extends JpaRepository
             "(hps.healthcareProfessionalId, cs) " +
             "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
-            + "WHERE hps.healthcareProfessionalId IN :professionalsIds")
+            + "WHERE hps.healthcareProfessionalId IN :professionalsIds "
+            + "AND hps.deleteable.deleted = false")
     List<ProfessionalClinicalSpecialtyVo> getAllByProfessionals(@Param("professionalsIds") List<Integer> professionalsIds);
 
 }

@@ -4,7 +4,6 @@ import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import net.pladema.snowstorm.configuration.SnowstormRestTemplateAuth;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
 import net.pladema.snowstorm.services.SnowstormService;
-import net.pladema.snowstorm.services.domain.SnowstormCie10RefsetMembersResponse;
 import net.pladema.snowstorm.services.domain.SnowstormConcept;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
@@ -86,19 +85,18 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
         return result.getItems();
     }
 
-    @Override
-    public SnowstormCie10RefsetMembersResponse getCie10RefsetMembers(String referencedComponentId) {
+    public <T> T getRefsetMembers(String referencedComponentId, String referenceSetId, String limit, Class<T> type) {
         StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getRefsetMembersUrl());
 
-        urlWithParams.append("?referenceSet=" + SnowstormWSConfig.CIE10_REFERENCE_SET_ID);
+        urlWithParams.append("?referenceSet=" + referenceSetId);
         urlWithParams.append("&referencedComponentId=" + referencedComponentId);
         urlWithParams.append("&active=true");
         urlWithParams.append("&offset=0");
-        urlWithParams.append("&limit=" + SnowstormWSConfig.CIE10_LIMIT);
+        urlWithParams.append("&limit=" + limit);
 
-        SnowstormCie10RefsetMembersResponse result;
+        T result;
         try {
-            ResponseEntity<SnowstormCie10RefsetMembersResponse> response = exchangeGet(urlWithParams.toString(), SnowstormCie10RefsetMembersResponse.class);
+            ResponseEntity<T> response = exchangeGet(urlWithParams.toString(), type);
             result = response.getBody();
             if (result == null)
                 throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));

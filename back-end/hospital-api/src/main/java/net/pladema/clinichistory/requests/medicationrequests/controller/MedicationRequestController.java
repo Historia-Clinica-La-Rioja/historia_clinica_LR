@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.ChangeStateMedicationRequestDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
@@ -21,9 +21,9 @@ import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
-import net.pladema.sgx.pdf.PDFDocumentException;
-import net.pladema.sgx.pdf.PdfService;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
@@ -104,12 +104,13 @@ public class MedicationRequestController {
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
-                   @RequestBody @Valid PrescriptionDto medicationRequest) {
+                   @RequestBody @Valid PrescriptionDto medicationRequest){
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientDto, medicationRequest);
-        Integer result = createMedicationRequestService.execute(institutionId, medicationRequestBo);
+        medicationRequestBo.setInstitutionId(institutionId);
+        Integer result = createMedicationRequestService.execute(medicationRequestBo);
         LOG.debug("create result -> {}", result);
         return result;
     }

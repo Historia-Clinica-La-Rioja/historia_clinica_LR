@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentObservationsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.controller.dto.DocumentObservationsDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.HealthConditionDto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

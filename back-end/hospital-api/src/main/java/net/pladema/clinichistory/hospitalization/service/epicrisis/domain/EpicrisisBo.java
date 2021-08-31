@@ -1,88 +1,76 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.service.Document;
-import net.pladema.clinichistory.hospitalization.service.domain.ClinicalSpecialtyBo;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProblemBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
-import java.util.Collections;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class EpicrisisBo implements Document {
+public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumentBo {
 
     private Long id;
 
-    private boolean confirmed;
+    private Integer patientId;
+
+    private PatientInfoBo patientInfo;
+
+    private Integer encounterId;
+
+    private Integer institutionId;
 
     private DocumentObservationsBo notes;
 
+    @NotNull(message = "{value.mandatory}")
     private HealthConditionBo mainDiagnosis;
 
-    private List<DiagnosisBo> diagnosis;
+    @NotNull(message = "{value.mandatory}")
+    private List<@Valid DiagnosisBo> diagnosis;
 
-    private List<HealthHistoryConditionBo> personalHistories;
+    @NotNull(message = "{value.mandatory}")
+    private List<@Valid HealthHistoryConditionBo> personalHistories;
 
-    private List<HealthHistoryConditionBo> familyHistories;
+    @NotNull(message = "{value.mandatory}")
+    private List<@Valid HealthHistoryConditionBo> familyHistories;
 
-    private List<MedicationBo> medications;
+    @NotNull(message = "{value.mandatory}")
+    private List<@Valid MedicationBo> medications;
 
-    private List<ImmunizationBo> immunizations;
+    @NotNull(message = "{value.mandatory}")
+    private List<@Valid ImmunizationBo> immunizations;
 
-    private List<AllergyConditionBo> allergies;
+    @NotNull(message = "{value.mandatory}")
+    private List<@Valid AllergyConditionBo> allergies;
 
+    @Valid
     private AnthropometricDataBo anthropometricData;
 
+    @Valid
     private VitalSignBo vitalSigns;
-
-    public String getDocumentStatusId(){
-        return confirmed ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
-    }
 
     @Override
     public Integer getPatientId() {
-        return null;
-    }
-
-    @Override
-    public List<ProblemBo> getProblems() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ProcedureBo> getProcedures() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<ReasonBo> getReasons() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public ClinicalSpecialtyBo getClinicalSpecialty() {
-        return null;
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return patientId;
     }
 
     public short getDocumentType() {
-        return 0;
-    }
-
-    @Override
-    public Integer getEncounterId() {
-        return null;
+        return DocumentType.EPICRISIS;
     }
 
     @Override
     public Short getDocumentSource() {
-        return null;
+        return SourceType.HOSPITALIZATION;
     }
 }

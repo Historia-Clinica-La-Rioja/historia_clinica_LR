@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <style type="text/css">
+
+        .table {
+            font-size: 12px;
+        }
+
+        .table > div > div {
+            display: table-cell;
+            padding: 1em;
+            border: 1px solid black;
+        }
+
+        .row-space {
+            height: 5px;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+        }
+
+        .table, .company-data {
+            width: 650px;
+        }
+
+        .title, .hospital, .attention-type {
+            width: 550px;
+        }
+
+        .date, .code-hpgd, .doc-number, .beneficiary-type, .relationship-type, .gender, .age,
+        .attention-type, .coverage-code, .company-data,
+        .coverage-number, .coverage-emision-date, .coverage-expiration, .receipt,
+        .month, .year, .company-cuit, .administratives-signature,
+        .signature-clarification, .beneficiarys-signature {
+            text-align: center;
+        }
+
+        .age, .month, .year {
+            width: 50px;
+        }
+
+        .date, .doc-type, .gender, .code-hpgd {
+            width: 100px;
+        }
+
+        .code-hpgd {
+            height: 50px;
+        }
+
+        .complete-name {
+            width: 400px;
+            height: 15px;
+        }
+
+        .border-bottom {
+            width: 100%;
+            border-bottom: 1px solid black;
+        }
+
+        .relationship-type, .beneficiary-type {
+            width: 250px;
+        }
+
+        .relationship-type, .beneficiary-type div {
+            display: inline;
+        }
+
+        .relationship-type div > div, .beneficiary-type div > div {
+            display: inline-block;
+            margin-right: 30px;
+        }
+
+        .consultation, .practice, .internment {
+            width: 120px;
+        }
+
+        .cell {
+            width: 20px;
+        }
+
+        .specialty, .code-nhpgd {
+            width: 510px;
+        }
+
+        .internment {
+            width: 128px;
+        }
+
+        .diagnostics {
+            width: 140px;
+        }
+
+        .principal-code {
+            width: 160px;
+            height: 50px;
+        }
+
+        .other-codes {
+            width: 200px;
+        }
+
+        .signature-section {
+            width: 650px;
+            display: inline;
+        }
+
+        .text-hpgd, .text-cie10 {
+            display: inline-block;
+        }
+
+        .text-cie10 {
+            margin-left: 20px;
+        }
+
+        .doctors-signature {
+            text-align: center;
+            margin-top: 16%
+        }
+
+        .coverage-data {
+            width: 600px;
+        }
+
+        .doc-number, .coverage-code, .receipt {
+            width: 150px;
+        }
+
+        .coverage-number {
+            width: 500px;
+        }
+
+        .coverage-emision-date, .coverage-expiration {
+            width: 125px;
+        }
+
+        .business-name, .addresses-company {
+            width: 400px;
+        }
+
+        .company-cuit {
+            width: 250px;
+        }
+
+        .administratives-signature, .signature-clarification {
+            width: 175px;
+        }
+
+        .beneficiarys-signature {
+            width: 300px;
+            height: 125px;
+        }
+
+    </style>
+</head>
+
+<body th:fragment="data">
+
+<div class="table">
+    <div>
+        <div class="title">
+            COMPROBANTE DE ATENCIÓN <br></br>
+            DE BENEFICIARIOS DE OBRAS SOCIALES
+        </div>
+        <div class="date">
+            <div class="border-bottom">FECHA</div>
+            <div th:text="${reportDate}"></div>
+        </div>
+    </div>
+    <div class="row-space"></div>
+    <div>
+        <div class="hospital" th:text="${'HOSPITAL: ' + establishment}"></div>
+        <div class="code-hpgd">
+            <div class="border-bottom">Código HPGD</div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+    <div class="row-space"></div>
+    <div>
+        <div class="complete-name">
+            <div class="border-bottom">APELLIDOS Y NOMBRES</div>
+            <div th:text="${completePatientName}"></div>
+        </div>
+        <div class="doc-type">
+            <div class="border-bottom">Tipo doc</div>
+            <div th:text="${documentType}"></div>
+        </div>
+        <div class="doc-number">
+            <div class="border-bottom">N° Documento</div>
+            <div th:text="${documentNumber}"></div>
+        </div>
+    </div>
+    <div class="row-space"></div>
+    <div>
+        <div class="beneficiary-type">Tipo de Beneficiario</div>
+        <div class="relationship-type">Parentesco</div>
+        <div class="gender">Sexo</div>
+        <div class="age">Edad</div>
+    </div>
+    <div>
+        <div class="beneficiary-type">
+            <div>
+                <div>Titular</div>
+                <div>No titu</div>
+                <div>Adhiere</div>
+            </div>
+        </div>
+        <div class="relationship-type">
+            <div>
+                <div>Conyug.</div>
+                <div>Hijo</div>
+                <div>Otro</div>
+            </div>
+        </div>
+        <div class="gender" th:text="${patientGender}"></div>
+        <div class="age" th:text="${patientAge}"></div>
+    </div>
+    <div class="row-space"></div>
+    <div>
+        <div class="attention-type">TIPO DE ATENCIÓN</div>
+        <div class="date">
+            <div class="border-bottom">FECHA</div>
+            <div th:text="${attentionDate}"></div>
+        </div>
+    </div>
+    <div>
+        <div class="consultation">CONSULTA</div>
+        <div class="cell">
+            <label th:if="${appointmentState == 'Atendido'}">X</label>
+            <label th:if="${appointmentState != 'Atendido'}">&nbsp;</label>
+        </div>
+        <div class="specialty">Especialidad:</div>
+    </div>
+    <div>
+        <div class="practice">PRÁCTICA</div>
+        <div class="cell">&nbsp;</div>
+        <div class="code-nhpgd">Códigos NHPGD:</div>
+    </div>
+    <div>
+        <div class="internment">INTERNACIÓN</div>
+        <div style="width: 23px;">&nbsp;</div>
+        <div class="diagnostics">Diagnóstico de egreso <br></br>CIE10</div>
+        <div class="principal-code">CÓDIGO PRINCIPAL:</div>
+        <div class="other-codes">OTROS CÓDIGOS:</div>
+    </div>
+    <div>
+        <div class="signature-section">
+            <div class="text-hpgd">HPGD: Nomenclador Hospitales Públicos de Gestión Descentralizada</div>
+            <div class="text-cie10">CIE 10: Clasificación Internacional de Enfermedades</div>
+            <div class="doctors-signature">Firma del Médico y sello con N° de matrícula</div>
+        </div>
+    </div>
+
+    <div>
+        <div class="coverage-data">
+            <div class="border-bottom">DATOS DE LA OBRA SOCIAL: Nombre completo</div>
+            <div th:text="${medicalCoverage}"></div>
+        </div>
+        <div class="coverage-code">
+            <div class="border-bottom">Código</div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+    <div class="row-space"></div>
+    <div>
+        <div class="coverage-number">
+            <div class="border-bottom">N° de Carnet de Obra Social</div>
+            <div th:text="${affiliateNumber}"></div>
+        </div>
+        <div class="coverage-emision-date">
+            <div class="border-bottom">Fecha de Emisión</div>
+            <div>&nbsp;</div>
+        </div>
+        <div class="coverage-expiration">
+            <div class="border-bottom">Vencimiento</div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+    <div class="row-space"></div>
+    <div>
+        <div class="company-data">DATOS DE LA EMPRESA</div>
+    </div>
+    <div>
+        <div class="business-name">
+            <div class="border-bottom">NOMBRE O RAZÓN SOCIAL</div>
+            <div>&nbsp;</div>
+        </div>
+        <div class="receipt">
+            <div class="border-bottom">&nbsp;</div>
+            <div>Último recibo de sueldo</div>
+        </div>
+        <div class="month">
+            <div class="border-bottom">MES</div>
+        </div>
+        <div class="year">
+            <div class="border-bottom">AÑO</div>
+        </div>
+    </div>
+    <div>
+        <div class="addresses-company">
+            <div class="border-bottom">DIRECCIÓN DE LA EMPRESA</div>
+            <div>&nbsp;</div>
+        </div>
+        <div class="company-cuit">
+            <div class="border-bottom">CUIT DE LA EMPRESA</div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+    <div>
+        <div class="administratives-signature">
+            <div class="border-bottom">FIRMA DEL RESPONSABLE ADMINISTRATIVO-CONTABLE</div>
+        </div>
+        <div class="signature-clarification">
+            <div class="border-bottom">ACLARACIÓN DE LA FIRMA</div>
+        </div>
+        <div class="beneficiarys-signature">FIRMA DEL BENEFICIARIO</div>
+    </div>
+</div>
+
+</body>
+</html>

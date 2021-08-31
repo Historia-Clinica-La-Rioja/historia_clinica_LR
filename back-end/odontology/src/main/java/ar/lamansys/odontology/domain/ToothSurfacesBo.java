@@ -15,4 +15,22 @@ public class ToothSurfacesBo {
     private OdontologySnomedBo internal;
     private OdontologySnomedBo external;
     private OdontologySnomedBo central;
+
+    public OdontologySnomedBo getSurface(ESurfacePosition position) {
+        switch (position) {
+            case EXTERNAL:
+                return external;
+            case INTERNAL:
+                return internal;
+            case CENTRAL:
+                return central;
+            case LEFT:
+                return left;
+            case RIGHT:
+                return right;
+            default:
+                return null;
+        }
+    }
+
 }

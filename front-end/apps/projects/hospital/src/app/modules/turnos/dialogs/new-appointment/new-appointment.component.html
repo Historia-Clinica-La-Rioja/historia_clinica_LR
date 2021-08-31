@@ -60,7 +60,7 @@
 							</mat-form-field>
 						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-							<ng-container *hasRole="['ADMINISTRATIVO']">
+							<ng-container *appHasRole="['ADMINISTRATIVO']">
 								<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()" *ngIf="showAddPatient">
 									<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
 								</button>
@@ -133,7 +133,7 @@
     <button mat-stroked-button color="primary" mat-dialog-close>
 		<span [translate]="'buttons.CANCEL'"></span>
     </button>
-	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()">
+	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()" [disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>

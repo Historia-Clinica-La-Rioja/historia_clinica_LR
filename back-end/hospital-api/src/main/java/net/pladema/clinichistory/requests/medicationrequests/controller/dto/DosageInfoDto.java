@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.documents.service.ips.domain.DosageBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 
 import java.io.Serializable;

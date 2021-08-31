@@ -1,6 +1,6 @@
 package net.pladema.establishment.repository;
 
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.InternmentEpisodeStatus;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.BedCategory;

@@ -34,6 +34,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-data</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -100,6 +105,58 @@
 			<version>2.0.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.cssbox</groupId>
+			<artifactId>pdf2dom</artifactId>
+			<version>1.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf</artifactId>
+			<version>9.1.20</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.odftoolkit</groupId>
+			<artifactId>simple-odf</artifactId>
+			<version>0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.togglz</groupId>
+			<artifactId>togglz-spring-boot-starter</artifactId>
+			<version>2.6.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.togglz</groupId>
+			<artifactId>togglz-spring-security</artifactId>
+			<version>2.6.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.togglz</groupId>
+			<artifactId>togglz-junit</artifactId>
+			<version>2.6.1.Final</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.togglz</groupId>
+			<artifactId>togglz-testing</artifactId>
+			<version>2.6.1.Final</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

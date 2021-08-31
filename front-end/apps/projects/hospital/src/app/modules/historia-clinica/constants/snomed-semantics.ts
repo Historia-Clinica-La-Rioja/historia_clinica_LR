@@ -20,17 +20,25 @@ const OR = ' OR ';
 const CHILDREN_OF = '<';
 const CHILDREN_AND_SELF_OF = '<<';
 const MEMBER_OF = '^';
+const MINUS = ' MINUS '
+
+
+const ILLEGALLY_INDUCED_ABORTION = [CHILDREN_AND_SELF_OF, '49632008 |aborto ilegal (trastorno)| ', OR,
+' 198863002 |readmisión hospitalaria para extracción de productos de la concepción retenidos, aborto ilegal (trastorno)| ', OR,
+' 198756005 |aborto ilegal completo con infección pélvica o del tracto genital (trastorno)| ', OR,
+' 785872000 |hemorragia excesiva debida a interrupción ilegal inducida de embarazo y posterior a ella (trastorno)| ', OR,
+' 785869007 |hemorragia secundaria debida a interrupción ilegal inducida de embarazo y posterior a ella (trastorno)| '].join('');
+
 
 export const SEMANTICS_CONFIG = {
-	diagnosis: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation].join(''),
+	diagnosis: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
 	bloodType: [CHILDREN_OF, SemanticsEnum.ABOFinding].join(''),
-	personalRecord: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation].join(''),
-	familyRecord: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation].join(''),
+	personalRecord: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
+	familyRecord: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join(''),
 	allergy: [CHILDREN_OF, SemanticsEnum.AllergicDisposition].join(''),
 	hospitalizationReason: [CHILDREN_OF, SemanticsEnum.ClinicalFinding, OR, SemanticsEnum.Event, OR, SemanticsEnum.Situation, OR, SemanticsEnum.SocialContext].join(''),
 	vaccine: [MEMBER_OF, SemanticsEnum.ReportableInmunizationsRefset].join(''),
 	medicine: [CHILDREN_OF, SemanticsEnum.GenericMedidicine].join(''),
-	consultationReason: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event, OR, CHILDREN_AND_SELF_OF,
-		SemanticsEnum.Situation].join(''),
 	procedure: [CHILDREN_OF, SemanticsEnum.Procedure].join(''),
+	consultationReason: [CHILDREN_AND_SELF_OF, SemanticsEnum.ClinicalFinding, MINUS, '(', ILLEGALLY_INDUCED_ABORTION, ')', OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Procedure, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Situation, OR, CHILDREN_AND_SELF_OF, SemanticsEnum.Event].join('')
 };

@@ -1,0 +1,317 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_19 
+
+    - changeSet:
+          id: vaccine_consultation-createTable
+          comment: Create table vaccine_consultation
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: vaccine_consultation
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_vaccine_consultation
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              name: clinical_specialty_id
+                              type: int
+                        - column:
+                              name: institution_id
+                              type: int
+                        - column:
+                              name: performed_date
+                              type: date
+                        - column:
+                              name: doctor_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: billable
+                              type: boolean
+                              defaultValue: ${boolean.false}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_by
+                              type: int
+                              defaultValue: -1
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                nullable: false
+                              name: deleted
+                              type: BOOLEAN
+                              defaultValue: ${boolean.false}
+                        - column:
+                              name: deleted_by
+                              type: int
+                        - column:
+                              name: deleted_on
+                              type: datetime
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: vaccine_consultation
+                    constraintName: FK_vaccine_consultation_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: clinical_specialty_id
+                    baseTableName: vaccine_consultation
+                    constraintName: FK_vaccine_consultation_clinical_specialty_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: clinical_specialty
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: institution_id
+                    baseTableName: vaccine_consultation
+                    constraintName: FK_vaccine_consultation_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: institution
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: doctor_id
+                    baseTableName: vaccine_consultation
+                    constraintName: FK_vaccine_consultation_healthcare_professional_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: healthcare_professional
+                    validate: true
+
+
+    - changeSet:
+        id: addColumn-immunization
+        author: etrapani
+        comment: Add new columns immunizations table
+        changes:
+          - addColumn:
+              tableName: inmunization
+              columns:
+                - column:
+                    name: snomed_commercial_id
+                    type: int
+                - column:
+                    name: scheme_id
+                    type: smallint
+                - column:
+                    name: condition_id
+                    type: smallint
+                - column:
+                    name: dose_id
+                    type: smallint
+                - column:
+                    name: batch_number
+                    type: varchar
+    - changeSet:
+        id: addForeignKeyConstraint-immunization-snomed-commercial-example
+        author: etrapani
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_commercial_id
+              baseTableName: inmunization
+              constraintName: FK_inmunization_snomed_commercial_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed
+              validate: true
+
+    - changeSet:
+        id: source_type-immunization-data
+        comment: Actualizar datos source_type
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO source_type VALUES (5, 'Inmunización');
+
+    - changeSet:
+        id: document_type-immunization-data
+        comment: Actualizar datos document_type
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (8, 'Inmunización');
+
+    - changeSet:
+          id: vaccine_scheme-createTable
+          comment: Create table vaccine_scheme
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: vaccine_scheme
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_vaccine_scheme
+                              name: id
+                              type: smallint
+                        - column:
+                              constraints:
+                                nullable: false
+                              name: description
+                              type: varchar(100)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: minimum_threshold_days
+                              type: int
+                        - column:
+                              constraints:
+                                nullable: false
+                              name: maximum_threshold_days
+                              type: int
+
+    - changeSet:
+        id: vaccine_scheme-data
+        comment: Cargar datos de schemas de vacunación
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (319,'Asplénico',60,41610);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (431,'Asplénico mayor de 5 años',1825,42000);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (430,'Asplénico menor de 5 años',56,1824);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (78,'Calendario Nacional',181,749);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (105,'Atrasado',8,2554);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (62,'Regular',0,7);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (132,'Adultos',181,40515);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (63,'Recién Nacido',0,2);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (288,'Secuencial',42,730);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (383,'Atrasado Adolescente',4384,5474);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (382,'Atrasado Lactantes',150,1459);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (305,'Regular Adolescentes',3654,4383);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (304,'Regular Lactantes',56,720);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (308,'Menores de 5 años con Factores de Riesgo',42,2189);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (104,'Incompleto',4016,40515);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (257,'Alterno Inicio mayor e igual a 14 años',5110,16426);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (369,'Adicional',395,1825);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (370,'Dosis 0',183,364);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (361,'Adicional para complemento',395,1863);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (433,'Déficit de complemento mayor de 5 años',1825,42000);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (432,'Déficit de complemento menor de 5 años',56,1824);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (362,'Mayor de 50 años',18251,41610);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (446,'Personal Estratégico',6570,42000);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (125,'Personas con factores de riesgo',1096,36500);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (277,'Post exposición',1,42000);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (269,'Recien Nacido',0,1);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (273,'Neonatos',0,2);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (285,'Regular Adultos',365,42000);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (196,'Regular Niños',54,36500);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (322,'Mayores de 6 meses',180,42000);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (321,'Menores de 6 meses',60,179);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (281,'Mayores de 5 años con Factores de Riesgo',1826,41610);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (283,'Mayores de 2 Años con Factores de Riesgo',730,41610);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (266,'Cardiopatía congénita',0,496);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (265,'Displasia Broncopulmonar',0,403);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (264,'Prematuro',0,217);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (448,'Personas de 18 a 59 años con Factores de Riesgo',6570,21899);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (447,'Personas de 60 o más años',21900,42000);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (363,'3 a 64 años',1095,23724);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (367,'Único',365,36500);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (179,'Regular Post Exposición Animal Muerto o Desaparecido',0,36500);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (178,'Regular Post Exposición de Animal Observado',0,36500);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (172,'Regular Pre Exposición',0,36500);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (72,'Viaje a Zona Endémica',241,22265);
+                INSERT INTO vaccine_scheme(id, description, minimum_threshold_days, maximum_threshold_days) VALUES (90,'Residencia en Zona Endémica',5475,36500);
+
+    - changeSet:
+        id:  rename batch-number column  in immunization table
+        author:  etrapani
+        changes:
+        -  renameColumn:
+             newColumnName:  lot_number
+             oldColumnName:  batch_number
+             tableName:  inmunization
+
+
+    - changeSet:
+       id: add billable column immunization
+       author: etrapani
+       comment: Add billable column immunizations table
+       changes:
+         - addColumn:
+             tableName: inmunization
+             columns:
+               - column:
+                   constraints:
+                     nullable: false
+                   name: billable
+                   type: BOOLEAN
+                   defaultValue: ${boolean.false}
+    - changeSet:
+        id: outpatient_consultation-addColumn-patient_medical_coverage_id
+        author: saguero
+        changes:
+        - addColumn:
+            tableName: outpatient_consultation
+            columns:
+            - column:
+                name: patient_medical_coverage_id
+                type: int
+                constraints: 
+                    nullable: true
+    
+    - changeSet:
+        id: set-medical_coverage-outpatient_consultation
+        comment: Set medical coverage to outpatient_consultation
+        author: saguero
+        dbms: postgresql
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE outpatient_consultation 
+                    SET patient_medical_coverage_id = subquery.patient_medical_coverage_id 
+                    FROM (
+                        SELECT distinct on (ap.patient_id) ap.patient_id, ap.patient_medical_coverage_id,
+                            d.healthcare_professional_id, ap.date_type_id
+                        FROM appointment ap
+                        JOIN appointment_assn apassn on (ap.id = apassn.appointment_id)
+                        JOIN diary d on (apassn.diary_id = d.id)
+                        WHERE ap.patient_medical_coverage_id is not null
+                        ORDER BY patient_id, "hour"
+                    ) subquery
+                    WHERE outpatient_consultation.patient_id = subquery.patient_id
+                    AND outpatient_consultation.doctor_id = subquery.healthcare_professional_id
+                    AND outpatient_consultation.start_date = subquery.date_type_id

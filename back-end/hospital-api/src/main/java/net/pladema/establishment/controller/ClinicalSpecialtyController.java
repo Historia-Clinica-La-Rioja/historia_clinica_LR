@@ -1,11 +1,11 @@
 package net.pladema.establishment.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.annotations.Api;
-import net.pladema.clinichistory.hospitalization.controller.dto.ClinicalSpecialtyDto;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.sgx.security.utils.UserInfo;
 import net.pladema.staff.controller.dto.ProfessionalsByClinicalSpecialtyDto;
 import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -17,7 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +71,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping(value = "/professional", params = "professionalsIds")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
     public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByProfessionals(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam List<Integer> professionalsIds) {

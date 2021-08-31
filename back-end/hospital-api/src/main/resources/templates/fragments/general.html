@@ -220,17 +220,41 @@
     <!-- Vacunas -->
 
     <div th:fragment="immunizations">
-        <h3>Vacunas</h3>
-        <div th:if="${#lists.isEmpty(immunizations)}">
+        <h3>Vacunas aplicadas</h3>
+        <div th:if="${#lists.isEmpty(billableImmunizations)}">
             <dl>
-                <dd><p>Sin cambios registrados</p></dd>
+                <dd><p>Sin vacunas aplicadas</p></dd>
             </dl>
         </div>
-        <div th:if="${not #lists.isEmpty(immunizations)}">
-            <dl th:each="immunization,iter: ${immunizations}">
-                <dd><p  th:text="${'- ' + immunization.snomed.pt}"></p></dd>
+        <div th:if="${not #lists.isEmpty(billableImmunizations)}">
+            <dl th:each="immunization,iter: ${billableImmunizations}">
+                <dd><strong>Vacuna</strong><p  th:text="${'- ' + immunization.snomed.pt}"></p></dd>
                 <dl>
-                    <dd><strong th:if="${immunization.administrationDate != null}">Fecha de administración: </strong><label th:text="${immunization.administrationDate}"></label></dd>
+                    <dd><strong th:if="${immunization.administrationDate != null}">Fecha de administración: </strong><label th:if="${immunization.administrationDate != null}" th:text="${immunization.administrationDate}"></label></dd>
+                    <dd><strong th:if="${immunization.condition != null}">Condición: </strong><label th:if="${immunization.condition != null}" th:text="${immunization.condition.description}"></label></dd>
+                    <dd><strong th:if="${immunization.scheme != null}">Esquema: </strong><label th:if="${immunization.scheme != null}" th:text="${immunization.scheme.description}"></label></dd>
+                    <dd><strong th:if="${immunization.dose != null}">Dosis: </strong><label th:if="${immunization.dose != null}" th:text="${immunization.dose.description}"></label></dd>
+                    <dd><strong th:if="${immunization.lotNumber != null}">Número de lote: </strong><label th:if="${immunization.lotNumber != null}" th:text="${immunization.lotNumber}"></label></dd>
+                    <dd><strong th:if="${immunization.note != null}">Observaciones: </strong><label th:if="${immunization.note != null}" th:text="${immunization.note}"></label></dd>
+                </dl>
+            </dl>
+        </div>
+        <h3>Vacunas registradas</h3>
+        <div th:if="${#lists.isEmpty(nonBillableImmunizations)}">
+            <dl>
+                <dd><p>Sin vacunas registradas</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(nonBillableImmunizations)}">
+            <dl th:each="immunization,iter: ${nonBillableImmunizations}">
+                <dd><strong>Vacuna</strong><p  th:text="${'- ' + immunization.snomed.pt}"></p></dd>
+                <dl>
+                    <dd><strong th:if="${immunization.administrationDate != null}">Fecha de administración: </strong><label th:if="${immunization.administrationDate != null}" th:text="${immunization.administrationDate}"></label></dd>
+                    <dd><strong th:if="${immunization.condition != null}">Condición: </strong><label th:if="${immunization.condition != null}" th:text="${immunization.condition.description}"></label></dd>
+                    <dd><strong th:if="${immunization.scheme != null}">Esquema: </strong><label th:if="${immunization.scheme != null}" th:text="${immunization.scheme.description}"></label></dd>
+                    <dd><strong th:if="${immunization.dose != null}">Dosis: </strong><label th:if="${immunization.dose != null}" th:text="${immunization.dose.description}"></label></dd>
+                    <dd><strong th:if="${immunization.lotNumber != null}">Número de lote: </strong><label th:if="${immunization.lotNumber != null}" th:text="${immunization.lotNumber}"></label></dd>
+                    <dd><strong th:if="${immunization.note != null}">Observaciones: </strong><label th:if="${immunization.note != null}" th:text="${immunization.note}"></label></dd>
                 </dl>
             </dl>
         </div>

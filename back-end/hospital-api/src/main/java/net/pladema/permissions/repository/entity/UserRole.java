@@ -5,15 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import lombok.EqualsAndHashCode;
-import ar.lamansys.sgx.shared.auditable.entity.AuditableEntity;
-import ar.lamansys.sgx.shared.auditable.listener.AuditListener;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 @Entity
 @Table(name = "user_role")
-@EntityListeners(AuditListener.class)
+@EntityListeners(SGXAuditListener.class)
 @EqualsAndHashCode
-public class UserRole extends AuditableEntity {
+public class UserRole extends SGXAuditableEntity<UserRolePK> {
 
 	/**
 	 * 
@@ -67,5 +68,10 @@ public class UserRole extends AuditableEntity {
 
 	public Integer getInstitutionId() {
 		return userRolePK.getInstitutionId();
+	}
+	
+	@Override
+	public UserRolePK getId() {
+		return this.userRolePK;
 	}
 }

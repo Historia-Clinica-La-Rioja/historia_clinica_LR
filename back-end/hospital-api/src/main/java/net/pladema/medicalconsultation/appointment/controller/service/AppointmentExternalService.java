@@ -7,4 +7,6 @@ public interface AppointmentExternalService {
     boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date);
 
     void serveAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
+
+    Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId);
 }

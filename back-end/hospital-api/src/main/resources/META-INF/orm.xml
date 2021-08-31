@@ -1,0 +1,383 @@
+<entity-mappings
+        version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+    http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+    <!-- JPA Named Native Queries -->
+
+    <!-- ========================================== -->
+    <!-- ====== Historia clínica electrónica ====== -->
+    <!-- ========================================== -->
+
+    <named-native-query name="HCE.findAllMedications" result-set-mapping="HCE.findAllMedicationsResult">
+        <query>with temporal as (
+            SELECT DISTINCT
+            ms.id as medicationStatementId, ms.snomed_id, ms.status_id, ms.created_on, ms.updated_on,
+            dsg.*,
+            row_number() OVER (PARTITION by ms.snomed_id ORDER BY ms.updated_on desc) AS rw
+            FROM document d
+            JOIN document_medicamention_statement dms ON d.id = dms.document_id
+            JOIN medication_statement ms ON dms.medication_statement_id = ms.id
+            LEFT JOIN dosage dsg ON ms.dosage_id = dsg.id
+            WHERE ms.patient_id = :patientId
+            AND d.type_id IN :documentTypeId
+            AND d.status_id = :documentStatusId
+            )
+            SELECT  t.medicationStatementId AS id , s.sctid AS sctidCode, s.pt AS sctidTerm, status_id AS status,
+            t.sequence, t.count, t.duration, t.duration_unit, t.frequency, t.period_unit,
+            coalesce(t.start_date, t.created_on) as effectiveTime, t.end_date
+            FROM temporal t
+            JOIN snomed s ON t.snomed_id = s.id
+            WHERE rw = 1 AND status_id = :statusId
+            ORDER BY t.updated_on
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllMedicationsResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="sctidCode" class="java.lang.String"/>
+            <column name="sctidTerm" class="java.lang.String"/>
+            <column name="status" class="java.lang.String"/>
+            <column name="sequence" class="java.lang.Integer"/>
+            <column name="count" class="java.lang.Integer"/>
+            <column name="duration" class="java.lang.Double"/>
+            <column name="duration_unit" class="java.lang.String"/>
+            <column name="frequency" class="java.lang.Integer"/>
+            <column name="period_unit" class="java.lang.String"/>
+            <column name="effectiveTime" class="java.sql.Date"/>
+            <column name="end_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.getDocumentReference" result-set-mapping="HCE.getDocumentReferenceResult">
+        <query>select pat.id, first_name, middle_names, last_name, bool_and(op.id is not null) as hasDocuments
+            from patient pat
+            join person per on ( pat.person_id = per.id )
+            left join outpatient_consultation op on ( pat.id = op.patient_id )
+            where pat.id = :patientId
+            group by pat.id, first_name, middle_names, last_name
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.getDocumentReferenceResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.BundleVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="first_name" class="java.lang.String"/>
+            <column name="middle_names" class="java.lang.String"/>
+            <column name="last_name" class="java.lang.String"/>
+            <column name="hasDocuments" class="java.lang.Boolean"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.getPatient" result-set-mapping="HCE.getPatientResult">
+        <query>
+            select p.first_name, p.middle_names, p.last_name, p.other_last_names, pe.mothers_last_name,
+            p.identification_number, p.gender_id, p.birth_date, pe.phone_number, pe.address_id
+            from patient pat
+            join person p on ( pat.person_id = p.id )
+            left join person_extended pe on ( p.id = pe.person_id )
+            where pat.id = :patientId
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.getPatientResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.PatientVo">
+            <column name="first_name" class="java.lang.String"/>
+            <column name="middle_names" class="java.lang.String"/>
+            <column name="last_name" class="java.lang.String"/>
+            <column name="other_last_names" class="java.lang.String"/>
+            <column name="mothers_last_name" class="java.lang.String"/>
+            <column name="identification_number" class="java.lang.String"/>
+            <column name="gender_id" class="java.lang.Short"/>
+            <column name="birth_date" class="java.lang.String"/>
+            <column name="phone_number" class="java.lang.String"/>
+            <column name="address_id" class="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.getAddress">
+        <query>
+            select a.street, a.number, a.floor, a.apartment, a.postcode,
+            ci.description as city, p.description as province, co.description as country
+            from address a
+            left join city ci on ( a.city_id = ci.id )
+            left join department d on ( ci.department_id = d.id )
+            left join province p on ( d.province_id = p.id )
+            left join country co on ( p.country_id = co.id )
+            where a.id = :addressId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="HCE.findAllCondition" result-set-mapping="HCE.findAllConditionResult">
+        <query>
+            WITH t AS(
+            SELECT hc.id, snomed_id, hc.status_id, verification_status_id, start_date, severity,
+            hc.created_on, hc.updated_on,
+            row_number() over (partition by snomed_id order by hc.updated_on desc) as rw
+            FROM document d
+            JOIN document_health_condition dhc on d.id = dhc.document_id
+            JOIN health_condition hc on dhc.health_condition_id = hc.id
+            WHERE d.status_id = :docStatusId
+            AND d.type_id = :documentTypeId
+            AND hc.patient_id = :patientId
+            AND hc.problem_id IN :diagnosisId
+            )
+            SELECT t.id as id, s.sctid as code, s.pt as term, t.status_id as clinical_status,
+            t.verification_status_id, t.start_date, t.severity, t.created_on
+            FROM t
+            JOIN snomed s ON snomed_id = s.id
+            WHERE rw = 1
+            AND NOT verification_status_id = :statusId
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllConditionResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ConditionVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="clinical_status" class="java.lang.String"/>
+            <column name="verification_status_id" class="java.lang.String"/>
+            <column name="start_date" class="java.sql.Date"/>
+            <column name="severity" class="java.lang.String"/>
+            <column name="created_on" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.findAllImmunizations" result-set-mapping="HCE.findAllImmunizationsResult">
+        <query>
+            WITH t AS (
+            SELECT inm.id, snomed_id, inm.status_id, administration_date, expiration_date, inm.created_on, inm.updated_on,
+            row_number() over (partition by snomed_id, administration_date order by inm.updated_on desc) as rw
+            FROM document d
+            JOIN document_inmunization di on d.id = di.document_id
+            JOIN inmunization inm on di.inmunization_id = inm.id
+            WHERE d.status_id = :docStatusId
+            AND d.type_id = :documentTypeId
+            AND inm.patient_id = :patientId
+            )
+            SELECT t.id as id, s.sctid as code, s.pt as term, status_id, administration_date, created_on, expiration_date
+            FROM t
+            JOIN snomed s ON t.snomed_id = s.id
+            WHERE rw = 1 AND NOT status_id = :statusId
+            ORDER BY t.updated_on DESC
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllImmunizationsResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ImmunizationVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="status_id" class="java.lang.String"/>
+            <column name="administration_date" class="java.sql.Date"/>
+            <column name="created_on" class="java.sql.Date"/>
+            <column name="expiration_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.findAllAllergies" result-set-mapping="HCE.findAllAllergiesResult">
+        <query>
+            with temporal as (
+            SELECT DISTINCT ai.id, ai.snomed_id, ai.status_id, ai.verification_status_id,
+            ai.category_id, ai.criticality, ai.start_date, ai.updated_on,
+            row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw
+            FROM document d
+            JOIN document_allergy_intolerance dai ON d.id = dai.document_id
+            JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id
+            WHERE d.type_id = :documentTypeId
+            AND d.status_id = :documentStatusId
+            AND ai.patient_id = :patientId
+            )
+            SELECT t.id AS id, s.sctid AS code, s.pt as term, t.status_id, t.verification_status_id,
+            t.category_id, t.criticality, t.start_date
+            FROM temporal t
+            JOIN snomed s ON t.snomed_id = s.id
+            WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus
+            ORDER BY t.updated_on desc
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.findAllAllergiesResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="status_id" class="java.lang.String"/>
+            <column name="verification_status_id" class="java.lang.String"/>
+            <column name="category_id" class="java.lang.Short"/>
+            <column name="criticality" class="java.lang.Short"/>
+            <column name="start_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="HCE.getOrganization" result-set-mapping="HCE.getOrganizationResult">
+        <query>
+            select distinct sisa_code, name, phone_number, address_id
+            from institution i
+            where id = (
+            select distinct institution_id
+            from (
+            select institution_id from internment_episode ie where patient_id = :patientId
+            union
+            select institution_id from outpatient_consultation oc where patient_id = :patientId
+            ) as subquery
+            limit 1)
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="HCE.getOrganizationResult" >
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.OrganizationVo">
+            <column name="sisa_code" class="java.lang.String"/>
+            <column name="name" class="java.lang.String"/>
+            <column name="phone_number" class="java.lang.String"/>
+            <column name="address_id" class="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <!-- ========================================== -->
+    <!-- ================ Reports ================= -->
+    <!-- ========================================== -->
+
+    <named-native-query name="Reports.OutpatientSummary" result-set-mapping="Reports.OutpatientSummaryResult">
+        <query>select oc.doctor_id as professional_id,
+            cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
+            extract(year from (age(oc.start_date, per.birth_date))) as "age", per.gender_id,
+            case when oc.patient_medical_coverage_id is null then false else true end as "OS"
+            from outpatient_consultation oc
+            left join clinical_specialty cs on (oc.clinical_specialty_id = cs.id)
+            join patient pat on (oc.patient_id = pat.id)
+            join person per on (pat.person_id = per.id)
+            where oc.institution_id = :institutionId
+            and oc.start_date between :from and :to
+            and oc.billable
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="Reports.OutpatientSummaryResult">
+        <constructor-result target-class="net.pladema.reports.repository.OutpatientSummary">
+            <column name="professional_id" class="java.lang.Integer"/>
+            <column name="specialty_id" class="java.lang.Integer"/>
+            <column name="specialty" class="java.lang.String"/>
+            <column name="specialtyType" class="java.lang.Short"/>
+            <column name="age" class="java.lang.Integer"/>
+            <column name="gender_id" class="java.lang.Short"/>
+            <column name="OS" class="java.lang.Boolean"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
+    <named-native-query name="Reports.OutpatientDetail" result-set-mapping="Reports.OutpatientDetailResult">
+        <query>SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
+            CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
+            CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
+            it.description as identificationType, pe.identification_number as identificationNumber,
+            to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
+            CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
+            px.phone_number as phoneNumber, px.email as email,
+            coverage.coverageName, coverage.affiliateNumber,
+            to_char(oc.start_date,'DD/MM/YYYY') as startDate,
+            cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
+            hp.id as professionalId,
+            CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
+            ocr.reasons as reasons,  prob.descriptions as problems,
+            vs.weight, vs.height, vs.systolic as systolicBloodPressure, vs.diastolic as diastolicBloodPressure
+            FROM    outpatient_consultation oc
+            JOIN institution i ON (oc.institution_id = i.id)
+            JOIN address a ON (i.address_id = a.id)
+            LEFT JOIN city c ON (a.city_id = c.id)
+            JOIN department d ON (c.department_id = d.id)
+            JOIN province p ON (d.province_id = p.id)
+            JOIN patient pa ON (oc.patient_id = pa.id)
+            JOIN person pe ON (pa.person_id = pe.id)
+            LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
+            LEFT JOIN person_extended px ON (px.person_id = pe.id)
+            LEFT JOIN gender g ON (px.gender_self_determination = g.id)
+            LEFT JOIN address a2 ON (px.address_id = a2.id)
+            LEFT JOIN city c2 ON (a2.city_id = c2.id)
+            LEFT JOIN (
+                select pmc.id, mc."name" AS coverageName, affiliate_number AS affiliateNumber
+                from patient_medical_coverage pmc
+                join medical_coverage mc on (pmc.medical_coverage_id = mc.id)
+            ) coverage ON (oc.patient_medical_coverage_id = coverage.id)
+            LEFT JOIN clinical_specialty cs ON (oc.clinical_specialty_id = cs.id)
+            JOIN healthcare_professional hp ON (oc.doctor_id = hp.id)
+            JOIN person p2 ON (hp.person_id = p2.id)
+            LEFT JOIN (
+                SELECT ocr.outpatient_consultation_id as id, STRING_AGG(r.description, ', ') as reasons
+                FROM outpatient_consultation_reasons ocr
+                JOIN reasons r ON (ocr.reason_id = r.id)
+                GROUP BY ocr.outpatient_consultation_id
+            ) ocr ON (oc.id = ocr.id )
+            LEFT JOIN (
+                SELECT oc.id, STRING_AGG(sno.pt, ', ') as descriptions
+                FROM outpatient_consultation oc
+                JOIN document doc ON (oc.document_id = doc.id)
+                JOIN document_health_condition dhc ON (doc.id = dhc.document_id)
+                JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
+                JOIN snomed sno ON (hc.snomed_id = sno.id)
+                GROUP BY oc.id
+            ) prob ON (oc.id = prob.id)
+            LEFT JOIN (
+                SELECT oc.id,
+                    MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolic,
+                    MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolic,
+                    MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as height,
+                    MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight
+                FROM outpatient_consultation oc
+                LEFT JOIN document_vital_sign dvs ON (oc.document_id = dvs.document_id)
+                LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id)
+                GROUP BY oc.id
+                ORDER BY oc.id
+            ) vs ON (oc.id = vs.id)
+            WHERE i.id = :institutionId
+            AND oc.billable = true
+            AND oc.start_date BETWEEN :startDate AND :endDate
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="Reports.OutpatientDetailResult">
+        <constructor-result target-class="net.pladema.reports.repository.OutpatientDetail">
+            <column name="province" class="java.lang.String"/>
+            <column name="department" class="java.lang.String"/>
+            <column name="sisaCode" class="java.lang.String"/>
+            <column name="institution" class="java.lang.String"/>
+            <column name="patientSurname" class="java.lang.String"/>
+            <column name="patientFirstName" class="java.lang.String"/>
+            <column name="identificationType" class="java.lang.String"/>
+            <column name="identificationNumber" class="java.lang.String"/>
+            <column name="birthDate" class="java.lang.String"/>
+            <column name="gender" class="java.lang.String"/>
+            <column name="address" class="java.lang.String"/>
+            <column name="phoneNumber" class="java.lang.String"/>
+            <column name="email" class="java.lang.String"/>
+            <column name="coverageName" class="java.lang.String"/>
+            <column name="affiliateNumber" class="java.lang.String"/>
+            <column name="startDate" class="java.lang.String"/>
+            <column name="clinicalSpecialtyId" class="java.lang.Integer"/>
+            <column name="clinicalSpecialty" class="java.lang.String"/>
+            <column name="professionalId" class="java.lang.Integer"/>
+            <column name="professionalName" class="java.lang.String"/>
+            <column name="reasons" class="java.lang.String"/>
+            <column name="problems" class="java.lang.String"/>
+            <column name="weight" class="java.lang.String"/>
+            <column name="height" class="java.lang.String"/>
+            <column name="systolicBloodPressure" class="java.lang.String"/>
+            <column name="diastolicBloodPressure" class="java.lang.String"/>
+        </constructor-result>
+
+    </sql-result-set-mapping>
+
+
+    <!-- ========================================== -->
+    <!-- ============== Appointment =============== -->
+    <!-- ========================================== -->
+
+    <named-native-query name="Appointment.medicalCoverage">
+        <query>select ap.patient_medical_coverage_id
+            from appointment ap
+            join appointment_assn apassn on (ap.id = apassn.appointment_id)
+            join diary d on (apassn.diary_id = d.id)
+            where ap.patient_id = :patientId and
+            ap.date_type_id = :currentDate and
+            ap.patient_medical_coverage_id is not null and
+            ap.appointment_state_id = :appointmentState and
+            d.healthcare_professional_id = :professionalId
+            order by hour asc
+            limit 1
+        </query>
+    </named-native-query>
+
+</entity-mappings>

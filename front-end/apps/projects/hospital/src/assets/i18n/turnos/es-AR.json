@@ -66,7 +66,14 @@
 			"phoneNumber": {
 				"SUCCESS": "El teléfono se modificó correctamente",
 				"PHONE_NUMBER": "Teléfono"
+			},
+			"coverageData": {
+				"COVERAGE_DATA": "Cobertura Médica",
+				"UPDATE_SUCCESS": "Los datos se han modificado correctamente"
 			}
+		},
+		"report": {
+			"TITLE": "Descargar informes"
 		}
 	}
 }

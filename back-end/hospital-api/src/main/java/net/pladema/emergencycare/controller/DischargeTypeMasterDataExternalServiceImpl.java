@@ -2,7 +2,7 @@ package net.pladema.emergencycare.controller;
 
 import net.pladema.emergencycare.controller.mapper.DischargeTypeMasterDataMapper;
 import net.pladema.emergencycare.service.DischargeTypeMasterDataService;
-import net.pladema.sgx.masterdata.dto.MasterDataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

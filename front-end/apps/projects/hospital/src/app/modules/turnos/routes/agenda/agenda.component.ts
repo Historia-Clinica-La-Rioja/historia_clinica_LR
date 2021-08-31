@@ -217,12 +217,18 @@ export class AgendaComponent implements OnInit, OnDestroy {
 				.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
 					event.meta.healthInsurance = medicalCoverageDto;
 					this.dialog.open(AppointmentComponent, {
-						data: event.meta
+						data: {
+							appointmentData: event.meta,
+							professionalPermissions: this.agenda.professionalAssignShift
+						}
 					});
 				});
 		} else {
 			this.dialog.open(AppointmentComponent, {
-				data: event.meta,
+				data: {
+					appointmentData: event.meta,
+					hasPermissionToAssignShift: this.agenda.professionalAssignShift
+				},
 			});
 		}
 	}

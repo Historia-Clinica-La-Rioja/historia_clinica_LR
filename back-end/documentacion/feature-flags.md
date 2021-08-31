@@ -2,11 +2,11 @@
 
 ## Definición de FF
 
-Todos los FF están definidos como enumerados en [net.pladema.sgx.featureflags.AppFeature](../hospital-api/src/main/java/net/pladema/sgx/featureflags/AppFeature.java).
+Todos los FF están definidos como enumerados en la clase [AppFeature.java](../hospital-api/src/main/java/net/pladema/sgx/featureflags/AppFeature.java).
 
 ## Estados de FF
 
-Cada sabor definido en [net.pladema.featureflags.service.domain.FlavorBo](../hospital-api/src/main/java/net/pladema/featureflags/service/domain/FlavorBo.java) debe definir los FF activos usando [net.pladema.flavor.service.impl.InitialFeatureStatesStrategy](../hospital-api/src/main/java/net/pladema/flavor/service/impl/InitialFeatureStatesStrategy.java).
+Cada sabor definido en la clase [FlavorBo.java](../hospital-api/src/main/java/net/pladema/featureflags/service/domain/FlavorBo.java) debe definir los FF activos usando la clase [InitialFeatureStatesStrategy.java](../hospital-api/src/main/java/net/pladema/flavor/service/impl/InitialFeatureStatesStrategy.java).
 
 ## Sobreescribir FF
  

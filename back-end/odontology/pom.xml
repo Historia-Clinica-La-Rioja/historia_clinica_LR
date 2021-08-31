@@ -29,6 +29,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys.sgh</groupId>
+            <artifactId>clinic-history</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ar.lamansys</groupId>
             <artifactId>sgx-shared</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -50,6 +56,17 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>1.3.1.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>jcc</artifactId>
+            <version>11.5.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
         </dependency>
 
     </dependencies>

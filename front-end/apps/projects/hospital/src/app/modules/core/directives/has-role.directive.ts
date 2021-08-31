@@ -5,7 +5,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { getElementViewFunction } from '@core/utils/directive.utils';
 
 @Directive({
-	selector: '[hasRole]'
+	selector: '[appHasRole]'
 })
 export class HasRoleDirective {
 
@@ -20,7 +20,7 @@ export class HasRoleDirective {
 	}
 
 	@Input()
-	set hasRole(allowedRoles: ERole[]) {
+	set appHasRole(allowedRoles: ERole[]) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.showElement(anyMatch<ERole>(userRoles, allowedRoles));
 		});

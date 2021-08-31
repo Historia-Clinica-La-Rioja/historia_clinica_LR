@@ -1,6 +1,5 @@
 package net.pladema.snowstorm.services;
 
-import net.pladema.snowstorm.services.domain.SnowstormCie10RefsetMembersResponse;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 
@@ -14,6 +13,6 @@ public interface SnowstormService {
 
     List<SnowstormItemResponse> getConceptAncestors(String conceptId);
 
-    SnowstormCie10RefsetMembersResponse getCie10RefsetMembers(String referencedComponentId);
+    <T> T getRefsetMembers(String referencedComponentId, String referenceSetId, String limit, Class<T> type);
 
 }

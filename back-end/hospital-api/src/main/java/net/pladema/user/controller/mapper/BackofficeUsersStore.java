@@ -8,7 +8,7 @@ import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.user.controller.dto.BackofficeUserDto;
 import net.pladema.user.controller.mappers.UserDtoMapper;

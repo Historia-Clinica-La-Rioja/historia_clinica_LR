@@ -6,7 +6,7 @@ import net.pladema.emergencycare.controller.mapper.EmergencyCareDischargeMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeAdministrativeDischargeService;
 import net.pladema.emergencycare.service.domain.AdministrativeDischargeBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

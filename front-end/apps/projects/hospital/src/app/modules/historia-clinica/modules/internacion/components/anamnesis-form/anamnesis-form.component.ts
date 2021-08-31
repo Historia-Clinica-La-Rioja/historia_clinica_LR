@@ -171,23 +171,15 @@ export class AnamnesisFormComponent implements OnInit {
 			console.warn('form valid');
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			this.apiErrors = [];
-			if (this.anamnesisId) {
-				this.anamnesisService.updateAnamnesis(this.anamnesisId, anamnesis, this.internmentEpisodeId)
-					.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
-							const url = `internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-							this.router.navigate([url]);
-					});
-			} else {
-				this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
-				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
-						this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
-						this.goToInternmentSummary();
-					}, responseErrors => {
-						this.apiErrorsProcess(responseErrors);
-						this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
-					});
-				}
-			} else {
+			this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
+			.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
+					this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
+					this.goToInternmentSummary();
+				}, responseErrors => {
+					this.apiErrorsProcess(responseErrors);
+					this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
+				});
+		} else {
 			this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
 		}
 	}

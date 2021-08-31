@@ -3,11 +3,13 @@ import {SnomedDto} from '@api-rest/api-model';
 import {ColumnConfig} from '@presentation/components/document-section/document-section.component';
 import {SEMANTICS_CONFIG} from '../constants/snomed-semantics';
 import {SnomedSemanticSearch, SnomedService} from './snomed.service';
-import {pushTo} from '@core/utils/array.utils';
-import {DateFormat, momentFormat, newMoment} from '@core/utils/moment.utils';
+import {pushTo, removeFrom} from '@core/utils/array.utils';
+import {newMoment} from '@core/utils/moment.utils';
 import {Moment} from 'moment';
 import {hasError} from '@core/utils/form.utils';
 import {Observable, Subject} from 'rxjs';
+import {TableColumnConfig} from '@presentation/components/document-section-table/document-section-table.component';
+import {CellTemplates} from '@presentation/components/cell-templates/cell-templates.component';
 
 export interface Problema {
 	snomed: SnomedDto;
@@ -23,7 +25,7 @@ export class ProblemasService {
 
 	private readonly form: FormGroup;
 	private snomedConcept: SnomedDto;
-	private readonly columns: ColumnConfig[];
+	private readonly columns: TableColumnConfig[];
 	private data: Problema[];
 	private errorSource = new Subject<string>();
 	private _error$: Observable<string>;
@@ -45,34 +47,30 @@ export class ProblemasService {
 			{
 				def: 'diagnosticos',
 				header: 'ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA',
-				text: (row) => row.snomed.pt
+				template: CellTemplates.SNOMED_PROBLEM,
 			},
 			{
 				def: 'severidad',
 				header: 'ambulatoria.paciente.nueva-consulta.problemas.SEVERIDAD',
-				text: (row) => this.getDisplayName(row.codigoSeveridad)
+				text: (row) => this.getSeverityDisplayName(row.codigoSeveridad),
+				template: CellTemplates.PROBLEM_SEVERITY
 			},
 			{
-				def: 'cronico',
-				header: 'ambulatoria.paciente.nueva-consulta.problemas.CRONICO',
-				text: (row) => row.cronico ? 'Si' : 'No'
+				def: 'fecha',
+				header: 'ambulatoria.paciente.nueva-consulta.problemas.FECHA',
+				template: CellTemplates.START_AND_END_DATE
 			},
 			{
-				def: 'fecha_inicio',
-				header: 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO',
-				text: (row) => momentFormat(row.fechaInicio, DateFormat.VIEW_DATE)
+				def: 'eliminar',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.remove(rowIndex)
 			},
-			{
-				def: 'fecha_fin',
-				header: 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN',
-				text: (row) => row.fechaFin ? momentFormat(row.fechaFin, DateFormat.VIEW_DATE) : ''
-			}
 		];
 
 		this.data = [];
 	}
 
-	private getDisplayName(codigoSeveridad) {
+	getSeverityDisplayName(codigoSeveridad) {
 		return (codigoSeveridad && this.severityTypes) ?
 			this.severityTypes.find(severityType => severityType.code === codigoSeveridad)?.display
 			: '';
@@ -151,6 +149,10 @@ export class ProblemasService {
 
 	getProblemas(): Problema[] {
 		return this.data;
+	}
+
+	remove(index: number): void {
+		this.data = removeFrom<Problema>(this.data, index);
 	}
 
 	// custom validation was required because the [max] input of MatDatepicker

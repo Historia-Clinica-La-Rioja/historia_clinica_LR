@@ -3,9 +3,9 @@ package net.pladema.clinichistory.hospitalization.controller.documents.evolution
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.EvolutionNoteDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.ResponseEvolutionNoteDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto.evolutiondiagnosis.EvolutionDiagnosisDto;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.AnthropometricDataMapper;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.SnomedMapper;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.mapper.VitalSignMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.VitalSignMapper;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;

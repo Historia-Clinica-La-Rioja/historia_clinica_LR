@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { VitalSign } from '@presentation/components/signo-vital-current/signo-vital.component';
@@ -9,7 +9,7 @@ import { VitalSign } from '@presentation/components/signo-vital-current/signo-vi
 	styleUrls: ['./triage-details.component.scss']
 })
 
-export class TriageDetailsComponent implements OnInit, OnChanges {
+export class TriageDetailsComponent implements OnChanges {
 
 	@Input() triage: Triage;
 	@Input() emergencyCareType: EmergencyCareTypes;
@@ -24,9 +24,6 @@ export class TriageDetailsComponent implements OnInit, OnChanges {
 
 	ngOnChanges() {
 		this.vitalSigns = this.includesVitalSigns() ? this.mapToVitalSign(this.triage) : undefined;
-	}
-
-	ngOnInit(): void {
 	}
 
 	private includesVitalSigns(): boolean {

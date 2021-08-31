@@ -1,32 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
-import static net.pladema.sgx.security.utils.UserInfo.getCurrentAuditor;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.counting;
-
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.NotNull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
@@ -41,7 +15,28 @@ import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
-import net.pladema.sgx.exceptions.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
+import static ar.lamansys.sgx.shared.security.UserInfo.getCurrentAuditor;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -103,7 +98,7 @@ public class DiaryServiceImpl implements DiaryService {
 		Diary diaryToDelete = diaryRepository.findById(diaryId)
 				.orElseThrow(() -> new EntityNotFoundException("diary.invalid.id"));
 		diaryToDelete.setDeleted(Boolean.TRUE);
-		diaryToDelete.setDeleteBy(getCurrentAuditor());
+		diaryToDelete.setDeletedBy(getCurrentAuditor());
 		diaryToDelete.setDeletedOn(LocalDateTime.now());
 		diaryToDelete.setActive(false);
 		diaryRepository.save(diaryToDelete);

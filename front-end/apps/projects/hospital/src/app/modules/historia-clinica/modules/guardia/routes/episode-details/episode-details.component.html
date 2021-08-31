@@ -12,13 +12,13 @@
 				(click)="cancelAttention()">
 				{{ 'guardia.episode.CANCEL_ATTENTION' | translate | uppercase }}
 			</button>
-			<div *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
+			<div *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
 				<button *ngIf="episodeState === STATES.EN_ATENCION" id="alta-medica" mat-raised-button color="primary"
 					(click)="goToMedicalDischarge()">
 					{{ 'guardia.episode.medical_discharge.TITLE' | translate | uppercase }}
 				</button>
 			</div>
-			<div *hasRole="['ADMINISTRATIVO']">
+			<div *appHasRole="['ADMINISTRATIVO']">
 				<button *ngIf="episodeState === STATES.CON_ALTA_MEDICA" id="administrative-discharge" mat-raised-button
 					color="primary" (click)="goToAdministrativeDischarge()">
 					{{ 'guardia.episode.administrative_discharge.TITLE' | translate | uppercase }}

@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.service.documents.validation;
 
-import net.pladema.clinichistory.documents.service.Document;
-import net.pladema.clinichistory.documents.service.ips.domain.AnthropometricDataBo;
-import net.pladema.clinichistory.documents.service.ips.domain.ClinicalObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +20,9 @@ public class AnthropometricDataValidator {
     private static final Double MIN_WEIGHT_VALUE = 0.0;
     private static final Double MAX_WEIGHT_VALUE = 1000.0;
 
-    public boolean isValid(Document document){
-        LOG.debug("Input parameters -> document {}", document);
-        AnthropometricDataBo anthropometricDataBo = document.getAnthropometricData();
+    public boolean isValid(IDocumentBo IDocumentBo){
+        LOG.debug("Input parameters -> document {}", IDocumentBo);
+        AnthropometricDataBo anthropometricDataBo = IDocumentBo.getAnthropometricData();
         if (anthropometricDataBo == null)
             return true;
 

@@ -1,0 +1,942 @@
+databaseChangeLog:
+    - logicalFilePath: incrementales-v1_18
+
+    - changeSet:
+          id: user-key-createTable
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: user_key
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: user_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: key
+                              type: varchar(255)
+
+    - changeSet:
+          id: user-key-primary_key
+          author:  etrapani
+          changes:
+              -  addPrimaryKey:
+                     columnNames:  user_id, key
+                     constraintName:  pk_user_key
+                     tableName: user_key
+
+    - changeSet:
+          id: user-key-unique_constraint
+          author: etrapani
+          changes:
+              - addUniqueConstraint:
+                    columnNames: key
+                    constraintName: UQ_key
+                    tableName: user_key
+
+    - changeSet:
+        id: add-delete_by-permission
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: permission
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-role
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: role
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-role_permission
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: role_permission
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-user_role
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: user_role
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-delete_by-users
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: users
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+    
+    - changeSet:
+        id: add-delete_by-user_password
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: user_password
+            columns:
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+
+    - changeSet:
+        id: add-deleteable-columns-document
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: document
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-allergy_intolerance
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: allergy_intolerance
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+
+    - changeSet:
+        id: add-deleteable-columns-diagnostic_report
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: diagnostic_report
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-health_condition
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: health_condition
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-inmunization
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: inmunization
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-medication_statement
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: medication_statement
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-procedures
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: procedures
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-internment_episode
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: internment_episode
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+
+    - changeSet:
+        id: add-deleteable-columns-patient_discharge
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: patient_discharge
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-outpatient_consultation
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: outpatient_consultation
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-medical_request
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: medical_request
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-medication_request
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: medication_request
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-diagnostic_report_file
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: diagnostic_report_file
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-service_request
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: service_request
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-emergency_care_episode
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: emergency_care_episode
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+    - changeSet:
+        id: add-deleteable-columns-historic_emergency_episode
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: historic_emergency_episode
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-triage
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: triage
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-historic_patient_bed_relocation
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: historic_patient_bed_relocation
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+
+    - changeSet:
+        id: add-deleteable-columns-appointment
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: appointment
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+                
+
+    - changeSet:
+        id: add-deleteable-columns-historic_appointment_state
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: historic_appointment_state
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+        
+    - changeSet:
+        id: add-deleteable-columns-document_file
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: document_file
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-observation_lab
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: observation_lab
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME
+
+    - changeSet:
+        id: add-deleteable-columns-observation_vital_sign
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: observation_vital_sign
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME           
+
+    - changeSet:
+        id: add-auditable-columns-healthcare_professional_specialty
+        author: mscooper
+        changes:
+        - addColumn:
+            tableName: healthcare_professional_specialty
+            columns:
+                - column:
+                    constraints:
+                        nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: INTEGER
+                - column:
+                    name: deleted_on
+                    type: DATETIME     
+                - column:
+                    name: created_on
+                    type: datetime
+                - column:
+                    name: updated_on
+                    type: datetime
+                - column:
+                    name: created_by
+                    type: int
+                    constraints:
+                        nullable: true
+                - column:
+                    name: updated_by
+                    type: int
+                    constraints:
+                        nullable: true            
+
+    - changeSet:
+        id: body_part-table
+        author: mscooper
+        changes:
+            - createTable:
+                tableName: body_part
+                columns:
+                - column:
+                    name: sctid
+                    type: varchar(20)
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_tooth
+                        nullable: false
+                - column:
+                    name: body_part_type_id
+                    type: varchar(20)
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: tooth-table
+        author: mscooper
+        changes:
+            - createTable:
+                tableName: tooth
+                columns:
+                - column:
+                    name: sctid
+                    type: varchar(20)
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_body_part
+                        nullable: false
+                - column:
+                    name: code
+                    type: tinyint
+                    constraints:
+                        nullable: false
+                - column:
+                    name: quadrant_code
+                    type: tinyint
+                    constraints:
+                        nullable: false
+                - column:
+                    name: posterior
+                    type: boolean
+                    constraints:
+                        nullable: false
+
+            - addForeignKeyConstraint:
+                baseColumnNames: sctid
+                baseTableName: tooth
+                constraintName: FK_tooth_body_part
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: sctid
+                referencedTableName: body_part
+                validate: true
+
+    - changeSet:
+        id: body_part-table
+        author: mscooper
+        changes:
+            - createTable:
+                tableName: body_part
+                columns:
+                - column:
+                    name: sctid
+                    type: varchar(20)
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_tooth
+                        nullable: false
+                - column:
+                    name: body_part_type_id
+                    type: varchar(20)
+                    constraints:
+                        nullable: false
+
+    - changeSet:
+        id: tooth-table
+        author: mscooper
+        changes:
+            - createTable:
+                tableName: tooth
+                columns:
+                - column:
+                    name: sctid
+                    type: varchar(20)
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_body_part
+                        nullable: false
+                - column:
+                    name: code
+                    type: tinyint
+                    constraints:
+                        nullable: false
+                - column:
+                    name: quadrant_code
+                    type: tinyint
+                    constraints:
+                        nullable: false
+                - column:
+                    name: posterior
+                    type: boolean
+                    constraints:
+                        nullable: false
+
+            - addForeignKeyConstraint:
+                baseColumnNames: sctid
+                baseTableName: tooth
+                constraintName: FK_tooth_body_part
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: sctid
+                referencedTableName: body_part
+                validate: true
+
+    - changeSet:
+        id: populate-snomed-table-with-teeth
+        author: mscooper
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245566003','tercer molar superior derecho permanente','245566003','tercer molar superior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('87704003','tercer molar superior izquierdo permanente','87704003','tercer molar superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('38994002','tercer molar inferior derecho permanente','38994002','tercer molar inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('74344005','tercer molar inferior izquierdo permanente','74344005','tercer molar inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('45578004','segundo molar superior izquierdo permanente','45578004','segundo molar superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245603001','segundo molar inferior izquierdo permanente','245603001','segundo molar inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245591003','segundo molar inferior derecho permanente','245591003','segundo molar inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245567007','segundo molar superior derecho permanente','245567007','segundo molar superior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('27855007','segundo molar  superior derecho temporario','27855007','segundo molar  superior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245622005','segundo molar superior izquierdo temporario','245622005','segundo molar superior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('49330006','segundo molar inferior izquierdo temporario','49330006','segundo molar inferior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('61868007','segundo molar  inferior derecho temporario','61868007','segundo molar  inferior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('45592005','primer molar inferior derecho permanente','45592005','primer molar inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245568002','primer molar superior derecho permanente','245568002','primer molar superior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245604007','primer molar inferior izquierdo permanente','245604007','primer molar inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245579007','primer molar superior izquierdo permanente','245579007','primer molar superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('45234009','primer molar  superior izquierdo temporario','45234009','primer molar  superior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('17505006','primer molar superior derecho temporario','17505006','primer molar superior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('58646007','primer molar inferior derecho temporario','58646007','primer molar inferior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('38896004','primer molar inferior izquierdo temporario','38896004','primer molar inferior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245607000','primer premolar inferior izquierdo permanente','245607000','primer premolar inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245583007','primer premolar superior izquierdo permanente','245583007','primer premolar superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245571005','primer premolar superior derecho permanente','245571005','primer premolar superior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245596008','primer premolar inferior derecho permanente','245596008','primer premolar inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('36492000','segundo premolar superior derecho','36492000','segundo premolar superior derecho');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('23226009','segundo premolar superior izquierdo permanente','23226009','segundo premolar superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('8873007','segundo premolar inferior derecho permanente','8873007','segundo premolar inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('24573005','segundo premolar inferior izquierdo permanente','24573005','segundo premolar inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245572003','canino superior derecho permanente','245572003','canino superior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245584001','canino superior izquierdo permanente','245584001','canino superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245597004','canino inferior derecho permanente','245597004','canino inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('860782001','canino inferior izquierdo permanente','860782001','canino inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('73937000','canino  superior izquierdo temporario','73937000','canino  superior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('30618001','canino superior derecho temporario','30618001','canino superior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('6062009','canino inferior derecho temporario','6062009','canino inferior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('43281008','canino inferior izquierdo temporario','43281008','canino inferior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245575001','incisivo central superior derecho permanente','245575001','incisivo central superior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245598009','incisivo central inferior derecho permanente','245598009','incisivo central inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245587008','incisivo central superior izquierdo permanente','245587008','incisivo central superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245611006','incisivo central inferior izquierdo permanente','245611006','incisivo central inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('88824007','incisivo central superior derecho temporario','88824007','incisivo central superior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('51678005','incisivo  central superior izquierdo temporario','51678005','incisivo  central superior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('67834006','incisivo central inferior derecho permanente','67834006','incisivo central inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('89552004','incisivo central inferior izquierdo temporario','89552004','incisivo central inferior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245574002','incisivo lateral superior derecho permanente','245574002','incisivo lateral superior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245586004','incisivo lateral superior izquierdo permanente','245586004','incisivo lateral superior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245610007','incisivo lateral inferior izquierdo permanente','245610007','incisivo lateral inferior izquierdo permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245599001','incisivo lateral inferior derecho permanente','245599001','incisivo lateral inferior derecho permanente');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245618000','incisivo lateral superior derecho temporario','245618000','incisivo lateral superior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245625007','incisivo lateral superior izquierdo temporario','245625007','incisivo lateral superior izquierdo temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245633008','incisivo  lateral inferior derecho temporario','245633008','incisivo  lateral inferior derecho temporario');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245640009','incisivo lateral inferior izquierdo temporario','245640009','incisivo lateral inferior izquierdo temporario');
+
+    - changeSet:
+        id: populate-body_part-table-with-teeth
+        author: mscooper
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245566003','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('87704003','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('38994002','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('74344005','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('45578004','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245603001','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245591003','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245567007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('27855007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245622005','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('49330006','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('61868007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('45592005','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245568002','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245604007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245579007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('45234009','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('17505006','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('58646007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('38896004','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245607000','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245583007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245571005','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245596008','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('36492000','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('23226009','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('8873007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('24573005','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245572003','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245584001','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245597004','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('860782001','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('73937000','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('30618001','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('6062009','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('43281008','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245575001','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245598009','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245587008','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245611006','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('88824007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('51678005','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('67834006','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('89552004','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245574002','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245586004','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245610007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245599001','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245618000','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245625007','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245633008','38199008');
+                    INSERT INTO body_part(sctid,body_part_type_id) VALUES('245640009','38199008');
+
+
+    - changeSet:
+        id: populate-tooth-table
+        author: mscooper
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245566003',8,1,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('87704003',8,2,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('38994002',8,4,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('74344005',8,3,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('45578004',7,2,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245603001',7,3,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245591003',7,4,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245567007',7,1,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('27855007',5,5,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245622005',5,6,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('49330006',5,7,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('61868007',5,8,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('45592005',6,4,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245568002',6,1,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245604007',6,3,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245579007',6,2,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('45234009',4,6,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('17505006',4,5,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('58646007',4,8,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('38896004',4,7,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245607000',4,3,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245583007',4,2,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245571005',4,1,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245596008',4,4,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('36492000',5,1,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('23226009',5,2,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('8873007',5,4,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('24573005',5,3,true);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245572003',3,1,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245584001',3,2,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245597004',3,4,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('860782001',3,3,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('73937000',3,6,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('30618001',3,5,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('6062009',3,8,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('43281008',3,7,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245575001',1,1,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245598009',1,4,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245587008',1,2,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245611006',1,3,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('88824007',1,5,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('51678005',1,6,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('67834006',1,3,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('89552004',1,7,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245574002',2,1,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245586004',2,2,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245610007',2,3,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245599001',2,4,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245618000',2,5,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245625007',2,6,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245633008',2,8,false);
+                    INSERT INTO tooth(sctid,code,quadrant_code,posterior) VALUES('245640009',2,7,false);
+
+
+    - changeSet:
+          id: add-auditable-columns-healthcare_professional
+          author: mscooper
+          changes:
+              - addColumn:
+                    tableName: healthcare_professional
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: deleted
+                              type: BOOLEAN
+                              defaultValue: ${boolean.false}
+                        - column:
+                              name: deleted_by
+                              type: INTEGER
+                        - column:
+                              name: deleted_on
+                              type: DATETIME
+                        - column:
+                              name: created_on
+                              type: datetime
+                        - column:
+                              name: updated_on
+                              type: datetime
+                        - column:
+                              name: created_by
+                              type: int
+                              constraints:
+                                  nullable: true
+                        - column:
+                              name: updated_by
+                              type: int
+                              constraints:
+                                  nullable: true

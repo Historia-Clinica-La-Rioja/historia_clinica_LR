@@ -8,8 +8,8 @@
 								(openInNew)="openDialogNewStudy()">
 
 	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
-		<button mat-icon-button color="primary" (click)="hideFilters(); clear()">
-			<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
+		<button mat-button class="filter-button" color="primary" (click)="hideFilters(); clear()">
+			<mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
 		</button>
 	</div>
 
@@ -93,22 +93,22 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-						<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
 							<button mat-menu-item (click)="downloadOrder(diagnosticReport.serviceRequestId)">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
 							</button>
 						</ng-container>
-						<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 							<button mat-menu-item (click)="completeStudy(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
 							</button>
 						</ng-container>
-						<ng-container *hasRole="['ESPECIALISTA_MEDICO']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
 							<button mat-menu-item (click)="deleteStudy(diagnosticReport.id)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
 							</button>
 						</ng-container>
-						<ng-container *hasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
 							<button mat-menu-item (click)="showStudyResults(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.FINAL.id">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SHOW_RESULTS'"></span>
 							</button>

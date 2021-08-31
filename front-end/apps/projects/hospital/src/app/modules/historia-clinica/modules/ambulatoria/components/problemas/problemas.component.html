@@ -36,7 +36,7 @@
 									</div>
 
 									<div fxFlex="5%">
-										<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+										<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
 											<mat-icon>more_vert</mat-icon>
 										</button>
 										<mat-menu #menu="matMenu">
@@ -81,7 +81,7 @@
 									</div>
 
 									<div fxFlex="5%">
-										<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
+										<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" mat-icon-button [matMenuTriggerFor]="menu" >
 											<mat-icon>more_vert</mat-icon>
 										</button>
 										<mat-menu #menu="matMenu">
@@ -153,7 +153,7 @@
 											{{ problem.entryDate }} - {{ problem.dischargeDate? problem.dischargeDate : "actualmente internado" }}
 										</span>
 									</div>
-									<button *hasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']" mat-icon-button [matMenuTriggerFor]="menu" >
+									<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']" mat-icon-button [matMenuTriggerFor]="menu" >
 										<mat-icon>more_vert</mat-icon>
 									</button>
 									<mat-menu #menu="matMenu">

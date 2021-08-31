@@ -1,7 +1,26 @@
 @import "../../../../../assets/styles/mixins.scss";
 
+.patient-name-title {
+	font-size: 18px;
+}
+
+.header-content {
+	@media screen and (min-width: 959px) {
+		width: 380px;
+	}
+
+	button mat-icon {
+		margin-top: -4px;
+		vertical-align: top;
+	}
+}
+
 .appointment-information {
 	height: auto;
+}
+
+.appointment-details {
+	margin: 10px 0;
 }
 
 .assigned-appointment {
@@ -18,6 +37,11 @@
 
 mat-icon {
 	font-size: 20px;
+}
+
+a {
+	text-decoration: none;
+	color: #2687C5;
 }
 
 .appointment-actions {
@@ -67,6 +91,7 @@ mat-form-field {
 
 section {
 	margin: 0;
+	margin-top: 5px;
 }
 
 
@@ -88,8 +113,8 @@ section {
 
 .coverage-text {
 	display: inline-block;
-    max-width: 130px;
+    max-width: 285px;
     white-space: nowrap;
-    overflow: hidden !important;
+    overflow: hidden;
     text-overflow: ellipsis;
 }

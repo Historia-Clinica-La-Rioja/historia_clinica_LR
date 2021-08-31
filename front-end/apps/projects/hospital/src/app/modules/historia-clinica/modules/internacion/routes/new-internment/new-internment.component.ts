@@ -13,7 +13,7 @@ import { PersonService } from '@api-rest/services/person.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
 	CompletePatientDto,
 	HealthcareProfessionalDto,
@@ -60,7 +60,7 @@ export class NewInternmentComponent implements OnInit {
 		private readonly el: ElementRef,
 		private readonly router: Router,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly healthcareProfessionalService: HealthcareProfessionalService,
+		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
 		private readonly patientService: PatientService,
 		private readonly personService: PersonService,
 		private readonly mapperService: MapperService,

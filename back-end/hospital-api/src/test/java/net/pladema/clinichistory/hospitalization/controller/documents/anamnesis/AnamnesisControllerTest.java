@@ -1,41 +1,39 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.AuthorMapper;
 import net.pladema.UnitController;
-import net.pladema.clinichistory.documents.repository.DocumentRepository;
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
-import net.pladema.clinichistory.hospitalization.controller.generalstate.constraint.validator.EffectiveVitalSignTimeValidator;
-import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleDoctorMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
-import net.pladema.featureflags.service.FeatureFlagsService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AnamnesisController.class)
+@Ignore
 public class AnamnesisControllerTest extends UnitController {
 
 	private static final Long DOCUMENT_ID = 1L;
@@ -50,9 +48,6 @@ public class AnamnesisControllerTest extends UnitController {
 	private CreateAnamnesisService createAnamnesisService;
 
 	@MockBean
-	private UpdateAnamnesisService updateAnamnesisService;
-
-	@MockBean
 	private AnamnesisService anamnesisService;
 
 	@MockBean
@@ -62,7 +57,7 @@ public class AnamnesisControllerTest extends UnitController {
 	private PatientExternalService patientExternalService;
 
 	@MockBean
-	private ResponsibleDoctorMapper responsibleDoctorMapper;
+	private AuthorMapper responsibleDoctorMapper;
 
 	@MockBean
 	private InternmentEpisodeRepository internmentEpisodeRepository;
@@ -78,9 +73,6 @@ public class AnamnesisControllerTest extends UnitController {
 
 	@MockBean
 	private SGHNotNullValidator sghNotNullValidator;
-
-	@MockBean
-	private FeatureFlagsService featureFlagsService;
 
 	@Before
 	public void setup() {
@@ -101,57 +93,14 @@ public class AnamnesisControllerTest extends UnitController {
 				.andExpect(status().isOk());
 	}
 
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisSuccess() throws Exception {
-		configContextDocumentValid();
-		configContextPatientExist();
-		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
-		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockRequestBodyBasic()))
-				.andExpect(status().isNotImplemented());
-	}
-
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisFailed() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT))
-				.andExpect(status().isBadRequest());
-	}
-
-
-	@Test
-	@WithMockUser
-	public void test_updateAnamnesisWithoutPatient() throws Exception {
-		configContextAnamnesisValid();
-		configContextDocumentValid();
-		when(effectiveVitalSignTimeValidator.isValid(any(), any())).thenReturn(true);
-		when(sghNotNullValidator.isValid(any(), any())).thenReturn(true);
-		this.mockMvc.perform(MockMvcRequestBuilders.put(PUT)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mockRequestBodyBasic()))
-				.andExpect(status().isNotImplemented());
-	}
-
 	private void configContextInternmentValid(){
 		when(internmentEpisodeRepository.existsById(anyInt())).thenReturn(true);
 		when(institutionRepository.existsById(anyInt())).thenReturn(true);
 	}
 
-	private void configContextAnamnesisValid(){
-		configContextInternmentValid();
-		when(internmentEpisodeService.haveAnamnesis(any())).thenReturn(false);
-	}
-
 	private void configContextDocumentValid(){
 		configContextInternmentValid();
 		when(documentRepository.findById(DOCUMENT_ID)).thenReturn(mockDocument());
-	}
-
-	private void configContextPatientExist(){
-		when(internmentEpisodeService.getPatient(any())).thenReturn(Optional.of(1));
 	}
 
 	private static Optional<Document> mockDocument() {
@@ -162,77 +111,5 @@ public class AnamnesisControllerTest extends UnitController {
 		return Optional.of(mock);
 	}
 
-	private String mockRequestBodyBasic() {
-		return "{" +
-					"\"confirmed\":false," +
-					"\"notes\":null," +
-					"\"mainDiagnosis\":{" +
-						"\"id\":null," +
-						"\"statusId\":null," +
-						"\"snomed\":{" +
-							"\"id\":\"43275000\"," +
-							"\"pt\":\"Preferred Term\"," +
-							"\"parentId\":null," +
-							"\"parentFsn\":null" +
-						"}," +
-						"\"verificationId\":null" +
-					"}," +
-					"\"diagnosis\":[]," +
-					"\"personalHistories\":[]," +
-					"\"familyHistories\":[]," +
-					"\"medications\":[]," +
-					"\"immunizations\":[]," +
-					"\"allergies\":[]," +
-					"\"anthropometricData\":null," +
-					"\"vitalSigns\":null" +
-				"}";
-	}
-
-	private String mockEmptyAnamnesisDto() {
-		return "{" +
-					"\"confirmed\":false," +
-					"\"notes\":null," +
-					"\"mainDiagnosis\":null," +
-					"\"diagnosis\":[]," +
-					"\"personalHistories\":[]," +
-					"\"familyHistories\":[]," +
-					"\"medications\":[]," +
-					"\"immunizations\":[]," +
-					"\"allergies\":[]," +
-					"\"anthropometricData\":null," +
-					"\"vitalSigns\":null" +
-				"}";
-	}
-
-	private String mockAnamnesisDtoWithDiagnosis() {
-		return "{" +
-					"\"confirmed\":false," +
-					"\"notes\":null," +
-					"\"mainDiagnosis\":{" +
-						"\"id\":null," +
-						"\"statusId\":null," +
-						"\"snomed\":{\"id\":\"43275000\",\"pt\":\"Preferred Term\",\"parentId\":null,\"parentFsn\":null}," +
-						"\"verificationId\":null" +
-					"}," +
-					"\"diagnosis\":[" +
-						"{" +
-							"\"id\":null," +
-							"\"statusId\":null," +
-							"\"snomed\":{" +
-								"\"id\":\"43275000\",\"pt\":\"Preferred Term\",\"parentId\":null,\"parentFsn\":null" +
-							"}," +
-							"\"verificationId\":null," +
-							"\"presumptive\":false" +
-						"}" +
-					"]," +
-					"\"personalHistories\":[]," +
-					"\"familyHistories\":[]," +
-					"\"medications\":[]," +
-					"\"immunizations\":[]," +
-					"\"allergies\":[]," +
-					"\"anthropometricData\":null," +
-					"\"vitalSigns\":null" +
-				"}";
-	}
 
 }

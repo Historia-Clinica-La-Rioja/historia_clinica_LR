@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.repository;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DiaryRepository extends JpaRepository<Diary, Integer> {
+public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, Integer> {
 
 
     @Transactional(readOnly = true)

@@ -2,7 +2,7 @@ package net.pladema.person.controller.dto;
 
 
 import lombok.ToString;
-import net.pladema.sgx.masterdata.dto.AbstractMasterdataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.AbstractMasterdataDto;
 
 @ToString
 public class GenderDto extends AbstractMasterdataDto<Short> {/**

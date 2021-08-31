@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
-import net.pladema.clinichistory.documents.service.DocumentFactory;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.CreateServiceRequestServiceImpl;
 import org.junit.Before;
@@ -40,8 +40,9 @@ public class CreateServiceRequestServiceImplTest {
     @Test
     public void execute_withNullInstitution(){
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
+        serviceRequestBo.setInstitutionId(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                createServiceRequestServiceImpl.execute(null,serviceRequestBo)
+                createServiceRequestServiceImpl.execute(serviceRequestBo)
         );
         String expectedMessage = "El identificador de la institución es obligatorio";
         String actualMessage = exception.getMessage();
@@ -53,7 +54,7 @@ public class CreateServiceRequestServiceImplTest {
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setPatientInfo(new PatientInfoBo());
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                createServiceRequestServiceImpl.execute(1,serviceRequestBo)
+                createServiceRequestServiceImpl.execute(serviceRequestBo)
         );
         String expectedMessage = "El paciente es obligatorio";
         String actualMessage = exception.getMessage();
@@ -65,7 +66,7 @@ public class CreateServiceRequestServiceImplTest {
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setDoctorId(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                createServiceRequestServiceImpl.execute(1,serviceRequestBo)
+                createServiceRequestServiceImpl.execute(serviceRequestBo)
         );
         String expectedMessage = "El identificador del médico es obligatorio";
         String actualMessage = exception.getMessage();
@@ -77,7 +78,7 @@ public class CreateServiceRequestServiceImplTest {
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setDiagnosticReports(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                createServiceRequestServiceImpl.execute(1,serviceRequestBo)
+                createServiceRequestServiceImpl.execute(serviceRequestBo)
         );
         String expectedMessage = "La orden tiene que tener asociada al menos un estudio";
         String actualMessage = exception.getMessage();
@@ -93,7 +94,7 @@ public class CreateServiceRequestServiceImplTest {
         diagnosticReportBoWithoutHealthConditionId.setSnomed(getValidSnomed());
         serviceRequestBo.setDiagnosticReports(List.of(diagnosticReportBoWithoutHealthConditionId));
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                createServiceRequestServiceImpl.execute(1, serviceRequestBo)
+                createServiceRequestServiceImpl.execute(serviceRequestBo)
         );
         String expectedMessage = "El estudio tiene que estar asociado a un problema";
         String actualMessage = exception.getMessage();
@@ -104,7 +105,7 @@ public class CreateServiceRequestServiceImplTest {
     public void execute_withDuplicatedStudy() {
         ServiceRequestBo serviceRequestBo = getServiceRequestBoWithDuplicatedStudy();
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                createServiceRequestServiceImpl.execute(1, serviceRequestBo)
+                createServiceRequestServiceImpl.execute(serviceRequestBo)
         );
         String expectedMessage = "La orden no puede contener más de un estudio con el mismo problema y el mismo concepto snomed";
         String actualMessage = exception.getMessage();
@@ -114,7 +115,7 @@ public class CreateServiceRequestServiceImplTest {
     @Test
     public void execute_success() {
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
-        Integer medicationRequestId = createServiceRequestServiceImpl.execute(1,serviceRequestBo);
+        Integer medicationRequestId = createServiceRequestServiceImpl.execute(serviceRequestBo);
         Assertions.assertEquals(1, serviceRequestRepository.count());
         Assertions.assertNotNull(medicationRequestId);
     }
@@ -141,6 +142,7 @@ public class CreateServiceRequestServiceImplTest {
         serviceRequestBo.setPatientInfo(new PatientInfoBo(1, (short) 1, (short) 1));
         serviceRequestBo.setCategoryId(ServiceRequestCategory.LABORATORY_PROCEDURE);
         serviceRequestBo.setEncounterId(1);
+        serviceRequestBo.setInstitutionId(1);
         serviceRequestBo.setDoctorId(1);
         serviceRequestBo.setNoteId(1L);
         serviceRequestBo.setMedicalCoverageId(4);
@@ -173,6 +175,7 @@ public class CreateServiceRequestServiceImplTest {
         serviceRequestBo.setPatientInfo(new PatientInfoBo(1, (short) 1, (short) 1));
         serviceRequestBo.setCategoryId(ServiceRequestCategory.LABORATORY_PROCEDURE);
         serviceRequestBo.setEncounterId(1);
+        serviceRequestBo.setInstitutionId(1);
         serviceRequestBo.setDoctorId(1);
         serviceRequestBo.setNoteId(1L);
         serviceRequestBo.setMedicalCoverageId(4);

@@ -3,7 +3,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.constra
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

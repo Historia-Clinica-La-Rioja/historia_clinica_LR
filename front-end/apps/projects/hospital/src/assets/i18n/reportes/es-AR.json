@@ -1,0 +1,24 @@
+{
+	"reportes": {
+		"TITLE": "Reportes",
+		"form": {
+			"TITLE": "Generar nuevo reporte",
+			"REPORT_TYPE": "Tipo de reporte",
+			"START_DATE": "Fecha de inicio",
+			"START_DATE_PLACEHOLDER": "Seleccionar fecha de inicio",
+			"END_DATE": "Fecha de fin",
+			"END_DATE_PLACEHOLDER": "Seleccionar fecha de fin",
+			"SPECIALTY": "Especialidad",
+			"SPECIALTY_PLACEHOLDER": "Especialidades",
+			"PROFESSIONAL": "Profesional",
+			"PROFESSIONAL_PLACEHOLDER": "Profesionales",
+			"SUBMIT": "Generar reporte",
+			"REQUIRED_FIELD": "Obligatorio *",
+			"errors": {
+				"FECHA_INICIO_POSTERIOR_FECHA_FIN": "La fecha de inicio debe ser menor o igual a la fecha de fin",
+				"FECHA_INICIO_POSTERIOR_HOY": "La fecha de inicio debe ser anterior o igual a la fecha actual",
+				"FECHA_FIN_MIN": "La fecha de fin debe ser posterior o igual a la fecha de inicio"
+			}
+		}
+	}
+}

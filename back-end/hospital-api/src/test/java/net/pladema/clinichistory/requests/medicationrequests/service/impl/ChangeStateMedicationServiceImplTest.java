@@ -1,16 +1,16 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import net.pladema.UnitRepository;
-import net.pladema.clinichistory.documents.core.ips.MedicationCalculateStatus;
-import net.pladema.clinichistory.documents.repository.ips.DosageRepository;
-import net.pladema.clinichistory.documents.repository.ips.MedicationStatementRepository;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.MedicationStatementStatus;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.CreateMedicationService;
-import net.pladema.clinichistory.documents.service.ips.SnomedService;
-import net.pladema.clinichistory.mocks.MedicationTestMocks;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.mocks.MedicationTestMocks;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -49,7 +49,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     private NoteService noteService;
 
     @MockBean
-    private CreateMedicationService createMedicationService;
+    private LoadMedications loadMedications;
 
     @MockBean
     private DateTimeProvider dateTimeProvider;
@@ -58,7 +58,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     public void setUp() {
         MedicationCalculateStatus medicationCalculateStatus = new MedicationCalculateStatus(dateTimeProvider);
         changeStateMedicationService = new ChangeStateMedicationServiceImpl(medicationStatementRepository,
-                createMedicationService, dosageRepository, documentService, snomedService, medicationCalculateStatus, noteService, dateTimeProvider);
+                loadMedications, dosageRepository, documentService, snomedService, medicationCalculateStatus, noteService, dateTimeProvider);
     }
 
     @Test

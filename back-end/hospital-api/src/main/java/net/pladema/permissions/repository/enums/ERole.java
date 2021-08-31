@@ -1,6 +1,6 @@
 package net.pladema.permissions.repository.enums;
 
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 public enum ERole {
 
@@ -12,7 +12,9 @@ public enum ERole {
     ENFERMERO_ADULTO_MAYOR(6, "ENFERMERO_ADULTO_MAYOR", ERoleLevel.LEVEL1),
     ENFERMERO(7,"ENFERMERO",ERoleLevel.LEVEL1),
 	ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE(8,"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE", ERoleLevel.LEVEL1),
-    ADMINISTRADOR_AGENDA(9,"ADMINISTRADOR_AGENDA", ERoleLevel.LEVEL1);
+    ADMINISTRADOR_AGENDA(9,"ADMINISTRADOR_AGENDA", ERoleLevel.LEVEL1),
+    API_CONSUMER(10, "API_CONSUMER", ERoleLevel.LEVEL0),
+    ;
 
     private Short id;
     private String value;

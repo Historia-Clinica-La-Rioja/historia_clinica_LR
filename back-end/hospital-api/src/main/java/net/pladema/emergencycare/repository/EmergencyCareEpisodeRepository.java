@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.repository;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EmergencyCareEpisodeRepository extends JpaRepository<EmergencyCareEpisode, Integer> {
+public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARepository<EmergencyCareEpisode, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, dso.description, tc) "+

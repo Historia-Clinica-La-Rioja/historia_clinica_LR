@@ -5,6 +5,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
+import {DateFormat, momentFormat} from "@core/utils/moment.utils";
+import {DownloadService} from "@core/services/download.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class AppointmentsService {
 	constructor(
 		private http: HttpClient,
 		private contextService: ContextService,
+		private downloadService: DownloadService
 	) { }
 
 
@@ -76,6 +79,16 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, {params : queryParams});
 	}
 
+	updateMedicalCoverage(appointmentId: number, patientMedicalCoverageId: number ): Observable<Boolean> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = (patientMedicalCoverageId) ? queryParams.append('patientMedicalCoverageId', JSON.stringify(patientMedicalCoverageId)) : queryParams;
+
+		const url = `${environment.apiBase}/institutions/
+					${this.contextService.institutionId}/medicalConsultations/appointments/
+					${appointmentId}/update-medical-coverage`;
+		return this.http.put<boolean>(url, {}, {params : queryParams});
+	}
+
 	getDailyAmounts(diaryId: number): Observable<AppointmentDailyAmountDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
@@ -86,6 +99,27 @@ export class AppointmentsService {
 			{
 				params: queryParams
 			});
+	}
+
+	getAnexoPdf(appointmentData: any): Observable<any> {
+		const pdfName = "AnexoII";
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/anexo`;
+		return this.getAppointmentReport(url, appointmentData, pdfName);
+	}
+
+	getFormPdf(appointmentData: any): Observable<any> {
+		const pdfName = "FormularioV";
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/formv`;
+		return this.getAppointmentReport(url, appointmentData, pdfName);
+	}
+
+	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
+		const appointmentId: number = appointmentData.appointmentId;
+		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
+		const appointmentDate : string = momentFormat(appointmentData.date, DateFormat.FILE_DATE);
+		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
+
+		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId});
 	}
 
 }

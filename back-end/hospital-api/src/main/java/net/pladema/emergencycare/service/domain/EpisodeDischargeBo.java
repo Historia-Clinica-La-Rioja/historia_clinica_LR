@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.service.domain;
 
 import lombok.Getter;
-import net.pladema.clinichistory.documents.service.ips.domain.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
 

@@ -247,7 +247,8 @@
 			},
 			"messages": {
 				"ERROR": "Error al guardar documento de evaluación clínica de diagnósticos",
-				"SUCCESS": "El documento con la evaluación clínica de diagnósticos se guardó exitosamente"
+				"SUCCESS": "El documento con la evaluación clínica de diagnósticos se guardó exitosamente",
+				"WITHOUT_NEW_DIAGNOSIS": "No se puede guardar sin seleccionar un nuevo diagnóstico"
 			}
 		},
 		"change-main-diagnosis": {
@@ -261,6 +262,7 @@
 				"panels": {
 					"new-diagnosis": {
 						"TITLE": "Nuevo diagnóstico",
+						"SUBTITLE": "*Recomendado",
 						"DESCRIPTION": "Elegir un diagnóstico nuevo"
 					},
 					"promote-diagnosis": {

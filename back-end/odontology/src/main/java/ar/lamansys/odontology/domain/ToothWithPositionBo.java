@@ -15,7 +15,7 @@ public class ToothWithPositionBo extends ToothBo {
     private boolean left;
     private boolean top;
 
-    public ToothWithPositionBo(OdontologySnomedBo snomed, Integer toothCode, Integer quadrantCode, boolean isPosterior, boolean left, boolean top) {
+    public ToothWithPositionBo(OdontologySnomedBo snomed, Short toothCode, Short quadrantCode, boolean isPosterior, boolean left, boolean top) {
         super(snomed, toothCode, quadrantCode, isPosterior);
         this.left = left;
         this.top = top;

@@ -5,7 +5,6 @@ BASEDIR=$(dirname "$0")"/.."
 cd "$BASEDIR"
 
 cd front-end/apps
-
 yarn install
 npm run lint
 npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
@@ -20,7 +19,6 @@ cd -
 
 
 cd back-end
-#mvn -B -e dependency:go-offline -B
 mvn clean package
 cd -
 

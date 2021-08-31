@@ -1,15 +1,14 @@
 package net.pladema.clinichistory.hospitalization.service.anamnesis.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.Document;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.domain.*;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ProcedureBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
-import net.pladema.sgx.exceptions.SelfValidating;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -18,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements Document {
+public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumentBo {
 
     private Long id;
 
@@ -28,8 +27,7 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements Document
 
     private Integer encounterId;
 
-    @NotNull(message = "{value.mandatory}")
-    private boolean confirmed;
+    private Integer institutionId;
 
     private DocumentObservationsBo notes;
 
@@ -60,6 +58,13 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements Document
 
     @Valid
     private VitalSignBo vitalSigns;
+
+    @Override
+    public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return patientId;
+    }
 
     public List<DiagnosisBo> getAlternativeDiagnosis() {
         return diagnosis;

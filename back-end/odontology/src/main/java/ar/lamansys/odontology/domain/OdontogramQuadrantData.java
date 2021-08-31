@@ -12,56 +12,56 @@ public class OdontogramQuadrantData {
         return List.of(
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554970081", "Cuadrante superior derecho dentición permanente"),
-                        1,
+                        (short)1,
                         false,
                         true,
                         true
                 ),
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554810031", "Cuadrante superior izquierdo dentición permanente"),
-                        2,
+                        (short)2,
                         true,
                         true,
                         true
                 ),
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554800021", "Cuadrante inferior izquierdo dentición permanente"),
-                        3,
+                        (short)3,
                         true,
                         false,
                         true
                 ),
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554950001", "Cuadrante inferior derecho dentición permanente"),
-                        4,
+                        (short)4,
                         false,
                         false,
                         true
                 ),
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554970082", "Cuadrante superior derecho dentición temporaria"),
-                        5,
+                        (short)5,
                         false,
                         true,
                         false
                 ),
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554800022", "Cuadrante superior izquierdo dentición temporaria"),
-                        6,
+                        (short)6,
                         true,
                         true,
                         false
                 ),
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554810032", "Cuadrante inferior izquierdo dentición temporaria"),
-                        7,
+                        (short)7,
                         true,
                         false,
                         false
                 ),
                 new OdontogramQuadrantBo(
                         new OdontologySnomedBo("-2554950002", "Cuadrante inferior derecho dentición temporaria"),
-                        8,
+                        (short)8,
                         false,
                         false,
                         false
@@ -69,8 +69,8 @@ public class OdontogramQuadrantData {
         );
     }
 
-    public static Map<Integer, OdontogramQuadrantBo> getAsMap() {
-        HashMap<Integer, OdontogramQuadrantBo> quadrantMap = new HashMap<>();
+    public static Map<Short, OdontogramQuadrantBo> getAsMap() {
+        HashMap<Short, OdontogramQuadrantBo> quadrantMap = new HashMap<>();
         getQuadrants().forEach(q -> quadrantMap.put(q.getCode(), q));
         return quadrantMap;
     }

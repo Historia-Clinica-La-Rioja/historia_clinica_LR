@@ -18,4 +18,6 @@ public class BackofficeHealthcareProfessionalCompleteDto {
     private Integer professionalSpecialtyId;
 
     private Integer clinicalSpecialtyId;
+
+    private boolean deleted = false;
 }

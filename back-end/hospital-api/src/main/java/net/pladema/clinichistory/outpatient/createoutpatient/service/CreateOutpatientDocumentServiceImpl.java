@@ -1,19 +1,14 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
-import net.pladema.clinichistory.documents.repository.entity.Document;
-import net.pladema.clinichistory.documents.service.DocumentService;
-import net.pladema.clinichistory.documents.service.NoteService;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentStatus;
-import net.pladema.clinichistory.documents.repository.ips.masterdata.entity.DocumentType;
-import net.pladema.clinichistory.documents.service.domain.PatientInfoBo;
-import net.pladema.clinichistory.documents.service.ips.*;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
-import net.pladema.clinichistory.outpatient.repository.domain.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import javax.validation.ConstraintViolationException;
+import java.util.Collections;
+
 
 @Service
 public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocumentService {
@@ -22,73 +17,35 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final DocumentService documentService;
+    private final DocumentFactory documentFactory;
 
     private final UpdateOutpatientConsultationService updateOutpatientConsultationService;
 
-    private final HealthConditionService healthConditionService;
-
-    private final ProceduresService proceduresService;
-
-    private final AllergyService allergyService;
-
-    private final CreateMedicationService createMedicationService;
-
-    private final ImmunizationService immunizationService;
-
-    private final ClinicalObservationService clinicalObservationService;
-
-    private final NoteService noteService;
-
-    public CreateOutpatientDocumentServiceImpl(DocumentService documentService,
-                                               UpdateOutpatientConsultationService updateOutpatientConsultationService,
-                                               HealthConditionService healthConditionService,
-                                               ProceduresService proceduresService, AllergyService allergyService,
-                                               CreateMedicationService createMedicationService,
-                                               ImmunizationService immunizationService, ClinicalObservationService clinicalObservationService,
-                                               NoteService noteService) {
-        this.documentService = documentService;
+    public CreateOutpatientDocumentServiceImpl(DocumentFactory documentFactory,
+                                              UpdateOutpatientConsultationService updateOutpatientConsultationService) {
+        this.documentFactory = documentFactory;
         this.updateOutpatientConsultationService = updateOutpatientConsultationService;
-        this.healthConditionService = healthConditionService;
-        this.proceduresService = proceduresService;
-        this.allergyService = allergyService;
-        this.createMedicationService = createMedicationService;
-        this.immunizationService = immunizationService;
-        this.clinicalObservationService = clinicalObservationService;
-        this.noteService = noteService;
     }
 
 
     @Override
-    public OutpatientDocumentBo create(Integer outpatientId, PatientInfoBo patientInfo, OutpatientDocumentBo outpatient) {
-        LOG.debug("Input parameters -> outpatientId {}, patientInfo {}, outpatient {}", outpatientId, patientInfo, outpatient);
-        Document doc = new Document(outpatientId, DocumentStatus.FINAL, DocumentType.OUTPATIENT, SourceType.OUTPATIENT);
-        loadNotes(doc, Optional.ofNullable(outpatient.getEvolutionNote()));
-        doc = documentService.save(doc);
+    public OutpatientDocumentBo execute(OutpatientDocumentBo outpatient) {
+        LOG.debug("Input parameters -> outpatient {}", outpatient);
 
-        outpatient.setProblems(healthConditionService.loadProblems(patientInfo, doc.getId(), outpatient.getProblems()));
-        outpatient.setProcedures(proceduresService.loadProcedures(patientInfo, doc.getId(), outpatient.getProcedures()));
-        outpatient.setFamilyHistories(healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), outpatient.getFamilyHistories()));
-        outpatient.setMedications(createMedicationService.execute(patientInfo, doc.getId(), outpatient.getMedications()));
-        outpatient.setAllergies(allergyService.loadAllergies(patientInfo, doc.getId(), outpatient.getAllergies()));
-        outpatient.setImmunizations(immunizationService.loadImmunization(patientInfo, doc.getId(), outpatient.getImmunizations()));
+        assertContextValid(outpatient);
+        outpatient.setId(documentFactory.run(outpatient, true));
 
-        outpatient.setVitalSigns(clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(outpatient.getVitalSigns())));
-        outpatient.setAnthropometricData(clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(outpatient.getAnthropometricData())));
-
-        updateOutpatientConsultationService.updateOutpatientDocId(outpatientId, doc.getId());
-        outpatient.setId(doc.getId());
+        updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());
         LOG.debug(OUTPUT, outpatient);
+
         return outpatient;
     }
 
-    private Document loadNotes(Document document, Optional<String> optNotes) {
-        LOG.debug("Input parameters -> document {}, notes {}", document, optNotes);
-        optNotes.ifPresent(notes ->
-            document.setOtherNoteId(noteService.createNote(optNotes.get()))
-        );
-        LOG.debug(OUTPUT, document);
-        return document;
+    private void assertContextValid(OutpatientDocumentBo outpatient) {
+        if (outpatient.getInstitutionId() == null)
+            throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
+        if (outpatient.getEncounterId() == null)
+            throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
     }
 }
 

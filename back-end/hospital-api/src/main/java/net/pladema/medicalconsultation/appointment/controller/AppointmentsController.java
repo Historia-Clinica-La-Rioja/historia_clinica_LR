@@ -18,7 +18,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDai
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,6 +182,19 @@ public class AppointmentsController {
             @RequestParam(required = false) @Size(max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
         LOG.debug("Input parameters -> institutionId {},appointmentId {}, phoneNumber {}", institutionId, appointmentId, phoneNumber);
         boolean result = appointmentService.updatePhoneNumber(appointmentId,phoneNumber,UserInfo.getCurrentAuditor());
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PutMapping(value = "/{appointmentId}/update-medical-coverage")
+    public ResponseEntity<Boolean> updateMedicalCoverage(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "appointmentId") Integer appointmentId,
+            @RequestParam(name = "patientMedicalCoverageId") Integer patientMedicalCoverageId) {
+        LOG.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}",
+                institutionId, appointmentId, patientMedicalCoverageId);
+        boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

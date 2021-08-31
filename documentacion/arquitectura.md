@@ -16,14 +16,14 @@ Este componente esta dividido en dos aplicaciones: webapp y backoffice. Cada una
 
 ### Webapp
 
-Esta implementada usando [Angular 9](https://angular.io/) y sus componentes gráficos usan [Angular Material] (https://material.angular.io/).
+Esta implementada usando [Angular 11](https://angular.io/) y sus componentes gráficos usan [Angular Material] (https://material.angular.io/).
 
 Este componente gestiona toda la funcionalidad más compleja del sistema (por ejemplo: internaciones, consultas ambulatorias, turnos, busqueda de paciente, historia electronica). Tiene comunicación con el servidor de Snomed para la búsqueda de los terminos clinicos utilizados en la aplicación y con la API de backend.
 
 
 ### Backoffice
 
-Esta implementada usando [React](https://es.reactjs.org/) sobre el framework [React-admin] (https://marmelab.com/react-admin/). 
+Aplicación desarralada en [React](https://es.reactjs.org/) utilizando el framework [React-admin] (https://marmelab.com/react-admin/). 
 
 En este caso el componente busca simplicidad y rapidez para el desarrollo de funcionalidades básicas como: creación de usuarios, instituciones, profesionales, etc. 
 
@@ -49,16 +49,14 @@ La base de datos elegída es [PostgreSQL 11](https://www.postgresql.org/about/ne
 
 El sistema manteniene comunicación con dos servicios externos para obtener distintos tipos de información.
 
-### Snomed
+### Snowstorm
 
-Es el servicio que provee todos la terminología medíca utilizada por la aplicación.
+Servicio que provee la terminología médica estándar (SNOMED) utilizada por la aplicación.
+
+### Renaper
+
+Servicio que permite buscar la información personal de cada paciente del sistema.
 
 ### Federar
 
-Es el servicio que nos permite buscar la información personal de cada paciente del sistema.
-
-
-
-
-
-
+Servicio que permite registrar pacientes en el bus de interoperabilidad.

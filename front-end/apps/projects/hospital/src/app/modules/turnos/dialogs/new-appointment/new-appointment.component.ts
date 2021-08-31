@@ -50,6 +50,7 @@ export class NewAppointmentComponent implements OnInit {
 	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
 	private readonly routePrefix;
 	isFormSubmitted = false;
+	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -173,6 +174,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	submit(): void {
+		this.isSubmitButtonDisabled = true;
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
@@ -187,6 +189,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
 			this.dialogRef.close(true);
 		}, error => {
+			this.isSubmitButtonDisabled = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
 	}

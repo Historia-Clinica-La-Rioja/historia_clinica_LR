@@ -28,7 +28,7 @@ public class ConditionVo {
     }
 
     public ConditionVo(Integer id, String sctidCode, String sctidTerm, String clinicalStatus,
-                       String verificationStatus, Date startDate, Date createdOn){
+                       String verificationStatus, Date startDate, String severity, Date createdOn){
         this();
         setId(Cast.toString(id));
         setSctidCode(sctidCode);
@@ -36,6 +36,7 @@ public class ConditionVo {
         setClinicalStatus(clinicalStatus);
         setVerificationStatus(verificationStatus);
         setStartDate(FhirDateMapper.toLocalDate(startDate));
+        setSeverityCode(severity);
         setCreatedOn(FhirDateMapper.toLocalDateTime(createdOn));
     }
 

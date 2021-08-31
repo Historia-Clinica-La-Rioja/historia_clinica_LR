@@ -72,17 +72,17 @@
 					}
 				},
 				"medicaciones": {
-					"CONCEPT_LABEL": "Medicación",
+					"CONCEPT_LABEL": "Medicación habitual",
 					"DESCRIPCION": "Descripción",
 					"NOMBRE_MEDICACION": "Nombre de medicación",
 					"OBSERVACIONES": "Observaciones",
 					"SUSPENDIDO": "Suspendido",
 					"TABLE_TITLE": "Medicaciones registradas",
-					"TITLE": "Medicación"
+					"TITLE": "Medicación habitual"
 				},
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
-					"SUCCESS": "El documento de nueva consulta ambulatoria se guardó exitosamente"
+					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente"
 				},
 				"problemas": {
 					"buttons": {
@@ -98,9 +98,13 @@
 					},
 					"FECHA_FIN": "Fecha fin",
 					"FECHA_INICIO": "Fecha inicio",
+					"FECHA": "Fecha",
 					"PROBLEMA": "Problema",
 					"TABLE_TITLE": "Problemas registrados",
-					"TITLE": "Problema"
+					"TITLE": "Problema",
+					"ACLARACION_CRONICO": "(Crónico)",
+					"FECHA_INICIO_PREFIJO": "Desde",
+					"FECHA_FIN_PREFIJO": "Hasta"
 				},
 				"procedimientos": {
 					"buttons": {

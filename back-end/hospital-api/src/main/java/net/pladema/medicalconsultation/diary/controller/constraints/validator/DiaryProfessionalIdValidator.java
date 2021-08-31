@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.sgx.security.utils.UserInfo;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
 import org.slf4j.Logger;

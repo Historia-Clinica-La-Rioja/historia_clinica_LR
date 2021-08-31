@@ -5,7 +5,7 @@ import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

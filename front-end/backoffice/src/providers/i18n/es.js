@@ -206,7 +206,8 @@ export default {
                 enable: 'Habilitado',
                 lastLogin: 'Último ingreso',
                 institutionId: 'Institución',
-                roleId: 'Rol'
+                roleId: 'Rol',
+                email: "E-mail"
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso'
@@ -216,6 +217,7 @@ export default {
                 newReset: 'Generar link',
             },
             createRelated: 'Crear Usuario',
+            noEmail: "Sin información",
         },
         internmentepisodes: {
             name: 'Episodio de internación |||| Episodios de internación',

@@ -2,7 +2,7 @@ package net.pladema.patient.portal.service;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.patient.repository.PatientRepository;
-import net.pladema.sgx.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

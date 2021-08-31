@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
-import static net.pladema.sgx.featureflags.AppFeature.RESPONSIBLE_DOCTOR_REQUIRED;
+import static ar.lamansys.sgx.shared.featureflags.AppFeature.RESPONSIBLE_DOCTOR_REQUIRED;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

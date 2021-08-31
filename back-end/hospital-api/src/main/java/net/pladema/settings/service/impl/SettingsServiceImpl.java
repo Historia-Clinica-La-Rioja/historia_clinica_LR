@@ -1,9 +1,8 @@
 package net.pladema.settings.service.impl;
 
-import net.pladema.clinichistory.requests.servicerequests.controller.ServiceRequestController;
 import net.pladema.settings.service.SettingsService;
 import net.pladema.assets.service.domain.Assets;
-import net.pladema.sgx.files.FileService;
+import ar.lamansys.sgx.shared.files.FileService;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,18 +15,19 @@ import java.util.Optional;
 public class SettingsServiceImpl implements SettingsService {
 
     private static final String PATH = "/assets/custom/";
-    private static final Logger LOG = LoggerFactory.getLogger(ServiceRequestController.class);
+    private final Logger logger;
 
     private final FileService fileService;
 
     public SettingsServiceImpl(FileService fileService) {
         super();
         this.fileService = fileService;
+        this.logger = LoggerFactory.getLogger(getClass());
     }
 
     @Override
     public boolean uploadFile(Optional<Assets> newAsset, MultipartFile file) throws MethodNotSupportedException {
-        LOG.debug("Input parameters ->  {} fileName {}", newAsset);
+        logger.debug("Input parameters ->  {} fileName {}", newAsset);
 
         if (newAsset.isPresent()) {
             String partialPath = PATH.concat(newAsset.get().getNameFile());
@@ -40,7 +40,7 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public boolean deleteFile(Optional<Assets> newAsset) throws MethodNotSupportedException {
-        LOG.debug("Input parameters ->  {} fileName {}", newAsset);
+        logger.debug("Input parameters ->  {} fileName {}", newAsset);
 
         if (newAsset.isPresent()) {
             String partialPath = PATH.concat(newAsset.get().getNameFile());

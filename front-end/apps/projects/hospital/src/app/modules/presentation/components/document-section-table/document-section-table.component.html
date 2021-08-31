@@ -1,0 +1,27 @@
+<!--This app-cell-templates component is here to load all the templates (which are in the cell-templates.component.html file).
+ 	Although the component is being used as a service, it has to be present here as it returns TemplateRefs (references to templates)
+ 	and those are loaded only if app-cell-templates is here -->
+<app-cell-templates #cellTemplates [id]="cellTemplates"></app-cell-templates>
+
+<section *ngIf="columns && data.length > 0">
+	<h3 class="mat-body-2" [translate]="tableTitle"></h3>
+
+	<table mat-table [dataSource]="data" class="secondary">
+
+		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
+			<th *matHeaderCellDef>{{ column.header | translate }}</th>
+			<td mat-cell *matCellDef="let element; index as i">
+				<ng-container [ngTemplateOutlet]="getTemplate(column.template)"
+							  [ngTemplateOutletContext]="{
+								  data: element,
+								  text: (column.text) ? column.text(element) : null,
+								  action: column.action,
+								  rowIndex: i}">
+				</ng-container>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+</section>

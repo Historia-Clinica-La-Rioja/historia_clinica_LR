@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "Settings", tags = { "Settings" })
 public class SettingsController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SettingsController.class);
+    private final Logger logger;
 
     private static String getFileName(HttpServletRequest request) {
         String requestURL = request.getRequestURL().toString();
@@ -32,6 +32,7 @@ public class SettingsController {
     public SettingsController(SettingsService settingsService, AssetsExternalService assetsExternalService) {
         this.settingsService = settingsService;
         this.assetsExternalService = assetsExternalService;
+        logger = LoggerFactory.getLogger(getClass());
     }
 
     @PostMapping(value = "/assets/{fileName:.+}/**", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -40,7 +41,7 @@ public class SettingsController {
     public boolean uploadFile(HttpServletRequest request,
                               @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
         //TODO: en service crear paquete exception con un exception handler en el controller o en otro paquete dentro de la capa de controler. Parserar a apierrordto
-        LOG.debug("Input parameters ->  {} fileName {}",
+        logger.debug("Input parameters ->  {} fileName {}",
                 request.getRequestURL().toString());
 
         return settingsService.uploadFile(this.assetsExternalService.findByName(getFileName(request)), file);
@@ -50,7 +51,7 @@ public class SettingsController {
     @PreAuthorize("hasAnyAuthority('ROOT')")
     @Transactional
     public boolean deleteFile(HttpServletRequest request) throws MethodNotSupportedException {
-        LOG.debug("Input parameters ->  {} fileName {}",
+        logger.debug("Input parameters ->  {} fileName {}",
                 request.getRequestURL().toString());
 
         return settingsService.deleteFile(this.assetsExternalService.findByName(getFileName(request)));

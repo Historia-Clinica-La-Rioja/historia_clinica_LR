@@ -50,9 +50,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>ar.lamansys.sgh</groupId>
+			<artifactId>clinic-history</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-data</artifactId>
 		</dependency>
 
 		<dependency>
@@ -136,17 +147,6 @@
 			<version>2.6</version>
 		</dependency>
 
-		<dependency>
-			<groupId>net.sf.cssbox</groupId>
-			<artifactId>pdf2dom</artifactId>
-			<version>1.6</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>flying-saucer-pdf</artifactId>
-			<version>9.1.20</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
@@ -154,31 +154,7 @@
 			<version>3.0.1.RELEASE</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.togglz</groupId>
-			<artifactId>togglz-spring-boot-starter</artifactId>
-			<version>2.6.1.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.togglz</groupId>
-			<artifactId>togglz-spring-security</artifactId>
-			<version>2.6.1.Final</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.togglz</groupId>
-			<artifactId>togglz-junit</artifactId>
-			<version>2.6.1.Final</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.togglz</groupId>
-			<artifactId>togglz-testing</artifactId>
-			<version>2.6.1.Final</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

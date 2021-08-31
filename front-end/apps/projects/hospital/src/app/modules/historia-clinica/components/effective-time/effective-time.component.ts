@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { EffectiveTimeDialogComponent } from '../../dialogs/effective-time-dialo
 	templateUrl: './effective-time.component.html',
 	styleUrls: ['./effective-time.component.scss']
 })
-export class EffectiveTimeComponent implements OnInit {
+export class EffectiveTimeComponent {
 
 	@Input() effectiveTime: Moment = newMoment();
 
@@ -18,8 +18,6 @@ export class EffectiveTimeComponent implements OnInit {
 	constructor(
 		public dialog: MatDialog,
 	) { }
-
-	ngOnInit(): void {}
 
 	openDialog() {
 		const dialogRef = this.dialog.open(EffectiveTimeDialogComponent, {

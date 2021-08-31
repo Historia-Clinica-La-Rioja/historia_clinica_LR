@@ -28,8 +28,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-@Transactional
 public class DailyAppointmentRepositoryTest extends UnitRepository {
 
     @Autowired
