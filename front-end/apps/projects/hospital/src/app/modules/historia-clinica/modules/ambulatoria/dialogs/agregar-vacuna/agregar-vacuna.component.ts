@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { ImmunizationDto, SnomedDto, SnomedResponseDto, VaccineConditionsDto, Va
 import { VaccineService } from '@api-rest/services/vaccine.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { scrollIntoError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -53,6 +54,7 @@ export class AgregarVacunaComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		public dialogRef: MatDialogRef<AgregarVacunaComponent>,
 		private readonly translate: TranslateService,
+		private readonly el: ElementRef
 	) { }
 
 	ngAfterContentInit(): void {
@@ -228,6 +230,8 @@ export class AgregarVacunaComponent implements OnInit {
 			this.tryToSubmit = true;
 			if (this.billableForm.controls.snomed.invalid)
 				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			else
+				scrollIntoError(this.billableForm, this.el);
 		}
 	}
 
@@ -261,6 +265,8 @@ export class AgregarVacunaComponent implements OnInit {
 			this.tryToSubmitPrevious = true;
 			if (this.previousForm.controls.snomed.invalid)
 				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			else
+				scrollIntoError(this.previousForm, this.el);
 		}
 	}
 
