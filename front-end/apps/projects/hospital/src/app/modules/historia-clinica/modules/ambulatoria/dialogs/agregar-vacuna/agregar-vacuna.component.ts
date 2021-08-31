@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, Input, OnInit } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ import { scrollIntoError } from '@core/utils/form.utils';
 	templateUrl: './agregar-vacuna.component.html',
 	styleUrls: ['./agregar-vacuna.component.scss']
 })
-export class AgregarVacunaComponent implements OnInit {
+export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 	readonly HALF_COLUMN_WIDTH: number = 47.5;
 	readonly DISABLED_LABEL_COLOR: string = 'rgba(0, 0, 0, 0.38)';
