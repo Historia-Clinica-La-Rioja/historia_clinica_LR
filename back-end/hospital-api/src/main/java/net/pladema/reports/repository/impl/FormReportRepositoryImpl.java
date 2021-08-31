@@ -58,8 +58,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "           LEFT JOIN Person_extended AS pex ON (pe.id = pex.person_id) " +
                 "           LEFT JOIN Address AS ad ON (pex.address_id = ad.id) " +
                 "           LEFT JOIN City AS ci ON (ad.city_id = ci.id) " +
-                "           JOIN Identification_type AS it ON (it.id = pe.identification_type_id) " +
-                "           JOIN Gender AS g ON (pe.gender_id = g.id) " +
+                "           LEFT JOIN Identification_type AS it ON (it.id = pe.identification_type_id) " +
+                "           LEFT JOIN Gender AS g ON (pe.gender_id = g.id) " +
                 "           LEFT JOIN ( " +
                 "               SELECT oc.id, STRING_AGG(sno.pt, '| ') as descriptions " +
                 "               FROM outpatient_consultation oc " +
