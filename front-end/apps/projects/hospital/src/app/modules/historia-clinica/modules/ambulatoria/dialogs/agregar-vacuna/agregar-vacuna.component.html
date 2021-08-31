@@ -93,8 +93,8 @@
 								</mat-select>
 							</mat-form-field>
 
-							<div fxLayout="row" fxLayoutAlign="space-between">
-								<div fxLayout="column" fxFlex="47.5">
+							<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between">
+								<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 									<mat-label>
 										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' |
 										translate
@@ -113,7 +113,7 @@
 										</mat-error>
 									</mat-form-field>
 								</div>
-								<div fxLayout="column" fxFlex="47.5">
+								<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 									<mat-label>
 										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' |
 										translate }}
@@ -241,8 +241,8 @@
 							</mat-select>
 						</mat-form-field>
 
-						<div fxLayout="row" fxLayoutAlign="space-between">
-							<div fxLayout="column" fxFlex="47.5">
+						<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between">
+							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 								<mat-label>
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' | translate
 									}}
@@ -259,7 +259,7 @@
 									</mat-error>
 								</mat-form-field>
 							</div>
-							<div fxLayout="column" fxFlex="47.5">
+							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 								<mat-label>
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
 								</mat-label>
