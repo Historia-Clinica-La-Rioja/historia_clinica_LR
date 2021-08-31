@@ -24,9 +24,11 @@
                 </mat-form-field>
             </div>
 
+            <mat-divider></mat-divider>
+
             <div class="aplied-vaccines">
 
-                <div *ngFor="let vaccine of this.appliedVaccines; index as i" class="separation">
+                <div *ngFor="let vaccine of this.appliedVaccines; index as i">
 
                     <div fxLayout="row" fxLayoutAlign="space-between center">
                         <div class="mat-h5 margin-bottom-0 color-primary">
@@ -55,17 +57,19 @@
                     </div>
 
                     <div class="mat-h5 margin-top" fxLayout="row" fxLayoutAlign="space-between center">
-                        <div class="dose" *ngIf="vaccine.dose">
-                            <span>{{ vaccine.dose?.description | uppercase }}</span>
+                        <div>
+                            <div class="dose" *ngIf="vaccine.dose">
+                                <span>{{ vaccine.dose?.description | uppercase }}</span>
+                            </div>
                         </div>
-                        <div> {{ this.displayDate(vaccine.administrationDate) }}</div>
+                        <div class="date"> {{ this.displayDate(vaccine.administrationDate) }}</div>
                     </div>
+
+                    <mat-divider></mat-divider>
 
                 </div>
 
             </div>
-
-            <mat-divider></mat-divider>
 
             <div fxLayout="row" class="separation">
                 <button mat-button type="button" (click)="addVaccine()" color="primary" tabindex="-1" id="add-button">
