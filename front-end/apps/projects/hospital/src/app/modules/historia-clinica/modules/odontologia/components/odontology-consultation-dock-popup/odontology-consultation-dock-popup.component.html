@@ -320,6 +320,26 @@
 			</app-new-document-section>
 		</div>
 
+		<div id="diagnostics">
+			<section *ngIf="diagnosticsNewConsultationService.columns && diagnosticsNewConsultationService.tableData">
+				<h2 class="mat-h2">Hallazgos sobre tejidos dentales</h2>
+
+				<table mat-table [dataSource]="diagnosticsNewConsultationService.tableData" class="secondary">
+
+					<ng-container *ngFor="let column of diagnosticsNewConsultationService.columns"
+						[matColumnDef]="column.def">
+						<th *matHeaderCellDef>{{ column.header}}</th>
+						<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="diagnosticsNewConsultationService.displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: diagnosticsNewConsultationService.displayedColumns;"></tr>
+				</table>
+				<app-no-data class="secondary" *ngIf="diagnosticsNewConsultationService.tableData.length === 0">
+				</app-no-data>
+			</section>
+		</div>
+
 		<div id="evolution">
 			<app-document-section sectionTitle="Evolución">
 				<ng-container concept-form>

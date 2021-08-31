@@ -14,11 +14,19 @@ import { newMoment } from "@core/utils/moment.utils";
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ProblemasService } from '@historia-clinica/services/problemas-nueva-consulta.service';
+import { ActionsNewConsultationService } from '../../services/actions-new-consultation.service';
+import { OdontogramService } from '../../services/odontogram.service';
+import { ConceptsFacadeService } from '../../services/concepts-facade.service';
+import { SurfacesNamesFacadeService } from '../../services/surfaces-names-facade.service';
+import { ActionType } from '../../services/actions.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
 	templateUrl: './odontology-consultation-dock-popup.component.html',
-	styleUrls: ['./odontology-consultation-dock-popup.component.scss']
+	styleUrls: ['./odontology-consultation-dock-popup.component.scss'],
+	providers: [
+		ConceptsFacadeService
+	]
 })
 export class OdontologyConsultationDockPopupComponent implements OnInit {
 
@@ -32,6 +40,9 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	form: FormGroup;
 	clinicalSpecialties: ClinicalSpecialtyDto[];
 
+	diagnosticsNewConsultationService: ActionsNewConsultationService;
+
+
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	errors: string[] = [];
 	public hasError = hasError;
@@ -44,12 +55,16 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly internmentMasterDataService: InternacionMasterDataService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly odontogramService: OdontogramService,
+		private readonly conceptsFacadeService: ConceptsFacadeService,
+		private readonly surfacesNamesFacadeService: SurfacesNamesFacadeService
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
 		this.medicationsNewConsultationService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
 		this.personalHistoriesNewConsultationService = new PersonalHistoriesNewConsultationService(formBuilder, this.snomedService);
 		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService);
+		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
 	}
 
 	ngOnInit(): void {

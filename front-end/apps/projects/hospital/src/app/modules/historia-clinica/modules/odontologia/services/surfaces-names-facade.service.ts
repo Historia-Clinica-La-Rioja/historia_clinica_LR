@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ToothSurfacesDto } from '@api-rest/api-model';
 import { BehaviorSubject } from 'rxjs';
 import { OdontogramService as OdontogramRestService } from '../api-rest/odontogram.service';
+import { getSurfaceShortName } from '../utils/surfaces';
 
 @Injectable({
 	providedIn: 'root'
@@ -33,6 +34,14 @@ export class SurfacesNamesFacadeService {
 
 	}
 
+	getToothSurfaceShortName(toothSctid: string, surfaceId: string): string {
+		if (!surfaceId) {
+			return undefined;
+		}
+		const a = this.surfacesNames.find(t => t.toothSctid === toothSctid);
+		const surfaceSctid: string = a.names[surfaceId].sctid;
+		return getSurfaceShortName(surfaceSctid);
+	}
 }
 
 export interface ToothSurfaceNames {
