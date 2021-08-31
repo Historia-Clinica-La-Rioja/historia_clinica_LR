@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface ImmunizationSyncRepository extends AbstractSyncRepository<NomivacImmunizationSync, Integer>, JpaRepository<NomivacImmunizationSync, Integer> {
+public interface NomivacImmunizationSyncRepository extends AbstractSyncRepository<NomivacImmunizationSync, Integer>, JpaRepository<NomivacImmunizationSync, Integer> {
     @Transactional
     @Modifying
     @Query("UPDATE NomivacImmunizationSync instsync"

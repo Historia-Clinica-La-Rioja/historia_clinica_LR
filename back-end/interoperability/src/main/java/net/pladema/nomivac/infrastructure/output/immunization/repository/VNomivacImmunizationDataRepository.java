@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ImmunizationDataRepository extends AbstractDataRepository<VNomivacImmunizationData, Integer>, JpaRepository<VNomivacImmunizationData, Integer> {
+public interface VNomivacImmunizationDataRepository extends AbstractDataRepository<VNomivacImmunizationData, Integer>, JpaRepository<VNomivacImmunizationData, Integer> {
 
     @Query("SELECT idata FROM VNomivacImmunizationData idata" +
     		" LEFT JOIN NomivacImmunizationSync isync ON idata.id = isync.id" +

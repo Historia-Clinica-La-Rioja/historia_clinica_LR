@@ -7,8 +7,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institution.Instituti
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.scheduling.infrastructure.output.service.SyncErrorService;
-import net.pladema.nomivac.infrastructure.output.immunization.repository.ImmunizationDataRepository;
-import net.pladema.nomivac.infrastructure.output.immunization.repository.ImmunizationSyncRepository;
+import net.pladema.nomivac.infrastructure.output.immunization.repository.VNomivacImmunizationDataRepository;
+import net.pladema.nomivac.infrastructure.output.immunization.repository.NomivacImmunizationSyncRepository;
 import net.pladema.nomivac.infrastructure.output.immunization.repository.NomivacImmunizationSync;
 import net.pladema.nomivac.infrastructure.output.immunization.repository.VNomivacImmunizationData;
 import org.junit.Ignore;
@@ -48,10 +48,10 @@ class SynchronizeImmunizationE2ETest {
     private SharedInstitutionPort sharedInstitutionPort;
 
     @Autowired
-    private ImmunizationDataRepository immunizationDataRepository;
+    private VNomivacImmunizationDataRepository VNomivacImmunizationDataRepository;
 
     @Autowired
-    private ImmunizationSyncRepository immunizationSyncRepository;
+    private NomivacImmunizationSyncRepository nomivacImmunizationSyncRepository;
 
     @MockBean
     private SyncErrorService<NomivacImmunizationSync, Integer> syncErrorService;
@@ -61,8 +61,7 @@ class SynchronizeImmunizationE2ETest {
         when(dateTimeProvider.nowDateTime()).thenReturn(LocalDateTime.of(2020,12,10,10,10));
         when(sharedPatientPort.getBasicDataFromPatient(any())).thenReturn(new BasicPatientDto(14, mockValidPerson(), (short)1));
         when(sharedInstitutionPort.fetchInstitutionById(any())).thenReturn(new InstitutionInfoDto(55, "Hospital ejemplo", "50460142155193"));
-
-        immunizationDataRepository.save(new VNomivacImmunizationData(1, 14,
+        VNomivacImmunizationDataRepository.save(new VNomivacImmunizationData(1, 14,
                 "871822003", "vacuna que contiene antígeno de virus Hepatitis B como único ingrediente (producto medicinal)",
                 COMPLETE, LocalDate.of(2025, 04, 29), null, 14,
                 (short)3, "Calendario Nacional", (short)109, "Regular", "2da dosis", (short)2,
@@ -77,7 +76,7 @@ class SynchronizeImmunizationE2ETest {
         when(sharedPatientPort.getBasicDataFromPatient(any())).thenReturn(new BasicPatientDto(14, mockValidPerson(), (short)1));
         when(sharedInstitutionPort.fetchInstitutionById(any())).thenReturn(new InstitutionInfoDto(55, "Hospital ejemplo", "50460142155193"));
 
-        immunizationDataRepository.save(new VNomivacImmunizationData(1, 14,
+        VNomivacImmunizationDataRepository.save(new VNomivacImmunizationData(1, 14,
                 "1052330009", "vacuna antineumocócica conjugada decavalente",
                 COMPLETE, LocalDate.of(2025, 04, 29), null, 14,
                 (short)3, "Calendario Nacional", (short)109, "Regular", "2da dosis", (short)2,
@@ -87,8 +86,8 @@ class SynchronizeImmunizationE2ETest {
 
     @BeforeEach
     void cleanDatabase(){
-        immunizationSyncRepository.deleteAll();
-        immunizationDataRepository.deleteAll();
+        nomivacImmunizationSyncRepository.deleteAll();
+        VNomivacImmunizationDataRepository.deleteAll();
     }
 
     private BasicDataPersonDto mockValidPerson(){

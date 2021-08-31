@@ -241,6 +241,12 @@ export default {
                 details: 'Datos personales',
                 users: 'Usuario'
             },
-        }
+        },
+        "nomivac-immunizationdata": {
+            name: 'Historial de vacunas |||| Historial de vacunas',
+        },
+        "nomivac-immunizationsync": {
+            name: 'Nomivac |||| Nomivac',
+        },
     },
 };

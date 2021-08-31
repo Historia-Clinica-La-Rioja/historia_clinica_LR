@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class ImmunizationPersistence extends AbstractPersistenceService<VNomivacImmunizationData, NomivacImmunizationSync, Integer> {
 
     public ImmunizationPersistence(SyncErrorService<NomivacImmunizationSync, Integer> syncErrorService,
-                                   ImmunizationDataRepository immunizationDataRepository,
-                                   ImmunizationSyncRepository immunizationSyncRepository) {
-        super(syncErrorService, immunizationDataRepository, immunizationSyncRepository, NomivacImmunizationSync::new);
+                                   VNomivacImmunizationDataRepository VNomivacImmunizationDataRepository,
+                                   NomivacImmunizationSyncRepository nomivacImmunizationSyncRepository) {
+        super(syncErrorService, VNomivacImmunizationDataRepository, nomivacImmunizationSyncRepository, NomivacImmunizationSync::new);
     }
 }

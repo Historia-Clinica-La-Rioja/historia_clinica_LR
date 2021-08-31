@@ -31,6 +31,13 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>sgx-backoffice</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>ar.lamansys.sgh</groupId>
             <artifactId>hospital-shared</artifactId>
             <version>${revision}</version>
