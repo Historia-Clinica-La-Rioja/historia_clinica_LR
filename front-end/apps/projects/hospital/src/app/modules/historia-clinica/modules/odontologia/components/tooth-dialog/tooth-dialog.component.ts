@@ -10,6 +10,7 @@ import { OdontogramService as OdontogramRestService, ToothRecordDto } from '../.
 import { ToothAction } from '../../services/actions.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
+import { SurfacesNamesFacadeService, ToothSurfaceNames } from '../../services/surfaces-names-facade.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { Actions, ToothComponent } from '../tooth/tooth.component';
 import { ScrollableData } from '../hidable-scrollable-data/hidable-scrollable-data.component';
@@ -28,7 +29,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		private readonly odontogramRestService: OdontogramRestService,
 		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[], records: ToothAction[], patientId: string },
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
-		private conceptsFacadeService: ConceptsFacadeService
+		private conceptsFacadeService: ConceptsFacadeService,
+		private surfacesNamesFacadeService: SurfacesNamesFacadeService
 	) {
 	}
 	showOlderRecords = false;
@@ -80,7 +82,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			}
 		);
 
-		this.odontogramRestService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
+		this.loadToothSurfaceName();
 
 		const filterFunction = this.getFilterFuction(false);
 		this.conceptsFacadeService.getDiagnostics$().subscribe(
@@ -193,6 +195,18 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			}
 		}
 		return toothRecordDtos.map(toSingleScrolleableData);
+	}
+
+	private loadToothSurfaceName() {
+		this.surfacesNamesFacadeService.loadSurfaceNameOf(this.data.tooth.snomed.sctid);
+		this.surfacesNamesFacadeService.toothSurfaceNames$
+			.subscribe(
+				(toothSurfaceNames: ToothSurfaceNames) => {
+					if (toothSurfaceNames?.toothSctid === this.data.tooth.snomed.sctid) {
+						this.surfacesDto = toothSurfaceNames.names
+					}
+				}
+			);
 	}
 }
 
