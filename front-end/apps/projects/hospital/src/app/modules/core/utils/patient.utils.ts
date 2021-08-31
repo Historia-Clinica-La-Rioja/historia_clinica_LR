@@ -22,7 +22,7 @@ export function patientCompleteName(patientBasicData: PatientBasicData): string 
 	} else if (patientBasicData.firstName != null && patientBasicData.lastName == null) {
 		return patientBasicData.firstName;
 	} else if (patientBasicData.firstName == null && patientBasicData.lastName != null) {
-		return this.patientBasicData.lastName;
+		return patientBasicData.lastName;
 	} else {
 		return 'Sin información';
 	}
