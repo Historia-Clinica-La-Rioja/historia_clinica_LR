@@ -106,6 +106,15 @@
 					</mat-icon>
 				</button>
 
+				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
+						[ngClass]="{'assigned': estadoSelected === appointmentStatesIds.CONFIRMED }"
+						(click)="callPatient()"
+						*ngIf="isMqttCallEnabled && estadoSelected === appointmentStatesIds.CONFIRMED" mat-stroked-button>
+					<mat-icon matTooltip="{{BELL_LABEL}}"
+							  color="primary" svgIcon="bell_appointment_call">
+					</mat-icon>
+				</button>
+
 				<button type="button" [ngClass]="{'selected absent': estadoSelected === appointmentStatesIds.ABSENT }"
 					(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
 					[disabled]="(hasRoleToChangeState$ | async) === false">

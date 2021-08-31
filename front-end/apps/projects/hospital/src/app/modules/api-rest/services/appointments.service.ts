@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AppointmentDailyAmountDto, AppointmentDto, AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
+import {
+	AppointmentDailyAmountDto,
+	AppointmentDto,
+	AppointmentListDto,
+	CreateAppointmentDto
+} from '@api-rest/api-model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
-import {DateFormat, momentFormat} from "@core/utils/moment.utils";
-import {DownloadService} from "@core/services/download.service";
+import { DateFormat, momentFormat } from "@core/utils/moment.utils";
+import { DownloadService } from "@core/services/download.service";
 
 @Injectable({
   providedIn: 'root'
@@ -120,6 +125,13 @@ export class AppointmentsService {
 		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
 
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId});
+	}
+
+	mqttCall(appointmentId: number): void {
+		const url = `${environment.apiBase}/institutions/
+					${this.contextService.institutionId}/medicalConsultations/appointments/
+					${appointmentId}/notifyPatient`;
+		this.http.post(url, {});
 	}
 
 }

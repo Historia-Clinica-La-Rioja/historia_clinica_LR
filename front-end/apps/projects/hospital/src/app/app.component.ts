@@ -52,6 +52,10 @@ export class AppComponent {
 			'person_cancel_outlined',
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/person_cancel_outlined.svg')
 		);
+		this.matIconRegistry.addSvgIcon(
+			'bell_appointment_call',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/bell_appointment_call.svg')
+		);
 		//
 		pwaInstallService.install$.pipe(
 			switchMap(
