@@ -2,6 +2,7 @@ package net.pladema.sgh.app;
 
 
 import ar.lamansys.immunization.EnableImmunization;
+import ar.lamansys.mqtt.EnableMqttCall;
 import ar.lamansys.sgx.auth.EnableAuth;
 import ar.lamansys.sgx.shared.EnableSharedLibrary;
 import ar.lamansys.odontology.EnableOdontology;
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableCubeJs
 @EnableOdontology
 @EnableImmunization
+@EnableMqttCall
 @EnableAuth
 @EnableHospitalLib
 @EnableSharedLibrary

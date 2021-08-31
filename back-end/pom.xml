@@ -17,6 +17,7 @@
 	<packaging>pom</packaging>
 	<inceptionYear>2020</inceptionYear>
 	<modules>
+		<module>sgx-mqtt</module>
 		<module>sgx-shared</module>
 		<module>sgx-dashboards</module>
 		<module>sgx-backoffice</module>

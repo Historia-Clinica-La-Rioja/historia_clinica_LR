@@ -153,8 +153,20 @@
 			<artifactId>thymeleaf-extras-java8time</artifactId>
 			<version>3.0.1.RELEASE</version>
 		</dependency>
+        <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>sgx-mqtt</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+		<dependency>
+			<groupId>ar.lamansys</groupId>
+			<artifactId>sgx-mqtt</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>
