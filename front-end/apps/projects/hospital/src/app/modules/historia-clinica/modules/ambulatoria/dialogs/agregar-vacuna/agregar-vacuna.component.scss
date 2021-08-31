@@ -5,8 +5,12 @@ form {
 mat-label, mat-form-field.mat-form-field {
   margin-bottom: 6px;
 }
-app-concepts-search {
-  margin-bottom: 17px;
+.vaccine-error {
+  margin-bottom: 18px;
+  font-size: 90%;
+  div.mat-error {
+    margin-bottom: 17px;
+  }
 }
 .mat-tab-label {
   font-size: 16px;

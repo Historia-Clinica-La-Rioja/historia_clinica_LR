@@ -62,9 +62,11 @@
 										[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
 										(search)="onSearchBillableForm($event)">
 									</app-concepts-search>
-									<div class="mat-error"
-										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-										*ngIf="!searchingNew && tryToSubmit">
+									<div class="vaccine-error">
+										<div class="mat-error"
+											[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+											*ngIf="!searchingNew && tryToSubmit">
+										</div>
 									</div>
 									<div class="spinner" fxLayoutAlign="center center">
 										<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
@@ -208,9 +210,11 @@
 									[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
 									(search)="onSearchPreviousForm($event)">
 								</app-concepts-search>
-								<div class="mat-error"
-									[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-									*ngIf="!searchingPrevious && tryToSubmitPrevious">
+								<div class="vaccine-error">
+									<div class="mat-error"
+										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
+										*ngIf="!searchingPrevious && tryToSubmitPrevious">
+									</div>
 								</div>
 								<div class="spinner" fxLayoutAlign="center center">
 									<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
