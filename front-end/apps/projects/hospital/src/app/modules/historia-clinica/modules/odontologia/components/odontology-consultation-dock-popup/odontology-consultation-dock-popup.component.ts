@@ -41,6 +41,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	clinicalSpecialties: ClinicalSpecialtyDto[];
 
 	diagnosticsNewConsultationService: ActionsNewConsultationService;
+	proceduresNewConsultationService: ActionsNewConsultationService;
 
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
@@ -65,6 +66,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.personalHistoriesNewConsultationService = new PersonalHistoriesNewConsultationService(formBuilder, this.snomedService);
 		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService);
 		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
+		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
 	}
 
 	ngOnInit(): void {
