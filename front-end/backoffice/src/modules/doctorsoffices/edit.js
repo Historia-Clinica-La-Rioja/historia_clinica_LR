@@ -23,7 +23,6 @@ const DoctorsOfficeEdit = props => (
                             optionText="name"
                             alwaysOn
                             allowEmpty={false}/>
-            <TextInput source="topic" validate={[required()]} />
         </SimpleForm>
     </Edit>
 );

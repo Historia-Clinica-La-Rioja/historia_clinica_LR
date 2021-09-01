@@ -28,7 +28,6 @@ const DoctorsOfficeCreate = props => (
                             allowEmpty={false}
                             validate={[required()]}
                             options={{ disabled: true }}/>
-            <TextInput source="topic" validate={[required()]} />
         </SimpleForm>
     </Create>
 );

@@ -33,7 +33,6 @@ const DoctorsOfficeList = props => (
                 <TextField source="description"/>
             </ReferenceField>
 
-            <TextField source="topic" />
         </Datagrid>
     </List>
 );

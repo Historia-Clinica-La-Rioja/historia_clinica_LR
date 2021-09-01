@@ -13,7 +13,6 @@ const DoctorsOfficeShow = props => (
                 <TextField source="name" />
             </ReferenceField>
 
-            <TextField source="topic" />
         </SimpleShowLayout>
     </Show>
 );
