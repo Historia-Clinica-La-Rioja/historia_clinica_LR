@@ -2,34 +2,51 @@
 
 	<div body fxLayout="column" fxLayoutGap="20px">
 
+		<div id="clinical_specialty">
+			<app-document-section sectionTitle="Especialidad">
+				<ng-container concept-form>
+					<form [formGroup]="form">
+						<mat-form-field appearance="outline">
+							<mat-label>Seleccione una especialidad</mat-label>
+							<mat-select formControlName="clinicalSpecialty" name="clinicalSpecialty">
+								<mat-option *ngFor="let clinicalSpecialty of clinicalSpecialties"
+									[value]="clinicalSpecialty.id">
+									{{clinicalSpecialty.name}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</form>
+				</ng-container>
+			</app-document-section>
+		</div>
+
+
 		<div id="reasons">
 
-			<app-new-document-section sectionTitle="Motivo de consulta"
-									  sectionImportance="*Recomendado">
+			<app-new-document-section sectionTitle="Motivo de consulta" sectionImportance="*Recomendado">
 
 				<ng-container concept-form>
 
 					<app-concepts-search
 						*ngIf="!reasonNewConsultationService.getSnomedConcept() else mainReasonConsultation"
-						label="Motivo"
-						(search)="reasonNewConsultationService.openSearchDialog($event)">
+						label="Motivo" (search)="reasonNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 
 					<ng-template #mainReasonConsultation>
 						<form [formGroup]="reasonNewConsultationService.getForm()"
-							  (ngSubmit)="reasonNewConsultationService.addToList()">
+							(ngSubmit)="reasonNewConsultationService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label> Diagnóstico </mat-label>
 								<input id="reason_input" matInput type="text" formControlName="snomed" name="snomed"
-									   readonly matTooltip="{{reasonNewConsultationService.getSnomedConcept().pt }}">
+									readonly matTooltip="{{reasonNewConsultationService.getSnomedConcept().pt }}">
 								<button id="clear_reasons" mat-button matSuffix color="warn" mat-icon-button
-										(click)="reasonNewConsultationService.resetForm()">
+									(click)="reasonNewConsultationService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
 							<div align="end">
 								<button id="submit_reasons" class="uppercase" mat-raised-button color="primary"
-										type="submit">
+									type="submit">
 									<span class="uppercase"> Agregar motivo </span>
 								</button>
 							</div>
@@ -38,8 +55,8 @@
 				</ng-container>
 
 				<app-document-section-table data-display tableTitle="Motivos registrados"
-											[columns]="reasonNewConsultationService.getTableColumnConfig()"
-											[data]="reasonNewConsultationService.getMotivosConsulta()">
+					[columns]="reasonNewConsultationService.getTableColumnConfig()"
+					[data]="reasonNewConsultationService.getMotivosConsulta()">
 
 				</app-document-section-table>
 
@@ -49,21 +66,22 @@
 		<div id="other-diagnostics">
 			<app-new-document-section sectionTitle="Otros diagnósticos">
 				<ng-container concept-form>
-					<app-concepts-search *ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm"
-										 label="Problema"
-										 (search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
+					<app-concepts-search
+						*ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm"
+						label="Problema" (search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 
 					<ng-template #otherDiagnosticForm>
 						<form [formGroup]="otherDiagnosticsNewConsultationService.getForm()"
-							  (ngSubmit)="otherDiagnosticsNewConsultationService.addToList()">
+							(ngSubmit)="otherDiagnosticsNewConsultationService.addToList()">
 
 							<mat-form-field appearance="outline">
 								<mat-label> Problema </mat-label>
-								<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
-									   matTooltip="{{ otherDiagnosticsNewConsultationService.getSnomedConcept().pt }}">
+								<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed"
+									readonly
+									matTooltip="{{ otherDiagnosticsNewConsultationService.getSnomedConcept().pt }}">
 								<button id="clear" mat-button matSuffix color="warn" mat-icon-button
-										(click)="otherDiagnosticsNewConsultationService.resetForm()">
+									(click)="otherDiagnosticsNewConsultationService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -87,8 +105,9 @@
 							<mat-form-field appearance="outline">
 								<mat-label> Fecha inicio </mat-label>
 								<input matInput id="start_date" [matDatepicker]="startDatePicker"
-									   formControlName="fechaInicio" [max]="otherDiagnosticsNewConsultationService.getFechaInicioMax()"
-									   (dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
+									formControlName="fechaInicio"
+									[max]="otherDiagnosticsNewConsultationService.getFechaInicioMax()"
+									(dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
 								<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #startDatePicker></mat-datepicker>
 								<mat-error
@@ -104,19 +123,22 @@
 							<mat-form-field appearance="outline">
 								<mat-label> Fecha fin </mat-label>
 								<input matInput id="end-date" [matDatepicker]="endDatePicker" formControlName="fechaFin"
-									   [max]="today" (dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
+									[max]="today"
+									(dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
 								<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #endDatePicker></mat-datepicker>
 								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('min', 'fechaFin')">
 									La fecha de fin no puede ser anterior a la fecha de inicio
 								</mat-error>
-								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaFin')"
-										   [translate]="'forms.MAX_DATE_TODAY'">
+								<mat-error
+									*ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaFin')"
+									[translate]="'forms.MAX_DATE_TODAY'">
 								</mat-error>
 							</mat-form-field>
 
 							<div align="end">
-								<button id="submit_diagnostic" class="uppercase" mat-raised-button color="primary" type="submit">
+								<button id="submit_diagnostic" class="uppercase" mat-raised-button color="primary"
+									type="submit">
 									<span> Agregar problema </span>
 								</button>
 							</div>
@@ -127,8 +149,8 @@
 				</ng-container>
 
 				<app-document-section-table data-display tableTitle="Otros diagnósticos registrados"
-											[columns]="otherDiagnosticsNewConsultationService.getTableColumnConfig()"
-											[data]="otherDiagnosticsNewConsultationService.getDiagnostics()">
+					[columns]="otherDiagnosticsNewConsultationService.getTableColumnConfig()"
+					[data]="otherDiagnosticsNewConsultationService.getDiagnostics()">
 				</app-document-section-table>
 
 			</app-new-document-section>
@@ -140,20 +162,18 @@
 			<app-new-document-section sectionTitle="Alergias">
 
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!allergiesNewConsultationService.getSnomedConcept() else allergiesForm"
-						label="Alergia"
-						(search)="allergiesNewConsultationService.openSearchDialog($event)">
+					<app-concepts-search *ngIf="!allergiesNewConsultationService.getSnomedConcept() else allergiesForm"
+						label="Alergia" (search)="allergiesNewConsultationService.openSearchDialog($event)">
 					</app-concepts-search>
 					<ng-template #allergiesForm>
 						<form [formGroup]="allergiesNewConsultationService.getForm()"
-							  (ngSubmit)="allergiesNewConsultationService.addToList()">
+							(ngSubmit)="allergiesNewConsultationService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label> Alergia </mat-label>
 								<input id="allergies_input" matInput type="text" formControlName="snomed" name="snomed"
-									   readonly matTooltip="{{allergiesNewConsultationService.getSnomedConcept().pt }}">
+									readonly matTooltip="{{allergiesNewConsultationService.getSnomedConcept().pt }}">
 								<button id="clear_allergies" mat-button matSuffix color="warn" mat-icon-button
-										(click)="allergiesNewConsultationService.resetForm()">
+									(click)="allergiesNewConsultationService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -161,7 +181,8 @@
 							<mat-form-field appearance="outline">
 								<mat-label> Criticidad </mat-label>
 								<mat-select id="criticality_select" formControlName="criticality">
-									<mat-option *ngFor="let criticalityType of criticalityTypes" [value]="criticalityType.id">
+									<mat-option *ngFor="let criticalityType of criticalityTypes"
+										[value]="criticalityType.id">
 										{{criticalityType.display}}
 									</mat-option>
 								</mat-select>
@@ -170,7 +191,7 @@
 
 							<div align="end">
 								<button id="submit_allergies" class="uppercase" mat-raised-button color="primary"
-										type="submit">
+									type="submit">
 									<span class="uppercase"> Agregar alergia </span>
 								</button>
 							</div>
@@ -179,8 +200,8 @@
 				</ng-container>
 
 				<app-document-section-table data-display tableTitle="Alergias registradas"
-								[columns]="allergiesNewConsultationService.getTableColumnConfig()"
-								[data]="allergiesNewConsultationService.getAlergias()">
+					[columns]="allergiesNewConsultationService.getTableColumnConfig()"
+					[data]="allergiesNewConsultationService.getAlergias()">
 				</app-document-section-table>
 
 			</app-new-document-section>
@@ -199,16 +220,15 @@
 					</app-concepts-search>
 					<ng-template #personalHistoriesForm>
 						<form [formGroup]="personalHistoriesNewConsultationService.getForm()"
-							  (ngSubmit)="personalHistoriesNewConsultationService.addToList()">
+							(ngSubmit)="personalHistoriesNewConsultationService.addToList()">
 
 							<mat-form-field appearance="outline">
 								<mat-label> Tipo de problema </mat-label>
 								<input id="personal_history_input" matInput type="text" formControlName="snomed"
-									   name="snomed"
-									   readonly
-									   matTooltip="{{personalHistoriesNewConsultationService.getSnomedConcept().pt }}">
+									name="snomed" readonly
+									matTooltip="{{personalHistoriesNewConsultationService.getSnomedConcept().pt }}">
 								<button id="clear_history" mat-button matSuffix color="warn" mat-icon-button
-										(click)="personalHistoriesNewConsultationService.resetForm()">
+									(click)="personalHistoriesNewConsultationService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -216,16 +236,15 @@
 							<mat-form-field appearance="outline">
 								<mat-label> Fecha de registro </mat-label>
 								<input matInput id="history_date" [matDatepicker]="historyDatePicker"
-									   formControlName="fecha"
-									   [max]="personalHistoriesNewConsultationService.getMaxDate()">
+									formControlName="fecha"
+									[max]="personalHistoriesNewConsultationService.getMaxDate()">
 								<mat-datepicker-toggle matSuffix [for]="historyDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #historyDatePicker></mat-datepicker>
 							</mat-form-field>
 
 							<div align="end">
-								<button id="submit_personal_history" class="uppercase" mat-raised-button
-										color="primary"
-										type="submit">
+								<button id="submit_personal_history" class="uppercase" mat-raised-button color="primary"
+									type="submit">
 									<span class="uppercase"> Agregar antecedente personal </span>
 								</button>
 							</div>
@@ -235,8 +254,8 @@
 
 
 				<app-document-section-table data-display tableTitle="Antecedentes registrados"
-											[columns]="personalHistoriesNewConsultationService.getTableColumnConfig()"
-											[data]="personalHistoriesNewConsultationService.getAntecedentesPersonales()">
+					[columns]="personalHistoriesNewConsultationService.getTableColumnConfig()"
+					[data]="personalHistoriesNewConsultationService.getAntecedentesPersonales()">
 				</app-document-section-table>
 
 
@@ -257,13 +276,13 @@
 
 				<ng-template #medicationForm>
 					<form [formGroup]="medicationsNewConsultationService.getForm()"
-						  (ngSubmit)="medicationsNewConsultationService.addToList()">
+						(ngSubmit)="medicationsNewConsultationService.addToList()">
 						<mat-form-field appearance="outline">
 							<mat-label> Nombre de medicación </mat-label>
 							<input matInput type="text" formControlName="snomed" name="snomed" readonly
-								   matTooltip="{{ medicationsNewConsultationService.getSnomedConcept().pt }}">
+								matTooltip="{{ medicationsNewConsultationService.getSnomedConcept().pt }}">
 							<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
-									(click)="medicationsNewConsultationService.resetForm()">
+								(click)="medicationsNewConsultationService.resetForm()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
@@ -271,12 +290,11 @@
 						<mat-form-field appearance="outline">
 							<mat-label> Observaciones </mat-label>
 							<textarea matInput type="text" id="observations" name="observaciones"
-									  formControlName="observaciones"
-									  placeholder="Descripción"
-							>
+								formControlName="observaciones" placeholder="Descripción">
 							</textarea>
-							<mat-error *ngIf="hasError(medicationsNewConsultationService.getForm(), 'maxlength', 'observaciones')" translate="forms.MAX_LENGTH_ERROR"
-									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+							<mat-error
+								*ngIf="hasError(medicationsNewConsultationService.getForm(), 'maxlength', 'observaciones')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
 							</mat-error>
 						</mat-form-field>
 
@@ -295,8 +313,8 @@
 				</ng-template>
 
 				<app-document-section-table data-display tableTitle="Medicaciones registradas"
-											[columns]="medicationsNewConsultationService.getTableColumnConfig()"
-											[data]="medicationsNewConsultationService.getMedicaciones()">
+					[columns]="medicationsNewConsultationService.getTableColumnConfig()"
+					[data]="medicationsNewConsultationService.getMedicaciones()">
 				</app-document-section-table>
 
 			</app-new-document-section>
@@ -305,11 +323,10 @@
 		<div id="evolution">
 			<app-document-section sectionTitle="Evolución">
 				<ng-container concept-form>
-					<form [formGroup]="formEvolucion">
+					<form [formGroup]="form">
 						<mat-form-field appearance="outline">
-							<textarea matInput type="text" id="evolution_input" name="evolution" formControlName="evolution"
-									  placeholder="Descripción"
-							>
+							<textarea matInput type="text" id="evolution_input" name="evolution"
+								formControlName="evolution" placeholder="Descripción">
 							</textarea>
 						</mat-form-field>
 					</form>

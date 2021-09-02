@@ -12,6 +12,8 @@ import { hasError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
 import { OtherDiagnosticsNewConsultationService } from "@historia-clinica/modules/odontologia/services/other-diagnostics-new-consultation.service";
 import { newMoment } from "@core/utils/moment.utils";
+import { ClinicalSpecialtyDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -27,8 +29,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	criticalityTypes: any[];
 	personalHistoriesNewConsultationService: PersonalHistoriesNewConsultationService;
 	medicationsNewConsultationService: MedicacionesNuevaConsultaService;
-	formEvolucion: FormGroup;
-
+	form: FormGroup;
+	clinicalSpecialties: ClinicalSpecialtyDto[];
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	errors: string[] = [];
@@ -41,6 +43,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly formBuilder: FormBuilder,
 		private readonly internmentMasterDataService: InternacionMasterDataService,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
@@ -51,6 +54,17 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+
+		this.form = this.formBuilder.group({
+			evolution: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			clinicalSpecialty: []
+		});
+
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(clinicalSpecialties => {
+			this.form.patchValue({ clinicalSpecialty: clinicalSpecialties[0].id });
+			this.clinicalSpecialties = clinicalSpecialties;
+		});
+
 		this.internmentMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
 			this.criticalityTypes = allergyCriticalities;
 			this.allergiesNewConsultationService.setCriticalityTypes(allergyCriticalities);
@@ -61,10 +75,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			this.otherDiagnosticsNewConsultationService.setSeverityTypes(healthConditionSeverities);
 		});
 
-		this.formEvolucion = this.formBuilder.group({
-			evolution: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-			clinicalSpecialty: []
-		});
 
 		this.reasonNewConsultationService.error$.subscribe(reasonError => {
 			this.errors[0] = reasonError;
@@ -76,7 +86,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	private addErrorMessage(): void {
-		this.errors[2] = hasError(this.formEvolucion, 'maxlength', 'evolution') ?
+		this.errors[2] = hasError(this.form, 'maxlength', 'evolution') ?
 			'La nota de evolución debe tener como máximo 1024 caracteres'
 			: undefined;
 	}
