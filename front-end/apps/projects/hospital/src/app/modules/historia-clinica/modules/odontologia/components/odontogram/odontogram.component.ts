@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ToothDto } from '@api-rest/api-model';
+import { ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
 import { deepClone } from '@core/utils/core.utils';
-import { ToothDrawingsDto, OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
+import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
 import { ToothAction, Action, ActionType } from '../../services/actions.service';
 import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
