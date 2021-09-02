@@ -33,8 +33,6 @@ import authProvider from './providers/authProvider';
 import i18nProvider from './providers/i18nProvider';
 import customRoutes from './layout/routes';
 import appInfoProvider from './providers/appInfoProvider'
-import ImmunizationDataList from "./modules/nomivac/immunizationdata/list";
-import ImmunizationSyncList from "./modules/nomivac/immunizationsync/list";
 
 const dataProvider = springbootRestProvider('/backoffice', {
 });
@@ -101,8 +99,6 @@ const App = () => {
         <Resource name="users" {...users}/>,
         <Resource name="dependencies" />,
         <Resource name="personextended" />,
-        <Resource name="nomivac-immunizationdata" list={ImmunizationDataList}/>,
-        <Resource name="nomivac-immunizationsync" list={ImmunizationSyncList}/>,
     ];
 
     return <Admin title="Historia de salud integrada"
