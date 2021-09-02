@@ -37,7 +37,7 @@ public class AssetsServiceImpl implements AssetsService {
     private static final Assets FOOTER_CENTER = new Assets("image/png", "footer/footer_center.png");
     private static final Assets FOOTER_RIGHT = new Assets("image/png", "footer/footer_right.png");
 
-    private static final Assets APP_LOGO = new Assets("image/svg+xml", "app_logo.svg");
+    private static final Assets APP_LOGO = new Assets("image/png", "app_logo.png");
 
 
     private final FileService fileService;

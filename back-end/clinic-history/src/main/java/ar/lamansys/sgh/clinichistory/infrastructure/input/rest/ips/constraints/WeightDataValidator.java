@@ -1,7 +1,6 @@
-package net.pladema.clinichistory.ips.controller.constraints.validator;
+package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.constraints;
 
-import net.pladema.clinichistory.documents.controller.dto.ClinicalObservationDto;
-import net.pladema.clinichistory.ips.controller.constraints.WeightDataValid;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ClinicalObservationDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -1,6 +1,4 @@
-package net.pladema.clinichistory.ips.controller.constraints;
-
-import net.pladema.clinichistory.ips.controller.constraints.validator.WeightDataValidator;
+package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.constraints;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
