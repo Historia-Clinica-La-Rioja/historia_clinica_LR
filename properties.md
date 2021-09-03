@@ -120,14 +120,15 @@ Este documento detalla las propiedades configurables del sistema.
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | ---------- | ------ | -------- | -------- | ------------ | ---- |
 | ws.federar.enabled | | - | **Único** | Determina si se utiliza la integracion con Federar (se necesita completar la configuración) | v0.2.0  |
+| ws.federar.url.base | | - | **Único** | URL de autenticación del Federador  | v0.2.0 |
 | ws.federar.sisaCode |	| 10002001110000 | **Obligatorio** |	Código SISA para el dominio | v1.20.0 |
 | ws.federar.claims.iss  |  | http://www.msal.gov.ar | **Obligatorio** | URI del dominio (registrada previamente ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.sub  |  | Ministerio de Salud de la Nación  | **Obligatorio** | Nombre del dominio | v0.2.0  |
-| ws.federar.claims.aud  |  | - | **Único** | URL de autenticación del Federador | v0.2.0  |
+| ws.federar.claims.aud  |  | - | **Único** | URL de autenticación usada en la generación del token JWT **[NO MODIFICAR]** | v0.2.0  |
 | ws.federar.claims.name  |  | Prueba Jose | **Obligatorio** | Apellido y Nombres del Usuario que accede (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.role |  | Project Manager | **Obligatorio** | Especialidad del Usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.ident  |  | 0001 | **Obligatorio** | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
-| ws.federar.auth.signKey |   | federar | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
+| ws.federar.auth.signKey |   | federar ***[TESTING]*** | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
 
 ### Snowstorm
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
