@@ -26,11 +26,9 @@
 		</div>
 
 		<div id="motivo">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE'"
-								  [sectionImportance]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"
-								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
-								  [columns]="motivoNuevaConsultaService.getColumns()"
-								  [data]="motivoNuevaConsultaService.getMotivosConsulta()">
+			<app-new-document-section 
+								  sectionTitle="ambulatoria.paciente.nueva-consulta.motivo.TITLE"
+	                        	  sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 
 				<ng-container concept-form>
 					<app-concepts-search
@@ -62,7 +60,11 @@
 						</form>
 					</ng-template>
 				</ng-container>
-			</app-document-section>
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
+											[columns]="motivoNuevaConsultaService.getTableColumnConfig()"
+											[data]="motivoNuevaConsultaService.getMotivosConsulta()">
+				</app-document-section-table>
+			</app-new-document-section>
 		</div>
 
 		<div id="problemas">
