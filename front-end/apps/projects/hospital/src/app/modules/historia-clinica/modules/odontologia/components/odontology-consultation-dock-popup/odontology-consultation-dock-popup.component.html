@@ -107,7 +107,7 @@
 								<input matInput id="start_date" [matDatepicker]="startDatePicker"
 									formControlName="fechaInicio"
 									[max]="otherDiagnosticsNewConsultationService.getFechaInicioMax()"
-									(dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
+									(dateChange)="otherDiagnosticsNewConsultationService.checkValidFechaFin()">
 								<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #startDatePicker></mat-datepicker>
 								<mat-error
@@ -124,7 +124,7 @@
 								<mat-label> Fecha fin </mat-label>
 								<input matInput id="end-date" [matDatepicker]="endDatePicker" formControlName="fechaFin"
 									[max]="today"
-									(dateChange)="otherDiagnosticsNewConsultationService.checkValidEndDate()">
+									(dateChange)="otherDiagnosticsNewConsultationService.checkValidFechaFin()">
 								<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #endDatePicker></mat-datepicker>
 								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('min', 'fechaFin')">
@@ -149,8 +149,8 @@
 				</ng-container>
 
 				<app-document-section-table data-display tableTitle="Otros diagnósticos registrados"
-					[columns]="otherDiagnosticsNewConsultationService.getTableColumnConfig()"
-					[data]="otherDiagnosticsNewConsultationService.getDiagnostics()">
+					[columns]="otherDiagnosticsNewConsultationService.getColumns()"
+					[data]="otherDiagnosticsNewConsultationService.getProblemas()">
 				</app-document-section-table>
 
 			</app-new-document-section>

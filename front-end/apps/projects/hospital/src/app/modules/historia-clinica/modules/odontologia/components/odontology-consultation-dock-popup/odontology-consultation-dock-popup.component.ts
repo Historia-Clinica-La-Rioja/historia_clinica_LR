@@ -10,10 +10,10 @@ import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambu
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
-import { OtherDiagnosticsNewConsultationService } from "@historia-clinica/modules/odontologia/services/other-diagnostics-new-consultation.service";
 import { newMoment } from "@core/utils/moment.utils";
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { ProblemasService } from '@historia-clinica/services/problemas-nueva-consulta.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -23,7 +23,7 @@ import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.
 export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	reasonNewConsultationService: MotivoNuevaConsultaService;
-	otherDiagnosticsNewConsultationService: OtherDiagnosticsNewConsultationService;
+	otherDiagnosticsNewConsultationService: ProblemasService;
 	severityTypes: any[];
 	allergiesNewConsultationService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
@@ -49,8 +49,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
 		this.medicationsNewConsultationService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
 		this.personalHistoriesNewConsultationService = new PersonalHistoriesNewConsultationService(formBuilder, this.snomedService);
-		this.otherDiagnosticsNewConsultationService = new OtherDiagnosticsNewConsultationService(formBuilder, this.snomedService);
-
+		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService);
 	}
 
 	ngOnInit(): void {
