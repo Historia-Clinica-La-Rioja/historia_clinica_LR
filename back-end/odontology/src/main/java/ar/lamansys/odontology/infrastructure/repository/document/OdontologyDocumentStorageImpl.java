@@ -37,7 +37,7 @@ public class OdontologyDocumentStorageImpl implements OdontologyDocumentStorage 
     public void save(OdontologyDocumentBo odontologyDocumentBo) {
         LOG.debug("Save new odontology document -> {}", odontologyDocumentBo);
         DocumentDto documentDto = mapTo(odontologyDocumentBo);
-        documentExternalFactory.run(documentDto, false);
+        documentExternalFactory.run(documentDto, true);
     }
 
     private DocumentDto mapTo(OdontologyDocumentBo odontologyDocumentBo) {
