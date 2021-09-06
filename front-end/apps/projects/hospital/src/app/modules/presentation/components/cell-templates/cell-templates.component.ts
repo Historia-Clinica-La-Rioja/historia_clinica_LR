@@ -34,6 +34,7 @@ export enum CellTemplates {
 	TEXT = 'textTemplate',
 	ERROR = 'errorTemplate',
 	REMOVE_BUTTON = 'removeButtonTemplate',
+	EDIT_BUTTON = 'editButtonTemplate',
 	SNOMED_PROBLEM = 'snomedProblemTemplate',
 	PROBLEM_SEVERITY = 'problemSeverityTemplate',
 	ALLERGY_CRITICALITY = 'allergyCriticalityTemplate',

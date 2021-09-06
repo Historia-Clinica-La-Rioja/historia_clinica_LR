@@ -69,7 +69,7 @@
 
 		<div id="problemas">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.problemas.TITLE"
-									  sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
+									sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 				<div concept-form *ngIf="!this.readOnlyProblema else problemaForm">
 					<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
 										 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
@@ -267,41 +267,35 @@
 				</ng-container>
 			</app-document-section>
 		</div>
+		<div id="medications">
 
-		<div id="medicaciones">
-			<app-document-section
-				[sectionTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE'"
-				[tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
-				[columns]="medicacionesNuevaConsultaService.getColumns()"
-				[data]="medicacionesNuevaConsultaService.getMedicaciones()">
+			<app-new-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE'">
 				<div concept-form>
 					<app-concepts-search
-						*ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicacionForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL'"
+					    *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm"
+						
+						label="ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL"
 						(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
 					</app-concepts-search>
 				</div>
-
-				<ng-template #medicacionForm>
+				<ng-template #medicationForm>
 					<form [formGroup]="medicacionesNuevaConsultaService.getForm()"
 						  (ngSubmit)="medicacionesNuevaConsultaService.addToList()">
 						<mat-form-field appearance="outline">
-							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.NOMBRE_MEDICACION'">
-							</mat-label>
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION'"></mat-label>
 							<input matInput type="text" formControlName="snomed" name="snomed" readonly
 								   matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
-							<button id="clear_medicacion" mat-button matSuffix color="warn" mat-icon-button
+							<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
 									(click)="medicacionesNuevaConsultaService.resetForm()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
-							<mat-label
-								[translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
-							<textarea matInput type="text" id="observaciones" name="observaciones"
-									  formControlName="observaciones"
-									  placeholder="{{'ambulatoria.paciente.nueva-consulta.medicaciones.DESCRIPCION' | translate }}"
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
+							<textarea matInput type="text" id="observations" name="Estado"
+									  formControlName="suspended"
+									  placeholder="Descripción"
 							>
 							</textarea>
 							<mat-error *ngIf="hasError(medicacionesNuevaConsultaService.getForm(), 'maxlength', 'observaciones')" translate="forms.MAX_LENGTH_ERROR"
@@ -311,18 +305,24 @@
 
 						<div class="margin-checkbox">
 							<mat-checkbox formControlName="suspendido">
-								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDO'"></span>
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDO'">  </span>
 							</mat-checkbox>
 						</div>
 
 						<div align="end">
-							<button class="uppercase" mat-raised-button color="primary" type="submit">
-								<span [translate]="'internaciones.anamnesis.medicacion.ADD'"></span>
+							<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary" type="submit">
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.ADD'"> </span>
 							</button>
 						</div>
 					</form>
 				</ng-template>
-			</app-document-section>
+
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
+											[columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
+											[data]="medicacionesNuevaConsultaService.getMedicaciones()">
+				</app-document-section-table>
+
+			</app-new-document-section>
 		</div>
 
 		<div id="procedimientos">
@@ -366,8 +366,8 @@
 							<div align="end">
 								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
 										type="submit">
-<span
-	[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+										<span 
+										[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
 								</button>
 							</div>
 
@@ -500,7 +500,7 @@
 								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
 								  [columns]="alergiasNuevaConsultaService.getColumns()"
 								  [data]="alergiasNuevaConsultaService.getAlergias()">
-				<ng-container concept-form>
+				<ng-container concept-form> 
 					<app-concepts-search
 						*ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
 						[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"

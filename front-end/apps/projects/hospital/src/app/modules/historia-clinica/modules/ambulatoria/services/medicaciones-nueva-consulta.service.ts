@@ -7,7 +7,6 @@ import { pushTo, removeFrom } from '@core/utils/array.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
 import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
-
 export interface Medicacion {
 	snomed: SnomedDto;
 	observaciones?: string;
@@ -51,21 +50,21 @@ export class MedicacionesNuevaConsultaService {
 		this.tableColumnConfig = [
 			{
 				def: 'medicacion',
-				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.NOMBRE_MEDICACION',
+				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION',
 				template: CellTemplates.TEXT,
 				text: v => v.snomed.pt
 			},
 			{
-				def: 'observaciones',
-				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES',
+				def: 'estado',
+				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.STATE',
 				template: CellTemplates.TEXT,
-				text: v => v.observaciones
+				text: (v) => this.getState(v.suspendido)
 			},
 			{
 				def: 'eliminar',
 				template: CellTemplates.REMOVE_BUTTON,
 				action: (rowIndex) => this.remove(rowIndex)
-			},
+			}
 		]
 
 		this.data = [];
@@ -102,6 +101,7 @@ export class MedicacionesNuevaConsultaService {
 		this.data = removeFrom<Medicacion>(this.data, index);
 	}
 
+
 	openSearchDialog(searchValue: string): void {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
@@ -131,5 +131,9 @@ export class MedicacionesNuevaConsultaService {
 
 	getMedicaciones(): Medicacion[] {
 		return this.data;
+	}
+
+	getState(suspendido :boolean ): string{
+		return suspendido?'Suspendido':'Activo'
 	}
 }
