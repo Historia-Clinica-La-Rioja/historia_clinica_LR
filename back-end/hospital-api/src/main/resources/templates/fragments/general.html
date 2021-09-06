@@ -167,6 +167,46 @@
         </div>
     </div>
 
+    <!-- Diagnósticos dentales -->
+
+    <div th:fragment="dentalDiagnostics">
+        <h3>Diagnósticos dentales</h3>
+        <div th:if="${#lists.isEmpty(dentalDiagnostics)}">
+            <dl>
+                <dd><p>Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(dentalDiagnostics)}">
+            <dl th:each="diagnostic,iter: ${dentalDiagnostics}">
+                <dd><p  th:text="${'- ' + diagnostic.snomed.pt}"></p></dd>
+                <dl>
+                    <dd><strong>Pieza: </strong><label  th:text="${diagnostic.tooth.pt}"></label></dd>
+                    <dd th:if="${diagnostic.surface  != null}"><strong>Cara: </strong><label  th:text="${diagnostic.surface.pt}"></label></dd>
+                </dl>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Procedimientos dentales -->
+
+    <div th:fragment="dentalProcedures">
+        <h3>Procedimientos dentales</h3>
+        <div th:if="${#lists.isEmpty(dentalProcedures)}">
+            <dl>
+                <dd><p>Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(dentalProcedures)}">
+            <dl th:each="procedure,iter: ${dentalProcedures}">
+                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+                <dl>
+                    <dd><strong>Pieza: </strong><label  th:text="${procedure.tooth.pt}"></label></dd>
+                    <dd th:if="${procedure.surface  != null}"><strong>Cara: </strong><label  th:text="${procedure.surface.pt}"></label></dd>
+                </dl>
+            </dl>
+        </div>
+    </div>
+
     <!-- Antecedentes personales -->
 
     <div th:fragment="personalHistory">
@@ -413,6 +453,23 @@
             </div>
         </div>
     </div>
+
+    <!-- Nota de evolución  -->
+    <div th:fragment="evolutionNote">
+        <h3>Nota de evolución</h3>
+        <div th:if="${notes == null}">
+            <dl>
+                <dd><p>Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${notes != null}">
+            <div class="col-12" th:if="${notes.evolutionNote}">
+                <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
     <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
