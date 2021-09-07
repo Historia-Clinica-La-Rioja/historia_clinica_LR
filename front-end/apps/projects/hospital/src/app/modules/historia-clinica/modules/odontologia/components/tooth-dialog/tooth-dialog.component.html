@@ -36,7 +36,7 @@
 				id="hallazgo pieza"
 				[placeholder]="'Seleccione hallazgo'"
 				[options]="filteredDiagnosticsTypeaheadOptions"
-				[initValue]="initValueDiagnosticsPieceTypeahead"
+				[externalSetValue]="initValueDiagnosticsPieceTypeahead"
 				(selectionChange)="findingChanged($event)"
 			>
 			</app-typeahead>
@@ -44,14 +44,14 @@
 				id="primer procedimiento pieza"
 				[placeholder]="'Seleccione 1er procedimiento'"
 				[options]="filteredProceduresTypeahead"
-				[initValue]="initValueTypeaheadPieceFirstProcedure"
+				[externalSetValue]="initValueTypeaheadPieceFirstProcedure"
 				(selectionChange)="firstProcedureChanged($event)"
 			>
 			</app-typeahead>
 			<app-typeahead
 				id="segundo procedimiento pieza"
 				[placeholder]="'Seleccione 2do procedimiento'"
-				[initValue]="initValueTypeaheadProcedureTwo"
+				[externalSetValue]="initValueTypeaheadProcedureTwo"
 				[options]="filteredProceduresTypeahead"
 				(selectionChange)="secondProcedureChanged($event)"
 			>
@@ -59,7 +59,7 @@
 			<app-typeahead
 				id="tercer procedimiento pieza"
 				[placeholder]="'Seleccione 3er procedimiento'"
-				[initValue]="initValueTypeaheadProcedureThree"
+				[externalSetValue]="initValueTypeaheadProcedureThree"
 				[options]="filteredProceduresTypeahead"
 				(selectionChange)="thirdProcedureChanged($event)"
 			>
@@ -70,7 +70,7 @@
 				id="hallazgo cara"
 				[placeholder]="'Seleccione hallazgo'"
 				[options]="filteredDiagnosticsTypeaheadOptions"
-				[initValue]="initValueDiagnosticsSurfaceTypeahead"
+				[externalSetValue]="initValueDiagnosticsSurfaceTypeahead"
 				(selectionChange)="findingChanged($event)"
 			>
 			</app-typeahead>
@@ -78,7 +78,7 @@
 				id="primer procedimiento cara"
 				[placeholder]="'Seleccione 1er procedimiento'"
 				[options]="filteredProceduresTypeahead"
-				[initValue]="initValueTypeaheadSurfaceFirstProcedure"
+				[externalSetValue]="initValueTypeaheadSurfaceFirstProcedure"
 				(selectionChange)="firstProcedureChanged($event)"
 			>
 			</app-typeahead>

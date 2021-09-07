@@ -13,7 +13,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 
 	@Input() options: TypeaheadOption<any>[] = [];
 	@Input() placeholder: string;
-	@Input() initValue: TypeaheadOption<any>;
+	@Input() externalSetValue: TypeaheadOption<any>;
 	@Output() selectionChange = new EventEmitter();
 
 	form: FormGroup;
@@ -39,9 +39,9 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	ngOnChanges(): void {
 		this.optionsFiltered = this.options;
 
-		if (this.initValue && this.options && !this.optionSelected) {
-			this.form.controls.searchValue.setValue(this.initValue.compareValue);
-			this.optionSelected = this.initValue;
+		if (this.externalSetValue && this.options) {
+			this.form.controls.searchValue.setValue(this.externalSetValue.compareValue);
+			this.optionSelected = this.externalSetValue;
 		}
 
 		if (this.optionSelected && this.optionsNotIncludesSelected()) {
