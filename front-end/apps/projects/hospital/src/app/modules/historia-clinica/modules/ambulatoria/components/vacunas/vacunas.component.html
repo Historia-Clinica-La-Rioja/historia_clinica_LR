@@ -6,7 +6,7 @@
 
 		<div id="add_button" *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO']">
 			<ng-container>
-				<button mat-flat-button color="primary" (click)=goToAgregarVacunas()>
+				<button mat-flat-button color="primary" onclick="this.blur()" (click)=goToAgregarVacunas()>
 					<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
 				</button>
 			</ng-container>
