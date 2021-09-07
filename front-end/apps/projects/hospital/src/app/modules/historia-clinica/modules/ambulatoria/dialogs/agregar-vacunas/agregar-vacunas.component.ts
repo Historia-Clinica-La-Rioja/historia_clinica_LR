@@ -31,7 +31,7 @@ export class AgregarVacunasComponent implements OnInit {
     public dialogRef: MatDialogRef<AgregarVacunasComponent>,
     private immunizationService: ImmunizationService,
     private readonly snackBarService: SnackBarService,
-	private readonly appointmentsService: AppointmentsService
+    private readonly appointmentsService: AppointmentsService
   ) {
     this.appliedVaccines = [];
   }
@@ -41,9 +41,9 @@ export class AgregarVacunasComponent implements OnInit {
       clinicalSpecialty: [{ value: null, disabled: true }, Validators.required]
     });
 
-	this.appointmentsService.hasNewConsultationEnabled(this.data.patientId).subscribe(response => {
-		this.hasConfirmedAppointment = response;
-	});
+    this.appointmentsService.hasNewConsultationEnabled(this.data.patientId).subscribe(response => {
+      this.hasConfirmedAppointment = response;
+    });
 
     this.setLoggedProfessionalSpecialties();
   }
@@ -76,8 +76,9 @@ export class AgregarVacunasComponent implements OnInit {
         immunization: this.appliedVaccines[vaccineIndex],
         edit: true,
         patientId: this.data.patientId,
-		hasConfirmedAppointment: this.hasConfirmedAppointment
-      }
+        hasConfirmedAppointment: this.hasConfirmedAppointment
+      },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(
@@ -94,8 +95,9 @@ export class AgregarVacunasComponent implements OnInit {
       width: '45%',
       data: {
         patientId: this.data.patientId,
-		hasConfirmedAppointment: this.hasConfirmedAppointment
-      }
+        hasConfirmedAppointment: this.hasConfirmedAppointment
+      },
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(
@@ -121,9 +123,9 @@ export class AgregarVacunasComponent implements OnInit {
           if (success) {
             this.dialogRef.close(true);
             this.snackBarService.showSuccess('ambulatoria.paciente.vacunas.agregar_vacunas.SUCCESS');
-			this.appointmentsService.hasNewConsultationEnabled(this.data.patientId).subscribe(response => {
-			  this.hasConfirmedAppointment = response;
-			});
+            this.appointmentsService.hasNewConsultationEnabled(this.data.patientId).subscribe(response => {
+              this.hasConfirmedAppointment = response;
+            });
           }
         },
         error => {

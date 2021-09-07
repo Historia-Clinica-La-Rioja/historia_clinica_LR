@@ -43,7 +43,8 @@ export class VacunasComponent implements OnInit {
 			width: '40%',
 			data: {
 				patientId: this.patientId
-			}
+			},
+			autoFocus: false
 		});
 
 		dialogRef.afterClosed().subscribe(submitted => {

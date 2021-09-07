@@ -1,6 +1,6 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
     <div class="mat-h2 margin-bottom-0" [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.TITLE'"></div>
-    <button mat-icon-button color="warn" (click)="dialogRef.close();" tabindex="-1">
+    <button mat-icon-button color="warn" (click)="dialogRef.close();">
         <mat-icon>close</mat-icon>
     </button>
 </div>
@@ -43,10 +43,10 @@
                         </ng-template>
 
                         <div>
-                            <button type="button" mat-icon-button tabindex="-1" (click)="edit(i)">
+                            <button type="button" mat-icon-button (click)="edit(i)">
                                 <mat-icon color="primary">mode_edit_outline</mat-icon>
                             </button>
-                            <button type="button" mat-icon-button tabindex="-1" (click)="remove(i);">
+                            <button type="button" mat-icon-button (click)="remove(i);">
                                 <mat-icon color="warn">delete_outline</mat-icon>
                             </button>
                         </div>
@@ -72,7 +72,7 @@
             </div>
 
             <div fxLayout="row" class="separation">
-                <button mat-button type="button" (click)="addVaccine()" color="primary" tabindex="-1" id="add-button">
+                <button mat-button type="button" (click)="addVaccine()" color="primary" id="add-button">
                     + {{ 'ambulatoria.paciente.vacunas.agregar_vacunas.ADD' | translate }}
                 </button>
             </div>

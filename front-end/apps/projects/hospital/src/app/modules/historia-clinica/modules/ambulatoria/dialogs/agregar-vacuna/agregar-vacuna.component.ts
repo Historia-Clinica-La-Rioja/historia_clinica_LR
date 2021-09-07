@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, Inject, OnInit } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -15,7 +15,8 @@ import { scrollIntoError } from '@core/utils/form.utils';
 @Component({
 	selector: 'app-agregar-vacuna',
 	templateUrl: './agregar-vacuna.component.html',
-	styleUrls: ['./agregar-vacuna.component.scss']
+	styleUrls: ['./agregar-vacuna.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
