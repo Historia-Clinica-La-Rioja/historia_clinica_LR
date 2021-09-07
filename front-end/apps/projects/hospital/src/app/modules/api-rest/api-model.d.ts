@@ -1166,6 +1166,14 @@ export interface MedicationInteroperabilityDto {
     unitTime: string;
 }
 
+export interface MqttMetadataDto {
+    message: string;
+    qos: number;
+    retained: boolean;
+    topic: string;
+    type: string;
+}
+
 export interface NewDosageDto extends Serializable {
     chronic: boolean;
     diary: boolean;
@@ -1255,7 +1263,11 @@ export interface OdontologyDentalActionDto extends Serializable {
 }
 
 export interface OdontologyDiagnosticDto extends Serializable {
+    chronic: boolean;
+    endDate?: DateDto;
+    severity: string;
     snomed: SnomedDto;
+    startDate: DateDto;
 }
 
 export interface OdontologyMedicationDto {
