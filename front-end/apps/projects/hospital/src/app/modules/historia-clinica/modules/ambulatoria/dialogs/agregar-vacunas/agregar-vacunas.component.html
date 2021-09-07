@@ -43,7 +43,7 @@
                         </ng-template>
 
                         <div>
-                            <button type="button" mat-icon-button (click)="edit(i)">
+                            <button type="button" mat-icon-button (click)="edit(i)" onclick="this.blur()">
                                 <mat-icon color="primary">mode_edit_outline</mat-icon>
                             </button>
                             <button type="button" mat-icon-button (click)="remove(i);">
@@ -72,7 +72,8 @@
             </div>
 
             <div fxLayout="row" class="separation">
-                <button mat-button type="button" (click)="addVaccine()" color="primary" id="add-button">
+                <button mat-button type="button" (click)="addVaccine()" color="primary" id="add-button"
+                    onclick="this.blur()">
                     + {{ 'ambulatoria.paciente.vacunas.agregar_vacunas.ADD' | translate }}
                 </button>
             </div>
