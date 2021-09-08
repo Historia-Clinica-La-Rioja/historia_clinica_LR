@@ -31,4 +31,8 @@ public class AllergyConditionBo extends HealthConditionBo {
         setVerification(allergyConditionVo.getVerification());
         setCriticalityId(allergyConditionVo.getCriticalityId());
     }
+
+    public AllergyConditionBo(SnomedBo snomedBo) {
+        super(snomedBo);
+    }
 }

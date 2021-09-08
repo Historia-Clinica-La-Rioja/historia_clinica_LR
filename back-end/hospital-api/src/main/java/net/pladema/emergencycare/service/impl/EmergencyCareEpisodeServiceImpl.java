@@ -191,7 +191,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         if (reasons.size() != 0) {
             LOG.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
             reasons.forEach(reason -> {
-                EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getId());
+                EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getSctid());
                 emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);
             });
             LOG.debug(OUTPUT, reasons);
@@ -297,7 +297,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     private List<ReasonBo> saveReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
         LOG.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
         reasons.forEach(reason -> {
-            EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getId());
+            EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getSctid());
             emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);
         });
         LOG.debug(OUTPUT, reasons);

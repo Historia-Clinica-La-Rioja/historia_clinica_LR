@@ -23,7 +23,6 @@ public class CreateOutpatientDto {
 
     private List<@Valid OutpatientProblemDto> problems = new ArrayList<>();
 
-    @ProceduresValid
     private List<@Valid OutpatientProcedureDto> procedures = new ArrayList<>();
 
     private List<@Valid OutpatientFamilyHistoryDto> familyHistories = new ArrayList<>();

@@ -192,11 +192,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
 				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 			},
-			errors => {
-				Object.getOwnPropertyNames(errors).forEach(val => {
-					this.apiErrors.push(errors[val]);
-				});
+			response => {
 				this.disableConfirmButton = false;
+				if (response.errors)
+					response.errors.forEach(val => {
+						this.apiErrors.push(val);
+					});
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 			}
 		);

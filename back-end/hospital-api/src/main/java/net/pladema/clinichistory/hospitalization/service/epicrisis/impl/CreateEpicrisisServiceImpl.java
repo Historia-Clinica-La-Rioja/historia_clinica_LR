@@ -1,8 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
@@ -16,9 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
@@ -67,22 +63,12 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
     private void assertEpicrisisValid(EpicrisisBo epicrisis) {
         epicrisis.validateSelf();
-        if (repeatedClinicalTerms(epicrisis.getDiagnosis()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(epicrisis.getDiagnosis()))
             throw new ConstraintViolationException("Diagnósticos secundarios repetidos", Collections.emptySet());
-        if (repeatedClinicalTerms(epicrisis.getPersonalHistories()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(epicrisis.getPersonalHistories()))
             throw new ConstraintViolationException("Antecedentes personales repetidos", Collections.emptySet());
-        if (repeatedClinicalTerms(epicrisis.getFamilyHistories()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(epicrisis.getFamilyHistories()))
             throw new ConstraintViolationException("Antecedentes familiares repetidos", Collections.emptySet());
-    }
-
-    private boolean repeatedClinicalTerms(List<? extends ClinicalTerm> clinicalTerms) {
-        if (clinicalTerms == null || clinicalTerms.isEmpty())
-            return false;
-        final Set<SnomedBo> set = new HashSet<>();
-        for (ClinicalTerm ct : clinicalTerms)
-            if (!set.add(ct.getSnomed()))
-                return true;
-        return false;
     }
 
     private void assertEffectiveVitalSignTimeValid(EpicrisisBo epicrisis, LocalDate entryDate) {

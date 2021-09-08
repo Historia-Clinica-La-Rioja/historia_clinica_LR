@@ -2,34 +2,36 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Reason;
-import lombok.*;
-
-import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
-public class ReasonBo {
+public class ReasonBo extends ClinicalTerm {
 
-    @NotNull
-    private SnomedBo snomed;
-
-    public String getId() {
-        return snomed.getSctid();
+    public String getSctid() {
+        return getSnomed().getSctid();
     }
 
     public String getPt() {
-        return snomed.getPt();
+        return getSnomed().getPt();
     }
 
     public ReasonBo(ReasonSummaryVo reasonSummaryVo){
-        this.snomed = new SnomedBo(reasonSummaryVo.getSnomed());
+        super(new SnomedBo(reasonSummaryVo.getSnomed()));
+    }
+
+    public ReasonBo(SnomedBo snomedBo) {
+        super(snomedBo);
     }
 
     public ReasonBo(Reason reason){
-        this.snomed = new SnomedBo(reason.getId(), reason.getDescription());
+        super(new SnomedBo(reason.getId(), reason.getDescription()));
 
     }
 }
