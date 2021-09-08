@@ -55,7 +55,7 @@ export class ActionsNewConsultationService {
 		return actionedTooth.actions
 			.filter(action => action.action.type === this.actionType)
 			.map(action => {
-				let surface = this.surfacesNamesFacadeService.getToothSurfaceShortName(actionedTooth.sctid, action.surfaceId);
+				let surface = this.surfacesNamesFacadeService.getToothSurfaceShortName(actionedTooth.tooth.snomed.sctid, action.surfaceId);
 				surface = surface ? ` (${surface})` : '';
 				return {
 					zone: actionedTooth.toothCompleteNumber + surface,

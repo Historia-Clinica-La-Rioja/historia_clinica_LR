@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ToothDto } from '@api-rest/api-model';
 import { deepClone } from '@core/utils/core.utils';
 import { ReplaySubject } from 'rxjs';
 import { ToothAction } from './actions.service';
@@ -18,12 +19,12 @@ export class OdontogramService {
 	private actionedTeethSubject = new ReplaySubject<ActionedTooth[]>(1);
 	actionedTeeth$ = this.actionedTeethSubject.asObservable()
 
-	setActionsTo(actions: ToothAction[], sctid: string, toothCompleteNumber: string) {
-		const toEmit = { sctid, actions, toothCompleteNumber };
+	setActionsTo(actions: ToothAction[], toothCompleteNumber: string, toothDto: ToothDto) {
+		const toEmit: ActionedTooth = { actions, toothCompleteNumber, tooth: toothDto };
 		this.actionsSubject.next(toEmit);
-		const tooth = this.actionedTeeth?.find(s => s.sctid === sctid);
+		const tooth = this.actionedTeeth?.find(s => s.tooth.snomed.sctid === toothDto.snomed.sctid);
 		if (!tooth) {
-			this.actionedTeeth.push({ sctid, actions, toothCompleteNumber });
+			this.actionedTeeth.push(toEmit);
 			this.actionedTeethSubject.next(this.actionedTeeth);
 			return;
 		}
@@ -32,13 +33,13 @@ export class OdontogramService {
 	}
 
 	getActionsFrom(sctid: string): ToothAction[] {
-		const toothActioned = this.actionedTeeth.find(s => s.sctid === sctid);
-		return toothActioned ? deepClone(toothActioned.actions): null;
+		const toothActioned: ActionedTooth = this.actionedTeeth.find(s => s.tooth.snomed.sctid === sctid);
+		return toothActioned ? deepClone(toothActioned.actions) : null;
 	}
 
 	resetOdontogram() {
 		this.actionedTeeth.forEach(actionedTooth => {
-			this.actionsSubject.next({ sctid: actionedTooth.sctid, actions: [], toothCompleteNumber: null })
+			this.actionsSubject.next({ actions: [], toothCompleteNumber: actionedTooth.toothCompleteNumber, tooth: actionedTooth.tooth })
 		})
 		this.actionedTeeth = [];
 		this.actionedTeethSubject.next(this.actionedTeeth);
@@ -47,7 +48,7 @@ export class OdontogramService {
 }
 
 export interface ActionedTooth {
-	sctid: string;
+	tooth: ToothDto;
 	toothCompleteNumber: string;
 	actions: ToothAction[];
 }
