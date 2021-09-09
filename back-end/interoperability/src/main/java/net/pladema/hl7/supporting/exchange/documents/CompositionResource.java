@@ -15,6 +15,7 @@ import net.pladema.hl7.dataexchange.model.domain.CompositionVo;
 
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
+import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Composition;
 import org.hl7.fhir.r4.model.Reference;
@@ -49,7 +50,9 @@ public class CompositionResource extends IResourceFhir {
                 .setTime(data.getCreatedOn())
                 .setParty(references.get(ResourceType.Organization)));
         //Organización a cargo
-        resource.setCustodian(references.get(ResourceType.Organization));
+        resource.setCustodian(
+                newReferenceAsIdentifier(CodingSystem.FEDERADOR, getDominio())
+        );
 
         resource.setStatus(Composition.CompositionStatus.FINAL);
         resource.setType(newCodeableConcept(data.getType()));
