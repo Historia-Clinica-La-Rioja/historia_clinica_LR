@@ -8,7 +8,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.person.repository.entity.Gender;
-import net.pladema.reports.repository.OutpatientSummary;
+import net.pladema.reports.repository.ConsultationSummary;
 import net.pladema.reports.repository.QueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class OutpatientSummaryReport {
+public class ConsultationSummaryReport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OutpatientSummaryReport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConsultationSummaryReport.class);
 
     private final QueryFactory queryFactory;
 
@@ -38,7 +38,7 @@ public class OutpatientSummaryReport {
     private static final int FIRST_COLUMN_DATA =4;
     private static final int LAST_COLUMN_DATA =22;
 
-    public OutpatientSummaryReport(QueryFactory queryFactory){
+    public ConsultationSummaryReport(QueryFactory queryFactory){
         this.queryFactory = queryFactory;
     }
 
@@ -59,7 +59,7 @@ public class OutpatientSummaryReport {
 
             //Content
             int firstDataRow = sheet.getCantRows();
-            Map<Integer, List<OutpatientSummary>> data = processData(institutionId, from, to, professionalId, specialtyId);
+            Map<Integer, List<ConsultationSummary>> data = processData(institutionId, from, to, professionalId, specialtyId);
             fillRow(sheet, convertDataIntoContent(sheet, data, firstDataRow));
             int lastDataRow = sheet.getCantRows();
 
@@ -75,29 +75,29 @@ public class OutpatientSummaryReport {
         return workbook;
     }
 
-    private Map<Integer, List<OutpatientSummary>> processData(Integer institutionId, LocalDate from, LocalDate to,
-                             Integer professionalId, Integer specialtyId) {
+    private Map<Integer, List<ConsultationSummary>> processData(Integer institutionId, LocalDate from, LocalDate to,
+                                                                Integer professionalId, Integer specialtyId) {
         //Data from database
-        List<OutpatientSummary> data = queryFactory.getOutpatientSummaryData(institutionId, from, to);
+        List<ConsultationSummary> data = queryFactory.fetchConsultationSummaryData(institutionId, from, to);
 
         //Required filter: discard records without gender or date of birth
         //Optional filter: by specialty or professional if specified
-        List<OutpatientSummary> validData = data.stream().filter(c -> c.hasGender() && c.hasBirthdate())
+        List<ConsultationSummary> validData = data.stream().filter(c -> c.hasGender() && c.hasBirthdate())
                 .filter(professionalId != null ? c -> c.getProfessionalId().equals(professionalId) : c -> true)
                 .filter(specialtyId != null ? c -> c.getSpecialtyId().equals(specialtyId) : c -> true)
                 .collect(Collectors.toList());
 
         return validData.stream()
-                .collect(Collectors.groupingBy(OutpatientSummary::getSpecialtyId));
+                .collect(Collectors.groupingBy(ConsultationSummary::getSpecialtyId));
     }
 
-    private List<CellContent> convertDataIntoContent(ISheet sheet, Map<Integer, List<OutpatientSummary>> data, int row){
+    private List<CellContent> convertDataIntoContent(ISheet sheet, Map<Integer, List<ConsultationSummary>> data, int row){
         List<CellContent> content = new ArrayList<>();
         int column = 0;
 
-        for(Map.Entry<Integer, List<OutpatientSummary>> dataEntry : data.entrySet()){
+        for(Map.Entry<Integer, List<ConsultationSummary>> dataEntry : data.entrySet()){
 
-            List<OutpatientSummary> consultations = dataEntry.getValue();
+            List<ConsultationSummary> consultations = dataEntry.getValue();
 
             //Register Clinical-Specialty
             String specialty = consultations.get(0).getSpecialty();
@@ -107,8 +107,8 @@ public class OutpatientSummaryReport {
             while(column < FIRST_COLUMN_DATA)
                 content.add(new CellContent(row, column++, SINGLECELL, SINGLECELL, null, basicStyle));
 
-            Map<Integer, List<OutpatientSummary>> consultationsByAgeRange = consultations.stream()
-                    .collect(Collectors.groupingBy(OutpatientSummary::getAgeRange));
+            Map<Integer, List<ConsultationSummary>> consultationsByAgeRange = consultations.stream()
+                    .collect(Collectors.groupingBy(ConsultationSummary::getAgeRange));
 
             //Register outpatient—consultations by sex and age for the specific clinical—specialty
             while(column < LAST_COLUMN_DATA) {
@@ -121,7 +121,7 @@ public class OutpatientSummaryReport {
                     //There are no outpatients—consultations for the age range.
                     dataFormat = CellContent.DATAFORMAT.STRING;
                 else {
-                    List<OutpatientSummary> consultationForAgeRange = consultationsByAgeRange.get(column);
+                    List<ConsultationSummary> consultationForAgeRange = consultationsByAgeRange.get(column);
 
                     nWomen = getNumberOfWomen(consultationForAgeRange);
                     nMen = getNumberOfMen(consultationForAgeRange, nWomen);
@@ -141,7 +141,7 @@ public class OutpatientSummaryReport {
             //Register total number of outpatient and with/out medical coverage for the specific clinical—specialty
             int count = consultations.size();
 
-            double withCoverage = consultations.stream().filter(OutpatientSummary::isCoverage).count();
+            double withCoverage = consultations.stream().filter(ConsultationSummary::isCoverage).count();
             double withoutCoverage = count - withCoverage;
 
             content.add(new CellContent(row, column++, SINGLECELL, SINGLECELL, withCoverage,
@@ -155,7 +155,7 @@ public class OutpatientSummaryReport {
         return content;
     }
 
-    private Object getNumberOfMen(List<OutpatientSummary> consultationForAgeRange, Object nWomen) {
+    private Object getNumberOfMen(List<ConsultationSummary> consultationForAgeRange, Object nWomen) {
         double size = consultationForAgeRange.size();
         if(nWomen != null) {
             double nMen = size - (double) nWomen;
@@ -165,7 +165,7 @@ public class OutpatientSummaryReport {
 
     }
 
-    private Double getNumberOfWomen(List<OutpatientSummary> consultations){
+    private Double getNumberOfWomen(List<ConsultationSummary> consultations){
         double women = (double) consultations.stream()
                 .filter(oc -> oc.getGenderId().equals(Gender.FEMALE))
                 .count();

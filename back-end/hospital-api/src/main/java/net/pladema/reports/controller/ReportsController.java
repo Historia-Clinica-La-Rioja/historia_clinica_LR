@@ -13,8 +13,8 @@ import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.ExcelService;
 import net.pladema.reports.service.FormReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
+import net.pladema.reports.service.domain.ConsultationSummaryReport;
 import net.pladema.reports.service.domain.FormVBo;
-import net.pladema.reports.service.domain.OutpatientSummaryReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -48,7 +48,7 @@ public class ReportsController {
 
     private final ExcelService excelService;
 
-    private final OutpatientSummaryReport outpatientSummaryReport;
+    private final ConsultationSummaryReport consultationSummaryReport;
 
     private final QueryFactory queryFactory;
 
@@ -62,10 +62,10 @@ public class ReportsController {
 
     private final ReportsMapper reportsMapper;
 
-    public ReportsController(ExcelService excelService, OutpatientSummaryReport outpatientSummaryReport,
+    public ReportsController(ExcelService excelService, ConsultationSummaryReport consultationSummaryReport,
                              QueryFactory queryFactory, LocalDateMapper localDateMapper, PdfService pdfService, AnnexReportService annexReportService, FormReportService formReportService, ReportsMapper reportsMapper){
         this.excelService = excelService;
-        this.outpatientSummaryReport = outpatientSummaryReport;
+        this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
         this.localDateMapper = localDateMapper;
         this.pdfService = pdfService;
@@ -112,7 +112,7 @@ public class ReportsController {
 
     @GetMapping(value = "/{institutionId}/summary")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-    public @ResponseBody void getOutpatientSummaryReport(
+    public @ResponseBody void fetchConsultationSummaryReport(
             @PathVariable Integer institutionId,
             @RequestParam(value="fromDate") String fromDate,
             @RequestParam(value="toDate") String toDate,
@@ -125,7 +125,7 @@ public class ReportsController {
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-        IWorkbook workbook = outpatientSummaryReport.build(institutionId, startDate, endDate, doctorId, clinicalSpecialtyId);
+        IWorkbook workbook = consultationSummaryReport.build(institutionId, startDate, endDate, doctorId, clinicalSpecialtyId);
         String title = "Resumen Mensual de Consultorios Externos - Hoja 2.1";
         String filename = title + "." + workbook.getExtension();
         response.addHeader("Content-disposition", "attachment;filename=" + filename);

@@ -7,7 +7,7 @@ import net.pladema.staff.repository.entity.ClinicalSpecialtyType;
 
 @Getter
 @NoArgsConstructor
-public class OutpatientSummary {
+public class ConsultationSummary {
 
     private Integer professionalId;
     private Integer specialtyId;
@@ -16,8 +16,8 @@ public class OutpatientSummary {
     private Short genderId;
     private boolean coverage;
 
-    public OutpatientSummary(Integer professionalId, Integer specialtyId, String specialty,
-                             Short specialtyType, Integer age, Short genderId, boolean coverage){
+    public ConsultationSummary(Integer professionalId, Integer specialtyId, String specialty,
+                               Short specialtyType, Integer age, Short genderId, boolean coverage){
         this.professionalId = professionalId;
         this.specialtyId = specialtyId != null ? specialtyId : 0;
         fixSpecialtyName(specialty, specialtyType);

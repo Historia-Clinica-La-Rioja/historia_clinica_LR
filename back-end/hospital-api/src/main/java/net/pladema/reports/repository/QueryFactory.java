@@ -39,8 +39,8 @@ public class QueryFactory {
 
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
-    public List<OutpatientSummary> getOutpatientSummaryData(Integer institutionId, LocalDate startDate, LocalDate endDate){
-        return entityManager.createNamedQuery("Reports.OutpatientSummary")
+    public List<ConsultationSummary> fetchConsultationSummaryData(Integer institutionId, LocalDate startDate, LocalDate endDate){
+        return entityManager.createNamedQuery("Reports.ConsultationSummary")
                 .setParameter("institutionId", institutionId)
                 .setParameter("from", startDate)
                 .setParameter("to", endDate)
