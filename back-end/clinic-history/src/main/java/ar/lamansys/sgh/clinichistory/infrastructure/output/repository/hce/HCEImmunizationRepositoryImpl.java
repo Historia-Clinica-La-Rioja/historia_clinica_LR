@@ -41,7 +41,7 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                 "   JOIN document_inmunization di on d.id = di.document_id " +
                 "   JOIN inmunization inm on di.inmunization_id = inm.id " +
                 "   WHERE d.status_id = :docStatusId " +
-                "   AND d.type_id IN :documentType "+
+                "   AND d.type_id IN :documentType " +
                 "   AND inm.patient_id = :patientId " +
                 "   " +
                 ") " +

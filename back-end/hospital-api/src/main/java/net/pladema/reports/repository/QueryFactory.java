@@ -21,14 +21,14 @@ public class QueryFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public List<OutpatientDetail> query(Integer institutionId, LocalDate startDate, LocalDate endDate,
-                                        Integer clinicalSpecialtyId, Integer doctorId) {
+    public List<ConsultationDetail> query(Integer institutionId, LocalDate startDate, LocalDate endDate,
+                                          Integer clinicalSpecialtyId, Integer doctorId) {
 
-        Query query = entityManager.createNamedQuery("Reports.OutpatientDetail");
+        Query query = entityManager.createNamedQuery("Reports.ConsultationDetail");
         query.setParameter("institutionId", institutionId);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
-        List<OutpatientDetail> data = query.getResultList();
+        List<ConsultationDetail> data = query.getResultList();
 
         //Optional filter: by specialty or professional if specified
         return data.stream()

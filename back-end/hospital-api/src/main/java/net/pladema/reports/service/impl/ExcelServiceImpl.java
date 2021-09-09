@@ -8,7 +8,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.reports.service.ExcelService;
-import net.pladema.reports.repository.OutpatientDetail;
+import net.pladema.reports.repository.ConsultationDetail;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class ExcelServiceImpl implements ExcelService {
     private ICellStyle subTitleStyle;
 
     @Override
-    public IWorkbook buildExcelFromQuery(String title, String[] headers, List<OutpatientDetail> result) {
+    public IWorkbook buildExcelFromQuery(String title, String[] headers, List<ConsultationDetail> result) {
         // creo el workbook de excel
         IWorkbook wb = WorkbookCreator.createExcelWorkbook();
         createCellStyle(wb);
@@ -173,7 +173,7 @@ public class ExcelServiceImpl implements ExcelService {
             sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
     }
 
-    private void fillRowContent(IRow row, OutpatientDetail content, ICellStyle style){
+    private void fillRowContent(IRow row, ConsultationDetail content, ICellStyle style){
         AtomicInteger rowNumber = new AtomicInteger(0);
             ICell cell = row.createCell(rowNumber.getAndIncrement());
             cell.setCellValue(content.getProvince());
