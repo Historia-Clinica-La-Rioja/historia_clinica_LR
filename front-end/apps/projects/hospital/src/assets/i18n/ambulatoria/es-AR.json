@@ -201,21 +201,36 @@
 					"START_DATE": "Desde",
 					"END_DATE": "Hasta"
 				},
+				"HISTORICAL_TITLE": "Histórico de evoluciones",
+				"HISTORICAL_HSI_TAB_LABEL": "Histórico HSI",
+				"HISTORICAL_EXTERNAL_TAB_LABEL": "Histórico Externo",
+				"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
+				"RESULTS": "resultados",
 				"historical-problems": {
-					"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
-					"NO_HISTORICAL": "No existe informacion para mostrar",
-					"HISTORICAL_TITLE": "Histórico de evoluciones",
 					"REASONS": "Motivos",
 					"PROCEDURES": "Procedimientos",
-					"SPECIALITY": "Especialidad",
+					"SPECIALTY": "Especialidad",
 					"PROFESSIONAL": "Médico",
 					"EVOLUTION_NOTE": "Descripción/Resumen",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
-				"historical-filters": {
-					"SPECIALITY": "Especialidad",
+				"historical-problems-filters": {
+					"SPECIALTY": "Especialidad",
 					"PROFESSIONAL": "Médico",
 					"PROBLEM": "Problema",
+					"CONSULTATION_DATE": "Fecha de consulta"
+				},
+				"external-clinical-history": {
+					"SPECIALTY": "Especialidad",
+					"NOTES": "Descripción/Resumen",
+					"CONSULTATION_DATE": "Fecha de consulta",
+					"INSTITUTION": "Institución"
+				},
+				"external-clinical-histories-filters": {
+					"SEARCH_BY_KEYWORD": "Buscar por palabra clave",
+					"SPECIALTY": "Especialidad",
+					"PROFESSIONAL": "Profesional",
+					"INSTITUTION": "Institución",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
 				"nueva_opened_confirm_dialog": {

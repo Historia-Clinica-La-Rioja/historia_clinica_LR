@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
@@ -6,21 +6,21 @@ import {
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
 import { HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
-import {HceGeneralStateService} from '@api-rest/services/hce-general-state.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DateFormat, momentFormat, momentParseDate} from '@core/utils/moment.utils';
-import {map, tap} from 'rxjs/operators';
-import {Observable, Subscription} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
-import {SolveProblemComponent} from '../../../../dialogs/solve-problem/solve-problem.component';
-import {HistoricalProblems, HistoricalProblemsFacadeService} from '../../services/historical-problems-facade.service';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { map, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { SolveProblemComponent } from '../../../../dialogs/solve-problem/solve-problem.component';
+import { HistoricalProblems, HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { ContextService } from '@core/services/context.service';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
-import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -29,6 +29,7 @@ const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 	selector: 'app-problemas',
 	templateUrl: './problemas.component.html',
 	styleUrls: ['./problemas.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class ProblemasComponent implements OnInit, OnDestroy {
 
@@ -149,7 +150,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			if (!this.nuevaConsultaAmbulatoriaRef) {
 				this.openDockPopup(problema.id);
 			} else {
-				const confirmDialog = this.dialog.open(ConfirmDialogComponent, {data: getConfirmDataDialog()});
+				const confirmDialog = this.dialog.open(ConfirmDialogComponent, { data: getConfirmDataDialog() });
 				confirmDialog.afterClosed().subscribe(confirmed => {
 					if (confirmed) {
 						this.openDockPopup(problema.id);
@@ -173,7 +174,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private openDockPopup(idProblema: number) {
 		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
 		this.nuevaConsultaFromProblemaRef =
-			this.dockPopupService.open(NuevaConsultaDockPopupComponent, {idPaciente, idProblema});
+			this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente, idProblema });
 		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
@@ -192,8 +193,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			}
 		}).afterClosed().subscribe(submitted => {
 			if (submitted) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({problems: true});
-			}});
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ problems: true });
+			}
+		});
 	}
 
 	filterByProblemOnProblemClick(problem: HCEPersonalHistoryDto) {
