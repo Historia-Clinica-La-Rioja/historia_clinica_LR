@@ -33,10 +33,7 @@
 				"PESO": "Peso",
 				"MOTIVO": "Motivos de consulta",
 				"PROBLEMA": "Problema de la consulta",
-				"REGRESAR": "Regresar y completar",
-				"CONFIRMAR": "Confirmar de todos modos",
 				"RECOMENDADO": "*Recomendado",
-				"CAMPOS_SUGERIDOS": "Se sugiere completar los siguientes campos",
 				"evolucion": {
 					"TITLE": "Evolucion",
 					"DESCRIPCION": "Descripcion"

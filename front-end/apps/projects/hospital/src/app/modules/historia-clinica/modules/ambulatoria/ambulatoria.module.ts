@@ -30,7 +30,7 @@ import { ItemPrescripcionesComponent } from './components/ordenes/item-prescripc
 import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
-import { ConfirmarNuevaConsultaPopupComponent } from './dialogs/confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
+import { SuggestedFieldsPopupComponent } from '../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
 import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
 import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacunas.component';
@@ -60,7 +60,7 @@ import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.
 		CompletarEstudioComponent,
 		VerResultadosEstudioComponent,
 		ExternalSummaryCardComponent,
-		ConfirmarNuevaConsultaPopupComponent,
+		SuggestedFieldsPopupComponent,
 		AgregarVacunasComponent,
 		AgregarVacunaComponent,
 		DetalleVacunaComponent
