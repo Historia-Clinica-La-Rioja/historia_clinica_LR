@@ -326,7 +326,7 @@
 		</div>
 
 		<div id="procedimientos">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
+			     <app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
 								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
 								  [columns]="procedimientoNuevaConsultaService.getColumns()"
 								  [data]="procedimientoNuevaConsultaService.getProcedimientos()"
@@ -496,10 +496,7 @@
 		</div>
 
 		<div id="alergias">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE'"
-								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
-								  [columns]="alergiasNuevaConsultaService.getColumns()"
-								  [data]="alergiasNuevaConsultaService.getAlergias()">
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.alergias.TITLE">
 				<ng-container concept-form> 
 					<app-concepts-search
 						*ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
@@ -534,14 +531,19 @@
 							<div align="end">
 								<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
 										type="submit">
-<span class="uppercase"
-	  [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
+									<span class="uppercase"[translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
 								</button>
 							</div>
 						</form>
 					</ng-template>
 				</ng-container>
-			</app-document-section>
+
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
+					[columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
+					[data]="alergiasNuevaConsultaService.getAlergias()">
+				</app-document-section-table>
+
+			</app-new-document-section>
 		</div>
 
 		<div id="evolucion">
