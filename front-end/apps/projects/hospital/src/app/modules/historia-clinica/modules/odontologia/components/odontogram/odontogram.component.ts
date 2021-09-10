@@ -93,7 +93,7 @@ export class OdontogramComponent implements OnInit {
 	}
 
 	openConsultationPopup() {
-		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: null });
+		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
 	}
 
 }

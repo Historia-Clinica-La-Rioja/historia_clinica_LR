@@ -11,14 +11,22 @@ import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
 import { newMoment } from "@core/utils/moment.utils";
-import { ClinicalSpecialtyDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ProblemasService } from '@historia-clinica/services/problemas-nueva-consulta.service';
 import { ActionsNewConsultationService } from '../../services/actions-new-consultation.service';
-import { OdontogramService } from '../../services/odontogram.service';
+import { ActionedTooth, OdontogramService } from '../../services/odontogram.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
 import { SurfacesNamesFacadeService } from '../../services/surfaces-names-facade.service';
 import { ActionType } from '../../services/actions.service';
+import { SuggestedFieldsPopupComponent } from '@presentation/components/suggested-fields-popup/suggested-fields-popup.component';
+import { OdontologyConsultationService } from '../../api-rest/odontology-consultation.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConsultationSuggestedFieldsService } from '../../services/consultation-suggested-fields.service';
+import { combineLatest } from 'rxjs';
+import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -58,7 +66,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly odontogramService: OdontogramService,
 		private readonly conceptsFacadeService: ConceptsFacadeService,
-		private readonly surfacesNamesFacadeService: SurfacesNamesFacadeService
+		private readonly surfacesNamesFacadeService: SurfacesNamesFacadeService,
+		private readonly odontologyConsultationService: OdontologyConsultationService,
+		private readonly dialog: MatDialog,
+		private readonly snackBarService: SnackBarService,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
@@ -105,6 +116,64 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.errors[2] = hasError(this.form, 'maxlength', 'evolution') ?
 			'La nota de evolución debe tener como máximo 1024 caracteres'
 			: undefined;
+	}
+
+
+	save() {
+		combineLatest([this.conceptsFacadeService.getProcedures$(), this.conceptsFacadeService.getDiagnostics$()]).pipe(take(1))
+			.subscribe(([procedures, diagnostics]) => {
+				const allConcepts = diagnostics.concat(procedures);
+				const odontologyDto: OdontologyConsultationDto = this.buildConsultationDto(allConcepts);
+				const suggestedFieldsService = new ConsultationSuggestedFieldsService(odontologyDto);
+
+				if (!suggestedFieldsService.nonCompletedFields.length) {
+					this.createConsultation(odontologyDto);
+				}
+				else {
+					this.openDialog(suggestedFieldsService.nonCompletedFields, suggestedFieldsService.presentFields, odontologyDto);
+				}
+			})
+	}
+
+	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {
+		const dialogRef = this.dialog.open(SuggestedFieldsPopupComponent, {
+			data: { nonCompletedFields, presentFields }
+		});
+		dialogRef.afterClosed().subscribe(confirm => {
+			if (confirm) {
+				this.createConsultation(odontologyDto);
+			}
+		});
+	}
+
+	private createConsultation(odontologyDto: OdontologyConsultationDto) {
+		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto).subscribe(
+			_ => {
+				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente');
+			},
+			_ => {
+				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
+			}
+		);
+
+	}
+
+	private buildConsultationDto(allConcepts: OdontologyConceptDto[]): OdontologyConsultationDto {
+
+		let dentalActions: OdontologyDentalActionDto[] = [];
+		this.odontogramService.actionedTeeth.forEach((a: ActionedTooth) => dentalActions = dentalActions.concat(toDentalAction(a, allConcepts)));
+
+		return {
+			allergies: this.allergiesNewConsultationService.getAlergias().map(toOdontologyAllergyConditionDto),
+			evolutionNote: this.form.value.evolution,
+			medications: this.medicationsNewConsultationService.getMedicaciones().map(toOdontologyMedicationDto),
+			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
+			procedures: null,
+			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
+			clinicalSpecialtyId: this.form.value.clinicalSpecialty,
+			dentalActions,
+			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentesPersonales().map(toOdontologyPersonalHistoryDto),
+		};
 	}
 
 }
