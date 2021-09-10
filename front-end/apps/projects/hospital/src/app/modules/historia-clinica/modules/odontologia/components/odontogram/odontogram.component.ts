@@ -30,7 +30,7 @@ export class OdontogramComponent implements OnInit {
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
 
 	quadrants;
-	records = {};
+	currentDraws = {};
 	actionsFrom = {};
 	private patientId: string;
 	ngOnInit(): void {
@@ -61,7 +61,7 @@ export class OdontogramComponent implements OnInit {
 				this.odontogramRestService.getOdontogramDrawings(this.patientId).subscribe(
 					(records: ToothDrawingsDto[]) => {
 						records.forEach(record => {
-							this.records[record.toothSctid] = mapRecords(record.drawings);
+							this.currentDraws[record.toothSctid] = mapRecords(record.drawings);
 						})
 					}
 				)
@@ -76,7 +76,7 @@ export class OdontogramComponent implements OnInit {
 				tooth,
 				quadrantCode,
 				currentActions: this.odontogramService.getActionsFrom(tooth.snomed.sctid),
-				records: this.records[tooth.snomed.sctid] ? deepClone(this.records[tooth.snomed.sctid]) : [],
+				records: this.currentDraws[tooth.snomed.sctid] ? deepClone(this.currentDraws[tooth.snomed.sctid]) : [],
 				patientId: this.patientId
 			}
 		});
@@ -94,8 +94,34 @@ export class OdontogramComponent implements OnInit {
 
 	openConsultationPopup() {
 		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
+		dialogRef.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+				this.setActionsAsRecords();
+			}
+		})
 	}
 
+	private setActionsAsRecords() {
+		this.odontogramService.actionedTeeth.forEach(actionedTooth => {
+			const actions = actionedTooth.actions
+				.map(currentActionsToRecords);
+			this.currentDraws[actionedTooth.tooth.snomed.sctid] = actions;
+		});
+		this.odontogramService.resetOdontogram();
+	}
+
+}
+
+const currentActionsToRecords = (action: ToothAction) => {
+	return {
+		action:
+		{
+			sctid: action.action.sctid,
+			type: action.action.type === ActionType.RECORD
+		},
+		surfaceId: action.surfaceId,
+		wholeProcedureOrder: action.wholeProcedureOrder
+	}
 }
 
 const mapRecords = (drawings: Drawings): ToothAction[] => {

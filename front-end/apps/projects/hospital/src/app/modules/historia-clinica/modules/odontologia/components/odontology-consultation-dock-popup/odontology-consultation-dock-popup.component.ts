@@ -150,6 +150,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente');
+				this.dockPopupRef.close(true);
 			},
 			_ => {
 				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');

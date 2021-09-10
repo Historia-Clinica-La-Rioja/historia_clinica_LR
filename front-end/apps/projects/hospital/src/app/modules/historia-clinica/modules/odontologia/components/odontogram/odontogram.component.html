@@ -14,7 +14,7 @@
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant1.code)"
 					matTooltip="Pieza {{quadrants.quadrant1.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 
@@ -25,7 +25,7 @@
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant2.code)"
 					matTooltip="Pieza {{quadrants.quadrant2.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 				<span>{{quadrants.quadrant5.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant5.code)"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
@@ -45,7 +45,7 @@
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant6.code)"
 					matTooltip="Pieza {{quadrants.quadrant6.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -55,7 +55,7 @@
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant8.code)"
 					matTooltip="Pieza {{quadrants.quadrant8.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -65,7 +65,7 @@
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant7.code)"
 					matTooltip="Pieza {{quadrants.quadrant7.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -75,7 +75,7 @@
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant4.code)"
 					matTooltip="Pieza {{quadrants.quadrant4.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -85,7 +85,7 @@
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant3.code)"
 					matTooltip="Pieza {{quadrants.quadrant3.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
 					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
-					[records]="records[tooth.snomed.sctid]">
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
