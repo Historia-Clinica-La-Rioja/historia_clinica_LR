@@ -170,6 +170,19 @@ export class ToothComponent implements AfterViewInit {
 			this.actionsService.addProcedure(sctid, selectedSurfacesIds, order);
 		}
 	}
+
+	public deleteAction(sctid: string, selectedSurfaces: string[], actionType: ActionType, order: ProcedureOrder){
+		if (!selectedSurfaces.length){
+			this.actionsService.deleteAction(undefined, sctid, actionType, order);
+		}
+		else {
+			selectedSurfaces.forEach(
+				surface => {
+					this.actionsService.deleteAction(surface, sctid, actionType, order);
+				}
+			);
+		}
+	}
 }
 
 export interface Actions {

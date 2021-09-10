@@ -39,8 +39,8 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	ngOnChanges(): void {
 		this.optionsFiltered = this.options;
 
-		if (this.externalSetValue && this.options) {
-			this.form.controls.searchValue.setValue(this.externalSetValue.compareValue);
+		if (this.options) {
+			this.form.controls.searchValue.setValue(this.externalSetValue?.compareValue);
 			this.optionSelected = this.externalSetValue;
 		}
 

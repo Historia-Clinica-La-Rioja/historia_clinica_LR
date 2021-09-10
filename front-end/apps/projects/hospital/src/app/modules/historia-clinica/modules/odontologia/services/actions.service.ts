@@ -152,6 +152,21 @@ export class ActionsService {
 		return currentDraw;
 
 	}
+
+	deleteAction (surfaceId: string, sctid: string, actionTypeToDelete: ActionType, order: ProcedureOrder){
+		const elementToDelete: ToothAction = this.actionsOnTeeth.find(
+			actionSurface =>
+				actionSurface.surfaceId === surfaceId && actionSurface.action.sctid === sctid &&
+				actionSurface.action.type === actionTypeToDelete &&
+				actionSurface.wholeProcedureOrder === order
+		);
+
+		const index = this.actionsOnTeeth.indexOf(elementToDelete);
+
+		this.actionsOnTeeth.splice(index, 1);
+
+		this.setActions(this.actionsOnTeeth);
+	}
 }
 
 
