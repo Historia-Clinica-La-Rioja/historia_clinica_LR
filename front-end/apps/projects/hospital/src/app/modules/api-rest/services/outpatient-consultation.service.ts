@@ -36,8 +36,4 @@ export class OutpatientConsultationService {
 		return this.http.get<OutpatientEvolutionSummaryDto[]>(url);
 	}
 
-	getOutpatientConsultations(patientId: number): Observable<ConsultationsDto[]> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/outpatient-consultations`;
-		return this.http.get<ConsultationsDto[]>(url);
-	}
 }

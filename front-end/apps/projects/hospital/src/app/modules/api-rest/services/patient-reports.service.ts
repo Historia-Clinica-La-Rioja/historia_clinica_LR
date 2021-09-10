@@ -36,4 +36,9 @@ export class PatientReportsService {
 		return this.downloadService.downloadPdfWithRequestParams(url, pdfName, {outpatientId});
 	}
 
+	getConsultations(patientId: number): Observable<ConsultationsDto[]> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/patient/${patientId}/consultations-list`;
+		return this.http.get<ConsultationsDto[]>(url);
+	}
+
 }

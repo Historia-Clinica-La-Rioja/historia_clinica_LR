@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.outpatient.repository.domain;
+package net.pladema.reports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +12,8 @@ import java.time.LocalDate;
 public class ConsultationsVo {
 
     private Integer id;
+
+    private Long documentId;
 
     private LocalDate consultationDate;
 

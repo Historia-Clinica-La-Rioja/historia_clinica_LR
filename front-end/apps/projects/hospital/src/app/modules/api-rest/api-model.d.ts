@@ -391,6 +391,7 @@ export interface ConditionDto {
 export interface ConsultationsDto extends Serializable {
     completeProfessionalName: string;
     consultationDate: Date;
+    documentId: number;
     id: number;
     specialty: string;
 }

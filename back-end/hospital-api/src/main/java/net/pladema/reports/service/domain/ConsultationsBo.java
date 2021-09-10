@@ -1,8 +1,8 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
+package net.pladema.reports.service.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.clinichistory.outpatient.repository.domain.ConsultationsVo;
+import net.pladema.reports.repository.ConsultationsVo;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -15,6 +15,8 @@ public class ConsultationsBo {
 
     private Integer id;
 
+    private Long documentId;
+
     private LocalDate consultationDate;
 
     private String specialty;
@@ -23,6 +25,7 @@ public class ConsultationsBo {
 
     public ConsultationsBo(ConsultationsVo consultationsVo){
         this.id = consultationsVo.getId();
+        this.documentId = consultationsVo.getDocumentId();
         this.consultationDate = consultationsVo.getConsultationDate();
         this.specialty = consultationsVo.getSpecialty();
         this.completeProfessionalName = Stream.of(consultationsVo.getFirstName(), consultationsVo.getMiddleNames(), consultationsVo.getLastName(), consultationsVo.getOtherLastNames())

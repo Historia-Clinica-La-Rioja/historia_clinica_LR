@@ -5,7 +5,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ConsultationsBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
@@ -50,12 +49,4 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         return result;
     }
 
-    @Override
-    public List<ConsultationsBo> getOutpatientConsultations(Integer patientId) {
-        LOG.debug("Input parameter -> patientId {}", patientId);
-        List<ConsultationsBo> result = outpatientConsultationSummaryRepository.getOutpatientConsultations(patientId).stream().map(ConsultationsBo::new)
-                .collect(Collectors.toList());
-        LOG.debug("Output -> {}", result);
-        return result;
-    }
 }

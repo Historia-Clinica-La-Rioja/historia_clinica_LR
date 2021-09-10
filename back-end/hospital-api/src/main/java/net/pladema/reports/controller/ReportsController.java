@@ -5,12 +5,15 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.reports.controller.dto.ConsultationsDto;
+import net.pladema.reports.service.domain.ConsultationsBo;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
 import net.pladema.reports.repository.QueryFactory;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.ExcelService;
+import net.pladema.reports.service.FetchConsultations;
 import net.pladema.reports.service.FormReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
 import net.pladema.reports.service.domain.ConsultationSummaryReport;
@@ -36,6 +39,7 @@ import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -62,8 +66,15 @@ public class ReportsController {
 
     private final ReportsMapper reportsMapper;
 
+    private final FetchConsultations fetchConsultations;
+
     public ReportsController(ExcelService excelService, ConsultationSummaryReport consultationSummaryReport,
-                             QueryFactory queryFactory, LocalDateMapper localDateMapper, PdfService pdfService, AnnexReportService annexReportService, FormReportService formReportService, ReportsMapper reportsMapper){
+                             QueryFactory queryFactory, LocalDateMapper localDateMapper,
+                             PdfService pdfService,
+                             AnnexReportService annexReportService,
+                             FormReportService formReportService,
+                             ReportsMapper reportsMapper,
+                             FetchConsultations fetchConsultations){
         this.excelService = excelService;
         this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
@@ -72,6 +83,7 @@ public class ReportsController {
         this.annexReportService = annexReportService;
         this.formReportService = formReportService;
         this.reportsMapper = reportsMapper;
+        this.fetchConsultations = fetchConsultations;
     }
 
     @GetMapping(value = "/{institutionId}/monthly")
@@ -216,5 +228,17 @@ public class ReportsController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + outputFileName)
                 .contentType(MediaType.APPLICATION_PDF).contentLength(outputStream.size()).body(resource);
         return response;
+    }
+
+
+    @GetMapping("/institution/{institutionId}/patient/{patientId}/consultations-list")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    public ResponseEntity<List<ConsultationsDto>> getConsultations(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId){
+        LOG.debug("Input parameter -> patientId {}", patientId);
+        List<ConsultationsBo> consultations = fetchConsultations.run(patientId);
+        List<ConsultationsDto> result = reportsMapper.fromListConsultationsBo(consultations);
+        return ResponseEntity.ok(result);
     }
 }

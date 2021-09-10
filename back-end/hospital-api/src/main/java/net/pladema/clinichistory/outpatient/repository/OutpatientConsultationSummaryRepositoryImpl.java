@@ -152,30 +152,4 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
         return result;
     }
 
-    @Override
-    public List<ConsultationsVo> getOutpatientConsultations(Integer patientId) {
-        String sqlString = "SELECT oc.id, oc.startDate, cs.name, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames "
-                +"  FROM OutpatientConsultation AS oc "
-                +"  LEFT JOIN ClinicalSpecialty AS cs ON(cs. id = oc.clinicalSpecialtyId) "
-                +"  JOIN HealthcareProfessional AS hp ON(hp.id = oc.doctorId) "
-                +"  JOIN Person AS pe ON(pe.id = hp.personId) "
-                +"  WHERE oc.patientId = :patientId "
-                +"  AND oc.billable = true "
-                +"  ORDER BY oc.startDate DESC";
-        List<Object[]> queryResult = entityManager.createQuery(sqlString)
-                .setParameter("patientId", patientId)
-                .getResultList();
-        List<ConsultationsVo> result = new ArrayList<>();
-        queryResult.forEach(a ->
-                result.add(new ConsultationsVo(
-                        (Integer) a[0],
-                        a[1] != null ? (LocalDate)a[1] : null,
-                        (String) a[2],
-                        (String) a[3],
-                        (String) a[4],
-                        (String) a[5],
-                        (String) a[6]))
-        );
-        return result;
-    }
 }
