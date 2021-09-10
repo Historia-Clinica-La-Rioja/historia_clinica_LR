@@ -1,23 +1,25 @@
 .filter-panel{
-    min-width: 30%;
     background-color: #f3efef8e;
-    padding: 20px;
 }
 
-section.problems {
-    padding: 20px;
+.historical-list {
     margin-top: 0;
 	max-height: 80vh;
 	overflow-y: auto;
 	overflow-wrap: break-word;
 }
+
+.historical-item {
+    padding: 20px;
+}
+
 .no-data-styles {
-    padding: 20px 5px;
     text-align: center;
     font-weight: bold;
     color: #A8A8A8;
     font-size: 18px
 }
+
 #problemas {
     .mat-list .mat-list-item .mat-line{
         overflow-wrap: break-word;
@@ -41,11 +43,7 @@ section.problems {
     }
 }
 
-.problem {
-    margin-bottom: 15px;
-}
-
-#historical-problems-card {
+.historical-card {
     padding: 0;
 }
 

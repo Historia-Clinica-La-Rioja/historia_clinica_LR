@@ -21,6 +21,8 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { ExternalClinicalHistory, ExternalClinicalHistoryService } from '../../services/external-clinical-history.service';
+import { Moment } from 'moment';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -61,6 +63,11 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
 	private severityTypeMasterData: any[];
 
+	// External clinical history attributes
+	public externalClinicalHistoryList: any[];
+	public externalClinicalHistoryAmount: number = 0;
+	public showExternalFilters: boolean = false;
+
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private historicalProblemsFacadeService: HistoricalProblemsFacadeService,
@@ -91,6 +98,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypeMasterData = healthConditionSeverities;
 		});
+	}
+
+	ngOnDestroy(): void {
+		this.historicalProblems$.unsubscribe();
 	}
 
 	getSeverityTypeDisplayByCode(severityCode): string {
@@ -183,8 +194,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		});
 	}
 
-
-
 	solveProblemPopUp(problema: HCEPersonalHistoryDto) {
 		this.dialog.open(SolveProblemComponent, {
 			data: {
@@ -211,12 +220,31 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.hideFilterPanel = !this.hideFilterPanel;
 	}
 
-	ngOnDestroy(): void {
-		this.historicalProblems$.unsubscribe();
-	}
-
 	goToHospitalizationEpisode(problema: HCEHospitalizationHistoryDto) {
 		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + problema.sourceId + ROUTE_INTERNMENT_EPISODE_SUFIX + this.patientId]);
 	}
 
+	// External clinical History methods
+
+	public toggleExternalFilters(): void {
+		this.showExternalFilters = !this.showExternalFilters;
+	}
+
+	private loadExternalClinicalHistoryList(): void {
+		this.externalClinicalHistoryService.getFilteredHistories().pipe(
+			tap((filteredHistories: ExternalClinicalHistory[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
+		).subscribe(
+			(filteredHistories: ExternalClinicalHistory[]) => {
+				this.externalClinicalHistoryList = filteredHistories.sort(
+					(h1: ExternalClinicalHistory, h2: ExternalClinicalHistory) => {
+						const moment1: Moment = momentParseDate(h1.consultationDate);
+						const moment2: Moment = momentParseDate(h2.consultationDate);
+						if (moment1.isSame(moment2)) return 0;
+						else if (moment1.isBefore(moment2)) return 1;
+						return -1;
+					}
+				);
+			}
+		);
+	}
 }
