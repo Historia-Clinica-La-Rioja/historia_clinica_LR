@@ -37,6 +37,7 @@ const authProvider = {
         }
         return Promise.resolve();
     },
+
     getPermissions: () => {
         return apiRest.permission$;
     },

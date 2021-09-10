@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-    TextInput,
-    Edit,
-    SimpleForm,
-    required,
-} from 'react-admin';
+import {Edit, required, SimpleForm, TextInput,} from 'react-admin';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
-const DoctorsOfficeEdit = props => (
+const DoctorsOfficeEdit = ({ permissions, ...props }) => (
     <Edit {...props}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="description" validate={[required()]} />
@@ -23,6 +18,9 @@ const DoctorsOfficeEdit = props => (
                             optionText="name"
                             alwaysOn
                             allowEmpty={false}/>
+
+            { permissions && permissions.isOn("HABILITAR_LLAMADO") && <TextInput source="topic"/> }
+
         </SimpleForm>
     </Edit>
 );

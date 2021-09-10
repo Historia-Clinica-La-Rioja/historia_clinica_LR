@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    List,
-    Datagrid,
-    ReferenceField,
-    TextField,
-    Filter,
-    TextInput
-} from 'react-admin';
+import {Datagrid, Filter, List, ReferenceField, TextField, TextInput} from 'react-admin';
 
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
@@ -18,8 +11,7 @@ const DoctorsOfficeFilter = props =>(
     </Filter>
 );
 
-
-const DoctorsOfficeList = props => (
+const DoctorsOfficeList = ({ permissions, ...props }) => (
     <List {...props} hasCreate={false} filters={<DoctorsOfficeFilter />} >
         <Datagrid rowClick="show">
 
@@ -33,9 +25,13 @@ const DoctorsOfficeList = props => (
                 <TextField source="description"/>
             </ReferenceField>
 
+            { permissions && permissions.isOn("HABILITAR_LLAMADO") && <TextField source="topic"/> }
+
         </Datagrid>
     </List>
 );
+
+
 
 export default DoctorsOfficeList;
 

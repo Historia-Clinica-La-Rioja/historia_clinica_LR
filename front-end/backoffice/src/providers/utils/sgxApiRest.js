@@ -1,5 +1,5 @@
-import { setHeader, sgxFetchApi } from '../../libs/sgx/utils/sgxFetch';
-import { configureRefreshFetch } from 'refresh-fetch';
+import {setHeader, sgxFetchApi} from '../../libs/sgx/utils/sgxFetch';
+import {configureRefreshFetch} from 'refresh-fetch';
 import SGXPermissions from './SGXPermissions';
 
 const TOKEN_KEY_STORE = 'token';
@@ -25,7 +25,6 @@ const doRefreshToken = () => {
     const options = buildPostOptions({ refreshToken });
     return sgxFetchApi('/auth/refresh', options)
         .then(({ token, refreshToken }) => {
-            console.log('response', { token, refreshToken });
             saveTokens(token, refreshToken)
         })
         .catch(error => {
@@ -66,12 +65,13 @@ class SgxApiRest {
         if (!this.isAuthenticated()) {
             return Promise.reject();
         }
-        if (!this._permission$) {
-            this._permission$ = this.fetch('/account/permissions')
-                .then((json) => {
-                    return new SGXPermissions(json);
-                });
+        if(!this._permission$) {
+            this._permission$ = Promise.all([this.fetch('/account/permissions'), this.fetch('/public/info')])
+                .then(values => {
+                    return new SGXPermissions({ roleAssignments: values[0].roleAssignments, featureFlags: values[1].features})
+                })
         }
+
         return this._permission$;
     }
 

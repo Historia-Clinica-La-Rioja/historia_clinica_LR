@@ -3,8 +3,8 @@ class SGXPermissions {
 
     constructor(permissions) {
         this.roleAssignments = permissions.roleAssignments;
+        this.featureFlags = permissions.featureFlags;
     }
-
 
     hasAnyAssignment(...anyAssignments) {
         if (anyAssignments.length === 0) {
@@ -27,6 +27,12 @@ class SGXPermissions {
 
         return hasAny;
     }
+
+    isOn(featureFlag) {
+        return this.featureFlags.find(ff => ff === featureFlag) !== undefined;
+    }
+
+
 
 }
 
