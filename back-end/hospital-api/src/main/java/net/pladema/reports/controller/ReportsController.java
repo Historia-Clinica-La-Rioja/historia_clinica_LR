@@ -161,25 +161,25 @@ public class ReportsController {
         AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
         Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
-        String outputFileName = annexReportService.createOutputFileName(appointmentId, now);
+        String outputFileName = annexReportService.createConsultationFileName(appointmentId.longValue(), now);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "annex_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
 
-    @GetMapping("/{institutionId}/outpatient-annex")
+    @GetMapping("/{institutionId}/consultations-annex")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
-    public ResponseEntity<InputStreamResource> getOutpatientAnnexReport(
+    public ResponseEntity<InputStreamResource> getConsultationAnnexReport(
             @PathVariable Integer institutionId,
-            @RequestParam(name = "outpatientId") Integer outpatientId)
+            @RequestParam(name = "documentId") Long documentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameter -> outpatientId {}", outpatientId);
+        LOG.debug("Input parameter -> documentId {}", documentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        AnnexIIBo reportDataBo = annexReportService.getOutpatientData(outpatientId);
+        AnnexIIBo reportDataBo = annexReportService.getConsultationData(documentId);
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
-        Map<String, Object> context = annexReportService.createOutpatientContext(reportDataDto);
-        String outputFileName = annexReportService.createOutputFileName(outpatientId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "annex_report");
+        Map<String, Object> context = annexReportService.createConsultationContext(reportDataDto);
+        String consultationFileName = annexReportService.createConsultationFileName(documentId, now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, consultationFileName, "annex_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }

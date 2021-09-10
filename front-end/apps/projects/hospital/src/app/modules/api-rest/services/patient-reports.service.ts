@@ -17,23 +17,23 @@ export class PatientReportsService {
 	constructor(private http: HttpClient, private readonly contextService: ContextService, private readonly downloadService: DownloadService) {
 	}
 
-	getFormPdf(outpatientConsultation: ConsultationsDto, patientName: string): Observable<any> {
+	getFormPdf(consultation: ConsultationsDto, patientName: string): Observable<any> {
 		const pdfPrefixName = 'FormularioV';
 		const url = this.URL_PREFIX + 'outpatient-formv';
-		return this.getOutpatientConsultationReport(url, outpatientConsultation, pdfPrefixName, patientName);
+		return this.getOutpatientConsultationReport(url, consultation, pdfPrefixName, patientName);
 	}
 
-	getAnnexPdf(outpatientConsultation: ConsultationsDto, patientName: string): Observable<any> {
+	getAnnexPdf(consultation: ConsultationsDto, patientName: string): Observable<any> {
 		const pdfPrefixName = 'AnexoII';
-		const url = this.URL_PREFIX + 'outpatient-annex';
-		return this.getOutpatientConsultationReport(url, outpatientConsultation, pdfPrefixName, patientName);
+		const url = this.URL_PREFIX + 'consultations-annex';
+		return this.getOutpatientConsultationReport(url, consultation, pdfPrefixName, patientName);
 	}
 
-	getOutpatientConsultationReport(url: string, outpatientConsultation: ConsultationsDto, pdfPrefixName: string, patientName: string): Observable<any> {
-		const consultationDate: string = momentFormat(momentParseDate(String(outpatientConsultation.consultationDate)), DateFormat.FILE_DATE);
-		const pdfName = pdfPrefixName + `_${patientName}_${consultationDate}_${outpatientConsultation.completeProfessionalName}`;
-		const outpatientId = outpatientConsultation.id;
-		return this.downloadService.downloadPdfWithRequestParams(url, pdfName, {outpatientId});
+	getOutpatientConsultationReport(url: string, consultationDto: ConsultationsDto, pdfPrefixName: string, patientName: string): Observable<any> {
+		const consultationDate: string = momentFormat(momentParseDate(String(consultationDto.consultationDate)), DateFormat.FILE_DATE);
+		const pdfName = pdfPrefixName + `_${patientName}_${consultationDate}_${consultationDto.completeProfessionalName}`;
+		const documentId = consultationDto.documentId;
+		return this.downloadService.downloadPdfWithRequestParams(url, pdfName, {documentId});
 	}
 
 	getConsultations(patientId: number): Observable<ConsultationsDto[]> {

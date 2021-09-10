@@ -45,25 +45,34 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     }
 
     @Override
-    public Optional<AnnexIIVo> getOutpatientAnnexInfo(Integer outpatientId) {
-        String query = "SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
-                "               pe.birth_date, it.description as idType, pe.identification_number, oc.start_date, pr.proced as hasProcedures, cs.name " +
-                "       FROM outpatient_consultation AS oc " +
-                "           JOIN Institution AS i ON (oc.institution_id = i.id) " +
-                "           JOIN Patient AS pa ON (oc.patient_id = pa.id) " +
+    public Optional<AnnexIIVo> getConsultationAnnexInfo(Long documentId) {
+        String query = "WITH t AS (" +
+                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id " +
+                "       FROM document AS d " +
+                "       JOIN outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)" +
+                "       WHERE d.id = :documentId " +
+                "       UNION ALL " +
+                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id " +
+                "       FROM document AS d " +
+                "       JOIN vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
+                "       WHERE d.id = :documentId " +
+                "       )" +
+                "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
+                "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, cs.name " +
+                "       FROM t " +
+                "           JOIN Institution AS i ON (t.institution_id = i.id) " +
+                "           JOIN Patient AS pa ON (t.patient_id = pa.id) " +
                 "           LEFT JOIN Person AS pe ON (pe.id = pa.person_id) " +
                 "           LEFT JOIN Identification_type AS it ON (it.id = pe.identification_type_id)" +
                 "           LEFT JOIN Gender AS g ON (pe.gender_id = g.id) " +
-                "           LEFT JOIN clinical_specialty AS cs ON (oc.clinical_specialty_id = cs.id)" +
+                "           LEFT JOIN clinical_specialty AS cs ON (t.clinical_specialty_id = cs.id)" +
                 "           LEFT JOIN ( " +
-                "               SELECT oc.id, CAST(1 AS BIT) as proced " +
-                "               FROM outpatient_consultation oc " +
-                "               JOIN document_procedure dp ON (oc.document_id = dp.document_id) " +
-                "               GROUP BY proced, oc.id " +
-                "           ) pr ON (oc.id = pr.id)"+
-                "       WHERE OC.id = :outpatientId ";
+                "               SELECT dp.document_id, CAST(1 AS BIT) as proced " +
+                "               FROM document_procedure dp " +
+                "               GROUP BY proced, dp.document_id " +
+                "           ) pr ON (t.doc_id = pr.document_id)";
         Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
-                .setParameter("outpatientId", outpatientId)
+                .setParameter("documentId", documentId)
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
 

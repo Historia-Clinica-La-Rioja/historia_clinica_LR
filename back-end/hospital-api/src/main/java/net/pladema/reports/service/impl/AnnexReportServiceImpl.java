@@ -38,9 +38,9 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     }
 
     @Override
-    public AnnexIIBo getOutpatientData(Integer outpatientId) {
-        LOG.debug("Input parameter -> outpatientId {}", outpatientId);
-        AnnexIIBo result = annexReportRepository.getOutpatientAnnexInfo(outpatientId).map(AnnexIIBo::new)
+    public AnnexIIBo getConsultationData(Long documentId) {
+        LOG.debug("Input parameter -> documentId {}", documentId);
+        AnnexIIBo result = annexReportRepository.getConsultationAnnexInfo(documentId).map(AnnexIIBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
         LOG.debug("Output -> {}", result);
         return result;
@@ -65,7 +65,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     }
 
     @Override
-    public Map<String, Object> createOutpatientContext(AnnexIIDto reportDataDto){
+    public Map<String, Object> createConsultationContext(AnnexIIDto reportDataDto){
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("reportDate", reportDataDto.getReportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -83,10 +83,10 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     }
 
     @Override
-    public String createOutputFileName(Integer id, ZonedDateTime consultedDate){
-        LOG.debug("Input parameters -> id {}, consultedDate {}", id, consultedDate);
+    public String createConsultationFileName(Long documentId, ZonedDateTime consultedDate){
+        LOG.debug("Input parameters -> documentId {}, consultedDate {}", documentId, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        String outputFileName = String.format("%s. AnexoII %s.pdf", id, formattedDate);
+        String outputFileName = String.format("%s. AnexoII %s.pdf", documentId, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

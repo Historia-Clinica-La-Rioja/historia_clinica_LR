@@ -10,11 +10,11 @@ public interface AnnexReportService {
 
     AnnexIIBo getAppointmentData(Integer appointmentId);
 
-    AnnexIIBo getOutpatientData(Integer outpatientId);
+    AnnexIIBo getConsultationData(Long documentId);
 
     Map<String, Object> createAppointmentContext(AnnexIIDto reportDataDto);
 
-    Map<String, Object> createOutpatientContext(AnnexIIDto reportDataDto);
+    Map<String, Object> createConsultationContext(AnnexIIDto reportDataDto);
 
-    String createOutputFileName(Integer appointmentId, ZonedDateTime consultedDate);
+    String createConsultationFileName(Long documentId, ZonedDateTime consultedDate);
 }

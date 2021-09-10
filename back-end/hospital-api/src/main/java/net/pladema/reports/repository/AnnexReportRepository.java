@@ -8,5 +8,5 @@ public interface AnnexReportRepository {
 
     Optional<AnnexIIVo> getAppointmentAnnexInfo(Integer appointmentId);
 
-    Optional<AnnexIIVo> getOutpatientAnnexInfo(Integer outpatientId);
+    Optional<AnnexIIVo> getConsultationAnnexInfo(Long documentId);
 }
