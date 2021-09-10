@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public class NotifyPatientBo {
-    private Integer appointmentId;
-    private String patientName;
-    private Integer sectorId;
-    private String doctorName;
-    private String doctorsOfficeName;
-    private String topic;
+    private final Integer appointmentId;
+    private final String patientName;
+    private final Integer sectorId;
+    private final String doctorName;
+    private final String doctorsOfficeName;
+    private final String topic;
 
     public NotifyPatientBo(Integer appointmentId, String patientName, Integer sectorId, String doctorName, String doctorsOfficeName, String topic) {
         this.appointmentId = appointmentId;

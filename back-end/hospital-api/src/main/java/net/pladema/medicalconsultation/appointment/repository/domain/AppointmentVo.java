@@ -13,13 +13,13 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class AppointmentVo {
 
-	private final Appointment appointment;
+	private Appointment appointment;
 
-	private final Short medicalAttentionTypeId;
+	private Short medicalAttentionTypeId;
 
-	private final String stateChangeReason;
+	private String stateChangeReason;
 	
-    private final Integer diaryId;
+    private Integer diaryId;
 
 	public AppointmentVo(Appointment appointment) {
 		this.appointment = appointment;

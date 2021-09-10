@@ -32,7 +32,7 @@ public class SendAppointmentNotificationImpl implements SendAppointmentNotificat
         );
     }
 
-    private String getMessage(NotifyPatientBo notifyPatientBo) {
+    protected String getMessage(NotifyPatientBo notifyPatientBo) {
             return String.format(
                     "data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}",
                     notifyPatientBo.getAppointmentId(),

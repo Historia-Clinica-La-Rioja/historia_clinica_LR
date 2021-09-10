@@ -36,15 +36,13 @@ public class MqttCallAutoConfiguration {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
-            options.setConnectionTimeout(10);
+            options.setConnectionTimeout(1000);
             if(mqttClientConnection) {
                 client.connect(options);
             }
         } catch (MqttException e) {
             e.printStackTrace();
         }
-
-
         return client;
     }
 }

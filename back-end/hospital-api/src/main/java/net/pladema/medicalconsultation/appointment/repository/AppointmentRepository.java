@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import org.springframework.data.jpa.repository.Modifying;
@@ -110,4 +111,18 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
                                      @Param("currentDate") LocalDate currentDate,
                                      @Param("appointmentState") Short appointmentState,
                                      @Param("professionalId") Integer professionalId);
+
+    @Transactional(readOnly = true)
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo(a.id, pp.lastName, pp.firstName, css.sectorId, php.lastName,php.firstName, do.description, do.topic)" +
+            "FROM Appointment AS a " +
+            "JOIN Patient AS p ON (p.id = a.patientId) " +
+            "JOIN Person AS pp ON (pp.id = p.personId) " +
+            "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+            "JOIN Diary d ON (d.id = aa.pk.diaryId) " +
+            "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+            "JOIN ClinicalSpecialtySector AS css ON (do.clinicalSpecialtySectorId = css.id) " +
+            "JOIN HealthcareProfessional AS hp ON (d.healthcareProfessionalId = hp.id)" +
+            "JOIN Person AS php ON (php.id = hp.personId)" +
+            "WHERE a.id = :appointmentId ")
+    Optional<NotifyPatientVo> getNotificationData(@Param("appointmentId") Integer appointmentId);
 }
