@@ -195,25 +195,25 @@ public class ReportsController {
         FormVBo reportDataBo = formReportService.getAppointmentData(appointmentId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
         Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
-        String outputFileName = formReportService.createOutputFileName(appointmentId, now);
+        String outputFileName = formReportService.createConsultationFileName(appointmentId.longValue(), now);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "form_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
 
-    @GetMapping("/{institutionId}/outpatient-formv")
+    @GetMapping("/{institutionId}/consultation-formv")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
-    public ResponseEntity<InputStreamResource> getFormVOutpatientReport(
+    public ResponseEntity<InputStreamResource> getFormVConsultationReport(
             @PathVariable Integer institutionId,
-            @RequestParam(name = "outpatientId") Integer outpatientId)
+            @RequestParam(name = "documentId") Long documentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameter -> outpatientId {}", outpatientId);
+        LOG.debug("Input parameter -> documentId {}", documentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        FormVBo reportDataBo = formReportService.getOutpatientData(outpatientId);
+        FormVBo reportDataBo = formReportService.getConsultationData(documentId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
-        Map<String, Object> context = formReportService.createOutpatientContext(reportDataDto);
-        String outputFileNames = formReportService.createOutputFileName(outpatientId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileNames, "form_report");
+        Map<String, Object> context = formReportService.createConsultationContext(reportDataDto);
+        String consultationFileName = formReportService.createConsultationFileName(documentId, now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, consultationFileName, "form_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }

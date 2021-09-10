@@ -19,7 +19,7 @@ export class PatientReportsService {
 
 	getFormPdf(consultation: ConsultationsDto, patientName: string): Observable<any> {
 		const pdfPrefixName = 'FormularioV';
-		const url = this.URL_PREFIX + 'outpatient-formv';
+		const url = this.URL_PREFIX + 'consultation-formv';
 		return this.getOutpatientConsultationReport(url, consultation, pdfPrefixName, patientName);
 	}
 

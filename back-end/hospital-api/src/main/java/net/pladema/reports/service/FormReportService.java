@@ -10,11 +10,11 @@ public interface FormReportService {
 
     FormVBo getAppointmentData(Integer appointmentId);
 
-    FormVBo getOutpatientData(Integer outpatientId);
+    FormVBo getConsultationData(Long documentId);
 
     Map<String, Object> createAppointmentContext(FormVDto reportDataDto);
 
-    Map<String, Object> createOutpatientContext(FormVDto reportDataDto);
+    Map<String, Object> createConsultationContext(FormVDto reportDataDto);
 
-    String createOutputFileName(Integer appointmentId, ZonedDateTime consultedDate);
+    String createConsultationFileName(Long documentId, ZonedDateTime consultedDate);
 }

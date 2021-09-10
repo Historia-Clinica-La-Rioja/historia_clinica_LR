@@ -38,9 +38,9 @@ public class FormReportServiceImpl implements FormReportService {
     }
 
     @Override
-    public FormVBo getOutpatientData(Integer outpatientId) {
-        LOG.debug("Input parameter -> outpatientId {}", outpatientId);
-        FormVBo result = formReportRepository.getOutpatientFormVInfo(outpatientId).map(FormVBo::new)
+    public FormVBo getConsultationData(Long documentId) {
+        LOG.debug("Input parameter -> documentId {}", documentId);
+        FormVBo result = formReportRepository.getConsultationFormVInfo(documentId).map(FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
         LOG.debug("Output -> {}", result);
         return result;
@@ -64,7 +64,7 @@ public class FormReportServiceImpl implements FormReportService {
     }
 
     @Override
-    public Map<String, Object> createOutpatientContext(FormVDto reportDataDto){
+    public Map<String, Object> createConsultationContext(FormVDto reportDataDto){
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("establishment", reportDataDto.getEstablishment());
@@ -81,7 +81,7 @@ public class FormReportServiceImpl implements FormReportService {
     }
 
     @Override
-    public String createOutputFileName(Integer id, ZonedDateTime consultedDate){
+    public String createConsultationFileName(Long id, ZonedDateTime consultedDate){
         LOG.debug("Input parameters -> id {}, consultedDate {}", id, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String outputFileName = String.format("%s. FormV %s.pdf", id, formattedDate);

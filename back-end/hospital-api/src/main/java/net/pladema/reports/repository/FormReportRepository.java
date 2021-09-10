@@ -8,5 +8,5 @@ public interface FormReportRepository {
 
     Optional<FormVVo> getAppointmentFormVInfo(Integer appointmentId);
 
-    Optional<FormVVo> getOutpatientFormVInfo(Integer outpatientId);
+    Optional<FormVVo> getConsultationFormVInfo(Long documentId);
 }
