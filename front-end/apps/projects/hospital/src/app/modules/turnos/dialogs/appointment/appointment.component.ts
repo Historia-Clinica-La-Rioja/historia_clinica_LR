@@ -281,7 +281,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	callPatient() {
-		this.appointmentService.mqttCall(-2);
+		this.appointmentService.mqttCall(this.params.appointmentData.appointmentId).subscribe();
 	}
 
 	hideFilters(): void {

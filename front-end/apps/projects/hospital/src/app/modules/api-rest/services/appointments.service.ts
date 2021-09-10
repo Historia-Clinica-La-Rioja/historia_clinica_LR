@@ -94,6 +94,12 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, {params : queryParams});
 	}
 
+	mqttCall(appointmentId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/notifyPatient`;
+		console.log(url);
+		return this.http.post(url, {});
+	}
+
 	getDailyAmounts(diaryId: number): Observable<AppointmentDailyAmountDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
@@ -125,13 +131,6 @@ export class AppointmentsService {
 		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
 
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId});
-	}
-
-	mqttCall(appointmentId: number): void {
-		const url = `${environment.apiBase}/institutions/
-					${this.contextService.institutionId}/medicalConsultations/appointments/
-					${appointmentId}/notifyPatient`;
-		this.http.post(url, {});
 	}
 
 }

@@ -107,7 +107,7 @@
 				</button>
 
 				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-						[ngClass]="{'assigned': estadoSelected === appointmentStatesIds.CONFIRMED }"
+						[ngClass]="{ 'assigned': estadoSelected === appointmentStatesIds.CONFIRMED }"
 						(click)="callPatient()"
 						*ngIf="isMqttCallEnabled && estadoSelected === appointmentStatesIds.CONFIRMED" mat-stroked-button>
 					<mat-icon matTooltip="{{BELL_LABEL}}"
