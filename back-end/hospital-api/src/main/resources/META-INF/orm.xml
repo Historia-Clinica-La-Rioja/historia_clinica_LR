@@ -292,6 +292,7 @@
             JOIN document_health_condition dhc ON (doc.id = dhc.document_id)
             JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
             JOIN snomed sno ON (hc.snomed_id = sno.id)
+            WHERE hc.problem_id IN (:problemTypes)
             GROUP BY oc.id
             ) prob ON (oc.id = prob.id)
             LEFT JOIN (

@@ -1,5 +1,6 @@
 package net.pladema.reports.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class QueryFactory {
         query.setParameter("institutionId", institutionId);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
+        query.setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC));
         List<ConsultationDetail> data = query.getResultList();
 
         //Optional filter: by specialty or professional if specified
