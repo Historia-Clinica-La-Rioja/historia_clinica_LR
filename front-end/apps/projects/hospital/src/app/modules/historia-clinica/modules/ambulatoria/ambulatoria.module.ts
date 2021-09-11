@@ -35,6 +35,7 @@ import { OdontologiaModule } from '../odontologia/odontologia.module';
 import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
 import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacunas.component';
 import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.component';
+import { ExternalClinicalHistoriesFiltersComponent } from './components/external-clinical-histories-filters/external-clinical-histories-filters.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.
 		SuggestedFieldsPopupComponent,
 		AgregarVacunasComponent,
 		AgregarVacunaComponent,
-		DetalleVacunaComponent
+		DetalleVacunaComponent,
+		ExternalClinicalHistoriesFiltersComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
