@@ -2,10 +2,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto } from '@api-rest/api-model';
-import { pushTo } from '@core/utils/array.utils';
+import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
+import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 
 export interface AntecedenteFamiliar {
 	snomed: SnomedDto;
@@ -19,6 +21,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	private data: AntecedenteFamiliar[];
 	private snomedConcept: SnomedDto;
 	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
+	private readonly tableColumnConfig: TableColumnConfig[];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -41,7 +44,19 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
 			},
 		];
-
+		this.tableColumnConfig = [
+			{
+				def: 'problemType',
+				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.ANTECEDENTE_FAMILIAR',
+				template: CellTemplates.TEXT,
+				text: v => v.snomed.pt
+			},
+			{
+				def: 'eliminar',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.remove(rowIndex)
+			}
+		]
 		this.data = [];
 	}
 
@@ -79,6 +94,11 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		}
 	}
 
+	remove(index: number): void {
+		this.data = removeFrom<AntecedenteFamiliar>(this.data, index);
+	}
+
+
 	getForm(): FormGroup {
 		return this.form;
 	}
@@ -102,6 +122,10 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 
 	getMaxFecha(): Moment {
 		return newMoment();
+	}
+
+	getTableColumnConfig(): TableColumnConfig[] {
+		return this.tableColumnConfig;
 	}
 
 }

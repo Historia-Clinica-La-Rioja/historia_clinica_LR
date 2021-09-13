@@ -215,11 +215,8 @@
 		</div>
 
 		<div id="antecedentes-familiares">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE'"
-								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
-								  [columns]="antecedentesFamiliaresNuevaConsultaService.getColumns()"
-								  [data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
-				<ng-container concept-form>
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE">
+				<ng-container concept-form >
 					<app-concepts-search
 						*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm"
 						[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
@@ -265,7 +262,12 @@
 						</form>
 					</ng-template>
 				</ng-container>
-			</app-document-section>
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
+								[columns]="antecedentesFamiliaresNuevaConsultaService.getTableColumnConfig()"
+								[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
+				</app-document-section-table>
+
+			</app-new-document-section>
 		</div>
 		<div id="medications">
 
@@ -326,13 +328,13 @@
 		</div>
 
 		<div id="procedimientos">
-			     <app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
-								  [tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
-								  [columns]="procedimientoNuevaConsultaService.getColumns()"
-								  [data]="procedimientoNuevaConsultaService.getProcedimientos()"
-								  [addRemoveColumn]="true"
-								  (removeColumn)="procedimientoNuevaConsultaService.remove($event)">
-				<ng-container concept-form>
+			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
+			[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
+			[columns]="procedimientoNuevaConsultaService.getColumns()"
+			[data]="procedimientoNuevaConsultaService.getProcedimientos()"
+			[addRemoveColumn]="true"
+			(removeColumn)="procedimientoNuevaConsultaService.remove($event)">
+						  <ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
 						[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
