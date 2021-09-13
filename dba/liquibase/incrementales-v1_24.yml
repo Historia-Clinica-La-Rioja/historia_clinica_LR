@@ -1,3 +1,95 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_24 
 
+    - changeSet:
+        id: hospital_audit-createTable
+        comment: Create table hospital_audit
+        author: bchacon
+        changes: 
+            - createTable: 
+                tableName: hospital_audit
+                columns: 
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_hospital_audit
+                        name: id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: user_id
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        name: institution_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: date
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column: 
+                        constraints:
+                            nullable: false
+                        name: action_type
+                        type: smallint
+                        
+            - addForeignKeyConstraint:
+                baseColumnNames: institution_id
+                baseTableName: hospital_audit
+                constraintName: FK_hospital_audit_institution_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: institution
+                validate: true
+            
+    - changeSet:  
+        id: patient_audit-createTable
+        comment: Create table patient_audit
+        author: bchacon
+        changes: 
+            - createTable: 
+                tableName: patient_audit
+                columns:  
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: patient_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: hospital_audit_id
+                        type: int
+                        
+            - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: patient_audit
+                    constraintName: FK_patient_audit_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true
+            - addForeignKeyConstraint:
+                    baseColumnNames: hospital_audit_id
+                    baseTableName: patient_audit
+                    constraintName: FK_patient_audit_hospital_audit_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: hospital_audit
+                    validate: true             
+       
+    - changeSet:
+        id: patient_audit-primary_key
+        author: bchacon
+        changes:
+            - addPrimaryKey:
+                columnNames: patient_id, hospital_audit_id
+                constraintName: PK_patient_audit
+                tableName: patient_audit
