@@ -173,36 +173,36 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         Optional<DiagnosticBo> opDiagnostic = diagnosticStorage.getDiagnostic(dentalDiagnostic.getSctid());
         if (opDiagnostic.isEmpty())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_DIAGNOSTIC_NOT_FOUND,
-                    "El diagnóstico con sctid: " + dentalDiagnostic.getSctid() +
-                            " y prefered term: '" + dentalDiagnostic.getPt() + "' no es un diagnóstico dental aplicable");
+                    "El diagnóstico con ID de Snomed: '" + dentalDiagnostic.getSctid() +
+                            "' y término: '" + dentalDiagnostic.getPt() + "' no es un diagnóstico dental aplicable");
 
         DiagnosticBo diagnostic = opDiagnostic.get();
         if (dentalDiagnostic.isAppliedToTooth() && !diagnostic.isApplicableToTooth())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DIAGNOSTIC_NOT_APPLICABLE_TO_TOOTH,
-                    "El diagnóstico con sctid: " + dentalDiagnostic.getSctid() +
-                            " y prefered term: '" + dentalDiagnostic.getPt() + "' no es aplicable a pieza dental");
+                    "El diagnóstico con ID de Snomed: '" + dentalDiagnostic.getSctid() +
+                            "' y término: '" + dentalDiagnostic.getPt() + "' no es aplicable a pieza dental");
         if (dentalDiagnostic.isAppliedToSurface() && !diagnostic.isApplicableToSurface())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DIAGNOSTIC_NOT_APPLICABLE_TO_SURFACE,
-                    "El diagnóstico con sctid: " + dentalDiagnostic.getSctid() +
-                            " y prefered term: '" + dentalDiagnostic.getPt() + "' no es aplicable a cara dental");
+                    "El diagnóstico con ID de Snomed: '" + dentalDiagnostic.getSctid() +
+                            "' y término: '" + dentalDiagnostic.getPt() + "' no es aplicable a cara dental");
     }
 
     private void validateDentalProcedure(ConsultationDentalActionBo dentalProcedure) {
         Optional<ProcedureBo> opProcedure = proceduresStorage.getProcedure(dentalProcedure.getSctid());
         if (opProcedure.isEmpty())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_PROCEDURE_NOT_FOUND,
-                    "El procedimiento con sctid: " + dentalProcedure.getSctid() +
-                            " y prefered term: '" + dentalProcedure.getPt() + "' no es un procedimiento dental aplicable");
+                    "El procedimiento con ID de Snomed: '" + dentalProcedure.getSctid() +
+                            "' y término: '" + dentalProcedure.getPt() + "' no es un procedimiento dental aplicable");
 
         ProcedureBo procedure = opProcedure.get();
         if (dentalProcedure.isAppliedToTooth() && !procedure.isApplicableToTooth())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.PROCEDURE_NOT_APPLICABLE_TO_TOOTH,
-                    "El procedimiento con sctid: " + dentalProcedure.getSctid() +
-                            " y prefered term: '" + dentalProcedure.getPt() + "' no es aplicable a pieza dental");
+                    "El procedimiento con ID de Snomed: '" + dentalProcedure.getSctid() +
+                            "' y término: '" + dentalProcedure.getPt() + "' no es aplicable a pieza dental");
         if (dentalProcedure.isAppliedToSurface() && !procedure.isApplicableToSurface())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.PROCEDURE_NOT_APPLICABLE_TO_SURFACE,
-                    "El procedimiento con sctid: " + dentalProcedure.getSctid() +
-                            " y prefered term: '" + dentalProcedure.getPt() + "' no es aplicable a cara dental");
+                    "El procedimiento con ID de Snomed: '" + dentalProcedure.getSctid() +
+                            "' y término: '" + dentalProcedure.getPt() + "' no es aplicable a cara dental");
     }
 
 }

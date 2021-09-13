@@ -183,8 +183,8 @@ class CreateOdontologyConsultationImplTest {
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
-        String expectedMessage = "El diagnóstico con sctid: " + sctidNotFound +
-                " y prefered term: '" + ptNotFound + "' no es un diagnóstico dental aplicable";
+        String expectedMessage = "El diagnóstico con ID de Snomed: '" + sctidNotFound +
+                "' y término: '" + ptNotFound + "' no es un diagnóstico dental aplicable";
         List<String> actualMessages = exception.getMessages();
         Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
@@ -230,8 +230,8 @@ class CreateOdontologyConsultationImplTest {
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
-        String expectedMessage = "El diagnóstico con sctid: " + diagnosticSctid +
-                " y prefered term: '" + diagnosticPt + "' no es aplicable a pieza dental";
+        String expectedMessage = "El diagnóstico con ID de Snomed: '" + diagnosticSctid +
+                "' y término: '" + diagnosticPt + "' no es aplicable a pieza dental";
         List<String> actualMessages = exception.getMessages();
         Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
@@ -277,8 +277,8 @@ class CreateOdontologyConsultationImplTest {
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
-        String expectedMessage = "El diagnóstico con sctid: " + diagnosticSctid +
-                " y prefered term: '" + diagnosticPt + "' no es aplicable a cara dental";
+        String expectedMessage = "El diagnóstico con ID de Snomed: '" + diagnosticSctid +
+                "' y término: '" + diagnosticPt + "' no es aplicable a cara dental";
         List<String> actualMessages = exception.getMessages();
         Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
@@ -333,8 +333,8 @@ class CreateOdontologyConsultationImplTest {
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
-        String expectedMessage = "El procedimiento con sctid: " + sctidNotFound +
-                " y prefered term: '" + ptNotFound + "' no es un procedimiento dental aplicable";
+        String expectedMessage = "El procedimiento con ID de Snomed: '" + sctidNotFound +
+                "' y término: '" + ptNotFound + "' no es un procedimiento dental aplicable";
         List<String> actualMessages = exception.getMessages();
         Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
@@ -383,8 +383,8 @@ class CreateOdontologyConsultationImplTest {
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
-        String expectedMessage = "El procedimiento con sctid: " + sctidNotApplicable +
-                " y prefered term: '" + ptNotApplicable + "' no es aplicable a pieza dental";
+        String expectedMessage = "El procedimiento con ID de Snomed: '" + sctidNotApplicable +
+                "' y término: '" + ptNotApplicable + "' no es aplicable a pieza dental";
         List<String> actualMessages = exception.getMessages();
         Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
@@ -433,8 +433,8 @@ class CreateOdontologyConsultationImplTest {
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
-        String expectedMessage = "El procedimiento con sctid: " + sctidNotApplicable +
-                " y prefered term: '" + ptNotApplicable + "' no es aplicable a cara dental";
+        String expectedMessage = "El procedimiento con ID de Snomed: '" + sctidNotApplicable +
+                "' y término: '" + ptNotApplicable + "' no es aplicable a cara dental";
         List<String> actualMessages = exception.getMessages();
         Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
