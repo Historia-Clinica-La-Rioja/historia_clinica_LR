@@ -43,7 +43,7 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
 
         Integer patientId = (Integer) parameters[0];
-        APatientDto newPatientData = (APatientDto) parameters[1];
+        APatientDto newPatientData = (APatientDto) parameters[2];
 
         Optional<Patient> optPatient = patientService.getPatient(patientId);
 

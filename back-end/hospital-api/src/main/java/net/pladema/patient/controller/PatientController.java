@@ -116,9 +116,10 @@ public class PatientController {
 		return ResponseEntity.ok(result);
 	}
 
-	@PostMapping
+	@PostMapping(value = "/institution/{institutionId}")
 	@Transactional
-	public ResponseEntity<Integer> addPatient(@RequestBody APatientDto patientDto) throws URISyntaxException {
+	public ResponseEntity<Integer> addPatient(@RequestBody APatientDto patientDto,
+											  @PathVariable(name = "institutionId") Integer institutionId) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
@@ -142,10 +143,11 @@ public class PatientController {
 	}
 
 
-	@PutMapping(value = "/{patientId}")
+	@PutMapping(value = "/{patientId}/institution/{institutionId}")
 	@Transactional
 	@PatientUpdateValid
 	public ResponseEntity<Integer> updatePatient(@PathVariable(name = "patientId") Integer patientId,
+												 @PathVariable(name = "institutionId") Integer institutionId,
 												 @RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		Patient patient = patientService.getPatient(patientId).orElseThrow(() -> new NotFoundException("patient-not-found", "Patient not found"));
