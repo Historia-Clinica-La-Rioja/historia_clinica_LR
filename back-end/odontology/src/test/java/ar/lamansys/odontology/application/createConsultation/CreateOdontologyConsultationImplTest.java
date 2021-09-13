@@ -77,12 +77,12 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenConsultationIsNull() {
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                         createOdontologyConsultation.run(null));
 
         String expectedMessage = "La información de la consulta es obligatoria";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -98,12 +98,12 @@ class CreateOdontologyConsultationImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El id de la institución es obligatorio";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -119,12 +119,12 @@ class CreateOdontologyConsultationImplTest {
         consultation.setPatientId(null);
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El id del paciente es obligatorio";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -173,13 +173,13 @@ class CreateOdontologyConsultationImplTest {
 
         consultation.setDentalActions(dentalDiagnosticBos);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El diagnóstico con sctid: " + sctidNotFound +
                 " y prefered term: '" + ptNotFound + "' no es un diagnóstico dental aplicable";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -220,13 +220,13 @@ class CreateOdontologyConsultationImplTest {
 
         consultation.setDentalActions(dentalDiagnostics);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El diagnóstico con sctid: " + diagnosticSctid +
                 " y prefered term: '" + diagnosticPt + "' no es aplicable a pieza dental";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -267,13 +267,13 @@ class CreateOdontologyConsultationImplTest {
 
         consultation.setDentalActions(dentalDiagnostics);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El diagnóstico con sctid: " + diagnosticSctid +
                 " y prefered term: '" + diagnosticPt + "' no es aplicable a cara dental";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -323,13 +323,13 @@ class CreateOdontologyConsultationImplTest {
 
         consultation.setDentalActions(dentalProcedures);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El procedimiento con sctid: " + sctidNotFound +
                 " y prefered term: '" + ptNotFound + "' no es un procedimiento dental aplicable";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
 
@@ -373,13 +373,13 @@ class CreateOdontologyConsultationImplTest {
 
         consultation.setDentalActions(dentalProcedures);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El procedimiento con sctid: " + sctidNotApplicable +
                 " y prefered term: '" + ptNotApplicable + "' no es aplicable a pieza dental";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -423,13 +423,13 @@ class CreateOdontologyConsultationImplTest {
 
         consultation.setDentalActions(dentalProcedures);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El procedimiento con sctid: " + sctidNotApplicable +
                 " y prefered term: '" + ptNotApplicable + "' no es aplicable a cara dental";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -442,12 +442,12 @@ class CreateOdontologyConsultationImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(255);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El identificador del profesional es inválido";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -463,12 +463,12 @@ class CreateOdontologyConsultationImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(1000);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El doctor no posee la especialidad indicada";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
     @Test
@@ -483,12 +483,12 @@ class CreateOdontologyConsultationImplTest {
         consultation.setPatientId(1);
         consultation.setClinicalSpecialtyId(null);
 
-        Exception exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
 
         String expectedMessage = "El id de especialidad es obligatorio";
-        String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
     }
 
 }
