@@ -3,7 +3,7 @@ package ar.lamansys.odontology.application.createConsultation.exceptions;
 import lombok.Getter;
 
 @Getter
-public class CreateConsultationException extends RuntimeException{
+public class CreateConsultationException extends RuntimeException {
 
     public final CreateConsultationExceptionEnum code;
 
@@ -11,4 +11,9 @@ public class CreateConsultationException extends RuntimeException{
         super(message);
         this.code = code;
     }
+
+    public String getCode() {
+        return code.name();
+    }
+
 }
