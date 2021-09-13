@@ -47,7 +47,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		this.tableColumnConfig = [
 			{
 				def: 'problemType',
-				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.ANTECEDENTE_FAMILIAR',
+				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.ANTECEDENTE_FAMILIAR',
 				template: CellTemplates.TEXT,
 				text: v => v.snomed.pt
 			},
