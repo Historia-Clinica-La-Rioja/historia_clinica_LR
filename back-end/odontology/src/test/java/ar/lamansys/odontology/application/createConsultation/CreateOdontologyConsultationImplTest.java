@@ -8,6 +8,12 @@ import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationAllergyBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationMedicationBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationPersonalHistoryBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationProcedureBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationReasonBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
@@ -28,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -489,6 +496,303 @@ class CreateOdontologyConsultationImplTest {
         String expectedMessage = "El id de especialidad es obligatorio";
         List<String> actualMessages = exception.getMessages();
         Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenThereAreRepeatedReasons() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+
+        List<ConsultationReasonBo> reasons = new ArrayList<>();
+
+        ConsultationReasonBo reason1 = new ConsultationReasonBo();
+        reason1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        reasons.add(reason1);
+
+        ConsultationReasonBo reason2 = new ConsultationReasonBo();
+        reason2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
+        reasons.add(reason2);
+
+        ConsultationReasonBo reason3 = new ConsultationReasonBo();
+        reason3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        reasons.add(reason3);
+
+        consultation.setReasons(reasons);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "Motivos repetidos";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenThereAreRepeatedPersonalHistories() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+
+        List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
+
+        ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo();
+        personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        personalHistories.add(personalHistory1);
+
+        ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo();
+        personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
+        personalHistories.add(personalHistory2);
+
+        ConsultationPersonalHistoryBo personalHistory3 = new ConsultationPersonalHistoryBo();
+        personalHistory3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        personalHistories.add(personalHistory3);
+
+        consultation.setPersonalHistories(personalHistories);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "Antecedentes personales repetidos";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenThereAreRepeatedAllergies() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+
+        List<ConsultationAllergyBo> allergies = new ArrayList<>();
+
+        ConsultationAllergyBo allergy1 = new ConsultationAllergyBo();
+        allergy1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        allergies.add(allergy1);
+
+        ConsultationAllergyBo allergy2 = new ConsultationAllergyBo();
+        allergy2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
+        allergies.add(allergy2);
+
+        ConsultationAllergyBo allergy3 = new ConsultationAllergyBo();
+        allergy3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        allergies.add(allergy3);
+
+        consultation.setAllergies(allergies);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "Alergias repetidas";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenThereAreRepeatedDiagnostics() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+
+        List<ConsultationDiagnosticBo> diagnostics = new ArrayList<>();
+
+        ConsultationDiagnosticBo diagnostic1 = new ConsultationDiagnosticBo();
+        diagnostic1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        diagnostics.add(diagnostic1);
+
+        ConsultationDiagnosticBo diagnostic2 = new ConsultationDiagnosticBo();
+        diagnostic2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
+        diagnostics.add(diagnostic2);
+
+        ConsultationDiagnosticBo diagnostic3 = new ConsultationDiagnosticBo();
+        diagnostic3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        diagnostics.add(diagnostic3);
+
+        consultation.setDiagnostics(diagnostics);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "Diagnósticos repetidos";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenThereAreRepeatedProcedures() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+
+        List<ConsultationProcedureBo> procedures = new ArrayList<>();
+
+        ConsultationProcedureBo procedure1 = new ConsultationProcedureBo();
+        procedure1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        procedures.add(procedure1);
+
+        ConsultationProcedureBo procedure2 = new ConsultationProcedureBo();
+        procedure2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
+        procedures.add(procedure2);
+
+        ConsultationProcedureBo procedure3 = new ConsultationProcedureBo();
+        procedure3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        procedures.add(procedure3);
+
+        consultation.setProcedures(procedures);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "Procedimientos repetidos";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenThereAreRepeatedMedications() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+
+        List<ConsultationMedicationBo> medications = new ArrayList<>();
+
+        ConsultationMedicationBo medication1 = new ConsultationMedicationBo();
+        medication1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        medications.add(medication1);
+
+        ConsultationMedicationBo medication2 = new ConsultationMedicationBo();
+        medication2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
+        medications.add(medication2);
+
+        ConsultationMedicationBo medication3 = new ConsultationMedicationBo();
+        medication3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        medications.add(medication3);
+
+        consultation.setMedications(medications);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "Medicaciones repetidas";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorWhenThereAreMultipleTypesOfRepeatedConcepts() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+
+        List<ConsultationMedicationBo> medications = new ArrayList<>();
+        ConsultationMedicationBo medication1 = new ConsultationMedicationBo();
+        medication1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        medications.add(medication1);
+        ConsultationMedicationBo medication2 = new ConsultationMedicationBo();
+        medication2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        medications.add(medication2);
+        consultation.setMedications(medications);
+
+        List<ConsultationProcedureBo> procedures = new ArrayList<>();
+        ConsultationProcedureBo procedure1 = new ConsultationProcedureBo();
+        procedure1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        procedures.add(procedure1);
+        ConsultationProcedureBo procedure2 = new ConsultationProcedureBo();
+        procedure2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        procedures.add(procedure2);
+        consultation.setProcedures(procedures);
+
+        List<ConsultationDiagnosticBo> diagnostics = new ArrayList<>();
+        ConsultationDiagnosticBo diagnostic1 = new ConsultationDiagnosticBo();
+        diagnostic1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        diagnostics.add(diagnostic1);
+        ConsultationDiagnosticBo diagnostic2 = new ConsultationDiagnosticBo();
+        diagnostic2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        diagnostics.add(diagnostic2);
+        consultation.setDiagnostics(diagnostics);
+
+        List<ConsultationAllergyBo> allergies = new ArrayList<>();
+        ConsultationAllergyBo allergy1 = new ConsultationAllergyBo();
+        allergy1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        allergies.add(allergy1);
+        ConsultationAllergyBo allergy2 = new ConsultationAllergyBo();
+        allergy2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        allergies.add(allergy2);
+        consultation.setAllergies(allergies);
+
+        List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
+        ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo();
+        personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        personalHistories.add(personalHistory1);
+        ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo();
+        personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        personalHistories.add(personalHistory2);
+        consultation.setPersonalHistories(personalHistories);
+
+        List<ConsultationReasonBo> reasons = new ArrayList<>();
+        ConsultationReasonBo reason1 = new ConsultationReasonBo();
+        reason1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        reasons.add(reason1);
+        ConsultationReasonBo reason2 = new ConsultationReasonBo();
+        reason2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
+        reasons.add(reason2);
+        consultation.setReasons(reasons);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        assertTrue(exception.getMessages().containsAll(List.of("Medicaciones repetidas",
+                "Antecedentes personales repetidos", "Alergias repetidas", "Motivos repetidos",
+                "Procedimientos repetidos", "Diagnósticos repetidos")));
     }
 
 }

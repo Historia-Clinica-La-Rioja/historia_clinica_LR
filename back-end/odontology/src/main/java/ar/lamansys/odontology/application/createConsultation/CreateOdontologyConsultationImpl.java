@@ -8,6 +8,7 @@ import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.ToothSurfacesBo;
+import ar.lamansys.odontology.domain.consultation.ClinicalTermsValidatorUtils;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
@@ -146,6 +147,26 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
                 else
                     this.validateDentalProcedure(dentalAction);
             });
+        assertThereAreNoRepeatedConcepts(consultationBo);
+    }
+
+    private void assertThereAreNoRepeatedConcepts(ConsultationBo consultationBo) {
+        CreateConsultationException exception = new CreateConsultationException(CreateConsultationExceptionEnum.REPEATED_CONCEPTS);
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getReasons()))
+            exception.addError("Motivos repetidos");
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getPersonalHistories()))
+            exception.addError("Antecedentes personales repetidos");
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getAllergies()))
+            exception.addError("Alergias repetidas");
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getDiagnostics()))
+            exception.addError("Diagnósticos repetidos");
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getProcedures()))
+            exception.addError("Procedimientos repetidos");
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getMedications()))
+            exception.addError("Medicaciones repetidas");
+
+        if (exception.hasErrors())
+            throw exception;
     }
 
     private void validateDentalDiagnostic(ConsultationDentalActionBo dentalDiagnostic) {
