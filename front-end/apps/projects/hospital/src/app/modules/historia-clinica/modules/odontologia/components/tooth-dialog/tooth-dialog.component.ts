@@ -5,7 +5,7 @@ import {dateDtoToDate} from '@api-rest/mapper/date-dto.mapper';
 import {DateFormat, momentFormatDate} from '@core/utils/moment.utils';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {OdontogramService as OdontogramRestService, ToothRecordDto} from '../../api-rest/odontogram.service';
+import {OdontogramService as OdontogramRestService} from '../../api-rest/odontogram.service';
 import {ActionType, ProcedureOrder, ToothAction} from '../../services/actions.service';
 import {ConceptsFacadeService} from '../../services/concepts-facade.service';
 import {ToothTreatment} from '../../services/surface-drawer.service';
@@ -67,6 +67,9 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 	thirdProcedureId: string;
 	initValueTypeaheadProcedureThree: TypeaheadOption<OdontologyConceptDto> = null;
+
+	disabledFirstProcedureButton: boolean;
+	disabledSecondProcedureButton: boolean;
 
 	ngAfterViewInit(): void {
 		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);
@@ -196,9 +199,11 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		else {
 			if (order === ProcedureOrder.SECOND){
 				this.initValueTypeaheadProcedureTwo = typeaheadConcept;
+				this.disabledFirstProcedureButton = true;
 			}
 			else {
 				this.initValueTypeaheadProcedureThree = typeaheadConcept;
+				this.disabledSecondProcedureButton = true;
 			}
 		}
 
@@ -246,11 +251,13 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (secondProcedure) {
 			this.secondProcedureId = secondProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(secondProcedure.snomed.sctid, ProcedureOrder.SECOND);
+			this.disabledFirstProcedureButton = true;
 		}
 		else {
 			if(this.initValueTypeaheadProcedureTwo?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadProcedureTwo, ActionType.PROCEDURE, ProcedureOrder.SECOND);
 				this.initValueTypeaheadProcedureTwo = null;
+				this.disabledFirstProcedureButton = false;
 			}
 		}
 	}
@@ -259,15 +266,17 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (thirdProcedure) {
 			this.thirdProcedureId = thirdProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(thirdProcedure.snomed.sctid, ProcedureOrder.THIRD);
+			this.disabledSecondProcedureButton = true;
 		}
 		else {
 			if (this.initValueTypeaheadProcedureThree?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadProcedureThree, ActionType.PROCEDURE, ProcedureOrder.THIRD);
 				this.initValueTypeaheadProcedureThree = null;
+				this.disabledSecondProcedureButton = false;
 			}
 		}
 	}
-	
+
 	private reciveToothCurrentViewActions(actions: Actions): void {
 		if (actions?.findingId) {
 			this.setTypeaheadCurrentFinding(actions.findingId);
@@ -300,8 +309,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.toothComponent.deleteAction(elementToDelete?.value?.snomed.sctid, this.selectedSurfaces, actionType, order);
 	}
 
-	private toScrollableData(toothRecordDtos: ToothRecordDto[]): ScrollableData[] {
-		const toSingleScrolleableData = (toothRecordDto: ToothRecordDto): ScrollableData => {
+	private toScrollableData(toothRecordDtos: HCEToothRecordDto[]): ScrollableData[] {
+		const toSingleScrolleableData = (toothRecordDto: HCEToothRecordDto): ScrollableData => {
 			const surfaceText = toothRecordDto.surfaceSctid ? ` ( ${getSurfaceShortName(toothRecordDto.surfaceSctid)} )` : ''
 			return {
 				firstElement: momentFormatDate(dateDtoToDate(toothRecordDto.date), DateFormat.VIEW_DATE),

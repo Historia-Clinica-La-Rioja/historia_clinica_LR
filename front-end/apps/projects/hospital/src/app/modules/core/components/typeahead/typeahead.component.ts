@@ -14,6 +14,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Input() options: TypeaheadOption<any>[] = [];
 	@Input() placeholder: string;
 	@Input() externalSetValue: TypeaheadOption<any>;
+	@Input() disabledClearButton: boolean;
 	@Output() selectionChange = new EventEmitter();
 
 	form: FormGroup;

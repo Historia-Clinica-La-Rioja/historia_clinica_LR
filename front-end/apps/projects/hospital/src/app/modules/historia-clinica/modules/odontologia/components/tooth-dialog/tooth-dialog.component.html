@@ -45,6 +45,7 @@
 				[placeholder]="'Seleccione 1er procedimiento'"
 				[options]="filteredProceduresTypeahead"
 				[externalSetValue]="initValueTypeaheadPieceFirstProcedure"
+				[disabledClearButton]="disabledFirstProcedureButton"
 				(selectionChange)="firstProcedureChanged($event)"
 			>
 			</app-typeahead>
@@ -53,6 +54,7 @@
 				[placeholder]="'Seleccione 2do procedimiento'"
 				[externalSetValue]="initValueTypeaheadProcedureTwo"
 				[options]="filteredProceduresTypeahead"
+				[disabledClearButton]="disabledSecondProcedureButton"
 				(selectionChange)="secondProcedureChanged($event)"
 			>
 			</app-typeahead>
