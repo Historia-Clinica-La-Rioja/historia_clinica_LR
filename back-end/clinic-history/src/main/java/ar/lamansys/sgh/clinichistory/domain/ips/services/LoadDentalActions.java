@@ -74,12 +74,12 @@ public class LoadDentalActions {
         result.setCie10Codes(cie10Codes);
 
         if (dentalProcedure.getTooth() != null) {
-            Integer toothId = snomedService.getLatestIdBySctid(dentalProcedure.getTooth().getSctid()).orElse(null);
+            Integer toothId = snomedService.getSnomedId(dentalProcedure.getTooth()).orElse(null);
             result.setToothId(toothId);
         }
 
         if (dentalProcedure.getSurface() != null) {
-            Integer surfaceId = snomedService.getLatestIdBySctid(dentalProcedure.getSurface().getSctid()).orElse(null);
+            Integer surfaceId = snomedService.getSnomedId(dentalProcedure.getSurface()).orElse(null);
             result.setSurfaceId(surfaceId);
         }
 
@@ -99,12 +99,12 @@ public class LoadDentalActions {
         result.setCie10Codes(cie10Codes);
 
         if (dentalDiagnostic.getTooth() != null) {
-            Integer toothId = snomedService.getLatestIdBySctid(dentalDiagnostic.getTooth().getSctid()).orElse(null);
+            Integer toothId = snomedService.getSnomedId(dentalDiagnostic.getTooth()).orElse(null);
             result.setToothId(toothId);
         }
 
         if (dentalDiagnostic.getSurface() != null) {
-            Integer surfaceId = snomedService.getLatestIdBySctid(dentalDiagnostic.getSurface().getSctid()).orElse(null);
+            Integer surfaceId = snomedService.getSnomedId(dentalDiagnostic.getSurface()).orElse(null);
             result.setSurfaceId(surfaceId);
         }
 
