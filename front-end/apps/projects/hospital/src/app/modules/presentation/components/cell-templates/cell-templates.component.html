@@ -7,11 +7,9 @@
 </ng-template>
 
 <ng-template #removeButtonTemplate let-action="action" let-rowIndex="rowIndex" appCtrlTemplate="removeButtonTemplate">
-	<div align="end">
 	<button  type="button" mat-icon-button color="warn" (click)="action(rowIndex)">
 		<mat-icon>delete_outline</mat-icon>
 	</button>
-	</div>
 </ng-template>
 
 <ng-template #removeButtonTemplate let-action="action" let-rowIndex="rowIndex" appCtrlTemplate="editButtonTemplate">

@@ -328,12 +328,7 @@
 		</div>
 
 		<div id="procedimientos">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE'"
-			[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
-			[columns]="procedimientoNuevaConsultaService.getColumns()"
-			[data]="procedimientoNuevaConsultaService.getProcedimientos()"
-			[addRemoveColumn]="true"
-			(removeColumn)="procedimientoNuevaConsultaService.remove($event)">
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.procedimientos.TITLE">
 						  <ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
@@ -366,17 +361,20 @@
 							</mat-form-field>
 
 							<div align="end">
-								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
-										type="submit">
-										<span 
-										[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary" type="submit">
+										<span [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
 								</button>
 							</div>
 
 						</form>
 					</ng-template>
 				</ng-container>
-			</app-document-section>
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
+											[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
+											[data]="procedimientoNuevaConsultaService.getProcedimientos()">
+				</app-document-section-table>
+
+			</app-new-document-section>
 		</div>
 
 		<div id="signos-vitales">

@@ -6,6 +6,8 @@ import { SEMANTICS_CONFIG } from '../constants/snomed-semantics';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment, momentParseDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
+import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 
 export interface Procedimiento {
 	snomed: SnomedDto;
@@ -19,6 +21,7 @@ export class ProcedimientosService {
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
+	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: any[];
 
 	constructor(
@@ -44,6 +47,27 @@ export class ProcedimientosService {
 			}
 
 		];
+
+		this.tableColumnConfig = [
+			{
+				def: 'procedimiento',
+				header: 'historia-clinica.procedimientos.PROCEDIMIENTO',
+				template: CellTemplates.SNOMED_PROBLEM
+			},
+			{
+				def: 'fecha',
+				header: 'historia-clinica.procedimientos.FECHA',
+				template: CellTemplates.TEXT,
+				text: (row) => row.performedDate ? momentFormat(momentParseDate(row.performedDate), DateFormat.VIEW_DATE) : ''
+			},
+			{
+				def: 'delete',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.removeProcedimiento(rowIndex)
+			}
+
+
+		];
 		this.data = [];
 	}
 
@@ -67,6 +91,10 @@ export class ProcedimientosService {
 			this.add(nuevoProcedimiento);
 			this.resetForm();
 		}
+	}
+
+	removeProcedimiento(index: number): void {
+		this.data = removeFrom<Procedimiento>(this.data, index);
 	}
 
 	resetForm(): void {
@@ -108,4 +136,9 @@ export class ProcedimientosService {
 	remove(index: number): void {
 		this.data = removeFrom<Procedimiento>(this.data, index);
 	}
+
+	getTableColumnConfig(): TableColumnConfig[] {
+		return this.tableColumnConfig;
+	}
+
 }
