@@ -30,7 +30,7 @@
 		</ng-template>
 	</div>
 
-	<div fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center">
+	<div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
 		<app-typeahead
 			id="finding"
 			[placeholder]="'Seleccione hallazgo'"
@@ -48,7 +48,7 @@
 			(selectionChange)="firstProcedureChanged($event)"
 		>
 		</app-typeahead>
-		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center">
+		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
 			<app-typeahead
 				id="second_procedure"
 				[placeholder]="'Seleccione 2do procedimiento'"
