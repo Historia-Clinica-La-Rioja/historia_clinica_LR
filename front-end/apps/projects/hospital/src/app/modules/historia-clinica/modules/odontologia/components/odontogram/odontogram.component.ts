@@ -78,7 +78,8 @@ export class OdontogramComponent implements OnInit {
 				currentActions: this.odontogramService.getActionsFrom(tooth.snomed.sctid),
 				records: this.currentDraws[tooth.snomed.sctid] ? deepClone(this.currentDraws[tooth.snomed.sctid]) : [],
 				patientId: this.patientId
-			}
+			},
+			autoFocus: false
 		});
 
 		dialogRef.afterClosed().subscribe((findingsAndProcedures: ToothAction[]) => {
