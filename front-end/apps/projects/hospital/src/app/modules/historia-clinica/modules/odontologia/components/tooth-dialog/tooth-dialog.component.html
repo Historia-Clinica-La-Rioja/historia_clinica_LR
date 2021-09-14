@@ -30,27 +30,27 @@
 		</ng-template>
 	</div>
 
-	<div>
-		<div *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center">
+	<div fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center">
+		<app-typeahead
+			id="finding"
+			[placeholder]="'Seleccione hallazgo'"
+			[options]="filteredDiagnosticsTypeaheadOptions"
+			[externalSetValue]="initValueTypeaheadDiagnostics"
+			(selectionChange)="findingChanged($event)"
+		>
+		</app-typeahead>
+		<app-typeahead
+			id="first_procedure"
+			[placeholder]="'Seleccione 1er procedimiento'"
+			[options]="filteredProceduresTypeahead"
+			[externalSetValue]="initValueTypeaheadFirstProcedure"
+			[disabledClearButton]="disabledFirstProcedureButton"
+			(selectionChange)="firstProcedureChanged($event)"
+		>
+		</app-typeahead>
+		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center">
 			<app-typeahead
-				id="hallazgo pieza"
-				[placeholder]="'Seleccione hallazgo'"
-				[options]="filteredDiagnosticsTypeaheadOptions"
-				[externalSetValue]="initValueDiagnosticsPieceTypeahead"
-				(selectionChange)="findingChanged($event)"
-			>
-			</app-typeahead>
-			<app-typeahead
-				id="primer procedimiento pieza"
-				[placeholder]="'Seleccione 1er procedimiento'"
-				[options]="filteredProceduresTypeahead"
-				[externalSetValue]="initValueTypeaheadPieceFirstProcedure"
-				[disabledClearButton]="disabledFirstProcedureButton"
-				(selectionChange)="firstProcedureChanged($event)"
-			>
-			</app-typeahead>
-			<app-typeahead
-				id="segundo procedimiento pieza"
+				id="second_procedure"
 				[placeholder]="'Seleccione 2do procedimiento'"
 				[externalSetValue]="initValueTypeaheadProcedureTwo"
 				[options]="filteredProceduresTypeahead"
@@ -59,29 +59,11 @@
 			>
 			</app-typeahead>
 			<app-typeahead
-				id="tercer procedimiento pieza"
+				id="third_procedure"
 				[placeholder]="'Seleccione 3er procedimiento'"
 				[externalSetValue]="initValueTypeaheadProcedureThree"
 				[options]="filteredProceduresTypeahead"
 				(selectionChange)="thirdProcedureChanged($event)"
-			>
-			</app-typeahead>
-		</div>
-		<div *ngIf="selectedSurfaces.length" fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center">
-			<app-typeahead
-				id="hallazgo cara"
-				[placeholder]="'Seleccione hallazgo'"
-				[options]="filteredDiagnosticsTypeaheadOptions"
-				[externalSetValue]="initValueDiagnosticsSurfaceTypeahead"
-				(selectionChange)="findingChanged($event)"
-			>
-			</app-typeahead>
-			<app-typeahead
-				id="primer procedimiento cara"
-				[placeholder]="'Seleccione 1er procedimiento'"
-				[options]="filteredProceduresTypeahead"
-				[externalSetValue]="initValueTypeaheadSurfaceFirstProcedure"
-				(selectionChange)="firstProcedureChanged($event)"
 			>
 			</app-typeahead>
 		</div>

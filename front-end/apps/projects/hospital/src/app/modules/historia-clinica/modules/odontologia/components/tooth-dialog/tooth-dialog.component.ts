@@ -52,15 +52,13 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	private diagnostics: OdontologyConceptDto[];
 	filteredDiagnosticsTypeaheadOptions:  TypeaheadOption<OdontologyConceptDto>[];
 
-	initValueDiagnosticsPieceTypeahead: TypeaheadOption<OdontologyConceptDto> = null;
-	initValueDiagnosticsSurfaceTypeahead: TypeaheadOption<OdontologyConceptDto> = null;
+	initValueTypeaheadDiagnostics: TypeaheadOption<OdontologyConceptDto> = null;
 
 	private procedures: OdontologyConceptDto[];
 	filteredProceduresTypeahead: TypeaheadOption<OdontologyConceptDto>[];
 
 	firstProcedureId: string;
-	initValueTypeaheadPieceFirstProcedure: TypeaheadOption<OdontologyConceptDto> = null;
-	initValueTypeaheadSurfaceFirstProcedure: TypeaheadOption<OdontologyConceptDto> = null;
+	initValueTypeaheadFirstProcedure: TypeaheadOption<OdontologyConceptDto> = null;
 
 	secondProcedureId: string;
 	initValueTypeaheadProcedureTwo: TypeaheadOption<OdontologyConceptDto> = null;
@@ -188,13 +186,13 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 	private setTypeaheadCurrentFinding(currentFindingSctid: string): void{
 		const typeaheadConcept = this.filteredDiagnosticsTypeaheadOptions?.find(diagnosticsTypeahead => diagnosticsTypeahead.value.snomed.sctid === currentFindingSctid);
-		(!this.selectedSurfaces.length) ? this.initValueDiagnosticsPieceTypeahead = typeaheadConcept : this.initValueDiagnosticsSurfaceTypeahead = typeaheadConcept;
+		this.initValueTypeaheadDiagnostics = typeaheadConcept;
 	}
 
 	private setTypeaheadProcedures(procedureSctid: string, order: ProcedureOrder){
 		const typeaheadConcept = this.filteredProceduresTypeahead?.find(procedureTypeahead => procedureTypeahead.value.snomed.sctid === procedureSctid);
 		if (order === ProcedureOrder.FIRST){
-			(!this.selectedSurfaces.length) ? this.initValueTypeaheadPieceFirstProcedure = typeaheadConcept : this.initValueTypeaheadSurfaceFirstProcedure = typeaheadConcept;
+			this.initValueTypeaheadFirstProcedure = typeaheadConcept;
 		}
 		else {
 			if (order === ProcedureOrder.SECOND){
@@ -215,15 +213,9 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.setTypeaheadCurrentFinding(hallazgo.snomed.sctid);
 		}
 		else {
-			if ((!this.selectedSurfaces.length) && (this.initValueDiagnosticsPieceTypeahead?.compareValue)){
-				this.deleteActionOfTooth(this.initValueDiagnosticsPieceTypeahead, ActionType.DIAGNOSTIC, undefined);
-				this.initValueDiagnosticsPieceTypeahead = null;
-			}
-			else {
-				if (this.initValueDiagnosticsSurfaceTypeahead?.compareValue) {
-					this.deleteActionOfTooth(this.initValueDiagnosticsSurfaceTypeahead, ActionType.DIAGNOSTIC, undefined);
-					this.initValueDiagnosticsSurfaceTypeahead = null;
-				}
+			if (this.initValueTypeaheadDiagnostics?.compareValue){
+				this.deleteActionOfTooth(this.initValueTypeaheadDiagnostics, ActionType.DIAGNOSTIC, undefined);
+				this.initValueTypeaheadDiagnostics = null;
 			}
 		}
 	}
@@ -234,15 +226,9 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.setTypeaheadProcedures(firstProcedure.snomed.sctid, ProcedureOrder.FIRST);
 		}
 		else {
-			if ((!this.selectedSurfaces.length) && (this.initValueTypeaheadPieceFirstProcedure?.compareValue)){
-				this.deleteActionOfTooth(this.initValueTypeaheadPieceFirstProcedure, ActionType.PROCEDURE, ProcedureOrder.FIRST);
-				this.initValueTypeaheadPieceFirstProcedure = null;
-			}
-			else {
-				if (this.initValueTypeaheadSurfaceFirstProcedure?.compareValue) {
-					this.deleteActionOfTooth(this.initValueTypeaheadSurfaceFirstProcedure, ActionType.PROCEDURE, ProcedureOrder.FIRST);
-					this.initValueTypeaheadSurfaceFirstProcedure = null;
-				}
+			if (this.initValueTypeaheadFirstProcedure?.compareValue){
+				this.deleteActionOfTooth(this.initValueTypeaheadFirstProcedure, ActionType.PROCEDURE, ProcedureOrder.FIRST);
+				this.initValueTypeaheadFirstProcedure = null;
 			}
 		}
 	}
@@ -283,7 +269,10 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		}
 		else {
 			this.newHallazgoId = undefined;
-			(!this.selectedSurfaces.length) ? this.initValueDiagnosticsPieceTypeahead = null : this.initValueDiagnosticsSurfaceTypeahead = null;
+			this.initValueTypeaheadDiagnostics = null;
+		}
+		if (this.selectedSurfaces.length){
+			this.disabledFirstProcedureButton = false;
 		}
 		if (actions?.procedures.firstProcedureId){
 			this.setTypeaheadProcedures(actions.procedures.firstProcedureId, ProcedureOrder.FIRST);
@@ -295,7 +284,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.setTypeaheadProcedures(actions.procedures.thirdProcedureId, ProcedureOrder.THIRD);
 		}
 		if (!(actions?.procedures.firstProcedureId) && !(actions?.procedures.secondProcedureId) && !(actions?.procedures.thirdProcedureId)) {
-			(!this.selectedSurfaces.length) ? this.initValueTypeaheadPieceFirstProcedure = null : this.initValueTypeaheadSurfaceFirstProcedure = null;
+			this.initValueTypeaheadFirstProcedure = null;
 
 			this.initValueTypeaheadProcedureTwo = null;
 			this.initValueTypeaheadProcedureThree = null;
