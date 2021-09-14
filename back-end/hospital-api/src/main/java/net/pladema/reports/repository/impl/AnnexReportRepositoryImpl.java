@@ -1,7 +1,8 @@
 package net.pladema.reports.repository.impl;
 
 import net.pladema.reports.repository.AnnexReportRepository;
-import net.pladema.reports.repository.entity.AnnexIIVo;
+import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
+import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,10 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<AnnexIIVo> getAppointmentAnnexInfo(Integer appointmentId) {
-        String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIVo(i.name, pe.firstName, pe.middleNames, " +
-                "           pe.lastName, pe.otherLastNames, it.description, pe.identificationNumber, " +
-                "           g.description, pe.birthDate, aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber) " +
+    public Optional<AnnexIIAppointmentVo> getAppointmentAnnexInfo(Integer appointmentId) {
+        String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIAppointmentVo(i.name, pe.firstName, pe.middleNames, " +
+                "           pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, pe.identificationNumber, " +
+                "           aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
@@ -45,7 +46,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     }
 
     @Override
-    public Optional<AnnexIIVo> getConsultationAnnexInfo(Long documentId) {
+    public Optional<AnnexIIOutpatientVo> getConsultationAnnexInfo(Long documentId) {
         String query = "WITH t AS (" +
                 "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id " +
                 "       FROM document AS d " +
@@ -76,7 +77,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
 
-        Optional<AnnexIIVo> result = queryResult.map(a -> new AnnexIIVo(
+        Optional<AnnexIIOutpatientVo> result = queryResult.map(a -> new AnnexIIOutpatientVo(
                 (String) a[0],
                 (String) a[1],
                 (String) a[2],
