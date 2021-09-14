@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.federar.controller.FederarExternalService;
 import net.pladema.federar.services.domain.FederarResourceAttributes;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
@@ -139,6 +140,9 @@ public class PatientController {
 					}
 			);
 		}
+
+		patientService.auditActionPatient(institutionId, createdPatient.getId(), EActionType.CREATE);
+
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 
@@ -156,6 +160,9 @@ public class PatientController {
 				createdPerson.getId());
 		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, (Patient pat) -> pat.setId(patientId));
+
+		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
+
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 
