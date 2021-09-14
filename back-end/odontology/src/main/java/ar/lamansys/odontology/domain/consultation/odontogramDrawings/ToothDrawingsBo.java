@@ -54,6 +54,7 @@ public class ToothDrawingsBo {
         this.externalSurfaceDrawing = null;
         this.leftSurfaceDrawing = null;
         this.rightSurfaceDrawing = null;
+        this.centralSurfaceDrawing = null;
     }
 
     public void draw(ConsultationDentalActionBo action) {
@@ -70,15 +71,15 @@ public class ToothDrawingsBo {
         if (action.isAppliedToSurface())
             updateSurfaceDrawing(action);
         else
-            wholeDrawing = new DrawingBo(action);
+            this.wholeDrawing = new DrawingBo(action);
     }
 
     private void applyWholeToothDrawing(ConsultationDentalActionBo action) {
         if (action.isProcedure()) {
             eraseAllDrawings();
-            wholeDrawing = new DrawingBo(action);
+            this.wholeDrawing = new DrawingBo(action);
         } else if (wholeDrawing == null)
-            wholeDrawing = new DrawingBo(action);
+            this.wholeDrawing = new DrawingBo(action);
     }
 
     private void applySurfaceDrawing(ConsultationDentalActionBo action) {
