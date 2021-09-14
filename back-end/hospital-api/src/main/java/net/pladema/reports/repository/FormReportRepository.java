@@ -1,12 +1,13 @@
 package net.pladema.reports.repository;
 
-import net.pladema.reports.repository.entity.FormVVo;
+import net.pladema.reports.repository.entity.FormVAppointmentVo;
+import net.pladema.reports.repository.entity.FormVOutpatientVo;
 
 import java.util.Optional;
 
 public interface FormReportRepository {
 
-    Optional<FormVVo> getAppointmentFormVInfo(Integer appointmentId);
+    Optional<FormVAppointmentVo> getAppointmentFormVInfo(Integer appointmentId);
 
-    Optional<FormVVo> getConsultationFormVInfo(Long documentId);
+    Optional<FormVOutpatientVo> getConsultationFormVInfo(Long documentId);
 }

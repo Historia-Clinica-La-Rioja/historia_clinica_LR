@@ -2,7 +2,8 @@ package net.pladema.reports.repository.impl;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.reports.repository.FormReportRepository;
-import net.pladema.reports.repository.entity.FormVVo;
+import net.pladema.reports.repository.entity.FormVAppointmentVo;
+import net.pladema.reports.repository.entity.FormVOutpatientVo;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +23,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<FormVVo> getAppointmentFormVInfo(Integer appointmentId) {
-        String query = "SELECT NEW net.pladema.reports.repository.entity.FormVVo(i.name, pe.firstName, pe.middleNames, "+
+    public Optional<FormVAppointmentVo> getAppointmentFormVInfo(Integer appointmentId) {
+        String query = "SELECT NEW net.pladema.reports.repository.entity.FormVAppointmentVo(i.name, pe.firstName, pe.middleNames, "+
                 "               pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, "+
                 "               pe.identificationNumber, mc.name, pmca.affiliateNumber, ad.street, ad.number, ci.description) "+
                 "       FROM Appointment AS a "+
@@ -49,7 +50,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<FormVVo> getConsultationFormVInfo(Long documentId) {
+    public Optional<FormVOutpatientVo> getConsultationFormVInfo(Long documentId) {
         String query = "WITH t AS (" +
                 "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id " +
                 "       FROM document AS d " +
@@ -88,7 +89,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
 
-        Optional<FormVVo> result = queryResult.map(a -> new FormVVo(
+        Optional<FormVOutpatientVo> result = queryResult.map(a -> new FormVOutpatientVo(
                         (String) a[0],
                         (String) a[1],
                         (String) a[2],
