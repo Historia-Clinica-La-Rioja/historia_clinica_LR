@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
-import { ExternalClinicalHistory } from '../../services/external-clinical-history.service';
+import { ExternalClinicalHistory } from '../../services/external-clinical-history-facade.service';
 
 @Component({
 	selector: 'app-external-clinical-history',

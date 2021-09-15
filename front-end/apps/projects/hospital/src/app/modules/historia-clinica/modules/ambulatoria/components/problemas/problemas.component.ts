@@ -21,7 +21,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { ExternalClinicalHistory, ExternalClinicalHistoryService } from '../../services/external-clinical-history.service';
+import { ExternalClinicalHistory, ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 import { Moment } from 'moment';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -64,7 +64,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private severityTypeMasterData: any[];
 
 	// External clinical history attributes
-	public externalClinicalHistoryList: any[];
+	public externalClinicalHistoryList: ExternalClinicalHistory[];
 	public externalClinicalHistoryAmount: number = 0;
 	public showExternalFilters: boolean = false;
 
@@ -78,6 +78,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private contextService: ContextService,
 		private dockPopupService: DockPopupService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -98,6 +99,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypeMasterData = healthConditionSeverities;
 		});
+
+		this.loadExternalClinicalHistoryList();
 	}
 
 	ngOnDestroy(): void {
