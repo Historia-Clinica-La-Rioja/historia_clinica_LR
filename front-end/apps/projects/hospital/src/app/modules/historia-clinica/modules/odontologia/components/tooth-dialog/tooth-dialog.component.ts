@@ -68,6 +68,9 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 	disabledFirstProcedureButton: boolean;
 	disabledSecondProcedureButton: boolean;
+	
+	showSecondProcedureTypeahead: boolean;
+	showThirdProcedureTypeahead: boolean;
 
 	ngAfterViewInit(): void {
 		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);

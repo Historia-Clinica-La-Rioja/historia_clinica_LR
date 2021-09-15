@@ -49,21 +49,21 @@
 		>
 		</app-typeahead>
 		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
-			<app-typeahead
-				id="second_procedure"
-				[placeholder]="'Seleccione 2do procedimiento'"
-				[externalSetValue]="initValueTypeaheadProcedureTwo"
-				[options]="filteredProceduresTypeahead"
-				[disabledClearButton]="disabledSecondProcedureButton"
-				(selectionChange)="secondProcedureChanged($event)"
+			<app-typeahead *ngIf="showSecondProcedureTypeahead"
+						   id="second_procedure"
+						   [placeholder]="'Seleccione 2do procedimiento'"
+						   [externalSetValue]="initValueTypeaheadProcedureTwo"
+						   [options]="filteredProceduresTypeahead"
+						   [disabledClearButton]="disabledSecondProcedureButton"
+						   (selectionChange)="secondProcedureChanged($event)"
 			>
 			</app-typeahead>
-			<app-typeahead
-				id="third_procedure"
-				[placeholder]="'Seleccione 3er procedimiento'"
-				[externalSetValue]="initValueTypeaheadProcedureThree"
-				[options]="filteredProceduresTypeahead"
-				(selectionChange)="thirdProcedureChanged($event)"
+			<app-typeahead *ngIf="showThirdProcedureTypeahead"
+						   id="third_procedure"
+						   [placeholder]="'Seleccione 3er procedimiento'"
+						   [externalSetValue]="initValueTypeaheadProcedureThree"
+						   [options]="filteredProceduresTypeahead"
+						   (selectionChange)="thirdProcedureChanged($event)"
 			>
 			</app-typeahead>
 		</div>
