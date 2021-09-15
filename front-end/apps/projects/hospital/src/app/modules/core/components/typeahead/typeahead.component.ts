@@ -57,10 +57,9 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		}
 	}
 
-	clear(event, autocompleteTrigger: MatAutocompleteTrigger ): void {
+	clear(event): void {
 		this.reset();
 		event.stopPropagation();
-		autocompleteTrigger.openPanel();
 	}
 
 	private reset(): void {
