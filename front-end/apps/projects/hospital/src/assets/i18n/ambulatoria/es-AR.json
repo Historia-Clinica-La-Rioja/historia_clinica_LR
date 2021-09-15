@@ -224,7 +224,8 @@
 					"SPECIALTY": "Especialidad",
 					"NOTES": "Descripción/Resumen",
 					"CONSULTATION_DATE": "Fecha de consulta",
-					"INSTITUTION": "Institución"
+					"INSTITUTION": "Institución",
+					"NO_PROFESSIONAL_DATA": "No hay información del profesional"
 				},
 				"external-clinical-histories-filters": {
 					"SEARCH_BY_KEYWORD": "Buscar por palabra clave",

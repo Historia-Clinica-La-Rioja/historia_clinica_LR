@@ -36,6 +36,7 @@ import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.
 import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacunas.component';
 import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.component';
 import { ExternalClinicalHistoriesFiltersComponent } from './components/external-clinical-histories-filters/external-clinical-histories-filters.component';
+import { ExternalClinicalHistoryComponent } from './components/external-clinical-history/external-clinical-history.component';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import { ExternalClinicalHistoriesFiltersComponent } from './components/external
 		AgregarVacunasComponent,
 		AgregarVacunaComponent,
 		DetalleVacunaComponent,
-		ExternalClinicalHistoriesFiltersComponent
+		ExternalClinicalHistoriesFiltersComponent,
+		ExternalClinicalHistoryComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,
