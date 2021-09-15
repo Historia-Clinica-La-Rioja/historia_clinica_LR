@@ -27,6 +27,7 @@ import { combineLatest } from 'rxjs';
 import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { take } from 'rxjs/operators';
+import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -47,10 +48,9 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	medicationsNewConsultationService: MedicacionesNuevaConsultaService;
 	form: FormGroup;
 	clinicalSpecialties: ClinicalSpecialtyDto[];
-
 	diagnosticsNewConsultationService: ActionsNewConsultationService;
 	proceduresNewConsultationService: ActionsNewConsultationService;
-
+	otherProceduresService: ProcedimientosService;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	errors: string[] = [];
@@ -78,6 +78,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService);
 		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
+		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService);
+
 	}
 
 	ngOnInit(): void {
