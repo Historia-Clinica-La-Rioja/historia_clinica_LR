@@ -3,12 +3,13 @@ div {
 }
 
 .subtitle {
-	font-size: 16px;
 	font-style: normal;
 	font-weight: 400;
 	line-height: 14px;
 	letter-spacing: 0em;
 	text-align: left;
+	margin-top: 10px;
+	height: 5px;
 }
 
 .title {
@@ -23,4 +24,12 @@ div {
 .mat-dialog-actions{
 	margin-top: 15px;
 	margin-bottom: auto;
+}
+
+.subtitle-font-size{
+	font-size: 16px;
+}
+
+.subtitle-findings-procedures-font-size{
+	font-size: 13.5px;
 }

@@ -9,7 +9,7 @@
 		</app-tooth>
 		<div fxLayout="column">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
-			<span class="subtitle">{{selectedSurfacesText}}</span>
+			<span class="subtitle subtitle-font-size">{{selectedSurfacesText}}</span>
 		</div>
 	</div>
 
@@ -31,6 +31,7 @@
 	</div>
 
 	<div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
+		<span class="subtitle subtitle-findings-procedures-font-size">Nuevos hallazgos sobre la pieza:</span>
 		<app-typeahead
 			id="finding"
 			[placeholder]="'Seleccione hallazgo'"
@@ -39,6 +40,7 @@
 			(selectionChange)="findingChanged($event)"
 		>
 		</app-typeahead>
+		<span class="subtitle subtitle-findings-procedures-font-size" >Nuevos procedimientos sobre la pieza:</span>
 		<app-typeahead
 			id="first_procedure"
 			[placeholder]="'Seleccione 1er procedimiento'"
