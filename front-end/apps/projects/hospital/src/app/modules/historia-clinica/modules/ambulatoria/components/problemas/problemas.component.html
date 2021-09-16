@@ -352,66 +352,70 @@
 
 			</mat-tab>
 
-			<mat-tab>
-				<ng-template mat-tab-label>
-					<span class="color-primary tab-label">
-						{{ 'ambulatoria.paciente.problemas.HISTORICAL_EXTERNAL_TAB_LABEL' | translate }}
-					</span>
-				</ng-template>
+			<ng-container *ngIf="this.showExternalClinicalHistoryTab">
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span class="color-primary tab-label">
+							{{ 'ambulatoria.paciente.problemas.HISTORICAL_EXTERNAL_TAB_LABEL' | translate }}
+						</span>
+					</ng-template>
 
-				<mat-card class="historical-card">
-					<mat-card-content>
-						<div fxLayout="column" fxLayout.gt-sm="row">
+					<mat-card class="historical-card">
+						<mat-card-content>
+							<div fxLayout="column" fxLayout.gt-sm="row">
 
-							<div class="filter-panel historical-item" fxFlex.gt-sm="30">
-								<div fxLayout="row" fxLayoutAlign="space-between center">
-									<mat-card-subtitle>
-										<span *ngIf="this.externalClinicalHistoryList">
-											{{ externalClinicalHistoryAmount }} {{
-											'ambulatoria.paciente.problemas.RESULTS' | translate }}
-										</span>
-									</mat-card-subtitle>
-									<button mat-icon-button color="primary" fxShow.gt-sm="false"
-										(click)="this.toggleExternalFilters()">
-										<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
-									</button>
-								</div>
-								<div fxLayout="column" [fxShow]="this.showExternalFilters" fxShow.gt-sm="true">
-									<app-external-clinical-histories-filters></app-external-clinical-histories-filters>
-								</div>
-							</div>
-
-							<div fxLayout="column" fxFlex.gt-sm="70" class="historical-list"
-								*ngIf="this.externalClinicalHistoryList?.length">
-								<div *ngFor="let externalClinicalHistory of this.externalClinicalHistoryList">
-									<div class="historical-item">
-										<app-external-clinical-history
-											[externalClinicalHistory]="externalClinicalHistory">
-										</app-external-clinical-history>
+								<div class="filter-panel historical-item" fxFlex.gt-sm="30">
+									<div fxLayout="row" fxLayoutAlign="space-between center">
+										<mat-card-subtitle>
+											<span *ngIf="this.externalClinicalHistoryList">
+												{{ externalClinicalHistoryAmount }} {{
+												'ambulatoria.paciente.problemas.RESULTS' | translate }}
+											</span>
+										</mat-card-subtitle>
+										<button mat-icon-button color="primary" fxShow.gt-sm="false"
+											(click)="this.toggleExternalFilters()">
+											<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
+										</button>
 									</div>
-									<mat-divider inset></mat-divider>
+									<div fxLayout="column" [fxShow]="this.showExternalFilters" fxShow.gt-sm="true">
+										<app-external-clinical-histories-filters>
+										</app-external-clinical-histories-filters>
+									</div>
 								</div>
+
+								<div fxLayout="column" fxFlex.gt-sm="70" class="historical-list"
+									*ngIf="this.externalClinicalHistoryList?.length">
+									<div *ngFor="let externalClinicalHistory of this.externalClinicalHistoryList">
+										<div class="historical-item">
+											<app-external-clinical-history
+												[externalClinicalHistory]="externalClinicalHistory">
+											</app-external-clinical-history>
+										</div>
+										<mat-divider inset></mat-divider>
+									</div>
+								</div>
+
+								<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
+									*ngIf="!this.externalClinicalHistoryList">
+									<div class="no-data-styles">
+										<span [translate]="'messages.NO_DATA'"></span>
+									</div>
+								</section>
+
+								<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
+									*ngIf="this.externalClinicalHistoryList && !this.externalClinicalHistoryList.length">
+									<div class="no-data-styles">
+										<span
+											[translate]="'ambulatoria.paciente.problemas.NO_FILTERED_PROBLEMS'"></span>
+									</div>
+								</section>
+
 							</div>
+						</mat-card-content>
+					</mat-card>
 
-							<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
-								*ngIf="!this.externalClinicalHistoryList">
-								<div class="no-data-styles">
-									<span [translate]="'messages.NO_DATA'"></span>
-								</div>
-							</section>
-
-							<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
-								*ngIf="this.externalClinicalHistoryList && !this.externalClinicalHistoryList.length">
-								<div class="no-data-styles">
-									<span [translate]="'ambulatoria.paciente.problemas.NO_FILTERED_PROBLEMS'"></span>
-								</div>
-							</section>
-
-						</div>
-					</mat-card-content>
-				</mat-card>
-
-			</mat-tab>
+				</mat-tab>
+			</ng-container>
 
 		</mat-tab-group>
 

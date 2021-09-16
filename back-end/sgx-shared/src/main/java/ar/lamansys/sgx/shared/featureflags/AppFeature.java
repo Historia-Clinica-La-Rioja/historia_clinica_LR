@@ -57,6 +57,9 @@ public enum AppFeature implements Feature {
     @Label("Habilita los llamados")
     HABILITAR_LLAMADO,
 
+    @Label("Habilita la pestaña para ver las historias clinicas externas del paciente")
+    HABILITAR_HISTORIA_CLINICA_EXTERNA,
+
     ;
 
     public boolean isActive() {

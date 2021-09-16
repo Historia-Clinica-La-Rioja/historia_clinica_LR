@@ -6,6 +6,7 @@ import {
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
 import { HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
@@ -23,6 +24,7 @@ import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summ
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ExternalClinicalHistory, ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 import { Moment } from 'moment';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -67,6 +69,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public externalClinicalHistoryList: ExternalClinicalHistory[];
 	public externalClinicalHistoryAmount: number = 0;
 	public showExternalFilters: boolean = false;
+	public showExternalClinicalHistoryTab: boolean = false
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -78,7 +81,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private contextService: ContextService,
 		private dockPopupService: DockPopupService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService
+		private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService,
+		private readonly featureFlagService: FeatureFlagService
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -100,7 +104,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			this.severityTypeMasterData = healthConditionSeverities;
 		});
 
-		this.loadExternalClinicalHistoryList();
+		this.featureFlagService.isActive(AppFeature.HABILITAR_HISTORIA_CLINICA_EXTERNA).subscribe(
+			(show) => this.showExternalClinicalHistoryTab = show
+		);
+		if (this.showExternalClinicalHistoryTab) this.loadExternalClinicalHistoryList();
 	}
 
 	ngOnDestroy(): void {
