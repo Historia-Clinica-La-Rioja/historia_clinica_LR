@@ -1,9 +1,20 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
@@ -12,16 +23,12 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
@@ -34,9 +41,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest(showSql = false)
-class CreateAnamnesisServiceImplTest {
+class CreateAnamnesisServiceImplTest extends UnitRepository {
 
 	private CreateAnamnesisServiceImpl createAnamnesisServiceImpl;
 
@@ -117,7 +122,7 @@ class CreateAnamnesisServiceImplTest {
 
 	@Test
 	void createDocumentWithAnamnesisAlreadyDone() {
-		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(1l));
+		var internmentEpisode = save(newInternmentEpisodeWithAnamnesis(1l));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.
 					execute(validAnamnesis(internmentEpisode.getInstitutionId(), internmentEpisode.getId()))
@@ -129,7 +134,7 @@ class CreateAnamnesisServiceImplTest {
 
 	@Test
 	void createDocumentWithoutMainDiagnosis() {
-		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(null));
+		var internmentEpisode = save(newInternmentEpisodeWithAnamnesis(null));
 		when(featureFlagsService.isOn(any())).thenReturn(true);
 		var anamnesis = validAnamnesis(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 		anamnesis.setMainDiagnosis(null);
@@ -144,7 +149,7 @@ class CreateAnamnesisServiceImplTest {
 
 	@Test
 	void createDocumentWithMainDiagnosisDuplicated() {
-		var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithAnamnesis(null));
+		var internmentEpisode = save(newInternmentEpisodeWithAnamnesis(null));
 		var anamnesis  = validAnamnesis(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("SECONDARY", "SECONDARY")));
 		anamnesis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("SECONDARY", "SECONDARY"))));
@@ -163,7 +168,7 @@ class CreateAnamnesisServiceImplTest {
 	public void createDocument_withInvalidDiagnosis() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setDiagnosis(null);
@@ -196,7 +201,7 @@ class CreateAnamnesisServiceImplTest {
 	void createDocumentWithInvalidPersonalHistories() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
@@ -229,7 +234,7 @@ class CreateAnamnesisServiceImplTest {
 	void createDocumentWithInvalidFamilyHistories() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
@@ -261,7 +266,7 @@ class CreateAnamnesisServiceImplTest {
 	void createDocumentWithInvalidProcedures() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
@@ -289,7 +294,7 @@ class CreateAnamnesisServiceImplTest {
 	void createDocumentWithInvalidMedications() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
@@ -313,7 +318,7 @@ class CreateAnamnesisServiceImplTest {
 	void createDocumentWithInvalidImmunizations() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
@@ -337,7 +342,7 @@ class CreateAnamnesisServiceImplTest {
 	void createDocumentWithInvalidAnthropometricData() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());
@@ -363,7 +368,7 @@ class CreateAnamnesisServiceImplTest {
 	void createDocumentWithInvalidVitalSign() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
 		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-		var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
 		anamnesis.setEncounterId(internmentEpisodeSaved.getId());

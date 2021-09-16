@@ -7,13 +7,13 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institution.Instituti
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.scheduling.infrastructure.output.service.SyncErrorService;
-import net.pladema.nomivac.infrastructure.output.immunization.repository.VNomivacImmunizationDataRepository;
-import net.pladema.nomivac.infrastructure.output.immunization.repository.NomivacImmunizationSyncRepository;
 import net.pladema.nomivac.infrastructure.output.immunization.repository.NomivacImmunizationSync;
+import net.pladema.nomivac.infrastructure.output.immunization.repository.NomivacImmunizationSyncRepository;
 import net.pladema.nomivac.infrastructure.output.immunization.repository.VNomivacImmunizationData;
-import org.junit.Ignore;
+import net.pladema.nomivac.infrastructure.output.immunization.repository.VNomivacImmunizationDataRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:nomivac-e2e-test.properties")
-@Ignore
+@Disabled
 class SynchronizeImmunizationE2ETest {
 
     private static final String COMPLETE = "255594003";

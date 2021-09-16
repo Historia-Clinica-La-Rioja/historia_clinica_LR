@@ -1,9 +1,18 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
-import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
@@ -11,16 +20,12 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
@@ -28,13 +33,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest(showSql = false)
-class CreateEvolutionNoteServiceImplTest {
+class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
     private CreateEvolutionNoteService createEvolutionNoteService;
 
@@ -104,7 +107,7 @@ class CreateEvolutionNoteServiceImplTest {
 
     @Test
     void createDocumentWithInternmentInOtherInstitution() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
                 createEvolutionNoteService.execute(validEvolutionNote(internmentEpisode.getInstitutionId()+1, internmentEpisode.getId()))
         );
@@ -115,7 +118,7 @@ class CreateEvolutionNoteServiceImplTest {
 
     @Test
     void createDocumentWithEpicrisis() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(1l));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(1l));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEvolutionNoteService.execute(validEvolutionNote(8, internmentEpisode.getId()))
         );
@@ -126,7 +129,7 @@ class CreateEvolutionNoteServiceImplTest {
 
     @Test
     void createDocument_withMainDiagnosisDuplicated() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
         var evolutionNote  = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("SECONDARY", "SECONDARY"))));
 
@@ -144,7 +147,7 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidDiagnosis() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
@@ -173,7 +176,7 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidImmunizations() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
@@ -192,7 +195,7 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidProcedures() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
@@ -213,7 +216,7 @@ class CreateEvolutionNoteServiceImplTest {
     void createDocumentWithInvalidAnthropometricData() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
 
@@ -225,20 +228,20 @@ class CreateEvolutionNoteServiceImplTest {
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEvolutionNoteService.execute(evolutionNote)
         );
-        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
+        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 
         evolutionNote.setAnthropometricData(newAnthropometricData("-50", null));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEvolutionNoteService.execute(evolutionNote)
         );
-        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
+        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
     }
 
     @Test
     void createDocumentWithInvalidVitalSign() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        internmentEpisode = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         LocalDateTime localDateTime = LocalDateTime.of(

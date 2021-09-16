@@ -1,13 +1,23 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
@@ -16,16 +26,12 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
@@ -33,13 +39,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest(showSql = false)
-class CreateEpicrisisServiceImplTest {
-
+class CreateEpicrisisServiceImplTest extends UnitRepository {
 
     private CreateEpicrisisService createEpicrisisService;
 
@@ -106,7 +108,7 @@ class CreateEpicrisisServiceImplTest {
 
     @Test
     void createDocumentWithInternmentInOtherInstitution() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
                 createEpicrisisService.execute(validEpicrisis(internmentEpisode.getInstitutionId()+1, internmentEpisode.getId()))
         );
@@ -117,7 +119,7 @@ class CreateEpicrisisServiceImplTest {
 
     @Test
     void createDocumentWithEpicrisis() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(1l));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(1l));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(validEpicrisis(8, internmentEpisode.getId()))
         );
@@ -145,7 +147,7 @@ class CreateEpicrisisServiceImplTest {
     void createDocumentWithInvalidDiagnosis() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
 
@@ -174,7 +176,7 @@ class CreateEpicrisisServiceImplTest {
     void createDocumentWithInvalidImmunizations() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
 
@@ -193,7 +195,7 @@ class CreateEpicrisisServiceImplTest {
     void createDocumentWithInvalidAnthropometricData() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
 
@@ -205,20 +207,20 @@ class CreateEpicrisisServiceImplTest {
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis)
         );
-        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
+        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 
         epicrisis.setAnthropometricData(newAnthropometricData("-50", null));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis)
         );
-        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0 y 1000"));
+        Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
     }
 
     @Test
     void createDocumentWithInvalidVitalSign() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         LocalDateTime localDateTime = LocalDateTime.of(
@@ -241,7 +243,7 @@ class CreateEpicrisisServiceImplTest {
     void createDocumentWithInvalidPersonalHistories() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         epicrisis.setPersonalHistories(null);
@@ -273,7 +275,7 @@ class CreateEpicrisisServiceImplTest {
     void createDocument_withInvalidFamilyHistories() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         epicrisis.setFamilyHistories(null);
@@ -304,7 +306,7 @@ class CreateEpicrisisServiceImplTest {
     void createDocumentWithInvalidMedications() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
-        var internmentEpisodeSaved = internmentEpisodeRepository.saveAndFlush(internmentEpisode);
+        var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         epicrisis.setMedications(null);
@@ -338,12 +340,12 @@ class CreateEpicrisisServiceImplTest {
     }
 
     private InternmentEpisode newValidInternmentEpisodeToCreateEpicrisis(){
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
-        var anamanesis = documentRepository.save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
+        var anamanesis = save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION));
         internmentEpisode.setAnamnesisDocId(anamanesis.getId());
-        internmentEpisodeRepository.save(internmentEpisode);
-        var evolutionNote = documentRepository.save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION));
-        evolutionNoteDocumentRepository.save(new EvolutionNoteDocument(evolutionNote.getId(), internmentEpisode.getId()));
+        save(internmentEpisode);
+        var evolutionNote = save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION));
+        save(new EvolutionNoteDocument(evolutionNote.getId(), internmentEpisode.getId()));
         return internmentEpisode;
     }
 

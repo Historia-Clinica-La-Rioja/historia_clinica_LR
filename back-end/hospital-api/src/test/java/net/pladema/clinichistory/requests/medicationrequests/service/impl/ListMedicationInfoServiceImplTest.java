@@ -1,31 +1,29 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import net.pladema.UnitRepository;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
-import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.MedicationTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedicationRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedicationRepositoryImpl;
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -33,8 +31,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-public class ListMedicationInfoServiceImplTest extends UnitRepository {
+class ListMedicationInfoServiceImplTest extends UnitRepository {
 
     private ListMedicationInfoService listMedicationInfoService;
 
@@ -45,7 +42,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
     private EntityManager entityManager;
 
 
-    @Before
+    @BeforeEach
     public void setUp(){
         MedicationCalculateStatus medicationCalculateStatus = new MedicationCalculateStatus(dateTimeProvider);
         ListMedicationRepository listMedicationRepository = new ListMedicationRepositoryImpl(entityManager);
@@ -56,7 +53,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_filterActive_success(){
+    public void executeFilterActiveSuccess(){
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2021,01,9));
 
@@ -158,7 +155,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_filterSuspended_success(){
+    public void executeFilterSuspendedSuccess(){
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020,12,19));
         Integer patientId = 1;
@@ -247,7 +244,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_filterActiveAndMedication_success(){
+    public void executeFilterActiveAndMedicationSuccess(){
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2021,01,9));
 
@@ -367,7 +364,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_filterActiveAndHealthcondition_success(){
+    public void executeFilterActiveAndHealthconditionSuccess(){
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2021,01,9));
 
@@ -487,7 +484,7 @@ public class ListMedicationInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_filterMixer_success(){
+    public void executeFilterMixerSuccess(){
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2021,01,9));
 

@@ -1,19 +1,18 @@
 package net.pladema.hsi.extensions.infrastructure.repository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Arrays;
-
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIMenuItemDto;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIPageDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 class DemoExtensionServiceTest {
 	private DemoExtensionService demoExtensionService;
 	@BeforeEach
