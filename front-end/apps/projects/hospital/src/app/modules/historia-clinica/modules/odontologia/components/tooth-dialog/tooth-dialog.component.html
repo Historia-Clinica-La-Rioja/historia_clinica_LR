@@ -69,7 +69,7 @@
 			>
 			</app-typeahead>
 		</div>
-		<span [ngClass]="{'activate-button': !isNotPreviousProcedureSet,'disable-button': isNotPreviousProcedureSet }" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
+		<span [ngClass]="{'activate-button': !isNotPreviousProcedureSet,'disable-button': isNotPreviousProcedureSet }" (click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
 	</div>
 	<mat-dialog-actions fxLayoutAlign="end end">
 		<button mat-stroked-button color="primary" mat-dialog-close type="button">Cancelar </button>

@@ -326,4 +326,14 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				}
 			);
 	}
+
+	public addTypeaheadProcedure(){
+		if (this.initValueTypeaheadFirstProcedure?.compareValue) {
+			this.showSecondProcedureTypeahead = true;
+		}
+		if (this.initValueTypeaheadProcedureTwo?.compareValue) {
+			this.showThirdProcedureTypeahead = true;
+		}
+		this.isNotPreviousProcedureSet = true;
+	}
 }
