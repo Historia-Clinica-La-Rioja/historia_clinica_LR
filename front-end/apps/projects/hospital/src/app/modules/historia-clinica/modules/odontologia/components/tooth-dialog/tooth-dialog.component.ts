@@ -228,6 +228,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (firstProcedure) {
 			this.firstProcedureId = firstProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(firstProcedure.snomed.sctid, ProcedureOrder.FIRST);
+			this.isNotPreviousProcedureSet = false;
 		}
 		else {
 			if (this.initValueTypeaheadFirstProcedure?.compareValue){
@@ -242,6 +243,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.secondProcedureId = secondProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(secondProcedure.snomed.sctid, ProcedureOrder.SECOND);
 			this.disabledFirstProcedureButton = true;
+			this.isNotPreviousProcedureSet = false;
 		}
 		else {
 			if(this.initValueTypeaheadProcedureTwo?.compareValue) {
