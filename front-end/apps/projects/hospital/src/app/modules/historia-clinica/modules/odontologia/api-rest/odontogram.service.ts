@@ -26,7 +26,7 @@ export class OdontogramService {
 		return this.http.get<ToothSurfacesDto>(url);
 	}
 
-	getOdontogramDrawings(patientId: string): Observable<ToothDrawingsDto[]> {
+	getOdontogramDrawings(patientId: number): Observable<ToothDrawingsDto[]> {
 		const url = `${environment.apiBase}${this.BASE_URL}/drawings/${patientId}`
 		return this.http.get<ToothDrawingsDto[]>(url);
 	}

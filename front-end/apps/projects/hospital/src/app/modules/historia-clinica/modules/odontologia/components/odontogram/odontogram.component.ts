@@ -32,7 +32,7 @@ export class OdontogramComponent implements OnInit {
 	quadrants;
 	currentDraws = {};
 	actionsFrom = {};
-	private patientId: string;
+	private patientId: number;
 	ngOnInit(): void {
 
 		this.odontogramRestService.getOdontogram().subscribe(
@@ -57,7 +57,7 @@ export class OdontogramComponent implements OnInit {
 
 		this.activatedRoute.paramMap.subscribe(
 			(params) => {
-				this.patientId = params.get('idPaciente');
+				this.patientId = Number(params.get('idPaciente'));
 				this.odontogramRestService.getOdontogramDrawings(this.patientId).subscribe(
 					(records: ToothDrawingsDto[]) => {
 						records.forEach(record => {
