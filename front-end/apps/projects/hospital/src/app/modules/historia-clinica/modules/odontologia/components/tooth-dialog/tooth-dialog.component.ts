@@ -68,6 +68,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 	disabledFirstProcedureButton: boolean;
 	disabledSecondProcedureButton: boolean;
+
+	isNotPreviousProcedureSet = true;
 	showSecondProcedureTypeahead: boolean;
 	showThirdProcedureTypeahead: boolean;
 
@@ -323,4 +325,3 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			);
 	}
 }
-
