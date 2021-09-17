@@ -24,7 +24,7 @@ import { OdontologyConsultationService } from '../../api-rest/odontology-consult
 import { MatDialog } from '@angular/material/dialog';
 import { ConsultationSuggestedFieldsService } from '../../services/consultation-suggested-fields.service';
 import { combineLatest } from 'rxjs';
-import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
+import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto, toOdontologyProcedureDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { take } from 'rxjs/operators';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -171,7 +171,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			evolutionNote: this.form.value.evolution,
 			medications: this.medicationsNewConsultationService.getMedicaciones().map(toOdontologyMedicationDto),
 			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
-			procedures: null,
+			procedures: this.otherProceduresService.getProcedimientos().map(toOdontologyProcedureDto),
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
 			clinicalSpecialtyId: this.form.value.clinicalSpecialty,
 			dentalActions,
