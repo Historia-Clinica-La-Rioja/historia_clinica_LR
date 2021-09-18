@@ -66,3 +66,5 @@ sonarlint.json
 
 #jenv
 .java-version
+
+*.properties
