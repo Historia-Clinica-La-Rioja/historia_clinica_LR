@@ -51,10 +51,9 @@ export class OdontogramComponent implements OnInit {
 			}
 		);
 
-		this.odontogramService.actionsSubject$.subscribe(actionedTooth => {
+		this.odontogramService.actionedTeeth.forEach(actionedTooth => {
 			this.actionsFrom[actionedTooth.tooth.snomed.sctid] = actionedTooth.actions;
-		})
-
+		});
 		this.activatedRoute.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
@@ -85,6 +84,7 @@ export class OdontogramComponent implements OnInit {
 		dialogRef.afterClosed().subscribe((findingsAndProcedures: ToothAction[]) => {
 			if (findingsAndProcedures) {
 				this.odontogramService.setActionsTo(findingsAndProcedures, `${quadrantCode}${tooth.code}`, tooth);
+				this.actionsFrom[tooth.snomed.sctid] = findingsAndProcedures;
 			}
 		});
 	}
