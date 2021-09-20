@@ -12,11 +12,17 @@ import { HidableScrollableDataComponent } from './components/hidable-scrollable-
 import { OdontologyConsultationDockPopupComponent } from './components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { CoreModule } from "@core/core.module";
+import { IndicesComponent } from './components/indices/indices.component';
 
 
 
 @NgModule({
-	declarations: [ToothComponent, OdontogramComponent, ToothDialogComponent, HidableScrollableDataComponent, OdontologyConsultationDockPopupComponent],
+	declarations: [ToothComponent,
+		OdontogramComponent,
+		ToothDialogComponent,
+		HidableScrollableDataComponent,
+		OdontologyConsultationDockPopupComponent,
+		IndicesComponent],
 	imports: [
 		CommonModule,
 		FlexModule,
