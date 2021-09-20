@@ -93,3 +93,43 @@ databaseChangeLog:
                 columnNames: patient_id, hospital_audit_id
                 constraintName: PK_patient_audit
                 tableName: patient_audit
+
+    - changeSet:  
+        id:  renameColumns-applicable_procedure
+        author:  tmedina
+        changes:  
+            -  renameColumn:
+                columnDataType:  boolean
+                newColumnName:  temporary_c
+                oldColumnName:  temporal_c
+                tableName:  applicable_procedure
+            -  renameColumn:  
+                columnDataType:  boolean
+                newColumnName:  temporary_e
+                oldColumnName:  temporal_e
+                tableName:  applicable_procedure
+            -  renameColumn:  
+                columnDataType:  boolean
+                newColumnName:  temporary_o
+                oldColumnName:  temporal_o
+                tableName:  applicable_procedure
+
+    - changeSet:  
+        id:  renameColumns-applicable_diagnostic
+        author:  tmedina
+        changes:  
+            -  renameColumn:  
+                columnDataType:  boolean
+                newColumnName:  temporary_c
+                oldColumnName:  temporal_c
+                tableName:  applicable_diagnostic
+            -  renameColumn:  
+                columnDataType:  boolean  
+                newColumnName:  temporary_e
+                oldColumnName:  temporal_e
+                tableName:  applicable_diagnostic
+            -  renameColumn:  
+                columnDataType:  boolean  
+                newColumnName:  temporary_o
+                oldColumnName:  temporal_o
+                tableName:  applicable_diagnostic
