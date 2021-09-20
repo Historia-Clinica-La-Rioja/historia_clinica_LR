@@ -144,6 +144,7 @@ export interface AnnexIIDto {
     patientAge: number;
     patientGender: string;
     reportDate: Date;
+    sisaCode: string;
     specialty: string;
 }
 

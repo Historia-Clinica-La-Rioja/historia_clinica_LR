@@ -20,8 +20,8 @@ public class AnnexIIOutpatientVo extends AnnexIIVo{
     private String specialty;
 
     public AnnexIIOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,
-                               String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty){
-        super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType, documentNumber);
+                               String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty, String sisaCode){
+        super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType, documentNumber, sisaCode);
         this.consultationDate = consultationDate;
         this.hasProcedures = hasProcedures == null ? false : hasProcedures;
         this.existsConsultation = true;

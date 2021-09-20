@@ -41,6 +41,8 @@ public class AnnexIIBo {
 
     private LocalDate consultationDate;
 
+    private String sisaCode;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.reportDate = LocalDate.now();
         this.establishment = annexIIOutpatientVo.getEstablishment();
@@ -49,6 +51,7 @@ public class AnnexIIBo {
         this.documentNumber = annexIIOutpatientVo.getDocumentNumber();
         this.patientGender = annexIIOutpatientVo.getPatientGender();
         this.patientAge = annexIIOutpatientVo.getAge();
+        this.sisaCode = annexIIOutpatientVo.getSisaCode();
 
         this.existsConsultation = annexIIOutpatientVo.getExistsConsultation();
         this.hasProcedures = annexIIOutpatientVo.getHasProcedures();
@@ -64,6 +67,7 @@ public class AnnexIIBo {
         this.documentNumber = annexIIAppointmentVo.getDocumentNumber();
         this.patientGender = annexIIAppointmentVo.getPatientGender();
         this.patientAge = annexIIAppointmentVo.getAge();
+        this.sisaCode = annexIIAppointmentVo.getSisaCode();
 
         this.attentionDate = annexIIAppointmentVo.getAttentionDate();
         this.appointmentState = annexIIAppointmentVo.getAppointmentState();

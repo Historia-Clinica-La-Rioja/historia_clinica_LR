@@ -24,8 +24,10 @@ public class AnnexIIVo {
 
     private String documentNumber;
 
+    private String sisaCode;
+
     public AnnexIIVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
-                     LocalDate patientBirthDate, String documentType, String documentNumber){
+                     LocalDate patientBirthDate, String documentType, String documentNumber, String sisaCode){
         this.establishment = establishment;
         this.completePatientName = Stream.of(firstName, middleNames, lastName, otherLastNames)
                 .filter(Objects::nonNull)
@@ -34,5 +36,6 @@ public class AnnexIIVo {
         this.documentNumber = documentNumber;
         this.patientGender = patientGender;
         this.patientBirthDate = patientBirthDate;
+        this.sisaCode = sisaCode;
     }
 }

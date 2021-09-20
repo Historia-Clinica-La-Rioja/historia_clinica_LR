@@ -61,6 +61,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         ctx.put("attentionDate", reportDataDto.getAttentionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
+        ctx.put("sisaCode", reportDataDto.getSisaCode());
         return ctx;
     }
 
@@ -79,6 +80,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         ctx.put("hasProcedures", reportDataDto.getHasProcedures());
         ctx.put("existsConsultation", reportDataDto.getExistsConsultation());
         ctx.put("specialty", reportDataDto.getSpecialty());
+        ctx.put("sisaCode", reportDataDto.getSisaCode());
         return ctx;
     }
 

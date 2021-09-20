@@ -24,7 +24,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     public Optional<AnnexIIAppointmentVo> getAppointmentAnnexInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIAppointmentVo(i.name, pe.firstName, pe.middleNames, " +
                 "           pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, pe.identificationNumber, " +
-                "           aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber) " +
+                "           aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber, i.sisaCode) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
@@ -59,7 +59,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "       WHERE d.id = :documentId " +
                 "       )" +
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
-                "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, cs.name " +
+                "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, cs.name, i.sisa_code " +
                 "       FROM t " +
                 "           JOIN Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN Patient AS pa ON (t.patient_id = pa.id) " +
@@ -89,7 +89,8 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 (String) a[8],
                 a[9] != null ? ((Date) a[9]).toLocalDate() : null,
                 (Boolean) a[10],
-                (String) a[11]
+                (String) a[11],
+                (String) a[12]
         ));
         return result;
     }
