@@ -19,13 +19,16 @@ public class AnnexIIOutpatientVo extends AnnexIIVo{
 
     private String specialty;
 
+    private String problems;
+
     public AnnexIIOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,
-                               String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty, String sisaCode){
+                               String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty, String sisaCode, String problems){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType, documentNumber, sisaCode);
         this.consultationDate = consultationDate;
         this.hasProcedures = hasProcedures == null ? false : hasProcedures;
         this.existsConsultation = true;
         this.specialty = specialty;
+        this.problems = problems;
     }
 
     @JsonIgnore

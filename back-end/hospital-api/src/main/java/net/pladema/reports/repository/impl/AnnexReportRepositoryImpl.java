@@ -1,5 +1,6 @@
 package net.pladema.reports.repository.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.reports.repository.AnnexReportRepository;
 import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
 import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -59,7 +61,8 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "       WHERE d.id = :documentId " +
                 "       )" +
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
-                "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, cs.name, i.sisa_code " +
+                "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, " +
+                "               cs.name, i.sisa_code, prob.descriptions as problems  " +
                 "       FROM t " +
                 "           JOIN Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN Patient AS pa ON (t.patient_id = pa.id) " +
@@ -71,9 +74,20 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "               SELECT dp.document_id, CAST(1 AS BIT) as proced " +
                 "               FROM document_procedure dp " +
                 "               GROUP BY proced, dp.document_id " +
-                "           ) pr ON (t.doc_id = pr.document_id)";
+                "           ) pr ON (t.doc_id = pr.document_id) " +
+                "           LEFT JOIN ( " +
+                "           SELECT dhc.document_id, STRING_AGG(( " +
+                "               CASE WHEN hc.cie10_codes IS NULL THEN sno.pt ELSE CONCAT(sno.pt, ' (',hc.cie10_codes, ')') END), '| '" +
+                "           ) as descriptions  " +
+                "           FROM document_health_condition dhc " +
+                "           JOIN health_condition hc ON (dhc.health_condition_id = hc.id) " +
+                "           JOIN snomed sno ON (hc.snomed_id = sno.id) " +
+                "           WHERE hc.problem_id IN (:problemTypes) " +
+                "           GROUP BY dhc.document_id " +
+                "           ) prob ON (t.doc_id = prob.document_id) ";
         Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
                 .setParameter("documentId", documentId)
+                .setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC))
                 .setMaxResults(1)
                 .getResultList().stream().findFirst();
 
@@ -90,7 +104,8 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 a[9] != null ? ((Date) a[9]).toLocalDate() : null,
                 (Boolean) a[10],
                 (String) a[11],
-                (String) a[12]
+                (String) a[12],
+                (String) a[13]
         ));
         return result;
     }

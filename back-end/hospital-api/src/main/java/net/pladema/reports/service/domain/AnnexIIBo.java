@@ -43,6 +43,8 @@ public class AnnexIIBo {
 
     private String sisaCode;
 
+    private String problems;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.reportDate = LocalDate.now();
         this.establishment = annexIIOutpatientVo.getEstablishment();
@@ -57,6 +59,7 @@ public class AnnexIIBo {
         this.hasProcedures = annexIIOutpatientVo.getHasProcedures();
         this.specialty = annexIIOutpatientVo.getSpecialty();
         this.consultationDate = annexIIOutpatientVo.getConsultationDate();
+        this.problems = annexIIOutpatientVo.getProblems();
     }
 
     public AnnexIIBo(AnnexIIAppointmentVo annexIIAppointmentVo){

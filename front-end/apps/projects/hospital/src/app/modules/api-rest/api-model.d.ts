@@ -143,6 +143,7 @@ export interface AnnexIIDto {
     medicalCoverage: string;
     patientAge: number;
     patientGender: string;
+    problems: string;
     reportDate: Date;
     sisaCode: string;
     specialty: string;
