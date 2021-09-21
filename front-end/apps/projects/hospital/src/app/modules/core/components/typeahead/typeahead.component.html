@@ -15,7 +15,7 @@
 			</mat-option>
 		</mat-autocomplete>
 
-		<button *ngIf="form.value?.searchValue?.length" id="clear" type="button" color="warn" mat-icon-button matSuffix (click)="clear($event)" [disabled]="disabledClearButton">
+		<button *ngIf="form.value?.searchValue?.length" id="clear" type="button" color="warn" mat-icon-button matSuffix (click)="clear($event)">
 			<mat-icon>close</mat-icon>
 		</button>
 
