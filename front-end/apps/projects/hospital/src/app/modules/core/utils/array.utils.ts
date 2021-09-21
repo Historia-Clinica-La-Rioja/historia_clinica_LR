@@ -18,7 +18,7 @@ export const uniqueItems = <T>(data: T[]): T[] => {
 
 export const pushIfNotExists = <T>(data: T[], obj: T, compareFunction: (obj1: T, obj2: T) => boolean): T[] => {
 	if (!data.some(e => compareFunction(e, obj))) {
-		data.push(obj);
+		return data.concat([obj]);
 	}
 	return data;
 };

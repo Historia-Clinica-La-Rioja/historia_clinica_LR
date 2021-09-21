@@ -3,11 +3,12 @@ import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { SnomedDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SEMANTICS_CONFIG } from '../constants/snomed-semantics';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment, momentParseDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface Procedimiento {
 	snomed: SnomedDto;
@@ -26,7 +27,9 @@ export class ProcedimientosService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService
+		private readonly snomedService: SnomedService,	
+		private readonly snackBarService: SnackBarService,
+
 	) {
 
 		this.form = this.formBuilder.group({
@@ -78,8 +81,20 @@ export class ProcedimientosService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(procedimiento: Procedimiento): void {
-		this.data = pushTo<Procedimiento>(this.data, procedimiento);
+	add(procedimiento: Procedimiento): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<Procedimiento>(this.data, procedimiento, this.compareSpeciality);
+	 	return currentItems === this.data.length;
+	}
+
+	addControl(procedimiento: Procedimiento): void {
+		if (this.add(procedimiento)){
+			this.snackBarService.showError("Procedimiento duplicado");
+		}
+	}
+	
+	compareSpeciality(data: Procedimiento, data1: Procedimiento): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	addToList() {
@@ -88,7 +103,7 @@ export class ProcedimientosService {
 				snomed: this.snomedConcept,
 				performedDate: this.form.value.performedDate ? momentFormat(this.form.value.performedDate, DateFormat.API_DATE) : undefined
 			};
-			this.add(nuevoProcedimiento);
+			this.addControl(nuevoProcedimiento);
 			this.resetForm();
 		}
 	}

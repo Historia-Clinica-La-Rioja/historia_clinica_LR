@@ -53,7 +53,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
-		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService);
+		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 	}
 
 	ngOnInit(): void {

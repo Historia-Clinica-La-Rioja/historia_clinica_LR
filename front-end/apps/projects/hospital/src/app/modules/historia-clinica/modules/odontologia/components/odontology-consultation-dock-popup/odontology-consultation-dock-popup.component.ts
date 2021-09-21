@@ -78,7 +78,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService);
 		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
-		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService);
+		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 
 	}
 
