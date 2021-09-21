@@ -1,5 +1,80 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_24 
+    - logicalFilePath: incrementales-v1_24
+    
+    - changeSet:
+          id: external_clinical_history-createTable
+          comment: Create table external_clinical_history
+          author: lbergottini
+          changes:
+            - createTable:
+                    tableName: external_clinical_history
+                    columns:
+                        - column:
+                            autoIncrement: true
+                            constraints:
+                                primaryKey: true
+                                primaryKeyName: PK_external_clinical_history
+                            name: id
+                            type: int
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: patient_gender
+                            type: smallint
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: patient_document_type
+                            type: smallint
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: patient_document_number
+                            type: varchar(11)
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: notes
+                            type: varchar(1024)
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: consultation_date
+                            type: date
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: institution
+                            type: varchar(255)
+                            defaultValue: '-'
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: professional_name
+                            type: varchar(120)
+                            defaultValue: '-'
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: professional_specialty
+                            type: varchar(100)
+                            defaultValue: '-'
+            - addForeignKeyConstraint:
+                    baseColumnNames: patient_gender
+                    baseTableName: external_clinical_history
+                    constraintName: FK_external_clinical_history_patient_gender
+                    referencedColumnNames: id
+                    referencedTableName: gender
+            - addForeignKeyConstraint:
+                    baseColumnNames: patient_document_type
+                    baseTableName: external_clinical_history
+                    constraintName: FK_external_clinical_history_patient_document_type
+                    referencedColumnNames: id
+                    referencedTableName: identification_type
+            - addUniqueConstraint:
+                    constraintName: UQ_all_attributes
+                    columnNames: patient_gender, patient_document_type, patient_document_number, notes, consultation_date, institution, professional_name, professional_specialty
+                    tableName: external_clinical_history
 
     - changeSet:
         id: hospital_audit-createTable
