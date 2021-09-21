@@ -6,7 +6,7 @@
 
     <style type="text/css">
         .table {
-            font-size: 12px;
+            font-size: 11px;
         }
         
         .table>div>div {
@@ -109,6 +109,10 @@
         }
         
         .specialty,
+        .diagnosis {
+          width: 230px;
+        }
+
         .code-nhpgd {
             width: 510px;
         }
@@ -186,6 +190,11 @@
             width: 300px;
             height: 125px;
         }
+
+        .problem::first-letter {
+            text-transform: uppercase;
+        }
+
     </style>
 </head>
 
@@ -207,7 +216,7 @@
             <div class="hospital" th:text="${'HOSPITAL: ' + establishment}"></div>
             <div class="code-hpgd">
                 <div class="border-bottom">Código HPGD</div>
-                <div>&nbsp;</div>
+                <div th:text="${sisaCode}"></div>
             </div>
         </div>
         <div class="row-space"></div>
@@ -267,9 +276,18 @@
                 <label th:if="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">X</label>
                 <label th:unless="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">&nbsp;</label>
             </div>
-            <div class="specialty" >
-                <label th:if="${specialty != null}" th:text="${'Especialidad:  ' + specialty}"></label>
-                <label th:unless="${specialty != null}" th:text="${'Especialidad:  '}">&nbsp;</label>
+            <div class="specialty">
+                <div class="border-bottom">ESPECIALIDAD</div>
+                <label th:if="${specialty != null}" th:text="${specialty}"></label>
+                <label th:unless="${specialty != null}" >&nbsp;</label>
+            </div>
+            <div class="diagnosis">
+                <div class="border-bottom">DIAGNÓSTICOS</div>
+                <div th:if="${problems != null}">
+                    <div th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:3px'}" >
+                        <div class="problem" th:text="${problem}"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div>
