@@ -9,6 +9,7 @@ import { ContextService } from '@core/services/context.service';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
 import { MatDialog } from '@angular/material/dialog';
+import {NavigationService} from "@pacientes/services/navigation.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -42,6 +43,7 @@ export class SearchCreateComponent implements OnInit {
 		private personMasterDataService: PersonMasterDataService,
 		private contextService: ContextService,
 		private dialog: MatDialog,
+		public navigationService: NavigationService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -63,6 +65,7 @@ export class SearchCreateComponent implements OnInit {
 
 		this.patientMasterDataService.getIdentityVerificationStatus().subscribe(
 			data => { this.identityVerificationStatusArray = data; });
+		this.navigationService.resetURL();
 	}
 
 	search(formDirectiveSearchForm: FormGroupDirective): void {
