@@ -3,7 +3,8 @@
 
 	<div id="actions" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="end">
 		<button mat-stroked-button color="primary" class="uppercase" (click)="clearOdontogram()">Restablecer</button>
-		<button mat-raised-button color="primary" class="uppercase" (click)="openConsultationPopup()">Completar consulta</button>
+		<button mat-raised-button color="primary" class="uppercase" (click)="openConsultationPopup()">Completar
+			consulta</button>
 	</div>
 
 
@@ -90,6 +91,11 @@
 			</div>
 		</div>
 
+	</div>
+
+	<div *ngIf="(consultationsIndices$ | async ) as consultationsIndices">
+		<app-indices *ngIf="consultationsIndices.length" fxLayoutAlign="center" class="indices"
+			[consultations]="consultationsIndices"></app-indices>
 	</div>
 
 </div>

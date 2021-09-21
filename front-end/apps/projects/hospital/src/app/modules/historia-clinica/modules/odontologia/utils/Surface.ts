@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { State, SurfaceDrawerService } from '../services/surface-drawer.service';
 
 export class Surface {

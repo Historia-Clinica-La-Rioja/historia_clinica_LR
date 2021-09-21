@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
+import { OdontologyConsultationIndicesDto, ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
 import { deepClone } from '@core/utils/core.utils';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
 import { ToothAction, Action, ActionType } from '../../services/actions.service';
@@ -11,6 +11,8 @@ import { ToothSurfaceId } from '../../utils/Surface';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { OdontologyConsultationDockPopupComponent } from '../odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
+import { OdontologyConsultationService } from '../../api-rest/odontology-consultation.service';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-odontogram',
@@ -25,6 +27,7 @@ export class OdontogramComponent implements OnInit {
 		public readonly odontogramService: OdontogramService,
 		private readonly activatedRoute: ActivatedRoute,
 		private readonly dockPopupService: DockPopupService,
+		private readonly odontologyConsultationService: OdontologyConsultationService
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
@@ -33,6 +36,7 @@ export class OdontogramComponent implements OnInit {
 	currentDraws = {};
 	actionsFrom = {};
 	private patientId: number;
+	consultationsIndices$: Observable<OdontologyConsultationIndicesDto[]>;
 	ngOnInit(): void {
 
 		this.odontogramRestService.getOdontogram().subscribe(
@@ -66,6 +70,7 @@ export class OdontogramComponent implements OnInit {
 				)
 			});
 
+		this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId)
 	}
 
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
