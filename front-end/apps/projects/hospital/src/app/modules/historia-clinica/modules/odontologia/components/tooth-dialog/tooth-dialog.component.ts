@@ -13,8 +13,8 @@ import {SurfacesNamesFacadeService, ToothSurfaceNames} from '../../services/surf
 import {getSurfaceShortName} from '../../utils/surfaces';
 import {Actions, ToothComponent} from '../tooth/tooth.component';
 import {TypeaheadOption} from "@core/components/typeahead/typeahead.component";
-import { ScrollableData } from '../hidable-scrollable-data/hidable-scrollable-data.component';
-import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
+import {ScrollableData} from '../hidable-scrollable-data/hidable-scrollable-data.component';
+import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
 
 @Component({
 	selector: 'app-tooth-dialog',
@@ -125,6 +125,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				.pipe(
 					map(this.toScrollableData)
 				);
+		this.showProcedures();
 	}
 
 	public confirm(): void {
@@ -201,14 +202,11 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		else {
 			if (order === ProcedureOrder.SECOND){
 				this.initValueTypeaheadProcedureTwo = typeaheadConcept;
-				this.disabledFirstProcedureButton = true;
 			}
 			else {
 				this.initValueTypeaheadProcedureThree = typeaheadConcept;
-				this.disabledSecondProcedureButton = true;
 			}
 		}
-
 	}
 
 	public findingChanged(hallazgo: OdontologyConceptDto): void {
@@ -271,6 +269,25 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	private showProcedures(): void{
+		if (this.initValueTypeaheadProcedureThree?.compareValue){
+			this.showSecondProcedureTypeahead = true;
+			this.showThirdProcedureTypeahead = true;
+			this.isNotPreviousProcedureSet = true;
+		}
+		else {
+			if (this.initValueTypeaheadProcedureTwo?.compareValue){
+				this.showSecondProcedureTypeahead = true;
+				this.isNotPreviousProcedureSet = false;
+			}
+			else {
+				if (this.initValueTypeaheadFirstProcedure?.compareValue){
+					this.isNotPreviousProcedureSet = false;
+				}
+			}
+		}
+	}
+
 	private reciveToothCurrentViewActions(actions: Actions): void {
 		if (actions?.findingId) {
 			this.setTypeaheadCurrentFinding(actions.findingId);
@@ -287,9 +304,11 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		}
 		if (actions?.procedures.secondProcedureId){
 			this.setTypeaheadProcedures(actions.procedures.secondProcedureId, ProcedureOrder.SECOND);
+			this.disabledFirstProcedureButton = true;
 		}
 		if (actions?.procedures.thirdProcedureId){
 			this.setTypeaheadProcedures(actions.procedures.thirdProcedureId, ProcedureOrder.THIRD);
+			this.disabledSecondProcedureButton = true;
 		}
 		if (!(actions?.procedures.firstProcedureId) && !(actions?.procedures.secondProcedureId) && !(actions?.procedures.thirdProcedureId)) {
 			this.initValueTypeaheadFirstProcedure = null;
