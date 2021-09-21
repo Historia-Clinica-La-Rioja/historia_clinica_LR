@@ -54,7 +54,7 @@
 			<app-typeahead *ngIf="showSecondProcedureTypeahead"
 						   id="second_procedure"
 						   [placeholder]="'Seleccione 2do procedimiento'"
-						   [externalSetValue]="initValueTypeaheadProcedureTwo"
+						   [externalSetValue]="initValueTypeaheadSecondProcedure"
 						   [options]="filteredProceduresTypeahead"
 						   [disabledClearButton]="disabledSecondProcedureButton"
 						   (selectionChange)="secondProcedureChanged($event)"
@@ -63,7 +63,7 @@
 			<app-typeahead *ngIf="showThirdProcedureTypeahead"
 						   id="third_procedure"
 						   [placeholder]="'Seleccione 3er procedimiento'"
-						   [externalSetValue]="initValueTypeaheadProcedureThree"
+						   [externalSetValue]="initValueTypeaheadThirdProcedure"
 						   [options]="filteredProceduresTypeahead"
 						   (selectionChange)="thirdProcedureChanged($event)"
 			>

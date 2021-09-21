@@ -61,10 +61,10 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	initValueTypeaheadFirstProcedure: TypeaheadOption<OdontologyConceptDto> = null;
 
 	secondProcedureId: string;
-	initValueTypeaheadProcedureTwo: TypeaheadOption<OdontologyConceptDto> = null;
+	initValueTypeaheadSecondProcedure: TypeaheadOption<OdontologyConceptDto> = null;
 
 	thirdProcedureId: string;
-	initValueTypeaheadProcedureThree: TypeaheadOption<OdontologyConceptDto> = null;
+	initValueTypeaheadThirdProcedure: TypeaheadOption<OdontologyConceptDto> = null;
 
 	disabledFirstProcedureButton: boolean;
 	disabledSecondProcedureButton: boolean;
@@ -201,10 +201,10 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		}
 		else {
 			if (order === ProcedureOrder.SECOND){
-				this.initValueTypeaheadProcedureTwo = typeaheadConcept;
+				this.initValueTypeaheadSecondProcedure = typeaheadConcept;
 			}
 			else {
-				this.initValueTypeaheadProcedureThree = typeaheadConcept;
+				this.initValueTypeaheadThirdProcedure = typeaheadConcept;
 			}
 		}
 	}
@@ -246,9 +246,9 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.isNotPreviousProcedureSet = false;
 		}
 		else {
-			if(this.initValueTypeaheadProcedureTwo?.compareValue) {
-				this.deleteActionOfTooth(this.initValueTypeaheadProcedureTwo, ActionType.PROCEDURE, ProcedureOrder.SECOND);
-				this.initValueTypeaheadProcedureTwo = null;
+			if(this.initValueTypeaheadSecondProcedure?.compareValue) {
+				this.deleteActionOfTooth(this.initValueTypeaheadSecondProcedure, ActionType.PROCEDURE, ProcedureOrder.SECOND);
+				this.initValueTypeaheadSecondProcedure = null;
 				this.disabledFirstProcedureButton = false;
 			}
 		}
@@ -261,22 +261,22 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.disabledSecondProcedureButton = true;
 		}
 		else {
-			if (this.initValueTypeaheadProcedureThree?.compareValue) {
-				this.deleteActionOfTooth(this.initValueTypeaheadProcedureThree, ActionType.PROCEDURE, ProcedureOrder.THIRD);
-				this.initValueTypeaheadProcedureThree = null;
+			if (this.initValueTypeaheadThirdProcedure?.compareValue) {
+				this.deleteActionOfTooth(this.initValueTypeaheadThirdProcedure, ActionType.PROCEDURE, ProcedureOrder.THIRD);
+				this.initValueTypeaheadThirdProcedure = null;
 				this.disabledSecondProcedureButton = false;
 			}
 		}
 	}
 
 	private showProcedures(): void{
-		if (this.initValueTypeaheadProcedureThree?.compareValue){
+		if (this.initValueTypeaheadThirdProcedure?.compareValue){
 			this.showSecondProcedureTypeahead = true;
 			this.showThirdProcedureTypeahead = true;
 			this.isNotPreviousProcedureSet = true;
 		}
 		else {
-			if (this.initValueTypeaheadProcedureTwo?.compareValue){
+			if (this.initValueTypeaheadSecondProcedure?.compareValue){
 				this.showSecondProcedureTypeahead = true;
 				this.isNotPreviousProcedureSet = false;
 			}
@@ -313,8 +313,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (!(actions?.procedures.firstProcedureId) && !(actions?.procedures.secondProcedureId) && !(actions?.procedures.thirdProcedureId)) {
 			this.initValueTypeaheadFirstProcedure = null;
 
-			this.initValueTypeaheadProcedureTwo = null;
-			this.initValueTypeaheadProcedureThree = null;
+			this.initValueTypeaheadSecondProcedure = null;
+			this.initValueTypeaheadThirdProcedure = null;
 			this.firstProcedureId = undefined;
 			this.secondProcedureId = undefined;
 			this.thirdProcedureId = undefined;
@@ -352,7 +352,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (this.initValueTypeaheadFirstProcedure?.compareValue) {
 			this.showSecondProcedureTypeahead = true;
 		}
-		if (this.initValueTypeaheadProcedureTwo?.compareValue) {
+		if (this.initValueTypeaheadSecondProcedure?.compareValue) {
 			this.showThirdProcedureTypeahead = true;
 		}
 		this.isNotPreviousProcedureSet = true;
