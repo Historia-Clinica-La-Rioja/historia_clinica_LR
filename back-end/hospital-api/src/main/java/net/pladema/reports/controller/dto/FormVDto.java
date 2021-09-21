@@ -32,4 +32,6 @@ public class FormVDto {
     private LocalDate consultationDate;
 
     private String problems;
+
+    private String sisaCode;
 }

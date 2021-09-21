@@ -60,6 +60,7 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("documentNumber", reportDataDto.getDocumentNumber());
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
+        ctx.put("sisaCode", reportDataDto.getSisaCode());
         return ctx;
     }
 
@@ -77,6 +78,7 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("documentNumber", reportDataDto.getDocumentNumber());
         ctx.put("consultationDate", reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("problems", reportDataDto.getProblems());
+        ctx.put("sisaCode", reportDataDto.getSisaCode());
         return ctx;
     }
 

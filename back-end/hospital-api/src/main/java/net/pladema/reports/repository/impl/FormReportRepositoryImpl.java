@@ -26,7 +26,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     public Optional<FormVAppointmentVo> getAppointmentFormVInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.FormVAppointmentVo(i.name, pe.firstName, pe.middleNames, "+
                 "               pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, "+
-                "               pe.identificationNumber, mc.name, pmca.affiliateNumber, ad.street, ad.number, ci.description) "+
+                "               pe.identificationNumber, mc.name, pmca.affiliateNumber, ad.street, ad.number, ci.description, i.sisaCode) "+
                 "       FROM Appointment AS a "+
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) "+
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) "+
@@ -65,7 +65,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
                 "              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
                 "              t.start_date, prob.descriptions as problems, "+
-                "              ad.street, ad.number, ci.description as city"+
+                "              ad.street, ad.number, ci.description as city, i.sisa_code"+
                 "       FROM t "+
                 "           JOIN Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN Patient AS pa ON (t.patient_id = pa.id) " +
@@ -103,7 +103,9 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                         (String) a[10],
                         (String) a[11],
                         (String) a[12],
-                        (String) a[13]
+                        (String) a[13],
+                        (String) a[14]
+
                 ));
         return result;
     }

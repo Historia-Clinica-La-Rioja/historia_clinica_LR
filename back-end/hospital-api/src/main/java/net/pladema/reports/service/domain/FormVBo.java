@@ -38,6 +38,8 @@ public class FormVBo {
 
     private String problems;
 
+    private String sisaCode;
+
     public FormVBo(FormVOutpatientVo formVOutpatientVo){
         this.establishment = formVOutpatientVo.getEstablishment();
         this.completePatientName = Stream.of(formVOutpatientVo.getFirstName(), formVOutpatientVo.getMiddleNames(), formVOutpatientVo.getLastName(), formVOutpatientVo.getOtherLastNames())
@@ -53,6 +55,7 @@ public class FormVBo {
                 .collect(Collectors.joining(" "));
         this.consultationDate = formVOutpatientVo.getConsultationDate();
         this.problems = formVOutpatientVo.getProblems();
+        this.sisaCode = formVOutpatientVo.getSisaCode();
     }
 
     public FormVBo(FormVAppointmentVo formVAppointmentVo){
@@ -70,5 +73,6 @@ public class FormVBo {
         this.address = Stream.of(formVAppointmentVo.getStreetName(), formVAppointmentVo.getStreetNumber(), formVAppointmentVo.getCity())
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
+        this.sisaCode = formVAppointmentVo.getSisaCode();
     }
 }

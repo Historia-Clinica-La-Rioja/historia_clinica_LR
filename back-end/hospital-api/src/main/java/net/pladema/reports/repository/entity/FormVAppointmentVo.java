@@ -17,9 +17,9 @@ public class FormVAppointmentVo extends FormVVo{
 
     public FormVAppointmentVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
                               LocalDate patientBirthDate, String documentType, String documentNumber, String streetName,
-                              String streetNumber, String city, String medicalCoverage, String affiliateNumber){
+                              String streetNumber, String city, String medicalCoverage, String affiliateNumber, String sisaCode){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType,
-                documentNumber, streetName, streetNumber, city);
+                documentNumber, streetName, streetNumber, city, sisaCode);
         this.medicalCoverage = medicalCoverage;
         this.affiliateNumber = affiliateNumber;
     }

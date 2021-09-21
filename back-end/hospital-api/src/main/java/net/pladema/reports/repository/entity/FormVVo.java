@@ -33,8 +33,10 @@ public class FormVVo {
 
     private String city;
 
+    private String sisaCode;
+
     public FormVVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
-                   LocalDate patientBirthDate, String documentType, String documentNumber, String streetName, String streetNumber,String city){
+                   LocalDate patientBirthDate, String documentType, String documentNumber, String streetName, String streetNumber,String city, String sisaCode){
         this.establishment = establishment;
         this.firstName = firstName;
         this.middleNames = middleNames;
@@ -47,5 +49,6 @@ public class FormVVo {
         this.streetName = streetName;
         this.streetNumber = streetNumber;
         this.city = city;
+        this.sisaCode = sisaCode;
     }
 }

@@ -784,6 +784,7 @@ export interface FormVDto {
     patientGender: string;
     problems: string;
     reportDate: Date;
+    sisaCode: string;
 }
 
 export interface GenderDto extends AbstractMasterdataDto<number> {
