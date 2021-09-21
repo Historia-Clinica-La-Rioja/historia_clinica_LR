@@ -151,7 +151,7 @@
             JOIN document_inmunization di on d.id = di.document_id
             JOIN inmunization inm on di.inmunization_id = inm.id
             WHERE d.status_id = :docStatusId
-            AND d.type_id = :documentTypeId
+            AND d.type_id IN :documentTypeId
             AND inm.patient_id = :patientId
             )
             SELECT t.id as id, s.sctid as code, s.pt as term, status_id, administration_date, created_on, expiration_date
