@@ -79,6 +79,7 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("consultationDate", reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("problems", reportDataDto.getProblems());
         ctx.put("sisaCode", reportDataDto.getSisaCode());
+        ctx.put("cie10Codes", reportDataDto.getCie10Codes());
         return ctx;
     }
 

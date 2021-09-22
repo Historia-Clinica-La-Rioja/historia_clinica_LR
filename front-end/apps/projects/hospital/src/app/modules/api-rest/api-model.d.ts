@@ -774,6 +774,7 @@ export interface FileDto {
 export interface FormVDto {
     address: string;
     affiliateNumber: string;
+    cie10Codes: string;
     completePatientName: string;
     consultationDate: Date;
     documentNumber: string;

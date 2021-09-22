@@ -34,4 +34,6 @@ public class FormVDto {
     private String problems;
 
     private String sisaCode;
+
+    private String cie10Codes;
 }

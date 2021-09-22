@@ -40,6 +40,8 @@ public class FormVBo {
 
     private String sisaCode;
 
+    private String cie10Codes;
+
     public FormVBo(FormVOutpatientVo formVOutpatientVo){
         this.establishment = formVOutpatientVo.getEstablishment();
         this.completePatientName = Stream.of(formVOutpatientVo.getFirstName(), formVOutpatientVo.getMiddleNames(), formVOutpatientVo.getLastName(), formVOutpatientVo.getOtherLastNames())
@@ -56,6 +58,7 @@ public class FormVBo {
         this.consultationDate = formVOutpatientVo.getConsultationDate();
         this.problems = formVOutpatientVo.getProblems();
         this.sisaCode = formVOutpatientVo.getSisaCode();
+        this.cie10Codes = formVOutpatientVo.getCie10Codes();
     }
 
     public FormVBo(FormVAppointmentVo formVAppointmentVo){

@@ -65,7 +65,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
                 "              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
                 "              t.start_date, prob.descriptions as problems, "+
-                "              ad.street, ad.number, ci.description as city, i.sisa_code"+
+                "              ad.street, ad.number, ci.description as city, i.sisa_code, prob.cie10Codes as cie10Codes"+
                 "       FROM t "+
                 "           JOIN Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN Patient AS pa ON (t.patient_id = pa.id) " +
@@ -76,7 +76,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "           LEFT JOIN Identification_type AS it ON (it.id = pe.identification_type_id) " +
                 "           LEFT JOIN Gender AS g ON (pe.gender_id = g.id) " +
                 "           LEFT JOIN ( " +
-                "               SELECT dhc.document_id, STRING_AGG(sno.pt, '| ') as descriptions " +
+                "               SELECT dhc.document_id, STRING_AGG(sno.pt, '| ') as descriptions, " +
+                "                      STRING_AGG((CASE WHEN hc.cie10_codes IS NULL THEN '-' ELSE hc.cie10_codes END), '| ') as cie10Codes " +
                 "               FROM document_health_condition dhc " +
                 "               JOIN health_condition hc ON (dhc.health_condition_id = hc.id) " +
                 "               JOIN snomed sno ON (hc.snomed_id = sno.id) " +
@@ -104,7 +105,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                         (String) a[11],
                         (String) a[12],
                         (String) a[13],
-                        (String) a[14]
+                        (String) a[14],
+                        (String) a[15]
 
                 ));
         return result;
