@@ -49,6 +49,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys.sgh</groupId>
+            <artifactId>hospital-public-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ar.lamansys</groupId>
             <artifactId>sgx-auth</artifactId>
             <version>0.0.1-SNAPSHOT</version>
