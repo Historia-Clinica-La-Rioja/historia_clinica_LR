@@ -186,6 +186,10 @@
             margin-top: 30%;
         }
 
+        .diagnosis::first-letter {
+            text-transform: uppercase;
+        }
+
     </style>
 </head>
 
@@ -200,7 +204,7 @@
     </div>
     <div class="row-data">
         <div class="establishment" th:text="${establishment}"></div>
-        <div class="code">&nbsp;</div>
+        <div class="code" th:text="${sisaCode}"></div>
     </div>
     <div class="row">
         <div class="complete-name">2. APELLIDOS Y NOMBRES</div>
@@ -252,9 +256,10 @@
         <div class="code">17. CÓDIGO</div>
     </div>
     <div th:if="${problems != null}">
-        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}" >
-            <div class="diagnosis" th:text="${#strings.capitalize(problem)}"></div>
-            <div class="code">&nbsp;</div>
+        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
+             th:with="cie10CodesList = ${#strings.arraySplit(cie10Codes,'|')}">
+            <div class="diagnosis" th:text="${problem}"></div>
+            <div class="code" th:text="${cie10CodesList[iter.index]}"></div>
         </div>
     </div>
     <div th:unless="${problems != null}">
