@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ExternalClinicalHistorySummaryVo implements Serializable {
+public class ExternalClinicalHistoryVo implements Serializable {
 
     private Integer id;
 

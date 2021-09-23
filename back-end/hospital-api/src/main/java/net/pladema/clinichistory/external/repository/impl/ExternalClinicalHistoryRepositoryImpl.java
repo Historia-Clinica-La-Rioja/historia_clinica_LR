@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.external.repository.impl;
 
-import net.pladema.clinichistory.external.repository.ExternalClinicalHistorySummaryRepository;
-import net.pladema.clinichistory.external.repository.domain.ExternalClinicalHistorySummaryVo;
+import net.pladema.clinichistory.external.repository.ExternalClinicalHistoryRepository;
+import net.pladema.clinichistory.external.repository.domain.ExternalClinicalHistoryVo;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ExternalClinicalHistorySummaryRepositoryImpl implements ExternalClinicalHistorySummaryRepository {
+public class ExternalClinicalHistoryRepositoryImpl implements ExternalClinicalHistoryRepository {
 
     private final EntityManager entityManager;
 
-    public ExternalClinicalHistorySummaryRepositoryImpl(EntityManager entityManager) {
+    public ExternalClinicalHistoryRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ExternalClinicalHistorySummaryVo> getAllExternalClinicalHistorySummary(Integer patientId) {
+    public List<ExternalClinicalHistoryVo> getAllExternalClinicalHistory(Integer patientId) {
         String sqlString = "SELECT ec.id, ec.professionalSpecialty, ec.consultationDate, ec.professionalName, ec.notes, ec.institution"
                 + "  FROM ExternalClinicalHistory AS ec "
                 + "  JOIN Person AS pe ON ec.patientDocumentNumber= pe.identificationNumber "
@@ -33,9 +33,9 @@ public class ExternalClinicalHistorySummaryRepositoryImpl implements ExternalCli
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .getResultList();
-        List<ExternalClinicalHistorySummaryVo> result = new ArrayList<>();
+        List<ExternalClinicalHistoryVo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                result.add(new ExternalClinicalHistorySummaryVo(
+                result.add(new ExternalClinicalHistoryVo(
                         (Integer) a[0],
                         (String) a[1],
                         (LocalDate) a[2],

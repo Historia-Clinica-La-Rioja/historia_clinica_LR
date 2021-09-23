@@ -753,6 +753,15 @@ export interface EvolutionNoteDto extends Serializable {
     vitalSigns?: VitalSignDto;
 }
 
+export interface ExternalClinicalHistoryDto extends Serializable {
+    consultationDate: string;
+    id: number;
+    institution?: string;
+    notes: string;
+    professionalName?: string;
+    professionalSpecialty?: string;
+}
+
 export interface FhirAddressDto {
     address: string;
     city: string;
