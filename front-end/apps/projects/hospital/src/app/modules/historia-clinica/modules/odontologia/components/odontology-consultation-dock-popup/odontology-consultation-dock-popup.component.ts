@@ -72,7 +72,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
-		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
+		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicationsNewConsultationService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.personalHistoriesNewConsultationService = new PersonalHistoriesNewConsultationService(formBuilder, this.snomedService);
 		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService);

@@ -3,9 +3,10 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto } from '@api-rest/api-model';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
 import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface Alergia {
 	snomed: SnomedDto;
@@ -24,7 +25,10 @@ export class AlergiasNuevaConsultaService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService) {
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService
+
+	) {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
@@ -95,8 +99,19 @@ export class AlergiasNuevaConsultaService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(alergia: Alergia): void {
-		this.data = pushTo<Alergia>(this.data, alergia);
+	add(alergia: Alergia): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<Alergia>(this.data, alergia, this.compareSpeciality);
+		return currentItems === this.data.length;
+	}
+
+	addControl(alergia: Alergia): void {
+		if (this.add(alergia))
+			this.snackBarService.showError("Alergia duplicada");
+	}
+
+	compareSpeciality(data: Alergia, data1: Alergia): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	removeAlergia(index: number): void {
@@ -109,7 +124,7 @@ export class AlergiasNuevaConsultaService {
 				snomed: this.snomedConcept,
 				criticalityId: this.form.value.criticality,
 			};
-			this.add(alergia);
+			this.addControl(alergia);
 			this.resetForm();
 		}
 	}
