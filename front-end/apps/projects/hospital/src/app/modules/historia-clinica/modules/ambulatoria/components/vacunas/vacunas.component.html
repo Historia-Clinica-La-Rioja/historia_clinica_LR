@@ -15,58 +15,63 @@
 	</div>
 
 
+	<section id="vaccines">
+		<div fxLayout="column" fxLayoutGap="20px">
+			<div fxFlex="100">
+				<app-summary-card id="applied_vaccine" [header]="vacunasSummary"
+					[tooltip]="'historia-clinica.summary-card.vacunas.TOOLTIP'" [editable]="false">
+					<ng-container *ngIf="!vaccines.length">
+						<span class="no-info" fxLayoutAlign="center"
+							[translate]="'ambulatoria.paciente.vacunas.NO-INFO'"></span>
+					</ng-container>
 
-	<div fxLayout="column" fxLayoutGap="20px">
-		<div fxFlex="100">
-			<app-summary-card [header]="vacunasSummary" [tooltip]="'historia-clinica.summary-card.vacunas.TOOLTIP'"
-				[editable]="false">
-				<ng-container *ngIf="!vaccines.length">
-					<span class="no-info" fxLayoutAlign="center"
-						[translate]="'ambulatoria.paciente.vacunas.NO-INFO'"></span>
-				</ng-container>
-
-				<ng-container *ngIf="vaccines.length">
-					<div fxLayout="column">
-						<mat-list-item class="vaccines-table-header-text">
-							<div fxFlex="70"><span [translate]="'ambulatoria.paciente.vacunas.VACCINE'"></span></div>
-							<div fxFlex="15"><span [translate]="'ambulatoria.paciente.vacunas.DOSE'"></span></div>
-							<div fxFlex="10"><span [translate]="'ambulatoria.paciente.vacunas.DATE'"></span></div>
-						</mat-list-item>
-					</div>
-					<mat-divider></mat-divider>
-				</ng-container>
-				<ng-container *ngFor="let vaccine of vaccines; let i = index">
-					<div fxLayout="row" fxLayoutAlign="center center">
-						<div class="mat-values" fxFlex="70">
-							<div mat-line class="capitalize-first-letter"> {{vaccine.snomed.pt}}</div>
+					<ng-container *ngIf="vaccines.length">
+						<div fxLayout="column">
+							<mat-list-item id="list_vaccine" class="vaccines-table-header-text">
+								<div fxFlex="70"><span [translate]="'ambulatoria.paciente.vacunas.VACCINE'"></span>
+								</div>
+								<div fxFlex="15"><span [translate]="'ambulatoria.paciente.vacunas.DOSE'"></span></div>
+								<div fxFlex="10"><span [translate]="'ambulatoria.paciente.vacunas.DATE'"></span></div>
+							</mat-list-item>
 						</div>
-						<div fxFlex="15">
-							<ng-container *ngIf="vaccine.dose?.description else noInfo">
-								<strong class="dose">{{vaccine.dose?.description}}</strong>
-							</ng-container>
-						</div>
-						<div fxFlex="10" class="padding-to-align-chip">
-							<ng-container *ngIf="vaccine.administrationDate">
-								<span>{{vaccine.administrationDate | viewDate }}</span>
-							</ng-container>
-						</div>
-						<div fxFlex="5">
-							<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
-								mat-icon-button [matMenuTriggerFor]="menu">
-								<mat-icon>more_vert</mat-icon>
-							</button>
-							<mat-menu #menu="matMenu">
-								<button mat-menu-item (click)="goToDetailsVaccine(vaccine)">
-									<span [translate]="'ambulatoria.paciente.vacunas.DETAILS'"></span>
+						<mat-divider></mat-divider>
+					</ng-container>
+					<ng-container *ngFor="let vaccine of vaccines; let i = index">
+						<mat-list-item>
+						<div fxLayout="row" fxLayoutAlign="center center">
+							<div class="mat-values" fxFlex="70">
+								<div mat-line class="capitalize-first-letter"> {{vaccine.snomed.pt}}</div>
+							</div>
+							<div fxFlex="15">
+								<ng-container *ngIf="vaccine.dose?.description else noInfo">
+									<strong class="dose">{{vaccine.dose?.description}}</strong>
+								</ng-container>
+							</div>
+							<div fxFlex="10" class="padding-to-align-chip">
+								<ng-container *ngIf="vaccine.administrationDate">
+									<span>{{vaccine.administrationDate | viewDate }}</span>
+								</ng-container>
+							</div>
+							<div fxFlex="5">
+								<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
+									mat-icon-button [matMenuTriggerFor]="menu">
+									<mat-icon>more_vert</mat-icon>
 								</button>
-							</mat-menu>
+								<mat-menu #menu="matMenu">
+									<button mat-menu-item (click)="goToDetailsVaccine(vaccine)">
+										<span [translate]="'ambulatoria.paciente.vacunas.DETAILS'"></span>
+									</button>
+								</mat-menu>
+							</div>
 						</div>
-					</div>
-					<mat-divider></mat-divider>
-				</ng-container>
-			</app-summary-card>
+						</mat-list-item>
+						<mat-divider></mat-divider>
+					</ng-container>
+				</app-summary-card>
+			</div>
 		</div>
-	</div>
+	</section>
+
 </app-content>
 
 <ng-template #noInfo>
