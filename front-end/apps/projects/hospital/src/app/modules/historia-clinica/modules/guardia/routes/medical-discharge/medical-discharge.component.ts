@@ -55,7 +55,7 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 
 	) {
-		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
+		this.problemasService = new ProblemasService(formBuilder, this.snomedService,this.snackBarService);
 	}
 
 	ngOnInit(): void {
