@@ -69,7 +69,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
 	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
+		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);

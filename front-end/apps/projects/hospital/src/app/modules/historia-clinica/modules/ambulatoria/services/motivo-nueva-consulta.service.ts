@@ -4,9 +4,10 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { Observable, Subject } from 'rxjs';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
 import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface MotivoConsulta {
 	snomed: SnomedDto;
@@ -26,7 +27,9 @@ export class MotivoNuevaConsultaService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService
+
 	) {
 		this.form = this.formBuilder.group({
 			snomed: [null]
@@ -103,16 +106,29 @@ export class MotivoNuevaConsultaService {
 		return this.tableColumnConfig;
 	}
 
-	add(motivo: MotivoConsulta): void {
-		this.motivoConsulta = pushTo<MotivoConsulta>(this.motivoConsulta, motivo);
+
+	add(motivo: MotivoConsulta): boolean {
+		const currentItems = this.motivoConsulta.length;
+		this.motivoConsulta = pushIfNotExists<MotivoConsulta>(this.motivoConsulta, motivo, this.compareSpeciality);
+	 	return currentItems === this.motivoConsulta.length;
 	}
+
+	addControl(motivo: MotivoConsulta): void {
+		if (this.add(motivo))
+			this.snackBarService.showError("Motivo duplicado");
+	}
+
+	compareSpeciality(data: MotivoConsulta, data1: MotivoConsulta): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
+	}
+
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			const motivo: MotivoConsulta = {
 				snomed: this.snomedConcept
 			};
-			this.add(motivo);
+			this.addControl(motivo);
 			this.errorSource.next();
 			this.resetForm();
 		}

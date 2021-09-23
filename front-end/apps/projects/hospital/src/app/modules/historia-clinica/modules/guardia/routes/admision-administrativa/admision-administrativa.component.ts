@@ -76,7 +76,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly doctorsOfficeService: DoctorsOfficeService
 	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
+		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 	}
 
 	ngOnInit(): void {
