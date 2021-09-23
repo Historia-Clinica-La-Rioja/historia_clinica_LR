@@ -29,7 +29,9 @@ public class ProcedureStorageImpl implements ProcedureStorage {
     public List<ProcedureBo> getProcedures() {
         LOG.debug("No input parameters");
 
-        String sqlString = "SELECT ap.sctid, ap.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
+        String sqlString =
+                "SELECT ap.sctid, ap.pt, ap.applicable_to_tooth, ap.applicable_to_surface, " +
+                "       ap.permanent_c, ap.permanent_p, ap.permanent_o, ap.temporary_c, ap.temporary_e, ap.temporary_o " +
                 "FROM applicable_procedure ap " +
                 "ORDER BY ap.pt ASC";
 
@@ -49,7 +51,9 @@ public class ProcedureStorageImpl implements ProcedureStorage {
     public Optional<ProcedureBo> getProcedure(String sctid) {
         LOG.debug("Input parameter -> sctid {}", sctid);
 
-        String sqlString = "SELECT ap.sctid, ap.pt, ap.applicable_to_tooth, ap.applicable_to_surface " +
+        String sqlString =
+                "SELECT ap.sctid, ap.pt, ap.applicable_to_tooth, ap.applicable_to_surface, " +
+                "       ap.permanent_c, ap.permanent_p, ap.permanent_o, ap.temporary_c, ap.temporary_e, ap.temporary_o " +
                 "FROM applicable_procedure ap " +
                 "WHERE ap.sctid = :sctid ";
 
@@ -69,6 +73,8 @@ public class ProcedureStorageImpl implements ProcedureStorage {
 
     private ProcedureBo parseToProcedureBo(Object[] rawProcedure) {
         return new ProcedureBo((String) rawProcedure[0], (String) rawProcedure[1],
-                               (boolean) rawProcedure[2], (boolean) rawProcedure[3]);
+                (boolean) rawProcedure[2], (boolean) rawProcedure[3],
+                (boolean) rawProcedure[4], (boolean) rawProcedure[5],(boolean) rawProcedure[6],
+                (boolean) rawProcedure[7], (boolean) rawProcedure[8],(boolean) rawProcedure[9]);
     }
 }

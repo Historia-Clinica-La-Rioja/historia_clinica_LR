@@ -87,6 +87,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
         assertContextValid(consultationBo, doctorInfoBo);
 
+        setCpoCeoIndicesInDentalActions(consultationBo);
         setSurfaceSctids(consultationBo);
 
         sortDentalActions(consultationBo);
@@ -140,14 +141,17 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
             throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CLINICAL_SPECIALTY_ID, "El id de especialidad es obligatorio");
         if (!doctorInfoBo.hasSpecialty(consultationBo.getClinicalSpecialtyId()))
             throw new CreateConsultationException(CreateConsultationExceptionEnum.INVALID_CLINICAL_SPECIALTY_ID, "El doctor no posee la especialidad indicada");
+        assertThereAreNoRepeatedConcepts(consultationBo);
+    }
+
+    private void setCpoCeoIndicesInDentalActions(ConsultationBo consultationBo) {
         if (consultationBo.getDentalActions() != null)
             consultationBo.getDentalActions().forEach(dentalAction -> {
                 if (dentalAction.isDiagnostic())
-                    this.validateDentalDiagnostic(dentalAction);
+                    this.setCpoCeoIndicesInDiagnostic(dentalAction);
                 else
-                    this.validateDentalProcedure(dentalAction);
+                    this.setCpoCeoIndicesInProcedure(dentalAction);
             });
-        assertThereAreNoRepeatedConcepts(consultationBo);
     }
 
     private void assertThereAreNoRepeatedConcepts(ConsultationBo consultationBo) {
@@ -169,7 +173,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
             throw exception;
     }
 
-    private void validateDentalDiagnostic(ConsultationDentalActionBo dentalDiagnostic) {
+    private void setCpoCeoIndicesInDiagnostic(ConsultationDentalActionBo dentalDiagnostic) {
         Optional<DiagnosticBo> opDiagnostic = diagnosticStorage.getDiagnostic(dentalDiagnostic.getSctid());
         if (opDiagnostic.isEmpty())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_DIAGNOSTIC_NOT_FOUND,
@@ -185,9 +189,12 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DIAGNOSTIC_NOT_APPLICABLE_TO_SURFACE,
                     "El diagnóstico con ID de Snomed: '" + dentalDiagnostic.getSctid() +
                             "' y término: '" + dentalDiagnostic.getPt() + "' no es aplicable a cara dental");
+
+        dentalDiagnostic.setPermanentIndex(diagnostic.getPermanentIndex());
+        dentalDiagnostic.setTemporaryIndex(diagnostic.getTemporaryIndex());
     }
 
-    private void validateDentalProcedure(ConsultationDentalActionBo dentalProcedure) {
+    private void setCpoCeoIndicesInProcedure(ConsultationDentalActionBo dentalProcedure) {
         Optional<ProcedureBo> opProcedure = proceduresStorage.getProcedure(dentalProcedure.getSctid());
         if (opProcedure.isEmpty())
             throw new CreateConsultationException(CreateConsultationExceptionEnum.DENTAL_PROCEDURE_NOT_FOUND,
@@ -203,6 +210,9 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
             throw new CreateConsultationException(CreateConsultationExceptionEnum.PROCEDURE_NOT_APPLICABLE_TO_SURFACE,
                     "El procedimiento con ID de Snomed: '" + dentalProcedure.getSctid() +
                             "' y término: '" + dentalProcedure.getPt() + "' no es aplicable a cara dental");
+
+        dentalProcedure.setPermanentIndex(procedure.getPermanentIndex());
+        dentalProcedure.setTemporaryIndex(procedure.getTemporaryIndex());
     }
 
 }

@@ -2,6 +2,8 @@ package ar.lamansys.odontology.domain.consultation;
 
 import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
+import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.ECeoIndexBo;
+import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.ECpoIndexBo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +20,10 @@ public class ConsultationDentalActionBo extends ClinicalTermBo {
     private OdontologySnomedBo surface;
 
     private ESurfacePositionBo surfacePosition;
+
+    private ECpoIndexBo permanentIndex = ECpoIndexBo.NONE;
+
+    private ECeoIndexBo temporaryIndex = ECeoIndexBo.NONE;
 
     private boolean diagnostic;
 

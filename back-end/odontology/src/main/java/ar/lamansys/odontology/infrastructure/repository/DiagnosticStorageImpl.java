@@ -29,7 +29,9 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
     public List<DiagnosticBo> getDiagnostics() {
         LOG.debug("No input parameters");
 
-        String sqlString = "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface " +
+        String sqlString =
+                "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface, " +
+                "       ad.permanent_c, ad.permanent_p, ad.permanent_o, ad.temporary_c, ad.temporary_e, ad.temporary_o " +
                 "FROM applicable_diagnostic ad " +
                 "ORDER BY ad.pt ASC";
 
@@ -49,7 +51,9 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
     public Optional<DiagnosticBo> getDiagnostic(String sctid) {
         LOG.debug("Input parameter -> sctid {}", sctid);
 
-        String sqlString = "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface " +
+        String sqlString =
+                "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface, " +
+                "       ad.permanent_c, ad.permanent_p, ad.permanent_o, ad.temporary_c, ad.temporary_e, ad.temporary_o " +
                 "FROM applicable_diagnostic ad " +
                 "WHERE ad.sctid = :sctid ";
 
@@ -69,7 +73,9 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
 
     private DiagnosticBo parseToDiagnosticBo(Object[] rawDiagnostic) {
         return new DiagnosticBo((String) rawDiagnostic[0], (String) rawDiagnostic[1],
-                                (boolean) rawDiagnostic[2], (boolean) rawDiagnostic[3]);
+                (boolean) rawDiagnostic[2], (boolean) rawDiagnostic[3],
+                (boolean) rawDiagnostic[4], (boolean) rawDiagnostic[5],(boolean) rawDiagnostic[6],
+                (boolean) rawDiagnostic[7], (boolean) rawDiagnostic[8],(boolean) rawDiagnostic[9]);
     }
 
 }
