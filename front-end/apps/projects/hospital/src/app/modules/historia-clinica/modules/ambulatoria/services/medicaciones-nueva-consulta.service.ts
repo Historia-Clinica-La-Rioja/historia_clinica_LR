@@ -3,10 +3,11 @@ import { SnomedDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
 import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 export interface Medicacion {
 	snomed: SnomedDto;
 	observaciones?: string;
@@ -26,7 +27,9 @@ export class MedicacionesNuevaConsultaService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService,
+
 	) {
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
@@ -81,8 +84,19 @@ export class MedicacionesNuevaConsultaService {
 		this.form.reset();
 	}
 
-	add(medicacion: Medicacion): void {
-		this.data = pushTo<Medicacion>(this.data, medicacion);
+	add(medicacion: Medicacion): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<Medicacion>(this.data, medicacion, this.compareSpeciality);
+	 	return currentItems === this.data.length;
+	}
+
+	addControl(medicacion: Medicacion): void {
+		if (this.add(medicacion))
+			this.snackBarService.showError("Medicación duplicada");
+	}
+
+	compareSpeciality(data: Medicacion, data1: Medicacion): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	addToList() {
@@ -92,7 +106,7 @@ export class MedicacionesNuevaConsultaService {
 				observaciones: this.form.value.observaciones,
 				suspendido: this.form.value.suspendido
 			};
-			this.add(nuevaMedicacion);
+			this.addControl(nuevaMedicacion);
 			this.resetForm();
 		}
 	}
