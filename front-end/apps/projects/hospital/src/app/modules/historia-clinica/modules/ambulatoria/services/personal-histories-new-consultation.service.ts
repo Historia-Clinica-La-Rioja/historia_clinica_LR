@@ -3,10 +3,11 @@ import { Moment } from "moment";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { SnomedSemanticSearch, SnomedService } from "@historia-clinica/services/snomed.service";
 import { DateFormat, momentFormat, newMoment } from "@core/utils/moment.utils";
-import { pushTo, removeFrom } from "@core/utils/array.utils";
+import { pushIfNotExists, removeFrom } from "@core/utils/array.utils";
 import { SEMANTICS_CONFIG } from "@historia-clinica/constants/snomed-semantics";
 import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
 import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 export interface AntecedentePersonal {
 	snomed: SnomedDto;
@@ -24,7 +25,10 @@ export class PersonalHistoriesNewConsultationService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService) {
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService
+
+		) {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
@@ -72,8 +76,19 @@ export class PersonalHistoriesNewConsultationService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	addAntecedente(antecedente: AntecedentePersonal): void {
-		this.data = pushTo<any>(this.data, antecedente);
+	add(antecedente: AntecedentePersonal): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<AntecedentePersonal>(this.data, antecedente, this.compareSpeciality);
+		return currentItems === this.data.length;
+	}
+
+	addControl(alergia: AntecedentePersonal): void {
+		if (this.add(alergia))
+			this.snackBarService.showError("Antecedente duplicado");
+	}
+
+	compareSpeciality(data: AntecedentePersonal, data1: AntecedentePersonal): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	removeAntecedente(index: number): void {
@@ -86,7 +101,7 @@ export class PersonalHistoriesNewConsultationService {
 				snomed: this.snomedConcept,
 				fecha: this.form.value.fecha
 			};
-			this.addAntecedente(antecedente);
+			this.addControl(antecedente);
 			this.resetForm();
 		}
 	}
