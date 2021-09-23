@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 
+export interface ExternalClinicalHistoryFiltersOptions {
+	specialties: string[],
+	professionals: string[],
+	institutions: string[]
+}
+
 @Component({
 	selector: 'app-external-clinical-histories-filters',
 	templateUrl: './external-clinical-histories-filters.component.html',
@@ -27,16 +33,21 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 			institution: [null],
 			consultationDate: [null]
 		});
-		this.specialties = this.externalClinicalHistoryService.getSpecialties();
-		this.professionals = this.externalClinicalHistoryService.getProfessionals();
-		this.institutions = this.externalClinicalHistoryService.getInstitutions();
+
+		this.externalClinicalHistoryService.getFiltersOptions().subscribe(
+			(filtersOtions: ExternalClinicalHistoryFiltersOptions) => {
+				this.specialties = filtersOtions.specialties;
+				this.professionals = filtersOtions.professionals;
+				this.institutions = filtersOtions.institutions;
+			}
+		);
 	}
 
 	public sendAllFiltersOnFilterChange(): void {
 
 	}
 
-	clear(control: AbstractControl): void {
+	public clear(control: AbstractControl): void {
 		control.reset();
 		this.sendAllFiltersOnFilterChange();
 	}

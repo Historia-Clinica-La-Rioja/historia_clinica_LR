@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ExternalClinicalHistoryDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
-import { ExternalClinicalHistory } from '../../services/external-clinical-history-facade.service';
 
 @Component({
 	selector: 'app-external-clinical-history',
@@ -9,7 +9,7 @@ import { ExternalClinicalHistory } from '../../services/external-clinical-histor
 })
 export class ExternalClinicalHistoryComponent implements OnInit {
 
-	@Input() public readonly externalClinicalHistory: ExternalClinicalHistory;
+	@Input() public readonly externalClinicalHistory: ExternalClinicalHistoryDto;
 	public DATE_TO_VIEW: string;
 
 	constructor() { }

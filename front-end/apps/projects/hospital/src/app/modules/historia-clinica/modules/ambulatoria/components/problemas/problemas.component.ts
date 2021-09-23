@@ -5,7 +5,7 @@ import {
 	PROBLEMAS_INTERNACION,
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
-import { HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { ExternalClinicalHistoryDto, HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { ExternalClinicalHistory, ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
+import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 import { Moment } from 'moment';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
@@ -66,7 +66,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private severityTypeMasterData: any[];
 
 	// External clinical history attributes
-	public externalClinicalHistoryList: ExternalClinicalHistory[];
+	public externalClinicalHistoryList: ExternalClinicalHistoryDto[];
 	public externalClinicalHistoryAmount: number = 0;
 	public showExternalFilters: boolean = false;
 	public showExternalClinicalHistoryTab: boolean = false
@@ -87,6 +87,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
+				externalClinicalHistoryService.setPatientId(this.patientId);
 				historicalProblemsFacadeService.setPatientId(this.patientId);
 			});
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -242,11 +243,11 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	private loadExternalClinicalHistoryList(): void {
 		this.externalClinicalHistoryService.getFilteredHistories().pipe(
-			tap((filteredHistories: ExternalClinicalHistory[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
+			tap((filteredHistories: ExternalClinicalHistoryDto[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
 		).subscribe(
-			(filteredHistories: ExternalClinicalHistory[]) => {
+			(filteredHistories: ExternalClinicalHistoryDto[]) => {
 				this.externalClinicalHistoryList = filteredHistories.sort(
-					(h1: ExternalClinicalHistory, h2: ExternalClinicalHistory) => {
+					(h1: ExternalClinicalHistoryDto, h2: ExternalClinicalHistoryDto) => {
 						const moment1: Moment = momentParseDate(h1.consultationDate);
 						const moment2: Moment = momentParseDate(h2.consultationDate);
 						if (moment1.isSame(moment2)) return 0;
