@@ -279,6 +279,9 @@
                         <pattern>net.pladema.hl7.**.dto.**Dto</pattern>
                         <pattern>ar.lamansys.**.dto.**Dto</pattern>
                     </classPatterns>
+                    <excludeClassPatterns>
+                        <pattern>ar.lamansys.sgh.publicapi.**.dto.**Dto</pattern>
+                    </excludeClassPatterns>
                     <outputKind>module</outputKind>
                     <outputFile>../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-model.d.ts</outputFile>
                     <optionalAnnotations>
