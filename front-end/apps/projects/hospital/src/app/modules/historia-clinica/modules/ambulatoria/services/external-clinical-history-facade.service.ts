@@ -29,17 +29,15 @@ export class ExternalClinicalHistoryFacadeService {
 
 	// It's necessary to invoke this method to bring the information from Backend
 	public setPatientId(patientId: number): void {
-		// With this IF statement, I make sure to subscribe only once to fetch data from Backend
-		if (!this.externalClinicalHistoryList.length)
-			this.externalClinicalHistoryService.getExternalClinicalHistoryList(patientId).subscribe(
-				(externalClinicalHistories: ExternalClinicalHistoryDto[]) => {
-					this.externalClinicalHistoryList = externalClinicalHistories;
-					this.filteredHistories = externalClinicalHistories;
-					this.filteredHistoriesSubject.next(externalClinicalHistories);
-					this.filtersOptions = this.loadFiltersOptions();
-					this.filtersOptionsSubject.next(this.filtersOptions);
-				}
-			);
+		this.externalClinicalHistoryService.getExternalClinicalHistoryList(patientId).subscribe(
+			(externalClinicalHistories: ExternalClinicalHistoryDto[]) => {
+				this.externalClinicalHistoryList = externalClinicalHistories;
+				this.filteredHistories = externalClinicalHistories;
+				this.filteredHistoriesSubject.next(externalClinicalHistories);
+				this.filtersOptions = this.loadFiltersOptions();
+				this.filtersOptionsSubject.next(this.filtersOptions);
+			}
+		);
 	}
 
 	public getFilteredHistories(): Observable<ExternalClinicalHistoryDto[]> {
