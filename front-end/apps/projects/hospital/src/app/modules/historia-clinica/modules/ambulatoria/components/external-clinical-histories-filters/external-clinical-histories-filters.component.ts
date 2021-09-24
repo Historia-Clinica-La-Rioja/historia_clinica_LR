@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { Moment } from 'moment';
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 
 export interface ExternalClinicalHistoryFiltersOptions {
 	specialties: string[],
 	professionals: string[],
 	institutions: string[]
+}
+export interface ExternalClinicalHistoryFilter {
+	keyWord?: string,
+	specialty?: string,
+	professional?: string,
+	institution?: string,
+	consultationDate?: Moment
 }
 
 @Component({
@@ -22,7 +30,7 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService
+		private readonly externalClinicalHistoryFacadeService: ExternalClinicalHistoryFacadeService
 	) { }
 
 	ngOnInit(): void {
@@ -34,7 +42,7 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 			consultationDate: [null]
 		});
 
-		this.externalClinicalHistoryService.getFiltersOptions().subscribe(
+		this.externalClinicalHistoryFacadeService.getFiltersOptions().subscribe(
 			(filtersOtions: ExternalClinicalHistoryFiltersOptions) => {
 				this.specialties = filtersOtions.specialties;
 				this.professionals = filtersOtions.professionals;
@@ -44,7 +52,19 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 	}
 
 	public sendAllFiltersOnFilterChange(): void {
+		const filters: ExternalClinicalHistoryFilter = {};
+		if (this.form.controls.consultationDate.value)
+			filters.consultationDate = this.form.controls.consultationDate.value;
+		if (this.form.controls.institution.value)
+			filters.institution = this.form.controls.institution.value;
+		if (this.form.controls.keyWord.value)
+			filters.keyWord = this.form.controls.keyWord.value;
+		if (this.form.controls.professional.value)
+			filters.professional = this.form.controls.professional.value;
+		if (this.form.controls.specialty.value)
+			filters.specialty = this.form.controls.specialty.value;
 
+		this.externalClinicalHistoryFacadeService.setFilters(filters);
 	}
 
 	public clear(control: AbstractControl): void {

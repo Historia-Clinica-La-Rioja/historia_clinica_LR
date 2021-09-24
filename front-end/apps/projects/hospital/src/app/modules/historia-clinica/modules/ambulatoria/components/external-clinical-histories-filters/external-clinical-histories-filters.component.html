@@ -5,6 +5,9 @@
 			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.SEARCH_BY_KEYWORD' | translate }}
 		</mat-label>
 		<input matInput formControlName="keyWord" (change)="sendAllFiltersOnFilterChange()">
+		<button type="button" matSuffix mat-icon-button>
+			<mat-icon>search</mat-icon>
+		</button>
 		<button type="button" *ngIf="form.controls.keyWord.value?.length > 0" matSuffix color="warn" mat-icon-button
 			(click)="clear(form.controls.keyWord); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
