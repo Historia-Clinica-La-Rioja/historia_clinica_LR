@@ -51,7 +51,7 @@
 		>
 		</app-typeahead>
 		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
-			<app-typeahead *ngIf="showSecondProcedureTypeahead"
+			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()"
 						   id="second_procedure"
 						   [placeholder]="'Seleccione 2do procedimiento'"
 						   [externalSetValue]="initValueTypeaheadSecondProcedure"
@@ -60,7 +60,7 @@
 						   (selectionChange)="secondProcedureChanged($event)"
 			>
 			</app-typeahead>
-			<app-typeahead *ngIf="showThirdProcedureTypeahead"
+			<app-typeahead *ngIf="showActionsService?.getThirdProcedure()"
 						   id="third_procedure"
 						   [placeholder]="'Seleccione 3er procedimiento'"
 						   [externalSetValue]="initValueTypeaheadThirdProcedure"
@@ -69,7 +69,7 @@
 			>
 			</app-typeahead>
 		</div>
-		<span [ngClass]="{'activate-button': !isNotPreviousProcedureSet,'disable-button': isNotPreviousProcedureSet }" (click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
+		<span [ngClass]="{'activate-button': !showActionsService?.getIsNotPreviousProcedureSet(), 'disable-button': showActionsService?.getIsNotPreviousProcedureSet() }" (click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
 	</div>
 	<mat-dialog-actions fxLayoutAlign="end end">
 		<button mat-stroked-button color="primary" mat-dialog-close type="button">Cancelar </button>

@@ -15,6 +15,7 @@ import {Actions, ToothComponent} from '../tooth/tooth.component';
 import {TypeaheadOption} from "@core/components/typeahead/typeahead.component";
 import {ScrollableData} from '../hidable-scrollable-data/hidable-scrollable-data.component';
 import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
+import { ShowActionsService } from "@historia-clinica/modules/odontologia/services/show-actions.service";
 
 @Component({
 	selector: 'app-tooth-dialog',
@@ -69,9 +70,9 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	disabledFirstProcedureButton: boolean;
 	disabledSecondProcedureButton: boolean;
 
-	isNotPreviousProcedureSet = true;
-	showSecondProcedureTypeahead: boolean;
-	showThirdProcedureTypeahead: boolean;
+	countProceduresAdded= -1;
+
+	showActionsService;
 
 	ngAfterViewInit(): void {
 		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);
@@ -108,15 +109,19 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				const firstProcedureId =  onlyProcedures?.find(first => first.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid;
 				if (firstProcedureId){
 					this.setTypeaheadProcedures(firstProcedureId, ProcedureOrder.FIRST);
+					this.countProceduresAdded = 0;
 				}
 				const secondProcedureId = onlyProcedures?.find(second => second.wholeProcedureOrder === ProcedureOrder.SECOND)?.action.sctid;
 				if (secondProcedureId){
 					this.setTypeaheadProcedures(secondProcedureId, ProcedureOrder.SECOND);
+					this.countProceduresAdded = 1;
 				}
 				const thirdProcedureId = onlyProcedures?.find(third => third.wholeProcedureOrder === ProcedureOrder.THIRD)?.action.sctid;
 				if (thirdProcedureId){
 					this.setTypeaheadProcedures(thirdProcedureId, ProcedureOrder.THIRD);
+					this.countProceduresAdded = 2;
 				}
+				this.showActionsService = new ShowActionsService(secondProcedureId, thirdProcedureId, this.countProceduresAdded);
 			}
 		);
 
@@ -125,7 +130,6 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				.pipe(
 					map(this.toScrollableData)
 				);
-		this.showProcedures();
 	}
 
 	public confirm(): void {
@@ -227,7 +231,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.firstProcedureId = firstProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(firstProcedure.snomed.sctid, ProcedureOrder.FIRST);
 			if (!this.selectedSurfaces.length) {
-				this.isNotPreviousProcedureSet = false;
+				this.countProceduresAdded ++;
+				this.showActionsService.setIsNotPreviousProcedureSet(false);
 			}
 		}
 		else {
@@ -243,7 +248,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.secondProcedureId = secondProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(secondProcedure.snomed.sctid, ProcedureOrder.SECOND);
 			this.disabledFirstProcedureButton = true;
-			this.isNotPreviousProcedureSet = false;
+			this.countProceduresAdded++;
+			this.showActionsService.setIsNotPreviousProcedureSet(false);
 		}
 		else {
 			if(this.initValueTypeaheadSecondProcedure?.compareValue) {
@@ -259,31 +265,13 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.thirdProcedureId = thirdProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(thirdProcedure.snomed.sctid, ProcedureOrder.THIRD);
 			this.disabledSecondProcedureButton = true;
+			this.countProceduresAdded++;
 		}
 		else {
 			if (this.initValueTypeaheadThirdProcedure?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadThirdProcedure, ActionType.PROCEDURE, ProcedureOrder.THIRD);
 				this.initValueTypeaheadThirdProcedure = null;
 				this.disabledSecondProcedureButton = false;
-			}
-		}
-	}
-
-	private showProcedures(): void{
-		if (this.initValueTypeaheadThirdProcedure?.compareValue){
-			this.showSecondProcedureTypeahead = true;
-			this.showThirdProcedureTypeahead = true;
-			this.isNotPreviousProcedureSet = true;
-		}
-		else {
-			if (this.initValueTypeaheadSecondProcedure?.compareValue){
-				this.showSecondProcedureTypeahead = true;
-				this.isNotPreviousProcedureSet = false;
-			}
-			else {
-				if (this.initValueTypeaheadFirstProcedure?.compareValue){
-					this.isNotPreviousProcedureSet = false;
-				}
 			}
 		}
 	}
@@ -349,13 +337,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	}
 
 	public addTypeaheadProcedure(){
-		if (this.initValueTypeaheadFirstProcedure?.compareValue) {
-			this.showSecondProcedureTypeahead = true;
-		}
-		if (this.initValueTypeaheadSecondProcedure?.compareValue) {
-			this.showThirdProcedureTypeahead = true;
-		}
-		this.isNotPreviousProcedureSet = true;
+		this.showActionsService.showProcedures(this.countProceduresAdded);
+		this.showActionsService.setIsNotPreviousProcedureSet(true);
 	}
 }
-
