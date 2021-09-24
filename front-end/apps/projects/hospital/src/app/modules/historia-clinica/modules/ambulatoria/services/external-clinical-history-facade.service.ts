@@ -59,7 +59,7 @@ export class ExternalClinicalHistoryFacadeService {
 			(history: ExternalClinicalHistoryDto) => {
 				let meets: boolean;
 
-				meets = ((this.filters.keyWord && history.notes.includes(this.filters.keyWord)) || !this.filters.keyWord);
+				meets = ((this.filters.keyWord && this.keyWordFound(this.filters.keyWord, history.notes)) || !this.filters.keyWord);
 				meets = meets && ((this.filters.specialty && history.professionalSpecialty == this.filters.specialty) || !this.filters.specialty);
 				meets = meets && ((this.filters.professional && history.professionalName == this.filters.professional) || !this.filters.professional);
 				meets = meets && ((this.filters.institution && history.institution == this.filters.institution) || !this.filters.institution);
@@ -94,6 +94,11 @@ export class ExternalClinicalHistoryFacadeService {
 		);
 
 		return options;
+	}
+
+	private keyWordFound(word: string, notes: string): boolean {
+		const regExp: RegExp = new RegExp(word.trim(), 'i');
+		return notes.match(regExp) ? true : false;
 	}
 
 }
