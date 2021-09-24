@@ -358,3 +358,4 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.isNotPreviousProcedureSet = true;
 	}
 }
+
