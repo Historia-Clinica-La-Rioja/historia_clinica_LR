@@ -65,6 +65,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
 	private severityTypeMasterData: any[];
 
+	public selectedTab: number = 0;
+
 	// External clinical history attributes
 	public externalClinicalHistoryList: ExternalClinicalHistoryDto[];
 	public externalClinicalHistoryAmount: number = 0;
@@ -225,6 +227,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			problem: problem.snomed.sctid,
 			consultationDate: null
 		});
+		this.selectedTab = 0;
 	}
 
 	hideFilters() {
