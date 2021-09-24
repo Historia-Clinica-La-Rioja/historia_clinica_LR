@@ -1,20 +1,20 @@
-import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {HCEToothRecordDto, OdontologyConceptDto, ToothDto, ToothSurfacesDto} from '@api-rest/api-model';
-import {dateDtoToDate} from '@api-rest/mapper/date-dto.mapper';
-import {DateFormat, momentFormatDate} from '@core/utils/moment.utils';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {OdontogramService as OdontogramRestService} from '../../api-rest/odontogram.service';
-import {ActionType, ProcedureOrder, ToothAction} from '../../services/actions.service';
-import {ConceptsFacadeService} from '../../services/concepts-facade.service';
-import {ToothTreatment} from '../../services/surface-drawer.service';
-import {SurfacesNamesFacadeService, ToothSurfaceNames} from '../../services/surfaces-names-facade.service';
-import {getSurfaceShortName} from '../../utils/surfaces';
-import {Actions, ToothComponent} from '../tooth/tooth.component';
-import {TypeaheadOption} from "@core/components/typeahead/typeahead.component";
-import {ScrollableData} from '../hidable-scrollable-data/hidable-scrollable-data.component';
-import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { HCEToothRecordDto, OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DateFormat, momentFormatDate } from '@core/utils/moment.utils';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
+import { ActionType, ProcedureOrder, ToothAction } from '../../services/actions.service';
+import { ConceptsFacadeService } from '../../services/concepts-facade.service';
+import { ToothTreatment } from '../../services/surface-drawer.service';
+import { SurfacesNamesFacadeService, ToothSurfaceNames } from '../../services/surfaces-names-facade.service';
+import { getSurfaceShortName } from '../../utils/surfaces';
+import { Actions, ToothComponent } from '../tooth/tooth.component';
+import { TypeaheadOption } from "@core/components/typeahead/typeahead.component";
+import { ScrollableData } from '../hidable-scrollable-data/hidable-scrollable-data.component';
+import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { ShowActionsService } from "@historia-clinica/modules/odontologia/services/show-actions.service";
 
 @Component({
@@ -51,7 +51,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	private surfacesDto: ToothSurfacesDto;
 
 	private diagnostics: OdontologyConceptDto[];
-	filteredDiagnosticsTypeaheadOptions:  TypeaheadOption<OdontologyConceptDto>[];
+	filteredDiagnosticsTypeaheadOptions: TypeaheadOption<OdontologyConceptDto>[];
 
 	initValueTypeaheadDiagnostics: TypeaheadOption<OdontologyConceptDto> = null;
 
@@ -70,7 +70,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	disabledFirstProcedureButton: boolean;
 	disabledSecondProcedureButton: boolean;
 
-	countProceduresAdded= -1;
+	countProceduresAdded = -1;
 
 	showActionsService;
 
@@ -95,7 +95,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				this.diagnostics = diagnostics;
 				this.setAppropiateFindings(filterFunction);
 				const hallazgoId = this.data.currentActions?.find(currentActions => currentActions.action.type === ActionType.DIAGNOSTIC && !currentActions.surfaceId)?.action.sctid
-				if (hallazgoId){
+				if (hallazgoId) {
 					this.setTypeaheadCurrentFinding(hallazgoId);
 				}
 			}
@@ -106,18 +106,18 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				this.setAppropiateProcedures(filterFunction);
 				const onlyProcedures = (this.data.currentActions?.filter(currentActions => currentActions.action.type === ActionType.PROCEDURE));
 
-				const firstProcedureId =  onlyProcedures?.find(first => first.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid;
-				if (firstProcedureId){
+				const firstProcedureId = onlyProcedures?.find(first => first.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid;
+				if (firstProcedureId) {
 					this.setTypeaheadProcedures(firstProcedureId, ProcedureOrder.FIRST);
 					this.countProceduresAdded = 0;
 				}
 				const secondProcedureId = onlyProcedures?.find(second => second.wholeProcedureOrder === ProcedureOrder.SECOND)?.action.sctid;
-				if (secondProcedureId){
+				if (secondProcedureId) {
 					this.setTypeaheadProcedures(secondProcedureId, ProcedureOrder.SECOND);
 					this.countProceduresAdded = 1;
 				}
 				const thirdProcedureId = onlyProcedures?.find(third => third.wholeProcedureOrder === ProcedureOrder.THIRD)?.action.sctid;
-				if (thirdProcedureId){
+				if (thirdProcedureId) {
 					this.setTypeaheadProcedures(thirdProcedureId, ProcedureOrder.THIRD);
 					this.countProceduresAdded = 2;
 				}
@@ -158,14 +158,14 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		return filterFuncion;
 	}
 
-	private setAppropiateFindings(filterFuncion): void{
+	private setAppropiateFindings(filterFuncion): void {
 		const filteredDiagnostics = this.diagnostics?.filter(filterFuncion);
-		if (filteredDiagnostics){
+		if (filteredDiagnostics) {
 			this.filteredDiagnosticsTypeaheadOptions = filteredDiagnostics.map(this.toTypeaheadOptions);
 		}
 	}
 
-	private setAppropiateProcedures(filterFuncion): void{
+	private setAppropiateProcedures(filterFuncion): void {
 		const filteredProcedures = this.procedures?.filter(filterFuncion);
 		if (filteredProcedures) {
 			this.filteredProceduresTypeahead = filteredProcedures.map(this.toTypeaheadOptions);
@@ -186,25 +186,25 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		return getSurfaceShortName(sctid);
 	}
 
-	private toTypeaheadOptions(odontologyConcept: OdontologyConceptDto): TypeaheadOption<OdontologyConceptDto>{
+	private toTypeaheadOptions(odontologyConcept: OdontologyConceptDto): TypeaheadOption<OdontologyConceptDto> {
 		return {
 			compareValue: odontologyConcept?.snomed.pt,
 			value: odontologyConcept
 		}
 	}
 
-	private setTypeaheadCurrentFinding(currentFindingSctid: string): void{
+	private setTypeaheadCurrentFinding(currentFindingSctid: string): void {
 		const typeaheadConcept = this.filteredDiagnosticsTypeaheadOptions?.find(diagnosticsTypeahead => diagnosticsTypeahead.value.snomed.sctid === currentFindingSctid);
 		this.initValueTypeaheadDiagnostics = typeaheadConcept;
 	}
 
-	private setTypeaheadProcedures(procedureSctid: string, order: ProcedureOrder){
+	private setTypeaheadProcedures(procedureSctid: string, order: ProcedureOrder) {
 		const typeaheadConcept = this.filteredProceduresTypeahead?.find(procedureTypeahead => procedureTypeahead.value.snomed.sctid === procedureSctid);
-		if (order === ProcedureOrder.FIRST){
+		if (order === ProcedureOrder.FIRST) {
 			this.initValueTypeaheadFirstProcedure = typeaheadConcept;
 		}
 		else {
-			if (order === ProcedureOrder.SECOND){
+			if (order === ProcedureOrder.SECOND) {
 				this.initValueTypeaheadSecondProcedure = typeaheadConcept;
 			}
 			else {
@@ -219,7 +219,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.setTypeaheadCurrentFinding(hallazgo.snomed.sctid);
 		}
 		else {
-			if (this.initValueTypeaheadDiagnostics?.compareValue){
+			if (this.initValueTypeaheadDiagnostics?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadDiagnostics, ActionType.DIAGNOSTIC, undefined);
 				this.initValueTypeaheadDiagnostics = null;
 			}
@@ -231,12 +231,12 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.firstProcedureId = firstProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(firstProcedure.snomed.sctid, ProcedureOrder.FIRST);
 			if (!this.selectedSurfaces.length) {
-				this.countProceduresAdded ++;
+				this.countProceduresAdded++;
 				this.showActionsService.setIsNotPreviousProcedureSet(false);
 			}
 		}
 		else {
-			if (this.initValueTypeaheadFirstProcedure?.compareValue){
+			if (this.initValueTypeaheadFirstProcedure?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadFirstProcedure, ActionType.PROCEDURE, ProcedureOrder.FIRST);
 				this.initValueTypeaheadFirstProcedure = null;
 			}
@@ -252,7 +252,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.showActionsService.setIsNotPreviousProcedureSet(false);
 		}
 		else {
-			if(this.initValueTypeaheadSecondProcedure?.compareValue) {
+			if (this.initValueTypeaheadSecondProcedure?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadSecondProcedure, ActionType.PROCEDURE, ProcedureOrder.SECOND);
 				this.initValueTypeaheadSecondProcedure = null;
 				this.disabledFirstProcedureButton = false;
@@ -284,17 +284,17 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.newHallazgoId = undefined;
 			this.initValueTypeaheadDiagnostics = null;
 		}
-		if (this.selectedSurfaces.length){
+		if (this.selectedSurfaces.length) {
 			this.disabledFirstProcedureButton = false;
 		}
-		if (actions?.procedures.firstProcedureId){
+		if (actions?.procedures.firstProcedureId) {
 			this.setTypeaheadProcedures(actions.procedures.firstProcedureId, ProcedureOrder.FIRST);
 		}
-		if (actions?.procedures.secondProcedureId){
+		if (actions?.procedures.secondProcedureId) {
 			this.setTypeaheadProcedures(actions.procedures.secondProcedureId, ProcedureOrder.SECOND);
 			this.disabledFirstProcedureButton = true;
 		}
-		if (actions?.procedures.thirdProcedureId){
+		if (actions?.procedures.thirdProcedureId) {
 			this.setTypeaheadProcedures(actions.procedures.thirdProcedureId, ProcedureOrder.THIRD);
 			this.disabledSecondProcedureButton = true;
 		}
@@ -309,7 +309,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	private deleteActionOfTooth(elementToDelete: TypeaheadOption<OdontologyConceptDto>, actionType: ActionType, order: ProcedureOrder){
+	private deleteActionOfTooth(elementToDelete: TypeaheadOption<OdontologyConceptDto>, actionType: ActionType, order: ProcedureOrder) {
 		this.toothComponent.deleteAction(elementToDelete?.value?.snomed.sctid, this.selectedSurfaces, actionType, order);
 	}
 
@@ -336,7 +336,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			);
 	}
 
-	public addTypeaheadProcedure(){
+	public addTypeaheadProcedure() {
 		this.showActionsService.showProcedures(this.countProceduresAdded);
 		this.showActionsService.setIsNotPreviousProcedureSet(true);
 	}

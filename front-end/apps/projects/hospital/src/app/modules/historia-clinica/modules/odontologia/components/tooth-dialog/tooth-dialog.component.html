@@ -2,10 +2,8 @@
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 		<app-tooth #tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
-				   [newFinding]="newHallazgoId"
-				   [setFirstProcedure]="firstProcedureId"
-				   [setSecondProcedure]="secondProcedureId"
-				   [setThirdProcedure]="thirdProcedureId">
+			[newFinding]="newHallazgoId" [setFirstProcedure]="firstProcedureId" [setSecondProcedure]="secondProcedureId"
+			[setThirdProcedure]="thirdProcedureId">
 		</app-tooth>
 		<div fxLayout="column">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
@@ -32,48 +30,32 @@
 
 	<div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
 		<span class="subtitle subtitle-findings-procedures-font-size">Nuevos hallazgos sobre la pieza:</span>
-		<app-typeahead
-			id="finding"
-			[placeholder]="'Seleccione hallazgo'"
-			[options]="filteredDiagnosticsTypeaheadOptions"
-			[externalSetValue]="initValueTypeaheadDiagnostics"
-			(selectionChange)="findingChanged($event)"
-		>
+		<app-typeahead id="finding" [placeholder]="'Seleccione hallazgo'"
+			[options]="filteredDiagnosticsTypeaheadOptions" [externalSetValue]="initValueTypeaheadDiagnostics"
+			(selectionChange)="findingChanged($event)">
 		</app-typeahead>
-		<span class="subtitle subtitle-findings-procedures-font-size" >Nuevos procedimientos sobre la pieza:</span>
-		<app-typeahead
-			id="first_procedure"
-			[placeholder]="'Seleccione 1er procedimiento'"
-			[options]="filteredProceduresTypeahead"
-			[externalSetValue]="initValueTypeaheadFirstProcedure"
-			[disabledClearButton]="disabledFirstProcedureButton"
-			(selectionChange)="firstProcedureChanged($event)"
-		>
+		<span class="subtitle subtitle-findings-procedures-font-size">Nuevos procedimientos sobre la pieza:</span>
+		<app-typeahead id="first_procedure" [placeholder]="'Seleccione 1er procedimiento'"
+			[options]="filteredProceduresTypeahead" [externalSetValue]="initValueTypeaheadFirstProcedure"
+			[disabledClearButton]="disabledFirstProcedureButton" (selectionChange)="firstProcedureChanged($event)">
 		</app-typeahead>
-		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
-			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()"
-						   id="second_procedure"
-						   [placeholder]="'Seleccione 2do procedimiento'"
-						   [externalSetValue]="initValueTypeaheadSecondProcedure"
-						   [options]="filteredProceduresTypeahead"
-						   [disabledClearButton]="disabledSecondProcedureButton"
-						   (selectionChange)="secondProcedureChanged($event)"
-			>
+		<div *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
+			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()" id="second_procedure"
+				[placeholder]="'Seleccione 2do procedimiento'" [externalSetValue]="initValueTypeaheadSecondProcedure"
+				[options]="filteredProceduresTypeahead" [disabledClearButton]="disabledSecondProcedureButton"
+				(selectionChange)="secondProcedureChanged($event)">
 			</app-typeahead>
-			<app-typeahead *ngIf="showActionsService?.getThirdProcedure()"
-						   id="third_procedure"
-						   [placeholder]="'Seleccione 3er procedimiento'"
-						   [externalSetValue]="initValueTypeaheadThirdProcedure"
-						   [options]="filteredProceduresTypeahead"
-						   (selectionChange)="thirdProcedureChanged($event)"
-			>
+			<app-typeahead *ngIf="showActionsService?.getThirdProcedure()" id="third_procedure"
+				[placeholder]="'Seleccione 3er procedimiento'" [externalSetValue]="initValueTypeaheadThirdProcedure"
+				[options]="filteredProceduresTypeahead" (selectionChange)="thirdProcedureChanged($event)">
 			</app-typeahead>
 		</div>
-		<span [ngClass]="{'activate-button': !showActionsService?.getIsNotPreviousProcedureSet(), 'disable-button': showActionsService?.getIsNotPreviousProcedureSet() }" (click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
+		<span
+			[ngClass]="{'activate-button': !showActionsService?.getIsNotPreviousProcedureSet(), 'disable-button': showActionsService?.getIsNotPreviousProcedureSet() }"
+			(click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
 	</div>
 	<mat-dialog-actions fxLayoutAlign="end end">
 		<button mat-stroked-button color="primary" mat-dialog-close type="button">Cancelar </button>
 		<button mat-raised-button color="primary" (click)="confirm()">Confirmar </button>
 	</mat-dialog-actions>
 </div>
-

@@ -10,40 +10,40 @@ export class ShowActionsService {
 	constructor(secondProcedure, thirdProcedure, isNotPreviousProcedureSet) {
 		this.secondProcedure = secondProcedure ? true : false;
 		this.thirdProcedure = thirdProcedure ? true : false;
-		this.isNotPreviousProcedureSet =  (isNotPreviousProcedureSet === -1 || isNotPreviousProcedureSet === 2) ? true : false;
+		this.isNotPreviousProcedureSet = (isNotPreviousProcedureSet === -1 || isNotPreviousProcedureSet === 2) ? true : false;
 	}
 
-	public getSecondProcedure(): boolean{
+	public getSecondProcedure(): boolean {
 		return this.secondProcedure;
 	}
 
-	public getThirdProcedure(): boolean{
+	public getThirdProcedure(): boolean {
 		return this.thirdProcedure;
 	}
 
-	public getIsNotPreviousProcedureSet(): boolean{
+	public getIsNotPreviousProcedureSet(): boolean {
 		return this.isNotPreviousProcedureSet;
 	}
 
-	public setSecondProcedure(showSecondProcedure: boolean): void{
+	public setSecondProcedure(showSecondProcedure: boolean): void {
 		this.secondProcedure = showSecondProcedure;
 	}
 
-	public setThirdProcedure(showThirdProcedure: boolean): void{
+	public setThirdProcedure(showThirdProcedure: boolean): void {
 		this.thirdProcedure = showThirdProcedure;
 	}
 
-	public setIsNotPreviousProcedureSet(isNotPreviousProcedure: boolean): void{
+	public setIsNotPreviousProcedureSet(isNotPreviousProcedure: boolean): void {
 		this.isNotPreviousProcedureSet = isNotPreviousProcedure;
 	}
 
-	public showProcedures(order: ProcedureOrder): void{
-		if (order === ProcedureOrder.SECOND){
+	public showProcedures(order: ProcedureOrder): void {
+		if (order === ProcedureOrder.SECOND) {
 			this.secondProcedure = true;
 			this.thirdProcedure = true;
 		}
 		else {
-			if (order === ProcedureOrder.FIRST){
+			if (order === ProcedureOrder.FIRST) {
 				this.secondProcedure = true;
 			}
 		}
