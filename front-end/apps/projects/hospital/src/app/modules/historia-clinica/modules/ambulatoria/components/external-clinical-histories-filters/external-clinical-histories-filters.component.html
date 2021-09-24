@@ -63,7 +63,7 @@
 		<mat-label>
 			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.CONSULTATION_DATE' | translate }}
 		</mat-label>
-		<input matInput formControlName="consultationDate" placeholder="mm/dd/yyyy" [matDatepicker]="myDatepicker"
+		<input matInput formControlName="consultationDate" [matDatepicker]="myDatepicker"
 			(dateChange)="sendAllFiltersOnFilterChange()">
 		<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
 		<mat-datepicker #myDatepicker></mat-datepicker>
