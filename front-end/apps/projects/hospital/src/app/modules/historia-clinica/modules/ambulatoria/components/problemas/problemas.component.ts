@@ -71,7 +71,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public externalClinicalHistoryList: ExternalClinicalHistoryDto[];
 	public externalClinicalHistoryAmount: number = 0;
 	public showExternalFilters: boolean = false;
-	public showExternalClinicalHistoryTab: boolean = false
+	public showExternalClinicalHistoryTab: boolean = false;
+	public externalHistoriesInformation: boolean = false;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -259,6 +260,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 					}
 				);
 			}
+		);
+
+		this.externalClinicalHistoryService.hasInformation().subscribe(
+			(hasInfo: boolean) => this.externalHistoriesInformation = hasInfo
 		);
 	}
 }

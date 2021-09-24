@@ -396,14 +396,14 @@
 								</div>
 
 								<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
-									*ngIf="!this.externalClinicalHistoryList">
+									*ngIf="!this.externalHistoriesInformation">
 									<div class="no-data-styles">
 										<span [translate]="'messages.NO_DATA'"></span>
 									</div>
 								</section>
 
 								<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
-									*ngIf="this.externalClinicalHistoryList && !this.externalClinicalHistoryList.length">
+									*ngIf="this.externalHistoriesInformation && !this.externalClinicalHistoryList?.length">
 									<div class="no-data-styles">
 										<span
 											[translate]="'ambulatoria.paciente.problemas.NO_FILTERED_PROBLEMS'"></span>
