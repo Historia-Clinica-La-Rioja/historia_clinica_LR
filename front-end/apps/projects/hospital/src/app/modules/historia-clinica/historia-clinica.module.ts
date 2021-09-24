@@ -26,6 +26,7 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 import { DocumentSectionComponent } from '../presentation/components/document-section/document-section.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
 import { InstitucionModule } from '../institucion/institucion.module';
+import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { InstitucionModule } from '../institucion/institucion.module';
 		VacunasSummaryComponent,
 		ProbableDischargeDialogComponent,
 		DocumentSectionComponent,
-		BedAssignmentComponent
+		BedAssignmentComponent,
+		InternacionAntecedentesPersonalesSummaryComponent
 	],
 	imports: [
 		ApiRestModule,
@@ -74,7 +76,8 @@ import { InstitucionModule } from '../institucion/institucion.module';
 		MedicacionSummaryComponent,
 		SignosVitalesSummaryComponent,
 		VacunasSummaryComponent,
-		DocumentSectionComponent
+		DocumentSectionComponent,
+		InternacionAntecedentesPersonalesSummaryComponent
 	]
 })
 export class HistoriaClinicaModule {
