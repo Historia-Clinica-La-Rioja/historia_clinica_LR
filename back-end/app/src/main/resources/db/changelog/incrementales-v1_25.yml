@@ -1,3 +1,76 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_25 
 
+    - changeSet:
+        id: odontology_consultation_indices-createTable
+        comment: Create table odontology_consultation_indices
+        author: tmedina
+        changes: 
+            - createTable: 
+                tableName: odontology_consultation_indices
+                columns: 
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_odontology_consultation_indices
+                        name: id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: odontology_consultation_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_c
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_p
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_o
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporary_c
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporary_e
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporary_o
+                        type: int
+                    - column:
+                        name: permanent_teeth_present
+                        type: int
+                    - column:
+                        name: temporary_teeth_present
+                        type: int                
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: date
+                        type: datetime
+                        defaultValueDate: ${date.now}
+            - addForeignKeyConstraint:
+                baseColumnNames: odontology_consultation_id
+                baseTableName: odontology_consultation_indices
+                constraintName: FK_odontology_consultation_indices_odontology_consultation_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: odontology_consultation
+                validate: true
+
+
