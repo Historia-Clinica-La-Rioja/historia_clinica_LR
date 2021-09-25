@@ -34,16 +34,23 @@
 			[options]="filteredDiagnosticsTypeaheadOptions" [externalSetValue]="initValueTypeaheadDiagnostics"
 			(selectionChange)="findingChanged($event)">
 		</app-typeahead>
-		<span class="subtitle subtitle-findings-procedures-font-size">Nuevos procedimientos sobre la pieza:</span>
-		<app-typeahead id="first_procedure" [placeholder]="'Seleccione 1er procedimiento'"
-			[options]="filteredProceduresTypeahead" [externalSetValue]="initValueTypeaheadFirstProcedure"
-			[disabledClearButton]="disabledFirstProcedureButton" (selectionChange)="firstProcedureChanged($event)">
+		<span class="subtitle subtitle-findings-procedures-font-size" >Nuevos procedimientos sobre la pieza:</span>
+		<app-typeahead
+			id="first_procedure"
+			[placeholder]="'Seleccione 1er procedimiento'"
+			[options]="filteredProceduresTypeahead"
+			[externalSetValue]="initValueTypeaheadFirstProcedure"
+			(selectionChange)="firstProcedureChanged($event)"
+		>
 		</app-typeahead>
-		<div *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
-			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()" id="second_procedure"
-				[placeholder]="'Seleccione 2do procedimiento'" [externalSetValue]="initValueTypeaheadSecondProcedure"
-				[options]="filteredProceduresTypeahead" [disabledClearButton]="disabledSecondProcedureButton"
-				(selectionChange)="secondProcedureChanged($event)">
+		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
+			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()"
+						   id="second_procedure"
+						   [placeholder]="'Seleccione 2do procedimiento'"
+						   [externalSetValue]="initValueTypeaheadSecondProcedure"
+						   [options]="filteredProceduresTypeahead"
+						   (selectionChange)="secondProcedureChanged($event)"
+			>
 			</app-typeahead>
 			<app-typeahead *ngIf="showActionsService?.getThirdProcedure()" id="third_procedure"
 				[placeholder]="'Seleccione 3er procedimiento'" [externalSetValue]="initValueTypeaheadThirdProcedure"

@@ -67,10 +67,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	thirdProcedureId: string;
 	initValueTypeaheadThirdProcedure: TypeaheadOption<OdontologyConceptDto> = null;
 
-	disabledFirstProcedureButton: boolean;
-	disabledSecondProcedureButton: boolean;
-
-	countProceduresAdded = -1;
+	countProceduresAdded= -1;
 
 	showActionsService;
 
@@ -247,7 +244,6 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (secondProcedure) {
 			this.secondProcedureId = secondProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(secondProcedure.snomed.sctid, ProcedureOrder.SECOND);
-			this.disabledFirstProcedureButton = true;
 			this.countProceduresAdded++;
 			this.showActionsService.setIsNotPreviousProcedureSet(false);
 		}
@@ -255,7 +251,6 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			if (this.initValueTypeaheadSecondProcedure?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadSecondProcedure, ActionType.PROCEDURE, ProcedureOrder.SECOND);
 				this.initValueTypeaheadSecondProcedure = null;
-				this.disabledFirstProcedureButton = false;
 			}
 		}
 	}
@@ -264,14 +259,12 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (thirdProcedure) {
 			this.thirdProcedureId = thirdProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(thirdProcedure.snomed.sctid, ProcedureOrder.THIRD);
-			this.disabledSecondProcedureButton = true;
 			this.countProceduresAdded++;
 		}
 		else {
 			if (this.initValueTypeaheadThirdProcedure?.compareValue) {
 				this.deleteActionOfTooth(this.initValueTypeaheadThirdProcedure, ActionType.PROCEDURE, ProcedureOrder.THIRD);
 				this.initValueTypeaheadThirdProcedure = null;
-				this.disabledSecondProcedureButton = false;
 			}
 		}
 	}
@@ -284,19 +277,14 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.newHallazgoId = undefined;
 			this.initValueTypeaheadDiagnostics = null;
 		}
-		if (this.selectedSurfaces.length) {
-			this.disabledFirstProcedureButton = false;
-		}
-		if (actions?.procedures.firstProcedureId) {
+		if (actions?.procedures.firstProcedureId){
 			this.setTypeaheadProcedures(actions.procedures.firstProcedureId, ProcedureOrder.FIRST);
 		}
 		if (actions?.procedures.secondProcedureId) {
 			this.setTypeaheadProcedures(actions.procedures.secondProcedureId, ProcedureOrder.SECOND);
-			this.disabledFirstProcedureButton = true;
 		}
 		if (actions?.procedures.thirdProcedureId) {
 			this.setTypeaheadProcedures(actions.procedures.thirdProcedureId, ProcedureOrder.THIRD);
-			this.disabledSecondProcedureButton = true;
 		}
 		if (!(actions?.procedures.firstProcedureId) && !(actions?.procedures.secondProcedureId) && !(actions?.procedures.thirdProcedureId)) {
 			this.initValueTypeaheadFirstProcedure = null;
