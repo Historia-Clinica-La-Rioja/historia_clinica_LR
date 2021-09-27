@@ -754,7 +754,7 @@ export interface EvolutionNoteDto extends Serializable {
 }
 
 export interface ExternalClinicalHistoryDto extends Serializable {
-    consultationDate: string;
+    consultationDate: DateDto;
     id: number;
     institution?: string;
     notes: string;

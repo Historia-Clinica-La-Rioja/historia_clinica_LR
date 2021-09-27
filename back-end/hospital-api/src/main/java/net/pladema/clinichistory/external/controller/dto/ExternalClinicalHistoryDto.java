@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.external.controller.dto;
 
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,8 +24,7 @@ public class ExternalClinicalHistoryDto implements Serializable {
     private String professionalSpecialty;
 
     @NotNull
-    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
-    private String consultationDate;
+    private DateDto consultationDate;
 
     @Nullable
     private String professionalName;

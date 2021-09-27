@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Setter
 public class ExternalClinicalHistoryBo {
 
+    private final String EMPTY = "-";
+
     private Integer id;
 
     private String professionalSpecialty;
@@ -24,11 +26,11 @@ public class ExternalClinicalHistoryBo {
 
     public ExternalClinicalHistoryBo(ExternalClinicalHistoryVo externalClinicalHistoryVo){
         this.id = externalClinicalHistoryVo.getId();
-        this.professionalSpecialty = externalClinicalHistoryVo.getProfessionalSpecialty().equals("-") ? null: externalClinicalHistoryVo.getProfessionalSpecialty();
+        this.professionalSpecialty = EMPTY.equals(externalClinicalHistoryVo.getProfessionalSpecialty()) ? null: externalClinicalHistoryVo.getProfessionalSpecialty();
         this.consultationDate = externalClinicalHistoryVo.getConsultationDate();
-        this.professionalName = externalClinicalHistoryVo.getProfessionalName().equals("-") ? null: externalClinicalHistoryVo.getProfessionalName();
+        this.professionalName = EMPTY.equals(externalClinicalHistoryVo.getProfessionalName()) ? null: externalClinicalHistoryVo.getProfessionalName();
         this.notes = externalClinicalHistoryVo.getNotes();
-        this.institution = externalClinicalHistoryVo.getInstitution().equals("-") ? null : externalClinicalHistoryVo.getInstitution();
+        this.institution = EMPTY.equals(externalClinicalHistoryVo.getInstitution()) ? null : externalClinicalHistoryVo.getInstitution();
     }
 }
 

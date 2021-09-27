@@ -33,10 +33,10 @@ public class ExternalClinicalHistory implements Serializable {
     @Column(name = "patient_gender", nullable = false)
     private Short patientGender;
 
-    @Column(name = "professional_name", length = 120)
+    @Column(name = "professional_name", length = 120, nullable = false)
     private String professionalName;
 
-    @Column(name = "professional_specialty", length = 100)
+    @Column(name = "professional_specialty", length = 100, nullable = false)
     private String professionalSpecialty;
 
     @Column(name = "notes", length = 1024, nullable = false)
@@ -45,6 +45,6 @@ public class ExternalClinicalHistory implements Serializable {
     @Column(name = "consultation_date", nullable = false)
     private LocalDate consultationDate;
 
-    @Column(name = "institution")
+    @Column(name = "institution", nullable = false)
     private String institution;
 }
