@@ -2,11 +2,13 @@ package ar.lamansys.odontology.application.createConsultation;
 
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationExceptionEnum;
+import ar.lamansys.odontology.application.odontogram.GetToothService;
 import ar.lamansys.odontology.application.odontogram.GetToothSurfacesService;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.ToothBo;
 import ar.lamansys.odontology.domain.ToothSurfacesBo;
 import ar.lamansys.odontology.domain.consultation.ClinicalTermsValidatorUtils;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
@@ -50,19 +52,23 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final DrawOdontogramService drawOdontogramService;
 
+    private final CpoCeoIndicesCalculator cpoCeoIndicesCalculator;
+
     private final GetToothSurfacesService getToothSurfacesService;
 
     private final AppointmentStorage appointmentStorage;
 
+    private final GetToothService getToothService;
+
     public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage,
-                                         ProcedureStorage proceduresStorage,
-                                         OdontologyConsultationStorage odontologyConsultationStorage,
-                                         DateTimeProvider dateTimeProvider,
-                                         OdontologyDoctorStorage odontologyDoctorStorage,
-                                         OdontologyDocumentStorage odontologyDocumentStorage,
-                                         DrawOdontogramService drawOdontogramService,
-                                         GetToothSurfacesService getToothSurfacesService,
-                                         AppointmentStorage appointmentStorage) {
+                                            ProcedureStorage proceduresStorage,
+                                            OdontologyConsultationStorage odontologyConsultationStorage,
+                                            DateTimeProvider dateTimeProvider,
+                                            OdontologyDoctorStorage odontologyDoctorStorage,
+                                            OdontologyDocumentStorage odontologyDocumentStorage,
+                                            DrawOdontogramService drawOdontogramService,
+                                            CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService,
+                                            AppointmentStorage appointmentStorage, GetToothService getToothService) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
@@ -70,8 +76,10 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         this.odontologyDoctorStorage = odontologyDoctorStorage;
         this.odontologyDocumentStorage = odontologyDocumentStorage;
         this.drawOdontogramService = drawOdontogramService;
+        this.cpoCeoIndicesCalculator = cpoCeoIndicesCalculator;
         this.getToothSurfacesService = getToothSurfacesService;
         this.appointmentStorage = appointmentStorage;
+        this.getToothService = getToothService;
     }
 
     @Override
@@ -103,6 +111,9 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
                         now,
                         true));
 
+        consultationBo.setConsultationId(encounterId);
+        cpoCeoIndicesCalculator.run(consultationBo);
+
         odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId()));
         appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
 
@@ -124,8 +135,10 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
                 .collect(Collectors.groupingBy(ConsultationDentalActionBo::getToothSctid));
 
         actionsByToothSctid.keySet().forEach(toothId -> {
+            ToothBo tooth = getToothService.run(toothId);
             ToothSurfacesBo toothSurfaces = getToothSurfacesService.run(toothId);
             actionsByToothSctid.get(toothId).forEach(actionBo -> {
+                actionBo.setAppliedToTemporaryTooth(tooth.isTemporary());
                 if (actionBo.isAppliedToSurface())
                     actionBo.setSurface(toothSurfaces.getSurface(actionBo.getSurfacePosition()));
             });
@@ -145,13 +158,12 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     }
 
     private void setCpoCeoIndicesInDentalActions(ConsultationBo consultationBo) {
-        if (consultationBo.getDentalActions() != null)
-            consultationBo.getDentalActions().forEach(dentalAction -> {
-                if (dentalAction.isDiagnostic())
-                    this.setCpoCeoIndicesInDiagnostic(dentalAction);
-                else
-                    this.setCpoCeoIndicesInProcedure(dentalAction);
-            });
+        consultationBo.getDentalActions().forEach(dentalAction -> {
+            if (dentalAction.isDiagnostic())
+                this.setCpoCeoIndicesInDiagnostic(dentalAction);
+            else
+                this.setCpoCeoIndicesInProcedure(dentalAction);
+        });
     }
 
     private void assertThereAreNoRepeatedConcepts(ConsultationBo consultationBo) {

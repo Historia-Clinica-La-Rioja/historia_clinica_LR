@@ -45,4 +45,13 @@ public class OdontologyConsultationStorageImpl implements OdontologyConsultation
             odontologyConsultationReasonRepository.save(new OdontologyConsultationReason(odontologyConsultationId, reason.getSctid()));
         });
     }
+
+    @Override
+    public boolean hasPreviousConsultations(Integer patientId) {
+        LOG.debug("Input parameter -> patientId {}", patientId);
+        boolean result = odontologyConsultationRepository.patientHasPreviousConsultations(patientId);
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
 }
