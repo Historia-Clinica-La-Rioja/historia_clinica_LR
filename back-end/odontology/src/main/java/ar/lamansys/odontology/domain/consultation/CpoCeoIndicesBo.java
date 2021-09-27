@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,17 +15,17 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CpoCeoIndicesBo {
 
-    private Integer permanentC;
+    private Integer permanentC = 0;
 
-    private Integer permanentP;
+    private Integer permanentP = 0;
 
-    private Integer permanentO;
+    private Integer permanentO = 0;
 
-    private Integer temporaryC;
+    private Integer temporaryC = 0;
 
-    private Integer temporaryE;
+    private Integer temporaryE = 0;
 
-    private Integer temporaryO;
+    private Integer temporaryO = 0;
 
     private Integer cpoIndex;
 
@@ -35,6 +35,6 @@ public class CpoCeoIndicesBo {
 
     private Integer temporaryTeethPresent;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
 }
