@@ -73,4 +73,71 @@ databaseChangeLog:
                 referencedTableName: odontology_consultation
                 validate: true
 
+    - changeSet:      
+          id: tooth_indices-createTable
+          comment: Create table tooth_indices
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: tooth_indices
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: tooth_id
+                              type: varchar(20)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: temporary
+                              type: boolean
+                        - column:
+                              name: whole_tooth
+                              type: varchar(10)
+                        - column:
+                              name: internal_surface
+                              type: varchar(10)
+                        - column:
+                              name: external_surface
+                              type: varchar(10)
+                        - column:
+                              name: central_surface
+                              type: varchar(10)
+                        - column:
+                              name: left_surface
+                              type: varchar(10)
+                        - column:
+                              name: right_surface
+                              type: varchar(10)
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: patient_id, tooth_id
+                    constraintName: PK_tooth_indices
+                    tableName: tooth_indices
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: tooth_indices
+                    constraintName: FK_tooth_indices_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: tooth_id
+                    baseTableName: tooth_indices
+                    constraintName: FK_tooth_indices_tooth_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: sctid
+                    referencedTableName: tooth
+                    validate: true
+
+
 
