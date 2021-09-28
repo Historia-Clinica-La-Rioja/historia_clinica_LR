@@ -4,11 +4,11 @@
 		<mat-label>
 			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.SEARCH_BY_KEYWORD' | translate }}
 		</mat-label>
-		<input matInput formControlName="keyWord" (change)="sendAllFiltersOnFilterChange()">
+		<input matInput formControlName="keyWord" (change)="sendAllFilters()">
 		<button type="button" matSuffix mat-icon-button>
 			<mat-icon>search</mat-icon>
 		</button>
-		<button type="button" *ngIf="form.controls.keyWord.value?.length > 0" matSuffix color="warn" mat-icon-button
+		<button type="button" *ngIf="form.value.keyWord?.length > 0" matSuffix color="warn" mat-icon-button
 			(click)="clear(form.controls.keyWord); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -18,12 +18,12 @@
 		<mat-label>
 			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.SPECIALTY' | translate }}
 		</mat-label>
-		<mat-select formControlName="specialty" (selectionChange)="sendAllFiltersOnFilterChange()">
+		<mat-select formControlName="specialty" (selectionChange)="sendAllFilters()">
 			<mat-option *ngFor="let specialty of specialties" [value]="specialty">
 				{{ specialty | titlecase }}
 			</mat-option>
 		</mat-select>
-		<button type="button" *ngIf="form.controls.specialty.value" matSuffix color="warn" mat-icon-button
+		<button type="button" *ngIf="form.value.specialty" matSuffix color="warn" mat-icon-button
 			(click)="clear(form.controls.specialty); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -33,12 +33,12 @@
 		<mat-label>
 			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.PROFESSIONAL' | translate }}
 		</mat-label>
-		<mat-select formControlName="professional" (selectionChange)="sendAllFiltersOnFilterChange()">
+		<mat-select formControlName="professional" (selectionChange)="sendAllFilters()">
 			<mat-option *ngFor="let professional of professionals" [value]="professional">
 				{{ professional | titlecase }}
 			</mat-option>
 		</mat-select>
-		<button type="button" *ngIf="form.controls.professional.value" matSuffix color="warn" mat-icon-button
+		<button type="button" *ngIf="form.value.professional" matSuffix color="warn" mat-icon-button
 			(click)="clear(form.controls.professional); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -48,12 +48,12 @@
 		<mat-label>
 			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.INSTITUTION' | translate }}
 		</mat-label>
-		<mat-select formControlName="institution" (selectionChange)="sendAllFiltersOnFilterChange()">
+		<mat-select formControlName="institution" (selectionChange)="sendAllFilters()">
 			<mat-option *ngFor="let institution of institutions" [value]="institution">
 				{{ institution | titlecase }}
 			</mat-option>
 		</mat-select>
-		<button type="button" *ngIf="form.controls.institution.value" matSuffix color="warn" mat-icon-button
+		<button type="button" *ngIf="form.value.institution" matSuffix color="warn" mat-icon-button
 			(click)="clear(form.controls.institution); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -64,10 +64,10 @@
 			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.CONSULTATION_DATE' | translate }}
 		</mat-label>
 		<input matInput formControlName="consultationDate" [matDatepicker]="myDatepicker"
-			(dateChange)="sendAllFiltersOnFilterChange()">
+			(dateChange)="sendAllFilters()">
 		<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
 		<mat-datepicker #myDatepicker></mat-datepicker>
-		<button type="button" *ngIf="form.controls.consultationDate.value" matSuffix color="warn" mat-icon-button
+		<button type="button" *ngIf="form.value.consultationDate" matSuffix color="warn" mat-icon-button
 			(click)="clear(form.controls.consultationDate); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>

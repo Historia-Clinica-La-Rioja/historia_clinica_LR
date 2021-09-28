@@ -26,7 +26,7 @@
 					{{ 'ambulatoria.paciente.problemas.external-clinical-history.CONSULTATION_DATE' | translate }}
 				</div>
 				<div>
-					{{ this.DATE_TO_VIEW }}
+					{{ this.DATE_TO_VIEW | viewDateDto : 'date' | date: 'dd/MM/yyyy'}}
 				</div>
 			</div>
 		</div>

@@ -51,7 +51,7 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 		);
 	}
 
-	public sendAllFiltersOnFilterChange(): void {
+	public sendAllFilters(): void {
 		const filters: ExternalClinicalHistoryFilter = {};
 		if (this.form.controls.consultationDate.value)
 			filters.consultationDate = this.form.controls.consultationDate.value;
@@ -69,7 +69,7 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 
 	public clear(control: AbstractControl): void {
 		control.reset();
-		this.sendAllFiltersOnFilterChange();
+		this.sendAllFilters();
 	}
 
 }

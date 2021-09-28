@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ExternalClinicalHistoryDto } from '@api-rest/api-model';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { DateDto, ExternalClinicalHistoryDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-external-clinical-history',
@@ -10,12 +9,12 @@ import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.ut
 export class ExternalClinicalHistoryComponent implements OnInit {
 
 	@Input() public readonly externalClinicalHistory: ExternalClinicalHistoryDto;
-	public DATE_TO_VIEW: string;
+	public DATE_TO_VIEW: DateDto;
 
 	constructor() { }
 
 	ngOnInit(): void {
-		this.DATE_TO_VIEW = momentFormat(momentParseDate(this.externalClinicalHistory.consultationDate), DateFormat.VIEW_DATE);
+		this.DATE_TO_VIEW = this.externalClinicalHistory.consultationDate;
 	}
 
 }

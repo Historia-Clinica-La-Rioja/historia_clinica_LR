@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ExternalClinicalHistoryDto } from '@api-rest/api-model';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ExternalClinicalHistoryService } from '@api-rest/services/external-clinical-history.service';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { dateToMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { ExternalClinicalHistoryFilter, ExternalClinicalHistoryFiltersOptions } from '../components/external-clinical-histories-filters/external-clinical-histories-filters.component';
@@ -31,7 +32,7 @@ export class ExternalClinicalHistoryFacadeService {
 	}
 
 	// It's necessary to invoke this method to bring the information from Backend
-	public setPatientId(patientId: number): void {
+	public loadInformation(patientId: number): void {
 		this.externalClinicalHistoryService.getExternalClinicalHistoryList(patientId).subscribe(
 			(externalClinicalHistories: ExternalClinicalHistoryDto[]) => {
 				this.externalClinicalHistoryList = externalClinicalHistories;
@@ -72,7 +73,7 @@ export class ExternalClinicalHistoryFacadeService {
 				meets = meets && ((this.filters.professional && history.professionalName == this.filters.professional) || !this.filters.professional);
 				meets = meets && ((this.filters.institution && history.institution == this.filters.institution) || !this.filters.institution);
 
-				const historyDate: Moment = momentParseDate(history.consultationDate);
+				const historyDate: Moment = dateToMoment(dateDtoToDate(history.consultationDate));
 				meets = meets && ((this.filters.consultationDate && historyDate.isSame(this.filters.consultationDate)) || !this.filters.consultationDate);
 
 				return meets;

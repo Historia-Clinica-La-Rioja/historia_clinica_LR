@@ -9,7 +9,7 @@ import { ExternalClinicalHistoryDto, HCEHospitalizationHistoryDto, HCEPersonalHi
 import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, dateToMoment, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { map, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,6 +25,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 import { Moment } from 'moment';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -90,7 +91,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
-				externalClinicalHistoryService.setPatientId(this.patientId);
+				externalClinicalHistoryService.loadInformation(this.patientId);
 				historicalProblemsFacadeService.setPatientId(this.patientId);
 			});
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -109,9 +110,11 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_HISTORIA_CLINICA_EXTERNA).subscribe(
-			(show) => this.showExternalClinicalHistoryTab = show
+			(show) => {
+				this.showExternalClinicalHistoryTab = show;
+				if (this.showExternalClinicalHistoryTab) this.loadExternalClinicalHistoryList();
+			}
 		);
-		if (this.showExternalClinicalHistoryTab) this.loadExternalClinicalHistoryList();
 	}
 
 	ngOnDestroy(): void {
@@ -249,21 +252,21 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		this.externalClinicalHistoryService.getFilteredHistories().pipe(
 			tap((filteredHistories: ExternalClinicalHistoryDto[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
 		).subscribe(
-			(filteredHistories: ExternalClinicalHistoryDto[]) => {
-				this.externalClinicalHistoryList = filteredHistories.sort(
-					(h1: ExternalClinicalHistoryDto, h2: ExternalClinicalHistoryDto) => {
-						const moment1: Moment = momentParseDate(h1.consultationDate);
-						const moment2: Moment = momentParseDate(h2.consultationDate);
-						if (moment1.isSame(moment2)) return 0;
-						else if (moment1.isBefore(moment2)) return 1;
-						return -1;
-					}
-				);
-			}
+			(filteredHistories: ExternalClinicalHistoryDto[]) =>
+				this.externalClinicalHistoryList = filteredHistories.sort(this.compareByDate)
 		);
 
 		this.externalClinicalHistoryService.hasInformation().subscribe(
 			(hasInfo: boolean) => this.externalHistoriesInformation = hasInfo
 		);
+	}
+
+	private compareByDate(h1: ExternalClinicalHistoryDto, h2: ExternalClinicalHistoryDto) {
+		// function used to sort External Clinical Histories by descending date
+		const moment1: Moment = dateToMoment(dateDtoToDate(h1.consultationDate));
+		const moment2: Moment = dateToMoment(dateDtoToDate(h2.consultationDate));
+		if (moment1.isSame(moment2)) return 0;
+		else if (moment1.isBefore(moment2)) return 1;
+		return -1;
 	}
 }
