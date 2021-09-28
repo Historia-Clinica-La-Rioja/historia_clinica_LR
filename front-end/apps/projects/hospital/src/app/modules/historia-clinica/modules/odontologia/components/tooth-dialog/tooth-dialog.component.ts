@@ -355,10 +355,14 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (order === ProcedureOrder.SECOND){
 			this.initValueTypeaheadFirstProcedure = this.initValueTypeaheadSecondProcedure;
 			this.toothComponent.deleteAction(this.initValueTypeaheadSecondProcedure.value?.snomed.sctid, this.selectedSurfaces, ActionType.PROCEDURE, ProcedureOrder.SECOND);
+			this.firstProcedureId = this.secondProcedureId;
+			this.secondProcedureId = null;
 		}
 		if (order === ProcedureOrder.THIRD){
 			this.initValueTypeaheadSecondProcedure = this.initValueTypeaheadThirdProcedure;
 			this.toothComponent.deleteAction(this.initValueTypeaheadThirdProcedure.value?.snomed.sctid, this.selectedSurfaces, ActionType.PROCEDURE, ProcedureOrder.THIRD);
+			this.secondProcedureId = this.thirdProcedureId;
+			this.thirdProcedureId = null;
 		}
 	}
 
