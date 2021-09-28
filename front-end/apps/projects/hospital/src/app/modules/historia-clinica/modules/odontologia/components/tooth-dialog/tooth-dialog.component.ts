@@ -306,6 +306,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 					this.organizeTypeaheadProcedures(ProcedureOrder.THIRD);
 					this.initValueTypeaheadThirdProcedure = null;
 				}
+				this.showActionsService.setIsNotPreviousProcedureSet(true);
 				break;
 			case ProcedureOrder.SECOND:
 				this.initValueTypeaheadSecondProcedure = null;
@@ -313,9 +314,11 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 					this.organizeTypeaheadProcedures(ProcedureOrder.THIRD);
 					this.initValueTypeaheadThirdProcedure = null;
 				}
+				this.showActionsService.setIsNotPreviousProcedureSet(true);
 				break;
 			case ProcedureOrder.THIRD:
 				this.initValueTypeaheadThirdProcedure = null;
+				this.showActionsService.setIsNotPreviousProcedureSet(true);
 				break;
 			default:
 				this.initValueTypeaheadDiagnostics = null;
