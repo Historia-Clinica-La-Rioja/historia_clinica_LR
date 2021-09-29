@@ -1,4 +1,4 @@
-import { anyMatch, sortBy } from './array.utils';
+import { anyMatch, pushIfNotExists, sortBy } from './array.utils';
 
 describe('anyMatch', () => {
 	// true if any match, false if no coincidences
@@ -51,6 +51,34 @@ describe('sortBy', () => {
 		expect(sortBy('id')<MockClass>([undefined, MOCK_THREE, undefined, MOCK_ONE])).toEqual([MOCK_ONE, MOCK_THREE, undefined, undefined]);
 	});
 });
+
+
+describe('pushIfNotExists', () => {
+
+	it('should add the element if the array is empty', () => {
+		expect(pushIfNotExists<MockClass>([], MOCK_ONE, equals)).toEqual([MOCK_ONE]);
+	});
+
+	it('should add the element if it is not present in the array', () => {
+		expect(pushIfNotExists<MockClass>([MOCK_ONE], MOCK_TWO, equals)).toEqual([MOCK_ONE, MOCK_TWO]);
+	});
+
+	it('should not add the element if it is already in array', () => {
+		expect(pushIfNotExists<MockClass>([MOCK_ONE], MOCK_ONE, equals)).toEqual([MOCK_ONE]);
+	});
+	
+	it('should not add a null or undefined element', () => {
+		expect(pushIfNotExists<MockClass>([MOCK_ONE], null, equals)).toEqual([MOCK_ONE]);
+		expect(pushIfNotExists<MockClass>([MOCK_ONE], undefined, equals)).toEqual([MOCK_ONE]);
+	});
+
+});
+
+function equals(obj1: MockClass, obj2: MockClass): boolean {
+	if (!obj1 || !obj2)
+		return true
+	return obj1.id === obj2.id
+}
 
 const enum Keys {
 	ONE,
