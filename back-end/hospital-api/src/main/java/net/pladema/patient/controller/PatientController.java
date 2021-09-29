@@ -131,14 +131,19 @@ public class PatientController {
 			Person person = personMapper.fromPersonDto(createdPerson);
 			FederarResourceAttributes attributes = new FederarResourceAttributes();
 			BeanUtils.copyProperties(person, attributes);
-			federarExternalService.federatePatient(attributes, createdPatient.getId()).ifPresent(
-					nationalId -> {
-						createdPatient.setNationalId(nationalId);
-						createdPatient.setTypeId(PatientType.PERMANENT);
-						patientService.addPatient(createdPatient);
-						LOG.debug("Successful federated patient with nationalId => {}", nationalId);
-					}
-			);
+			try {
+				federarExternalService.federatePatient(attributes, createdPatient.getId()).ifPresent(
+						nationalId -> {
+							createdPatient.setNationalId(nationalId);
+							createdPatient.setTypeId(PatientType.PERMANENT);
+							LOG.debug("Successful federated patient with nationalId => {}", nationalId);
+						}
+				);
+			}
+			catch (Exception ex){
+				LOG.error(ex.getMessage(), ex);
+			}
+			patientService.addPatient(createdPatient);
 		}
 
 		patientService.auditActionPatient(institutionId, createdPatient.getId(), EActionType.CREATE);
