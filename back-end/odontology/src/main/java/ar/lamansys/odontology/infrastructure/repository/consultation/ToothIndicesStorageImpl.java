@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ToothIndicesStorageImpl implements ToothIndicesStorage {
@@ -23,6 +24,17 @@ public class ToothIndicesStorageImpl implements ToothIndicesStorage {
     public void save(Integer patientId, List<ToothIndicesBo> teethIndices) {
         LOG.debug("Input parameters -> patientId {}, teethIndices {}", patientId, teethIndices);
         toothIndicesRepository.saveAll(teethIndices.stream().map(t -> new ToothIndices(patientId, t)).collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<ToothIndicesBo> getTeethIndices(Integer patientId) {
+        LOG.debug("Input parameters -> patientId {}", patientId);
+        List<ToothIndicesBo> result = toothIndicesRepository.getByPatientId(patientId)
+                .stream()
+                .map(ToothIndices::toToothIndicesBo)
+                .collect(Collectors.toList());
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 
 }

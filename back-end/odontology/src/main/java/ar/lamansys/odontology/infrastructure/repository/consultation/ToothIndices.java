@@ -68,5 +68,30 @@ public class ToothIndices {
         }
     }
 
+    public ToothIndicesBo toToothIndicesBo() {
+        ToothIndicesBo result = new ToothIndicesBo(this.pk.getToothId(), this.temporary);
+        result.setWholeToothIndex(mapValue(this.wholeTooth));
+        result.setInternalIndex(mapValue(this.internalSurface));
+        result.setExternalIndex(mapValue(this.externalSurface));
+        result.setCentralIndex(mapValue(this.centralSurface));
+        result.setLeftIndex(mapValue(this.leftSurface));
+        result.setRightIndex(mapValue(this.rightSurface));
+        return result;
+    }
+
+    private EOdontologyIndexBo mapValue(String value) {
+        if (value == null)
+            return EOdontologyIndexBo.NONE;
+        switch (value) {
+            case CAVITIES_VALUE:
+                return EOdontologyIndexBo.CAVITIES;
+            case LOST_VALUE:
+                return EOdontologyIndexBo.LOST;
+            case FIXED_VALUE:
+                return EOdontologyIndexBo.FIXED;
+            default:
+                return EOdontologyIndexBo.NONE;
+        }
+    }
 }
 

@@ -8,4 +8,6 @@ public interface ToothIndicesStorage {
 
     void save(Integer patientId, List<ToothIndicesBo> teethIndices);
 
+    List<ToothIndicesBo> getTeethIndices(Integer patientId);
+
 }
