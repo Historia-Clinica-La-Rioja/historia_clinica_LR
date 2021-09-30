@@ -1,0 +1,278 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'ambulatoria.paciente.new-nursing-consultation.TITLE'">
+	<div body fxLayout="column" fxLayoutGap="20px">
+
+		<div id="specialty">
+			<div class="margin-bottom">
+				<app-document-section [sectionTitle]="'ambulatoria.paciente.new-nursing-consultation.SPECIALTY'">
+					<ng-container concept-form>
+						<div fxLayout="row" [formGroup]="formEvolucion">
+							<mat-form-field appearance="outline">
+								<mat-select id="clinical_specialty_id" formControlName="clinicalSpecialty"
+									(selectionChange)="setDefaultSpecialty()" [attr.disabled]="fixedSpecialty">
+									<mat-option *ngFor="let clinicalSpecialty of this.specialties"
+										[value]="clinicalSpecialty">
+										<span class="mat-body">{{clinicalSpecialty.name}}</span>
+									</mat-option>
+								</mat-select>
+								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+							</mat-form-field>
+						</div>
+					</ng-container>
+				</app-document-section>
+			</div>
+		</div>
+
+		<div id="anthropometric_data">
+			<div class="margin-bottom">
+				<app-document-section
+					[sectionTitle]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'">
+					<ng-container concept-form>
+						<form [formGroup]="datosAntropometricosNuevaConsultaService.getForm()">
+							<div>
+								<mat-form-field [floatLabel]="'never'" appearance="outline">
+									<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'">
+									</mat-label>
+									<mat-select placeholder="B+" formControlName="bloodType">
+										<mat-option
+											*ngFor="let bloodType of datosAntropometricosNuevaConsultaService?.getBloodTypes()"
+											[value]="bloodType">
+											{{ bloodType.description }}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+							<div>
+								<mat-form-field [floatLabel]="'never'" appearance="outline">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'">
+									</mat-label>
+									<input id="height" formControlName="height" placeholder="Ej: 180" type="number"
+										matInput>
+								</mat-form-field>
+								<h5 class="recomendado recomendado-antropo"
+									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+							</div>
+							<div>
+								<mat-form-field [floatLabel]="'never'" appearance="outline">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'">
+									</mat-label>
+									<input id="weight" formControlName="weight" placeholder="Ej: 70" type="number"
+										matInput>
+								</mat-form-field>
+								<h5 class="recomendado recomendado-antropo"
+									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+							</div>
+						</form>
+					</ng-container>
+				</app-document-section>
+			</div>
+		</div>
+		<div id="vital_signs">
+			<div class="margin-bottom">
+				<app-document-section class="margin-bottom"
+					[sectionTitle]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TITLE'">
+					<ng-container concept-form>
+						<form fxLayout="column" fxLayoutGap="10px"
+							[formGroup]="signosVitalesNuevaConsultaService.getForm()">
+							<div fxLayout="row wrap" fxFlex="100%" fxLayoutGap="5px" fxLayout.lt-lg="column">
+								<div class="signos-vitales-field" formGroupName="heartRate">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'">
+									</mat-label>
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<input id="heart_rate" formControlName="value" placeholder="00" type="number"
+											matInput>
+									</mat-form-field>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.heartRate.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'heartRate')">
+									</app-effective-time>
+								</div>
+								<div class="signos-vitales-field" formGroupName="respiratoryRate">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'">
+									</mat-label>
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<input id="respiratory_rate" formControlName="value" placeholder="00"
+											type="number" matInput>
+									</mat-form-field>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'respiratoryRate')">
+									</app-effective-time>
+								</div>
+							</div>
+
+							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+								<div class="signos-vitales-field" formGroupName="temperature">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'">
+									</mat-label>
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<input id="temperature" formControlName="value" placeholder="00.0" type="number"
+											matInput>
+									</mat-form-field>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.temperature.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'temperature')">
+									</app-effective-time>
+								</div>
+								<div class="signos-vitales-field" formGroupName="bloodOxygenSaturation">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'">
+									</mat-label>
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<input id="blood_oxygen_saturation" formControlName="value" placeholder="00"
+											type="number" matInput>
+									</mat-form-field>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
+									</app-effective-time>
+								</div>
+							</div>
+
+							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+								<div class="signos-vitales-field" formGroupName="systolicBloodPressure">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'">
+									</mat-label>
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<input id="systolic_blood_pressure" formControlName="value" placeholder="00"
+											type="number" matInput>
+									</mat-form-field>
+									<h5 class="recomendado recomendado-tension"
+										[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
+									</app-effective-time>
+								</div>
+								<div class="signos-vitales-field" formGroupName="diastolicBloodPressure">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'">
+									</mat-label>
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<input id="diastolic_blood_pressure" formControlName="value" placeholder="00"
+											type="number" matInput>
+									</mat-form-field>
+									<h5 class="recomendado recomendado-tension"
+										[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
+									</app-effective-time>
+								</div>
+							</div>
+						</form>
+					</ng-container>
+				</app-document-section>
+			</div>
+		</div>
+
+		<div id="problem">
+			<div class="margin-bottom">
+				<app-document-section [sectionTitle]="'ambulatoria.paciente.new-nursing-consultation.ASSOCIATED_PROBLEM'">
+					<ng-container concept-form>
+						<div fxLayout="row" [formGroup]="formEvolucion">
+							<mat-form-field appearance="outline">
+								<mat-select id="problem" formControlName="clinicalProblem"
+									[attr.disabled]="fixedProblem">
+									<mat-option *ngFor="let clinicalProblem of this.problems" [value]="clinicalProblem">
+										<span class="mat-body"> {{clinicalProblem.snomed.pt | translate}}</span>
+									</mat-option>
+								</mat-select>
+								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+							</mat-form-field>
+						</div>
+					</ng-container>
+				</app-document-section>
+			</div>
+		</div>
+
+		<div id="procedure">
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.procedimientos.TITLE">
+				<ng-container concept-form>
+					<app-concepts-search
+						*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
+						[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
+						(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
+					</app-concepts-search>
+
+					<ng-template #procedimientoForm>
+						<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
+							(ngSubmit)="procedimientoNuevaConsultaService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
+								</mat-label>
+								<input id="procedimiento_input" matInput type="text" formControlName="snomed" readonly
+									matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear_procedimiento" mat-button matSuffix color="warn" mat-icon-button
+									(click)="procedimientoNuevaConsultaService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
+								</mat-label>
+								<input matInput id="procedure_date" [matDatepicker]="datePicker"
+									formControlName="performedDate"
+									[max]="procedimientoNuevaConsultaService.getFechaMax()">
+								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+								<mat-datepicker #datePicker></mat-datepicker>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
+									type="submit">
+									<span
+										[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+								</button>
+							</div>
+
+						</form>
+					</ng-template>
+				</ng-container>
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
+					[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
+					[data]="procedimientoNuevaConsultaService.getProcedimientos()">
+				</app-document-section-table>
+
+			</app-new-document-section>
+		</div>
+
+
+		<div id="evolution">
+			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.evolucion.TITLE'">
+				<ng-container concept-form>
+					<form [formGroup]="formEvolucion">
+						<mat-form-field appearance="outline">
+							<textarea matInput type="text" id="evolucion_input" formControlName="evolucion"
+								placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
+							</textarea>
+						</mat-form-field>
+					</form>
+				</ng-container>
+			</app-document-section>
+		</div>
+
+		<div id="validations" *ngIf="!isValidConsultation() || apiErrors.length > 0">
+			<mat-card>
+				<mat-error *ngFor="let error of errores" class="mat-body-2">{{ error | translate }}</mat-error>
+				<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
+			</mat-card>
+		</div>
+
+	</div>
+	<div actions id="buttons">
+		<div align="end">
+			<button class="uppercase" mat-raised-button color="primary" (click)="save()"
+				[disabled]="disableConfirmButton">
+				<span [translate]="'buttons.CONFIRM'"></span>
+			</button>
+		</div>
+	</div>
+</app-dock-popup>

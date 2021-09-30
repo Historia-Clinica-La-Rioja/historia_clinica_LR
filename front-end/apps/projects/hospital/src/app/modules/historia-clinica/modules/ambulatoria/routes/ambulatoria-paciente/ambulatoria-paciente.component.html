@@ -8,10 +8,15 @@
 			[personPhoto]="personPhoto" [showAdditionalInformation]="true">
 			<div horizontal-content>
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
-					<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" id="nueva_consulta"
-						mat-flat-button color="primary" (click)="openNuevaConsulta()">
-						{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}
-					</button>
+					<ng-container *ngIf="CurrentUserIsAllowedToMakeBothQueries; else currentUserIsNotAllowedToMakeBothQueries">
+						<button id="nueva_consulta" mat-flat-button color="primary" mat-button
+							[matMenuTriggerFor]="menu">
+							{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}</button>
+						<mat-menu #menu="matMenu">
+							<button mat-menu-item (click)="openNuevaConsulta()">Ambulatoria</button>
+							<button mat-menu-item (click)="openNuevaConsultaEnfermeria()">Enfermeria</button>
+						</mat-menu>
+					</ng-container>
 				</ng-container>
 			</div>
 		</app-patient-card>
@@ -109,4 +114,14 @@
 
 <ng-template #loading>
 	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>
+
+<ng-template #currentUserIsNotAllowedToMakeBothQueries>
+	<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" id="nueva_consulta" mat-flat-button
+		color="primary" mat-button (click)="openNuevaConsulta()">
+		{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}</button>
+
+	<button *appHasRole="['ENFERMERO']" id="nueva_consulta" mat-flat-button color="primary" mat-button
+		(click)="openNuevaConsultaEnfermeria()">
+		{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}</button>
 </ng-template>

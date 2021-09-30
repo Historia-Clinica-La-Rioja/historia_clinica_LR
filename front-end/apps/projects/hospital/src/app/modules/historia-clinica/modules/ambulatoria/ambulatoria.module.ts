@@ -37,6 +37,7 @@ import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacun
 import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.component';
 import { ExternalClinicalHistoriesFiltersComponent } from './components/external-clinical-histories-filters/external-clinical-histories-filters.component';
 import { ExternalClinicalHistoryComponent } from './components/external-clinical-history/external-clinical-history.component';
+import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import { ExternalClinicalHistoryComponent } from './components/external-clinical
 		AgregarVacunaComponent,
 		DetalleVacunaComponent,
 		ExternalClinicalHistoriesFiltersComponent,
+		NuevaConsultaDockPopupEnfermeriaComponent,
 		ExternalClinicalHistoryComponent
 	],
 	imports: [

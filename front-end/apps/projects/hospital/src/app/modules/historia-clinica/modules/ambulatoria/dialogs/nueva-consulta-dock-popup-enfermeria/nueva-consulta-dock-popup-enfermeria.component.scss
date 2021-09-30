@@ -1,0 +1,48 @@
+::ng-deep .cdk-overlay-pane {
+	app-nueva-consulta-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+.margin-checkbox {
+	margin-bottom: 15px;
+}
+
+.signos-vitales-field {
+	display: flex;
+	flex-direction: column;
+	.mat-form-field {
+		width: 50%;
+		::ng-deep .mat-form-field-wrapper {
+			padding-bottom: 0;
+		}
+		margin-bottom: -5px;
+	}
+	margin-bottom: 10px;
+}
+
+.margin-bottom {
+	margin-bottom: 3vh;
+}
+
+.recomendado-antropo {
+	margin-top: -3%;
+}
+
+.recomendado-tension {
+	margin-top: 2%;
+}
+
+.recomendado {
+	color: lightgray;
+	font-size: 13px;
+	font-weight: lighter;
+}

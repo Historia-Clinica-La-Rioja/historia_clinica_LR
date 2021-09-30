@@ -23,6 +23,11 @@
 					"NUEVA_CONSULTA": "Nueva consulta"
 				}
 			},
+			"new-nursing-consultation":{
+				"TITLE": "Nueva consulta de enfermería",
+				"ASSOCIATED_PROBLEM":"Problema asociado",
+				"SPECIALTY": "Especialidad"
+			},
 			"nueva-consulta": {
 				"TITLE": "Nueva consulta",
 				"SUBTITLE": "Completa los siguientes datos.",
@@ -35,7 +40,7 @@
 				"PROBLEMA": "Problema de la consulta",
 				"RECOMENDADO": "*Recomendado",
 				"evolucion": {
-					"TITLE": "Evolucion",
+					"TITLE": "Evolución",
 					"DESCRIPCION": "Descripcion"
 				},
 				"errors": {
