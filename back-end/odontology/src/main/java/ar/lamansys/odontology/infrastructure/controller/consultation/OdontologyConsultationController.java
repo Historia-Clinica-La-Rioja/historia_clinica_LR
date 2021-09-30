@@ -1,7 +1,7 @@
 package ar.lamansys.odontology.infrastructure.controller.consultation;
 
 import ar.lamansys.odontology.application.createConsultation.CreateOdontologyConsultation;
-import ar.lamansys.odontology.application.fetchCpoCeoIndices.FetchCpoCeoIndicesService;
+import ar.lamansys.odontology.application.fetchCpoCeoIndices.FetchCpoCeoIndices;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.CpoCeoIndicesBo;
 import ar.lamansys.odontology.infrastructure.controller.consultation.dto.OdontologyConsultationIndicesDto;
@@ -37,17 +37,17 @@ public class OdontologyConsultationController {
 
     private final OdontologyConsultationMapper odontologyConsultationMapper;
 
-    private final FetchCpoCeoIndicesService fetchCpoCeoIndicesService;
+    private final FetchCpoCeoIndices fetchCpoCeoIndices;
 
     private final CpoCeoIndicesMapper cpoCeoIndicesMapper;
 
     public OdontologyConsultationController(CreateOdontologyConsultation createOdontologyConsultation,
                                             OdontologyConsultationMapper odontologyConsultationMapper,
-                                            FetchCpoCeoIndicesService fetchCpoCeoIndicesService,
+                                            FetchCpoCeoIndices fetchCpoCeoIndices,
                                             CpoCeoIndicesMapper cpoCeoIndicesMapper) {
         this.createOdontologyConsultation = createOdontologyConsultation;
         this.odontologyConsultationMapper = odontologyConsultationMapper;
-        this.fetchCpoCeoIndicesService = fetchCpoCeoIndicesService;
+        this.fetchCpoCeoIndices = fetchCpoCeoIndices;
         this.cpoCeoIndicesMapper = cpoCeoIndicesMapper;
     }
 
@@ -74,7 +74,7 @@ public class OdontologyConsultationController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId")  Integer patientId) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
-        List<CpoCeoIndicesBo> cpoCeoIndicesBoList = fetchCpoCeoIndicesService.run(institutionId, patientId);
+        List<CpoCeoIndicesBo> cpoCeoIndicesBoList = fetchCpoCeoIndices.run(patientId);
         List<OdontologyConsultationIndicesDto> result = cpoCeoIndicesMapper.fromCpoCeoIndicesBoList(cpoCeoIndicesBoList);
         LOG.debug("Output -> {}", result);
         return result;

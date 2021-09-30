@@ -16,8 +16,8 @@ public class ConsultationCpoCeoIndicesStorageMockImpl implements ConsultationCpo
     private static final Logger LOG = LoggerFactory.getLogger(ConsultationCpoCeoIndicesStorageMockImpl.class);
 
     @Override
-    public List<CpoCeoIndicesBo> getConsultationIndices(Integer institutionId, Integer patientId) {
-        LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+    public List<CpoCeoIndicesBo> getConsultationIndices(Integer patientId) {
+        LOG.debug("Input parameters -> patientId {}", patientId);
         List<CpoCeoIndicesBo> result = new ArrayList<>();
         if (patientId % 2 == 0) {
             result.add(new CpoCeoIndicesBo(1, 2, 3,

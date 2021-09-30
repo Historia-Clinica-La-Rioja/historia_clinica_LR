@@ -2,6 +2,7 @@ package ar.lamansys.odontology.infrastructure.repository.consultation;
 
 import ar.lamansys.odontology.domain.consultation.CpoCeoIndicesBo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "odontology_consultation_indices")
 @Getter
 @Setter
+@NoArgsConstructor
 public class OdontologyConsultationIndices {
 
     @Id
