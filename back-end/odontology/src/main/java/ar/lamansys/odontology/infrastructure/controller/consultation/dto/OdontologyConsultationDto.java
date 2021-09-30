@@ -49,5 +49,10 @@ public class OdontologyConsultationDto implements Serializable {
     @Nullable
     private String evolutionNote;
 
+    @Nullable
+    private Integer permanentTeethPresent;
+
+    @Nullable
+    private Integer temporaryTeethPresent;
 
 }

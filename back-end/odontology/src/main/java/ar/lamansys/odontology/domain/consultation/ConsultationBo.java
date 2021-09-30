@@ -40,4 +40,8 @@ public class ConsultationBo {
 
     private String evolutionNote;
 
+    private Integer permanentTeethPresent;
+
+    private Integer temporaryTeethPresent;
+
 }
