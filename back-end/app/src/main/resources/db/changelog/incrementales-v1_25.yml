@@ -1,5 +1,34 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_25 
+    
+    - changeSet: 
+        id: self_perceived_gender-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (1,'Mujer cis',2);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (2,'Varón cis',5);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (3,'Travesti',1);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (4,'Mujer trans',3);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (5,'No binarie',4);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (6,'Varón trans',6);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (7,'Gay',7);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (8,'Lesbiana',8);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (9,'Género fluido',9);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (10,'Ninguna de las anteriores',10);
+                    
+    - changeSet:
+        id: person_extended-addColumn-other_gender_self_determination
+        comment: add new column other_gender_self_determination to person_extended table
+        author: lbergottini
+        changes:
+        - addColumn:
+            tableName: person_extended
+            columns:
+            - column:
+                name: other_gender_self_determination
+                type: varchar(40)
 
     - changeSet:
         id: odontology_consultation_indices-createTable
