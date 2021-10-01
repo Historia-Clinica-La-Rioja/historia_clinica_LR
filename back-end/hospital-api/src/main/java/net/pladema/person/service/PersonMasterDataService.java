@@ -2,6 +2,7 @@ package net.pladema.person.service;
 
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
+import net.pladema.person.repository.entity.SelfPerceivedGender;
 import net.pladema.person.service.domain.EducationLevelBo;
 import net.pladema.person.service.domain.EthnicityBo;
 import net.pladema.person.service.domain.PersonOccupationBo;
@@ -14,6 +15,8 @@ public interface PersonMasterDataService {
     Optional<Gender> getGender(Short genderId);
 
     List<Gender> getGenders();
+
+    List<SelfPerceivedGender> getSelfPerceivedGender();
 
     List<IdentificationType> getIdentificationTypes();
 

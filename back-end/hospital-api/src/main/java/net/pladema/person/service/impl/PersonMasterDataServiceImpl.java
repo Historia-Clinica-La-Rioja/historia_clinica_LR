@@ -5,9 +5,11 @@ import net.pladema.person.repository.EthnicityRepository;
 import net.pladema.person.repository.GenderRepository;
 import net.pladema.person.repository.IdentificationTypeRepository;
 import net.pladema.person.repository.OccupationRepository;
+import net.pladema.person.repository.SelfPerceivedGenderRepository;
 import net.pladema.person.repository.entity.Ethnicity;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
+import net.pladema.person.repository.entity.SelfPerceivedGender;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.domain.EducationLevelBo;
 import net.pladema.person.service.domain.EthnicityBo;
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +30,8 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
 
     private final GenderRepository genderRepository;
 
+    private final SelfPerceivedGenderRepository selfPerceivedGenderRepository;
+
     private final IdentificationTypeRepository identificationTypeRepository;
 
     private final EthnicityRepository ethnicityRepository;
@@ -36,10 +41,11 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
     private final OccupationRepository occupationRepository;
 
     public PersonMasterDataServiceImpl(GenderRepository genderRepository,
-                                       IdentificationTypeRepository identificationTypeRepository,
+                                       SelfPerceivedGenderRepository selfPerceivedGenderRepository, IdentificationTypeRepository identificationTypeRepository,
                                        EthnicityRepository ethnicityRepository, EducationLevelRepository educationLevelRepository, OccupationRepository occupationRepository) {
         super();
         this.genderRepository = genderRepository;
+        this.selfPerceivedGenderRepository = selfPerceivedGenderRepository;
         this.identificationTypeRepository = identificationTypeRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.educationLevelRepository = educationLevelRepository;
@@ -60,6 +66,11 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
     @Override
     public List<Gender> getGenders() {
         return genderRepository.findAll();
+    }
+
+    @Override
+    public List<SelfPerceivedGender> getSelfPerceivedGender() {
+        return selfPerceivedGenderRepository.getSelfPerceivedGenderOrderByOrden();
     }
 
     @Override
