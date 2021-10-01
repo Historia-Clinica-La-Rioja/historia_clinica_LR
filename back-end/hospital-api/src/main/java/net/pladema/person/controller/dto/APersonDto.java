@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -60,6 +61,10 @@ public class APersonDto {
     private String nameSelfDetermination;
 
     private Short genderSelfDeterminationId;
+
+    @Length(max = 40)
+    @Nullable
+    private String otherGenderSelfDetermination;
 
     private String street;
 

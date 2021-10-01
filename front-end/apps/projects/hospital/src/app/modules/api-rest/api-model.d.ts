@@ -56,6 +56,7 @@ export interface APersonDto {
     nameSelfDetermination: string;
     number: string;
     occupationId: number;
+    otherGenderSelfDetermination?: string;
     otherLastNames: string;
     phoneNumber: string;
     postcode: string;
@@ -1724,6 +1725,10 @@ export interface SectorSummaryDto {
     organizationTypeId: number;
     sectorType: string;
     sectorTypeId: number;
+}
+
+export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
+    id: number;
 }
 
 export interface Serializable {
