@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -29,6 +29,8 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 export class NewTemporaryPatientComponent implements OnInit {
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
+	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
+	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
@@ -37,6 +39,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
+	public selfPerceivedGenders: SelfPerceivedGenderDto[];
+	public show: boolean = false;
 	public countries: any[];
 	public provinces: any[];
 	public departments: any[];
@@ -96,6 +100,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
+					otherGenderSelfDetermination: [{ value: null, disabled: true }, Validators.maxLength(this.GENDER_MAX_LENGTH)],
+
 					// Address
 					addressStreet: [],
 					addressNumber: [],
@@ -303,6 +309,14 @@ export class NewTemporaryPatientComponent implements OnInit {
 			this.form.controls.birthDate.disable();
 		}
 
+	}
+
+	public showOtherSelfPerceivedGender(): void {
+		this.show = (this.form.value.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		if (this.show)
+			this.form.get('otherGenderSelfDetermination').enable();
+		else
+			this.form.get('otherGenderSelfDetermination').disable();
 	}
 
 }

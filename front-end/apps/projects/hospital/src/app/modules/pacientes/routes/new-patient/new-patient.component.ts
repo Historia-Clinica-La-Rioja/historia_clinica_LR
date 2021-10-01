@@ -12,7 +12,8 @@ import {
 	GenderDto,
 	IdentificationTypeDto,
 	PatientMedicalCoverageDto,
-	PersonPhotoDto
+	PersonPhotoDto,
+	SelfPerceivedGenderDto
 } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
@@ -38,6 +39,8 @@ const ROUTE_HOME_PATIENT = 'pacientes';
 export class NewPatientComponent implements OnInit {
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
+	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
+	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
@@ -45,6 +48,8 @@ export class NewPatientComponent implements OnInit {
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
+	public selfPerceivedGenders: SelfPerceivedGenderDto[];
+	public show: boolean = false;
 	public countries: any[];
 	public provinces: any[];
 	public departments: any[];
@@ -102,6 +107,7 @@ export class NewPatientComponent implements OnInit {
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
+					otherGenderSelfDetermination: [{ value: null, disabled: true }, Validators.maxLength(this.GENDER_MAX_LENGTH)],
 
 					// Address
 					addressStreet: [],
@@ -309,4 +315,11 @@ export class NewPatientComponent implements OnInit {
 		this.router.navigate([this.routePrefix + ROUTE_HOME_PATIENT]);
 	}
 
+	public showOtherSelfPerceivedGender(): void {
+		this.show = (this.form.value.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		if (this.show)
+			this.form.get('otherGenderSelfDetermination').enable();
+		else
+			this.form.get('otherGenderSelfDetermination').disable();
+	}
 }

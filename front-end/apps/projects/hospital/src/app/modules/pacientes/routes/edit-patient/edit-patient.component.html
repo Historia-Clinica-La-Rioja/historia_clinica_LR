@@ -60,7 +60,7 @@
 						<mat-form-field appearance="outline">
 							<input id="firstName" name="firstName" formControlName="firstName"
 								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
-								   [maxLength]="PERSON_MAX_LENGTH.firstName" matInput>
+								[maxLength]="PERSON_MAX_LENGTH.firstName" matInput>
 							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 						</mat-form-field>
 					</div>
@@ -68,7 +68,7 @@
 					<mat-form-field appearance="outline">
 						<input id="middleNames" name="middleNames" formControlName="middleNames"
 							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
-							   [maxLength]="PERSON_MAX_LENGTH.middleNames" matInput>
+							[maxLength]="PERSON_MAX_LENGTH.middleNames" matInput>
 					</mat-form-field>
 				</div>
 
@@ -80,13 +80,13 @@
 						<mat-form-field appearance="outline">
 							<input id="lastName" name="lastName" formControlName="lastName"
 								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
-								   [maxLength]="PERSON_MAX_LENGTH.lastName" matInput>
+								[maxLength]="PERSON_MAX_LENGTH.lastName" matInput>
 							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 						</mat-form-field>
 						<mat-form-field appearance="outline">
 							<input id="otherLastNames" name="otherLastNames" formControlName="otherLastNames"
 								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
-								   [maxLength]="PERSON_MAX_LENGTH.otherLastNames" matInput>
+								[maxLength]="PERSON_MAX_LENGTH.otherLastNames" matInput>
 						</mat-form-field>
 					</div>
 				</div>
@@ -97,7 +97,7 @@
 				<mat-form-field appearance="outline">
 					<input id="mothersLastName" name="mothersLastName" formControlName="mothersLastName"
 						placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
-						   [maxLength]="PERSON_MAX_LENGTH.mothersLastName" matInput>
+						[maxLength]="PERSON_MAX_LENGTH.mothersLastName" matInput>
 				</mat-form-field>
 
 				<div>
@@ -105,7 +105,8 @@
 				</div>
 				<div>
 					<mat-form-field appearance="outline">
-						<input formControlName="birthDate" id="birthDate" matInput [max]="today" [matDatepicker]="picker2">
+						<input formControlName="birthDate" id="birthDate" matInput [max]="today"
+							[matDatepicker]="picker2">
 						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 						<mat-datepicker #picker2></mat-datepicker>
 					</mat-form-field>
@@ -117,10 +118,28 @@
 					<div>
 						<span [translate]="'pacientes.form.GENDER_SELF_DETERMINATION'"></span>
 					</div>
-					<mat-radio-group formControlName="genderSelfDeterminationId">
-						<mat-radio-button *ngFor="let gender of genders" [value]="gender.id">{{gender.description}}
-						</mat-radio-button>
-					</mat-radio-group>
+					<div class="form-row">
+						<mat-form-field appearance="outline">
+							<mat-select formControlName="genderSelfDeterminationId"
+								(selectionChange)="showOtherSelfPerceivedGender()">
+								<mat-option [value]="null" style="color:gray;">
+									- {{ 'forms.NULL_OPTION_MESSAGE' | translate }} -
+								</mat-option>
+								<mat-option *ngFor="let gender of selfPerceivedGenders" [value]="gender.id">
+									{{ gender.description }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+						<ng-container *ngIf="show">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'pacientes.form.OTHER_SELF_PERCEIVED_GENDER'"></mat-label>
+								<input matInput formControlName="otherGenderSelfDetermination"
+									maxlength="GENDER_MAX_LENGTH">
+								<mat-error [translate]="'forms.MAX_LENGTH_ERROR'"
+									[translateParams]="{ max: GENDER_MAX_LENGTH }"></mat-error>
+							</mat-form-field>
+						</ng-container>
+					</div>
 				</div>
 				<br>
 
@@ -131,7 +150,8 @@
 					<mat-form-field appearance="outline">
 						<input id="nameSelfDetermination" name="nameSelfDetermination"
 							formControlName="nameSelfDetermination"
-							placeholder="{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}" maxlength="25" matInput>
+							placeholder="{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}" maxlength="25"
+							matInput>
 					</mat-form-field>
 				</div>
 
@@ -190,8 +210,9 @@
 						</mat-select>
 					</mat-form-field>
 					<mat-form-field appearance="outline">
-						<input id="addressPostcode" name="addressPostcode" formControlName="addressPostcode" maxlength="6"
-							pattern="[0-9]{1,6}" placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}" matInput>
+						<input id="addressPostcode" name="addressPostcode" formControlName="addressPostcode"
+							maxlength="6" pattern="[0-9]{1,6}"
+							placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}" matInput>
 						<mat-error *ngIf="hasError(form,'pattern', 'addressPostcode')  && formSubmitted"
 							[translate]="'pacientes.form.INVALID'"></mat-error>
 					</mat-form-field>
@@ -234,15 +255,16 @@
 					<span [translate]="'pacientes.form.EMAIL'"></span>
 				</div>
 				<mat-form-field appearance="outline">
-					<input id="email" name="email" formControlName="email" placeholder="usuario@usuario.com" maxlength="100"
-						matInput>
+					<input id="email" name="email" formControlName="email" placeholder="usuario@usuario.com"
+						maxlength="100" matInput>
 					<mat-error *ngIf="hasError(form,'email', 'email')  && formSubmitted"
 						[translate]="'pacientes.form.INVALID'"></mat-error>
 				</mat-form-field>
 
 				<div fxLayout="column">
 					<span [translate]="'pacientes.form.MEDICAL_COVERAGE'"></span>
-					<button mat-stroked-button color="primary" type="button" (click)="openMedicalCoverageDialog()" class="medical-coverage">
+					<button mat-stroked-button color="primary" type="button" (click)="openMedicalCoverageDialog()"
+						class="medical-coverage">
 						<span [translate]="'pacientes.form.UPDATE_MEDICAL_COVERAGE'"></span>
 					</button>
 				</div>
@@ -310,9 +332,10 @@
 						<span [translate]="'pacientes.form.ETHNIC'"></span>
 					</div>
 					<mat-form-field appearance="outline">
-						<mat-select id="ethnicity-select" formControlName="ethnicityId" placeholder="{{'pacientes.form.ETHNIC' | translate}}">
+						<mat-select id="ethnicity-select" formControlName="ethnicityId"
+							placeholder="{{'pacientes.form.ETHNIC' | translate}}">
 							<mat-option *ngFor="let ethnicity of ethnicities" [value]="ethnicity.id">
-									{{ethnicity.pt | titlecase}}
+								{{ethnicity.pt | titlecase}}
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
@@ -322,14 +345,17 @@
 						<span [translate]="'pacientes.form.OCCUPATION'"></span>
 					</div>
 					<mat-form-field appearance="outline">
-						<mat-select id="occupation-select" formControlName="occupationId" placeholder="{{'pacientes.form.OCCUPATION' | translate}}">
-							<mat-option *ngFor="let occupation of occupations" [value]="occupation.id" matTooltip="{{ occupation.description }}">
-									{{occupation.description}}
+						<mat-select id="occupation-select" formControlName="occupationId"
+							placeholder="{{'pacientes.form.OCCUPATION' | translate}}">
+							<mat-option *ngFor="let occupation of occupations" [value]="occupation.id"
+								matTooltip="{{ occupation.description }}">
+								{{occupation.description}}
 							</mat-option>
 
 						</mat-select>
-						<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value" matSuffix color="warn"
-								mat-icon-button (click)="form.controls.occupationId.reset(); $event.stopPropagation()">
+						<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value"
+							matSuffix color="warn" mat-icon-button
+							(click)="form.controls.occupationId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -339,13 +365,16 @@
 						<span [translate]="'pacientes.form.EDUCATION_LEVEL'"></span>
 					</div>
 					<mat-form-field appearance="outline">
-						<mat-select id="educationLevel-select" formControlName="educationLevelId" placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
-							<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id" matTooltip="{{ educationLevel.description }}">
-									{{educationLevel.description}}
+						<mat-select id="educationLevel-select" formControlName="educationLevelId"
+							placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
+							<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id"
+								matTooltip="{{ educationLevel.description }}">
+								{{educationLevel.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear-educationLevel" type="button" mat-button *ngIf="form.controls.educationLevelId.value" matSuffix color="warn"
-								mat-icon-button (click)="form.controls.educationLevelId.reset(); $event.stopPropagation()">
+						<button id="clear-educationLevel" type="button" mat-button
+							*ngIf="form.controls.educationLevelId.value" matSuffix color="warn" mat-icon-button
+							(click)="form.controls.educationLevelId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>

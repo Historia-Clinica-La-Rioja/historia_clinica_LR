@@ -16,13 +16,14 @@
 			"CUIT_CUIL": "CUIT / CUIL",
 			"EMAIL": "Email",
 			"ETHNIC": "Etnia",
-			"OCCUPATION":"Ocupación",
-			"EDUCATION_LEVEL":"Nivel educativo",
+			"OCCUPATION": "Ocupación",
+			"EDUCATION_LEVEL": "Nivel educativo",
 			"FIRST_NAME": "Primer nombre",
 			"FIRST_NAMES_TITLE": "Nombres",
 			"FULL_NAME": "Nombre completo",
 			"GENDER": "Sexo",
-			"GENDER_SELF_DETERMINATION": "Género autopercibido",
+			"GENDER_SELF_DETERMINATION": "Identidad de género",
+			"OTHER_SELF_PERCEIVED_GENDER": "Identidad de género",
 			"GENERAL_PRACTITIONER": "Médico de cabecera",
 			"IDENTIFICATION_TYPE": "Tipo de documento",
 			"IDENTIFICATION_NUMBER": "Nº de documento",
@@ -30,7 +31,7 @@
 			"LAST_NAME": "Primer apellido",
 			"LAST_NAME_TITLE": "Apellidos",
 			"MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
-			"MEDICAL_COVERAGE":"Cobertura médica",
+			"MEDICAL_COVERAGE": "Cobertura médica",
 			"MIDDLE_NAMES": "Otros nombres",
 			"MOTHERS_LAST_NAME": "Apellido materno",
 			"NAME_SELF_DETERMINATION": "Nombre autopercibido",
@@ -53,9 +54,9 @@
 				"BUTTON_SEARCH": "Buscar",
 				"NO_IDENTITY": "No acredita identidad",
 				"TITLE": "Búsqueda / Creación de HC",
-				"scan":{
+				"scan": {
 					"BUTTON_SCAN": "Escanear código",
-					"messages":{
+					"messages": {
 						"ERROR": "El escaneo no pudo completarse correctamente. Intente de nuevo o proceda a una búsqueda manual.",
 						"SUCCESS": "Resultados encontrados."
 					}
@@ -96,10 +97,10 @@
 				"GENDER": "Sexo",
 				"PATIENT_ID": "ID Paciente"
 			},
-			"PATIENT_NOT_FOUND":"Paciente no encontrado",
+			"PATIENT_NOT_FOUND": "Paciente no encontrado",
 			"PROVES_IDENTITY": "Acredita identidad",
-			"PATIENT_ID":"ID Paciente",
-			"scan":{
+			"PATIENT_ID": "ID Paciente",
+			"scan": {
 				"TITLE": "Buscar paciente por escaneo de código de DNI",
 				"ITEM_1": "Disponga de una Lectora de código.",
 				"ITEM_2": "Escanee el código del DNI ubicado en la parte inferior derecha del frente mismo.",

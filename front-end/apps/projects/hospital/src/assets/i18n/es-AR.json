@@ -55,7 +55,8 @@
 		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",
 		"FORMAT_WHITOUT_BLANK_SPACES": "El valor no puede contener espacios en blanco",
 		"YES": "Si",
-		"NO": "No"
+		"NO": "No",
+		"NULL_OPTION_MESSAGE": "Seleccione una opción"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"
