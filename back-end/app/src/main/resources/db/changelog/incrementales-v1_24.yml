@@ -208,3 +208,46 @@ databaseChangeLog:
                 newColumnName:  temporary_o
                 oldColumnName:  temporal_o
                 tableName:  applicable_diagnostic
+                
+    - changeSet:
+        id: self_perceived_gender-createTable
+        comment: Create table self_perceived_gender
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: self_perceived_gender
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_self_perceived_gender
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(25)
+            - column:
+                constraints:
+                    nullable: false
+                name: orden
+                type: smallint
+
+    - changeSet: 
+        id: self_perceived_gender-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (1,'Mujer cis',2);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (2,'Varón cis',5);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (3,'Travesti',1);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (4,'Mujer trans',3);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (5,'No binarie',4);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (6,'Varón trans',6);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (7,'Gay',7);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (8,'Lesbiana',8);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (9,'Género fluido',9);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (10,'Ninguna de las anteriores',10);
+                    
