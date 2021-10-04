@@ -138,6 +138,11 @@ export class NewPatientComponent implements OnInit {
 				this.genders = genders;
 			});
 
+		this.personMasterDataService.getSelfPerceivedGenders()
+			.subscribe(
+				genders => this.selfPerceivedGenders = genders
+			);
+
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
 				this.identificationTypeList = identificationTypes;
@@ -219,7 +224,7 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	private mapToPersonRequest(): APatientDto {
-		return {
+		const patient: APatientDto = {
 			birthDate: this.form.controls.birthDate.value.toDate(),
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
@@ -264,6 +269,11 @@ export class NewPatientComponent implements OnInit {
 
 			}
 		};
+
+		if (patient.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
+			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination ? this.form.value.otherGenderSelfDetermination : null;
+
+		return patient;
 
 	}
 
