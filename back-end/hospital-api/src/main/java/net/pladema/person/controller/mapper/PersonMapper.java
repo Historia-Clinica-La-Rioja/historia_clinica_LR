@@ -80,6 +80,7 @@ public interface PersonMapper {
     @Mapping(target = "occupationId", source = "personExtended.occupationId")
     @Mapping(target = "nameSelfDetermination", source = "personExtended.nameSelfDetermination")
     @Mapping(target = "genderSelfDeterminationId", source = "personExtended.genderSelfDeterminationId")
+    @Mapping(target = "otherGenderSelfDetermination", source = "personExtended.otherGenderSelfDetermination")
     @Mapping(target = "street", source = "address.street")
     @Mapping(target = "number", source = "address.number")
     @Mapping(target = "floor", source = "address.floor")
