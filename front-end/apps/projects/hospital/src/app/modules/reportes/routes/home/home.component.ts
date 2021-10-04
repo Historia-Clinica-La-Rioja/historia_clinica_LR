@@ -11,6 +11,7 @@ import {dateToMoment, newMoment} from '@core/utils/moment.utils';
 import {Moment} from 'moment';
 import {ReportsService} from '@api-rest/services/reports.service';
 import {hasError} from '@core/utils/form.utils';
+import {MIN_DATE} from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-home',
@@ -35,6 +36,8 @@ export class HomeComponent implements OnInit {
 	idSpecialty: number;
 
 	REPORT_TYPES = REPORT_TYPES;
+
+	minDate = MIN_DATE;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,

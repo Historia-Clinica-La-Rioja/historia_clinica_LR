@@ -11,6 +11,7 @@ import { VaccineService } from '@api-rest/services/vaccine.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { scrollIntoError } from '@core/utils/form.utils';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -28,6 +29,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	conditions: VaccineConditionsDto[];
 	private readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 	today: Moment = newMoment();
+	minDate = MIN_DATE;
 
 	// billable form attributes (new vaccine application)
 	billableForm: FormGroup;

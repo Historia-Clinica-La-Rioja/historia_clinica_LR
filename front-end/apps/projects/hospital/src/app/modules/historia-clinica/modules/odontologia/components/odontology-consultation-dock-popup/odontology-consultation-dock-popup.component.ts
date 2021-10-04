@@ -28,6 +28,7 @@ import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnostic
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { take } from 'rxjs/operators';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -56,6 +57,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	errors: string[] = [];
 	public hasError = hasError;
 	public today = newMoment();
+	minDate = MIN_DATE;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,

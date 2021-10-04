@@ -26,7 +26,7 @@
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-									[matDatepicker]="newVaccineDatepicker" formControlName="date" [max]="this.today"
+									[matDatepicker]="newVaccineDatepicker" formControlName="date" [min]=this.minDate [max]="this.today"
 									required>
 								<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
 								<mat-datepicker #newVaccineDatepicker
@@ -177,7 +177,7 @@
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [max]="this.today"
+								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [min]=this.minDate [max]="this.today"
 								required>
 							<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
 							<mat-datepicker #previousVaccineDatepicker

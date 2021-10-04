@@ -27,6 +27,7 @@ import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -55,6 +56,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	public hasError = hasError;
 	severityTypes: any[];
 	criticalityTypes: any[];
+	minDate = MIN_DATE;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,

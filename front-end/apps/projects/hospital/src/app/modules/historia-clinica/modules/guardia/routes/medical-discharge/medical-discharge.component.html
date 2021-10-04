@@ -73,7 +73,7 @@
 							<mat-label translate="guardia.episode.medical_discharge.problems.FECHA_INICIO">
 							</mat-label>
 							<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker"
-								formControlName="fechaInicio" [max]="problemasService.getFechaInicioMax()"
+								formControlName="fechaInicio" [min]="minDate" [max]="problemasService.getFechaInicioMax()"
 								(dateChange)="problemasService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #inicioDatePicker></mat-datepicker>

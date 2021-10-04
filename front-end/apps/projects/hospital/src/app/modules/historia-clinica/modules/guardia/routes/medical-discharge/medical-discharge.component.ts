@@ -19,6 +19,7 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -40,6 +41,8 @@ export class MedicalDischargeComponent implements OnInit {
 	episodeCreatedOn: Moment;
 	formSubmited = false;
 	private episodeId: number;
+
+	minDate = MIN_DATE;
 
 	constructor(
 		private readonly router: Router,

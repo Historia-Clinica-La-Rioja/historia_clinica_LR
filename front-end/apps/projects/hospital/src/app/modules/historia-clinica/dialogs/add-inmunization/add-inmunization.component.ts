@@ -8,6 +8,7 @@ import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-add-inmunization',
@@ -25,6 +26,8 @@ export class AddInmunizationComponent implements OnInit {
 	searching = false;
 	snowstormServiceNotAvailable = false;
 	conceptsResultsTable: TableModel<any>;
+
+	minDate = MIN_DATE;
 
 	constructor(
 		public dialogRef: MatDialogRef<AddInmunizationComponent>,

@@ -10,7 +10,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label>Fecha</mat-label>
 				<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
-					[max]="today">
+					[min]="minDate" [max]="today">
 				<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
 				<mat-datepicker #myDatepicker>
 				</mat-datepicker>

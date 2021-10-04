@@ -25,6 +25,7 @@ import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { Patient, SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -63,6 +64,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 
 	private selectedPatient;
+
+	minDate = MIN_DATE;
 
 	constructor(
 		private readonly dialog: MatDialog,

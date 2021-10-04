@@ -41,7 +41,7 @@
 								<mat-label [translate]="'internaciones.anamnesis.procedimientos.FECHA'">
 								</mat-label>
 								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-									   formControlName="performedDate" [max]="procedimientosService.getFechaMax()">
+									   formControlName="performedDate" [min]="minDate" [max]="procedimientosService.getFechaMax()">
 								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
 								<mat-datepicker #datePicker></mat-datepicker>
 							</mat-form-field>

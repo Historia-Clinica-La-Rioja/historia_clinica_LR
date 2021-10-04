@@ -18,6 +18,7 @@ import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
@@ -33,6 +34,7 @@ export class SearchComponent implements OnInit {
 
 	readonly PERSON_MAX_LENGHT = PERSON;
 
+	minDate = MIN_DATE;
 	today: Moment = newMoment();
 	public formSearchSubmitted = false;
 	public formSearch: FormGroup;

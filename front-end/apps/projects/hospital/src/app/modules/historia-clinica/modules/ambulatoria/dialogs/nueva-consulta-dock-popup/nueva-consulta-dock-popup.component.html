@@ -26,7 +26,7 @@
 		</div>
 
 		<div id="motivo">
-			<app-new-document-section 
+			<app-new-document-section
 								  sectionTitle="ambulatoria.paciente.nueva-consulta.motivo.TITLE"
 	                        	  sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 
@@ -117,7 +117,7 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'">
 							</mat-label>
 							<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker"
-								   formControlName="fechaInicio" [max]="problemasService.getFechaInicioMax()"
+								   formControlName="fechaInicio" [min]="minDate" [max]="problemasService.getFechaInicioMax()"
 								   (dateChange)="problemasService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #inicioDatePicker></mat-datepicker>
@@ -135,7 +135,7 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
 							</mat-label>
 							<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-								   [max]="today" (dateChange)="problemasService.checkValidFechaFin()">
+								   [min]="minDate" [max]="today" (dateChange)="problemasService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #finDatePicker></mat-datepicker>
 							<mat-error *ngIf="problemasService.hasError('min', 'fechaFin')"
@@ -246,7 +246,7 @@
 								</mat-label>
 								<input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker"
 									   formControlName="fecha"
-									   [max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
+									   [min]="minDate" [max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
 								<mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #antecedenteDatePicker></mat-datepicker>
 							</mat-form-field>
@@ -275,7 +275,7 @@
 				<div concept-form>
 					<app-concepts-search
 					    *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm"
-						
+
 						label="ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL"
 						(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
 					</app-concepts-search>
@@ -355,7 +355,7 @@
 								</mat-label>
 								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
 									   formControlName="performedDate"
-									   [max]="procedimientoNuevaConsultaService.getFechaMax()">
+									   [min]="minDate" [max]="procedimientoNuevaConsultaService.getFechaMax()">
 								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
 								<mat-datepicker #datePicker></mat-datepicker>
 							</mat-form-field>
@@ -497,7 +497,7 @@
 
 		<div id="alergias">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.alergias.TITLE">
-				<ng-container concept-form> 
+				<ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
 						[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
