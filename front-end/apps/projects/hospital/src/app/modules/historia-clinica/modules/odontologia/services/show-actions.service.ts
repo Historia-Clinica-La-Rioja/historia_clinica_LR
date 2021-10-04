@@ -36,15 +36,24 @@ export class ShowActionsService {
 	public setIsNotPreviousProcedureSet(isNotPreviousProcedure: boolean): void {
 		this.isNotPreviousProcedureSet = isNotPreviousProcedure;
 	}
+	
 
-	public showProcedures(order: ProcedureOrder): void {
+	public showProcedures(order: ProcedureOrder, isANewProcedure: boolean): void {
 		if (order === ProcedureOrder.SECOND) {
-			this.secondProcedure = true;
-			this.thirdProcedure = true;
-		}
-		else {
-			if (order === ProcedureOrder.FIRST) {
+			if (isANewProcedure){
 				this.secondProcedure = true;
+				this.thirdProcedure = true;
+			}
+			else{
+				this.thirdProcedure = false;
+			}
+		}
+		if (order === ProcedureOrder.FIRST) {
+			if (isANewProcedure){
+				this.secondProcedure = true;
+			}
+			else {
+				this.secondProcedure = false;
 			}
 		}
 	}

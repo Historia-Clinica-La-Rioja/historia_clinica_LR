@@ -67,7 +67,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	thirdProcedureId: string;
 	initValueTypeaheadThirdProcedure: TypeaheadOption<OdontologyConceptDto> = null;
 
-	countProceduresAdded= -1;
+	lastProcedureAdded = -1;
 
 	showActionsService;
 
@@ -106,19 +106,19 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 				const firstProcedureId = onlyProcedures?.find(first => first.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid;
 				if (firstProcedureId) {
 					this.setTypeaheadProcedures(firstProcedureId, ProcedureOrder.FIRST);
-					this.countProceduresAdded = 0;
+					this.lastProcedureAdded = 0;
 				}
 				const secondProcedureId = onlyProcedures?.find(second => second.wholeProcedureOrder === ProcedureOrder.SECOND)?.action.sctid;
 				if (secondProcedureId) {
 					this.setTypeaheadProcedures(secondProcedureId, ProcedureOrder.SECOND);
-					this.countProceduresAdded = 1;
+					this.lastProcedureAdded = 1;
 				}
 				const thirdProcedureId = onlyProcedures?.find(third => third.wholeProcedureOrder === ProcedureOrder.THIRD)?.action.sctid;
 				if (thirdProcedureId) {
 					this.setTypeaheadProcedures(thirdProcedureId, ProcedureOrder.THIRD);
-					this.countProceduresAdded = 2;
+					this.lastProcedureAdded = 2;
 				}
-				this.showActionsService = new ShowActionsService(secondProcedureId, thirdProcedureId, this.countProceduresAdded);
+				this.showActionsService = new ShowActionsService(secondProcedureId, thirdProcedureId, this.lastProcedureAdded);
 			}
 		);
 
@@ -216,7 +216,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.setTypeaheadCurrentFinding(hallazgo.snomed.sctid);
 		}
 		else {
-			if (this.initValueTypeaheadDiagnostics?.compareValue){
+			if (this.initValueTypeaheadDiagnostics?.compareValue) {
 				this.reorganizeAndDeleteActions(this.initValueTypeaheadDiagnostics, ActionType.DIAGNOSTIC, undefined);
 			}
 		}
@@ -227,14 +227,18 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.firstProcedureId = firstProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(firstProcedure.snomed.sctid, ProcedureOrder.FIRST);
 			if (!this.selectedSurfaces.length) {
-				this.countProceduresAdded= 0;
-				this.showActionsService.setIsNotPreviousProcedureSet(false);
+				this.lastProcedureAdded = 0;
+				if (this.showActionsService.getThirdProcedure) {
+					this.showActionsService.setIsNotPreviousProcedureSet(false);
+				}
+				else {
+					this.showActionsService.setIsNotPreviousProcedureSet(true);
+				}
 			}
 		}
 		else {
-			if (this.initValueTypeaheadFirstProcedure?.compareValue){
+			if (this.initValueTypeaheadFirstProcedure?.compareValue) {
 				this.reorganizeAndDeleteActions(this.initValueTypeaheadFirstProcedure, ActionType.PROCEDURE, ProcedureOrder.FIRST);
-				this.countProceduresAdded= -1;
 			}
 		}
 	}
@@ -243,13 +247,12 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (secondProcedure) {
 			this.secondProcedureId = secondProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(secondProcedure.snomed.sctid, ProcedureOrder.SECOND);
-			this.countProceduresAdded= 1;
-			this.showActionsService.setIsNotPreviousProcedureSet(false);
+			this.lastProcedureAdded = 1;
+			this.showActionsService.getThirdProcedure ?	this.showActionsService.setIsNotPreviousProcedureSet(false) : this.showActionsService.setIsNotPreviousProcedureSet(true);
 		}
 		else {
-			if(this.initValueTypeaheadSecondProcedure?.compareValue) {
+			if (this.initValueTypeaheadSecondProcedure?.compareValue) {
 				this.reorganizeAndDeleteActions(this.initValueTypeaheadSecondProcedure, ActionType.PROCEDURE, ProcedureOrder.SECOND);
-				this.countProceduresAdded= 0;
 			}
 		}
 	}
@@ -258,12 +261,11 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		if (thirdProcedure) {
 			this.thirdProcedureId = thirdProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(thirdProcedure.snomed.sctid, ProcedureOrder.THIRD);
-			this.countProceduresAdded= 2;
+			this.lastProcedureAdded = 2;
 		}
 		else {
 			if (this.initValueTypeaheadThirdProcedure?.compareValue) {
 				this.reorganizeAndDeleteActions(this.initValueTypeaheadThirdProcedure, ActionType.PROCEDURE, ProcedureOrder.THIRD);
-				this.countProceduresAdded= 1;
 			}
 		}
 	}
@@ -276,7 +278,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.newHallazgoId = undefined;
 			this.initValueTypeaheadDiagnostics = null;
 		}
-		if (actions?.procedures.firstProcedureId){
+		if (actions?.procedures.firstProcedureId) {
 			this.setTypeaheadProcedures(actions.procedures.firstProcedureId, ProcedureOrder.FIRST);
 		}
 		if (actions?.procedures.secondProcedureId) {
@@ -296,11 +298,12 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	private reorganizeAndDeleteActions(elementToDelete: TypeaheadOption<OdontologyConceptDto>, actionType: ActionType, order: ProcedureOrder){
+	private reorganizeAndDeleteActions(elementToDelete: TypeaheadOption<OdontologyConceptDto>, actionType: ActionType, order: ProcedureOrder) {
 		this.toothComponent.deleteAction(elementToDelete?.value?.snomed.sctid, this.selectedSurfaces, actionType, order);
 		switch (order) {
 			case ProcedureOrder.FIRST:
 				this.initValueTypeaheadFirstProcedure = null;
+				this.lastProcedureAdded = -1;
 				if (this.initValueTypeaheadSecondProcedure?.compareValue) {
 					this.organizeTypeaheadProcedures(ProcedureOrder.SECOND);
 					this.initValueTypeaheadSecondProcedure = null;
@@ -309,19 +312,24 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 					this.organizeTypeaheadProcedures(ProcedureOrder.THIRD);
 					this.initValueTypeaheadThirdProcedure = null;
 				}
-				this.showActionsService.setIsNotPreviousProcedureSet(true);
+				this.showActionsService.showProcedures(this.lastProcedureAdded, false);
+				(this.initValueTypeaheadFirstProcedure?.compareValue) ? this.showActionsService.setIsNotPreviousProcedureSet(false) : this.showActionsService.setIsNotPreviousProcedureSet(true);
 				break;
 			case ProcedureOrder.SECOND:
 				this.initValueTypeaheadSecondProcedure = null;
+				this.lastProcedureAdded = 0;
 				if (this.initValueTypeaheadThirdProcedure?.compareValue) {
 					this.organizeTypeaheadProcedures(ProcedureOrder.THIRD);
 					this.initValueTypeaheadThirdProcedure = null;
 				}
-				this.showActionsService.setIsNotPreviousProcedureSet(true);
+				this.showActionsService.showProcedures(this.lastProcedureAdded, false);
+				this.showActionsService.setIsNotPreviousProcedureSet(false);
 				break;
 			case ProcedureOrder.THIRD:
 				this.initValueTypeaheadThirdProcedure = null;
-				this.showActionsService.setIsNotPreviousProcedureSet(true);
+				this.lastProcedureAdded = 1;
+				this.showActionsService.setIsNotPreviousProcedureSet(false);
+				this.showActionsService.showProcedures(this.lastProcedureAdded, false);
 				break;
 			default:
 				this.initValueTypeaheadDiagnostics = null;
@@ -353,22 +361,24 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	}
 
 	public addTypeaheadProcedure() {
-		this.showActionsService.showProcedures(this.countProceduresAdded);
+		this.showActionsService.showProcedures(this.lastProcedureAdded, true);
 		this.showActionsService.setIsNotPreviousProcedureSet(true);
 	}
 
-	private organizeTypeaheadProcedures(order){
-		if (order === ProcedureOrder.SECOND){
+	private organizeTypeaheadProcedures(order) {
+		if (order === ProcedureOrder.SECOND) {
 			this.initValueTypeaheadFirstProcedure = this.initValueTypeaheadSecondProcedure;
 			this.toothComponent.deleteAction(this.initValueTypeaheadSecondProcedure.value?.snomed.sctid, this.selectedSurfaces, ActionType.PROCEDURE, ProcedureOrder.SECOND);
 			this.firstProcedureId = this.secondProcedureId;
 			this.secondProcedureId = null;
+			this.lastProcedureAdded = 0;
 		}
-		if (order === ProcedureOrder.THIRD){
+		if (order === ProcedureOrder.THIRD) {
 			this.initValueTypeaheadSecondProcedure = this.initValueTypeaheadThirdProcedure;
 			this.toothComponent.deleteAction(this.initValueTypeaheadThirdProcedure.value?.snomed.sctid, this.selectedSurfaces, ActionType.PROCEDURE, ProcedureOrder.THIRD);
 			this.secondProcedureId = this.thirdProcedureId;
 			this.thirdProcedureId = null;
+			this.lastProcedureAdded = 1;
 		}
 	}
 
