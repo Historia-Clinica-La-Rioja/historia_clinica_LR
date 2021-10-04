@@ -105,11 +105,11 @@ public class FhirClientR4 {
         try {
             return busClient.getDocumentReference(subject, custodian, type);
         }
-        catch(ResourceNotFoundException ex){
-            return null;
-        }
         catch(InvalidRequestException ex){
             throw new InvalidRequestException(ex.getMessage());
+        }
+        catch(InternalErrorException ex){
+            return null;
         }
     }
 }
