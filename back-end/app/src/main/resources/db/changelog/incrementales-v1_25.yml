@@ -1,6 +1,31 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_25 
     
+    - changeSet:
+        id: self_perceived_gender-createTable
+        comment: Create table self_perceived_gender
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: self_perceived_gender
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_self_perceived_gender
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(25)
+            - column:
+                constraints:
+                    nullable: false
+                name: orden
+                type: smallint
+    
     - changeSet: 
         id: self_perceived_gender-metadata
         author: lbergottini
@@ -29,6 +54,30 @@ databaseChangeLog:
             - column:
                 name: other_gender_self_determination
                 type: varchar(40)
+                
+    - changeSet:
+        id: dropFK-person_extended-gender_self_determination
+        comment: drop FK constraint from person_extended table
+        author: lbergottini
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: person_extended
+            constraintName: FK_person_extended_gender_id
+            
+    - changeSet:
+        id: fk_person_extended-gender_self_determination-gender_id
+        comment: add FK constraint in person_extended table to change DM values
+        author: lbergottini
+        changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: gender_self_determination
+            baseTableName: person_extended
+            constraintName: FK_person_extended_gender_self_determination_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: self_perceived_gender
+            validate: true
 
     - changeSet:
         id: odontology_consultation_indices-createTable

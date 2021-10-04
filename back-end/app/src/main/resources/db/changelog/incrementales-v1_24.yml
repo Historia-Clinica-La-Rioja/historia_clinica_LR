@@ -208,28 +208,3 @@ databaseChangeLog:
                 newColumnName:  temporary_o
                 oldColumnName:  temporal_o
                 tableName:  applicable_diagnostic
-                
-    - changeSet:
-        id: self_perceived_gender-createTable
-        comment: Create table self_perceived_gender
-        author: lbergottini
-        changes: 
-        - createTable: 
-            tableName: self_perceived_gender
-            columns: 
-            - column:
-                constraints:
-                    primaryKey: true
-                    primaryKeyName: PK_self_perceived_gender
-                name: id
-                type: smallint
-            - column:
-                constraints:
-                    nullable: false
-                name: description
-                type: varchar(25)
-            - column:
-                constraints:
-                    nullable: false
-                name: orden
-                type: smallint
