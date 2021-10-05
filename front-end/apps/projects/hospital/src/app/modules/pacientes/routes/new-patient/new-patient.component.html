@@ -127,6 +127,10 @@
 								{{ gender.description }}
 							</mat-option>
 						</mat-select>
+						<button *ngIf="form.value.genderSelfDeterminationId" type="button" matSuffix color="warn"
+							mat-icon-button (click)="clearGenderSelfDetermination(); $event.stopPropagation();">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 					<ng-container *ngIf="show">
 						<mat-form-field appearance="outline">

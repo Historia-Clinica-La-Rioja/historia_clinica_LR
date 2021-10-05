@@ -409,4 +409,9 @@ export class EditPatientComponent implements OnInit {
 			this.form.get('otherGenderSelfDetermination').disable();
 	}
 
+	public clearGenderSelfDetermination(): void {
+		this.form.controls.genderSelfDeterminationId.reset();
+		this.showOtherSelfPerceivedGender();
+	}
+
 }
