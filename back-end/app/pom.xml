@@ -43,6 +43,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>nursing</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.pladema</groupId>
             <artifactId>hospital-api</artifactId>
             <version>${revision}</version>
