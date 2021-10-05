@@ -74,6 +74,8 @@
 					<mat-error *ngIf="hasError(formSearchById, 'required', 'id')">
 						<span translate="forms.REQUIRED"></span>
 					</mat-error>
+					<mat-error *ngIf="hasError(formSearchById, 'min', 'id')" [translate]="'forms.MIN_ERROR'"
+							   [translateParams]="{min: getError(formSearchById, 'min', 'id').min}"></mat-error>
 				</mat-form-field>
 				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="5px">
 					<button mat-stroked-button color="primary" type="reset" (click)="clearResults()" class="uppercase"

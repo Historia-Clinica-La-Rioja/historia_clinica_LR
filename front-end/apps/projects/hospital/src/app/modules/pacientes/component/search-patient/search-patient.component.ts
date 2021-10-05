@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BasicPatientDto, GenderDto, IdentificationTypeDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { hasError, VALIDATIONS } from '@core/utils/form.utils';
+import {getError, hasError, VALIDATIONS } from '@core/utils/form.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -27,7 +27,9 @@ export class SearchPatientComponent implements OnInit {
 		photo: PersonPhotoDto
 	};
 	foundPatient: Patient;
+	readonly MIN_VALUE = 0;
 	hasError = hasError;
+	getError = getError;
 	isFormSubmitted = false;
 	constructor(
 		private dialogRef: MatDialogRef<SearchPatientComponent>,
@@ -49,7 +51,7 @@ export class SearchPatientComponent implements OnInit {
 		});
 
 		this.formSearchById = this.formBuilder.group({
-			id: [null, Validators.required]
+			id: [null, [Validators.min(this.MIN_VALUE) , Validators.required]]
 		});
 	}
 
