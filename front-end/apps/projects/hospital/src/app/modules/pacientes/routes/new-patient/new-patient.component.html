@@ -130,9 +130,9 @@
 					</mat-form-field>
 					<ng-container *ngIf="show">
 						<mat-form-field appearance="outline">
-							<mat-label [translate]="'pacientes.form.OTHER_SELF_PERCEIVED_GENDER'"></mat-label>
-							<input matInput formControlName="otherGenderSelfDetermination"
-								maxlength="GENDER_MAX_LENGTH">
+							<input matInput maxlength="GENDER_MAX_LENGTH" required
+								formControlName="otherGenderSelfDetermination"
+								placeholder="{{ 'pacientes.form.OTHER_SELF_PERCEIVED_GENDER_LABEL' | translate }}">
 							<mat-error [translate]="'forms.MAX_LENGTH_ERROR'"
 								[translateParams]="{ max: GENDER_MAX_LENGTH }"></mat-error>
 						</mat-form-field>

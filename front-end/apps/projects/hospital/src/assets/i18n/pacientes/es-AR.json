@@ -23,7 +23,7 @@
 			"FULL_NAME": "Nombre completo",
 			"GENDER": "Sexo",
 			"GENDER_SELF_DETERMINATION": "Identidad de género",
-			"OTHER_SELF_PERCEIVED_GENDER": "Identidad de género",
+			"OTHER_SELF_PERCEIVED_GENDER_LABEL": "Especifique cuál",
 			"GENERAL_PRACTITIONER": "Médico de cabecera",
 			"IDENTIFICATION_TYPE": "Tipo de documento",
 			"IDENTIFICATION_NUMBER": "Nº de documento",
