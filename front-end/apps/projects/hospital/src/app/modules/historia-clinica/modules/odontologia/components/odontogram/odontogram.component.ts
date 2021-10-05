@@ -70,7 +70,7 @@ export class OdontogramComponent implements OnInit {
 				)
 			});
 
-		this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId)
+		this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
 	}
 
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
@@ -103,6 +103,7 @@ export class OdontogramComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
 				this.setActionsAsRecords();
+				this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
 			}
 		})
 	}
