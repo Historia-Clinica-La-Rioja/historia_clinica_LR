@@ -88,7 +88,9 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			evolution: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-			clinicalSpecialty: []
+			clinicalSpecialty: [],
+			permanentTeethPresent: [null, [Validators.maxLength(2), Validators.pattern('^[0-9]+$')]],
+			temporaryTeethPresent: [null, [Validators.maxLength(2), Validators.pattern('^[0-9]+$')]],
 		});
 
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(clinicalSpecialties => {

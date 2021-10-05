@@ -75,9 +75,9 @@
 							(ngSubmit)="otherProceduresService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label> Tipo de procedimiento </mat-label>
-								<input id="input_procedure" matInput type="text" formControlName="snomed"
-									name="snomed" readonly
-									matTooltip="{{otherProceduresService.getSnomedConcept().pt }}">
+								<input id="input_procedure" matInput type="text" formControlName="snomed" 
+								name="snomed" readonly 
+								matTooltip="{{otherProceduresService.getSnomedConcept().pt }}">
 								<button id="clear_procedure" mat-button matSuffix color="warn" mat-icon-button
 									(click)="otherProceduresService.resetForm()">
 									<mat-icon>close</mat-icon>
@@ -407,6 +407,26 @@
 				<app-no-data class="secondary" *ngIf="proceduresNewConsultationService.tableData.length === 0">
 				</app-no-data>
 			</section>
+		</div>
+
+		<div id="dental_pieces">
+			<h2 class="mat-h2">Cantidad de piezas presentes</h2>
+			<form [formGroup]="form">
+				<div class="form_dental_pieces" fxLayout="row">
+					<div fxLayout="column" style="width: 50%">
+						<span>Presentes permanentes:</span>
+						<mat-form-field appearance="outline">
+							<input placeholder="Sin información" formControlName="permanentTeethPresent" matInput>
+						</mat-form-field>
+					</div>
+					<div fxLayout="column" style="width: 50%">
+						<span>Presentes temporales:</span>
+						<mat-form-field appearance="outline">
+							<input placeholder="Sin información" formControlName="temporaryTeethPresent" matInput>
+						</mat-form-field>
+					</div>
+				</div>
+			</form>
 		</div>
 
 		<div id="evolution">
