@@ -278,3 +278,18 @@ databaseChangeLog:
           - dropColumn:
               columnName: person_id
               tableName: users
+
+    - changeSet:
+        id: createView-v_hospital_users-postgresql
+        author: etrapani
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_hospital_users
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id
+                FROM users u
+                LEFT JOIN user_person as up ON (u.id = up.user_id)
