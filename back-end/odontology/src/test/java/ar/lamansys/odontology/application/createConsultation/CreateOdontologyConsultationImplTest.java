@@ -509,16 +509,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenThereAreRepeatedReasons() {
-        Integer clinicalSpecialtyId = 255;
-        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
-        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
-        when(odontologyDoctorStorage.getDoctorInfo())
-                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
-
-        ConsultationBo consultation = new ConsultationBo();
-        consultation.setInstitutionId(1);
-        consultation.setPatientId(1);
-        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationReasonBo> reasons = new ArrayList<>();
 
@@ -546,16 +537,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenThereAreRepeatedPersonalHistories() {
-        Integer clinicalSpecialtyId = 255;
-        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
-        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
-        when(odontologyDoctorStorage.getDoctorInfo())
-                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
-
-        ConsultationBo consultation = new ConsultationBo();
-        consultation.setInstitutionId(1);
-        consultation.setPatientId(1);
-        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
 
@@ -583,16 +565,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenThereAreRepeatedAllergies() {
-        Integer clinicalSpecialtyId = 255;
-        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
-        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
-        when(odontologyDoctorStorage.getDoctorInfo())
-                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
-
-        ConsultationBo consultation = new ConsultationBo();
-        consultation.setInstitutionId(1);
-        consultation.setPatientId(1);
-        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationAllergyBo> allergies = new ArrayList<>();
 
@@ -620,16 +593,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenThereAreRepeatedDiagnostics() {
-        Integer clinicalSpecialtyId = 255;
-        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
-        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
-        when(odontologyDoctorStorage.getDoctorInfo())
-                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
-
-        ConsultationBo consultation = new ConsultationBo();
-        consultation.setInstitutionId(1);
-        consultation.setPatientId(1);
-        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationDiagnosticBo> diagnostics = new ArrayList<>();
 
@@ -657,16 +621,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenThereAreRepeatedProcedures() {
-        Integer clinicalSpecialtyId = 255;
-        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
-        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
-        when(odontologyDoctorStorage.getDoctorInfo())
-                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
-
-        ConsultationBo consultation = new ConsultationBo();
-        consultation.setInstitutionId(1);
-        consultation.setPatientId(1);
-        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationProcedureBo> procedures = new ArrayList<>();
 
@@ -694,16 +649,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenThereAreRepeatedMedications() {
-        Integer clinicalSpecialtyId = 255;
-        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
-        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
-        when(odontologyDoctorStorage.getDoctorInfo())
-                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
-
-        ConsultationBo consultation = new ConsultationBo();
-        consultation.setInstitutionId(1);
-        consultation.setPatientId(1);
-        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationMedicationBo> medications = new ArrayList<>();
 
@@ -731,16 +677,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenThereAreMultipleTypesOfRepeatedConcepts() {
-        Integer clinicalSpecialtyId = 255;
-        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
-        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
-        when(odontologyDoctorStorage.getDoctorInfo())
-                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
-
-        ConsultationBo consultation = new ConsultationBo();
-        consultation.setInstitutionId(1);
-        consultation.setPatientId(1);
-        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationMedicationBo> medications = new ArrayList<>();
         ConsultationMedicationBo medication1 = new ConsultationMedicationBo();
@@ -802,6 +739,80 @@ class CreateOdontologyConsultationImplTest {
         assertTrue(exception.getMessages().containsAll(List.of("Medicaciones repetidas",
                 "Antecedentes personales repetidos", "Alergias repetidas", "Motivos repetidos",
                 "Procedimientos repetidos", "Diagnósticos repetidos")));
+    }
+
+    @Test
+    void shouldThrowErrorsWhenPermanentTeethQuantityIsNegative() {
+        ConsultationBo consultation = mockBasicConsultation();
+
+        consultation.setPermanentTeethPresent(-1);
+        consultation.setTemporaryTeethPresent(15);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "La cantidad de dientes permanentes presentes debe estar entre 0 y 99";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorsWhenPermanentTeethQuantityIsMoreThan99() {
+        ConsultationBo consultation = mockBasicConsultation();
+
+        consultation.setPermanentTeethPresent(100);
+        consultation.setTemporaryTeethPresent(15);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "La cantidad de dientes permanentes presentes debe estar entre 0 y 99";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorsWhenTemporaryTeethQuantityIsNegative() {
+        ConsultationBo consultation = mockBasicConsultation();
+
+        consultation.setPermanentTeethPresent(28);
+        consultation.setTemporaryTeethPresent(-1);
+
+        CreateConsultationException exception3 = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "La cantidad de dientes temporarios presentes debe estar entre 0 y 99";
+        List<String> actualMessages = exception3.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    @Test
+    void shouldThrowErrorsWhenTemporaryTeethQuantityIsMoreThan99() {
+        ConsultationBo consultation = mockBasicConsultation();
+
+        consultation.setPermanentTeethPresent(28);
+        consultation.setTemporaryTeethPresent(100);
+
+        CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
+                createOdontologyConsultation.run(consultation));
+
+        String expectedMessage = "La cantidad de dientes temporarios presentes debe estar entre 0 y 99";
+        List<String> actualMessages = exception.getMessages();
+        Assertions.assertTrue(actualMessages.contains(expectedMessage));
+    }
+
+    private ConsultationBo mockBasicConsultation() {
+        Integer clinicalSpecialtyId = 255;
+        List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+        clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
+        when(odontologyDoctorStorage.getDoctorInfo())
+                .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
+
+        ConsultationBo consultation = new ConsultationBo();
+        consultation.setInstitutionId(1);
+        consultation.setPatientId(1);
+        consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
+        return consultation;
     }
 
 }

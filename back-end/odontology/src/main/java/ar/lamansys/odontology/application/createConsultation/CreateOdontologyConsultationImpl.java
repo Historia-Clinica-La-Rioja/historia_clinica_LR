@@ -38,6 +38,11 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private static final Logger LOG = LoggerFactory.getLogger(CreateOdontologyConsultationImpl.class);
 
+    private static final Integer MIN_PERMANENT_TEETH = 0;
+    private static final Integer MAX_PERMANENT_TEETH = 99;
+    private static final Integer MIN_TEMPORARY_TEETH = 0;
+    private static final Integer MAX_TEMPORARY_TEETH = 99;
+
     private final DiagnosticStorage diagnosticStorage;
 
     private final ProcedureStorage proceduresStorage;
@@ -94,6 +99,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
                 new CreateConsultationException(CreateConsultationExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es inválido"));
 
         assertContextValid(consultationBo, doctorInfoBo);
+        assertTeethQuantityValid(consultationBo);
 
         setCpoCeoIndicesInDentalActions(consultationBo);
         setSurfaceSctids(consultationBo);
@@ -155,6 +161,22 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         if (!doctorInfoBo.hasSpecialty(consultationBo.getClinicalSpecialtyId()))
             throw new CreateConsultationException(CreateConsultationExceptionEnum.INVALID_CLINICAL_SPECIALTY_ID, "El doctor no posee la especialidad indicada");
         assertThereAreNoRepeatedConcepts(consultationBo);
+    }
+
+    private void assertTeethQuantityValid(ConsultationBo consultationBo) {
+        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+        Integer permanentTeethPresent = consultationBo.getPermanentTeethPresent();
+        if (permanentTeethPresent != null &&
+                ((permanentTeethPresent < MIN_PERMANENT_TEETH) || (permanentTeethPresent > MAX_PERMANENT_TEETH))) {
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.WRONG_TEETH_QUANTITY,
+                    String.format("La cantidad de dientes permanentes presentes debe estar entre %d y %d", MIN_PERMANENT_TEETH, MAX_PERMANENT_TEETH));
+        }
+
+        Integer temporaryTeethPresent = consultationBo.getTemporaryTeethPresent();
+        if (temporaryTeethPresent != null &&
+                ((temporaryTeethPresent < MIN_TEMPORARY_TEETH) || (temporaryTeethPresent > MAX_TEMPORARY_TEETH)))
+            throw new CreateConsultationException(CreateConsultationExceptionEnum.WRONG_TEETH_QUANTITY,
+                    String.format("La cantidad de dientes temporarios presentes debe estar entre %d y %d", MIN_TEMPORARY_TEETH, MAX_TEMPORARY_TEETH));
     }
 
     private void setCpoCeoIndicesInDentalActions(ConsultationBo consultationBo) {
