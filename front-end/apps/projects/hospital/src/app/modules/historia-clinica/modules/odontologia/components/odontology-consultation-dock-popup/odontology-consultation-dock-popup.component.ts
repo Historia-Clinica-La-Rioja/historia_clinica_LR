@@ -126,19 +126,24 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 
 	save() {
-		combineLatest([this.conceptsFacadeService.getProcedures$(), this.conceptsFacadeService.getDiagnostics$()]).pipe(take(1))
-			.subscribe(([procedures, diagnostics]) => {
-				const allConcepts = diagnostics.concat(procedures);
-				const odontologyDto: OdontologyConsultationDto = this.buildConsultationDto(allConcepts);
-				const suggestedFieldsService = new ConsultationSuggestedFieldsService(odontologyDto);
+		if (this.form.valid) {
+			combineLatest([this.conceptsFacadeService.getProcedures$(), this.conceptsFacadeService.getDiagnostics$()]).pipe(take(1))
+				.subscribe(([procedures, diagnostics]) => {
+					const allConcepts = diagnostics.concat(procedures);
+					const odontologyDto: OdontologyConsultationDto = this.buildConsultationDto(allConcepts);
+					const suggestedFieldsService = new ConsultationSuggestedFieldsService(odontologyDto);
 
-				if (!suggestedFieldsService.nonCompletedFields.length) {
-					this.createConsultation(odontologyDto);
-				}
-				else {
-					this.openDialog(suggestedFieldsService.nonCompletedFields, suggestedFieldsService.presentFields, odontologyDto);
-				}
-			})
+					if (!suggestedFieldsService.nonCompletedFields.length) {
+						this.createConsultation(odontologyDto);
+					}
+					else {
+						this.openDialog(suggestedFieldsService.nonCompletedFields, suggestedFieldsService.presentFields, odontologyDto);
+					}
+				})
+		}
+		else {
+			this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
+		}
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {
@@ -180,6 +185,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			clinicalSpecialtyId: this.form.value.clinicalSpecialty,
 			dentalActions,
 			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentesPersonales().map(toOdontologyPersonalHistoryDto),
+			permanentTeethPresent: this.form.value.permanentTeethPresent,
+			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 		};
 	}
 
