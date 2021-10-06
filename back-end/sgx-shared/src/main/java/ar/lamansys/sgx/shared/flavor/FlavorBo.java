@@ -4,7 +4,6 @@ import java.util.Optional;
 
 public enum FlavorBo {
 
-    CHACO("chaco"),
     PBA("pba"),
     HOSPITALES("minsal");
 

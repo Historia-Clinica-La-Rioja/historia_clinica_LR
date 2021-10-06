@@ -4,17 +4,16 @@ import { PublicService } from '@api-rest/services/public.service';
 import { map } from 'rxjs/operators';
 import { AppFeature } from '@api-rest/api-model';
 
-const FLAVOR_CHACO = 'chaco';
 const FLAVOR_HOSPITALES = 'minsal';
 const FLAVOR_PBA = 'pba';
 const FEATURE_FLAGS = [
 	{
 		name: 'agregarContactoResponsable',
-		flavorMatch: [FLAVOR_CHACO]
+		flavorMatch: []
 	},
 	{
 		name: 'agregarMedicosAdicionales',
-		flavorMatch: [FLAVOR_CHACO]
+		flavorMatch: []
 	},
 	{
 		name: 'habilitarServicioRenaper',
