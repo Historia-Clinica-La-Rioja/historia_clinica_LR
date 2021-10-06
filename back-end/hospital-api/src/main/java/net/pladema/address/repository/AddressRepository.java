@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Integer> {
@@ -18,4 +19,13 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
             "FROM Address a LEFT JOIN City c ON (a.cityId = c.id) " +
             "WHERE a.id IN :addressIds")
     List<AddressVo> findByIds(@Param("addressIds") List<Integer> addressIds);
+
+    @Query("SELECT a " +
+            "FROM Address a " +
+            "WHERE a.street LIKE :street " +
+            "AND a.number LIKE :number " +
+            "AND a.cityId = :cityId " +
+            "AND a.postcode LIKE :postcode")
+    Optional<Address> findAddress(@Param("street") String street, @Param("number") String number,
+                                  @Param("cityId") Integer cityId, @Param("postcode") String postcode);
 }
