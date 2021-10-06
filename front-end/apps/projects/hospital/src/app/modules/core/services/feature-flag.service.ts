@@ -4,18 +4,17 @@ import { PublicService } from '@api-rest/services/public.service';
 import { map } from 'rxjs/operators';
 import { AppFeature } from '@api-rest/api-model';
 
-const FLAVOR_TANDIL = 'tandil';
 const FLAVOR_CHACO = 'chaco';
 const FLAVOR_HOSPITALES = 'minsal';
 const FLAVOR_PBA = 'pba';
 const FEATURE_FLAGS = [
 	{
 		name: 'agregarContactoResponsable',
-		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
+		flavorMatch: [FLAVOR_CHACO]
 	},
 	{
 		name: 'agregarMedicosAdicionales',
-		flavorMatch: [FLAVOR_TANDIL, FLAVOR_CHACO]
+		flavorMatch: [FLAVOR_CHACO]
 	},
 	{
 		name: 'habilitarServicioRenaper',
@@ -31,7 +30,7 @@ const FEATURE_FLAGS = [
 	},
 	{
 		name: 'habilitarBotonCovidDiagnosticoPresuntivo',
-		flavorMatch: [FLAVOR_TANDIL]
+		flavorMatch: []
 	},
 	{
 		name: 'habilitarToggleFiltroDiagnosticoPrincipal',
