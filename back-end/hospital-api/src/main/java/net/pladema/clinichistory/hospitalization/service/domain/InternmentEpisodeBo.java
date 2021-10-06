@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
-import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 import java.io.Serializable;
 

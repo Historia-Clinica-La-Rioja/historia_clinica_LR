@@ -15,45 +15,45 @@
 			"es2018",
 			"dom"
 		],
-    "paths": {
-      "@environments/*": [
-        "projects/hospital/src/environments/*"
-      ],
-      "@core/*": [
-        "projects/hospital/src/app/modules/core/*"
-      ],
-      "@api-rest/*": [
-        "projects/hospital/src/app/modules/api-rest/*"
-      ],
-      "@presentation/*": [
-        "projects/hospital/src/app/modules/presentation/*"
-      ],
-      "@historia-clinica/*": [
-        "projects/hospital/src/app/modules/historia-clinica/*"
-      ],
-      "@institucion/*": [
-        "projects/hospital/src/app/modules/institucion/*"
-      ],
-      "@pacientes/*": [
-        "projects/hospital/src/app/modules/pacientes/*"
-      ],
-      "@camas/*": [
-        "projects/hospital/src/app/modules/camas/*"
-      ],
-      "@material/*": [
-        "projects/hospital/src/app/modules/material/*"
-      ],
-      "@turnos/*": [
-        "projects/hospital/src/app/modules/turnos/*"
-      ],
-	  "@extensions/*": [
-        "projects/hospital/src/app/modules/extensions/*"
-      ],
-      "odontology": [
-        "dist/odontology/odontology",
-        "dist/odontology"
-      ]
-    }
+		"paths": {
+			"@environments/*": [
+				"projects/hospital/src/environments/*"
+			],
+			"@core/*": [
+				"projects/hospital/src/app/modules/core/*"
+			],
+			"@api-rest/*": [
+				"projects/hospital/src/app/modules/api-rest/*"
+			],
+			"@presentation/*": [
+				"projects/hospital/src/app/modules/presentation/*"
+			],
+			"@historia-clinica/*": [
+				"projects/hospital/src/app/modules/historia-clinica/*"
+			],
+			"@institucion/*": [
+				"projects/hospital/src/app/modules/institucion/*"
+			],
+			"@pacientes/*": [
+				"projects/hospital/src/app/modules/pacientes/*"
+			],
+			"@camas/*": [
+				"projects/hospital/src/app/modules/camas/*"
+			],
+			"@material/*": [
+				"projects/hospital/src/app/modules/material/*"
+			],
+			"@turnos/*": [
+				"projects/hospital/src/app/modules/turnos/*"
+			],
+			"@extensions/*": [
+				"projects/hospital/src/app/modules/extensions/*"
+			],
+			"odontology": [
+				"dist/odontology/odontology",
+				"dist/odontology"
+			]
+		}
 	},
 	"angularCompilerOptions": {
 		"fullTemplateTypeCheck": true,

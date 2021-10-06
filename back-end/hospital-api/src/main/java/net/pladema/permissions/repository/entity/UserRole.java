@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import lombok.EqualsAndHashCode;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;

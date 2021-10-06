@@ -2,7 +2,7 @@ package ar.lamansys.immunization.infrastructure.output.repository.vaccine;
 
 import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationBo;
 import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationStorage;
-import ar.lamansys.immunization.domain.vaccine.VaccineSchemeBo;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

@@ -1,6 +1,5 @@
 package net.pladema.sgx.repository;
 
-import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
 import net.pladema.UnitRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;

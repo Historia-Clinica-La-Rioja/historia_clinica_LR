@@ -2,7 +2,7 @@ package ar.lamansys.odontology.infrastructure.repository;
 
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
-import ar.lamansys.odontology.domain.ProcedureBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -10,7 +10,6 @@ import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
-import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Bundle;

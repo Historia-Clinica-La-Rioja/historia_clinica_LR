@@ -1,10 +1,8 @@
 package net.pladema.medicalconsultation.diary.repository.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -16,8 +14,6 @@ import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.auditable.DeleteableEntity;
-import ar.lamansys.sgx.shared.auditable.entity.Deleteable;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import org.hibernate.annotations.ColumnDefault;
 

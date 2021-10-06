@@ -4,7 +4,7 @@ import ar.lamansys.sgx.auth.apiKey.infrastructure.input.service.ApiKeyExternalSe
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.security.authorization.InstitutionGrantedAuthority;
-import ar.lamansys.sgx.auth.apiKey.application.login.ApiKeyLogin;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

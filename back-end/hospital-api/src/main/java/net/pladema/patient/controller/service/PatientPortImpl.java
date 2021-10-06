@@ -1,6 +1,5 @@
 package net.pladema.patient.controller.service;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;

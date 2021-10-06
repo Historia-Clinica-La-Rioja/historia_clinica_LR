@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.searchDocument;
 
 import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
-import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.EDocumentSearch;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.*;
 import org.apache.logging.log4j.util.Strings;

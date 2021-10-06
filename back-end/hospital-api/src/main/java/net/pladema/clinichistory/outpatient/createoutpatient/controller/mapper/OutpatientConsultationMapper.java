@@ -6,7 +6,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.*;
 
-import net.pladema.reports.service.domain.ConsultationsBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
