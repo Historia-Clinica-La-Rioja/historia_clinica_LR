@@ -116,6 +116,15 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.otherDiagnosticsNewConsultationService.error$.subscribe(otherDiagnosticsError => {
 			this.errors[1] = otherDiagnosticsError;
 		});
+
+		this.odontologyConsultationService.getConsultationIndices(this.data.patientId).subscribe(odontologyConsultationArray => {
+			const odontologyConsultation = odontologyConsultationArray.find(odontologyConsultation => odontologyConsultation.permanentTeethPresent !== null && odontologyConsultation.temporaryTeethPresent !== null)
+			if (odontologyConsultation) {
+				this.form.controls['permanentTeethPresent'].setValue(odontologyConsultation.permanentTeethPresent);
+				this.form.controls['temporaryTeethPresent'].setValue(odontologyConsultation.temporaryTeethPresent);
+			}
+		});
+
 	}
 
 	private addErrorMessage(): void {
