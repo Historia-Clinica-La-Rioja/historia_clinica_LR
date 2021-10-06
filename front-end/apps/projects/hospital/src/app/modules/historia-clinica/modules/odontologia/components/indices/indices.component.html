@@ -28,7 +28,9 @@
             </div>
             <div id="permanents">
                 <span>Presentes permanentes: </span>
-                <strong>{{selectedConsultation.permanentTeethPresent}}</strong>
+                <strong *ngIf="selectedConsultation.permanentTeethPresent === undefined">Sin información</strong>
+                <strong
+                    *ngIf="selectedConsultation.permanentTeethPresent !== undefined">{{selectedConsultation.permanentTeethPresent}}</strong>
             </div>
             <div id="temporary_c">
                 <span>c: </span>
@@ -48,7 +50,9 @@
             </div>
             <div id="temporaries">
                 <span>Presentes temporarios: </span>
-                <strong>{{selectedConsultation.temporaryTeethPresent}}</strong>
+                <strong *ngIf="selectedConsultation.temporaryTeethPresent === undefined">Sin información</strong>
+                <strong
+                    *ngIf="selectedConsultation.temporaryTeethPresent !== undefined">{{selectedConsultation.temporaryTeethPresent}}</strong>
             </div>
         </div>
     </div>
