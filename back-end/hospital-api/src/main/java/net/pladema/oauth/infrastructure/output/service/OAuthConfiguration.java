@@ -1,4 +1,4 @@
-package net.pladema.security.configuration;
+package net.pladema.oauth.infrastructure.output.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

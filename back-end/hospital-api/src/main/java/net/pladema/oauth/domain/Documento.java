@@ -1,4 +1,4 @@
-package net.pladema.security.authentication.business;
+package net.pladema.oauth.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

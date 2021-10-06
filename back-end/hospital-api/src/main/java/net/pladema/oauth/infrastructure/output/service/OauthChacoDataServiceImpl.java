@@ -1,7 +1,7 @@
-package net.pladema.security.authentication.service.impl;
+package net.pladema.oauth.infrastructure.output.service;
 
-import java.net.URISyntaxException;
-
+import net.pladema.oauth.domain.OauthDataService;
+import net.pladema.oauth.domain.OauthUser;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +11,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import net.pladema.security.authentication.business.OauthUser;
-import net.pladema.security.authentication.service.OauthDataService;
-import net.pladema.security.configuration.OAuthConfiguration;
+import java.net.URISyntaxException;
+
 
 @Service
 public class OauthChacoDataServiceImpl implements OauthDataService {

@@ -1,8 +1,6 @@
-package net.pladema.security.authentication.service;
+package net.pladema.oauth.domain;
 
 import java.net.URISyntaxException;
-
-import net.pladema.security.authentication.business.OauthUser;
 
 public interface OauthDataService {
 

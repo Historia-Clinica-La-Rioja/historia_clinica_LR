@@ -1,12 +1,16 @@
-package net.pladema.security.authentication.controller;
+package net.pladema.oauth.infrastructure.input.rest;
 
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.JWTokenDto;
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.OauthConfigDto;
 import io.swagger.annotations.Api;
-import net.pladema.security.authentication.controller.mapper.JWTokenMapper;
-import net.pladema.security.authentication.service.OauthService;
+import net.pladema.oauth.application.OauthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/oauth")
@@ -15,15 +19,12 @@ public class ExternalAuthenticationController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExternalAuthenticationController.class);
 
-	private final JWTokenMapper jWTokenMapper;
 	private final OauthService oauthService;
 
 	public ExternalAuthenticationController(
-			JWTokenMapper jWTokenMapper,
 			OauthService oauthService
 	) {
 		super();
-		this.jWTokenMapper = jWTokenMapper;
 		this.oauthService = oauthService;
 	}
 
@@ -36,7 +37,7 @@ public class ExternalAuthenticationController {
 	@GetMapping(value = "/login")
 	public ResponseEntity<JWTokenDto> login(@RequestParam("code") String code) throws Exception {
 		LOG.debug("Login oauth with code=> {}", code);
-		return ResponseEntity.ok().body(jWTokenMapper.mapNewToken(oauthService.login(code)));
+		return ResponseEntity.ok().body(oauthService.login(code));
 	}
 
 }
