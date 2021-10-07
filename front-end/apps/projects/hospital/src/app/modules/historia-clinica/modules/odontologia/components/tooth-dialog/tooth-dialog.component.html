@@ -58,7 +58,7 @@
 			</app-typeahead>
 		</div>
 		<span
-			[ngClass]="{'activate-button': !showActionsService?.getIsNotPreviousProcedureSet(), 'disable-button': showActionsService?.getIsNotPreviousProcedureSet() }"
+			[ngClass]="{'activate-button': (!showActionsService?.getIsNotPreviousProcedureSet() && !selectedSurfaces.length), 'disable-button': (showActionsService?.getIsNotPreviousProcedureSet() || selectedSurfaces.length)}"
 			(click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
 	</div>
 	<mat-dialog-actions fxLayoutAlign="end end">

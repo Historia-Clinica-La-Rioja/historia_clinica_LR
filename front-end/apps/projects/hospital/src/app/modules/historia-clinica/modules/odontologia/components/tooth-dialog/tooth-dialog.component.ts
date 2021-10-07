@@ -248,7 +248,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 			this.secondProcedureId = secondProcedure.snomed.sctid;
 			this.setTypeaheadProcedures(secondProcedure.snomed.sctid, ProcedureOrder.SECOND);
 			this.lastProcedureAdded = 1;
-			this.showActionsService.getThirdProcedure ?	this.showActionsService.setIsNotPreviousProcedureSet(false) : this.showActionsService.setIsNotPreviousProcedureSet(true);
+			this.showActionsService.getThirdProcedure ? this.showActionsService.setIsNotPreviousProcedureSet(false) : this.showActionsService.setIsNotPreviousProcedureSet(true);
 		}
 		else {
 			if (this.initValueTypeaheadSecondProcedure?.compareValue) {
@@ -361,8 +361,10 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	}
 
 	public addTypeaheadProcedure() {
-		this.showActionsService.showProcedures(this.lastProcedureAdded, true);
-		this.showActionsService.setIsNotPreviousProcedureSet(true);
+		if (!this.selectedSurfaces.length) {
+			this.showActionsService.showProcedures(this.lastProcedureAdded, true);
+			this.showActionsService.setIsNotPreviousProcedureSet(true);
+		}
 	}
 
 	private organizeTypeaheadProcedures(order) {
