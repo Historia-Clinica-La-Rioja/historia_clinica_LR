@@ -55,7 +55,7 @@ export class EditPatientComponent implements OnInit {
 	public hasError = hasError;
 	public genders: GenderDto[];
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
-	public show: boolean;
+	public showOtherGender: boolean;
 	public countries: any[];
 	public provinces: any[];
 	public departments: any[];
@@ -117,12 +117,12 @@ export class EditPatientComponent implements OnInit {
 
 								const OTHER_GENDER_VALUE = personInformationData.otherGenderSelfDetermination ? personInformationData.otherGenderSelfDetermination : null;
 								this.form.setControl('otherGenderSelfDetermination', new FormControl(OTHER_GENDER_VALUE, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]));
-								if (personInformationData.genderSelfDeterminationId != this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID) {
+								if (personInformationData.genderSelfDeterminationId !== this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID) {
 									this.form.get('otherGenderSelfDetermination').disable();
-									this.show = false;
+									this.showOtherGender = false;
 								}
 								else
-									this.show = true;
+									this.showOtherGender = true;
 
 								this.form.setControl('nameSelfDetermination', new FormControl(personInformationData.nameSelfDetermination));
 								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
@@ -314,8 +314,8 @@ export class EditPatientComponent implements OnInit {
 			}
 		};
 
-		if (patient.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
-			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination ? this.form.value.otherGenderSelfDetermination : null;
+		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
+			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination;
 
 		return patient;
 
@@ -402,9 +402,9 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	public showOtherSelfPerceivedGender(): void {
-		this.show = (this.form.value.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		this.showOtherGender = (this.form.value.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
 		this.form.get('otherGenderSelfDetermination').setValue(null);
-		if (this.show)
+		if (this.showOtherGender)
 			this.form.get('otherGenderSelfDetermination').enable();
 		else
 			this.form.get('otherGenderSelfDetermination').disable();

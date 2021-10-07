@@ -49,7 +49,7 @@ export class NewPatientComponent implements OnInit {
 	public hasError = hasError;
 	public genders: GenderDto[];
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
-	public show: boolean = false;
+	public showOtherGender: boolean = false;
 	public countries: any[];
 	public provinces: any[];
 	public departments: any[];
@@ -270,8 +270,8 @@ export class NewPatientComponent implements OnInit {
 			}
 		};
 
-		if (patient.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
-			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination ? this.form.value.otherGenderSelfDetermination : null;
+		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
+			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination;
 
 		return patient;
 
@@ -326,9 +326,9 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	public showOtherSelfPerceivedGender(): void {
-		this.show = (this.form.value.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		this.showOtherGender = (this.form.value.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
 		this.form.get('otherGenderSelfDetermination').setValue(null);
-		if (this.show)
+		if (this.showOtherGender)
 			this.form.get('otherGenderSelfDetermination').enable();
 		else
 			this.form.get('otherGenderSelfDetermination').disable();
