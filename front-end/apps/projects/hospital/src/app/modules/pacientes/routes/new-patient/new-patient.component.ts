@@ -107,7 +107,7 @@ export class NewPatientComponent implements OnInit {
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
-					otherGenderSelfDetermination: [{ value: null, disabled: true }, Validators.maxLength(this.GENDER_MAX_LENGTH)],
+					otherGenderSelfDetermination: [{ value: null, disabled: true }, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]],
 
 					// Address
 					addressStreet: [],

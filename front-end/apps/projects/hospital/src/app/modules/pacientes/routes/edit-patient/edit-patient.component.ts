@@ -116,7 +116,7 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('genderSelfDeterminationId', new FormControl(Number(personInformationData.genderSelfDeterminationId)));
 
 								const OTHER_GENDER_VALUE = personInformationData.otherGenderSelfDetermination ? personInformationData.otherGenderSelfDetermination : null;
-								this.form.setControl('otherGenderSelfDetermination', new FormControl(OTHER_GENDER_VALUE, Validators.maxLength(this.GENDER_MAX_LENGTH)));
+								this.form.setControl('otherGenderSelfDetermination', new FormControl(OTHER_GENDER_VALUE, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]));
 								if (personInformationData.genderSelfDeterminationId != this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID) {
 									this.form.get('otherGenderSelfDetermination').disable();
 									this.show = false;

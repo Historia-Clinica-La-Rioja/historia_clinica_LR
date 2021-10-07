@@ -138,7 +138,12 @@
 								formControlName="otherGenderSelfDetermination"
 								placeholder="{{ 'pacientes.form.OTHER_SELF_PERCEIVED_GENDER_LABEL' | translate }}">
 							<mat-error [translate]="'forms.MAX_LENGTH_ERROR'"
-								[translateParams]="{ max: GENDER_MAX_LENGTH }"></mat-error>
+								[translateParams]="{ max: GENDER_MAX_LENGTH }"
+								*ngIf="hasError(form, 'maxlength', 'otherGenderSelfDetermination')">
+							</mat-error>
+							<mat-error [translate]="'forms.REQUIRED'"
+								*ngIf="hasError(form, 'required', 'otherGenderSelfDetermination')">
+							</mat-error>
 						</mat-form-field>
 					</ng-container>
 				</div>
