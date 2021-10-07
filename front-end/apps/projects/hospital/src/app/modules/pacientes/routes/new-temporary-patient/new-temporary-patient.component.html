@@ -110,7 +110,8 @@
 				<div class="form-row">
 					<mat-form-field appearance="outline">
 						<mat-select formControlName="genderSelfDeterminationId"
-							(selectionChange)="showOtherSelfPerceivedGender()">
+							(selectionChange)="showOtherSelfPerceivedGender()"
+							placeholder="{{ 'pacientes.form.GENDER_SELF_DETERMINATION' | translate }}">
 							<mat-option [value]="null" style="color:gray;">
 								- {{ 'forms.NULL_OPTION_MESSAGE' | translate }} -
 							</mat-option>
