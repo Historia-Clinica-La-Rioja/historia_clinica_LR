@@ -323,6 +323,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 	public showOtherSelfPerceivedGender(): void {
 		this.show = (this.form.value.genderSelfDeterminationId == this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		this.form.get('otherGenderSelfDetermination').setValue(null);
 		if (this.show)
 			this.form.get('otherGenderSelfDetermination').enable();
 		else
