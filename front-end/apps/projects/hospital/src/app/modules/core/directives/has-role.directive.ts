@@ -20,7 +20,8 @@ export class HasRoleDirective {
 	}
 
 	@Input()
-	set appHasRole(allowedRoles: ERole[]) {
+	set appHasRole(allowedRoleNames: string[]) {
+		const allowedRoles: ERole[] = <ERole[]> allowedRoleNames;
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.showElement(anyMatch<ERole>(userRoles, allowedRoles));
 		});

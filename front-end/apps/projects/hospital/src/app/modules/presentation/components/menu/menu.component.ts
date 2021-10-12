@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { MenuItemDef } from '@core/core-model';
 import { Label } from '../label/label.component';
 
 export interface MenuItem {
@@ -9,7 +10,7 @@ export interface MenuItem {
 	options?: any;
 }
 
-export const defToMenuItem = ({text, icon, url, id, options}): MenuItem =>
+export const defToMenuItem = ({text, icon, url, id, options}: MenuItemDef): MenuItem =>
 	({label: {key: text}, icon, url, id, options});
 
 @Component({

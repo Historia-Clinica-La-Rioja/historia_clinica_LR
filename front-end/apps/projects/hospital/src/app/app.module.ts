@@ -38,9 +38,6 @@ registerLocaleData(localeEsAr, 'es-AR');
 		FormsModule,
 		HttpClientModule,
 		RouterModule,
-		ServiceWorkerModule.register(
-			'ngsw-worker.js', { enabled: environment.production }
-		),
 		TranslateModule.forRoot({
 			loader: {
 				provide: TranslateLoader,
@@ -58,6 +55,9 @@ registerLocaleData(localeEsAr, 'es-AR');
 		// https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
 		ExtensionsModule,
+		ServiceWorkerModule.register('ngsw-worker.js', {
+			enabled: environment.production,
+		}),
 	],
 	providers: [
 		httpInterceptorProviders,

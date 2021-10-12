@@ -10,7 +10,7 @@ export class IndicesComponent implements OnInit {
 
   constructor() { /*this is intentional*/ }
 
-  @Input() readonly consultations: OndontologyConsultationIndicesDto[] = [];
+  @Input() consultations: OndontologyConsultationIndicesDto[] = [];
   selectedConsultation: OndontologyConsultationIndicesDto;
 
 

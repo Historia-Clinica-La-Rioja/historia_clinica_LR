@@ -8,7 +8,7 @@ import { DateDto, ExternalClinicalHistoryDto } from '@api-rest/api-model';
 })
 export class ExternalClinicalHistoryComponent implements OnInit {
 
-	@Input() public readonly externalClinicalHistory: ExternalClinicalHistoryDto;
+	@Input() externalClinicalHistory: ExternalClinicalHistoryDto;
 	public DATE_TO_VIEW: DateDto;
 
 	constructor() { }
