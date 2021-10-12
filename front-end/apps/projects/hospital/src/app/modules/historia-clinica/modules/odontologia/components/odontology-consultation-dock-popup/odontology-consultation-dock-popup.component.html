@@ -284,7 +284,7 @@
 							<mat-form-field appearance="outline">
 								<mat-label> Fecha de registro </mat-label>
 								<input matInput id="history_date" [matDatepicker]="historyDatePicker"
-									formControlName="fecha"
+									formControlName="fecha" 
 									[min]="minDate"
 									[max]="personalHistoriesNewConsultationService.getMaxDate()">
 								<mat-datepicker-toggle matSuffix [for]="historyDatePicker"></mat-datepicker-toggle>
@@ -418,12 +418,18 @@
 						<mat-form-field appearance="outline">
 							<input placeholder="Sin información" formControlName="permanentTeethPresent" matInput>
 						</mat-form-field>
+						<mat-error *ngIf="hasError(form, 'pattern', 'permanentTeethPresent')">Solo se puede ingresar valores
+							numéricos</mat-error>
+						<mat-error *ngIf="hasError(form, 'maxlength', 'permanentTeethPresent')">Solo se puede ingresar números de dos dígitos</mat-error>	
 					</div>
 					<div fxLayout="column" style="width: 50%">
 						<span>Presentes temporales:</span>
 						<mat-form-field appearance="outline">
 							<input placeholder="Sin información" formControlName="temporaryTeethPresent" matInput>
 						</mat-form-field>
+						<mat-error *ngIf="hasError(form, 'pattern', 'temporaryTeethPresent')">Solo se puede ingresar valores
+							numéricos</mat-error>
+						<mat-error *ngIf="hasError(form, 'maxlength', 'temporaryTeethPresent')">Solo se puede ingresar números de dos dígitos</mat-error>	
 					</div>
 				</div>
 			</form>
