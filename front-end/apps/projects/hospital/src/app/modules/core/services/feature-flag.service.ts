@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 import { AppFeature } from '@api-rest/api-model';
 
 const FLAVOR_HOSPITALES = 'minsal';
-const FLAVOR_PBA = 'pba';
 const FEATURE_FLAGS = [
 	{
 		name: 'agregarMedicosAdicionales',
@@ -13,11 +12,11 @@ const FEATURE_FLAGS = [
 	},
 	{
 		name: 'mainDiagnosisRequired',
-		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
+		flavorMatch: [FLAVOR_HOSPITALES]
 	},
 	{
 		name: 'epicrisisRequired',
-		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
+		flavorMatch: [FLAVOR_HOSPITALES]
 	},
 	{
 		name: 'habilitarBotonCovidDiagnosticoPresuntivo',
@@ -25,15 +24,15 @@ const FEATURE_FLAGS = [
 	},
 	{
 		name: 'habilitarToggleFiltroDiagnosticoPrincipal',
-		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
+		flavorMatch: [FLAVOR_HOSPITALES]
 	},
 	{
 		name: 'habilitarPaseCama',
-		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
+		flavorMatch: [FLAVOR_HOSPITALES]
 	},
 	{
 		name: 'habilitarEdicionPacienteInternacion',
-		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
+		flavorMatch: [FLAVOR_HOSPITALES]
 	},
 	// No usar esta lista
 ];
