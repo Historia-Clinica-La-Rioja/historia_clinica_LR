@@ -2,23 +2,23 @@ import { ProcedureOrder } from "@historia-clinica/modules/odontologia/services/a
 
 export class ShowActionsService {
 
-	public secondProcedure: boolean;
-	public thirdProcedure: boolean;
+	public showSecondProcedure: boolean;
+	public showThirdProcedure: boolean;
 	public isNotPreviousProcedureSet = true;
 
 
 	constructor(secondProcedure, thirdProcedure, isNotPreviousProcedureSet) {
-		this.secondProcedure = secondProcedure ? true : false;
-		this.thirdProcedure = thirdProcedure ? true : false;
+		this.showSecondProcedure = secondProcedure ? true : false;
+		this.showThirdProcedure = thirdProcedure ? true : false;
 		this.isNotPreviousProcedureSet = (isNotPreviousProcedureSet === -1 || isNotPreviousProcedureSet === 2) ? true : false;
 	}
 
 	public getSecondProcedure(): boolean {
-		return this.secondProcedure;
+		return this.showSecondProcedure;
 	}
 
 	public getThirdProcedure(): boolean {
-		return this.thirdProcedure;
+		return this.showThirdProcedure;
 	}
 
 	public getIsNotPreviousProcedureSet(): boolean {
@@ -26,37 +26,39 @@ export class ShowActionsService {
 	}
 
 	public setSecondProcedure(showSecondProcedure: boolean): void {
-		this.secondProcedure = showSecondProcedure;
+		this.showSecondProcedure = showSecondProcedure;
 	}
 
 	public setThirdProcedure(showThirdProcedure: boolean): void {
-		this.thirdProcedure = showThirdProcedure;
+		this.showThirdProcedure = showThirdProcedure;
 	}
 
 	public setIsNotPreviousProcedureSet(isNotPreviousProcedure: boolean): void {
 		this.isNotPreviousProcedureSet = isNotPreviousProcedure;
 	}
-	
 
-	public showProcedures(order: ProcedureOrder, isANewProcedure: boolean): void {
-		if (order === ProcedureOrder.SECOND) {
-			if (isANewProcedure){
-				this.secondProcedure = true;
-				this.thirdProcedure = true;
+	public showProcedures(order: number, isANewProcedure: boolean): void {
+		if (isANewProcedure) {
+			switch (order) {
+				case ProcedureOrder.SECOND:
+					this.showSecondProcedure = true;
+					this.showThirdProcedure = true;
+					break;
+				case ProcedureOrder.FIRST:
+					this.showSecondProcedure = true;
+					break;
 			}
-			else{
-				this.thirdProcedure = false;
-			}
-		}
-		if (order === ProcedureOrder.FIRST) {
-			if (isANewProcedure){
-				this.secondProcedure = true;
-			}
-			else {
-				this.secondProcedure = false;
+		} else {
+			switch (order) {
+				case ProcedureOrder.SECOND:
+					this.showThirdProcedure = false;
+					break;
+				default :
+					this.showSecondProcedure = false;
+					this.showThirdProcedure = false;
+					break;
 			}
 		}
 	}
-
 }
 
