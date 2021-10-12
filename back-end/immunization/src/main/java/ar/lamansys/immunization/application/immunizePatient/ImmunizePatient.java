@@ -136,11 +136,11 @@ public class ImmunizePatient {
         var rolesOverInstitution = userStorage.fetchLoggedUserRoles().stream()
                 .filter(roleInfoBo -> institutionId.equals(roleInfoBo.getInstitution()))
                 .collect(Collectors.toList());
-        if (rolesOverInstitution.stream().noneMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("ENFERMERO", "PROFESIONAL_DE_SALUD", "ESPECIALISTA_MEDICO"))))
+        if (rolesOverInstitution.stream().noneMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("ENFERMERO", "PROFESIONAL_DE_SALUD", "ESPECIALISTA_EN_ODONTOLOGIA", "ESPECIALISTA_MEDICO"))))
             throw new RolePermissionException(RolesExceptionEnum.INVALID_ROLE, "No tiene los permisos suficientes para inmunizar un paciente");
         if (rolesOverInstitution.stream().anyMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("ENFERMERO"))))
             return;
-        if (rolesOverInstitution.stream().anyMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("PROFESIONAL_DE_SALUD", "ESPECIALISTA_MEDICO")))
+        if (rolesOverInstitution.stream().anyMatch(roleInfoBo -> roleInfoBo.anyRole(List.of("PROFESIONAL_DE_SALUD", "ESPECIALISTA_EN_ODONTOLOGIA", "ESPECIALISTA_MEDICO")))
             && immunizations.stream().anyMatch(ImmunizationInfoBo::isBillable))
             throw new RolePermissionException(RolesExceptionEnum.INVALID_ROLE, "El enfermero solo tiene permisos para aplicar vacunas");
     }

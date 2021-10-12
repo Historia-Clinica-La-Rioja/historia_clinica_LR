@@ -43,7 +43,7 @@ public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDi
 
         if (!hasAdministrativeRole) {
             boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO));
+                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO));
 
             if (hasProfessionalRole) {
                 Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());

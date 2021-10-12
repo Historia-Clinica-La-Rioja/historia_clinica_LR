@@ -207,6 +207,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		return ERole.ENFERMERO.getId().equals(roleId) ||
 			   ERole.ESPECIALISTA_MEDICO.getId().equals(roleId) ||
 			   ERole.ENFERMERO_ADULTO_MAYOR.getId().equals(roleId) ||
-			   ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId);
+			   ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId) ||
+			   ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId().equals(roleId);
 	}
 }

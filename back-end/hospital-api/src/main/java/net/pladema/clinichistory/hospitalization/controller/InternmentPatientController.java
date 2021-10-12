@@ -41,7 +41,7 @@ public class InternmentPatientController {
     }
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
     public ResponseEntity<List<InternmentEpisodeDto>> getAllInternmentPatient(
             @PathVariable(name = "institutionId") Integer institutionId){
         LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID, institutionId);
@@ -52,7 +52,7 @@ public class InternmentPatientController {
     }
 
     @GetMapping("/basicdata")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
     public ResponseEntity<List<InternmentPatientDto>> getAllInternmentPatientsBasicData(
             @PathVariable(name = "institutionId") Integer institutionId){
         LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID, institutionId);

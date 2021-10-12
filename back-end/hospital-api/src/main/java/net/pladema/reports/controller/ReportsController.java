@@ -151,7 +151,7 @@ public class ReportsController {
     }
 
     @GetMapping("/{institutionId}/appointment-annex")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<InputStreamResource> getAppointmentAnnexReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
@@ -185,7 +185,7 @@ public class ReportsController {
     }
 
     @GetMapping("/{institutionId}/appointment-formv")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<InputStreamResource> getFormVAppointmentReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
@@ -232,7 +232,7 @@ public class ReportsController {
 
 
     @GetMapping("/institution/{institutionId}/patient/{patientId}/consultations-list")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<List<ConsultationsDto>> getConsultations(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId){

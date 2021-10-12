@@ -44,7 +44,7 @@ public class ImmunizeController {
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping
     public boolean immunizePatient(
