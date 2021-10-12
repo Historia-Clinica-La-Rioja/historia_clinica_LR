@@ -8,10 +8,6 @@ const FLAVOR_HOSPITALES = 'minsal';
 const FLAVOR_PBA = 'pba';
 const FEATURE_FLAGS = [
 	{
-		name: 'agregarContactoResponsable',
-		flavorMatch: []
-	},
-	{
 		name: 'agregarMedicosAdicionales',
 		flavorMatch: []
 	},
@@ -39,6 +35,7 @@ const FEATURE_FLAGS = [
 		name: 'habilitarEdicionPacienteInternacion',
 		flavorMatch: [FLAVOR_HOSPITALES, FLAVOR_PBA]
 	},
+	// No usar esta lista
 ];
 
 @Injectable({
@@ -57,6 +54,9 @@ export class FeatureFlagService {
 			);
 	}
 
+	/**
+ 	 * @deprecated No usar este método
+ 	 */
 	public isOn(ff: string): Observable<boolean> {
 		return this.publicService.getInfo().pipe(map(data => {
 			const ffObject = this.getIfIsPresent(ff);
