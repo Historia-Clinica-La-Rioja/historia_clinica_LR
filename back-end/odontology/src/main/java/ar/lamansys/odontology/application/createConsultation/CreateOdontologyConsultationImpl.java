@@ -7,10 +7,12 @@ import ar.lamansys.odontology.application.odontogram.GetToothSurfacesService;
 import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
+import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.ToothBo;
 import ar.lamansys.odontology.domain.ToothSurfacesBo;
 import ar.lamansys.odontology.domain.consultation.ClinicalTermsValidatorUtils;
+import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
@@ -42,6 +44,10 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     private static final Integer MAX_PERMANENT_TEETH = 99;
     private static final Integer MIN_TEMPORARY_TEETH = 0;
     private static final Integer MAX_TEMPORARY_TEETH = 99;
+
+    public static final String DEFAULT_PROBLEM_SCTID = "401281000221107";
+    public static final String DEFAULT_PROBLEM_PT = "Registro de odontograma";
+    public static final String DEFAULT_PROBLEM_SEVERITY = "LA6752-5";
 
     private final DiagnosticStorage diagnosticStorage;
 
@@ -90,7 +96,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     @Override
     @Transactional
     public void run(ConsultationBo consultationBo) {
-        LOG.debug("Input parameter -> odontologyConsultationBo {}", consultationBo);
+        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
         if (consultationBo == null)
             throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CONSULTATION,
                     "La información de la consulta es obligatoria");
@@ -101,10 +107,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         assertContextValid(consultationBo, doctorInfoBo);
         assertTeethQuantityValid(consultationBo);
 
-        setCpoCeoIndicesInDentalActions(consultationBo);
-        setSurfaceSctids(consultationBo);
-
-        sortDentalActions(consultationBo);
+        processDentalActions(consultationBo);
         drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
         Integer medicalCoverageId = appointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
@@ -124,6 +127,31 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
 
         LOG.debug("No output");
+    }
+
+    private void processDentalActions(ConsultationBo consultationBo) {
+        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+        setDefaultProblem(consultationBo);
+        setCpoCeoIndicesInDentalActions(consultationBo);
+        setSurfaceSctids(consultationBo);
+        sortDentalActions(consultationBo);
+    }
+
+    private void setDefaultProblem(ConsultationBo consultationBo) {
+        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+        if (!consultationBo.getDentalActions().isEmpty()) {
+            ConsultationDiagnosticBo problem = buildDefaultProblem();
+            consultationBo.getDiagnostics().add(problem);
+        }
+    }
+
+    private ConsultationDiagnosticBo buildDefaultProblem() {
+        LOG.debug("No input parameters");
+        ConsultationDiagnosticBo defaultProblem = new ConsultationDiagnosticBo();
+        defaultProblem.setSnomed(new OdontologySnomedBo(DEFAULT_PROBLEM_SCTID, DEFAULT_PROBLEM_PT));
+        defaultProblem.setStartDate(dateTimeProvider.nowDate());
+        defaultProblem.setSeverity(DEFAULT_PROBLEM_SEVERITY);
+        return defaultProblem;
     }
 
     private void sortDentalActions(ConsultationBo consultationBo) {
