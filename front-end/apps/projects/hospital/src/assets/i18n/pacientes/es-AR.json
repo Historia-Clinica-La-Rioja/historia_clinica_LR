@@ -53,7 +53,7 @@
 				"BUTTON_ADD": "Crear paciente temporal",
 				"BUTTON_SEARCH": "Buscar",
 				"NO_IDENTITY": "No acredita identidad",
-				"TITLE": "Búsqueda / Creación de HC",
+				"TITLE": "Búsqueda",
 				"scan": {
 					"BUTTON_SCAN": "Escanear código",
 					"messages": {
