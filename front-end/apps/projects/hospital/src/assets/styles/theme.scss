@@ -1,11 +1,11 @@
-@import 'mat-mixins';
-@import 'palettes';
-@import '~@angular/cdk/overlay-prebuilt.css';
+@import "mat-mixins";
+@import "palettes";
+@import "~@angular/cdk/overlay-prebuilt.css";
 
 @include mat-core();
 
 $primary: mat-palette($primary-palette, 400);
-$accent:  mat-palette($accent-palette);
+$accent: mat-palette($accent-palette);
 
 $theme: mat-light-theme($primary, $accent);
 

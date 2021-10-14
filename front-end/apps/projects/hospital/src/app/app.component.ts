@@ -60,14 +60,14 @@ export class AppComponent {
 		pwaInstallService.install$.pipe(
 			switchMap(
 				pwaInstallAction =>
-					snackBarService.showAction('Instalar aplicación', {text: 'Ok', payload: pwaInstallAction})
+					snackBarService.showAction('Instalar aplicación', { text: 'Ok', payload: pwaInstallAction })
 			),
 		).subscribe(pwaInstallAction => pwaInstallAction.run());
 
 		pwaUpdateService.update$.pipe(
 			switchMap(
 				pwaUpdateAction =>
-					snackBarService.showAction('Nueva versión', {text: 'Actualizar', payload: pwaUpdateAction})
+					snackBarService.showAction('Nueva versión', { text: 'Actualizar', payload: pwaUpdateAction })
 			),
 		).subscribe(pwaUpdateAction => pwaUpdateAction.run());
 

@@ -1,9 +1,9 @@
 @import "variables";
 
 @mixin form-row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 @mixin card-properties {
@@ -55,6 +55,6 @@
 	line-height: 14px;
 }
 
-@mixin general-font{
+@mixin general-font {
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 }
