@@ -46,7 +46,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
                 "   WHERE d.status_id = :docStatusId " +
-                "   AND d.type_id = :documentType "+
+                "   AND d.type_id in (:documentTypes) "+
                 "   AND hc.patient_id = :patientId " +
                 "   AND hc.problem_id IN (:validProblemTypes) " +
                 ") " +
@@ -63,7 +63,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("patientId", patientId)
                 .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
-                .setParameter("documentType", DocumentType.OUTPATIENT)
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
                 .getResultList();
 
         List<HCEHealthConditionVo> result = new ArrayList<>();
