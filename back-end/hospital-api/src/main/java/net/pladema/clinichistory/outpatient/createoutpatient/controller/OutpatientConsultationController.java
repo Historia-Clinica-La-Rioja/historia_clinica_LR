@@ -14,9 +14,9 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.O
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.OutpatientSummaryService;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientEvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.patient.controller.dto.BasicPatientDto;
@@ -244,9 +244,9 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<List<OutpatientEvolutionSummaryDto>> getEvolutionSummaryList(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId){
-        List<OutpatientEvolutionSummaryBo> evolutions = outpatientSummaryService.getSummary(patientId);
+        List<EvolutionSummaryBo> evolutions = outpatientSummaryService.getSummary(patientId);
         List<OutpatientEvolutionSummaryDto> result = outpatientConsultationMapper.fromListOutpatientEvolutionSummaryBo(evolutions);
-        LOG.debug("Get  summary  => {}", result);
+        LOG.debug("Get summary  => {}", result);
         return ResponseEntity.ok(result);
     }
 }
