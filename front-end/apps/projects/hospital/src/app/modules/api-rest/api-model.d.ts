@@ -1234,6 +1234,50 @@ export interface NewVitalSignsObservationDto extends Serializable {
     temperature?: NewEffectiveClinicalObservationDto;
 }
 
+export interface NursingAnthropometricDataDto extends Serializable {
+    bloodType?: ClinicalObservationDto;
+    bmi?: ClinicalObservationDto;
+    height: ClinicalObservationDto;
+    weight: ClinicalObservationDto;
+}
+
+export interface NursingConsultationDto extends Serializable {
+    anthropometricData?: NursingAnthropometricDataDto;
+    clinicalSpecialtyId: number;
+    evolutionNote?: string;
+    problem: NursingProblemDto;
+    procedures?: NursingProcedureDto[];
+    vitalSigns?: NursingVitalSignDto;
+}
+
+export interface NursingHealtConditionDto extends Serializable {
+    id?: number;
+    snomed: SnomedDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface NursingProblemDto extends Serializable {
+    severity?: string;
+    snomed: SnomedDto;
+    startDate?: string;
+    statusId?: string;
+}
+
+export interface NursingProcedureDto extends Serializable {
+    performedDate?: string;
+    snomed: SnomedDto;
+}
+
+export interface NursingVitalSignDto extends Serializable {
+    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    diastolicBloodPressure: EffectiveClinicalObservationDto;
+    heartRate?: EffectiveClinicalObservationDto;
+    respiratoryRate?: EffectiveClinicalObservationDto;
+    systolicBloodPressure: EffectiveClinicalObservationDto;
+    temperature?: EffectiveClinicalObservationDto;
+}
+
 export interface OauthConfigDto {
     enabled: boolean;
     loginUrl: string;

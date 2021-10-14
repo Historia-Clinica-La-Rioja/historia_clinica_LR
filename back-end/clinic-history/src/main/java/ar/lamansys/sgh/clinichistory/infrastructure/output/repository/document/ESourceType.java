@@ -12,7 +12,7 @@ public enum ESourceType {
     EMERGENCY_CARE(4, "emergency_care"),
     IMMUNIZATION(5, "immunization"),
     ODONTOLOGY(6, "odontology"),
-    ;
+    NURSING(7, "nursing");
 
     private Short id;
     private String value;
