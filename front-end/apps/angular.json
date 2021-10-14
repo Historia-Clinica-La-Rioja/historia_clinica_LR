@@ -1,10 +1,5 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "cli": {
-    "analytics": false,
-    "packageManager": "yarn",
-    "defaultCollection": "@angular-eslint/schematics"
-  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -13,6 +8,9 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
         }
       },
       "root": "projects/hospital",
@@ -22,17 +20,12 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": [
-              "angular-calendar",
-              "file-saver",
-              "@mattlewis92/dom-autoscroller"
-            ],
             "outputPath": "dist/hospital",
             "index": "projects/hospital/src/index.html",
             "main": "projects/hospital/src/main.ts",
             "polyfills": "projects/hospital/src/polyfills.ts",
             "tsConfig": "projects/hospital/tsconfig.app.json",
-            "aot": true,
+            "inlineStyleLanguage": "scss",
             "assets": [
               "projects/hospital/src/robots.txt",
               "projects/hospital/src/favicon.ico",
@@ -43,51 +36,54 @@
               "node_modules/angular-calendar/css/angular-calendar.css",
               "projects/hospital/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "serviceWorker": true,
+            "ngswConfigPath": "projects/hospital/ngsw-config.json"
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "2mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "projects/hospital/src/environments/environment.ts",
                   "with": "projects/hospital/src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ],
-              "serviceWorker": true,
-              "ngswConfigPath": "ngsw-config.json"
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "hospital:build"
-          },
           "configurations": {
             "production": {
-              "browserTarget": "hospital:build:production",
-              "proxyConfig": "src/proxy.conf.json"
+              "browserTarget": "hospital:build:production"
+            },
+            "development": {
+              "browserTarget": "hospital:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -102,6 +98,7 @@
             "polyfills": "projects/hospital/src/polyfills.ts",
             "tsConfig": "projects/hospital/tsconfig.spec.json",
             "karmaConfig": "projects/hospital/karma.conf.js",
+            "inlineStyleLanguage": "scss",
             "assets": [
               "projects/hospital/src/favicon.ico",
               "projects/hospital/src/assets",
@@ -112,27 +109,6 @@
               "projects/hospital/src/styles.scss"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "projects/hospital/**/*.ts",
-              "projects/hospital/**/*.html"
-            ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/hospital/e2e/protractor.conf.js",
-            "devServerTarget": "hospital:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "hospital:serve:production"
-            }
           }
         }
       }
@@ -146,14 +122,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/odontology/tsconfig.lib.json",
             "project": "projects/odontology/ng-package.json"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/odontology/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/odontology/tsconfig.lib.json"
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -161,15 +140,6 @@
             "main": "projects/odontology/src/test.ts",
             "tsConfig": "projects/odontology/tsconfig.spec.json",
             "karmaConfig": "projects/odontology/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "projects/odontology/**/*.ts",
-              "projects/odontology/**/*.html"
-            ]
           }
         }
       }
