@@ -22,7 +22,7 @@ public class BackofficeUserExceptionHandler {
 	@ExceptionHandler({ BackofficeUserException.class })
 	protected ApiErrorMessageDto handleBackofficeUserException(BackofficeUserException ex, Locale locale) {
 		LOG.debug("InputValidationException exception -> {}", ex.getMessage());
-		return new ApiErrorMessageDto(null, ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 }
 

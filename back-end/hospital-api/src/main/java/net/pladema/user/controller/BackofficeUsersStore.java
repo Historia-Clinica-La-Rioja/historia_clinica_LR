@@ -230,8 +230,13 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	}
 
 	private void checkValidRoles(BackofficeUserDto dto) {
-		if(!dto.getRoles().stream().allMatch(role -> isValidRole(role, dto.getPersonId())))
-			throw new BackofficeUserException(BackofficeUserExceptionEnum.PROFESSIONAL_REQUIRED, "El rol asignado requiere que el usuario sea un profesional");
+		dto.getRoles().stream().filter(role -> !isValidRole(role, dto.getPersonId())).findAny()
+				.ifPresent(backofficeUserRoleDto -> {
+					String role = ERole.map(backofficeUserRoleDto.getRoleId()).getValue();
+					throw new BackofficeUserException(BackofficeUserExceptionEnum.PROFESSIONAL_REQUIRED,
+							String.format("El rol %s asignado requiere que el usuario sea un profesional", role));
+				});
+
 
 		if(List.of(ERole.ROOT).stream().anyMatch(eRole -> existRole(eRole, dto.getRoles())))
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El usuario creado no puede tener el siguiente rol: ROOT");

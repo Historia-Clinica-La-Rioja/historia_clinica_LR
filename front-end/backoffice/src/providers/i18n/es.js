@@ -40,6 +40,7 @@ export default {
         "role":{
           "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
         },
+        "PROFESSIONAL_REQUIRED": "Alguno de los roles asignados requiere que el usuario sea un profesional",
         "user":{
             "exists": "Esta persona ya tiene un usuario en el sistema",
             "hasrole": "El profesional que quiere eliminar tiene un rol asociado"
