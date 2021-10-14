@@ -28,7 +28,7 @@
 		</ng-template>
 	</div>
 
-	<div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
+	<div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center" *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']">
 		<span class="subtitle subtitle-findings-procedures-font-size">Nuevos hallazgos sobre la pieza:</span>
 		<app-typeahead id="finding" [placeholder]="'Seleccione hallazgo'"
 			[options]="filteredDiagnosticsTypeaheadOptions" [externalSetValue]="initValueTypeaheadDiagnostics"
@@ -61,8 +61,10 @@
 			[ngClass]="{'activate-button': (!showActionsService?.getIsNotPreviousProcedureSet() && !selectedSurfaces.length), 'disable-button': (showActionsService?.getIsNotPreviousProcedureSet() || selectedSurfaces.length)}"
 			(click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
 	</div>
+
 	<mat-dialog-actions fxLayoutAlign="end end">
-		<button mat-stroked-button color="primary" mat-dialog-close type="button">Cancelar </button>
-		<button mat-raised-button color="primary" (click)="confirm()">Confirmar </button>
+		<button *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']" mat-raised-button color="primary"
+			(click)="confirm()">Confirmar </button>
 	</mat-dialog-actions>
+
 </div>
