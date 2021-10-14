@@ -178,6 +178,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		userRoleRepository.saveAll(roleToAdd(saved.getId(), toModel(dto.getRoles()), new ArrayList<>()));
 		if (dto.getPersonId() != null)
 			userPersonRepository.save(new UserPerson(saved.getId(), dto.getPersonId()));
+		userExternalService.enableUser(dto.getUsername());
 		return saved;
 	}
 

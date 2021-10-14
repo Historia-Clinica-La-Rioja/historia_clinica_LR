@@ -29,7 +29,7 @@ public class RegisterUserImpl implements RegisterUser {
     public RegisterUserImpl(UserStorage userStorage,
                             @Value("${authentication.username.pattern:^[a-zA-Z]+[a-zA-Z0-9@.]*$}") String pattern,
                             PasswordEncryptor passwordEncryptor,
-                            @Value("${authentication.username.pattern:PRUEBA}") String defaultPassword) {
+                            @Value("${authentication.username.password.default:PRUEBA}") String defaultPassword) {
         this.passwordEncryptor = passwordEncryptor;
         this.defaultPassword = defaultPassword;
         this.logger = LoggerFactory.getLogger(this.getClass());
