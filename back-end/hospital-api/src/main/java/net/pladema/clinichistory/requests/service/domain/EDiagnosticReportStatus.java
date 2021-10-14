@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EDiagnosticReportStatus {
 
-    REGISTERED("1", "Activo"),
+    REGISTERED("1", "Pendiente"),
     FINAL("261782000", "Completado");
     
     private final String id;
