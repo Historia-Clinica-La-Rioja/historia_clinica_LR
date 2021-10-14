@@ -28,9 +28,7 @@ public class ProblemDatesValidator implements ConstraintValidator<ProblemDates, 
     @Override
     public boolean isValid(OutpatientProblemDto problemDto, ConstraintValidatorContext context) {
        LOG.debug("Input parameters -> problemDto {}", problemDto);
-       if (problemDto.getStartDate() == null)
-           return false;
-       if (problemDto.getEndDate() == null)
+       if (problemDto.getEndDate() == null || problemDto.getStartDate() == null)
            return true;
        LocalDate endDate = localDateMapper.fromStringToLocalDate(problemDto.getEndDate());
        LocalDate startDate = localDateMapper.fromStringToLocalDate(problemDto.getStartDate());

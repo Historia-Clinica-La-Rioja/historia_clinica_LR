@@ -14,12 +14,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ProblemBo extends HealthConditionBo {
 
-    @NotNull
     private LocalDate startDate;
 
     private LocalDate endDate;
 
-    @NotNull(message = "{value.mandatory}")
     private String severity;
 
     private boolean chronic = false;

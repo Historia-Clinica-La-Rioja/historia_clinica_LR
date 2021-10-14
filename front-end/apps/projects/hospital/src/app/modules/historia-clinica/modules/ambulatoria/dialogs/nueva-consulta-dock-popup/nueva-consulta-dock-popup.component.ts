@@ -270,7 +270,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			snomed: p.snomed,
 			codigoSeveridad: p.severity,
 			cronico: p.isChronic,
-			fechaInicio: dateToMomentTimeZone(p.startDate),
+			fechaInicio: p.startDate ? dateToMomentTimeZone(p.startDate) : newMoment(),
 			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
 		};
 		return problema;
@@ -311,7 +311,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 						chronic: problema.cronico,
 						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,
-						startDate: momentFormat(problema.fechaInicio, DateFormat.API_DATE)
+						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
 					};
 				}
 			),

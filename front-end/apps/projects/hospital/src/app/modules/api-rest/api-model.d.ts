@@ -1408,9 +1408,9 @@ export interface OutpatientMedicationDto {
 export interface OutpatientProblemDto {
     chronic: boolean;
     endDate?: string;
-    severity: string;
+    severity?: string;
     snomed: SnomedDto;
-    startDate: string;
+    startDate?: string;
     statusId?: string;
     verificationId?: string;
 }

@@ -57,7 +57,7 @@
 
 <ng-template #startAndEndDateTemplate let-rowData="data" appCtrlTemplate="startAndEndDateTemplate">
 	<div class="mat-small grayText">
-		<span translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
+		<span *ngIf="rowData.fechaInicio" translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
 		{{formatDate(rowData.fechaInicio)}}
 	</div>
 	<div class="mat-small grayText" *ngIf="rowData.fechaFin">

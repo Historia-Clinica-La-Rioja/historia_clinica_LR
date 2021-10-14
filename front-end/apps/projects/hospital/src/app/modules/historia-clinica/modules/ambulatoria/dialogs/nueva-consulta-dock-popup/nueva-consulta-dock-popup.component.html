@@ -104,7 +104,6 @@
 									{{severityType.display}}
 								</mat-option>
 							</mat-select>
-							<mat-error translate="forms.REQUIRED"></mat-error>
 						</mat-form-field>
 
 						<div class="margin-checkbox">
@@ -121,14 +120,6 @@
 								   (dateChange)="problemasService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #inicioDatePicker></mat-datepicker>
-							<mat-error
-								*ngIf="problemasService.hasError('required', 'fechaInicio')"
-								[translate]="'forms.REQUIRED'">
-							</mat-error>
-							<mat-error
-								*ngIf="problemasService.hasError('matDatepickerMax', 'fechaInicio')"
-								[translate]="'forms.MAX_DATE_TODAY'">
-							</mat-error>
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
@@ -143,6 +134,9 @@
 							</mat-error>
 							<mat-error *ngIf="problemasService.hasError('matDatepickerMax', 'fechaFin')"
 									   [translate]="'forms.MAX_DATE_TODAY'">
+							</mat-error>
+							<mat-error *ngIf="problemasService.hasError('required_init_date', 'fechaFin')"
+									   [translate]="'forms.REQUIRED_INIT_DATE'">
 							</mat-error>
 						</mat-form-field>
 
