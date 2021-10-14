@@ -4,7 +4,7 @@
 			<h2 [translate]="'ambulatoria.paciente.vacunas.TITLE'"></h2>
 		</div>
 
-		<div id="add_button" *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO']">
+		<div id="add_button" *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container>
 				<button mat-flat-button color="primary" onclick="this.blur()" (click)=goToAgregarVacunas()>
 					<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
@@ -53,7 +53,7 @@
 								</ng-container>
 							</div>
 							<div fxFlex="5">
-								<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
+								<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 									mat-icon-button [matMenuTriggerFor]="menu">
 									<mat-icon>more_vert</mat-icon>
 								</button>

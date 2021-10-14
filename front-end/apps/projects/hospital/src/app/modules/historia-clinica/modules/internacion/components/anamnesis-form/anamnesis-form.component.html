@@ -16,7 +16,7 @@
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
 
-		<section id="procedimientos" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+		<section id="procedimientos" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
 				[tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
 				[columns]="procedimientosService.getColumns()"

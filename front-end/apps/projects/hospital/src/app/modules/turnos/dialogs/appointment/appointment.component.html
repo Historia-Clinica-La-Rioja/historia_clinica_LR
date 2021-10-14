@@ -11,7 +11,7 @@
 						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="params.appointmentData.patient.identificationNumber">DNI {{params.appointmentData.patient.identificationNumber}}</span>
 					</div>
 					<div>
-						<a class="mat-body" *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']"
+						<a class="mat-body" *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
 							(click)="closeDialog()">Ver historia clínica</a>
 					</div>
@@ -146,7 +146,7 @@
 			</div>
 		</section>
 
-		<ng-container *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+		<ng-container *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container *ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
 				<section id="report" fxLayout="column">
 					<span class="mat-body-strong" fxLayout="row">Descargar informes</span>
@@ -163,7 +163,7 @@
 		</ng-container>
 	</div>
 
-	<mat-dialog-actions *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']"
+	<mat-dialog-actions *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 		align="end">
 		<ng-container *ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
 			<button type="button" mat-flat-button color="primary" id="report-appointment"
