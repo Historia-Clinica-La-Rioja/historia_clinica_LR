@@ -1,0 +1,8 @@
+@mixin app-indices($theme) {
+    $palette-primary: map-get($theme, primary);
+    app-indices {
+        .index-box {
+            background-color:  mat-color($palette-primary, 50);;
+        }
+    }
+}

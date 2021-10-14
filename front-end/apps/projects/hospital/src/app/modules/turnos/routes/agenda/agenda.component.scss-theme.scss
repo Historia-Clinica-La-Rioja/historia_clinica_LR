@@ -1,0 +1,23 @@
+@mixin app-agenda($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    app-agenda {
+        .turnos {
+            .navigation.mat-button-toggle-appearance-standard {
+                background-color: mat-color($palette-primary); // previuos color #26aa26;
+                color: white;
+            }
+
+            .toggle-view {
+                .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+                    background-color: mat-color($palette-primary, 700); // previuos color #0062cd;
+                }
+
+                .mat-button-toggle-appearance-standard {
+                    background-color: mat-color($palette-primary); // previuos color #007aff;
+                    color: white;
+                }
+            }
+        }
+    }
+}

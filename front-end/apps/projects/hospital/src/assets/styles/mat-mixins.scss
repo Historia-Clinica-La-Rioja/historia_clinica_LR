@@ -45,19 +45,6 @@ $default-color: 50;
 	}
 }
 
-@mixin no-data($theme) {
-	$palette: map-get($theme, primary);
-	app-no-data {
-		div.no-data {
-			padding: 20px 5px;
-			text-align: center;
-			font-weight: bold;
-			color: #A8A8A8;
-			background-color: white;
-		}
-	}
-}
-
 @mixin mat-table($theme) {
 	$primary-palette: map-get($theme, primary);
 	$accent-palette: map-get($theme, accent);
@@ -220,32 +207,6 @@ $default-color: 50;
 	}
 }
 
-@mixin signos-vitales-box($theme) {
-	$palette: map-get($theme, primary);
-	app-signo-vital {
-		mat-card.mat-card {
-			background-color: $primary-bg;
-
-			div.current-value {
-				color: mat-color($palette, default);
-			}
-		}
-	}
-}
-
-@mixin detail-box($theme) {
-	$palette: map-get($theme, primary);
-	app-detail-box {
-		mat-card.mat-card {
-			border: 1px solid mat-color($palette, default);
-			background-color: $primary-bg;
-
-			span.value {
-				color: mat-color($palette, default);
-			}
-		}
-	}
-}
 
 @mixin mat-dialog($theme) {
 	$primary-palette: map-get($theme, primary);
@@ -291,4 +252,16 @@ $default-color: 50;
 	.background-color-primary {
 		background-color: mat-color($primary-palette);
 	}
+}
+
+@mixin material-mixins($theme) {
+	@include general($theme);
+	@include mat-nav-list($theme);
+	@include mat-selection-list($theme);
+	@include mat-table($theme);
+	@include mat-card-box($theme);
+	@include mat-dialog($theme);
+	@include mat-button($theme);
+	@include header($theme);
+	@include mat-theme-color($theme);
 }

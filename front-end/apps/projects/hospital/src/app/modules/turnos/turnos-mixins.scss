@@ -1,0 +1,5 @@
+@import "./routes/agenda/agenda.component.scss-theme.scss";
+
+@mixin turnos-mixins($theme) {
+    @include app-agenda($theme);
+}

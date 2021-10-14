@@ -50,8 +50,12 @@ section {
 
 .dark-theme {
 	@include angular-material-color($dark-theme);
+	@include custom-components-color($dark-theme);
+	@include material-mixins($dark-theme);
 }
 
 .candy-app-theme {
 	@include angular-material-color($candy-app-theme);
+	@include custom-components-color($candy-app-theme);
+	@include material-mixins($candy-app-theme);
 }
