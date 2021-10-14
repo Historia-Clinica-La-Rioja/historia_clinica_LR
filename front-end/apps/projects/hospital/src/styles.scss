@@ -47,3 +47,11 @@ section {
 		}
 	}
 }
+
+.dark-theme {
+	@include angular-material-color($dark-theme);
+}
+
+.candy-app-theme {
+	@include angular-material-color($candy-app-theme);
+}

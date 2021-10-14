@@ -25,12 +25,14 @@ import { AppMaterialModule } from './modules/material/app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { environment } from '@environments/environment';
 import { ExtensionsModule } from '@extensions/extensions.module';
+import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 
 registerLocaleData(localeEsAr, 'es-AR');
 
 @NgModule({
 	declarations: [
 		AppComponent,
+		ExchangeableThemeComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,

@@ -66,6 +66,8 @@ public enum AppFeature implements Feature {
     @Label("Indica si se restringe la opción de editar paciente")
     RESTRINGIR_DATOS_EDITAR_PACIENTE,
     
+    @Label("Indica si está habilitado la opción de cambiar el tema de la aplicación")
+    HABILITAR_INTERCAMBIO_TEMAS
     ;
 
     public boolean isActive() {
