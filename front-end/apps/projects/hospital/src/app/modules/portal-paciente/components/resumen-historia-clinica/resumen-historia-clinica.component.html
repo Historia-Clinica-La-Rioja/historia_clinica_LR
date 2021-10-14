@@ -16,7 +16,7 @@
 			</div>
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
-					<app-medicacion-summary [medications]="medications$ | async">
+					<app-medicacion-summary [medicationsHeader]="medicationsHeader" [medications]="medications$ | async">
 					</app-medicacion-summary>
 				</div>
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">

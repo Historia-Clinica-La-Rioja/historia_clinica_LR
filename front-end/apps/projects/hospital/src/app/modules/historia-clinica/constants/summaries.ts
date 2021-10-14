@@ -42,6 +42,11 @@ export const MEDICACION: SummaryHeader = {
 	matIcon: 'event_available'
 };
 
+export const MEDICACION_HABITUAL: SummaryHeader = {
+	title: 'Medicación habitual',
+	matIcon: 'event_available'
+};
+
 export const ALERGIAS: SummaryHeader = {
 	title: 'Alergias',
 	matIcon: 'queue'
@@ -88,7 +93,7 @@ export const PROBLEMAS_RESUELTOS: SummaryHeader = {
 };
 
 export const PROBLEMAS_ANTECEDENTES: SummaryHeader = {
-	title: 'Problemas/Antecedentes',
+	title: 'Problemas activos y crónicos',
 	matIcon: 'error_outline'
 };
 

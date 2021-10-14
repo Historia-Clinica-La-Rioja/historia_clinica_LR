@@ -35,7 +35,7 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
-						<app-medicacion-summary [medications]="medications$ | async"></app-medicacion-summary>
+						<app-medicacion-summary [medicationsHeader]="medicationsHeader" [medications]="medications$ | async"></app-medicacion-summary>
 						<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
 							<app-table class="mante" [showTableHeader]="true" [model]="this.medicationsTable"
 									   *ngIf="medicationsTable?.data?.length > 0 else noInfo"></app-table>
