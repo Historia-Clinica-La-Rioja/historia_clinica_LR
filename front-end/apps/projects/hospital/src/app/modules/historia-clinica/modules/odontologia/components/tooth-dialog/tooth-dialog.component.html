@@ -1,4 +1,4 @@
-<div fxLayout="column" fxLayoutGap="7px">
+<div class="tooth-dialog" fxLayout="column" fxLayoutGap="7px">
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 		<app-tooth #tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
@@ -65,6 +65,9 @@
 	<mat-dialog-actions fxLayoutAlign="end end">
 		<button *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']" mat-raised-button color="primary"
 			(click)="confirm()">Confirmar </button>
+			<button class="close" type="button" mat-dialog-close mat-icon-button matSuffix fxLayout="column">
+				<mat-icon>close</mat-icon>
+			</button>	
 	</mat-dialog-actions>
 
 </div>

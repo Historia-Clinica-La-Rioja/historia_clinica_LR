@@ -24,6 +24,7 @@ div {
 .mat-dialog-actions{
 	margin-top: 15px;
 	margin-bottom: auto;
+	min-height: auto;
 }
 
 .subtitle-font-size{
@@ -44,4 +45,15 @@ div {
 
 .disable-button{
 	color: #9c9fa3;
+}
+
+.tooth-dialog{
+	position: relative;
+}
+
+.close{
+	transform: scale(1.0);
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }
