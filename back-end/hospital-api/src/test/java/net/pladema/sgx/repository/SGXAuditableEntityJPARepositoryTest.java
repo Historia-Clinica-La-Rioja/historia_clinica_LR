@@ -1,5 +1,6 @@
 package net.pladema.sgx.repository;
 
+import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
 import net.pladema.UnitRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -49,7 +50,7 @@ public class SGXAuditableEntityJPARepositoryTest extends UnitRepository {
 
             @Override
             public Object getPrincipal() {
-                return 144;
+                return new SgxUserDetails(144);
             }
 
             @Override
