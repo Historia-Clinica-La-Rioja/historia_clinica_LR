@@ -35,7 +35,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | token.header |  | Authorization | Único | Nombre del header que almacena el token de session | v0.2.0 |
 | token.secret | TOKEN_SECRET | ultra_secret_token | **Obligatorio** | La clave secreta de generación de token, usada para validar los tokens recibidos desde los request. | v0.2.0 |
-| token.expiration | TOKEN_EXPIRATION | 120 | Opcional | Tiempo de expiración del token en segundos | v0.2.0 |
+| token.expiration | TOKEN_EXPIRATION | 30m | Opcional | Tiempo de expiración del token en m(inutos). Se puede elegir las siguientes medidas de duración: s(egundos), m(inutos), h(oras) | v0.2.0 |
 | validationToken.expiration | VALIDTOKEN_EXPIRATION | 1440 | Opcional |  | v0.2.0 | 
 | refreshToken.expiration | REFRESHTOKEN_EXPIRATION | 2880 | Opcional | Tiempo de expiración del refreshToken en segundos. Debe ser más grande que el tiempo del token |  |
 
