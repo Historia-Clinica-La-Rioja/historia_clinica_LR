@@ -293,3 +293,32 @@ databaseChangeLog:
                 SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id
                 FROM users u
                 LEFT JOIN user_person as up ON (u.id = up.user_id)
+
+    - changeSet:
+        id: addData-applicable_diagnostic
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('468785006','barra metalica sobre implantes',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('398791000221100','puente por tecnologia cad cam',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('285071002','puente dental transitorio',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('468782009','puente dental, de cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('469108005','puente dental, de metal y cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('469111006','puente adhesivo',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('398761000221105','tramo de puente',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false});
+
+    - changeSet:
+        id: addData-applicable_procedure
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('468785006','barra metalica sobre implantes',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('398791000221100','puente por tecnologia cad cam',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('285071002','puente dental transitorio',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('468782009','puente dental, de cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('469108005','puente dental, de metal y cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('469111006','puente adhesivo',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
