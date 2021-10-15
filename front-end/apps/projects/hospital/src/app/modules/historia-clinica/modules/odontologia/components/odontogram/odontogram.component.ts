@@ -96,6 +96,7 @@ export class OdontogramComponent implements OnInit {
 
 	clearOdontogram() {
 		this.odontogramService.resetOdontogram();
+		this.actionsFrom = [];
 	}
 
 	openConsultationPopup() {
