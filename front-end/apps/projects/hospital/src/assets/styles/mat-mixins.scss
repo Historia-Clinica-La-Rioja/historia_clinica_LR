@@ -45,6 +45,16 @@ $default-color: 50;
 	}
 }
 
+@mixin mat-tab-label($theme) {
+	$primary-palette: map-get($theme, primary);
+	.mat-tab-label.mat-tab-label-active {
+		opacity: 1;
+		span {
+			color: mat-color($primary-palette, default);
+		}
+	}
+}
+
 @mixin mat-table($theme) {
 	$primary-palette: map-get($theme, primary);
 	$accent-palette: map-get($theme, accent);
@@ -264,4 +274,5 @@ $default-color: 50;
 	@include mat-button($theme);
 	@include header($theme);
 	@include mat-theme-color($theme);
+	@include mat-tab-label($theme);
 }
