@@ -1,3 +1,4 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
@@ -7,7 +8,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class ExchangeableThemeComponent {
 
-	constructor() { // This is intentional 
+	constructor(
+		private overlayContainer: OverlayContainer
+	) { // This is intentional 
 	}
 
 	themesOptions: Theme[] = [{
@@ -23,7 +26,14 @@ export class ExchangeableThemeComponent {
 	}];
 	selectedTheme: Theme;
 
-	@Output() themeChanged = new EventEmitter();
+	@Output() themeChanged: EventEmitter<Theme> = new EventEmitter();
+
+ 	setTheme(theme: Theme) {
+		this.selectedTheme = theme;
+		this.themeChanged.next(theme);
+		this.overlayContainer.getContainerElement().classList.remove(... this.themesOptions.map(a => a.class));
+		this.overlayContainer.getContainerElement().classList.add(theme.class);
+	} 
 }
 
 

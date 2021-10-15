@@ -4,7 +4,7 @@
 	</button>
 	<mat-menu #menu="matMenu">
 		<div *ngFor="let theme of themesOptions">
-			<button mat-menu-item (click)="themeChanged.next(theme)">
+			<button mat-menu-item (click)="setTheme(theme)">
 				<span>{{theme.name}}</span>
 			</button>
 		</div>
