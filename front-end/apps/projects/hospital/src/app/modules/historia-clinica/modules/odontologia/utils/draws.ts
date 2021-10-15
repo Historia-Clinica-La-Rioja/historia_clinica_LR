@@ -65,8 +65,14 @@ export const getDraw = (toothPartId: string, svgName: string) => {
 
 const moveCenter = (svgName: string): number => {
 	let toTransformY = 0;
-	if (svgName === 'red_cross_and_red_vertical_line') {
-		toTransformY -= 19.5;
+	switch (svgName) {
+		case 'red_cross_and_red_vertical_line':
+			toTransformY -= 19.5;
+			break;
+		case 'short_vertical_red_line':
+		case 'TC':
+			toTransformY -= 37.5;
+			break;
 	}
 	return toTransformY;
 }
