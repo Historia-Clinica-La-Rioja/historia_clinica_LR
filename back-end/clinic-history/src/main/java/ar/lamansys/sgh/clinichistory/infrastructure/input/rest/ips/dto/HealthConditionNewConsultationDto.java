@@ -38,6 +38,5 @@ public class HealthConditionNewConsultationDto implements Serializable {
 
     private Boolean isChronic;
 
-    @NotNull(message = "{value.mandatory}")
     private String severity;
 }

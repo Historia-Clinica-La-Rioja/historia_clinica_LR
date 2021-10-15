@@ -11,6 +11,8 @@ import {HEALTH_CLINICAL_STATUS} from '../../modules/internacion/constants/ids';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
 import {hasError} from '@core/utils/form.utils';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import {format} from "date-fns";
+import {DateFormatter, MIN_DATE} from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-solve-problem',
@@ -29,6 +31,8 @@ export class SolveProblemComponent implements OnInit {
 	private readonly problemId: number;
 	private readonly startDate: Date;
 	severityTypeMasterData: any[];
+	today: Date;
+	minDate = MIN_DATE;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) data,
@@ -45,10 +49,11 @@ export class SolveProblemComponent implements OnInit {
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
-		this.startDate = this.toFormatDate(this.dataDto.startDate);
+		this.today = this.toFormatDate(format( new Date(), DateFormatter.VIEW_DATE));
+		this.startDate = this.dataDto.startDate ? this.toFormatDate(this.dataDto.startDate) : this.today;
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			severidad: [null, Validators.required],
+			severidad: [null],
 			cronico: [null, Validators.required],
 			fechaInicio: [null, Validators.required],
 			fechaFin: [null, Validators.required]
@@ -73,7 +78,7 @@ export class SolveProblemComponent implements OnInit {
 			this.form.controls.severidad.disable();
 		}
 		this.form.controls.cronico.setValue(p.isChronic);
-		this.form.controls.fechaInicio.setValue(new Date(p.startDate).toLocaleDateString('es-AR', {timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit'}));
+		p.startDate ? this.form.controls.fechaInicio.setValue(p.startDate) : this.form.controls.fechaInicio.setValue(this.toFormatDate(format( new Date(), DateFormatter.VIEW_DATE)));
 	}
 
 	solveProblem() {
@@ -90,6 +95,7 @@ export class SolveProblemComponent implements OnInit {
 			dialogRefConfirmation.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
 					this.problema.inactivationDate = this.form.value.fechaFin.toDate();
+					this.problema.startDate = this.form.value.fechaInicio;
 					this.problema.statusId = HEALTH_CLINICAL_STATUS.RESUELTO;
 					this.problema.id = this.problemId;
 					if (this.form.value.severidad) {

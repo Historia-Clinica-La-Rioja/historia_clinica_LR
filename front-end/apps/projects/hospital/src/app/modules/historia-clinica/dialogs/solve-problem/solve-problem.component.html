@@ -36,7 +36,10 @@
 
 				<mat-form-field appearance="outline" >
 					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'"></mat-label>
-					<input matInput id="fecha_inicio" formControlName="fechaInicio" readonly>
+					<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker" [min]="minDate" [max]="today" formControlName="fechaInicio"
+						   (dateChange)="checkInactivationDate()">
+					<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
+					<mat-datepicker #inicioDatePicker></mat-datepicker>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
