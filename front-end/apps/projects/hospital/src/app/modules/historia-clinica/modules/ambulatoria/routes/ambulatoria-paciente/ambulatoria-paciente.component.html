@@ -47,14 +47,6 @@
 		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)">
-					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled">
-						<ng-template mat-tab-label>
-							<span>ODONTOLOGÍA</span>
-						</ng-template>
-						<ng-template matTabContent>
-							<app-odontogram></app-odontogram>
-						</ng-template>
-					</mat-tab>
 					<mat-tab id="tab_resumen">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
@@ -97,6 +89,14 @@
 							<ng-container *ngIf="(extensionTab.body$ | async) as tabPage; else loading">
 								<app-page [page]="tabPage"></app-page>
 							</ng-container>
+						</ng-template>
+					</mat-tab>
+					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled">
+						<ng-template mat-tab-label>
+							<span>ODONTOLOGÍA</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-odontogram></app-odontogram>
 						</ng-template>
 					</mat-tab>
 
