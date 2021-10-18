@@ -4,6 +4,6 @@ const MIN_DAY = 1;
 
 export const MIN_DATE = new Date (MIN_YEAR, MIN_MONTH, MIN_DAY)
 
-export enum DateFormatter {
+export enum DateFormat {
 	VIEW_DATE = 'dd/MM/yyyy',
 }

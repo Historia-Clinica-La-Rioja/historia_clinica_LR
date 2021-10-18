@@ -12,7 +12,7 @@ import {OutpatientConsultationService} from '@api-rest/services/outpatient-consu
 import {hasError} from '@core/utils/form.utils';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 import {format} from "date-fns";
-import {DateFormatter, MIN_DATE} from "@core/utils/date.utils";
+import {DateFormat, MIN_DATE} from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-solve-problem',
@@ -29,7 +29,7 @@ export class SolveProblemComponent implements OnInit {
 	private dataDto: HCEPersonalHistoryDto;
 	private readonly patientId: number;
 	private readonly problemId: number;
-	private readonly startDate: Date;
+	dateIsReadOnly: boolean;
 	severityTypeMasterData: any[];
 	today: Date;
 	minDate = MIN_DATE;
@@ -49,8 +49,7 @@ export class SolveProblemComponent implements OnInit {
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
-		this.today = this.toFormatDate(format( new Date(), DateFormatter.VIEW_DATE));
-		this.startDate = this.dataDto.startDate ? this.toFormatDate(this.dataDto.startDate) : this.today;
+		this.today = this.toFormatDate(format( new Date(), DateFormat.VIEW_DATE));
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
 			severidad: [null],
@@ -73,12 +72,22 @@ export class SolveProblemComponent implements OnInit {
 
 	initializeFields(p: HealthConditionNewConsultationDto) {
 		this.form.controls.snomed.setValue(p.snomed.pt);
+
 		if (p.severity) {
 			this.form.controls.severidad.setValue(p.severity);
 			this.form.controls.severidad.disable();
 		}
+
+		let dateToSet;
+		if(p.startDate) {
+			dateToSet = this.toFormatDate(this.dataDto.startDate)
+			this.dateIsReadOnly = true
+		} else {
+			dateToSet = this.toFormatDate(format( new Date(), DateFormat.VIEW_DATE))
+		}
+
 		this.form.controls.cronico.setValue(p.isChronic);
-		p.startDate ? this.form.controls.fechaInicio.setValue(p.startDate) : this.form.controls.fechaInicio.setValue(this.toFormatDate(format( new Date(), DateFormatter.VIEW_DATE)));
+		this.form.controls.fechaInicio.setValue(dateToSet);
 	}
 
 	solveProblem() {
@@ -122,15 +131,19 @@ export class SolveProblemComponent implements OnInit {
 
 	checkInactivationDate() {
 		const fechaFin = this.form.controls.fechaFin.value;
+		const fechaInicio = this.form.controls.fechaInicio.value;
 
 		if (fechaFin) {
-			const inactivationDate = fechaFin.toDate();
-			if (this.startDate > inactivationDate) {
-				this.form.controls.fechaFin.setErrors({min: true});
-			}
-			const actualDate = new Date();
-			if (inactivationDate > actualDate) {
-				this.form.controls.fechaFin.setErrors({max: true});
+			if(fechaInicio) {
+				const inactivationDate = fechaFin.toDate();
+				const initDate = fechaInicio;
+				if (initDate > inactivationDate) {
+					this.form.controls.fechaFin.setErrors({min: true});
+				}
+				const actualDate = new Date();
+				if (inactivationDate > actualDate) {
+					this.form.controls.fechaFin.setErrors({max: true});
+				}
 			}
 		}
 	}
