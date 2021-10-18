@@ -808,10 +808,10 @@ export interface HCEAllergyDto extends ClinicalTermDto {
 }
 
 export interface HCEAnthropometricDataDto extends Serializable {
-    bloodType?: HCEClinicalObservationDto;
+    bloodType?: HCEEffectiveClinicalObservationDto;
     bmi?: HCEClinicalObservationDto;
-    height?: HCEClinicalObservationDto;
-    weight?: HCEClinicalObservationDto;
+    height?: HCEEffectiveClinicalObservationDto;
+    weight?: HCEEffectiveClinicalObservationDto;
 }
 
 export interface HCEClinicalObservationDto extends Serializable {
