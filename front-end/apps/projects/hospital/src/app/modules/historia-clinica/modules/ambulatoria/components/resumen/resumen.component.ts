@@ -39,7 +39,6 @@ export class ResumenComponent implements OnInit, OnChanges {
 	public healthConditionsTable: TableModel<ConditionDto>;
 	public allergiesTable: TableModel<AllergyIntoleranceDto>;
 	public medicationsTable: TableModel<MedicationInteroperabilityDto>;
-	public familyHistoriesTable: TableModel<OutpatientFamilyHistoryDto>;
 	@Input() patientExternalSummary: PatientSummaryDto;
 
 	constructor(

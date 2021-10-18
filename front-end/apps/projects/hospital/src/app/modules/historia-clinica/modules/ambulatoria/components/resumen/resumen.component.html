@@ -21,13 +21,6 @@
 						<app-antecedentes-familiares-summary [familyHistories]="familyHistories$ | async"
 							[familyHistoriesHeader]="familyHistoriesHeader">
 						</app-antecedentes-familiares-summary>
-						<app-external-summary-card *ngIf="loadExternal" [header]="this.patientExternalSummary.organization.name">
-							<app-table [showTableHeader]="false" [model]="this.familyHistoriesTable"
-									   *ngIf="familyHistoriesTable?.data?.length > 0 else noInfo"></app-table>
-							<ng-template #noInfo>
-								<app-no-data></app-no-data>
-							</ng-template>
-						</app-external-summary-card>
 					</ng-container>
 				</div>
 			</div>
