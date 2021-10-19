@@ -41,6 +41,8 @@ export default {
           "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
         },
         "PROFESSIONAL_REQUIRED": "Alguno de los roles asignados requiere que el usuario sea un profesional",
+        "ROOT_LOST_PERMISSION": "El admin no puede perder el rol: ROOT",
+        "USER_INVALID_ROLE": "El usuario creado no puede tener el siguiente rol: ROOT",
         "user":{
             "exists": "Esta persona ya tiene un usuario en el sistema",
             "hasrole": "El profesional que quiere eliminar tiene un rol asociado"
@@ -219,6 +221,18 @@ export default {
                 newReset: 'Generar link',
             },
             createRelated: 'Crear Usuario',
+            noEmail: "Sin información",
+        },
+        admin: {
+            name: 'Admin |||| Admins',
+            fields: {
+                username: 'Nombre de usuario',
+                enable: 'Habilitado',
+                lastLogin: 'Último ingreso',
+                institutionId: 'Institución',
+                roleId: 'Rol',
+                email: "E-mail"
+            },
             noEmail: "Sin información",
         },
         internmentepisodes: {

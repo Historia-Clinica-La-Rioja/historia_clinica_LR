@@ -397,3 +397,23 @@ databaseChangeLog:
                                  vc.created_by, vc.created_on, vc.updated_by, vc.updated_on, vc.deleted_by, vc.deleted_on, vc.deleted
                          FROM vaccine_consultation as vc
                          JOIN document as d ON (vc.id = d.source_id and d.source_type_id = 5)
+
+
+    - changeSet:
+        id: update-v_hospital_users-postgresql-error-admin
+        author: etrapani
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_hospital_users
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id
+                FROM users u
+                INNER JOIN user_person as up ON (u.id = up.user_id)
+                UNION
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, -1
+                FROM users u
+                WHERE u.id NOT IN (SELECT up.user_id FROM user_person as up)

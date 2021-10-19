@@ -25,6 +25,7 @@ import healthcareprofessionalspecialties from './modules/healthcareprofessionals
 import doctorsoffices from './modules/doctorsoffices'
 
 import person from './modules/person'
+import admin from './modules/admin';
 import users from './modules/users';
 import passwordReset from './modules/password-reset';
 
@@ -96,6 +97,7 @@ const App = () => {
         <Resource name="doctorsoffices" {...doctorsoffices}/>,
         <Resource name="rooms" {...rooms}/>,
         <Resource name="beds" {...beds}/>,
+        <Resource name="admin" {...admin}/>,
         <Resource name="users" {...users}/>,
         <Resource name="dependencies" />,
         <Resource name="personextended" />,
