@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.publicapi.infrastructure.output;
 
 import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
+import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
+import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageExceptionEnum;
 import ar.lamansys.sgh.publicapi.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,9 +62,12 @@ public class ActivityStorageImpl implements ActivityStorage {
         List<Object[]> queryResult = query.getResultList();
 
         Object[] resultSearch = queryResult.size() == 1 ? queryResult.get(0) : null;
-        Optional<AttentionInfoBo> result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo);
+        AttentionInfoBo result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo)
+                .orElseThrow(() -> new ActivityStorageException(ActivityStorageExceptionEnum.ACTIVITY_NOT_EXISTS,
+                        "La actividad no existe"));
+
         LOG.trace("Output -> {}", result);
-        return result;
+        return Optional.of(result);
     }
 
     @Override
