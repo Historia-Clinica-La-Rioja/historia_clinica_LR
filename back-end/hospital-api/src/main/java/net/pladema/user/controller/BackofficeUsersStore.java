@@ -77,10 +77,10 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 
 		ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
 				.withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withMatcher("personId", ExampleMatcher.GenericPropertyMatchers.exact())
 				.withIgnorePaths("audit", "enable");
 
 		List<BackofficeUserDto> result = vHospitalUserRepository.findAll(Example.of(modelUser, customExampleMatcher)).stream()
-				.filter(this::infrastructureUsers)
 				.map(userDtoMapper::fromVHospitalUserToDto)
 				.collect(Collectors.toList());
 		int minIndex = pageable.getPageNumber()*pageable.getPageSize();
@@ -239,8 +239,17 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 				});
 
 
-		if(List.of(ERole.ROOT).stream().anyMatch(eRole -> existRole(eRole, dto.getRoles())))
+		if(isROOTUser(dto.getUsername()) && !hasRootRole(dto.getRoles()))
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.ROOT_LOST_PERMISSION, "El admin no puede perder el rol: ROOT");
+		if(!isROOTUser(dto.getUsername()) && hasRootRole(dto.getRoles()))
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El usuario creado no puede tener el siguiente rol: ROOT");
+	}
+
+	private boolean isROOTUser(String username) {
+		return "admin@example.com".equals(username);
+	}
+	private boolean hasRootRole(List<BackofficeUserRoleDto> roles) {
+		return List.of(ERole.ROOT).stream().anyMatch(eRole -> existRole(eRole, roles));
 	}
 
 	private boolean existRole(ERole eRole, List<BackofficeUserRoleDto> roles) {

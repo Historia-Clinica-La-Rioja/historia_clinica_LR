@@ -1888,7 +1888,9 @@ export interface UIPageDto {
 
 export interface UserDto extends AbstractUserDto {
     email: string;
+    firstName: string;
     id: number;
+    lastName: string;
     personDto: UserPersonDto;
     personId: number;
 }

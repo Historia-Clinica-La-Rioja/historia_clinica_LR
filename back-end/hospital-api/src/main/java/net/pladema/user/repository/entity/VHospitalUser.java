@@ -26,13 +26,13 @@ public class VHospitalUser {
 	@Column(name = "username", nullable = false, unique = true, length = 100)
 	private String username;
 
-	@Column(name = "enable", nullable = false)
+	@Column(name = "enable")
 	private Boolean enable = false;
 
 	@Column(name = "last_login")
 	private LocalDateTime lastLogin;
 
-	@Column(name = "person_id", nullable = false)
+	@Column(name = "person_id")
 	private Integer personId;
 
 }
