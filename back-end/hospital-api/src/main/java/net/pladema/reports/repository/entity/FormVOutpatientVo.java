@@ -19,7 +19,7 @@ public class FormVOutpatientVo extends FormVVo{
 
     public FormVOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
                              LocalDate patientBirthDate, String documentType, String documentNumber, LocalDate consultationDate, String problems,
-                             String streetName, String streetNumber,String city, String sisaCode, String cie10Codes){
+                             String streetName, String streetNumber, String city, String sisaCode, String cie10Codes){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType,
                 documentNumber, streetName, streetNumber, city, sisaCode);
         this.consultationDate = consultationDate;

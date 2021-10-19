@@ -26,7 +26,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     public Optional<FormVAppointmentVo> getAppointmentFormVInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.FormVAppointmentVo(i.name, pe.firstName, pe.middleNames, "+
                 "               pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, "+
-                "               pe.identificationNumber, mc.name, pmca.affiliateNumber, ad.street, ad.number, ci.description, i.sisaCode) "+
+                "               pe.identificationNumber, ad.street, ad.number, ci.description, mc.name, pmca.affiliateNumber, i.sisaCode) "+
                 "       FROM Appointment AS a "+
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) "+
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) "+
