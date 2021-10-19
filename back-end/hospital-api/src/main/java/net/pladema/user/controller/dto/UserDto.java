@@ -30,4 +30,16 @@ public class UserDto extends AbstractUserDto {
 			return null;
 		return personDto.getId();
 	}
+
+	public String getFirstName() {
+		if (personDto == null)
+			return null;
+		return personDto.getFirstName();
+	}
+
+	public String getLastName() {
+		if (personDto == null)
+			return null;
+		return personDto.getLastName();
+	}
 }

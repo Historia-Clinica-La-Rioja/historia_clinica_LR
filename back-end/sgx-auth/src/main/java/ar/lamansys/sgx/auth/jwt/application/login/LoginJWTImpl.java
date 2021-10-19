@@ -35,6 +35,8 @@ public class LoginJWTImpl implements Login {
     @Override
     public JWTokenBo execute(LoginBo login) throws BadLoginException {
         UserInfoBo user = userInfoStorage.getUser(login.username);
+        if (user == null)
+            throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario invalido");
         if (!user.isEnable())
             throw new BadLoginException(BadLoginEnumException.DISABLED_USER, "Usuario invalido");
         if (!passwordEncryptor.matches(login.password, user.getPassword()))

@@ -4,7 +4,6 @@ import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalServic
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.controller.service.domain.UserPersonInfoBo;
 import net.pladema.user.repository.UserPersonRepository;
-import net.pladema.user.repository.entity.UserPerson;
 import net.pladema.user.service.domain.HospitalUserStorage;
 import org.springframework.stereotype.Service;
 
@@ -29,23 +28,25 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 
     @Override
     public Optional<UserPersonInfoBo> getUserPersonInfo(Integer userId) {
-        return userPersonRepository.getByUserId(userId)
-            .map(this::apply);
-    }
-
-    private UserPersonInfoBo apply(UserPerson userPerson) {
-        UserPersonInfoBo result = new UserPersonInfoBo();
-        var personData = personExternalService.getBasicDataPerson(userPerson.getPersonId());
-        if (personData != null) {
-            result.setPersonId(personData.getId());
-            result.setFirstName(personData.getFirstName());
-            result.setLastName(personData.getLastName());
-        }
-        userExternalService.getUser(userPerson.getUserId())
-                .ifPresent(userInfoDto -> {
+        return userExternalService.getUser(userId)
+                .map(userInfoDto -> {
+                    UserPersonInfoBo result = new UserPersonInfoBo();
                     result.setId(userInfoDto.getId());
                     result.setEmail(userInfoDto.getUsername());
+                    return result;
+                })
+                .map(this::loadPersonInfo);
+
+    }
+
+    private UserPersonInfoBo loadPersonInfo(UserPersonInfoBo userPersonInfoBo) {
+        userPersonRepository.getByUserId(userPersonInfoBo.getId())
+                .map(userPerson -> personExternalService.getBasicDataPerson(userPerson.getPersonId()))
+                .ifPresent(basicDataPersonDto -> {
+                    userPersonInfoBo.setPersonId(basicDataPersonDto.getId());
+                    userPersonInfoBo.setFirstName(basicDataPersonDto.getFirstName());
+                    userPersonInfoBo.setLastName(basicDataPersonDto.getLastName());
                 });
-        return result;
+        return userPersonInfoBo;
     }
 }

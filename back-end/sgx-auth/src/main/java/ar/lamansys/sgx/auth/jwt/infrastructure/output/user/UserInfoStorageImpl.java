@@ -24,7 +24,7 @@ public class UserInfoStorageImpl implements UserInfoStorage {
     public UserInfoBo getUser(String username) {
         return userExternalService.getUser(username)
                 .map(this::toUserInfoBo)
-                .orElseThrow();
+                .orElse(null);
     }
 
     @Override
