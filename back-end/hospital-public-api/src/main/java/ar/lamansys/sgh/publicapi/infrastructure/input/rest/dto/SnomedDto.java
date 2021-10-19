@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.infrastructure.input.dto;
+package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto;
 
 import lombok.*;
 
@@ -7,9 +7,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@Builder
 public class SnomedDto implements Serializable {
 
-    Integer id;
-    String sctId;
-    String pt;
+    private String sctId;
+    private String pt;
 }

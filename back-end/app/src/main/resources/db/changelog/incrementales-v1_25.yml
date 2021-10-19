@@ -166,7 +166,7 @@ databaseChangeLog:
                               type: int
                         - column:
                               constraints:
-                                  nullable: false
+                                  nullable: false      
                               name: tooth_id
                               type: varchar(20)
                         - column:
@@ -322,3 +322,78 @@ databaseChangeLog:
                 INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('468782009','puente dental, de cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
                 INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('469108005','puente dental, de metal y cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
                 INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('469111006','puente adhesivo',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+    
+    - changeSet:    
+        id: institution-addProvinceCodeColumn
+        comment: Create column province_code to institution
+        author: ltoloza
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: province_code
+                    type: varchar(25)
+              tableName: institution
+
+    - changeSet:
+          id: attention_reads-createTable
+          comment: Create table attention_reads
+          author: ltoloza
+          changes:
+              - createTable:
+                    tableName: attention_reads
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: attention_id
+                              type: bigint
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: user_id
+                              type: varchar(100)
+                        - column:
+                              name: processed
+                              type: boolean
+                        - column:
+                              name: performed_date
+                              type: datetime
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: attention_id, user_id
+                    constraintName: PK_attention_reads
+                    tableName: attention_reads
+
+    - changeSet:
+          id:  v_attention-createView
+          comment: Create v_attention view
+          author: ltoloza
+          changes:
+              -  createView:
+                     viewName: v_attention
+                     fullDefinition:  false
+                     replaceIfExists:  true
+                     selectQuery: |-
+                         SELECT d.id as id, oc.patient_id as patient_id, oc.institution_id as institution_id, oc.clinical_specialty_id as clinical_speciality_id,
+                                 oc.start_date as performed_date, d.source_id as encounter_id, d.source_type_id as scope_id, oc.doctor_id as doctor_id,
+                                 oc.created_by as created_by, oc.created_on as created_on, oc.updated_by as updated_by, oc.updated_on as updated_on,
+                                 oc.deleted_by as deleted_by, oc.deleted_on as deleted_on, oc.deleted as deleted
+                         FROM outpatient_consultation as oc
+                         JOIN document as d ON (oc.id = d.source_id and d.source_type_id = 1)
+                             UNION ALL
+                         SELECT d.id as id, ie.patient_id, ie.institution_id , ie.clinical_specialty_id , ie.entry_date, d.source_id, d.source_type_id, hpg.healthcare_professional_id,
+                                 ie.created_by, ie.created_on, ie.updated_by, ie.updated_on, ie.deleted_by, ie.deleted_on, ie.deleted
+                         FROM internment_episode as ie
+                         JOIN document AS d ON (ie.id = d.source_id and d.source_type_id = 0)
+                         JOIN healthcare_professional_group AS hpg ON (ie.id = hpg.internment_episode_id and hpg.responsible)
+                             UNION ALL
+                         SELECT d.id as id, dc.patient_id, dc.institution_id , dc.clinical_specialty_id , dc.performed_date, d.source_id, d.source_type_id, dc.doctor_id,
+                                 dc.created_by, dc.created_on, dc.updated_by, dc.updated_on, dc.deleted_by, dc.deleted_on, dc.deleted
+                         FROM odontology_consultation as dc
+                         JOIN document as d ON (dc.id = d.source_id and d.source_type_id = 6)
+                             UNION ALL
+                         SELECT d.id as id, vc.patient_id, vc.institution_id , vc.clinical_specialty_id , vc.performed_date, d.source_id, d.source_type_id, vc.doctor_id,
+                                 vc.created_by, vc.created_on, vc.updated_by, vc.updated_on, vc.deleted_by, vc.deleted_on, vc.deleted
+                         FROM vaccine_consultation as vc
+                         JOIN document as d ON (vc.id = d.source_id and d.source_type_id = 5)
