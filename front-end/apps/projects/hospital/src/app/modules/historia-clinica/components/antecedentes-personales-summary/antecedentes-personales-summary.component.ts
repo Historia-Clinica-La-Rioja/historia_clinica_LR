@@ -48,7 +48,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit, OnChanges
 				{
 					columnDef: 'fechaInicio',
 					header: 'Desde',
-					text: (row) => momentFormat(momentParseDate(row.startDate), DateFormat.VIEW_DATE)
+					text: (row) => row.startDate ? momentFormat(momentParseDate(row.startDate), DateFormat.VIEW_DATE) : ''
 				}
 				],
 			data
