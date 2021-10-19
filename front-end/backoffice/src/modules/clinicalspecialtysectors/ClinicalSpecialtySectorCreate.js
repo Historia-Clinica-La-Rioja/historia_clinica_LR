@@ -7,7 +7,7 @@ import {
     SimpleForm,
     required
 } from 'react-admin';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 
 const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
 

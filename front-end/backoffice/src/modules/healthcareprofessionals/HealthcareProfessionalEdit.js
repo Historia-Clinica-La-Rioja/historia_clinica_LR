@@ -9,7 +9,7 @@ import {
 import PersonReferenceInput from '../person/PersonReferenceInput';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 import ProfessionalSpecialtiesSection from "./ProfessionalSpecialtiesSection";
 
 const redirect = (basePath, id, data) => `/person/${data.personId}/show/2`;

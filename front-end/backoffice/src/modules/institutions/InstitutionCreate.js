@@ -10,7 +10,7 @@ import {
     maxLength,
     minLength
 } from 'react-admin';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 
 const Dependency = (sourceId) => {
     return (

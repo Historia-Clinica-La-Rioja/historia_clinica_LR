@@ -1,6 +1,6 @@
 import spanishMessages from '@blackbox-vision/ra-language-spanish';
 
-export default {
+const messages = {
     ...spanishMessages,
     sgh: {
         dashboard: {
@@ -252,3 +252,5 @@ export default {
         },
     },
 };
+
+export default messages;

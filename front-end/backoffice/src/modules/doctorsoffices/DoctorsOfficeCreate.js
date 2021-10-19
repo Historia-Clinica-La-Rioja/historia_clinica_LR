@@ -1,7 +1,7 @@
 import React from 'react';
 import {Create, required, SimpleForm, TextInput,} from 'react-admin';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 
 const redirect = (basePath, id, data) => `/clinicalspecialtysectors/${data.clinicalSpecialtySectorId}/show`;
 

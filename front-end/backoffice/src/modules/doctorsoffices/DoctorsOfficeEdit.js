@@ -1,7 +1,7 @@
 import React from 'react';
 import {Edit, required, SimpleForm, TextInput,} from 'react-admin';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 
 const DoctorsOfficeEdit = ({ permissions, ...props }) => (
     <Edit {...props}>

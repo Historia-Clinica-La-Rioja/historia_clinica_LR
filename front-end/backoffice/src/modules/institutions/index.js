@@ -1,11 +1,13 @@
-import InstitutionShow from './show';
-import InstitutionList from './list';
-import InstitutionCreate from './create';
-import InstitutionEdit from './edit';
+import InstitutionShow from './InstitutionShow';
+import InstitutionList from './InstitutionList';
+import InstitutionCreate from './InstitutionCreate';
+import InstitutionEdit from './InstitutionEdit';
 
-export default {
+const institutions = {
     show: InstitutionShow,
     list: InstitutionList,
     create: InstitutionCreate,
     edit: InstitutionEdit,
 };
+
+export default institutions;

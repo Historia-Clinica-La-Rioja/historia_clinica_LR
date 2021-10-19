@@ -1,5 +1,7 @@
 import LockIcon from '@material-ui/icons/Lock';
 
-export default {
+const passwordReset = {
     icon: LockIcon,
 };
+
+export default passwordReset;

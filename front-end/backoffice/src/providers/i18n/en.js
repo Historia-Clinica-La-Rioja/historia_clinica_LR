@@ -1,6 +1,6 @@
 import englishMessages from 'ra-language-english';
 
-export default {
+const messages = {
     ...englishMessages,
     pos: {
         search: 'Search',
@@ -143,3 +143,5 @@ export default {
         },
     },
 };
+
+export default messages;

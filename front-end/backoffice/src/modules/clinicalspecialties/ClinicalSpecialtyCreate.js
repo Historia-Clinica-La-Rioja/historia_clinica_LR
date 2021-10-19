@@ -5,7 +5,7 @@ import {
     SimpleForm,
     required
 } from 'react-admin';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 
 const ClinicalSpecialtyCreate = props => (
     <Create {...props}>

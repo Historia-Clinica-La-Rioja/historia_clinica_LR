@@ -1,6 +1,6 @@
 import React from 'react';
 import {AutocompleteInput, Create, DateInput, ReferenceInput, required, SimpleForm, TextInput,} from 'react-admin';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 
 const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
 

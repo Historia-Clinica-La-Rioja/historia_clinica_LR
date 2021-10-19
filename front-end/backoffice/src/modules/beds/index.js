@@ -1,11 +1,13 @@
-import BedShow from './show';
-import BedList from './list';
-import BedCreate from './create';
-import BedEdit from './edit';
+import BedShow from './BedShow';
+import BedList from './BedList';
+import BedCreate from './BedCreate';
+import BedEdit from './BedEdit';
 
-export default {
+const beds =  {
     show: BedShow,
     list: BedList,
     create: BedCreate,
     edit: BedEdit,
 };
+
+export default beds;

@@ -1,9 +1,11 @@
-import ClinicalSpecialtySectorShow from './show';
-import ClinicalSpecialtySectorList from './list';
-import ClinicalSpecialtySectorCreate from './create';
+import ClinicalSpecialtySectorShow from './ClinicalSpecialtySectorShow';
+import ClinicalSpecialtySectorList from './ClinicalSpecialtySectorList';
+import ClinicalSpecialtySectorCreate from './ClinicalSpecialtySectorCreate';
 
-export default {
+const clinicalspecialtysectors = {
     show: ClinicalSpecialtySectorShow,
     list: ClinicalSpecialtySectorList,
     create: ClinicalSpecialtySectorCreate,
 };
+
+export default clinicalspecialtysectors;

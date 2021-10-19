@@ -1,7 +1,9 @@
-import DepartmentList from './list';
-import DepartmentShow from './show';
+import DepartmentList from './DepartmentList';
+import DepartmentShow from './DepartmentShow';
 
-export default {
+const departments = {
     list: DepartmentList,
     show: DepartmentShow
 };
+
+export default departments;

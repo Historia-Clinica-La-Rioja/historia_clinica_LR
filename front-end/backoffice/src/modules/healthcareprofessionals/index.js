@@ -1,9 +1,11 @@
-import HealthcareProfessionalShow from './show';
-import HealthcareProfessionalCreate from './create';
-import HealthcareProfessionalEdit from './edit';
+import HealthcareProfessionalShow from './HealthcareProfessionalShow';
+import HealthcareProfessionalCreate from './HealthcareProfessionalCreate';
+import HealthcareProfessionalEdit from './HealthcareProfessionalEdit';
 
-export default {
+const healthcareprofessionals = {
     show: HealthcareProfessionalShow,
     create: HealthcareProfessionalCreate,
     edit: HealthcareProfessionalEdit,
 };
+
+export default healthcareprofessionals;

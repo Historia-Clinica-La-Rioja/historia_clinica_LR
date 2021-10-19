@@ -1,7 +1,9 @@
 import HealthcareProfessionalSpecialtyShow from './show';
 import HealthcareProfessionalSpecialtyCreate from './create';
 
-export default {
+const healthcareprofessionalspecialties = {
     show: HealthcareProfessionalSpecialtyShow,
     create: HealthcareProfessionalSpecialtyCreate,
 };
+
+export default healthcareprofessionalspecialties;

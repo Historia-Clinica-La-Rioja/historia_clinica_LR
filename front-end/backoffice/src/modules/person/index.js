@@ -1,7 +1,9 @@
-import PersonShow from './show';
-import { PersonList } from './PersonList';
+import PersonShow from './PersonShow';
+import PersonList from './PersonList';
 
-export default {
+const person = {
     show: PersonShow,
     list: PersonList,
 };
+
+export default person;

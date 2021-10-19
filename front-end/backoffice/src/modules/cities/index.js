@@ -1,10 +1,12 @@
 import SettingsIcon from '@material-ui/icons/Settings';
 
-import CityShow from './show';
-import CityList from './list';
+import CityShow from './CityShow';
+import CityList from './CityList';
 
-export default {
+const cities = {
     icon: SettingsIcon,
     show: CityShow,
     list: CityList,
 };
+
+export default cities;

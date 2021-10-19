@@ -16,7 +16,7 @@ const OkMessage = () => (
     <span>Bienvenido</span>
 );
 
-export default () => {
+const Home = () => {
     const translate = useTranslate();
     const { loading, authenticated } = useAuthState();
     if (loading) {
@@ -32,4 +32,4 @@ export default () => {
 
 };
 
-
+export default Home;

@@ -24,7 +24,7 @@ import apiRest from './utils/sgxApiRest';
  * CREATE       => POST http://my.api.url/posts
  * DELETE       => DELETE http://my.api.url/posts/123
  */
-export default (apiUrl, mappers) => {
+const sgxDataProvider = (apiUrl, mappers) => {
 
   const mapResponse = (resource, list) => {
     const mapper = mappers[resource];
@@ -149,3 +149,5 @@ export default (apiUrl, mappers) => {
     );
   };
 };
+
+export default sgxDataProvider;

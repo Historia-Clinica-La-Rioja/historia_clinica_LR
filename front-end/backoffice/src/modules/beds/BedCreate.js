@@ -9,7 +9,7 @@ import {
     required,
     BooleanInput,
 } from 'react-admin';
-import CustomToolbar from "../../modules/components/CustomToolbar";
+import CustomToolbar from "../components/CustomToolbar";
 
 const redirect = (basePath, id, data) => `/rooms/${data.roomId}/show`;
 
