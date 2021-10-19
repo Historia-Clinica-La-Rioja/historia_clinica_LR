@@ -1,6 +1,5 @@
 package net.pladema.reports.service.impl;
 
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.repository.AnnexReportRepository;
@@ -25,11 +24,8 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
     private final AnnexReportRepository annexReportRepository;
 
-    private final LocalDateMapper localDateMapper;
-
-    public AnnexReportServiceImpl(AnnexReportRepository annexReportRepository, LocalDateMapper localDateMapper){
+    public AnnexReportServiceImpl(AnnexReportRepository annexReportRepository){
         this.annexReportRepository = annexReportRepository;
-        this.localDateMapper = localDateMapper;
     }
 
     @Override
@@ -55,7 +51,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = loadBasicContext(reportDataDto);
         ctx.put("appointmentState", reportDataDto.getAppointmentState());
-        ctx.put("attentionDate", localDateMapper.fromLocalDateToString(reportDataDto.getAttentionDate()));
+        ctx.put("attentionDate", reportDataDto.getAttentionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
         return ctx;
@@ -65,7 +61,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     public Map<String, Object> createConsultationContext(AnnexIIDto reportDataDto){
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = loadBasicContext(reportDataDto);
-        ctx.put("consultationDate", localDateMapper.fromLocalDateToString(reportDataDto.getConsultationDate()));
+        ctx.put("consultationDate", reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("hasProcedures", reportDataDto.getHasProcedures());
         ctx.put("existsConsultation", reportDataDto.getExistsConsultation());
         ctx.put("specialty", reportDataDto.getSpecialty());
@@ -75,7 +71,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
     private Map<String, Object> loadBasicContext(AnnexIIDto reportDataDto) {
         Map<String, Object> ctx = new HashMap<>();
-        ctx.put("reportDate", localDateMapper.fromLocalDateToString(reportDataDto.getReportDate()));
+        ctx.put("reportDate", reportDataDto.getReportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("establishment", reportDataDto.getEstablishment());
         ctx.put("completePatientName", reportDataDto.getCompletePatientName());
         ctx.put("documentType", reportDataDto.getDocumentType());

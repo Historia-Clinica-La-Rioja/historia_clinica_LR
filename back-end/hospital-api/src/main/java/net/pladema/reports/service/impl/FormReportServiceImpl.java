@@ -1,6 +1,5 @@
 package net.pladema.reports.service.impl;
 
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.repository.FormReportRepository;
@@ -25,11 +24,8 @@ public class FormReportServiceImpl implements FormReportService {
 
     private final FormReportRepository formReportRepository;
 
-    private final LocalDateMapper localDateMapper;
-
-    public FormReportServiceImpl(FormReportRepository formReportRepository, LocalDateMapper localDateMapper){
+    public FormReportServiceImpl(FormReportRepository formReportRepository){
         this.formReportRepository = formReportRepository;
-        this.localDateMapper = localDateMapper;
     }
 
     @Override
@@ -63,7 +59,7 @@ public class FormReportServiceImpl implements FormReportService {
     public Map<String, Object> createConsultationContext(FormVDto reportDataDto){
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = loadBasicContext(reportDataDto);
-        ctx.put("consultationDate", localDateMapper.fromLocalDateToString(reportDataDto.getConsultationDate()));
+        ctx.put("consultationDate", reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("problems", reportDataDto.getProblems());
         ctx.put("cie10Codes", reportDataDto.getCie10Codes());
         return ctx;
@@ -74,7 +70,7 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("establishment", reportDataDto.getEstablishment());
         ctx.put("completePatientName", reportDataDto.getCompletePatientName());
         ctx.put("address", reportDataDto.getAddress());
-        ctx.put("reportDate", localDateMapper.fromLocalDateToString(reportDataDto.getReportDate()));
+        ctx.put("reportDate", reportDataDto.getReportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("patientGender", reportDataDto.getPatientGender());
         ctx.put("patientAge", reportDataDto.getPatientAge());
         ctx.put("documentType", reportDataDto.getDocumentType());
