@@ -40,6 +40,7 @@ import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.
 import { ExternalClinicalHistoriesFiltersComponent } from './components/external-clinical-histories-filters/external-clinical-histories-filters.component';
 import { ExternalClinicalHistoryComponent } from './components/external-clinical-history/external-clinical-history.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
+import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report/epidemiological-report.component';
 
 @NgModule({
 	declarations: [
@@ -71,6 +72,7 @@ import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consu
 		ExternalClinicalHistoriesFiltersComponent,
 		NuevaConsultaDockPopupEnfermeriaComponent,
 		ExternalClinicalHistoryComponent,
+		EpidemiologicalReportComponent
 	],
 	imports: [
 		CommonModule,
