@@ -170,13 +170,25 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente');
-				this.dockPopupRef.close(true);
+				this.dockPopupRef.close({
+					confirmed: true,
+					fieldsToUpdate: this.mapFieldsToUpdate(odontologyDto)
+				});
 			},
 			_ => {
 				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
 			}
 		);
 
+	}
+
+	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {
+		return {
+			allergies: !!odontologyDto.allergies?.length,
+			personalHistories: !!odontologyDto.personalHistories?.length,
+			medications: !!odontologyDto.medications?.length,
+			problems: !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions?.length
+		};
 	}
 
 	private buildConsultationDto(allConcepts: OdontologyConceptDto[]): OdontologyConsultationDto {
@@ -199,6 +211,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		};
 	}
 
+}
+
+export interface FieldsToUpdate {
+	allergies: boolean,
+	personalHistories: boolean,
+	medications: boolean,
+	problems: boolean
 }
 
 export interface OdontologyConsultationData {

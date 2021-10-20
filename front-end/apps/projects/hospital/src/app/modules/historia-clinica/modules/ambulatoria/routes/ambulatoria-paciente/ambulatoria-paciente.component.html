@@ -96,7 +96,7 @@
 							<span>ODONTOLOGÍA</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-odontogram></app-odontogram>
+							<app-odontogram (consultationCompleted)="updateFields($event)"></app-odontogram>
 						</ng-template>
 					</mat-tab>
 

@@ -24,6 +24,7 @@ import { Page } from '@presentation/components/page/page.component';
 import { ExtensionPatientService } from '@extensions/services/extension-patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
+import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
 
 
 const RESUMEN_INDEX = 0;
@@ -166,5 +167,9 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				problems: false
 			});
 		}
+	}
+
+	updateFields(fieldsToUpdate: FieldsToUpdate) {
+		this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 	}
 }
