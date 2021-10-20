@@ -14,7 +14,7 @@ import InstitutionEdit from './modules/institutions/InstitutionEdit';
 import addresses from './modules/addresses';
 import sectors from './modules/sectors';
 import clinicalspecialties from './modules/clinicalspecialties';
-import ClinicalSpecialtyShow from './modules/clinicalspecialties/show';
+import ClinicalSpecialtyShow from './modules/clinicalspecialties/ClinicalSpecialtyShow';
 import clinicalspecialtysectors from './modules/clinicalspecialtysectors';
 import rooms from './modules/rooms'
 import beds from './modules/beds'
