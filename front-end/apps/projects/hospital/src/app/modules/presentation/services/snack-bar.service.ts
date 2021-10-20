@@ -45,7 +45,7 @@ export class SnackBarService {
 		});
 	}
 
-	showAction<T>(message, action: {text: string, payload: T}, config?: ToastConfig): Observable<T> {
+	showAction<T>(message: string, action: {text: string, payload: T}, config?: ToastConfig): Observable<T> {
 		return this.snackBar.open(message, action.text, {
 			duration: config?.duration || DEFAULT_DURATION,
 			horizontalPosition: config?.horizontalPosition || DEFAULT_H_POSITION,

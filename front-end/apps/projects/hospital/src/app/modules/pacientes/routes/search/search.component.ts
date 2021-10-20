@@ -71,7 +71,7 @@ export class SearchComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		if (this.navigationService.goBackFromNewPatien())
+		if (this.navigationService.goBackFromNewPatient())
 			this.back();
 		else {
 			this.route.queryParams.subscribe(params => {

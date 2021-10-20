@@ -31,7 +31,4 @@ const DoctorsOfficeList = ({ permissions, ...props }) => (
     </List>
 );
 
-
-
 export default DoctorsOfficeList;
-

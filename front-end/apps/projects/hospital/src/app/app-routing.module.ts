@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+export enum AppRoutes {
+	Institucion = 'institucion',
+}
+
 const routes: Routes = [
 	{
 		path: '',
@@ -12,7 +16,7 @@ const routes: Routes = [
 		loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
 	},
 	{
-		path: 'institucion',
+		path: AppRoutes.Institucion,
 		loadChildren: () => import('./modules/institucion/institucion.module').then(m => m.InstitucionModule),
 	},
 	{
