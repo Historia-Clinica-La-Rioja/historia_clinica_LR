@@ -47,9 +47,6 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si está habilitado el módulo de Reportes")
     HABILITAR_REPORTES,
-
-    @Label("Indica si está habilitado la nueva versión de aplicación de vacunas")
-    HABILITAR_VACUNAS_V2,
     
     @Label("Indica si está habilitada la funcionalidad para descargar informes desde turnos y desde el perfil del paciente")
     HABILITAR_INFORMES,
