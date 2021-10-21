@@ -14,6 +14,7 @@
 									{{clinicalSpecialty.name}}
 								</mat-option>
 							</mat-select>
+							<mat-error *ngIf="hasError(form, 'required', 'clinicalSpecialty')" [translate]="'forms.REQUIRED'"></mat-error>
 						</mat-form-field>
 					</form>
 				</ng-container>
