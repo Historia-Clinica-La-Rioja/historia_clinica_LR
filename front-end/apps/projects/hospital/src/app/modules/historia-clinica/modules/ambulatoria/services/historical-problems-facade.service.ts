@@ -58,13 +58,15 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	public sendHistoricalProblemsFilter(newFilter: HistoricalProblemsFilter): void {
-		const historichalProblemsCopy = [...this.originalHistoricalProblems];
-		const result = historichalProblemsCopy.filter(historicalProblem => (this.filterBySpecialty(newFilter, historicalProblem)
-			&& this.filterByProfessional(newFilter, historicalProblem)
-			&& this.filterByProblem(newFilter, historicalProblem)
-			&& this.filterByConsultationDate(newFilter, historicalProblem)));
-		this.historicalProblemsSubject.next(result);
-		this.historicalProblemsFilterSubject.next(newFilter);
+		if (this.originalHistoricalProblems && this.originalHistoricalProblems.length) {
+			const historichalProblemsCopy = [...this.originalHistoricalProblems];
+			const result = historichalProblemsCopy.filter(historicalProblem => (this.filterBySpecialty(newFilter, historicalProblem)
+				&& this.filterByProfessional(newFilter, historicalProblem)
+				&& this.filterByProblem(newFilter, historicalProblem)
+				&& this.filterByConsultationDate(newFilter, historicalProblem)));
+			this.historicalProblemsSubject.next(result);
+			this.historicalProblemsFilterSubject.next(newFilter);
+		}
 	}
 
 	private filterBySpecialty(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
