@@ -93,6 +93,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.fixedSpecialty = fixedSpecialty;
 		this.defaultSpecialty = specialtyArray[0];
 		this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
+		this.formEvolucion.controls['clinicalSpecialty'].markAsTouched();
 	}
 
 	ngOnInit(): void {
@@ -108,7 +109,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		this.formEvolucion = this.formBuilder.group({
 			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-			clinicalSpecialty: []
+			clinicalSpecialty: [null, [Validators.required]],
 		});
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
@@ -158,7 +159,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		this.apiErrors = [];
 		this.addErrorMessage(nuevaConsulta);
-		if (this.isValidConsultation()) {
+		if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
 			if (!fieldsService.nonCompletedFields .length) {
 				this.createConsultation(nuevaConsulta);
 				this.disableConfirmButton = true;
@@ -318,7 +319,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
-			clinicalSpecialtyId: this.defaultSpecialty.id
+			clinicalSpecialtyId: this.defaultSpecialty?.id
 
 		};
 	}
