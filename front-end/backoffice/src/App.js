@@ -2,7 +2,6 @@ import React from 'react';
 import { Admin, Resource } from 'react-admin';
 
 import { Dashboard } from './dashboard';
-import OauthLoginPage from './login/OauthLoginPage';
 import LoginPage from './login/LoginPage.js';
 
 import cities from './modules/cities';
@@ -16,10 +15,10 @@ import sectors from './modules/sectors';
 import clinicalspecialties from './modules/clinicalspecialties';
 import ClinicalSpecialtyShow from './modules/clinicalspecialties/ClinicalSpecialtyShow';
 import clinicalspecialtysectors from './modules/clinicalspecialtysectors';
-import rooms from './modules/rooms'
-import beds from './modules/beds'
-import healthcareprofessionals from './modules/healthcareprofessionals'
-import professionalspecialties from './modules/professionalspecialties'
+import rooms from './modules/rooms';
+import beds from './modules/beds';
+import healthcareprofessionals from './modules/healthcareprofessionals';
+import professionalspecialties from './modules/professionalspecialties';
 import ProfessionalSpecialtyShow from './modules/professionalspecialties/show';
 import healthcareprofessionalspecialties from './modules/healthcareprofessionalspecialties';
 import doctorsoffices from './modules/doctorsoffices';
@@ -33,13 +32,11 @@ import springbootRestProvider from './providers/sgxDataProvider';
 import authProvider from './providers/authProvider';
 import i18nProvider from './providers/i18nProvider';
 import customRoutes from './layout/routes';
-import appInfoProvider from './providers/appInfoProvider'
 
 const dataProvider = springbootRestProvider('/backoffice', {
 });
 
 const App = () => {
-    const oauth = appInfoProvider.getInfo().oauthConfig.enabled;
 
     const resourcesAdminInstitucional = [
         <Resource name="sectortypes" />,
@@ -108,7 +105,7 @@ const App = () => {
                 dataProvider={dataProvider}
                 authProvider={authProvider}
                 i18nProvider={i18nProvider}
-                loginPage={oauth ? OauthLoginPage : LoginPage}
+                loginPage={LoginPage}
                 dashboard={Dashboard}
     >
         {
