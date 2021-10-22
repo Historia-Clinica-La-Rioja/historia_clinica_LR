@@ -40,7 +40,7 @@ export const toOdontologyDiagnosticDto = (problema: Problema): OdontologyDiagnos
 		chronic: problema.cronico,
 		endDate: problema.fechaFin ? dateToDateDto(problema.fechaFin.toDate()) : undefined,
 		snomed: problema.snomed,
-		startDate: dateToDateDto(problema.fechaInicio.toDate())
+		startDate: problema.fechaInicio ? dateToDateDto(problema.fechaInicio.toDate()) : undefined
 	};
 
 }
