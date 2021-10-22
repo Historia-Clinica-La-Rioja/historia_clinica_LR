@@ -21,10 +21,10 @@ public class OdontologyDiagnosticDto implements Serializable {
     @Valid
     private SnomedDto snomed;
 
-    @NotNull(message = "{outpatient.problem.severity.mandatory}")
+    @Nullable
     private String severity;
 
-    @NotNull
+    @Nullable
     private DateDto startDate;
 
     @Nullable

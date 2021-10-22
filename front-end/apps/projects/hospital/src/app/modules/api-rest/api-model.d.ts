@@ -1307,9 +1307,9 @@ export interface OdontologyDentalActionDto extends Serializable {
 export interface OdontologyDiagnosticDto extends Serializable {
     chronic: boolean;
     endDate?: DateDto;
-    severity: string;
+    severity?: string;
     snomed: SnomedDto;
-    startDate: DateDto;
+    startDate?: DateDto;
 }
 
 export interface OdontologyMedicationDto {
