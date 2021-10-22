@@ -48,7 +48,7 @@
 					</mat-error>
 				</div>
 			</div>
-			<div>
+			<div *appHasRole="['ADMINISTRATIVO']">
 				<section>
 					<mat-checkbox (change)="noIdentityChange()">
 						No acredita identidad
@@ -80,7 +80,7 @@
 					</mat-form-field>
 				</mat-card-content>
 			</div>
-			<div *appHasRole="['ADMINISTRATIVO']" align="end">
+			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" align="end">
 				<div class="search" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
 					<button mat-stroked-button color="primary" type="button" (click)="openScanPatientDialog(formDirectiveSearchForm)" [disabled]="disableButtonScan">
 						<span class="material-icons" color="primary">crop_free</span>

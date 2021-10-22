@@ -16,6 +16,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		url: './pacientes',
 		permissions: [
 			ERole.ADMINISTRATIVO,
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE
 		],
 	},
 	{

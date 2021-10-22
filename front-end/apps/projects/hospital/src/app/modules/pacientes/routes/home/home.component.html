@@ -11,7 +11,7 @@
 			></app-search-create>
 		</div>
 	</section>
-	<section >
+	<section *appHasRole="['ADMINISTRATIVO']">
 		<h2 class="page-title" [translate]="'pacientes.home.TITLE_SEARCH'"></h2>
 		<div fxLayout="row">
 			<app-pacientes-table fxFlex="100%"></app-pacientes-table>
