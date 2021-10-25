@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.pladema.renaper.configuration.RenaperCondition;
 
 import org.springframework.context.annotation.Conditional;
@@ -22,10 +24,14 @@ import ar.lamansys.sgx.shared.restclient.services.RestClient;
 public class RenaperServiceImpl extends RestClient implements RenaperService {
 
 	private RenaperWSConfig renaperWSConfig;
+
+	private final ObjectMapper jackson;
 	
-	public RenaperServiceImpl(RenaperRestTemplateAuth restTemplateAuth, RenaperWSConfig wsConfig) {
+	public RenaperServiceImpl(RenaperRestTemplateAuth restTemplateAuth, RenaperWSConfig wsConfig,
+							  ObjectMapper jackson) {
 		super(restTemplateAuth, wsConfig);
 		this.renaperWSConfig = wsConfig;
+		this.jackson = jackson;
 	}
 
 	@Override
@@ -38,8 +44,20 @@ public class RenaperServiceImpl extends RestClient implements RenaperService {
 	@Override
 	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Short idSexo) {
 		String urlWithParams = renaperWSConfig.getUrlPersona() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo; 
-		ResponseEntity<PersonDataResponse> response = exchangeGet(urlWithParams, PersonDataResponse.class);
-		return Optional.ofNullable(response.getBody());
+		try{
+			ResponseEntity<String> response = exchangeGet(urlWithParams, String.class);
+			switch(response.getStatusCode()){
+				case OK:
+					return Optional.ofNullable(jackson.readValue(response.getBody(), PersonDataResponse.class));
+				case INTERNAL_SERVER_ERROR:
+				default:
+					return Optional.empty();
+			}
+		}
+		catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return Optional.empty();
+		}
 	}
 
 	
