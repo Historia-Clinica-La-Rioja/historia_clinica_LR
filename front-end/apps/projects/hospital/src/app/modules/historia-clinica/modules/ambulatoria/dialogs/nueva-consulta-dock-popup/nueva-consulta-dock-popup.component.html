@@ -164,17 +164,32 @@
 
 		</div>
 
-		<div id="datos-antropometricos">
-			<div class="margin-bottom">
-				<app-document-section
-									  [sectionTitle]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'">
+		<div id="anthropometric_Data">
+			<div>
+				<h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'"></h2>
+					<div *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" class="dialog">
+						<mat-icon  online class="icon"  color="primary">error_outline</mat-icon>
+						<div class="info-text">
+							<span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DESCRIPTION'" [translateParams]="{date: datosAntropometricosNuevaConsultaService.getDate()}"> </span>
+							<span class="question" [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.QUESTION'"></span>
+							<span fxLayout="row">
+								<button class="button" id=include_Anthropometric_Data mat-button color="primary" (click)=datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData()>
+									<span [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.ADD'"></span>
+								</button>
+								<button class="button" id=discard_Anthropometric_Data mat-button color="warn" (click)=datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData()>
+									<span [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DISCARD'"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+				<app-document-section>
 					<ng-container concept-form>
 						<form [formGroup]="datosAntropometricosNuevaConsultaService.getForm()">
-							<div>
-								<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<div fxLayout="row" fxLayoutAlign="space-between center">
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'">
 									</mat-label>
-									<mat-select placeholder="B+" formControlName="bloodType" name="bloodTypeId">
+									<mat-select placeholder="B+" formControlName="bloodType">
 										<mat-option
 											*ngFor="let bloodType of datosAntropometricosNuevaConsultaService?.getBloodTypes()"
 											[value]="bloodType">
@@ -182,24 +197,38 @@
 										</mat-option>
 									</mat-select>
 								</mat-form-field>
+								<ng-container *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" >
+									<mat-icon  class="field-icon"  color="primary">error_outline</mat-icon>
+								</ng-container>
 							</div>
 							<div>
-								<mat-form-field [floatLabel]="'never'" appearance="outline">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'"></mat-label>
-									<input id="height" name="height" formControlName="height" placeholder="Ej: 180"
-										   type="number" matInput>
-								</mat-form-field>
+								<div fxLayout="row" fxLayoutAlign="space-between center">
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'"></mat-label>
+											<input id="height" formControlName="height"
+												   placeholder="Ej: 180"
+										           type="number" matInput>
+										</mat-form-field>
+										<ng-container *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" >
+											<mat-icon  class="field-icon"  color="primary">error_outline</mat-icon>
+										</ng-container>
+								</div>
 								<h5 class="recomendado recomendado-antropo" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 							</div>
 							<div>
-								<mat-form-field [floatLabel]="'never'" appearance="outline">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'"></mat-label>
-									<input id="weight" name="weight" formControlName="weight" placeholder="Ej: 70"
+								<div fxLayout="row" fxLayoutAlign="space-between center">
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<mat-label
+											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'"></mat-label>
+										<input id="weight" formControlName="weight" placeholder="Ej: 70"
 										   type="number"
 										   matInput>
-								</mat-form-field>
+									</mat-form-field>
+									<ng-container *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" >
+										<mat-icon  class="field-icon"  color="primary">error_outline</mat-icon>
+									</ng-container>
+								</div>
+
 								<h5 class="recomendado recomendado-antropo" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 							</div>
 						</form>
@@ -207,6 +236,7 @@
 				</app-document-section>
 			</div>
 		</div>
+
 
 		<div id="antecedentes-familiares">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE">
@@ -225,9 +255,7 @@
 									[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'">
 								</mat-label>
 								<input id="antecedentes-familiares-input" matInput type="text" formControlName="snomed"
-									   name="snomed"
-									   readonly
-									   matTooltip="{{antecedentesFamiliaresNuevaConsultaService.getSnomedConcept().pt }}">
+									   readonly matTooltip="{{antecedentesFamiliaresNuevaConsultaService.getSnomedConcept().pt }}">
 								<button id="clear-antecedente" mat-button matSuffix color="warn" mat-icon-button
 										(click)="antecedentesFamiliaresNuevaConsultaService.resetForm()">
 									<mat-icon>close</mat-icon>

@@ -5,7 +5,7 @@ import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
-import { Problema, ProblemasService } from '../../../../services/problemas.service';
+import { Problema } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
@@ -32,6 +32,8 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
 	templateUrl: './nueva-consulta-dock-popup.component.html',
@@ -73,8 +75,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly healthConditionService: HealthConditionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
+		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly translateService: TranslateService,
 		private readonly snowstormService: SnowstormService,
+		private readonly datePipe: DatePipe,
 		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -82,7 +86,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snowstormService, this.dialog);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.datePipe);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -117,6 +121,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			clinicalSpecialty: [null, [Validators.required]],
 		});
+
+		this.datosAntropometricosNuevaConsultaService.setPreviousAnthropometricData();
+
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
 		});

@@ -189,6 +189,12 @@
 							"REGISTRY_DATE": "Fecha registro"
 						}
 					}
+				},
+				"anthropometric_dialog": {
+					"ADD": "SI, INCLUIRLOS",
+					"DISCARD": "NO, DESCARTARLOS",
+					"DESCRIPTION": "Últimos datos antropométricos cargados previamente el {{date}} hs",
+					"QUESTION": "¿Desea incluirlos en la consulta? "
 				}
 			},
 			"problemas": {
