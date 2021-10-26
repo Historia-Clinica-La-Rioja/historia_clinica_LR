@@ -31,6 +31,9 @@ public interface UserDtoMapper {
 	@Named("UserDataBoToUserDataDto")
 	UserDataDto UserDataBoToUserDataDto(UserDataBo user);
 
+	@Named("userDataBoToUserDataDto")
+	UserDataDto userDataBoToUserDataDto(UserDataBo user);
+
 	@Named("toVHospitalUser")
 	@Mapping(target = "userId", source = "dto.id")
 	VHospitalUser toVHospitalUser(BackofficeUserDto dto);

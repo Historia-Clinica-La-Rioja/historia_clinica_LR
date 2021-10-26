@@ -19,6 +19,11 @@ public class UserDataBo {
     private LocalDateTime lastLogin;
 
     public UserDataBo(Integer id){
+        this(id,null,null);
+    }
+    public UserDataBo(Integer id, String username, Boolean enable){
         this.id = id;
+        this.username = username;
+        this.enable = enable;
     }
 }
