@@ -1,0 +1,24 @@
+package net.pladema.user.controller.service.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDataBo {
+
+    private Integer id;
+    private String username;
+    private Boolean enable;
+    private LocalDateTime lastLogin;
+
+    public UserDataBo(Integer id){
+        this.id = id;
+    }
+}

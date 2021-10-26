@@ -1930,6 +1930,13 @@ export interface UIPageDto {
     type: string;
 }
 
+export interface UserDataDto {
+    enable?: boolean;
+    id?: number;
+    lastLogin?: Date;
+    username?: string;
+}
+
 export interface UserDto extends AbstractUserDto {
     email: string;
     firstName: string;
