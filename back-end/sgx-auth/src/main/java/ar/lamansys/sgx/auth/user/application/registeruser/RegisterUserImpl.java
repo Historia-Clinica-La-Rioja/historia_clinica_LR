@@ -43,11 +43,10 @@ public class RegisterUserImpl implements RegisterUser {
         validations(username);
         var salt = "salt";
         var hashAlgorithm = "hashAlgorithm";
-        userStorage.save(
-                new UserBo(username,
-                        passwordEncryptor.encode(password != null ? password : defaultPassword, salt, hashAlgorithm),
-                        salt,
-                        hashAlgorithm));
+        UserBo userBo = (password!=null) ?
+                new UserBo(username,passwordEncryptor.encode(password,salt,hashAlgorithm),salt,hashAlgorithm) :
+                new UserBo(username);
+        userStorage.save(userBo);
     }
 
     private void validations(String username) {

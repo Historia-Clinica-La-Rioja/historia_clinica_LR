@@ -22,6 +22,15 @@ public class UserBo {
 
     private UserPasswordBo userPasswordBo;
 
+    public UserBo(String username){
+        this.username = username;
+    }
+    public UserBo(Integer id,String username, Boolean enable){
+        this.id = id;
+        this.username = username;
+        this.enable = enable;
+    }
+
     public UserBo(String username, String password, String salt, String hashAlgorithm) {
         this(null, username, false, password, salt, hashAlgorithm);
     }

@@ -32,7 +32,8 @@ public class UserStorageImpl implements UserStorage {
         logger.debug("Save user in repository -> {}", user);
         User userEntity = mapUser(user);
         userEntity = userRepository.save(userEntity);
-        userPasswordRepository.save(mapUserPassword(user, userEntity));
+        if(user.getPassword()!=null)
+            userPasswordRepository.save(mapUserPassword(user, userEntity));
     }
 
     @Override
@@ -42,13 +43,14 @@ public class UserStorageImpl implements UserStorage {
                 .orElseThrow(() -> new UserStorageException(UserStorageEnumException.NOT_FOUND_USER,
                         String.format("Usuario con id (%s) inexistente", userBo)));
         UserPassword userPassword = userPasswordRepository.findById(userBo.getId())
-                .orElseThrow(() -> new UserStorageException(UserStorageEnumException.NOT_FOUND_USER_PASSWORD,
-                        String.format(PASSWORD_CON_ID_INEXISTENTE, userBo.getId())));
+                .orElse(null);
 
         updateUser(userBo, user);
         userRepository.save(user);
-
-        updateUserPassword(userBo, userPassword);
+        if(userPassword!=null)
+            updateUserPassword(userBo, userPassword);
+        else
+            userPassword = mapUserPassword(userBo, user);
         userPasswordRepository.save(userPassword);
     }
 
@@ -72,9 +74,7 @@ public class UserStorageImpl implements UserStorage {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserStorageException(UserStorageEnumException.NOT_FOUND_USER,
                         String.format("Usuario con id (%s) inexistente", userId)));
-        UserPassword userPassword = userPasswordRepository.findById(userId)
-                .orElseThrow(() -> new UserStorageException(UserStorageEnumException.NOT_FOUND_USER_PASSWORD,
-                        String.format(PASSWORD_CON_ID_INEXISTENTE, userId)));
+        UserPassword userPassword = userPasswordRepository.findById(userId).orElse(null);
         return mapUserBo(user, userPassword);
     }
 
@@ -84,22 +84,24 @@ public class UserStorageImpl implements UserStorage {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserStorageException(UserStorageEnumException.NOT_FOUND_USER,
                         String.format("Usuario con username (%s) inexistente", username)));
-        UserPassword userPassword = userPasswordRepository.findById(user.getId())
-                .orElseThrow(() -> new UserStorageException(UserStorageEnumException.NOT_FOUND_USER_PASSWORD,
-                        String.format(PASSWORD_CON_ID_INEXISTENTE, user.getId())));
+        UserPassword userPassword = userPasswordRepository.findById(user.getId()).orElse(null);
         return mapUserBo(user, userPassword);
     }
 
 
     private UserBo mapUserBo(User user, UserPassword userPassword) {
-        return new UserBo(
+        return (userPassword!=null) ?
+                new UserBo(
                 user.getId(),
                 user.getUsername(),
                 user.getEnable(),
                 userPassword.getPassword(),
                 userPassword.getSalt(),
                 userPassword.getHashAlgorithm(),
-                user.getLastLogin());
+                user.getLastLogin()):
+                new UserBo(user.getId(),
+                        user.getUsername(),
+                        user.getEnable());
     }
 
     private UserPassword mapUserPassword(UserBo user, User userEntity) {
