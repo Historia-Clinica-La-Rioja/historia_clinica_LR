@@ -1,10 +1,18 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { HCEToothRecordDto, OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DateFormat, momentFormatDate } from '@core/utils/moment.utils';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { DateFormat, momentFormatDate } from '@core/utils/moment.utils';
+
+import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+
+import { HCEToothRecordDto, OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+
+import { ShowActionsService } from '@historia-clinica/modules/odontologia/services/show-actions.service';
+
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
 import { ActionType, ProcedureOrder, ToothAction } from '../../services/actions.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
@@ -12,10 +20,7 @@ import { ToothTreatment } from '../../services/surface-drawer.service';
 import { SurfacesNamesFacadeService, ToothSurfaceNames } from '../../services/surfaces-names-facade.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { Actions, ToothComponent } from '../tooth/tooth.component';
-import { TypeaheadOption } from "@core/components/typeahead/typeahead.component";
 import { ScrollableData } from '../hidable-scrollable-data/hidable-scrollable-data.component';
-import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
-import { ShowActionsService } from "@historia-clinica/modules/odontologia/services/show-actions.service";
 
 @Component({
 	selector: 'app-tooth-dialog',

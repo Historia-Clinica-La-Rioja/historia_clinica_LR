@@ -38,6 +38,7 @@ import { NewDocumentSectionComponent } from './components/new-document-section/n
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
+import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -80,6 +81,7 @@ import { DatePickerComponent } from './dialogs/date-picker/date-picker.component
 		DocumentSectionTableComponent,
 		CtrlTemplateDirective,
 		CellTemplatesComponent,
+		TypeaheadComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -124,6 +126,7 @@ import { DatePickerComponent } from './dialogs/date-picker/date-picker.component
 		DocumentSectionTableComponent,
 		CtrlTemplateDirective,
 		CellTemplatesComponent,
+		TypeaheadComponent,
 	],
 	entryComponents: [
 		DockPopupComponent

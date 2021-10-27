@@ -12,15 +12,12 @@ import { ContentComponent } from './components/content/content.component';
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 
-import { TypeaheadComponent } from './components/typeahead/typeahead.component';
-
 
 @NgModule({
 	declarations: [
 		ContentComponent,
 		HasRoleDirective,
 		FeatureFlagDirective,
-		TypeaheadComponent,
 	],
 	imports: [
 		AppMaterialModule,
@@ -47,7 +44,6 @@ import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 		RecaptchaFormsModule,
 		RouterModule,
 		TranslateModule,
-		TypeaheadComponent,
 	],
 	providers: []
 })
