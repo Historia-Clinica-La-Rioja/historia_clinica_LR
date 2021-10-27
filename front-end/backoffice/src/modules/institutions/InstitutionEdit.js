@@ -50,7 +50,7 @@ const InstitutionEdit = props => (
                 minLength(14),
                 maxLength(14)]}/>
             <Dependency source="dependencyId" />
-
+            <TextInput source="provinceCode"/>
             <SectionTitle label="resources.institutions.fields.sectors"/>
             <CreateRelatedButton
                 reference="sectors"

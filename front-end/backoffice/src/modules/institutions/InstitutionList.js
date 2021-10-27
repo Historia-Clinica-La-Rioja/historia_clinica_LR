@@ -27,6 +27,7 @@ const InstitutionList = props => (
             <ReferenceField source="dependencyId" reference="dependencies" link={false}>
                 <TextField source="description" />
             </ReferenceField>
+            <TextField source="provinceCode" />
         </Datagrid>
     </List>
 );

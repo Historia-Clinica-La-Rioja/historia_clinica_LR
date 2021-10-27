@@ -1,17 +1,17 @@
 package net.pladema.establishment.repository.entity;
 
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 @Entity
 @Table(name = "institution")
@@ -53,5 +53,8 @@ public class Institution {
 
 	@Column(name = "timezone", nullable = false, length = 60)
 	private String timezone = JacksonDateFormatConfig.ZONE_ID;
+
+	@Column(name = "province_code")
+	private String provinceCode;
 
 }

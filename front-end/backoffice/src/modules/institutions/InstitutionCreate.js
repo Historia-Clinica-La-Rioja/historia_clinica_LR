@@ -43,6 +43,7 @@ const InstitutionCreate = props => (
                 minLength(14),
                 maxLength(14)]}/>
             <Dependency source="dependencyId" />
+            <TextInput source="provinceCode"/>
         </SimpleForm>
     </Create>
 );

@@ -35,6 +35,7 @@ const InstitutionShow = props => (
             <ReferenceField source="dependencyId" reference="dependencies" link={false}>
                 <TextField source="description" />
             </ReferenceField>
+            <TextField source="provinceCode" />
             <ReferenceField source="addressId" reference="addresses" link={'show'}>
                 <TextField source="cityId"/>
             </ReferenceField>

@@ -133,6 +133,7 @@ const messages = {
                 addressId: 'Dirección',
                 sectors: 'Sectores',
                 dependencyId: 'Dependencia',
+                provinceCode: 'Código de provincia',
             },
         }, 
         sectors: {
