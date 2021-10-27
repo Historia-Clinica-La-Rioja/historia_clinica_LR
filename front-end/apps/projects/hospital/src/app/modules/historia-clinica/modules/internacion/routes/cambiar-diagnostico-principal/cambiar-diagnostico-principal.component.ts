@@ -18,7 +18,7 @@ import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { MatSelectionList } from '@angular/material/list';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
 	selector: 'app-cambiar-diagnostico-principal',
@@ -118,7 +118,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 			this.snackBarService.showError('internaciones.clinical-assessment-diagnosis.messages.WITHOUT_NEW_DIAGNOSIS');
 		}
 	}
-	
+
 	openConfirmDialog(): Observable<any> {
 		const previousDiagnosisHTML = `<strong>${this.currentMainDiagnosis.snomed.pt}</strong>`;
 		const newDiagnosisHTML = `<strong>${this.newMainDiagnosis.snomed.pt}</strong>`;

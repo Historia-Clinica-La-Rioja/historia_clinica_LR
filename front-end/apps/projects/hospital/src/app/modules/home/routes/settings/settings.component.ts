@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from './../../../api-rest/services/settings.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Asset } from './asset.model';
 import { addAvailableAssetsToList } from './asset.facade';

@@ -25,7 +25,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { LogoComponent } from './components/logo/logo.component';
-import { DockPopupComponent } from '@presentation/components/dock-popup/dock-popup.component';
+import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
@@ -34,10 +34,12 @@ import { ContentTitleComponent } from './components/content-title/content-title.
 import { PageComponent } from './components/page/page.component';
 import { PageComponentsComponent } from './components/page-components/page-components.component';
 import { UiComponentComponent } from './components/ui-component/ui-component.component';
-import { NewDocumentSectionComponent } from '@presentation/components/new-document-section/new-document-section-component.component';
-import { DocumentSectionTableComponent } from '@presentation/components/document-section-table/document-section-table.component';
-import { CtrlTemplateDirective } from '@presentation/directives/ctrl-template.directive';
-import { CellTemplatesComponent } from '@presentation/components/cell-templates/cell-templates.component';
+import { NewDocumentSectionComponent } from './components/new-document-section/new-document-section-component.component';
+import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
+import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
+import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
+
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -77,6 +79,8 @@ import { CellTemplatesComponent } from '@presentation/components/cell-templates/
 		DocumentSectionTableComponent,
 		CtrlTemplateDirective,
 		CellTemplatesComponent,
+		// dialogs
+		ConfirmDialogComponent,
 	],
 	imports: [
 		CommonModule,

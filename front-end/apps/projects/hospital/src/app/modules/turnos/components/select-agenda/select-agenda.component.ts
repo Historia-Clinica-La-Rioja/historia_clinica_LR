@@ -3,7 +3,7 @@ import { DiaryListDto } from '@api-rest/api-model';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';

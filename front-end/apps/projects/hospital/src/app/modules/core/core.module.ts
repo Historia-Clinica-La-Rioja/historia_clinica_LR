@@ -1,25 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppMaterialModule } from '@material/app.material.module';
-
-import { ContentComponent } from './components/content/content.component';
 import { HttpClientModule } from '@angular/common/http';
-import { TranslateModule } from '@ngx-translate/core';
-import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { AppMaterialModule } from '@material/app.material.module';
+import { FlexModule } from '@angular/flex-layout';
+import { TranslateModule } from '@ngx-translate/core';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+
+import { ContentComponent } from './components/content/content.component';
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
-import { FlexModule } from '@angular/flex-layout';
 
 
 @NgModule({
 	declarations: [
 		ContentComponent,
-		ConfirmDialogComponent,
 		HasRoleDirective,
 		FeatureFlagDirective,
 		DatePickerComponent,
@@ -40,7 +38,6 @@ import { FlexModule } from '@angular/flex-layout';
 	exports: [
 		AppMaterialModule,
 		CommonModule,
-		ConfirmDialogComponent,
 		ContentComponent,
 		FeatureFlagDirective,
 		HasRoleDirective,

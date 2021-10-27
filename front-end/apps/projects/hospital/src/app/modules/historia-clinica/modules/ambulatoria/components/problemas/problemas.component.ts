@@ -19,7 +19,7 @@ import { ContextService } from '@core/services/context.service';
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';

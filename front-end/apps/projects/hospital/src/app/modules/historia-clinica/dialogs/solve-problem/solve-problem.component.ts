@@ -1,18 +1,20 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {HCEPersonalHistoryDto, HealthConditionNewConsultationDto, MasterDataInterface} from '@api-rest/api-model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
-import {HealthConditionService} from '@api-rest/services/healthcondition.service';
-import {ProblemasService} from '../../services/problemas.service';
-import {SnomedService} from '../../services/snomed.service';
-import {HEALTH_CLINICAL_STATUS} from '../../modules/internacion/constants/ids';
-import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
-import {hasError} from '@core/utils/form.utils';
-import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
-import {format} from "date-fns";
-import {DateFormat, MIN_DATE} from "@core/utils/date.utils";
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { format } from "date-fns";
+
+import { hasError } from '@core/utils/form.utils';
+import { DateFormat, MIN_DATE } from "@core/utils/date.utils";
+import { HCEPersonalHistoryDto, HealthConditionNewConsultationDto, MasterDataInterface } from '@api-rest/api-model';
+import { HealthConditionService } from '@api-rest/services/healthcondition.service';
+import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+
+import { ProblemasService } from '../../services/problemas.service';
+import { SnomedService } from '../../services/snomed.service';
+import { HEALTH_CLINICAL_STATUS } from '../../modules/internacion/constants/ids';
 
 @Component({
 	selector: 'app-solve-problem',
@@ -49,7 +51,7 @@ export class SolveProblemComponent implements OnInit {
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
-		this.today = this.toFormatDate(format( new Date(), DateFormat.VIEW_DATE));
+		this.today = this.toFormatDate(format(new Date(), DateFormat.VIEW_DATE));
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
 			severidad: [null],
@@ -79,11 +81,11 @@ export class SolveProblemComponent implements OnInit {
 		}
 
 		let dateToSet;
-		if(p.startDate) {
+		if (p.startDate) {
 			dateToSet = this.toFormatDate(this.dataDto.startDate)
 			this.dateIsReadOnly = true
 		} else {
-			dateToSet = this.toFormatDate(format( new Date(), DateFormat.VIEW_DATE))
+			dateToSet = this.toFormatDate(format(new Date(), DateFormat.VIEW_DATE))
 		}
 
 		this.form.controls.cronico.setValue(p.isChronic);
@@ -134,15 +136,15 @@ export class SolveProblemComponent implements OnInit {
 		const fechaInicio = this.form.controls.fechaInicio.value;
 
 		if (fechaFin) {
-			if(fechaInicio) {
+			if (fechaInicio) {
 				const inactivationDate = fechaFin.toDate();
 				const initDate = fechaInicio;
 				if (initDate > inactivationDate) {
-					this.form.controls.fechaFin.setErrors({min: true});
+					this.form.controls.fechaFin.setErrors({ min: true });
 				}
 				const actualDate = new Date();
 				if (inactivationDate > actualDate) {
-					this.form.controls.fechaFin.setErrors({max: true});
+					this.form.controls.fechaFin.setErrors({ max: true });
 				}
 			}
 		}
