@@ -13,7 +13,7 @@ import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modul
 import { newMoment } from "@core/utils/moment.utils";
 import { ClinicalSpecialtyDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { ProblemasService } from '@historia-clinica/services/problemas-nueva-consulta.service';
+import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ActionsNewConsultationService } from '../../services/actions-new-consultation.service';
 import { ActionedTooth, OdontogramService } from '../../services/odontogram.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';

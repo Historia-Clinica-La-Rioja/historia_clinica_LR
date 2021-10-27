@@ -5,7 +5,7 @@ import {SnackBarService} from '@presentation/services/snack-bar.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
 import {HealthConditionService} from '@api-rest/services/healthcondition.service';
-import {ProblemasService} from '../../services/problemas-nueva-consulta.service';
+import {ProblemasService} from '../../services/problemas.service';
 import {SnomedService} from '../../services/snomed.service';
 import {HEALTH_CLINICAL_STATUS} from '../../modules/internacion/constants/ids';
 import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
