@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
-import {ApplicationVersionDto, PublicInfoDto, RecaptchaPublicConfigDto} from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
-
-import { environment } from '@environments/environment';
+import { Observable, ReplaySubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { LocalStorageService } from '../../core/services/local-storage.service';
+
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { ApplicationVersionDto, PublicInfoDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
+import { environment } from '@environments/environment';
 
 const BASIC_URL_PREFIX = '/public';
 const PUBLIC_INFO_KEY = 'public-info';

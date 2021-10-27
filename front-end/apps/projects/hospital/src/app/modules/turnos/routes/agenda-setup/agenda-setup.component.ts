@@ -9,11 +9,11 @@ import { Observable } from 'rxjs';
 import { processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
 import { currentWeek, DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SectorService } from '@api-rest/services/sector.service';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import {
 	CompleteDiaryDto,
 	DiaryADto,

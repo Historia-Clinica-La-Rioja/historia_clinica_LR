@@ -14,7 +14,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
-import { MedicalCoverageComponent } from '../core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { AgendaComponent } from './routes/agenda/agenda.component';
 
