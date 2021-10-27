@@ -1,5 +1,5 @@
 <ng-container [ngSwitch]="uiComponent.type">
-	<div *ngSwitchCase="'typography'" >
+	<div *ngSwitchCase="'typography'">
 		<span [ngClass]="'mat-' + uiComponent.args.className">
 			{{uiComponent.args.value}}
 		</span>
@@ -10,6 +10,10 @@
 		</a>
 	</div>
 	<div *ngSwitchCase="'html'" [innerHTML]="valueAsHtml"></div>
+
+	<div *ngSwitchCase="'code'">
+		<code>{{uiComponent.args.value | json}}</code>
+	</div>
 
 	<div *ngSwitchDefault>
 		<span class="mat-title">

@@ -3,5 +3,10 @@
     "label": {"text": "Manuales de usuario"},
     "icon": "support",
     "id": "manuales"
+  },
+  {
+    "label": {"text": "Componentes"},
+    "icon": "library_add",
+    "id": "components"
   }
 ]

@@ -1,0 +1,154 @@
+{
+  "type":"components",
+  "content":[
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Lista de componentes para demo ",
+        "className":"h1"
+      }
+    },
+
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Componente: typography ",
+        "className":"title"
+      }
+    },
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Componente typography con el estilo de mat-h3",
+        "className":"h3"
+      }
+    },
+    {
+      "type":"code",
+      "args":{
+        "value":{
+          "type":"typography",
+          "args":{
+            "value":"Componente typography con el estilo de mat-h3 ",
+            "className":"h3"
+          }
+        }
+      }
+    },
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Componente typography con el estilo de mat-caption",
+        "className":"caption"
+      }
+    },
+    {
+      "type":"code",
+      "args":{
+        "value":{
+          "type":"typography",
+          "args":{
+            "value":"Esto es un componente del tipo typography con el estilo de mat-caption ",
+            "className":"caption"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "html",
+      "args": {
+        "value":"<hr>"
+      }
+    },
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Componente: html ",
+        "className":"title"
+      }
+    },
+    {
+      "type":"html",
+      "args":{
+        "value":"<div style=\"margin: 10px;\">\n\n\t<div>\n\t\t<span>\n\t\t\t<img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Frame-1.png\" height=\"auto\"\n\t\t\t\twidth=\"auto\">\n\t\t</span>\n\t</div>\n\t<div>\n\t\t<div>\n\t\t\t<h4>Texto h4 agregado por html</h4>\n\t\t</div>\n\t</div>\n</div>"
+      }
+    },
+    {
+      "type":"code",
+      "args":{
+        "value":{
+          "type":"html",
+          "args":{
+            "value":"<div style=\"margin: 10px;\">\n\n\t<div>\n\t\t<span>\n\t\t\t<img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Frame-1.png\" height=\"auto\"\n\t\t\t\twidth=\"auto\">\n\t\t</span>\n\t</div>\n\t<div>\n\t\t<div>\n\t\t\t<h4>Texto h4 agregado por html</h4>\n\t\t</div>\n\t</div>\n</div>"
+          }
+        }
+      }
+    },
+
+    {
+      "type": "html",
+      "args": {
+        "value":"<hr>"
+      }
+    },
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Componente: link ",
+        "className":"title"
+      }
+    },
+    {
+      "type":"link",
+      "args":{
+        "value":"http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+        "label":{
+          "text":"DESCARGAR"
+        }
+      }
+    },
+    {
+      "type": "code",
+      "args": {
+        "value": {
+          "type":"link",
+          "args":{
+            "value":"http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+            "label":{
+              "text":"DESCARGAR"
+            }
+          }
+        }
+      }
+    },
+
+    {
+      "type": "html",
+      "args": {
+        "value":"<hr>"
+      }
+    },
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Componente: no definido ",
+        "className":"title"
+      }
+    },
+    {
+      "type": "nombreIndefinido",
+      "args": {
+        "value": "Valor sin sentido"
+      }
+    }
+
+  ]
+}

@@ -23,7 +23,7 @@ class DemoExtensionServiceTest {
 	@Test
 	void getSystemMenu() {
 		UIMenuItemDto[] menuItems = demoExtensionService.getSystemMenu();
-		assertTrue(menuItems.length == 1);
+		assertTrue(menuItems.length == 2);
 		Arrays.stream(menuItems).map(
 				item -> demoExtensionService.getSystemPage(item.id)
 		).forEach(
