@@ -40,6 +40,7 @@ import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
 
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 
 @NgModule({
 	declarations: [
@@ -81,6 +82,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 		CellTemplatesComponent,
 		// dialogs
 		ConfirmDialogComponent,
+		DatePickerComponent,
 	],
 	imports: [
 		CommonModule,

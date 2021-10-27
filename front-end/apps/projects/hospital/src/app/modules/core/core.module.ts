@@ -11,7 +11,7 @@ import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 import { ContentComponent } from './components/content/content.component';
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
-import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
+
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 
 
@@ -20,7 +20,6 @@ import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 		ContentComponent,
 		HasRoleDirective,
 		FeatureFlagDirective,
-		DatePickerComponent,
 		TypeaheadComponent,
 	],
 	imports: [
