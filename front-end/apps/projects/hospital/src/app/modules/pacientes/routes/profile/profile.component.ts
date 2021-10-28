@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit {
 	private readonly routePrefix;
 	public internmentEpisode;
 	public userData: UserDataDto;
-	public personId;
+	private personId: number;
 
 	public downloadReportIsEnabled: boolean;
 
@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		public dialog: MatDialog,
 		private readonly userService: UserService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -86,7 +86,7 @@ export class ProfileComponent implements OnInit {
 						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
-						this.userService.getUserData(completeData.person.id)
+						this.userService.getUserData(this.personId)
 							.subscribe(userDataDto => this.userData = userDataDto);
 					});
 
@@ -131,12 +131,11 @@ export class ProfileComponent implements OnInit {
 	}
 
 	addUser() {
-		this.userService.addUser(this.personId).subscribe(userId => {
-			this.userService.getUserData(this.personId).subscribe( userDataDto => {this.userData = userDataDto});
-			this.snackBarService.showSuccess("'pacientes.user_data.messages.SUCCESS''");
-		}, error => {
-			this.snackBarService.showError("'pacientes.user_data.messages.ERROR''");
-		})
+		this.userService.addUser(this.personId)
+			.subscribe(userId => {
+				this.userService.getUserData(this.personId).subscribe(userDataDto => this.userData = userDataDto);
+				this.snackBarService.showSuccess('pacientes.user_data.messages.SUCCESS');
+		}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
 	}
 
 }

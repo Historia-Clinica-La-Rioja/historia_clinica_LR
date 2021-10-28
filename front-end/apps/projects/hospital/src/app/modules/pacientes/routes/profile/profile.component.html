@@ -51,7 +51,7 @@
                     </mat-card-title>
                     <ng-container *ngIf="!userData?.id" fxLayout="row" fxLayoutAlign="center center">
                         <button mat-raised-button color="primary" class="create-user">
-							<span [translate]="'pacientes.user_data.buttons.CREATE_USER'"></span>
+							<span [translate]="'pacientes.user_data.buttons.CREATE_USER'" (click)="addUser()"></span>
 						</button>
                     </ng-container>
                 </mat-card-header>
