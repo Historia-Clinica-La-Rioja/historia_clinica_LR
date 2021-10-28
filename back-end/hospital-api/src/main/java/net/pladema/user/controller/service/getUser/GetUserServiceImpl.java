@@ -1,8 +1,6 @@
 package net.pladema.user.controller.service.getUser;
 
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
-import net.pladema.user.controller.dto.UserDataDto;
-import net.pladema.user.controller.mappers.UserDtoMapper;
 import net.pladema.user.controller.service.domain.UserDataBo;
 import net.pladema.user.repository.UserPersonRepository;
 import net.pladema.user.repository.VHospitalUserRepository;
