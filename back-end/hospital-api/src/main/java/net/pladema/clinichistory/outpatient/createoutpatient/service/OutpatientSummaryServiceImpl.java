@@ -7,8 +7,10 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitaliz
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
+import net.pladema.clinichistory.outpatient.repository.NursingConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.OdontologyConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
+import net.pladema.clinichistory.outpatient.repository.domain.NursingEvolutionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OdontologyEvolutionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 import org.slf4j.Logger;
@@ -31,10 +33,14 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
 
     private final OdontologyConsultationSummaryRepository odontologyConsultationSummaryRepository;
 
+    private final NursingConsultationSummaryRepository nursingConsultationSummaryRepository;
+
     public OutpatientSummaryServiceImpl(OutpatientConsultationSummaryRepository outpatientConsultationSummaryRepository,
-                                        OdontologyConsultationSummaryRepository odontologyConsultationSummaryRepository) {
+                                        OdontologyConsultationSummaryRepository odontologyConsultationSummaryRepository,
+                                        NursingConsultationSummaryRepository nursingConsultationSummaryRepository) {
         this.outpatientConsultationSummaryRepository = outpatientConsultationSummaryRepository;
         this.odontologyConsultationSummaryRepository = odontologyConsultationSummaryRepository;
+        this.nursingConsultationSummaryRepository = nursingConsultationSummaryRepository;
     }
 
     @Override
@@ -43,6 +49,7 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         List<EvolutionSummaryBo> result = new ArrayList<>();
         result.addAll(getOutpatientEvolutionSummaries(patientId));
         result.addAll(getOdontologyEvolutionSummaries(patientId));
+        result.addAll(getNursingEvolutionSummaries(patientId));
         result.sort(Comparator.comparing(EvolutionSummaryBo::getStartDate).reversed());
         LOG.debug(OUTPUT, result);
         return result;
@@ -82,6 +89,24 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
             oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationId())).map(ReasonBo::new).collect(Collectors.toList()));
             oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(oes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);
+        }
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace(OUTPUT, result);
+        return result;
+    }
+
+    private List<EvolutionSummaryBo> getNursingEvolutionSummaries(Integer patientId) {
+        LOG.debug("Input parameter -> patientId {}", patientId);
+        List<NursingEvolutionSummaryVo> queryResult = nursingConsultationSummaryRepository.getAllNursingEvolutionSummary(patientId);
+        List<Integer> nursingConsultationIds = queryResult.stream().map(NursingEvolutionSummaryVo::getConsultationId).collect(Collectors.toList());
+        List<HealthConditionSummaryVo> healthConditions = nursingConsultationSummaryRepository.getHealthConditionsByPatient(patientId, nursingConsultationIds);
+        List<ProcedureSummaryVo> procedures = nursingConsultationSummaryRepository.getProceduresByPatient(patientId, nursingConsultationIds);
+        List<EvolutionSummaryBo> result = new ArrayList<>();
+        for (NursingEvolutionSummaryVo nes : queryResult) {
+            EvolutionSummaryBo nesBo = new EvolutionSummaryBo(nes);
+            nesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationID().equals(nes.getConsultationId())).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
+            nesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(nes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
+            result.add(nesBo);
         }
         LOG.debug("Output size -> {}", result.size());
         LOG.trace(OUTPUT, result);

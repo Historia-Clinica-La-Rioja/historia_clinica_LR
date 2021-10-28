@@ -59,4 +59,13 @@ public class EvolutionSummaryBo {
         this.professional = new HealthcareProfessionalBo(odontologyEvolutionSummaryVo.getProfessional(), odontologyEvolutionSummaryVo.getPerson());
         this.evolutionNote = odontologyEvolutionSummaryVo.getEvolutionNote();
     }
+
+    public EvolutionSummaryBo(NursingEvolutionSummaryVo nursingEvolutionSummaryVo){
+        this.consultationID = nursingEvolutionSummaryVo.getConsultationId();
+        if(nursingEvolutionSummaryVo.getClinicalSpecialty() != null)
+            this.clinicalSpecialty = new OutpatientClinicalSpecialtyBo(nursingEvolutionSummaryVo.getClinicalSpecialty());
+        this.startDate = nursingEvolutionSummaryVo.getStartDate();
+        this.professional = new HealthcareProfessionalBo(nursingEvolutionSummaryVo.getProfessional(), nursingEvolutionSummaryVo.getPerson());
+        this.evolutionNote = nursingEvolutionSummaryVo.getEvolutionNote();
+    }
 }
