@@ -15,12 +15,13 @@ import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 
-export interface Problema {
+export interface AmbulatoryConsultationProblem {
 	snomed: SnomedDto;
 	codigoSeveridad?: string;
 	cronico?: boolean;
 	fechaInicio?: Moment;
 	fechaFin?: Moment;
+	reportProblem?: any;
 }
 
 export class AmbulatoryConsultationProblemsService {
@@ -30,7 +31,7 @@ export class AmbulatoryConsultationProblemsService {
 	private readonly form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: TableColumnConfig[];
-	private data: Problema[];
+	private data: AmbulatoryConsultationProblem[];
 	private errorSource = new Subject<string>();
 	private _error$: Observable<string>;
 	private severityTypes: any[];
@@ -94,24 +95,24 @@ export class AmbulatoryConsultationProblemsService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(problema: Problema): boolean {
+	add(problema: AmbulatoryConsultationProblem): boolean {
 		const currentItems = this.data.length;
-		this.data = pushIfNotExists<Problema>(this.data, problema, this.compareSpeciality);
+		this.data = pushIfNotExists<AmbulatoryConsultationProblem>(this.data, problema, this.compareSpeciality);
 		return currentItems === this.data.length;
 	}
 
-	addControl(problema: Problema): void {
+	addControl(problema: AmbulatoryConsultationProblem): void {
 		if (this.add(problema))
 			this.snackBarService.showError("Problema duplicado");
 	}
 
-	compareSpeciality(data: Problema, data1: Problema): boolean {
+	compareSpeciality(data: AmbulatoryConsultationProblem, data1: AmbulatoryConsultationProblem): boolean {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
-			const nuevoProblema: Problema = {
+			const nuevoProblema: AmbulatoryConsultationProblem = {
 				snomed: this.snomedConcept,
 				codigoSeveridad: this.form.value.severidad,
 				cronico: this.form.value.cronico,
@@ -126,16 +127,24 @@ export class AmbulatoryConsultationProblemsService {
 							autoFocus: false,
 							data: nuevoProblema.snomed.pt.includes("dengue")
 						});
+						dialogRef.afterClosed().subscribe((reportProblem: boolean) => {
+							nuevoProblema.reportProblem = reportProblem;
+							this.addControl(nuevoProblema);
+							this.errorSource.next();
+							this.resetForm();
+						})
+					}
+					else {
+						this.addControl(nuevoProblema);
+						this.errorSource.next();
+						this.resetForm();
 					}
 				}
 			);
-			this.addControl(nuevoProblema);
-			this.errorSource.next();
-			this.resetForm();
 		}
 	}
 
-	addProblemToList(problema: Problema): void {
+	addProblemToList(problema: AmbulatoryConsultationProblem): void {
 		this.add(problema);
 		this.form.controls.severidad.setValue(problema.codigoSeveridad);
 		this.form.controls.cronico.setValue(problema.cronico);
@@ -177,12 +186,12 @@ export class AmbulatoryConsultationProblemsService {
 		return this.columns;
 	}
 
-	getProblemas(): Problema[] {
+	getProblemas(): AmbulatoryConsultationProblem[] {
 		return this.data;
 	}
 
 	remove(index: number): void {
-		this.data = removeFrom<Problema>(this.data, index);
+		this.data = removeFrom<AmbulatoryConsultationProblem>(this.data, index);
 	}
 
 	// custom validation was required because the [max] input of MatDatepicker
