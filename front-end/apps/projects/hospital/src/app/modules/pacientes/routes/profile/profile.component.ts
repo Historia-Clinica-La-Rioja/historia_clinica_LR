@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { PersonalInformationDto, CompletePatientDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
+import {
+	PersonalInformationDto,
+	CompletePatientDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto,
+	UserDataDto
+} from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
@@ -15,6 +21,8 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ReportsComponent } from "@pacientes/dialogs/reports/reports.component";
 import { patientCompleteName } from '@core/utils/patient.utils';
+import { UserService } from "@api-rest/services/user.service";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -38,6 +46,8 @@ export class ProfileComponent implements OnInit {
 	private patientId: number;
 	private readonly routePrefix;
 	public internmentEpisode;
+	public userData: UserDataDto;
+	public personId;
 
 	public downloadReportIsEnabled: boolean;
 
@@ -51,7 +61,9 @@ export class ProfileComponent implements OnInit {
 		private internmentPatientService: InternmentPatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly featureFlagService: FeatureFlagService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private readonly userService: UserService,
+		private readonly snackBarService: SnackBarService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -66,12 +78,16 @@ export class ProfileComponent implements OnInit {
 					.subscribe(completeData => {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
+						this.personId = completeData.person.id;
 						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
 						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
+
+						this.userService.getUserData(completeData.person.id)
+							.subscribe(userDataDto => this.userData = userDataDto);
 					});
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
@@ -112,6 +128,15 @@ export class ProfileComponent implements OnInit {
 			width: '700px',
 			data: { patientId: this.patientId, patientName: patientCompleteName(this.patientBasicData) }
 		});
+	}
+
+	addUser() {
+		this.userService.addUser(this.personId).subscribe(userId => {
+			this.userService.getUserData(this.personId).subscribe( userDataDto => {this.userData = userDataDto});
+			this.snackBarService.showSuccess("'pacientes.user_data.messages.SUCCESS''");
+		}, error => {
+			this.snackBarService.showError("'pacientes.user_data.messages.ERROR''");
+		})
 	}
 
 }
