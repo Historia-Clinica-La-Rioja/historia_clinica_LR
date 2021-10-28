@@ -11,6 +11,9 @@ import { Observable, Subject } from 'rxjs';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 
 export interface Problema {
 	snomed: SnomedDto;
@@ -35,7 +38,9 @@ export class AmbulatoryConsultationProblemsService {
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly snowstormService: SnowstormService,
+		private readonly dialog: MatDialog,
 
 	) {
 		this.form = this.formBuilder.group({
@@ -113,6 +118,13 @@ export class AmbulatoryConsultationProblemsService {
 				fechaInicio: this.form.value.fechaInicio,
 				fechaFin: this.form.value.fechaFin
 			};
+			this.snowstormService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
+				(isReportable: boolean) => {
+					if (isReportable) {
+						const dialogRef = this.dialog.open(EpidemiologicalReportComponent);	
+					}
+				}
+			);
 			this.addControl(nuevoProblema);
 			this.errorSource.next();
 			this.resetForm();

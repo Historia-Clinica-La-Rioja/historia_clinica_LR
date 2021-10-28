@@ -29,6 +29,7 @@ import { NewConsultationSuggestedFieldsService } from '../../services/new-consul
 import { TranslateService } from '@ngx-translate/core';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
+import { SnowstormService } from '@api-rest/services/snowstorm.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -71,10 +72,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
+		private readonly snowstormService: SnowstormService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService);
+		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snowstormService, this.dialog);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
