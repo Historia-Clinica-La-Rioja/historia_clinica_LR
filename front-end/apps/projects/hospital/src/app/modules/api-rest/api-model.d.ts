@@ -1801,6 +1801,11 @@ export interface SnomedDto extends Serializable {
     sctid: string;
 }
 
+export interface SnomedEclDto {
+    key: SnomedECL;
+    value: string;
+}
+
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
@@ -2057,4 +2062,17 @@ export const enum ESurfacePositionDto {
     LEFT = "LEFT",
     RIGHT = "RIGHT",
     CENTRAL = "CENTRAL",
+}
+
+export const enum SnomedECL {
+    BLOOD_TYPE = "BLOOD_TYPE",
+    PERSONAL_RECORD = "PERSONAL_RECORD",
+    FAMILY_RECORD = "FAMILY_RECORD",
+    ALLERGY = "ALLERGY",
+    HOSPITAL_REASON = "HOSPITAL_REASON",
+    VACCINE = "VACCINE",
+    MEDICINE = "MEDICINE",
+    PROCEDURE = "PROCEDURE",
+    CONSULTATION_REASON = "CONSULTATION_REASON",
+    DIAGNOSIS = "DIAGNOSIS",
 }

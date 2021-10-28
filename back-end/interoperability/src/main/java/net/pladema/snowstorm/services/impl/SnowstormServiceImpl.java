@@ -7,6 +7,8 @@ import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormConcept;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
+import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
+import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
 import net.pladema.snowstorm.services.exceptions.SnowstormTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +28,19 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
 
     private final SnowstormWSConfig snowstormWSConfig;
 
-    public SnowstormServiceImpl(SnowstormRestTemplateAuth restTemplateSSL, SnowstormWSConfig wsConfig) {
+    private final SnomedSemantics snomedSemantics;
+
+    public SnowstormServiceImpl(SnowstormRestTemplateAuth restTemplateSSL,
+                                SnowstormWSConfig wsConfig,
+                                SnomedSemantics snomedSemantics) {
         super(restTemplateSSL, wsConfig);
         this.snowstormWSConfig = wsConfig;
+        this.snomedSemantics = snomedSemantics;
         logger = LoggerFactory.getLogger(CalculateCie10CodesServiceImpl.class);
     }
 
     @Override
-    public SnowstormSearchResponse getConcepts(String term, String ecl) {
+    public SnowstormSearchResponse getConcepts(String term, String eclKey) {
 
         StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getConceptsUrl());
 
@@ -48,8 +55,9 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
 
         urlWithParams.append("&term=" + term);
 
-        if (ecl != null) {
-            urlWithParams.append("&ecl=" + ecl);
+        if (eclKey != null) {
+            var snomedEcl = SnomedECL.map(eclKey);
+            urlWithParams.append("&ecl=" + snomedSemantics.getEcl(snomedEcl));
         }
 
         SnowstormSearchResponse result;

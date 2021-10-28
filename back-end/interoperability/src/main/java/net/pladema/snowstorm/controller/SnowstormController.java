@@ -2,8 +2,9 @@ package net.pladema.snowstorm.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-
+import net.pladema.snowstorm.controller.dto.SnomedEclDto;
 import net.pladema.snowstorm.services.SnowstormService;
+import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,18 +37,20 @@ public class SnowstormController {
 
     private final SnowstormService snowstormService;
 
+    private final FetchAllSnomedEcl fetchAllSnomedEcl;
+
     @Value("${ws.snowstorm.request.timeout:15000}")
     private long requestTimeOut;
 
     @GetMapping(value = CONCEPTS)
     public DeferredResult<ResponseEntity<SnowstormSearchResponse>> getConcepts(
             @RequestParam(value = "term", required = true) String term,
-            @RequestParam(value = "ecl", required = false) String ecl) {
-        LOG.debug("Input data -> term: {} , ecl: {} ", term, ecl);
+            @RequestParam(value = "ecl", required = false) String eclKey) {
+        LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
         DeferredResult<ResponseEntity<SnowstormSearchResponse>> deferredResult = new DeferredResult<>(requestTimeOut);
         setCallbacks(deferredResult, CONCEPTS);
         ForkJoinPool.commonPool().submit(() -> {
-            SnowstormSearchResponse snowstormSearchResponse = snowstormService.getConcepts(term, ecl);
+            SnowstormSearchResponse snowstormSearchResponse = snowstormService.getConcepts(term, eclKey);
             if (snowstormSearchResponse == null) {
                 deferredResult.setResult(ResponseEntity.noContent().build());
             }
@@ -66,5 +71,12 @@ public class SnowstormController {
             deferredResult
                     .setErrorResult(ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(e.toString()));
         });
+    }
+
+    @GetMapping(value = "/ecl")
+    public List<SnomedEclDto> getEcls() {
+        return fetchAllSnomedEcl.run().stream()
+                .map(snomedECLBo -> new SnomedEclDto(snomedECLBo.getKey(), snomedECLBo.getValue()))
+                .collect(Collectors.toList());
     }
 }
