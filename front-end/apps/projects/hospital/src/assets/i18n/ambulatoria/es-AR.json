@@ -41,7 +41,7 @@
 				"RECOMENDADO": "*Recomendado",
 				"evolucion": {
 					"TITLE": "Evolución",
-					"DESCRIPCION": "Descripcion"
+					"DESCRIPCION": "Descripción"
 				},
 				"errors": {
 					"MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
