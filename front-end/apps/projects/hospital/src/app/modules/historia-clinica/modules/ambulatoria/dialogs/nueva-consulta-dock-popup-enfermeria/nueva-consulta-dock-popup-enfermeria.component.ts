@@ -129,7 +129,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 					statusId: problem.statusId
 				}));
 				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
-				this.healthProblemOptions = activeProblemsList.concat({
+				this.healthProblemOptions = this.healthProblemOptions.concat({
 					severity: null,
 					snomed: {
 						pt: ATENCION_ENFERMERIA_TITLE,
