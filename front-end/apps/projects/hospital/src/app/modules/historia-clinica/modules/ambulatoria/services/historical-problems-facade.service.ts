@@ -108,7 +108,7 @@ export class HistoricalProblemsFacadeService {
 				});
 			}
 
-			this.professionals = pushIfNotExists(this.professionals, { professionalId: outpatientEvolution.medic.id, professionalDescription: `${outpatientEvolution.medic.person.firstName} ${outpatientEvolution.medic.person.lastName}` }, this.compareProfessional);
+			this.professionals = pushIfNotExists(this.professionals, { professionalId: outpatientEvolution.professional.id, professionalDescription: `${outpatientEvolution.professional.person.firstName} ${outpatientEvolution.professional.person.lastName}` }, this.compareProfessional);
 
 		});
 	}

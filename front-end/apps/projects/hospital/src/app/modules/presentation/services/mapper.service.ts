@@ -158,8 +158,8 @@ export class MapperService {
 			historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					consultationProfessionalName: `${currentOutpatientEvolutionSummary.medic.person.firstName} ${currentOutpatientEvolutionSummary.medic.person.lastName}`,
-					consultationProfessionalId: currentOutpatientEvolutionSummary.medic.id,
+					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
+					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					problemId: problem.snomed.sctid,
 					problemPt: problem.snomed.pt,
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
@@ -169,8 +169,8 @@ export class MapperService {
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					consultationProfessionalName: `${currentOutpatientEvolutionSummary.medic.person.firstName} ${currentOutpatientEvolutionSummary.medic.person.lastName}`,
-					consultationProfessionalId: currentOutpatientEvolutionSummary.medic.id,
+					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
+					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					problemId: 'Problema no informado',
 					problemPt: 'Problema no informado',
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,

@@ -1421,8 +1421,8 @@ export interface OutpatientEvolutionSummaryDto extends Serializable {
     consultationID: number;
     evolutionNote: string;
     healthConditions: OutpatientSummaryHealthConditionDto[];
-    medic: HealthcareProfessionalDto;
     procedures: OutpatientProcedureDto[];
+    professional: HealthcareProfessionalDto;
     reasons: OutpatientReasonDto[];
     startDate: string;
 }

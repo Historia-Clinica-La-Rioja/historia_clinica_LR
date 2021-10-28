@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import net.pladema.clinichistory.outpatient.repository.domain.NursingEvolutionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OdontologyEvolutionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
@@ -28,16 +29,16 @@ public class EvolutionSummaryBo {
 
     private List<ReasonBo> reasons;
 
-    private HealthcareProfessionalBo medic;
+    private HealthcareProfessionalBo professional;
 
     private List<ProcedureBo> procedures = new ArrayList<>();
 
     private String evolutionNote;
 
-    public EvolutionSummaryBo(Integer id, LocalDate startDate, HealthcareProfessionalBo medic, String evolutionNote){
+    public EvolutionSummaryBo(Integer id, LocalDate startDate, HealthcareProfessionalBo professional, String evolutionNote){
         this.consultationID = id;
         this.startDate = startDate;
-        this.medic = medic;
+        this.professional = professional;
         this.evolutionNote = evolutionNote;
     }
 
@@ -46,7 +47,7 @@ public class EvolutionSummaryBo {
         if(outpatientEvolutionSummaryVo.getClinicalSpecialty() != null)
             this.clinicalSpecialty = new OutpatientClinicalSpecialtyBo(outpatientEvolutionSummaryVo.getClinicalSpecialty());
         this.startDate = outpatientEvolutionSummaryVo.getStartDate();
-        this.medic = new HealthcareProfessionalBo(outpatientEvolutionSummaryVo.getMedic(), outpatientEvolutionSummaryVo.getPerson());
+        this.professional = new HealthcareProfessionalBo(outpatientEvolutionSummaryVo.getProfessional(), outpatientEvolutionSummaryVo.getPerson());
         this.evolutionNote = outpatientEvolutionSummaryVo.getEvolutionNote();
     }
 
@@ -55,7 +56,7 @@ public class EvolutionSummaryBo {
         if(odontologyEvolutionSummaryVo.getClinicalSpecialty() != null)
             this.clinicalSpecialty = new OutpatientClinicalSpecialtyBo(odontologyEvolutionSummaryVo.getClinicalSpecialty());
         this.startDate = odontologyEvolutionSummaryVo.getStartDate();
-        this.medic = new HealthcareProfessionalBo(odontologyEvolutionSummaryVo.getMedic(), odontologyEvolutionSummaryVo.getPerson());
+        this.professional = new HealthcareProfessionalBo(odontologyEvolutionSummaryVo.getProfessional(), odontologyEvolutionSummaryVo.getPerson());
         this.evolutionNote = odontologyEvolutionSummaryVo.getEvolutionNote();
     }
 }
