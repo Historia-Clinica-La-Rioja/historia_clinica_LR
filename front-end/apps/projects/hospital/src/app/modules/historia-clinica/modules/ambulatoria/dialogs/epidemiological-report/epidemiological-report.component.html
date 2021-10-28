@@ -14,10 +14,10 @@
     </div>
 
     <mat-dialog-actions>
-        <button mat-raised-button color="primary" type="button">
+        <button mat-raised-button color="primary" type="button" (click)="reportProblem()">
             <span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
         </button>
-        <button mat-stroked-button color="warn" mat-dialog-close>
+        <button mat-stroked-button color="warn" (click)="doNotReportProblem()">
             <span
                 [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
         </button>

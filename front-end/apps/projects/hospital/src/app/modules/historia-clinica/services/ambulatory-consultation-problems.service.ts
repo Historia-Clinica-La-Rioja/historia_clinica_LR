@@ -121,7 +121,11 @@ export class AmbulatoryConsultationProblemsService {
 			this.snowstormService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
 				(isReportable: boolean) => {
 					if (isReportable) {
-						const dialogRef = this.dialog.open(EpidemiologicalReportComponent);	
+						const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
+							disableClose: true,
+							autoFocus: false,
+							data: nuevoProblema.snomed.pt.includes("dengue")
+						});
 					}
 				}
 			);
