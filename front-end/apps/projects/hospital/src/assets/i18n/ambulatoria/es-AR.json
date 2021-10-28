@@ -244,6 +244,15 @@
 					"CONTENT": "Ya existe una nueva consulta abierta, de continuar se perderán los datos cargados",
 					"OK_BUTTON": "Continuar",
 					"CANCEL_BUTTON": "Cancelar"
+				},
+				"epidemiological_report": {
+					"DESCRIPTION_DENGUE": "El problema Dengue es reportable a nivel epidemiológico.",
+					"DESCRIPTION_COVID": "El problema Covid es reportable a nivel epidemiológico.",
+					"REPORT": "¿Desea reportarlo?",
+					"buttons": {
+						"CONFIRM_REPORT": "SI, REPORTARLO",
+						"CANCEL_REPORT": "NO, OMITIRLO"
+					}
 				}
 			},
 			"ordenes_prescripciones": {

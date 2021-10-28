@@ -1,1 +1,29 @@
-<p>epidemiological-report works!</p>
+<div class="epidemiological-report" fxLayout="column" fxLayoutGap="7px" fxLayoutAlign="center center">
+
+    <div fxLayout="row" class="image" fxLayout="row" fxLayoutAlign="center">
+        <img src='assets/images/error_outline.png'>
+    </div>
+
+    <div fxLayout="column" class="message" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <span *ngIf="isDengueProblem"
+            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.DESCRIPTION_DENGUE'"></span>
+        <span *ngIf="!isDengueProblem"
+            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.DESCRIPTION_COVID'"></span>
+        <span class="report-message"
+            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.REPORT'"></span>
+    </div>
+
+    <mat-dialog-actions>
+        <button mat-raised-button color="primary" type="button">
+            <span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
+        </button>
+        <button mat-stroked-button color="warn" mat-dialog-close>
+            <span
+                [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
+        </button>
+        <button class="close" type="button" mat-dialog-close mat-icon-button matSuffix fxLayout="column">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-dialog-actions>
+
+</div>

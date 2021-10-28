@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EpidemiologicalReportComponent implements OnInit {
 
+	isDengueProblem: boolean;
+
 	constructor() { }
 
 	ngOnInit(): void {
