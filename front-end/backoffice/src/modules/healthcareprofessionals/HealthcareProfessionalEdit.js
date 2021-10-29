@@ -15,7 +15,7 @@ import ProfessionalSpecialtiesSection from "./ProfessionalSpecialtiesSection";
 const redirect = (basePath, id, data) => `/person/${data.personId}/show/2`;
 
 const HealthcareProfessionalEdit = props => (
-    <Edit {...props}>
+    <Edit {...props} mutationMode="pessimistic">
         <SimpleForm redirect={redirect} toolbar={<CustomToolbar isEdit={true}/>}>
             <PersonReferenceInput source="personId" validate={[required()]} />
             <TextInput source="licenseNumber" validate={[required()]} />
