@@ -129,9 +129,11 @@ export class AmbulatoryConsultationProblemsService {
 						});
 						dialogRef.afterClosed().subscribe((reportProblem: boolean) => {
 							nuevoProblema.reportProblem = reportProblem;
-							this.addControl(nuevoProblema);
-							this.errorSource.next();
-							this.resetForm();
+							if (nuevoProblema.reportProblem != null) {
+								this.addControl(nuevoProblema);
+								this.errorSource.next();
+								this.resetForm();
+							}
 						})
 					}
 					else {

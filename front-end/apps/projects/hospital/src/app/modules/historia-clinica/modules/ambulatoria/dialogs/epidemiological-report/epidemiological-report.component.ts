@@ -24,4 +24,8 @@ export class EpidemiologicalReportComponent implements OnInit {
 		this.dialogRef.close(false);
 	}
 
+	goBack(): void {
+		this.dialogRef.close(null);
+	}
+
 }

@@ -21,7 +21,7 @@
             <span
                 [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
         </button>
-        <button class="close" type="button" mat-dialog-close mat-icon-button matSuffix fxLayout="column">
+        <button class="close" type="button" mat-icon-button matSuffix fxLayout="column" (click)="goBack()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-dialog-actions>
