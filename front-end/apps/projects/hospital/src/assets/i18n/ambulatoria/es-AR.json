@@ -109,7 +109,9 @@
 					"TITLE": "Problema",
 					"ACLARACION_CRONICO": "(Crónico)",
 					"FECHA_INICIO_PREFIJO": "Desde",
-					"FECHA_FIN_PREFIJO": "Hasta"
+					"FECHA_FIN_PREFIJO": "Hasta",
+					"REPORT_PROBLEM": "A reportar",
+					"DO_NOT_REPORT_PROBLEM": "No reportar"
 				},
 				"procedimientos": {
 					"buttons": {
