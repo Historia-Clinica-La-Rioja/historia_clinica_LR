@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +40,7 @@ public class BackofficePermissionByActionValidator<E, I> implements BackofficePe
 
 	@Override
 	public List<I> filterIdsByPermission(List<I> ids) {
-		return null;
+		return Collections.emptyList();
 	}
 
 	private void assertTrue(BOMethod method, String message) {
@@ -73,13 +74,13 @@ public class BackofficePermissionByActionValidator<E, I> implements BackofficePe
 	}
 
 	@Override
-	public ItemsAllowed itemsAllowedToList(E entity) {
+	public ItemsAllowed<I> itemsAllowedToList(E entity) {
 		assertMethodAccepted(HttpMethod.GET);
 		return new ItemsAllowed<>(true, new ArrayList<>());
 	}
 
 	@Override
-	public ItemsAllowed itemsAllowedToList() {
+	public ItemsAllowed<I> itemsAllowedToList() {
 		assertMethodAccepted(HttpMethod.GET);
 		return new ItemsAllowed<>(true, new ArrayList<>());
 	}

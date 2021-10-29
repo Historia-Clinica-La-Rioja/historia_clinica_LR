@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class BackofficeNomivacImmunizationSyncController extends AbstractBackofficeController<NomivacImmunizationSync, Integer> {
 
     public BackofficeNomivacImmunizationSyncController(NomivacImmunizationSyncRepository repository) {
-        super(new BackofficeRepository<>(repository),
-                new BackofficePermissionValidatorAdapter(HttpMethod.GET, HttpMethod.PUT),
-                new BackofficeEntityValidatorAdapter<>());
+        super(
+            new BackofficeRepository<>(repository),
+            new BackofficePermissionValidatorAdapter<>(HttpMethod.GET, HttpMethod.PUT),
+            new BackofficeEntityValidatorAdapter<>()
+        );
     }
 
 }

@@ -1,30 +1,28 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState;
 
-import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationClinicalObservationState;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.HCHClinicalObservationRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
-import ar.lamansys.sgh.clinichistory.domain.ips.Last2VitalSignsBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
-import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
+import ar.lamansys.sgh.clinichistory.domain.ips.Last2VitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.HCHClinicalObservationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 
 @RunWith(SpringRunner.class)
 public class FetchHospitalizationClinicalObservationStateTest {
-
-	private static final String TOKEN = "TOKEN";
 
 	private FetchHospitalizationClinicalObservationState clinicalObservationGeneralStateService;
 
@@ -128,7 +126,7 @@ public class FetchHospitalizationClinicalObservationStateTest {
 
 
 	private List<ClinicalObservationVo> mockVitalSignsVo(int quantity){
-		List<ClinicalObservationVo> vitalSigns = new ArrayList();
+		List<ClinicalObservationVo> vitalSigns = new ArrayList<>();
 		for (int i=0;i<quantity;i++){
 			ClinicalObservationVo diastolic = new ClinicalObservationVo(i+1, EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(), ObservationStatus.FINAL,"1", LocalDateTime.now());
 			vitalSigns.add(diastolic);
