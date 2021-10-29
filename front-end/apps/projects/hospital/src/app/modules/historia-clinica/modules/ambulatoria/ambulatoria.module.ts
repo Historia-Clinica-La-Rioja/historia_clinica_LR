@@ -6,7 +6,6 @@ import { PortalModule } from '@angular/cdk/portal';
 
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
-import { AppMaterialModule } from '../../../material/app.material.module';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { PacientesModule } from '../../../pacientes/pacientes.module';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
@@ -80,7 +79,6 @@ import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consu
 		PortalModule,
 		CoreModule,
 		PresentationModule,
-		AppMaterialModule,
 		HistoriaClinicaModule,
 		PacientesModule,
 		OdontologiaModule,

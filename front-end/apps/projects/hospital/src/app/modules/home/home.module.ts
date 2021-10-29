@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
+import { ExtensionsModule } from '@extensions/extensions.module';
 
 import { ProfileComponent } from './routes/profile/profile.component';
 import { HomeRoutingModule } from './home-routing.module';
@@ -21,6 +22,7 @@ import { SettingsComponent } from './routes/settings/settings.component';
 		CommonModule,
 		CoreModule,
 		PresentationModule,
+		ExtensionsModule,
 		HomeRoutingModule
 	]
 })

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
-import { AppMaterialModule } from '@material/app.material.module';
 
 import { TurnosRoutingModule } from './turnos-routing.module';
 
@@ -38,7 +37,6 @@ import { AgendaComponent } from './routes/agenda/agenda.component';
 		CommonModule,
 		CoreModule,
 		PresentationModule,
-		AppMaterialModule,
 		TurnosRoutingModule,
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
 	],

@@ -55,11 +55,11 @@ import { EditEmergencyCareEpisodeComponent } from './routes/edit-emergency-care-
 	],
 	imports: [
 		CommonModule,
-		GuardiaRoutingModule,
 		CoreModule,
 		PresentationModule,
 		InstitucionModule,
 		HistoriaClinicaModule,
+		GuardiaRoutingModule,
 	],
 	providers: [
 		NewEpisodeService,

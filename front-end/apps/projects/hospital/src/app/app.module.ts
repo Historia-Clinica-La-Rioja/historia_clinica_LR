@@ -21,10 +21,8 @@ import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-tra
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { PublicService } from '@api-rest/services/public.service';
 import { PresentationModule } from '@presentation/presentation.module';
-import { AppMaterialModule } from './modules/material/app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { environment } from '@environments/environment';
-import { ExtensionsModule } from '@extensions/extensions.module';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 
 registerLocaleData(localeEsAr, 'es-AR');
@@ -49,14 +47,12 @@ registerLocaleData(localeEsAr, 'es-AR');
 		}),
 		// Módulos nuestros que se cargan al inicio
 		ApiRestModule,
-		AppMaterialModule,
 		AuthModule,
 		CoreModule,
 		PresentationModule,
 		// Module import order
 		// https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
-		ExtensionsModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {
 			enabled: environment.production,
 		}),

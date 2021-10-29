@@ -5,7 +5,6 @@ import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
-import { AppMaterialModule } from '@material/app.material.module';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 
 import { ToothComponent } from './components/tooth/tooth.component';
@@ -32,7 +31,6 @@ import { IndicesComponent } from './components/indices/indices.component';
 		FlexLayoutModule,
 		CoreModule,
 		PresentationModule,
-		AppMaterialModule,
 		HistoriaClinicaModule,
 	],
 	exports: [

@@ -4,10 +4,12 @@ set -o errexit
 BASEDIR=$(dirname "$0")"/.."
 cd "$BASEDIR"
 
+NPM_CACHE=$(pwd)/.npm
+
 start_apps=$(date +%s)
 
 cd front-end/apps
-npm ci
+npm ci --cache ${NPM_CACHE}
 npm run build:odontology
 npm run build:prod
 cd -
@@ -15,7 +17,7 @@ cd -
 start_backoffice=$(date +%s)
 
 cd front-end/backoffice
-npm ci
+npm ci --cache ${NPM_CACHE}
 npm run build
 cd -
 
@@ -50,3 +52,6 @@ cd -
 end_tests=$(date +%s)
 echo "Elapsed Time for app tests: $(($start_be_tests-$start_fe_tests)) seconds"
 echo "Elapsed Time for backend tests: $(($end_tests-$start_be_tests)) seconds"
+
+rm -rf front-end/apps/node_modules
+rm -rf front-end/backoffice/node_modules
