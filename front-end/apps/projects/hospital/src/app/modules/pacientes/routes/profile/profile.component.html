@@ -50,10 +50,12 @@
 								<span [translate]="'pacientes.user_data.TITLE'"></span>
 							</div>
 						</mat-card-title>
-						<ng-container *ngIf="!userData?.id" fxLayout="row" fxLayoutAlign="center center">
-							<button mat-raised-button color="primary" class="create-user">
-								<span [translate]="'pacientes.user_data.buttons.CREATE_USER'" (click)="addUser()"></span>
-							</button>
+						<ng-container *ngIf="!userData?.id">
+							<div fxLayout="row" fxLayoutAlign="center center">
+								<button mat-raised-button color="primary" class="create-user">
+									<span [translate]="'pacientes.user_data.buttons.CREATE_USER'" (click)="addUser()"></span>
+								</button>
+							</div>
 						</ng-container>
 					</mat-card-header>
 					<mat-card-content>
