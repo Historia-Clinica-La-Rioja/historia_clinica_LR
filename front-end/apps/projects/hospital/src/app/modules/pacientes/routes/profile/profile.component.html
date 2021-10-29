@@ -41,51 +41,53 @@
 				institución.</em>
         </div>
         <div fxFlex="50" *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
-            <mat-card class="box user-data">
-                <mat-card-header>
-                    <mat-card-title>
-                        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
-                            <mat-icon fontSet="material-icons-outlined">person</mat-icon>
-                            <span [translate]="'pacientes.user_data.TITLE'"></span>
-                        </div>
-                    </mat-card-title>
-                    <ng-container *ngIf="!userData?.id" fxLayout="row" fxLayoutAlign="center center">
-                        <button mat-raised-button color="primary" class="create-user">
-							<span [translate]="'pacientes.user_data.buttons.CREATE_USER'" (click)="addUser()"></span>
-						</button>
-                    </ng-container>
-                </mat-card-header>
-                <mat-card-content>
-                    <div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
-                        <div fxLayout="row" fxLayoutGap="5px">
-                            <strong [translate]="'pacientes.user_data.USER_ID'"></strong>
-                            <span>{{userData.id}}</span>
-                        </div>
-                        <div *ngIf="!userData.username" fxLayout="row" fxLayoutGap="10px">
-                            <mat-icon color="primary" fontSet="material-icons-outlined">error_outline</mat-icon>
-                            <span class="color-primary" [translate]="'pacientes.user_data.PENDING_DATA'"></span>
-                        </div>
-                        <ng-container *ngIf="userData.username">
-                            <div fxLayout="row" fxLayoutGap="5px">
-                                <strong [translate]="'pacientes.user_data.USERNAME'"></strong>
-                                <span>{{userData.username}}</span>
-                            </div>
-                            <div fxLayout="row" fxLayoutGap="5px">
-                                <strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
-                                <span *ngIf="userData.lastLogin else noInformation">{{userData.lastLogin | date : 'dd/MM/yyyy - HH:mm'}} hs</span>
-                            </div>
-                            <div fxLayout="row">
-                                <form [formGroup]="form">
-                                    <mat-slide-toggle color="primary" formControlName="enable" (change)="enableUser()">
-                                        <span [translate]="'pacientes.user_data.ENABLE'"></span>
-                                    </mat-slide-toggle>
-                                </form>
-                            </div>
-                        </ng-container>
-                        <mat-divider inset></mat-divider>
-                    </div>
-                </mat-card-content>
-            </mat-card>
+			<div *ngIf="createUsersIsEnable">
+				<mat-card class="box user-data">
+					<mat-card-header>
+						<mat-card-title>
+							<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+								<mat-icon fontSet="material-icons-outlined">person</mat-icon>
+								<span [translate]="'pacientes.user_data.TITLE'"></span>
+							</div>
+						</mat-card-title>
+						<ng-container *ngIf="!userData?.id" fxLayout="row" fxLayoutAlign="center center">
+							<button mat-raised-button color="primary" class="create-user">
+								<span [translate]="'pacientes.user_data.buttons.CREATE_USER'" (click)="addUser()"></span>
+							</button>
+						</ng-container>
+					</mat-card-header>
+					<mat-card-content>
+						<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
+							<div fxLayout="row" fxLayoutGap="5px">
+								<strong [translate]="'pacientes.user_data.USER_ID'"></strong>
+								<span>{{userData.id}}</span>
+							</div>
+							<div *ngIf="!userData.username" fxLayout="row" fxLayoutGap="10px">
+								<mat-icon color="primary" fontSet="material-icons-outlined">error_outline</mat-icon>
+								<span class="color-primary" [translate]="'pacientes.user_data.PENDING_DATA'"></span>
+							</div>
+							<ng-container *ngIf="userData.username">
+								<div fxLayout="row" fxLayoutGap="5px">
+									<strong [translate]="'pacientes.user_data.USERNAME'"></strong>
+									<span>{{userData.username}}</span>
+								</div>
+								<div fxLayout="row" fxLayoutGap="5px">
+									<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
+									<span *ngIf="userData.lastLogin else noInformation">{{userData.lastLogin | date : 'dd/MM/yyyy - HH:mm'}} hs</span>
+								</div>
+								<div fxLayout="row">
+									<form [formGroup]="form">
+										<mat-slide-toggle color="primary" formControlName="enable" (change)="enableUser()">
+											<span [translate]="'pacientes.user_data.ENABLE'"></span>
+										</mat-slide-toggle>
+									</form>
+								</div>
+							</ng-container>
+							<mat-divider inset></mat-divider>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</div>
         </div>
     </div>
 </app-content>

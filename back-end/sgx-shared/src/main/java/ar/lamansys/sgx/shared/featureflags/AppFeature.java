@@ -66,6 +66,8 @@ public enum AppFeature implements Feature {
     @Label("Indica si está habilitado la opción de cambiar el tema de la aplicación")
     HABILITAR_INTERCAMBIO_TEMAS,
 
+    @Label("Indica si está habilitada la funcionalidad para crear usuarios")
+    HABILITAR_CREACION_USUARIOS
     ;
 
     public boolean isActive() {

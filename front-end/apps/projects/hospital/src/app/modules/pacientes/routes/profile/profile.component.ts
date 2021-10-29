@@ -53,6 +53,7 @@ export class ProfileComponent implements OnInit {
 	public form: FormGroup;
 
 	public downloadReportIsEnabled: boolean;
+	public createUsersIsEnable: boolean;
 
 	constructor(
 		private patientService: PatientService,
@@ -71,6 +72,7 @@ export class ProfileComponent implements OnInit {
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_CREACION_USUARIOS).subscribe(isOn => this.createUsersIsEnable = isOn);
 	}
 
 	ngOnInit(): void {
