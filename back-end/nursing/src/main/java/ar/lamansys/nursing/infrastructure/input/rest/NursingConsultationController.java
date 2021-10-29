@@ -1,7 +1,6 @@
 package ar.lamansys.nursing.infrastructure.input.rest;
 
 import ar.lamansys.nursing.application.CreateNursingConsultation;
-import ar.lamansys.nursing.domain.NursingConsultationBo;
 import ar.lamansys.nursing.infrastructure.input.rest.dto.NursingConsultationDto;
 import ar.lamansys.nursing.infrastructure.input.rest.mapper.NursingConsultationMapper;
 import io.swagger.annotations.Api;
