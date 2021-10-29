@@ -75,9 +75,11 @@
                                 <span *ngIf="userData.lastLogin else noInformation">{{userData.lastLogin | date : 'dd/MM/yyyy - HH:mm'}} hs</span>
                             </div>
                             <div fxLayout="row">
-                                <mat-slide-toggle color="primary" [checked]="userData.enable">
-									<span [translate]="'pacientes.user_data.ENABLE'"></span>
-								</mat-slide-toggle>
+                                <form [formGroup]="form">
+                                    <mat-slide-toggle color="primary" formControlName="enable" (change)="enableUser()">
+                                        <span [translate]="'pacientes.user_data.ENABLE'"></span>
+                                    </mat-slide-toggle>
+                                </form>
                             </div>
                         </ng-container>
                         <mat-divider inset></mat-divider>

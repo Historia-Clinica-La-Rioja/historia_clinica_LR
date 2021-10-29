@@ -22,5 +22,10 @@ export class UserService {
 		return this.http.post<number>(url, {});
 	}
 
+	enableUser(userId: number, enable: boolean): Observable<boolean> {
+		const url = `${environment.apiBase}/users/institution/${this.contextService.institutionId}/user/${userId}`;
+		return this.http.put<boolean>(url, enable);
+	}
+
 }
 

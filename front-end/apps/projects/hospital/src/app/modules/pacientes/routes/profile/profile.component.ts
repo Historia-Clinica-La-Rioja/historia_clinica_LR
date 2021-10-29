@@ -23,6 +23,7 @@ import { ReportsComponent } from "@pacientes/dialogs/reports/reports.component";
 import { patientCompleteName } from '@core/utils/patient.utils';
 import { UserService } from "@api-rest/services/user.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -48,6 +49,7 @@ export class ProfileComponent implements OnInit {
 	public internmentEpisode;
 	public userData: UserDataDto;
 	private personId: number;
+	public form: FormGroup;
 
 	public downloadReportIsEnabled: boolean;
 
@@ -64,6 +66,7 @@ export class ProfileComponent implements OnInit {
 		public dialog: MatDialog,
 		private readonly userService: UserService,
 		private readonly snackBarService: SnackBarService,
+		private readonly formBuilder: FormBuilder,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -87,7 +90,10 @@ export class ProfileComponent implements OnInit {
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
 						this.userService.getUserData(this.personId)
-							.subscribe(userDataDto => this.userData = userDataDto);
+							.subscribe(userDataDto => {
+									this.userData = userDataDto
+									this.form.controls.enable.setValue(this.userData.enable);
+							});
 					});
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
@@ -100,6 +106,10 @@ export class ProfileComponent implements OnInit {
 				this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 			});
+
+		this.form = this.formBuilder.group({
+			enable: [null]
+		});
 
 	}
 
@@ -136,6 +146,16 @@ export class ProfileComponent implements OnInit {
 				this.userService.getUserData(this.personId).subscribe(userDataDto => this.userData = userDataDto);
 				this.snackBarService.showSuccess('pacientes.user_data.messages.SUCCESS');
 		}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
+	}
+
+	enableUser() {
+		this.userService.enableUser(this.userData.id, this.form.value.enable)
+			.subscribe(userId => {
+				this.snackBarService.showSuccess('pacientes.user_data.messages.UPDATE_SUCCESS');
+			}, _ => {
+				this.snackBarService.showError('pacientes.user_data.messages.UPDATE_ERROR');
+				this.form.controls.enable.setValue(this.userData.enable);
+			});
 	}
 
 }
