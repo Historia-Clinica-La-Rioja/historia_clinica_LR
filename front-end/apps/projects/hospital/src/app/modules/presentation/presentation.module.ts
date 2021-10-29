@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CoreModule } from '@core/core.module';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+
+import { CoreModule } from '@core/core.module';
 
 import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
@@ -88,9 +89,9 @@ import { DatePickerComponent } from './dialogs/date-picker/date-picker.component
 	],
 	imports: [
 		CommonModule,
-		CoreModule,
 		FlexModule,
 		FlexLayoutModule,
+		CoreModule,
 	],
 	exports: [
 		BarComponent,

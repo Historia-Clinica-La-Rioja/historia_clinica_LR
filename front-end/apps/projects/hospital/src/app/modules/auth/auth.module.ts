@@ -5,6 +5,7 @@ import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
 
 import { AuthRoutingModule } from './auth-routing.module';
+
 import { AuthComponent } from './auth.component';
 import { LoginComponent } from './routes/login/login.component';
 import { PasswordResetComponent } from './routes/password-reset/password-reset.component';
@@ -20,10 +21,10 @@ import { OauthLoginComponent } from './routes/chaco-login/oauth-login.component'
 		OauthLoginComponent
 	],
 	imports: [
-		CoreModule,
-		PresentationModule,
 		FormsModule,
 		ReactiveFormsModule,
+		CoreModule,
+		PresentationModule,
 		AuthRoutingModule,
 	]
 })

@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
-import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
+
 import { CoreModule } from '@core/core.module';
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { PresentationModule } from '@presentation/presentation.module';
+import { InstitucionModule } from '../institucion/institucion.module';
+
+import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
+import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
 import { AntecedentesPersonalesSummaryComponent } from './components/antecedentes-personales-summary/antecedentes-personales-summary.component';
@@ -25,7 +28,6 @@ import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diag
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { DocumentSectionComponent } from '../presentation/components/document-section/document-section.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
-import { InstitucionModule } from '../institucion/institucion.module';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 
 
@@ -56,9 +58,9 @@ import { InternacionAntecedentesPersonalesSummaryComponent } from './components/
 		InternacionAntecedentesPersonalesSummaryComponent
 	],
 	imports: [
-		ApiRestModule,
 		CommonModule,
 		CoreModule,
+		ApiRestModule,
 		PresentationModule,
 		InstitucionModule,
 	],
