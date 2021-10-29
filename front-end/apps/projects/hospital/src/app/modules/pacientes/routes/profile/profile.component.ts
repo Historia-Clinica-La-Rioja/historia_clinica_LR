@@ -24,6 +24,7 @@ import { patientCompleteName } from '@core/utils/patient.utils';
 import { UserService } from "@api-rest/services/user.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { processErrors } from "@core/utils/form.utils";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -152,8 +153,8 @@ export class ProfileComponent implements OnInit {
 		this.userService.enableUser(this.userData.id, this.form.value.enable)
 			.subscribe(userId => {
 				this.snackBarService.showSuccess('pacientes.user_data.messages.UPDATE_SUCCESS');
-			}, _ => {
-				this.snackBarService.showError('pacientes.user_data.messages.UPDATE_ERROR');
+			}, error => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
 				this.form.controls.enable.setValue(this.userData.enable);
 			});
 	}

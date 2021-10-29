@@ -137,9 +137,8 @@
             "messages": {
                 "SUCCESS": "El usuario se creó exitosamente",
                 "ERROR": "Error al crear el usuario",
-				"UPDATE_SUCCESS": "El usuario se actualizó exitosamente",
-				"UPDATE_ERROR": "Error al actualizar el usuario"
-            }
+				"UPDATE_SUCCESS": "El usuario se actualizó exitosamente"
+			}
         }
     }
 }
