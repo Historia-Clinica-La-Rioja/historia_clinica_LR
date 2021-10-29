@@ -19,7 +19,6 @@ import { AppComponent, DEFAULT_LANG } from './app.component';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 // deps
 import { ApiRestModule } from '@api-rest/api-rest.module';
-import { AuthModule } from './modules/auth/auth.module';
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
 
@@ -52,7 +51,6 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		}),
 		// deps
 		ApiRestModule,
-		AuthModule,
 		CoreModule,
 		PresentationModule,
 		// routing https://angular.io/guide/router#module-import-order
