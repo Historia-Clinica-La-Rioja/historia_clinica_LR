@@ -87,7 +87,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.datePipe);
-		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
+		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 	}
@@ -123,6 +123,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 
 		this.datosAntropometricosNuevaConsultaService.setPreviousAnthropometricData();
+
+		this.signosVitalesNuevaConsultaService.setPreviousVitalSignsData();
 
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
