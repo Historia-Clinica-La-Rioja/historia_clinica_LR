@@ -15,7 +15,7 @@ import {
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -30,6 +30,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -59,6 +60,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	severityTypes: any[];
 	criticalityTypes: any[];
 	minDate = MIN_DATE;
+	public ffIsOn: boolean;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -73,6 +75,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
 		private readonly snowstormService: SnowstormService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -154,6 +157,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.criticalityTypes = allergyCriticalities;
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe( isOn => this.ffIsOn = isOn);
 	}
 
 	save(): void {

@@ -110,7 +110,7 @@ export class AmbulatoryConsultationProblemsService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(reportProblemIsOn: boolean) {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProblema: AmbulatoryConsultationProblem = {
 				snomed: this.snomedConcept,
@@ -119,30 +119,31 @@ export class AmbulatoryConsultationProblemsService {
 				fechaInicio: this.form.value.fechaInicio,
 				fechaFin: this.form.value.fechaFin
 			};
-			this.snowstormService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
-				(isReportable: boolean) => {
-					if (isReportable) {
-						const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
-							disableClose: true,
-							autoFocus: false,
-							data: nuevoProblema.snomed.pt.includes("dengue")
-						});
-						dialogRef.afterClosed().subscribe((reportProblem: boolean) => {
-							nuevoProblema.reportProblem = reportProblem;
-							if (nuevoProblema.reportProblem != null) {
-								this.addControl(nuevoProblema);
-								this.errorSource.next();
-								this.resetForm();
-							}
-						})
+			if (reportProblemIsOn) {
+				this.snowstormService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
+					(isReportable: boolean) => {
+						if (isReportable) {
+							const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
+								disableClose: true,
+								autoFocus: false,
+								data: nuevoProblema.snomed.pt.includes("dengue")
+							});
+							dialogRef.afterClosed().subscribe((reportProblem: boolean) => {
+								nuevoProblema.reportProblem = reportProblem;
+								if (nuevoProblema.reportProblem != null) {
+									this.addControlAndResetForm(nuevoProblema);
+								}
+							})
+						}
+						else {
+							this.addControlAndResetForm(nuevoProblema);
+						}
 					}
-					else {
-						this.addControl(nuevoProblema);
-						this.errorSource.next();
-						this.resetForm();
-					}
-				}
-			);
+				);
+			}
+			else {
+				this.addControlAndResetForm(nuevoProblema);
+			}
 		}
 	}
 
@@ -244,6 +245,12 @@ export class AmbulatoryConsultationProblemsService {
 			return true;
 		}
 		return false;
+	}
+
+	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem) {
+		this.addControl(nuevoProblema);
+		this.errorSource.next();
+		this.resetForm();
 	}
 }
 

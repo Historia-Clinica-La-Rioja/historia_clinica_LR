@@ -67,7 +67,10 @@ public enum AppFeature implements Feature {
     HABILITAR_INTERCAMBIO_TEMAS,
 
     @Label("Indica si está habilitada la funcionalidad para crear usuarios")
-    HABILITAR_CREACION_USUARIOS
+    HABILITAR_CREACION_USUARIOS,
+    
+    @Label("Indica si esta habilitado la opcion de reportar epidemiológicamente un problema")
+    HABILITAR_REPORTE_EPIDEMIOLOGICO,
     ;
 
     public boolean isActive() {
