@@ -80,9 +80,9 @@ import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consu
 		CoreModule,
 		PresentationModule,
 		HistoriaClinicaModule,
+		AmbulatoriaRoutingModule,
 		PacientesModule,
 		OdontologiaModule,
-		AmbulatoriaRoutingModule,
 	]
 })
 export class AmbulatoriaModule {
