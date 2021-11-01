@@ -215,13 +215,13 @@
 					"REASONS": "Motivos",
 					"PROCEDURES": "Procedimientos",
 					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Médico",
+					"PROFESSIONAL": "Profesional",
 					"EVOLUTION_NOTE": "Descripción/Resumen",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
 				"historical-problems-filters": {
 					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Médico",
+					"PROFESSIONAL": "Profesional",
 					"PROBLEM": "Problema",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
