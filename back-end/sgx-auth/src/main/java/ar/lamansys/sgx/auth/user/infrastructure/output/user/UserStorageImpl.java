@@ -47,11 +47,11 @@ public class UserStorageImpl implements UserStorage {
 
         updateUser(userBo, user);
         userRepository.save(user);
-        if(userPassword!=null)
-            updateUserPassword(userBo, userPassword);
-        else
-            userPassword = mapUserPassword(userBo, user);
-        userPasswordRepository.save(userPassword);
+        if(userBo.getPassword()!=null) {
+            userPassword = (userPassword != null)? updateUserPassword(userBo, userPassword)
+                    : mapUserPassword(userBo, user);
+            userPasswordRepository.save(userPassword);
+        }
     }
 
     private UserPassword updateUserPassword(UserBo userBo, UserPassword userPassword) {
