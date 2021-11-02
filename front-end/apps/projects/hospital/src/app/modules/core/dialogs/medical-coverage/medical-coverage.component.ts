@@ -7,6 +7,7 @@ import { HealthInsuranceService } from '@api-rest/services/health-insurance.serv
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -26,6 +27,9 @@ export class MedicalCoverageComponent implements OnInit {
 
 	private healthInsuranceToAdd: HealthInsurance;
 	private healthInsuranceMasterData: MedicalCoverageDto[];
+
+	minDate = MIN_DATE;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private renaperService: RenaperService,

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
-import { ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
+import {ClinicalSpecialtyDto, ProfessionalsByClinicalSpecialtyDto} from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -36,7 +36,7 @@ export class ClinicalSpecialtyService {
 		return this.http.get<any[]>(url);
 	}
 
-	getLoggedInProfessionalClinicalSpecialties(): Observable<any[]> {
+	getLoggedInProfessionalClinicalSpecialties(): Observable<ClinicalSpecialtyDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty`;
 		return this.http.get<any[]>(url);
 	}

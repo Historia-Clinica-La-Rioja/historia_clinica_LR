@@ -20,9 +20,11 @@
 	"buttons": {
 		"ADD": "Agregar",
 		"BACK": "Volver",
+		"BACK_AND_COMPLETE": "Regresar y completar",
 		"CANCEL": "Cancelar",
 		"CONTINUE": "Continuar",
 		"CONFIRM": "Confirmar",
+		"CONFIRM_ANYWAY": "Confirmar de todos modos",
 		"CLOSE": "Cerrar",
 		"DELETE": "Eliminar",
 		"SEARCH": "Buscar",
@@ -31,8 +33,9 @@
 		"EDIT": "Editar",
 		"NO": "No",
 		"YES": "Si",
-		"SKIP":"Omitir",
-		"RESET":"Restablecer"
+		"SKIP": "Omitir",
+		"RESET": "Restablecer",
+		"SELECT": "Seleccionar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
@@ -41,17 +44,19 @@
 		"INVALID_DATE": "La fecha ingresada no es válida",
 		"REQUIRING_FIELD_FOR_SEARCH": "Debe ingresar al menos un campo para la búsqueda",
 		"SEARCH_RESULTS": "Resultados de la búsqueda",
+		"SUGGESTED_FIELDS": "Se sugiere completar los siguientes campos",
 		"MIN_ERROR": "El valor no puede ser menor que {{min}}",
 		"MAX_ERROR": "El valor no puede ser mayor que {{max}}",
 		"MIN_TIME_ERROR": "La hora debe ser posterior a la hora: {{minTime}}",
 		"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
 		"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
 		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy",
+		"REQUIRED_INIT_DATE": "Debe ingresar fecha de inicio",
 		"FORMAT_NUMERIC": "El valor debe ser numérico",
 		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",
-		"FORMAT_WHITOUT_BLANK_SPACES":"El valor no puede contener espacios en blanco",
+		"FORMAT_WHITOUT_BLANK_SPACES": "El valor no puede contener espacios en blanco",
 		"YES": "Si",
-		"NO":"No"
+		"NO": "No"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"
@@ -59,8 +64,8 @@
 	"medical-coverage": {
 		"ACTIVES_HEALTH_INSURANCES": "Obras sociales activas",
 		"ACTIVES_PRIVATE_HEALTH_INSURANCES": "Prepagas activas",
-		"ADD_HEALTH_INSURANCES":"Agregar obra social",
-		"ADD_PRIVATE_HEALTH_INSURANCES":"Agregar prepaga",
+		"ADD_HEALTH_INSURANCES": "Agregar obra social",
+		"ADD_PRIVATE_HEALTH_INSURANCES": "Agregar prepaga",
 		"NEW_HEALTH_INSURANCES": "Agregar nueva obra social",
 		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga"
 	},

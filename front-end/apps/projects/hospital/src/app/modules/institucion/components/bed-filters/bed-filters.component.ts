@@ -32,10 +32,12 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 			filled: [true]
 		});
 
-		const filterOptions = this.bedManagementFacadeService.getFilterOptions();
-		this.sectors = filterOptions.sectors;
-		this.specialities = filterOptions.specialities;
-		this.categories = filterOptions.categories;
+		this.bedManagementFacadeService.getBedSummary().subscribe( data => {
+			const filterOptions = this.bedManagementFacadeService.getFilterOptions();
+			this.sectors = filterOptions.sectors;
+			this.specialities = filterOptions.specialities;
+			this.categories = filterOptions.categories;
+		})
 
 		this.bedManagementFilter$ = this.bedManagementFacadeService.getBedManagementFilter().subscribe(
 			data => {

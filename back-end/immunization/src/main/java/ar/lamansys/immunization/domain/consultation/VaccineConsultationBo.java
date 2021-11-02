@@ -11,6 +11,8 @@ public class VaccineConsultationBo {
 
     private Integer patientId;
 
+    private Integer patientMedicalCoverageId;
+
     private Integer clinicalSpecialtyId;
 
     private Integer institutionId;
@@ -22,6 +24,7 @@ public class VaccineConsultationBo {
     private boolean billable;
 
     public VaccineConsultationBo(Integer id, Integer patientId,
+                                 Integer patientMedicalCoverageId,
                                  Integer clinicalSpecialtyId,
                                  Integer institutionId,
                                  Integer doctorId,
@@ -29,6 +32,7 @@ public class VaccineConsultationBo {
                                  boolean billable) {
         this.id = id;
         this.patientId = patientId;
+        this.patientMedicalCoverageId = patientMedicalCoverageId;
         this.clinicalSpecialtyId = clinicalSpecialtyId;
         this.institutionId = institutionId;
         this.doctorId = doctorId;

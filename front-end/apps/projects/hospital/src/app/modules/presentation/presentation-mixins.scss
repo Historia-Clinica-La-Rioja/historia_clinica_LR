@@ -1,0 +1,8 @@
+
+@import "./components/detail-box/detail-box.component.scss-theme.scss";
+@import "./components/signo-vital-current/signo-vital.component.scss-theme.scss"; 
+
+@mixin presentation-mixins($theme) {
+    @include app-detail-box($theme);
+    @include app-signo-vital($theme);
+}

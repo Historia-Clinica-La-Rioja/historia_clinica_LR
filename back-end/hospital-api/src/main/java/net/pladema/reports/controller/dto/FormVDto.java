@@ -28,4 +28,12 @@ public class FormVDto {
     private String medicalCoverage;
 
     private String affiliateNumber;
+
+    private LocalDate consultationDate;
+
+    private String problems;
+
+    private String sisaCode;
+
+    private String cie10Codes;
 }

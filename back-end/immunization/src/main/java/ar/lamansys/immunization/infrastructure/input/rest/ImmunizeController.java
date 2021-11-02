@@ -44,7 +44,7 @@ public class ImmunizeController {
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping
     public boolean immunizePatient(
@@ -65,6 +65,8 @@ public class ImmunizeController {
     private ImmunizationInfoBo mapImmunization(ImmunizationDto immunizationDto, Integer institutionId) {
         return new ImmunizationInfoBo(null,
                     immunizationDto.isBillable() ? institutionId : immunizationDto.getInstitutionId(),
+                    immunizationDto.getInstitutionInfo(),
+                    immunizationDto.getDoctorInfo(),
                     mapSnomed(immunizationDto.getSnomed()),
                     immunizationDto.getConditionId(),
                     immunizationDto.getSchemeId(),

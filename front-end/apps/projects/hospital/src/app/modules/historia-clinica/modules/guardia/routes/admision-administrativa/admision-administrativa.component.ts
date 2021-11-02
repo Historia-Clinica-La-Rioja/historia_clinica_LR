@@ -25,6 +25,7 @@ import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { Patient, SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -64,6 +65,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	private selectedPatient;
 
+	minDate = MIN_DATE;
+
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
@@ -76,7 +79,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly doctorsOfficeService: DoctorsOfficeService
 	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
+		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 	}
 
 	ngOnInit(): void {
@@ -96,7 +99,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			callTime: [null],
 			plateNumber: [null, Validators.maxLength(POLICE_OFFICER.PLATE_NUMBER.max_length)],
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
-			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
+			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
 			reasons: [null],
 			patientId: [null]
 		});

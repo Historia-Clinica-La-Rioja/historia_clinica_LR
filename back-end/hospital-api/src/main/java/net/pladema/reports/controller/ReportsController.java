@@ -5,16 +5,19 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.reports.controller.dto.ConsultationsDto;
+import net.pladema.reports.service.domain.ConsultationsBo;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
 import net.pladema.reports.repository.QueryFactory;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.ExcelService;
+import net.pladema.reports.service.FetchConsultations;
 import net.pladema.reports.service.FormReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
+import net.pladema.reports.service.domain.ConsultationSummaryReport;
 import net.pladema.reports.service.domain.FormVBo;
-import net.pladema.reports.service.domain.OutpatientSummaryReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -36,6 +39,7 @@ import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,7 +52,7 @@ public class ReportsController {
 
     private final ExcelService excelService;
 
-    private final OutpatientSummaryReport outpatientSummaryReport;
+    private final ConsultationSummaryReport consultationSummaryReport;
 
     private final QueryFactory queryFactory;
 
@@ -62,16 +66,24 @@ public class ReportsController {
 
     private final ReportsMapper reportsMapper;
 
-    public ReportsController(ExcelService excelService, OutpatientSummaryReport outpatientSummaryReport,
-                             QueryFactory queryFactory, LocalDateMapper localDateMapper, PdfService pdfService, AnnexReportService annexReportService, FormReportService formReportService, ReportsMapper reportsMapper){
+    private final FetchConsultations fetchConsultations;
+
+    public ReportsController(ExcelService excelService, ConsultationSummaryReport consultationSummaryReport,
+                             QueryFactory queryFactory, LocalDateMapper localDateMapper,
+                             PdfService pdfService,
+                             AnnexReportService annexReportService,
+                             FormReportService formReportService,
+                             ReportsMapper reportsMapper,
+                             FetchConsultations fetchConsultations){
         this.excelService = excelService;
-        this.outpatientSummaryReport = outpatientSummaryReport;
+        this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
         this.localDateMapper = localDateMapper;
         this.pdfService = pdfService;
         this.annexReportService = annexReportService;
         this.formReportService = formReportService;
         this.reportsMapper = reportsMapper;
+        this.fetchConsultations = fetchConsultations;
     }
 
     @GetMapping(value = "/{institutionId}/monthly")
@@ -112,7 +124,7 @@ public class ReportsController {
 
     @GetMapping(value = "/{institutionId}/summary")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-    public @ResponseBody void getOutpatientSummaryReport(
+    public @ResponseBody void fetchConsultationSummaryReport(
             @PathVariable Integer institutionId,
             @RequestParam(value="fromDate") String fromDate,
             @RequestParam(value="toDate") String toDate,
@@ -125,7 +137,7 @@ public class ReportsController {
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-        IWorkbook workbook = outpatientSummaryReport.build(institutionId, startDate, endDate, doctorId, clinicalSpecialtyId);
+        IWorkbook workbook = consultationSummaryReport.build(institutionId, startDate, endDate, doctorId, clinicalSpecialtyId);
         String title = "Resumen Mensual de Consultorios Externos - Hoja 2.1";
         String filename = title + "." + workbook.getExtension();
         response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -138,36 +150,70 @@ public class ReportsController {
         response.flushBuffer();
     }
 
-    @GetMapping("/{institutionId}/anexo")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
-    public ResponseEntity<InputStreamResource> getAnexoReport(
+    @GetMapping("/{institutionId}/appointment-annex")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    public ResponseEntity<InputStreamResource> getAppointmentAnnexReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        AnnexIIBo reportDataBo = annexReportService.execute(appointmentId);
+        AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
-        Map<String, Object> context = annexReportService.createContext(reportDataDto);
-        String outputFileName = annexReportService.createOutputFileName(appointmentId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_anexo");
+        Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
+        String outputFileName = annexReportService.createConsultationFileName(appointmentId.longValue(), now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "annex_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
 
-    @GetMapping("/{institutionId}/formv")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
-    public ResponseEntity<InputStreamResource> getFormVReport(
+    @GetMapping("/{institutionId}/consultations-annex")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    public ResponseEntity<InputStreamResource> getConsultationAnnexReport(
+            @PathVariable Integer institutionId,
+            @RequestParam(name = "documentId") Long documentId)
+            throws PDFDocumentException {
+        LOG.debug("Input parameter -> documentId {}", documentId);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+        AnnexIIBo reportDataBo = annexReportService.getConsultationData(documentId);
+        AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
+        Map<String, Object> context = annexReportService.createConsultationContext(reportDataDto);
+        String consultationFileName = annexReportService.createConsultationFileName(documentId, now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, consultationFileName, "annex_report");
+        LOG.debug(OUTPUT, reportDataDto);
+        return response;
+    }
+
+    @GetMapping("/{institutionId}/appointment-formv")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    public ResponseEntity<InputStreamResource> getFormVAppointmentReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        FormVBo reportDataBo = formReportService.execute(appointmentId);
+        FormVBo reportDataBo = formReportService.getAppointmentData(appointmentId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
-        Map<String, Object> context = formReportService.createContext(reportDataDto);
-        String outputFileName = formReportService.createOutputFileName(appointmentId, now);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "appointments_report_form");
+        Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
+        String outputFileName = formReportService.createConsultationFileName(appointmentId.longValue(), now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "form_report");
+        LOG.debug(OUTPUT, reportDataDto);
+        return response;
+    }
+
+    @GetMapping("/{institutionId}/consultation-formv")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    public ResponseEntity<InputStreamResource> getFormVConsultationReport(
+            @PathVariable Integer institutionId,
+            @RequestParam(name = "documentId") Long documentId)
+            throws PDFDocumentException {
+        LOG.debug("Input parameter -> documentId {}", documentId);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+        FormVBo reportDataBo = formReportService.getConsultationData(documentId);
+        FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
+        Map<String, Object> context = formReportService.createConsultationContext(reportDataDto);
+        String consultationFileName = formReportService.createConsultationFileName(documentId, now);
+        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, consultationFileName, "form_report");
         LOG.debug(OUTPUT, reportDataDto);
         return response;
     }
@@ -182,5 +228,17 @@ public class ReportsController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + outputFileName)
                 .contentType(MediaType.APPLICATION_PDF).contentLength(outputStream.size()).body(resource);
         return response;
+    }
+
+
+    @GetMapping("/institution/{institutionId}/patient/{patientId}/consultations-list")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    public ResponseEntity<List<ConsultationsDto>> getConsultations(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId){
+        LOG.debug("Input parameter -> patientId {}", patientId);
+        List<ConsultationsBo> consultations = fetchConsultations.run(patientId);
+        List<ConsultationsDto> result = reportsMapper.fromListConsultationsBo(consultations);
+        return ResponseEntity.ok(result);
     }
 }

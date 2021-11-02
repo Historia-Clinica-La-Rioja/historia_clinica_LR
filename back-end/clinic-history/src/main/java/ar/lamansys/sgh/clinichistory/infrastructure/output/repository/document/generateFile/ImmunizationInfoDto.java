@@ -19,6 +19,10 @@ public class ImmunizationInfoDto {
 
     private String administrationDate;
 
+    private String institutionInfo;
+
+    private String doctorInfo;
+
     private VaccineDoseInfoDto dose;
 
     private VaccineConditionDto condition;

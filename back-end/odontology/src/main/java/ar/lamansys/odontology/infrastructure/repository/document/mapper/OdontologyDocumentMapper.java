@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public interface OdontologyDocumentMapper {
 
     @Named("fromOdontologyDocumentBo")
-    @Mapping(target = "diagnosis", source = "diagnostics")
+    @Mapping(target = "problems", source = "diagnostics")
     @Mapping(target = "notes.evolutionNote", source = "evolutionNote")
     DocumentDto fromOdontologyDocumentBo(OdontologyDocumentBo odontologyDocumentBo);
 

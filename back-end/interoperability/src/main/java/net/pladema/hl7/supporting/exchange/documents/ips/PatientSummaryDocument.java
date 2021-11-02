@@ -17,6 +17,7 @@ import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.context.annotation.Conditional;
@@ -77,6 +78,16 @@ public class PatientSummaryDocument implements IDocumentProfile {
         entries.add(compositionEntry);
         entries.add(entryPatient);
         entries.addAll(requiredEntries);
+
+        //Location resource is only required when there are administered vaccines.
+        boolean requiredLocation = requiredEntries.stream()
+                .filter(a -> a.getResource().getResourceType().equals(ResourceType.Immunization))
+                .map(r -> (Immunization) r.getResource())
+                .allMatch(Immunization::hasLocation);
+
+        if(!requiredLocation)
+            demographicEntries.removeIf(r -> r.getResource().getResourceType().equals(ResourceType.Location));
+
         entries.addAll(demographicEntries);
         return entries;
     }

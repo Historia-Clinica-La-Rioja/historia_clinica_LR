@@ -7,6 +7,7 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
 public final class CodingCode {
 
     public static final FhirCode ABSENT_REASON = new FhirCode("unknown");
+    public static final String NO_INFO = "No hay información para mostrar";
 
     @UtilityClass
     public static class Document {
@@ -16,7 +17,7 @@ public final class CodingCode {
     @UtilityClass
     public static class Allergy {
         public static final FhirCode KNOWN_ABSENT = new FhirCode("no-allergy-info",
-                "No information about current allergies");
+                NO_INFO);
         public static final String NOT_KNOWN = "no-known-allergies";
 
         public static final FhirCode ENTRY = new FhirCode("48765-2", "Allergies and adverse reactions Document");
@@ -25,7 +26,7 @@ public final class CodingCode {
     @UtilityClass
     public static class Condition {
         public static final FhirCode KNOWN_ABSENT = new FhirCode(
-                "no-problem-info", "No information about current problems");
+                "no-problem-info", NO_INFO);
         public static final FhirCode NOT_KNOWN = new FhirCode(
                 "no-known-problems", "No known problems");
 
@@ -48,7 +49,7 @@ public final class CodingCode {
     @UtilityClass
     public static class Immunization {
         public static final FhirCode KNOWN_ABSENT = new FhirCode("no-immunization-info",
-                "No information about current immunizations");
+                NO_INFO);
         public static final String NOT_KNOWN = "no-known-immunization";
 
         public static final FhirCode ENTRY = new FhirCode("60484-3", "CDC Immunization panel");
@@ -57,9 +58,9 @@ public final class CodingCode {
     @UtilityClass
     public static class Medication {
         public static final FhirCode KNOWN_ABSENT = new FhirCode(
-                "no-medication-info", "No information about current medications");
+                "no-medication-info", NO_INFO);
         public static final FhirCode NOT_KNOWN = new FhirCode(
-                "no-known-medications", "No known medications");
+                "no-known-medications", NO_INFO);
 
         public static final FhirCode ENTRY = new FhirCode("10160-0", "History of Medication use Narrative");
 

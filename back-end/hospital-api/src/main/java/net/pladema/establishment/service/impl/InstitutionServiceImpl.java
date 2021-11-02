@@ -1,7 +1,6 @@
 package net.pladema.establishment.service.impl;
 
 import net.pladema.establishment.repository.InstitutionRepository;
-import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.establishment.service.InstitutionBoMapper;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBo;
@@ -14,7 +13,6 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InstitutionServiceImpl.class);
 
-    private static final String LOGGING_OUTPUT = "Output -> {}";
     private static final String LOGGING_INPUT = "Input parameters -> institutionId {} ";
 
     private final InstitutionRepository institutionRepository;
@@ -29,9 +27,8 @@ public class InstitutionServiceImpl implements InstitutionService {
     @Override
     public InstitutionBo get(Integer id) {
         LOG.debug(LOGGING_INPUT, id);
-        Institution institution = institutionRepository.getOne(id);
-        InstitutionBo result = institutionBoMapper.toInstitutionBo(institution);
-        LOG.debug(LOGGING_OUTPUT, result);
-        return result;
+        return institutionRepository.findById(id)
+                .map(institutionBoMapper::toInstitutionBo)
+                .orElse(null);
     }
 }

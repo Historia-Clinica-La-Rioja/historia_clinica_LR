@@ -20,7 +20,7 @@
 				<app-typeahead
 					fxFlex.gt-xs="60"
 					[options]="profesionalesTypeahead" [placeholder]="'turnos.home.PROFESSIONAL_SEARCH'"
-					[initValue]="profesionalInitValue"
+					[externalSetValue]="profesionalInitValue"
 					(selectionChange)="setProfesional($event)"
 				>
 				</app-typeahead>

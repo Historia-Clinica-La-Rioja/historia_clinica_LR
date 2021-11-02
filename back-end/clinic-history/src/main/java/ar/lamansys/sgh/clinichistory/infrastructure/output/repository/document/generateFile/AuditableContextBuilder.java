@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.VitalSignMapper;
@@ -72,6 +73,8 @@ public class AuditableContextBuilder {
 		contextMap.put("personalHistories", document.getPersonalHistories());
 		contextMap.put("familyHistories", document.getFamilyHistories());
 		contextMap.put("allergies", document.getAllergies());
+		contextMap.put("dentalDiagnostics", document.getDentalActions().stream().filter(DentalActionBo::isDiagnostic).collect(Collectors.toList()));
+		contextMap.put("dentalProcedures", document.getDentalActions().stream().filter(DentalActionBo::isProcedure).collect(Collectors.toList()));
 
 		var immunizations =  mapImmunizations(document.getImmunizations());
 		contextMap.put("billableImmunizations", immunizations.stream().filter(ImmunizationInfoDto::isBillable).collect(Collectors.toList()));
@@ -96,6 +99,8 @@ public class AuditableContextBuilder {
 		result.setLotNumber(immunizationBo.getLotNumber());
 		result.setSnomed(new SnomedDto(immunizationBo.getSnomed().getSctid(), immunizationBo.getSnomed().getPt()));
 		result.setAdministrationDate(localDateMapper.fromLocalDateToString(immunizationBo.getAdministrationDate()));
+		result.setInstitutionInfo(immunizationBo.getInstitutionInfo());
+		result.setDoctorInfo(immunizationBo.getDoctorInfo());
 		result.setNote(immunizationBo.getNote());
 		result.setCondition(immunizationBo.getConditionId() != null ?
 				sharedImmunizationPort.fetchVaccineConditionInfo(immunizationBo.getConditionId()) : null);

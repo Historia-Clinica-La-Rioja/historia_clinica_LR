@@ -1,7 +1,9 @@
 package net.pladema.person.controller.mapper;
 
 import net.pladema.person.controller.dto.GenderDto;
+import net.pladema.person.controller.dto.SelfPerceivedGenderDto;
 import net.pladema.person.repository.entity.Gender;
+import net.pladema.person.repository.entity.SelfPerceivedGender;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
@@ -14,4 +16,9 @@ public interface GenderMapper {
     GenderDto fromGender(Gender gender);
 
     List<GenderDto> fromGenderList(List<Gender> genders);
+
+    @Named("fromSelfPerceivedGender")
+    SelfPerceivedGenderDto fromSelfPerceivedGender(SelfPerceivedGender selfPerceivedGender);
+
+    List<SelfPerceivedGenderDto> fromSelfPerceivedGenderList(List<SelfPerceivedGender> genders);
 }

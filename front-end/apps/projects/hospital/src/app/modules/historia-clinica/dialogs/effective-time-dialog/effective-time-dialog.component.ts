@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Moment } from 'moment';
 import { newMoment, momentFormat, DateFormat } from '@core/utils/moment.utils';
 import { hasError, futureTimeValidation } from '@core/utils/form.utils';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-effective-time-dialog',
@@ -14,6 +15,7 @@ export class EffectiveTimeDialogComponent implements OnInit {
 
 	timeForm: FormGroup;
 	today: Moment = newMoment();
+	minDate = MIN_DATE;
 
 	hasError = hasError;
 

@@ -1,0 +1,15 @@
+.index-box {
+    border-radius: 10px;
+    min-width: 73%;
+}
+
+.consultation {
+    margin: 3%;
+}
+
+.index {
+    display: grid;
+    grid-template-columns: 12% 12% 12% 25% auto;
+    margin: 4%;
+    row-gap: 10%;
+}

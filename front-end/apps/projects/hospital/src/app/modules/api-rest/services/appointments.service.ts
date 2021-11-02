@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AppointmentDailyAmountDto, AppointmentDto, AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
+import {
+	AppointmentDailyAmountDto,
+	AppointmentDto,
+	AppointmentListDto,
+	CreateAppointmentDto
+} from '@api-rest/api-model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
-import {DateFormat, momentFormat} from "@core/utils/moment.utils";
-import {DownloadService} from "@core/services/download.service";
+import { DateFormat, momentFormat } from "@core/utils/moment.utils";
+import { DownloadService } from "@core/services/download.service";
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +94,12 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, {params : queryParams});
 	}
 
+	mqttCall(appointmentId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/notifyPatient`;
+		console.log(url);
+		return this.http.post(url, {});
+	}
+
 	getDailyAmounts(diaryId: number): Observable<AppointmentDailyAmountDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
@@ -102,14 +113,14 @@ export class AppointmentsService {
 	}
 
 	getAnexoPdf(appointmentData: any): Observable<any> {
-		const pdfName = "AnexoII";
-		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/anexo`;
+		const pdfName = 'AnexoII';
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/appointment-annex`;
 		return this.getAppointmentReport(url, appointmentData, pdfName);
 	}
 
 	getFormPdf(appointmentData: any): Observable<any> {
-		const pdfName = "FormularioV";
-		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/formv`;
+		const pdfName = 'FormularioV';
+		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/appointment-formv`;
 		return this.getAppointmentReport(url, appointmentData, pdfName);
 	}
 

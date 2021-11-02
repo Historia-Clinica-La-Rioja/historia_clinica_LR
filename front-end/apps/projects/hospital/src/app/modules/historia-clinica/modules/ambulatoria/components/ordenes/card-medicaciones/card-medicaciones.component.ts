@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationInfoDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -8,10 +8,10 @@ import {
 	NewPrescription,
 	NuevaPrescripcionComponent
 } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
-import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
+import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
 import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
-import {FormBuilder, FormGroup, FormArray, AbstractControl} from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -21,9 +21,9 @@ import { ERole } from '@api-rest/api-model';
 const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO];
 
 @Component({
-  selector: 'app-card-medicaciones',
-  templateUrl: './card-medicaciones.component.html',
-  styleUrls: ['./card-medicaciones.component.scss']
+	selector: 'app-card-medicaciones',
+	templateUrl: './card-medicaciones.component.html',
+	styleUrls: ['./card-medicaciones.component.scss']
 })
 export class CardMedicacionesComponent implements OnInit {
 
@@ -72,7 +72,7 @@ export class CardMedicacionesComponent implements OnInit {
 			const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
 
 			this.medicationsInfo.forEach(m => {
-				checkboxArray.push(this.formBuilder.group({checked: false}));
+				checkboxArray.push(this.formBuilder.group({ checked: false }));
 			});
 		});
 
@@ -86,10 +86,10 @@ export class CardMedicacionesComponent implements OnInit {
 	}
 
 	private getMedication(): void {
-		this.medicacionesService.updateMedicationFilter( this.patientId,
-																  this.formFilter.controls.statusId.value,
-																  this.formFilter.controls.medicationStatement.value,
-																  this.formFilter.controls.healthCondition.value);
+		this.medicacionesService.updateMedicationFilter(this.patientId,
+			this.formFilter.controls.statusId.value,
+			this.formFilter.controls.medicationStatement.value,
+			this.formFilter.controls.healthCondition.value);
 	}
 
 	private getMedicationList(medication?: MedicationInfoDto) {
@@ -118,7 +118,7 @@ export class CardMedicacionesComponent implements OnInit {
 				width: '35%',
 			});
 
-		newMedicationDialog.afterClosed().subscribe( (newPrescription: NewPrescription) => {
+		newMedicationDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
 			if (newPrescription.prescriptionDto.hasRecipe) {
 				this.dialog.open(ConfirmarPrescripcionComponent,
 					{
@@ -136,7 +136,9 @@ export class CardMedicacionesComponent implements OnInit {
 			} else {
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
 			}
+
 			this.getMedication();
+			this.cleanSelectedMedicationList();
 		});
 	}
 
@@ -154,6 +156,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 			newSuspendMedicationDialog.afterClosed().subscribe(() => {
 				this.getMedication();
+				this.cleanSelectedMedicationList();
 			});
 		}
 	}
@@ -166,6 +169,7 @@ export class CardMedicacionesComponent implements OnInit {
 				() => {
 					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_SUCCESS');
 					this.getMedication();
+					this.cleanSelectedMedicationList();
 				},
 				_ => {
 					this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.MEDICATION_CHANGE_ERROR');
@@ -191,7 +195,7 @@ export class CardMedicacionesComponent implements OnInit {
 		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
 
 		checkboxArray.controls.forEach(control => {
-			control.setValue({checked});
+			control.setValue({ checked });
 		});
 
 		this.selectedMedicationList = checked ? this.medicationsInfo : [];
@@ -245,5 +249,15 @@ export class CardMedicacionesComponent implements OnInit {
 
 	hasRecipe(medicationInfo: MedicationInfoDto): boolean {
 		return (medicationInfo.hasRecipe && medicationInfo.medicationRequestId !== null);
+	}
+
+	cleanSelectedMedicationList() {
+		this.selectedMedicationList = [];
+		const checkboxArray = this.medicationCheckboxes.controls.checkboxArray as FormArray;
+		checkboxArray.controls.forEach(control => {
+			control.setValue({ checked: false });
+		});
+
+
 	}
 }

@@ -1,6 +1,6 @@
 package ar.lamansys.immunization.infrastructure.output.repository.appointments;
 
-import ar.lamansys.immunization.domain.appointment.ServeAppointmentStorage;
+import ar.lamansys.immunization.domain.appointment.AppointmentStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-public class ServeAppointmentStorageImpl implements ServeAppointmentStorage {
+public class ServeAppointmentStorageImpl implements AppointmentStorage {
 
     private final SharedAppointmentPort sharedAppointmentPort;
 
@@ -24,5 +24,10 @@ public class ServeAppointmentStorageImpl implements ServeAppointmentStorage {
     public void run(Integer patientId, Integer doctorId, LocalDate date) {
         if (!disableValidation && sharedAppointmentPort.hasConfirmedAppointment(patientId,doctorId,date))
             sharedAppointmentPort.serveAppointment(patientId, doctorId, date);
+    }
+
+    @Override
+    public Integer getPatientMedicalCoverageId(Integer patientId, Integer doctorId) {
+        return sharedAppointmentPort.getMedicalCoverage(patientId, doctorId);
     }
 }

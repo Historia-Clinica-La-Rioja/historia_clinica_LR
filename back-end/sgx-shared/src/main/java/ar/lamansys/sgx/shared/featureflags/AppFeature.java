@@ -51,9 +51,23 @@ public enum AppFeature implements Feature {
     @Label("Indica si está habilitado la nueva versión de aplicación de vacunas")
     HABILITAR_VACUNAS_V2,
     
-    @Label("Indica si está habilitada la funcionalidad para descargar informes en turnos")
-    HABILITAR_INFORMES_TURNOS,
+    @Label("Indica si está habilitada la funcionalidad para descargar informes desde turnos y desde el perfil del paciente")
+    HABILITAR_INFORMES,
 
+    @Label("Habilita los llamados")
+    HABILITAR_LLAMADO,
+
+    @Label("Habilita la pestaña para ver las historias clínicas externas del paciente")
+    HABILITAR_HISTORIA_CLINICA_EXTERNA,
+
+    @Label("Indica si se habilita la integración con RENAPER")
+    HABILITAR_SERVICIO_RENAPER,
+
+    @Label("Indica si se restringe la opción de editar paciente")
+    RESTRINGIR_DATOS_EDITAR_PACIENTE,
+    
+    @Label("Indica si está habilitado la opción de cambiar el tema de la aplicación")
+    HABILITAR_INTERCAMBIO_TEMAS
     ;
 
     public boolean isActive() {

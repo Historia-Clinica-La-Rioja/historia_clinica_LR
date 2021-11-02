@@ -20,6 +20,7 @@ public class FormReportServiceImpl implements FormReportService {
     private final Logger LOG = LoggerFactory.getLogger(FormReportServiceImpl.class);
     public static final String OUTPUT = "Output -> {}";
     public static final String APPOINTMENT_NOT_FOUND = "appointment.not.found";
+    public static final String CONSULTATION_NOT_FOUND = "consultation.not.found";
 
     private final FormReportRepository formReportRepository;
 
@@ -28,17 +29,43 @@ public class FormReportServiceImpl implements FormReportService {
     }
 
     @Override
-    public FormVBo execute(Integer appointmentId) {
-        LOG.debug("Input parameters -> appointmentId {}", appointmentId);
-        FormVBo result = formReportRepository.getFormVInfo(appointmentId).map(FormVBo::new)
+    public FormVBo getAppointmentData(Integer appointmentId) {
+        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
+        FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
         LOG.debug("Output -> {}", result);
         return result;
     }
 
     @Override
-    public Map<String, Object> createContext(FormVDto reportDataDto){
-        LOG.debug("Input parameters -> reportDataDto {}", reportDataDto);
+    public FormVBo getConsultationData(Long documentId) {
+        LOG.debug("Input parameter -> documentId {}", documentId);
+        FormVBo result = formReportRepository.getConsultationFormVInfo(documentId).map(FormVBo::new)
+                .orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> createAppointmentContext(FormVDto reportDataDto){
+        LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
+        Map<String, Object> ctx = loadBasicContext(reportDataDto);
+        ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
+        ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
+        return ctx;
+    }
+
+    @Override
+    public Map<String, Object> createConsultationContext(FormVDto reportDataDto){
+        LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
+        Map<String, Object> ctx = loadBasicContext(reportDataDto);
+        ctx.put("consultationDate", reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        ctx.put("problems", reportDataDto.getProblems());
+        ctx.put("cie10Codes", reportDataDto.getCie10Codes());
+        return ctx;
+    }
+
+    private Map<String, Object> loadBasicContext(FormVDto reportDataDto){
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("establishment", reportDataDto.getEstablishment());
         ctx.put("completePatientName", reportDataDto.getCompletePatientName());
@@ -48,16 +75,15 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("patientAge", reportDataDto.getPatientAge());
         ctx.put("documentType", reportDataDto.getDocumentType());
         ctx.put("documentNumber", reportDataDto.getDocumentNumber());
-        ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
-        ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
+        ctx.put("sisaCode", reportDataDto.getSisaCode());
         return ctx;
     }
 
     @Override
-    public String createOutputFileName(Integer appointmentId, ZonedDateTime consultedDate){
-        LOG.debug("Input parameters -> appointmentId {}, consultedDate {}", appointmentId, consultedDate);
+    public String createConsultationFileName(Long id, ZonedDateTime consultedDate){
+        LOG.debug("Input parameters -> id {}, consultedDate {}", id, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        String outputFileName = String.format("%s. FormV %s.pdf", appointmentId, formattedDate);
+        String outputFileName = String.format("%s. FormV %s.pdf", id, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

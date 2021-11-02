@@ -124,6 +124,10 @@ export class BedManagementFacadeService {
 	private sectorHasSpecialty(sector: SectorSummaryDto, specialtyId: number): boolean {
 		return sector.clinicalSpecialties.some(clinicalSpecialty => clinicalSpecialty.id === specialtyId);
 	}
+
+	public getBedSummary(): Observable<BedSummaryDto[]> {
+		return this.bedSummary$;
+	}
 }
 
 export class Sector {

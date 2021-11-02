@@ -155,7 +155,7 @@ export class GuardiaMapperService {
 						chronic: problema.cronico,
 						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,
-						startDate: momentFormat(problema.fechaInicio, DateFormat.API_DATE)
+						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
 					};
 				}
 			),

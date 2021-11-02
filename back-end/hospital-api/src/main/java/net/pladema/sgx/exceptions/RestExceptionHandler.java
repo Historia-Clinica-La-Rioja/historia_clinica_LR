@@ -1,20 +1,10 @@
 package net.pladema.sgx.exceptions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.mail.MessagingException;
-import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
-
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgx.shared.strings.StringValidatorException;
+import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +22,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
-import net.pladema.security.exceptions.JWTParseException;
-import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
+import javax.mail.MessagingException;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -146,14 +143,6 @@ public class RestExceptionHandler {
 	@ExceptionHandler({OverturnsLimitException.class})
 	public ApiErrorMessageDto handleOverturnsLimitException(OverturnsLimitException ex, Locale locale) {
 		return handleRuntimeException(ex, locale);
-	}
-
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	@ExceptionHandler({JWTParseException.class})
-	public ApiErrorMessageDto handleJWTParseException(JWTParseException ex) {
-		LOG.info(ex.getMessage());
-		LOG.debug(ex.getMessage(), ex);
-		return new ApiErrorMessageDto("token-invalid", "Token vencido o inválido");
 	}
 
 	@ResponseStatus(HttpStatus.NOT_IMPLEMENTED)

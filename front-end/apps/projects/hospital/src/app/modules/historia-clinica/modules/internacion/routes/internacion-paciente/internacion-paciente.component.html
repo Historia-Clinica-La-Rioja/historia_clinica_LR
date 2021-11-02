@@ -14,7 +14,7 @@
 					</ng-container>
 
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<button mat-flat-button color="primary" fxFlexFill.xs (click)="goToNotaEvolucion()">
 							<span class="uppercase"
 								[translate]="'internaciones.internacion-paciente.actions.ADD_NOTA_EVOLUCION'"></span>
@@ -69,29 +69,29 @@
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
-						*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+						*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto"></app-patient-card>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-signos-vitales-summary [internmentEpisodeId]="internmentEpisodeId"
 							[editable]="!epicrisisDoc?.confirmed" [vitalSigns$]="vitalSigns$">
 						</app-signos-vitales-summary>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"
 							[anthropometricData$]="anthropometricData$" [editable]="!epicrisisDoc?.confirmed">
 						</app-antropometricos-summary>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO','ENFERMERO','PROFESIONAL_DE_SALUD','ENFERMERO_ADULTO_MAYOR']">
-						<app-antecedentes-personales-summary [personalHistory]="personalHistory$ | async"
+						*appHasRole="['ESPECIALISTA_MEDICO','ENFERMERO','PROFESIONAL_DE_SALUD','ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-internacion-antecedentes-personales-summary [personalHistory]="personalHistory$ | async"
 							[personalHistoriesHeader]="personalHistoriesHeader">
-						</app-antecedentes-personales-summary>
+						</app-internacion-antecedentes-personales-summary>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-antecedentes-familiares-summary [familyHistories]="familyHistories$ | async"
 							[familyHistoriesHeader]="familyHistoriesHeader">
 						</app-antecedentes-familiares-summary>
@@ -99,7 +99,7 @@
 				</div>
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
-						*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+						*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-summary-card id="internment_summary_card" [header]="internacionSummary" [canEdit]="['ESPECIALISTA_MEDICO']"
 							[editable]="!hasMedicalDischarge && canLoadProbableDischargeDate"
 							(openInNew)="openDialog()">
@@ -111,30 +111,30 @@
 						</app-summary-card>
 					</ng-container>
 					<ng-container *appFeatureFlag="'mainDiagnosisRequired'">
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 							<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
 								[editable]="!epicrisisDoc">
 							</app-main-diagnosis-summary>
 						</ng-container>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
 							[editable]="!epicrisisDoc && editDiagnosisSummary$">
 						</app-diagnosis-summary>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-alergias-summary [internmentEpisodeId]="internmentEpisodeId"
 							[editable]="!epicrisisDoc?.confirmed" [allergies]="allergies$ | async">
 						</app-alergias-summary>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
-						<app-medicacion-summary [medications]="medications$ | async"></app-medicacion-summary>
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-medicacion-summary [medicationsHeader]="medicationsHeader" [medications]="medications$ | async"></app-medicacion-summary>
 					</ng-container>
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-vacunas-summary [internmentEpisodeId]="internmentEpisodeId"
 							[immunizations]="immunizations$ | async" [editable]="!epicrisisDoc?.confirmed">
 						</app-vacunas-summary>
@@ -142,7 +142,7 @@
 				</div>
 			</div>
 			<ng-container
-				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 				<app-documents-summary [internmentEpisodeId]="internmentEpisodeId"></app-documents-summary>
 			</ng-container>
 		</div>

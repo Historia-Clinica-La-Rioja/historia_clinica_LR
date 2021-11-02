@@ -49,9 +49,26 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys.sgh</groupId>
+            <artifactId>hospital-public-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ar.lamansys</groupId>
             <artifactId>sgx-auth</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -60,11 +77,10 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <profiles>
@@ -178,7 +194,7 @@
                 <pluginRepository>
                     <id>jcenter-snapshots</id>
                     <name>jcenter</name>
-                    <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+                    <url>https://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
                 </pluginRepository>
                 <pluginRepository>
                     <snapshots>
@@ -186,7 +202,7 @@
                     </snapshots>
                     <id>jcenter-releases</id>
                     <name>jcenter</name>
-                    <url>http://jcenter.bintray.com</url>
+                    <url>https://jcenter.bintray.com</url>
                 </pluginRepository>
             </pluginRepositories>
         </profile>
@@ -263,6 +279,9 @@
                         <pattern>net.pladema.hl7.**.dto.**Dto</pattern>
                         <pattern>ar.lamansys.**.dto.**Dto</pattern>
                     </classPatterns>
+                    <excludeClassPatterns>
+                        <pattern>ar.lamansys.sgh.publicapi.**.dto.**Dto</pattern>
+                    </excludeClassPatterns>
                     <outputKind>module</outputKind>
                     <outputFile>../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-model.d.ts</outputFile>
                     <optionalAnnotations>

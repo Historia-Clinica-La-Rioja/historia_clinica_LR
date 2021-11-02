@@ -1,0 +1,5 @@
+@import "./components/indices/indices.component.scss-theme.scss";
+
+@mixin odontologia-mixins($theme) {
+    @include app-indices($theme);
+}

@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,16 +19,26 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiagnosticStorageImpl.class);
 
-    private final DiagnosticRepository diagnosticRepository;
+    private final EntityManager entityManager;
 
-    public DiagnosticStorageImpl(DiagnosticRepository diagnosticRepository) {
-        this.diagnosticRepository = diagnosticRepository;
+    public DiagnosticStorageImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public List<DiagnosticBo> getDiagnostics() {
         LOG.debug("No input parameters");
-        List<DiagnosticBo> result = diagnosticRepository.getAll()
+
+        String sqlString =
+                "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface, " +
+                "       ad.permanent_c, ad.permanent_p, ad.permanent_o, ad.temporary_c, ad.temporary_e, ad.temporary_o " +
+                "FROM applicable_diagnostic ad " +
+                "ORDER BY ad.pt ASC";
+
+        Query query = entityManager.createNativeQuery(sqlString);
+        List<Object[]> queryResult = query.getResultList();
+
+        List<DiagnosticBo> result = queryResult
                 .stream()
                 .map(this::parseToDiagnosticBo)
                 .collect(Collectors.toList());
@@ -38,7 +50,17 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
     @Override
     public Optional<DiagnosticBo> getDiagnostic(String sctid) {
         LOG.debug("Input parameter -> sctid {}", sctid);
-        List<Object[]> diagnostics = diagnosticRepository.getBySctid(sctid);
+
+        String sqlString =
+                "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface, " +
+                "       ad.permanent_c, ad.permanent_p, ad.permanent_o, ad.temporary_c, ad.temporary_e, ad.temporary_o " +
+                "FROM applicable_diagnostic ad " +
+                "WHERE ad.sctid = :sctid ";
+
+        Query query = entityManager.createNativeQuery(sqlString)
+                .setParameter("sctid", sctid);
+        List<Object[]> diagnostics = query.getResultList();
+
         if (diagnostics.isEmpty())
             return Optional.empty();
         Optional<DiagnosticBo> result = diagnostics
@@ -51,7 +73,9 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
 
     private DiagnosticBo parseToDiagnosticBo(Object[] rawDiagnostic) {
         return new DiagnosticBo((String) rawDiagnostic[0], (String) rawDiagnostic[1],
-                                (boolean) rawDiagnostic[2], (boolean) rawDiagnostic[3]);
+                (boolean) rawDiagnostic[2], (boolean) rawDiagnostic[3],
+                (boolean) rawDiagnostic[4], (boolean) rawDiagnostic[5],(boolean) rawDiagnostic[6],
+                (boolean) rawDiagnostic[7], (boolean) rawDiagnostic[8],(boolean) rawDiagnostic[9]);
     }
 
 }

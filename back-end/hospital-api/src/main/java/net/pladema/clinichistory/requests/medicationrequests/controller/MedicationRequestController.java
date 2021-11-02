@@ -100,7 +100,7 @@ public class MedicationRequestController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     @Transactional
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
@@ -119,7 +119,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/suspend")
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     @Transactional
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                   @PathVariable(name = "patientId") Integer patientId,
@@ -134,7 +134,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/finalize")
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     @Transactional
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
@@ -148,7 +148,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/reactivate")
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     @Transactional
     public void reactivateMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                      @PathVariable(name = "patientId") Integer patientId,
@@ -164,7 +164,7 @@ public class MedicationRequestController {
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     public @ResponseBody
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     List<MedicationInfoDto> medicationRequestList(@PathVariable(name = "institutionId") Integer institutionId,
                                                   @PathVariable(name = "patientId") Integer patientId,
                                                   @RequestParam(value = "statusId", required = false) String statusId,
@@ -183,7 +183,7 @@ public class MedicationRequestController {
     }
 
     @GetMapping(value = "/{medicationRequestId}/download")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<InputStreamResource> download(@PathVariable(name = "institutionId") Integer institutionId,
                                                         @PathVariable(name = "patientId") Integer patientId,
                                                         @PathVariable(name = "medicationRequestId") Integer medicationRequestId) throws PDFDocumentException {

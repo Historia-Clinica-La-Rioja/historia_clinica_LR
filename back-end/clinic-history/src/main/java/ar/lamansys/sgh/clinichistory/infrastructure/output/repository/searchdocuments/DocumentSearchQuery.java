@@ -50,8 +50,8 @@ public class DocumentSearchQuery {
         return new QueryPart("DocumentHealthCondition as dhc \n" +
                 "join Document as document on (dhc.pk.documentId = document.id) \n" +
         //Creator
-                "join User as users on (document.creationable.createdBy = users.id) \n" +
-                "join Person as creator on (users.personId = creator.id) \n" +
+                "join UserPerson as userperson on (document.creationable.createdBy = userperson.pk.userId) \n" +
+                "join Person as creator on (userperson.pk.personId = creator.id) \n" +
         //Notes
                 "left join Note othernote on (document.otherNoteId = othernote.id) \n" +
                 "left join Note physicalnote on (document.physicalExamNoteId = physicalnote.id) \n" +

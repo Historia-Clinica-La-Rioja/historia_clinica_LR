@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface UserAssignmentService {
 	List<RoleAssignment> getRoleAssignment(Integer userId);
+
 	void saveUserRole(Integer userId, ERole role, Integer institutionId);
+
+	void removeAllPermissions(Integer userId);
 }

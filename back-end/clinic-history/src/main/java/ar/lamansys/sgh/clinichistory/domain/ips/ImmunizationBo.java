@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -16,9 +18,15 @@ public class ImmunizationBo extends ClinicalTerm {
 
     private LocalDate administrationDate;
 
+    private LocalDate expirationDate;
+
     private String note;
 
     private Integer institutionId;
+
+    private String institutionInfo;
+
+    private String doctorInfo;
 
     private ImmunizationDoseBo dose;
 
@@ -29,6 +37,37 @@ public class ImmunizationBo extends ClinicalTerm {
     private String lotNumber;
 
     private boolean billable = false;
+
+    private Integer createdBy;
+
+    public ImmunizationBo(Integer id, Integer patientId, SnomedBo snomed, String statusId,
+                          LocalDate administrationDate, LocalDate expirationDate, Integer institutionId,
+                          Short conditionId, Short schemeId, ImmunizationDoseBo dose,
+                          String lotNumber, boolean billable, String note, Integer createdBy) {
+        super(id, patientId, snomed, statusId, null, null);
+        this.administrationDate = administrationDate;
+        this.expirationDate = expirationDate;
+        this.note = note;
+        this.institutionId = institutionId;
+        this.dose = dose;
+        this.conditionId = conditionId;
+        this.schemeId = schemeId;
+        this.lotNumber = lotNumber;
+        this.billable = billable;
+        this.createdBy = createdBy;
+    }
+
+    public ImmunizationBo(@Valid @NotNull(message = "{value.mandatory}") SnomedBo snomed, LocalDate administrationDate, String note, Integer institutionId, ImmunizationDoseBo dose, Short conditionId, Short schemeId, String lotNumber, boolean billable) {
+        super(snomed);
+        this.administrationDate = administrationDate;
+        this.note = note;
+        this.institutionId = institutionId;
+        this.dose = dose;
+        this.conditionId = conditionId;
+        this.schemeId = schemeId;
+        this.lotNumber = lotNumber;
+        this.billable = billable;
+    }
 
     public ImmunizationBo(ImmunizationVo immunizationVo) {
         super();

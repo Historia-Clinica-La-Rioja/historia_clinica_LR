@@ -1,0 +1,9 @@
+@mixin app-vacunas($theme) {
+    $palette-primary: map-get($theme, primary);
+    app-vacunas {
+        .dose {
+            background-color: #2687c533;
+            color: mat-color($palette-primary, 400); // previuos color 2687c5
+        }
+    }
+}

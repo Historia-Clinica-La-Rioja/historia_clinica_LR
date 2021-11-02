@@ -17,6 +17,8 @@ public abstract class ClinicalTerm extends SelfValidating<ClinicalTerm> {
 
     private Integer id;
 
+    private Integer patientId;
+
     @Valid
     @NotNull(message = "{value.mandatory}")
     private SnomedBo snomed;
@@ -27,7 +29,17 @@ public abstract class ClinicalTerm extends SelfValidating<ClinicalTerm> {
 
     private String cie10codes;
 
-    public ClinicalTerm(@Valid @NotNull(message = "{value.mandatory}") SnomedBo snomed) {
+    protected ClinicalTerm(Integer id, Integer patientId, @Valid @NotNull(message = "{value.mandatory}") SnomedBo snomed,
+                        String statusId, String status, String cie10codes) {
+        this.id = id;
+        this.patientId = patientId;
+        this.snomed = snomed;
+        this.statusId = statusId;
+        this.status = status;
+        this.cie10codes = cie10codes;
+    }
+
+    protected ClinicalTerm(@Valid @NotNull(message = "{value.mandatory}") SnomedBo snomed) {
         this.snomed = snomed;
     }
 }

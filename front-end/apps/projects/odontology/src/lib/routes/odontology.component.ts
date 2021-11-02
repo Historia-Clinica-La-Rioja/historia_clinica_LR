@@ -11,14 +11,11 @@ import { Observable } from 'rxjs';
 	`,
 	styles: []
 })
-export class OdontologyComponent implements OnInit {
+export class OdontologyComponent {
 
 	odontologyInfo$: Observable<string>;
 
 	constructor(private odontologyService: OdontologyService) {
-	}
-
-	ngOnInit(): void {
 		this.odontologyInfo$ = this.odontologyService.getInfo();
 	}
 

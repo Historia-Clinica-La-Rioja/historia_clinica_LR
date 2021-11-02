@@ -6,6 +6,7 @@ import net.pladema.person.controller.dto.EthnicityDto;
 import net.pladema.person.controller.dto.GenderDto;
 import net.pladema.person.controller.dto.IdentificationTypeDto;
 import net.pladema.person.controller.dto.PersonOccupationDto;
+import net.pladema.person.controller.dto.SelfPerceivedGenderDto;
 import net.pladema.person.controller.mapper.EducationLevelMapper;
 import net.pladema.person.controller.mapper.EthnicityMapper;
 import net.pladema.person.controller.mapper.GenderMapper;
@@ -13,6 +14,7 @@ import net.pladema.person.controller.mapper.IdentificationTypeMapper;
 import net.pladema.person.controller.mapper.OccupationMapper;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
+import net.pladema.person.repository.entity.SelfPerceivedGender;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.domain.EducationLevelBo;
 import net.pladema.person.service.domain.EthnicityBo;
@@ -66,6 +68,15 @@ public class PersonMasterDataController {
         List<Gender> genders = personMasterDataService.getGenders();
         List<GenderDto> result = genderMapper.fromGenderList(genders);
         LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/self-perceived-genders")
+    public ResponseEntity<Collection<SelfPerceivedGenderDto>> getSelfPerceivedGenders(){
+        LOG.debug("{}", "All self-perceived genders");
+        List<SelfPerceivedGender> genders = personMasterDataService.getSelfPerceivedGender();
+        List<SelfPerceivedGenderDto> result = genderMapper.fromSelfPerceivedGenderList(genders);
+        LOG.debug("OUTPUT -> {}", result);
         return ResponseEntity.ok().body(result);
     }
 

@@ -5,11 +5,14 @@ import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { PublicInfoDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { PwaInstallService } from '@core/services/pwa-install.service';
 import { PwaUpdateService } from '@core/services/pwa-update.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Theme } from './components/exchangeable-theme/exchangeable-theme.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const DEFAULT_LANG = 'es-AR';
 
@@ -20,7 +23,8 @@ const DEFAULT_LANG = 'es-AR';
 })
 export class AppComponent {
 	public publicInfo$: Observable<PublicInfoDto>;
-
+	selectedTheme: Theme;
+	isExchangeableTheme$: Observable<boolean>;
 	constructor(
 		translate: TranslateService,
 		titleService: Title,
@@ -30,6 +34,7 @@ export class AppComponent {
 		snackBarService: SnackBarService,
 		private matIconRegistry: MatIconRegistry,
 		private domSanitizer: DomSanitizer,
+		private readonly featureFlagService: FeatureFlagService
 	) {
 		translate.setDefaultLang(DEFAULT_LANG);
 		translate.use(DEFAULT_LANG);
@@ -52,22 +57,28 @@ export class AppComponent {
 			'person_cancel_outlined',
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/person_cancel_outlined.svg')
 		);
+		this.matIconRegistry.addSvgIcon(
+			'bell_appointment_call',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/bell_appointment_call.svg')
+		);
 		//
 		pwaInstallService.install$.pipe(
 			switchMap(
 				pwaInstallAction =>
-					snackBarService.showAction('Instalar aplicación', {text: 'Ok', payload: pwaInstallAction})
+					snackBarService.showAction('Instalar aplicación', { text: 'Ok', payload: pwaInstallAction })
 			),
 		).subscribe(pwaInstallAction => pwaInstallAction.run());
 
 		pwaUpdateService.update$.pipe(
 			switchMap(
 				pwaUpdateAction =>
-					snackBarService.showAction('Nueva versión', {text: 'Actualizar', payload: pwaUpdateAction})
+					snackBarService.showAction('Nueva versión', { text: 'Actualizar', payload: pwaUpdateAction })
 			),
 		).subscribe(pwaUpdateAction => pwaUpdateAction.run());
 
 		pwaUpdateService.checkForUpdate();
+
+		this.isExchangeableTheme$ = this.featureFlagService.isActive(AppFeature.HABILITAR_INTERCAMBIO_TEMAS);
 	}
 
 }

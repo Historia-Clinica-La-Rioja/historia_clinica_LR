@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+    <head>
+        <th:block th:include="fragments/form_report.html :: headerfiles"></th:block>
+    </head>
+    <body>
+        <div class="container">
+            <div th:replace="fragments/form_report.html :: header(title='ORDEN DE PRESTACIÓN')"></div>
+            <div th:replace="fragments/form_report.html :: data"></div>
+        </div>
+    </body>
+</html>

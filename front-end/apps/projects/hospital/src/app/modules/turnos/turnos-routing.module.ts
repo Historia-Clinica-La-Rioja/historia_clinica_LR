@@ -21,6 +21,7 @@ const routes: Routes = [
 						ERole.ENFERMERO,
 						ERole.ESPECIALISTA_MEDICO,
 						ERole.PROFESIONAL_DE_SALUD,
+						ERole.ESPECIALISTA_EN_ODONTOLOGIA
 					]
 				},
 				children: [

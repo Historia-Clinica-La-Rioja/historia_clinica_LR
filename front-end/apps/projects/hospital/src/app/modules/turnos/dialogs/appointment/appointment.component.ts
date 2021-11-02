@@ -6,17 +6,17 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
-import { AppFeature } from '@api-rest/api-model';
-import { ERole } from '@api-rest/api-model';
+import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { MapperService } from '@core/services/mapper.service';
 import {
 	determineIfIsHealthInsurance,
-	HealthInsurance, MedicalCoverage,
-	MedicalCoverageComponent, PatientMedicalCoverage, PrivateHealthInsurance
+	HealthInsurance,
+	MedicalCoverageComponent,
+	PatientMedicalCoverage,
+	PrivateHealthInsurance
 } from '@core/dialogs/medical-coverage/medical-coverage.component';
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
@@ -25,9 +25,10 @@ import { Observable } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 const TEMPORARY_PATIENT = 3;
-const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+const BELL_LABEL = 'Llamar paciente'
+const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLES_TO_EDIT: ERole[]
-	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
 
 @Component({
@@ -39,6 +40,7 @@ export class AppointmentComponent implements OnInit {
 
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
+	readonly BELL_LABEL = BELL_LABEL;
 	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;
@@ -62,6 +64,7 @@ export class AppointmentComponent implements OnInit {
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
+	isMqttCallEnabled: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params : { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -78,7 +81,8 @@ export class AppointmentComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES_TURNOS).subscribe(isOn => this.downloadReportIsEnabled = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 	}
 
 	ngOnInit(): void {
@@ -274,6 +278,10 @@ export class AppointmentComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	callPatient() {
+		this.appointmentService.mqttCall(this.params.appointmentData.appointmentId).subscribe();
 	}
 
 	hideFilters(): void {

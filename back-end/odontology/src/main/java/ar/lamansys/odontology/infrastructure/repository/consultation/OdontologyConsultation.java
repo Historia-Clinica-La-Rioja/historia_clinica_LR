@@ -40,6 +40,9 @@ public class OdontologyConsultation extends SGXAuditableEntity<Integer> {
     @Column(name = "institution_id")
     private Integer institutionId;
 
+    @Column(name = "patient_medical_coverage_id")
+    private Integer patientMedicalCoverageId;
+
     @Column(name = "doctor_id")
     private Integer doctorId;
 
@@ -70,6 +73,7 @@ public class OdontologyConsultation extends SGXAuditableEntity<Integer> {
         this.doctorId = consultation.getDoctorId();
         this.performedDate = consultation.getPerformedDate();
         this.clinicalSpecialtyId = consultation.getClinicalSpecialtyId();
+        this.patientMedicalCoverageId = consultation.getPatientMedicalCoverageId();
     }
 
 }

@@ -37,6 +37,7 @@
 					<mat-form-field appearance="outline">
 						<input formControlName="startDate" id="startDatePicker" matInput [matDatepicker]="startDatePicker"
 							   placeholder="{{'reportes.form.START_DATE_PLACEHOLDER' | translate}}"
+							   [min]="minDate"
 							   [max]="maxStartDate(this.form.controls.endDate.value)"
 								(dateChange)="checkValidDates()">
 						<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>

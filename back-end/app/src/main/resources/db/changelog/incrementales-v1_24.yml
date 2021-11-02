@@ -1,0 +1,210 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_24
+    
+    - changeSet:
+          id: external_clinical_history-createTable
+          comment: Create table external_clinical_history
+          author: lbergottini
+          changes:
+            - createTable:
+                    tableName: external_clinical_history
+                    columns:
+                        - column:
+                            autoIncrement: true
+                            constraints:
+                                primaryKey: true
+                                primaryKeyName: PK_external_clinical_history
+                            name: id
+                            type: int
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: patient_gender
+                            type: smallint
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: patient_document_type
+                            type: smallint
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: patient_document_number
+                            type: varchar(11)
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: notes
+                            type: varchar(1024)
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: consultation_date
+                            type: date
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: institution
+                            type: varchar(255)
+                            defaultValue: '-'
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: professional_name
+                            type: varchar(120)
+                            defaultValue: '-'
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: professional_specialty
+                            type: varchar(100)
+                            defaultValue: '-'
+            - addForeignKeyConstraint:
+                    baseColumnNames: patient_gender
+                    baseTableName: external_clinical_history
+                    constraintName: FK_external_clinical_history_patient_gender
+                    referencedColumnNames: id
+                    referencedTableName: gender
+            - addForeignKeyConstraint:
+                    baseColumnNames: patient_document_type
+                    baseTableName: external_clinical_history
+                    constraintName: FK_external_clinical_history_patient_document_type
+                    referencedColumnNames: id
+                    referencedTableName: identification_type
+            - addUniqueConstraint:
+                    constraintName: UQ_all_attributes
+                    columnNames: patient_gender, patient_document_type, patient_document_number, notes, consultation_date, institution, professional_name, professional_specialty
+                    tableName: external_clinical_history
+
+    - changeSet:
+        id: hospital_audit-createTable
+        comment: Create table hospital_audit
+        author: bchacon
+        changes: 
+            - createTable: 
+                tableName: hospital_audit
+                columns: 
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_hospital_audit
+                        name: id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: user_id
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        name: institution_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: date
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column: 
+                        constraints:
+                            nullable: false
+                        name: action_type
+                        type: smallint
+                        
+            - addForeignKeyConstraint:
+                baseColumnNames: institution_id
+                baseTableName: hospital_audit
+                constraintName: FK_hospital_audit_institution_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: institution
+                validate: true
+            
+    - changeSet:  
+        id: patient_audit-createTable
+        comment: Create table patient_audit
+        author: bchacon
+        changes: 
+            - createTable: 
+                tableName: patient_audit
+                columns:  
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: patient_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: hospital_audit_id
+                        type: int
+                        
+            - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: patient_audit
+                    constraintName: FK_patient_audit_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true
+            - addForeignKeyConstraint:
+                    baseColumnNames: hospital_audit_id
+                    baseTableName: patient_audit
+                    constraintName: FK_patient_audit_hospital_audit_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: hospital_audit
+                    validate: true             
+       
+    - changeSet:
+        id: patient_audit-primary_key
+        author: bchacon
+        changes:
+            - addPrimaryKey:
+                columnNames: patient_id, hospital_audit_id
+                constraintName: PK_patient_audit
+                tableName: patient_audit
+
+    - changeSet:  
+        id:  renameColumns-applicable_procedure
+        author:  tmedina
+        changes:  
+            -  renameColumn:
+                columnDataType:  boolean
+                newColumnName:  temporary_c
+                oldColumnName:  temporal_c
+                tableName:  applicable_procedure
+            -  renameColumn:  
+                columnDataType:  boolean
+                newColumnName:  temporary_e
+                oldColumnName:  temporal_e
+                tableName:  applicable_procedure
+            -  renameColumn:  
+                columnDataType:  boolean
+                newColumnName:  temporary_o
+                oldColumnName:  temporal_o
+                tableName:  applicable_procedure
+
+    - changeSet:  
+        id:  renameColumns-applicable_diagnostic
+        author:  tmedina
+        changes:  
+            -  renameColumn:  
+                columnDataType:  boolean
+                newColumnName:  temporary_c
+                oldColumnName:  temporal_c
+                tableName:  applicable_diagnostic
+            -  renameColumn:  
+                columnDataType:  boolean  
+                newColumnName:  temporary_e
+                oldColumnName:  temporal_e
+                tableName:  applicable_diagnostic
+            -  renameColumn:  
+                columnDataType:  boolean  
+                newColumnName:  temporary_o
+                oldColumnName:  temporal_o
+                tableName:  applicable_diagnostic

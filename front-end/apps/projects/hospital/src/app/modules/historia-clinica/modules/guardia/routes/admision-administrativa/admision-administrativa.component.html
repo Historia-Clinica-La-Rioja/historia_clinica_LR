@@ -118,7 +118,7 @@
 
 		<div fxLayout="row" fxLayoutGap="5px">
 			<mat-form-field appearance="outline">
-				<input formControlName="callDate" id="callDate" matInput [matDatepicker]="initPicker" [max]="today"
+				<input formControlName="callDate" id="callDate" matInput [matDatepicker]="initPicker" [min]="minDate" [max]="today"
 					placeholder="{{'guardia.administrative_admision.form.police_intervention.DATE' | translate}}">
 				<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
 				<mat-datepicker #initPicker></mat-datepicker>

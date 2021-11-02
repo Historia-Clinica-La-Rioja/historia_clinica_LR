@@ -1,6 +1,5 @@
 package net.pladema.emergencycare.repository.entity;
 
-import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

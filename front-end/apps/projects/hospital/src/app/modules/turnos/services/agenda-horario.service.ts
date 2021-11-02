@@ -72,7 +72,7 @@ export class AgendaHorarioService {
 
 		this.diaryOpeningHours = [...this.diaryOpeningHours, dragToSelectEvent];
 
-		fromEvent(document, 'mousemove')
+		fromEvent<MouseEvent>(document, 'mousemove')
 			.pipe(
 				finalize(() => {
 					if (dragToSelectEvent.end) {

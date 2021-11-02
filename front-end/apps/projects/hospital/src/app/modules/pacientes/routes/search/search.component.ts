@@ -5,6 +5,7 @@ import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils
 import { ActivatedRoute, Router } from '@angular/router';
 import { Moment } from 'moment';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
@@ -17,11 +18,12 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PERSON } from '@core/constants/validation-constants';
+import { NavigationService } from '@pacientes/services/navigation.service';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
-const RENAPER_FFLAG = 'habilitarServicioRenaper';
 
 @Component({
 	selector: 'app-search',
@@ -32,6 +34,7 @@ export class SearchComponent implements OnInit {
 
 	readonly PERSON_MAX_LENGHT = PERSON;
 
+	minDate = MIN_DATE;
 	today: Moment = newMoment();
 	public formSearchSubmitted = false;
 	public formSearch: FormGroup;
@@ -60,48 +63,54 @@ export class SearchComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		public dialog: MatDialog,
 		private contextService: ContextService,
-		private featureFlagService: FeatureFlagService
+		private featureFlagService: FeatureFlagService,
+		public navigationService: NavigationService
+
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
-		this.route.queryParams.subscribe(params => {
-			this.identificationTypeId = params.identificationTypeId;
-			this.identificationNumber = params.identificationNumber;
-			this.genderId = params.genderId;
-			this.noIdentity = params.noIdentity === 'true';
-			if (!this.noIdentity) {
-				this.buildFormSearchWithValidations(params);
-				this.featureFlagService.isOn(RENAPER_FFLAG)
-					.subscribe(result => {
-						if (result && Number(this.identificationTypeId) === IDENTIFICATION_TYPE_IDS.DNI) {
-							this.callRenaperService();
-						} else {
-							this.isLoading = false;
-						}
-					});
-			} else {
-				this.buildFormSearchWithoutValidations(params);
-				this.isLoading = false;
-			}
+		if (this.navigationService.goBackFromNewPatien())
+			this.back();
+		else {
+			this.route.queryParams.subscribe(params => {
+				this.identificationTypeId = params.identificationTypeId;
+				this.identificationNumber = params.identificationNumber;
+				this.genderId = params.genderId;
+				this.noIdentity = params.noIdentity === 'true';
+				if (!this.noIdentity) {
+					this.buildFormSearchWithValidations(params);
+					this.featureFlagService.isActive(AppFeature.HABILITAR_SERVICIO_RENAPER)
+						.subscribe(result => {
+							if (result && Number(this.identificationTypeId) === IDENTIFICATION_TYPE_IDS.DNI) {
+								this.callRenaperService();
+							} else {
+								this.isLoading = false;
+							}
+						});
+				} else {
+					this.buildFormSearchWithoutValidations(params);
+					this.isLoading = false;
+				}
 
-			this.personMasterDataService.getIdentificationTypes().subscribe(
-				identificationTypes => {
-					this.identifyTypeArray = identificationTypes;
-					identificationTypes.forEach(identificationType => {
-						this.identifyTypeViewPatientDetail[identificationType.id] = identificationType.description;
+				this.personMasterDataService.getIdentificationTypes().subscribe(
+					identificationTypes => {
+						this.identifyTypeArray = identificationTypes;
+						identificationTypes.forEach(identificationType => {
+							this.identifyTypeViewPatientDetail[identificationType.id] = identificationType.description;
+						});
 					});
-				});
 
-			this.personMasterDataService.getGenders().subscribe(
-				genders => {
-					this.genderOptions = genders;
-					genders.forEach(gender => {
-						this.genderOptionsViewTable[gender.id] = gender.description;
+				this.personMasterDataService.getGenders().subscribe(
+					genders => {
+						this.genderOptions = genders;
+						genders.forEach(gender => {
+							this.genderOptionsViewTable[gender.id] = gender.description;
+						});
 					});
-				});
-		});
+			});
+		}
 	}
 
 	private buildTable(data: PatientSearchDto[]): TableModel<PatientSearchDto> {
@@ -312,7 +321,7 @@ export class SearchComponent implements OnInit {
 					secondSubstring: text.substr(spaceIndex + 1)
 				}
 				:
-				{firstSubstring: text};
+				{ firstSubstring: text };
 		}
 	}
 

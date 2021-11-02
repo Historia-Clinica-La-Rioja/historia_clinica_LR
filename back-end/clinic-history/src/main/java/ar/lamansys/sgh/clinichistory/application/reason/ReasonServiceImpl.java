@@ -29,7 +29,7 @@ public class ReasonServiceImpl implements ReasonService {
         LOG.debug("Input parameters -> reasons {}", reasons);
         List<String> result = reasons.stream()
                 .map(this::saveReason)
-                .map(ReasonBo::getId)
+                .map(ReasonBo::getSctid)
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
@@ -39,7 +39,7 @@ public class ReasonServiceImpl implements ReasonService {
     private ReasonBo saveReason(ReasonBo reasonBo) {
         LOG.debug("Input parameters reasonBo {}", reasonBo);
         Objects.requireNonNull(reasonBo);
-        Reason reason = new Reason(reasonBo.getId(), reasonBo.getPt());
+        Reason reason = new Reason(reasonBo.getSctid(), reasonBo.getPt());
         reasonRepository.save(reason);
         LOG.debug(OUTPUT, reasonBo);
         return reasonBo;

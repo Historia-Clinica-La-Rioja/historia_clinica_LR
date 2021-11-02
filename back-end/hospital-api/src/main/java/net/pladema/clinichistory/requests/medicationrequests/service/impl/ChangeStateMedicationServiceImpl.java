@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;

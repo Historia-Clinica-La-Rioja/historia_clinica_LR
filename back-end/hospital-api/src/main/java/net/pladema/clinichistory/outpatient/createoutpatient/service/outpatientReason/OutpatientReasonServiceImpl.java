@@ -1,8 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ReasonsRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Reason;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationReasonsRepository;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientConsultationReasons;
 import org.slf4j.Logger;
@@ -43,7 +41,7 @@ public class OutpatientReasonServiceImpl implements OutpatientReasonService {
         LOG.debug("Input parameters reasonBo {}, outpatientId {}", reasonBo, outpatientId);
         Objects.requireNonNull(reasonBo);
         OutpatientConsultationReasons result =
-                outpatientConsultationReasonsRepository.save(new OutpatientConsultationReasons(outpatientId, reasonBo.getId()));
+                outpatientConsultationReasonsRepository.save(new OutpatientConsultationReasons(outpatientId, reasonBo.getSctid()));
         LOG.debug(OUTPUT, result);
         return result;
     }

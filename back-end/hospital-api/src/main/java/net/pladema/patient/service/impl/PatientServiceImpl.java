@@ -1,12 +1,18 @@
 package net.pladema.patient.service.impl;
 
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import net.pladema.audit.repository.HospitalAuditRepository;
+import net.pladema.audit.repository.entity.HospitalAudit;
+import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.federar.services.FederarService;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientAudit;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
@@ -17,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -38,13 +45,19 @@ public class PatientServiceImpl implements PatientService {
 	public static final Integer MAX_RESULT_SIZE = 150;
 
 	private final PatientRepository patientRepository;
+	private final HospitalAuditRepository hospitalAuditRepository;
+	private final PatientAuditRepository patientAuditRepository;
 
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
 							  MedicalCoverageRepository medicalCoverageRepository,
 							  PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository,
-							  FederarService federarService) {
+							  FederarService federarService,
+							  HospitalAuditRepository hospitalAuditRepository,
+							  PatientAuditRepository patientAuditRepository) {
 		this.patientRepository = patientRepository;
+		this.hospitalAuditRepository = hospitalAuditRepository;
+		this.patientAuditRepository = patientAuditRepository;
 	}
 
 	@Override
@@ -111,6 +124,25 @@ public class PatientServiceImpl implements PatientService {
 		patient.setNationalId(nationalId);
 		patient.setTypeId(PatientType.PERMANENT);
 		patientRepository.save(patient);
+		this.auditActionPatient(null, patient.getId(), EActionType.UPDATE);
+	}
+
+	@Override
+	public void auditActionPatient(Integer institutionId, Integer patientId, EActionType eActionType) {
+		LOG.debug("Add audit -> institutionId {}, patientId {}, eActionType {}", institutionId, patientId, eActionType);
+		Integer userId = SecurityContextUtils.getUserDetails().userId;
+		LocalDateTime dateNow = LocalDateTime.now();
+
+		HospitalAudit hospitalAuditToSave = new HospitalAudit();
+		hospitalAuditToSave.setInstitutionId(institutionId);
+		hospitalAuditToSave.setUserId(userId);
+		hospitalAuditToSave.setDate(dateNow);
+		hospitalAuditToSave.setActionType(eActionType.getId());
+
+		HospitalAudit hospitalAuditSaved = hospitalAuditRepository.save(hospitalAuditToSave);
+		LOG.debug("Saved -> {}", hospitalAuditSaved);
+		PatientAudit patientAuditSaved = patientAuditRepository.save(new PatientAudit(patientId, hospitalAuditSaved.getId()));
+		LOG.debug("Saved -> {}", patientAuditSaved);
 	}
 
 }

@@ -1,15 +1,18 @@
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ToothSurfaceId } from '../utils/Surface';
 export class ActionsService {
 
 
 	private actionsOnTeeth: ToothAction[] = [];
+	private records: ToothAction[] = [];
+
 	private currentDrawEmitter = new BehaviorSubject<CurrentDraw>({
-		whole: null,
-		central: null,
-		external: null,
-		right: null,
-		left: null,
-		internal: null,
+		[ToothSurfaceId.WHOLE]: null,
+		[ToothSurfaceId.CENTRAL]: null,
+		[ToothSurfaceId.EXTERNAL]: null,
+		[ToothSurfaceId.RIGHT]: null,
+		[ToothSurfaceId.LEFT]: null,
+		[ToothSurfaceId.INTERNAL]: null,
 	});
 	currentDraw$: Observable<CurrentDraw> = this.currentDrawEmitter.asObservable();
 
@@ -21,11 +24,13 @@ export class ActionsService {
 	}
 
 	addProcedure(actionSctid: string, surfacesIds: string[], order: ProcedureOrder) {
-		this.execute(actionSctid, surfacesIds, true, (setAction: ToothAction) => setAction.wholeProcedureOrder === order && !setAction.surfaceId, order);
+		const action: Action = { sctid: actionSctid, type: ActionType.PROCEDURE }
+		this.execute(action, surfacesIds, (setAction: ToothAction) => setAction.wholeProcedureOrder === order && !setAction.surfaceId, order);
 	}
 
-	setFinding(actionSctid: string, surfacesIds: string[]) {
-		this.execute(actionSctid, surfacesIds, false, (setAction: ToothAction) => !setAction.isProcedure && !setAction.surfaceId)
+	addFinding(actionSctid: string, surfacesIds: string[]) {
+		const action: Action = { sctid: actionSctid, type: ActionType.DIAGNOSTIC }
+		this.execute(action, surfacesIds, (setAction: ToothAction) => setAction.action.type === ActionType.DIAGNOSTIC && !setAction.surfaceId)
 	}
 
 
@@ -38,21 +43,21 @@ export class ActionsService {
 		return this.actionsOnTeeth;
 	}
 
-	private execute(actionSctid: string, surfacesIds: string[], isProcedure: boolean, filterFuncion, order?: ProcedureOrder) {
+	private execute(action: Action, surfacesIds: string[], filterFuncion, order?: ProcedureOrder) {
 		if (!surfacesIds.length) {
 			const toothAction = this.actionsOnTeeth.find(filterFuncion);
 			if (toothAction) {
-				toothAction.actionSctid = actionSctid;
+				toothAction.action = action;
 			} else {
-				this.addToothAction(actionSctid, isProcedure, order);
+				this.addToothAction(action, order);
 			}
 		} else {
 			surfacesIds.forEach(id => {
-				const toBeReplaced = this.toReplace(id, isProcedure);
+				const toBeReplaced = this.toReplace(id, action.type);
 				if (toBeReplaced) {
-					toBeReplaced.actionSctid = actionSctid;
+					toBeReplaced.action.sctid = action.sctid;
 				} else {
-					this.addSurfaceAction(id, actionSctid, isProcedure);
+					this.addSurfaceAction(id, action);
 				}
 			});
 		}
@@ -60,61 +65,86 @@ export class ActionsService {
 		this.currentDrawEmitter.next(this.getCurrentDraw());
 	}
 
-	private toReplace(surfaceId: string, isProcedure: boolean): ToothAction {
-		return this.actionsOnTeeth.find(a => a.isProcedure === isProcedure && a.surfaceId === surfaceId);
+	private toReplace(surfaceId: string, type: ActionType): ToothAction {
+		return this.actionsOnTeeth.find(a => a.action.type === type && a.surfaceId === surfaceId);
 	}
 
-	private addToothAction(actionSctid: string, isProcedure: boolean, wholeProcedureOrder?: ProcedureOrder) {
-		const toAdd: ToothAction[] = [{ actionSctid, isProcedure, wholeProcedureOrder }];
+	private addToothAction(action: Action, wholeProcedureOrder?: ProcedureOrder) {
+		const toAdd: ToothAction[] = [{ action, wholeProcedureOrder }];
 		this.actionsOnTeeth = this.actionsOnTeeth.concat(toAdd);
 	}
 
-
-	private addSurfaceAction = (surfaceId: string, actionSctid: string, isProcedure: boolean) => {
-		const toAdd = { actionSctid, surfaceId, isProcedure };
+	private addSurfaceAction = (surfaceId: string, action: Action) => {
+		const toAdd = { action, surfaceId };
 		this.actionsOnTeeth = this.actionsOnTeeth.concat(toAdd);
 	}
+
+	setRecords(records: ToothAction[]) {
+		this.records = records || [];
+		if (records?.length) {
+			this.currentDrawEmitter.next(this.getCurrentDraw());
+		}
+	}
+
 
 	private getCurrentDraw(): CurrentDraw {
 
-		const currentDraw: CurrentDraw = {
-			whole: null,
-			central: null,
-			external: null,
-			right: null,
-			left: null,
-			internal: null,
+		const getInitialDraw = () => {
+			const whole = this.records.find(r => !r.surfaceId)?.action
+			const central = this.records.find(r => r.surfaceId === ToothSurfaceId.CENTRAL)?.action
+			const external = this.records.find(r => r.surfaceId === ToothSurfaceId.EXTERNAL)?.action
+			const right = this.records.find(r => r.surfaceId === ToothSurfaceId.RIGHT)?.action
+			const left = this.records.find(r => r.surfaceId === ToothSurfaceId.LEFT)?.action
+			const internal = this.records.find(r => r.surfaceId === ToothSurfaceId.INTERNAL)?.action
+
+			return { whole, central, external, right, left, internal };
 		}
 
+		const currentDraw: CurrentDraw = getInitialDraw();
+
 		const borrarDibujoCaras = () => {
-			currentDraw.whole = null;
-			currentDraw.central = null;
-			currentDraw.external = null;
-			currentDraw.right = null;
-			currentDraw.left = null;
-			currentDraw.internal = null;
+			currentDraw[ToothSurfaceId.WHOLE] = null;
+			currentDraw[ToothSurfaceId.CENTRAL] = null;
+			currentDraw[ToothSurfaceId.EXTERNAL] = null;
+			currentDraw[ToothSurfaceId.RIGHT] = null;
+			currentDraw[ToothSurfaceId.LEFT] = null;
+			currentDraw[ToothSurfaceId.INTERNAL] = null;
 		};
 
-		const actualizarDibujoCara = (toothAction) => {
-			currentDraw[toothAction.surfaceId] = { sctid: toothAction.actionSctid, isProcedure: toothAction.isProcedure }
+		const actualizarDibujoCara = (toothAction: ToothAction) => {
+			currentDraw[toothAction.surfaceId] = toothAction.action
+		}
+
+
+		const removeRecordActions = () => {
+			Object.keys(currentDraw).forEach(
+				key => {
+					if (currentDraw[key]?.type === ActionType.RECORD) {
+						currentDraw[key] = null;
+					}
+				}
+			);
 		}
 
 		this.actionsOnTeeth?.forEach(
 			toothAction => {
+				if (toothAction.action.type !== ActionType.RECORD) {
+					removeRecordActions();
+				}
 				if (toothAction.surfaceId) {
-					if (!toothAction.isProcedure && currentDraw.whole?.isProcedure) {
+					if (toothAction.action.type === ActionType.DIAGNOSTIC && currentDraw[ToothSurfaceId.WHOLE]?.type === ActionType.PROCEDURE) {
 						return;
 					}
-					const surfaceHasProcedure = currentDraw[toothAction.surfaceId]?.isProcedure; // Si es false entonces o no tiene nada o tiene hallazgo ==> dibuja
+					const surfaceHasProcedure = currentDraw[toothAction.surfaceId]?.type === ActionType.PROCEDURE; // Si es false entonces o no tiene nada o tiene hallazgo ==> dibuja
 					if ((!surfaceHasProcedure)) {
 						actualizarDibujoCara(toothAction);
 					}
 				} else { // Es pieza
-					if (toothAction.isProcedure) {
+					if (toothAction.action.type === ActionType.PROCEDURE) {
 						borrarDibujoCaras();
-						currentDraw.whole = { sctid: toothAction.actionSctid, isProcedure: toothAction.isProcedure }
-					} else if (!currentDraw.whole) {
-						currentDraw.whole = { sctid: toothAction.actionSctid, isProcedure: toothAction.isProcedure }
+						currentDraw[ToothSurfaceId.WHOLE] = toothAction.action
+					} else if (currentDraw[ToothSurfaceId.WHOLE]?.type !== ActionType.PROCEDURE) {
+						currentDraw[ToothSurfaceId.WHOLE] = toothAction.action
 					}
 				}
 			}
@@ -122,30 +152,48 @@ export class ActionsService {
 		return currentDraw;
 
 	}
+
+	deleteAction (surfaceId: string, sctid: string, actionTypeToDelete: ActionType, order: ProcedureOrder){
+		const elementToDelete: ToothAction = this.actionsOnTeeth.find(
+			actionSurface =>
+				actionSurface.surfaceId === surfaceId && actionSurface.action.sctid === sctid &&
+				actionSurface.action.type === actionTypeToDelete &&
+				actionSurface.wholeProcedureOrder === order
+		);
+
+		const index = this.actionsOnTeeth.indexOf(elementToDelete);
+
+		this.actionsOnTeeth.splice(index, 1);
+
+		this.setActions(this.actionsOnTeeth);
+	}
 }
 
 
 export interface ToothAction {
 	surfaceId?: string;
-	actionSctid: string;
-	isProcedure: boolean;
 	wholeProcedureOrder?: ProcedureOrder
+	action: Action
 };
 
-interface Action {
+export interface Action {
 	sctid: string;
-	isProcedure: boolean
+	type: ActionType
 }
 
 export interface CurrentDraw {
-	whole: Action
-	left: Action,
-	internal: Action,
-	right: Action,
-	external: Action,
-	central: Action,
+	[ToothSurfaceId.WHOLE]: Action
+	[ToothSurfaceId.LEFT]: Action,
+	[ToothSurfaceId.INTERNAL]: Action,
+	[ToothSurfaceId.RIGHT]: Action,
+	[ToothSurfaceId.EXTERNAL]: Action,
+	[ToothSurfaceId.CENTRAL]: Action,
 }
 
 export enum ProcedureOrder {
 	FIRST, SECOND, THIRD
+}
+
+export enum ActionType {
+	PROCEDURE, DIAGNOSTIC, RECORD
 }

@@ -3,9 +3,11 @@ import { SnomedDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
-
+import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
+import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 export interface Medicacion {
 	snomed: SnomedDto;
 	observaciones?: string;
@@ -19,12 +21,15 @@ export class MedicacionesNuevaConsultaService {
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
+	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: Medicacion[];
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService,
+
 	) {
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
@@ -45,6 +50,26 @@ export class MedicacionesNuevaConsultaService {
 			},
 		];
 
+		this.tableColumnConfig = [
+			{
+				def: 'medicacion',
+				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION',
+				template: CellTemplates.TEXT,
+				text: v => v.snomed.pt
+			},
+			{
+				def: 'estado',
+				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.STATE',
+				template: CellTemplates.TEXT,
+				text: (v) => this.getState(v.suspendido)
+			},
+			{
+				def: 'eliminar',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.remove(rowIndex)
+			}
+		]
+
 		this.data = [];
 	}
 
@@ -59,8 +84,19 @@ export class MedicacionesNuevaConsultaService {
 		this.form.reset();
 	}
 
-	add(medicacion: Medicacion): void {
-		this.data = pushTo<Medicacion>(this.data, medicacion);
+	add(medicacion: Medicacion): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<Medicacion>(this.data, medicacion, this.compareSpeciality);
+	 	return currentItems === this.data.length;
+	}
+
+	addControl(medicacion: Medicacion): void {
+		if (this.add(medicacion))
+			this.snackBarService.showError("Medicación duplicada");
+	}
+
+	compareSpeciality(data: Medicacion, data1: Medicacion): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	addToList() {
@@ -70,7 +106,7 @@ export class MedicacionesNuevaConsultaService {
 				observaciones: this.form.value.observaciones,
 				suspendido: this.form.value.suspendido
 			};
-			this.add(nuevaMedicacion);
+			this.addControl(nuevaMedicacion);
 			this.resetForm();
 		}
 	}
@@ -78,6 +114,7 @@ export class MedicacionesNuevaConsultaService {
 	remove(index: number): void {
 		this.data = removeFrom<Medicacion>(this.data, index);
 	}
+
 
 	openSearchDialog(searchValue: string): void {
 		if (searchValue) {
@@ -102,7 +139,15 @@ export class MedicacionesNuevaConsultaService {
 		return this.columns;
 	}
 
+	getTableColumnConfig(): TableColumnConfig[] {
+		return this.tableColumnConfig;
+	}
+
 	getMedicaciones(): Medicacion[] {
 		return this.data;
+	}
+
+	getState(suspendido :boolean ): string{
+		return suspendido?'Suspendido':'Activo'
 	}
 }

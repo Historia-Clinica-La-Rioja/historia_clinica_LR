@@ -11,3 +11,18 @@
 	}
 
 }
+
+.search {
+	@include form-buttons;
+	margin-top: 25px;
+	width: auto;
+}
+
+.material-icons{
+	width: 30px;;
+}
+
+.errorScan{
+	position: relative;
+	width: 340px;
+}

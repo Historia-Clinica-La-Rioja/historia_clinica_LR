@@ -1,0 +1,866 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_22 
+
+    - changeSet:
+         id: body_part-addPtColumn
+         comment: Create column pt to body_part
+         author: tmedina
+         changes:
+            - addColumn:
+                  columns:
+                  - column:
+                        name: pt
+                        type: varchar(255)
+                  tableName: body_part    
+
+    - changeSet:
+          id: body_part-updatePtData
+          comment: Set values of preferred terms in body_part
+          author: tmedina
+          context: "!schema-only"
+          changes:
+              - sql:
+                    sql: |-
+                      UPDATE body_part SET pt = 'tercer molar superior derecho permanente' WHERE sctid='245566003';
+                      UPDATE body_part SET pt = 'tercer molar superior izquierdo permanente' WHERE sctid='87704003';
+                      UPDATE body_part SET pt = 'tercer molar inferior derecho permanente' WHERE sctid='38994002';
+                      UPDATE body_part SET pt = 'tercer molar inferior izquierdo permanente' WHERE sctid='74344005';
+                      UPDATE body_part SET pt = 'segundo molar superior izquierdo permanente' WHERE sctid='45578004';
+                      UPDATE body_part SET pt = 'segundo molar inferior izquierdo permanente' WHERE sctid='245603001';
+                      UPDATE body_part SET pt = 'segundo molar inferior derecho permanente' WHERE sctid='245591003';
+                      UPDATE body_part SET pt = 'segundo molar superior derecho permanente' WHERE sctid='245567007';
+                      UPDATE body_part SET pt = 'segundo molar  superior derecho temporario' WHERE sctid='27855007';
+                      UPDATE body_part SET pt = 'segundo molar superior izquierdo temporario' WHERE sctid='245622005';
+                      UPDATE body_part SET pt = 'segundo molar inferior izquierdo temporario' WHERE sctid='49330006';
+                      UPDATE body_part SET pt = 'segundo molar  inferior derecho temporario' WHERE sctid='61868007';
+                      UPDATE body_part SET pt = 'primer molar inferior derecho permanente' WHERE sctid='45592005';
+                      UPDATE body_part SET pt = 'primer molar superior derecho permanente' WHERE sctid='245568002';
+                      UPDATE body_part SET pt = 'primer molar inferior izquierdo permanente' WHERE sctid='245604007';
+                      UPDATE body_part SET pt = 'primer molar superior izquierdo permanente' WHERE sctid='245579007';
+                      UPDATE body_part SET pt = 'primer molar  superior izquierdo temporario' WHERE sctid='45234009';
+                      UPDATE body_part SET pt = 'primer molar superior derecho temporario' WHERE sctid='17505006';
+                      UPDATE body_part SET pt = 'primer molar inferior derecho temporario' WHERE sctid='58646007';
+                      UPDATE body_part SET pt = 'primer molar inferior izquierdo temporario' WHERE sctid='38896004';
+                      UPDATE body_part SET pt = 'primer premolar inferior izquierdo permanente' WHERE sctid='245607000';
+                      UPDATE body_part SET pt = 'primer premolar superior izquierdo permanente' WHERE sctid='245583007';
+                      UPDATE body_part SET pt = 'primer premolar superior derecho permanente' WHERE sctid='245571005';
+                      UPDATE body_part SET pt = 'primer premolar inferior derecho permanente' WHERE sctid='245596008';
+                      UPDATE body_part SET pt = 'segundo premolar superior derecho' WHERE sctid='36492000';
+                      UPDATE body_part SET pt = 'segundo premolar superior izquierdo permanente' WHERE sctid='23226009';
+                      UPDATE body_part SET pt = 'segundo premolar inferior derecho permanente' WHERE sctid='8873007';
+                      UPDATE body_part SET pt = 'segundo premolar inferior izquierdo permanente' WHERE sctid='24573005';
+                      UPDATE body_part SET pt = 'canino superior derecho permanente' WHERE sctid='245572003';
+                      UPDATE body_part SET pt = 'canino superior izquierdo permanente' WHERE sctid='245584001';
+                      UPDATE body_part SET pt = 'canino inferior derecho permanente' WHERE sctid='245597004';
+                      UPDATE body_part SET pt = 'canino inferior izquierdo permanente' WHERE sctid='860782001';
+                      UPDATE body_part SET pt = 'canino  superior izquierdo temporario' WHERE sctid='73937000';
+                      UPDATE body_part SET pt = 'canino superior derecho temporario' WHERE sctid='30618001';
+                      UPDATE body_part SET pt = 'canino inferior derecho temporario' WHERE sctid='6062009';
+                      UPDATE body_part SET pt = 'canino inferior izquierdo temporario' WHERE sctid='43281008';
+                      UPDATE body_part SET pt = 'incisivo central superior derecho permanente' WHERE sctid='245575001';
+                      UPDATE body_part SET pt = 'incisivo central inferior derecho permanente' WHERE sctid='245598009';
+                      UPDATE body_part SET pt = 'incisivo central superior izquierdo permanente' WHERE sctid='245587008';
+                      UPDATE body_part SET pt = 'incisivo central inferior izquierdo permanente' WHERE sctid='245611006';
+                      UPDATE body_part SET pt = 'incisivo central superior derecho temporario' WHERE sctid='88824007';
+                      UPDATE body_part SET pt = 'incisivo  central superior izquierdo temporario' WHERE sctid='51678005';
+                      UPDATE body_part SET pt = 'incisivo central inferior derecho temporario' WHERE sctid='67834006';
+                      UPDATE body_part SET pt = 'incisivo central inferior izquierdo temporario' WHERE sctid='89552004';
+                      UPDATE body_part SET pt = 'incisivo lateral superior derecho permanente' WHERE sctid='245574002';
+                      UPDATE body_part SET pt = 'incisivo lateral superior izquierdo permanente' WHERE sctid='245586004';
+                      UPDATE body_part SET pt = 'incisivo lateral inferior izquierdo permanente' WHERE sctid='245610007';
+                      UPDATE body_part SET pt = 'incisivo lateral inferior derecho permanente' WHERE sctid='245599001';
+                      UPDATE body_part SET pt = 'incisivo lateral superior derecho temporario' WHERE sctid='245618000';
+                      UPDATE body_part SET pt = 'incisivo lateral superior izquierdo temporario' WHERE sctid='245625007';
+                      UPDATE body_part SET pt = 'incisivo  lateral inferior derecho temporario' WHERE sctid='245633008';
+                      UPDATE body_part SET pt = 'incisivo lateral inferior izquierdo temporario' WHERE sctid='245640009';
+
+    - changeSet:
+         id: applicable_diagnostic-addPtColumn
+         comment: Create column pt to applicable_diagnostic
+         author: tmedina
+         changes:
+            - addColumn:
+                  columns:
+                  - column:
+                        name: pt
+                        type: varchar(255)
+                  tableName: applicable_diagnostic
+
+    - changeSet:
+         id: applicable_procedure-addPtColumn
+         comment: Create column pt to applicable_procedure
+         author: tmedina
+         changes:
+            - addColumn:
+                  columns:
+                  - column:
+                        name: pt
+                        type: varchar(255)
+                  tableName: applicable_procedure
+
+    - changeSet:
+          id: applicable_diagnostic-updatePtData
+          comment: Set values of preferred terms in applicable_diagnostic
+          author: tmedina
+          context: "!schema-only"
+          changes:
+              - sql:
+                    sql: |-
+                        UPDATE applicable_diagnostic SET pt = 'ausencia congénita completa de dientes' WHERE sctid = '16958000';
+                        UPDATE applicable_diagnostic SET pt = 'ausencia parcial congénita de los dientes' WHERE sctid = '64969001';
+                        UPDATE applicable_diagnostic SET pt = 'diente supernumerario' WHERE sctid = '367534004';
+                        UPDATE applicable_diagnostic SET pt = 'dientes con forma de clavija' WHERE sctid = '29553002';
+                        UPDATE applicable_diagnostic SET pt = 'amelogénesis imperfecta, tipo hipoplásica con microdoncia' WHERE sctid = '109473003';
+                        UPDATE applicable_diagnostic SET pt = 'anomalía de desarrollo del tamaño y la forma de diente' WHERE sctid = '266415009';
+                        UPDATE applicable_diagnostic SET pt = 'surco oclusal profundo' WHERE sctid = '699685006';
+                        UPDATE applicable_diagnostic SET pt = 'fluorosis dental' WHERE sctid = '30265004';
+                        UPDATE applicable_diagnostic SET pt = 'opacidades del esmalte no causadas por flúor' WHERE sctid = '49414002';
+                        UPDATE applicable_diagnostic SET pt = 'veteado de esmalte dental' WHERE sctid = '76719002';
+                        UPDATE applicable_diagnostic SET pt = 'dientes moteados congénitos' WHERE sctid = '84752003';
+                        UPDATE applicable_diagnostic SET pt = 'dientes moteados' WHERE sctid = '120541000119103';
+                        UPDATE applicable_diagnostic SET pt = 'falta de exfoliación asociada con erupción ectópica de diente sucedáneo' WHERE sctid = '109541006';
+                        UPDATE applicable_diagnostic SET pt = 'erupción tardía de diente' WHERE sctid = '5639000';
+                        UPDATE applicable_diagnostic SET pt = 'diente primario persistente' WHERE sctid = '57650002';
+                        UPDATE applicable_diagnostic SET pt = 'supraoclusión dental' WHERE sctid = '109644008';
+                        UPDATE applicable_diagnostic SET pt = 'altura clínicamente insuficiente de corona de diente por erupción pasiva anómala' WHERE sctid = '110314001';
+                        UPDATE applicable_diagnostic SET pt = 'trastorno de la erupción o caída dentaria' WHERE sctid = '234972003';
+                        UPDATE applicable_diagnostic SET pt = 'diente sumergido' WHERE sctid = '234973008';
+                        UPDATE applicable_diagnostic SET pt = 'caída dentaria prematura' WHERE sctid = '234974002';
+                        UPDATE applicable_diagnostic SET pt = 'síndrome de dentición' WHERE sctid = '8004003';
+                        UPDATE applicable_diagnostic SET pt = 'descoloración intrínseca de diente' WHERE sctid = '234983007';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental secundaria a defectos del desarrollo de la estructura de los dientes' WHERE sctid = '109568006';
+                        UPDATE applicable_diagnostic SET pt = 'dientes retenidos' WHERE sctid = '196419009';
+                        UPDATE applicable_diagnostic SET pt = 'diente embutido' WHERE sctid = '360431007';
+                        UPDATE applicable_diagnostic SET pt = 'diente impactado' WHERE sctid = '235104008';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental primaria inactiva que se extiende hasta el esmalte' WHERE sctid = '733971007';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental primaria inactiva que se extiende hasta la dentina' WHERE sctid = '733973005';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental inactiva secundaria que se extiende hasta el esmalte' WHERE sctid = '733975003';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental inactiva secundaria que se extiende hasta la dentina' WHERE sctid = '733977006';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental que se extiende hasta la pulpa' WHERE sctid = '700046006';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental primaria inactiva que se extiende hasta la pulpa' WHERE sctid = '733978001';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental activa primaria que se extiende hasta la pulpa' WHERE sctid = '733980007';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental activa secundaria que se extiende hasta la pulpa' WHERE sctid = '733982004';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental secundaria inactiva que se extiende hasta la pulpa' WHERE sctid = '767855004';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental primaria, origen en superficie lisa proximal' WHERE sctid = '109573000';
+                        UPDATE applicable_diagnostic SET pt = 'caries de raíz' WHERE sctid = '234975001';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental' WHERE sctid = '80967001';
+                        UPDATE applicable_diagnostic SET pt = 'caries por disfunción salival secundaria a envejecimiento' WHERE sctid = '95246007';
+                        UPDATE applicable_diagnostic SET pt = 'caries por disfunción salival causada por medicación' WHERE sctid = '95247003';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental asociada con hipomineralización del esmalte' WHERE sctid = '109564008';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental secundaria a defectos adquiridos de la estructura dental' WHERE sctid = '109569003';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental agresiva múltiple' WHERE sctid = '234976000';
+                        UPDATE applicable_diagnostic SET pt = 'caries en la primera infancia' WHERE sctid = '702402003';
+                        UPDATE applicable_diagnostic SET pt = 'desgaste oclusal de los dientes' WHERE sctid = '10017004';
+                        UPDATE applicable_diagnostic SET pt = 'fricción excesiva de los dientes' WHERE sctid = '53963006';
+                        UPDATE applicable_diagnostic SET pt = 'lesión traumática por fricción ocupacional de diente' WHERE sctid = '9665009';
+                        UPDATE applicable_diagnostic SET pt = 'lesión traumática habitual por fricción de diente' WHERE sctid = '27160009';
+                        UPDATE applicable_diagnostic SET pt = 'lesión por fricción causada por dentífrico' WHERE sctid = '33727006';
+                        UPDATE applicable_diagnostic SET pt = 'defecto en cuña de los dientes' WHERE sctid = '73197002';
+                        UPDATE applicable_diagnostic SET pt = 'lesión traumática por abrasión ritual de diente' WHERE sctid = '90316008';
+                        UPDATE applicable_diagnostic SET pt = 'lesión dental por fricción secundaria a prácticas orales deletéreas' WHERE sctid = '91843000';
+                        UPDATE applicable_diagnostic SET pt = 'abrasión de cuello dental' WHERE sctid = '109585008';
+                        UPDATE applicable_diagnostic SET pt = 'lesión traumática por fricción dental limitada al esmalte' WHERE sctid = '438627000';
+                        UPDATE applicable_diagnostic SET pt = 'lesión traumática por fricción dental extendida hasta la dentina' WHERE sctid = '439849002';
+                        UPDATE applicable_diagnostic SET pt = 'abrasión generalizada de diente' WHERE sctid = '698524005';
+                        UPDATE applicable_diagnostic SET pt = 'abrasión localizada de diente' WHERE sctid = '698525006';
+                        UPDATE applicable_diagnostic SET pt = 'erosión de los dientes' WHERE sctid = '82212003';
+                        UPDATE applicable_diagnostic SET pt = 'resorción interna de diente' WHERE sctid = '52994003';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis debida a resorción de raíz cervical' WHERE sctid = '713256008';
+                        UPDATE applicable_diagnostic SET pt = 'hipercementosis' WHERE sctid = '78537008';
+                        UPDATE applicable_diagnostic SET pt = 'anquilosis de diente' WHERE sctid = '14901003';
+                        UPDATE applicable_diagnostic SET pt = 'cálculo dental supragingival' WHERE sctid = '18755003';
+                        UPDATE applicable_diagnostic SET pt = 'cálculo dental subgingival' WHERE sctid = '41366005';
+                        UPDATE applicable_diagnostic SET pt = 'coloración extrínseca de diente' WHERE sctid = '234979007';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad gingival debida a placa dental' WHERE sctid = '707237008';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis debida a placa dental' WHERE sctid = '713245008';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis debida a placa dental con factor contribuyente local' WHERE sctid = '713879003';
+                        UPDATE applicable_diagnostic SET pt = 'alteración de la coloración dental poseruptiva' WHERE sctid = '4654002';
+                        UPDATE applicable_diagnostic SET pt = 'manchado posteruptivo del diente por hemorragia de la pulpa' WHERE sctid = '26884006';
+                        UPDATE applicable_diagnostic SET pt = 'manchado posteruptivo de diente causado por fármaco' WHERE sctid = '52367009';
+                        UPDATE applicable_diagnostic SET pt = 'manchado posteruptivo de diente causado por metal' WHERE sctid = '63210009';
+                        UPDATE applicable_diagnostic SET pt = 'alteración adquirida de la coloración del esmalte dental' WHERE sctid = '91851002';
+                        UPDATE applicable_diagnostic SET pt = 'manchado dental extrínseco asociado con la higiene oral inadecuada' WHERE sctid = '109597009';
+                        UPDATE applicable_diagnostic SET pt = 'manchado dental poseruptivo' WHERE sctid = '196317007';
+                        UPDATE applicable_diagnostic SET pt = 'tinción de dientes causada por fármacos' WHERE sctid = '196318002';
+                        UPDATE applicable_diagnostic SET pt = 'tinción dental causada por metales' WHERE sctid = '196319005';
+                        UPDATE applicable_diagnostic SET pt = 'manchado dental por sangrado pulpar' WHERE sctid = '196320004';
+                        UPDATE applicable_diagnostic SET pt = 'manchado dentario extrínseco - negro' WHERE sctid = '234980005';
+                        UPDATE applicable_diagnostic SET pt = 'coloración dental intrínseca inducida por drogas' WHERE sctid = '234986004';
+                        UPDATE applicable_diagnostic SET pt = 'dentina sensible' WHERE sctid = '13468005';
+                        UPDATE applicable_diagnostic SET pt = 'abfracción' WHERE sctid = '109750005';
+                        UPDATE applicable_diagnostic SET pt = 'pulpitis irreversible sintomática' WHERE sctid = '711638008';
+                        UPDATE applicable_diagnostic SET pt = 'pulpitis irreversible asintomática' WHERE sctid = '711639000';
+                        UPDATE applicable_diagnostic SET pt = 'pulpitis reversible asintomática' WHERE sctid = '711640003';
+                        UPDATE applicable_diagnostic SET pt = 'pulpitis reversible sintomática' WHERE sctid = '711641004';
+                        UPDATE applicable_diagnostic SET pt = 'obliteración de conducto radicular de diente debido a mineralización anormal de pulpa dental' WHERE sctid = '699701005';
+                        UPDATE applicable_diagnostic SET pt = 'dentina secundaria' WHERE sctid = '59818004';
+                        UPDATE applicable_diagnostic SET pt = 'formación de tejido duro anormal en la pulpa' WHERE sctid = '81543006';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis periapical sintomática' WHERE sctid = '718053009';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis periapical asintomática' WHERE sctid = '718052004';
+                        UPDATE applicable_diagnostic SET pt = 'absceso periapical con tracto sinusal' WHERE sctid = '74598008';
+                        UPDATE applicable_diagnostic SET pt = 'absceso apical agudo' WHERE sctid = '109602002';
+                        UPDATE applicable_diagnostic SET pt = 'absceso apical crónico' WHERE sctid = '109603007';
+                        UPDATE applicable_diagnostic SET pt = 'absceso gingival' WHERE sctid = '109610001';
+                        UPDATE applicable_diagnostic SET pt = 'quiste periodontal' WHERE sctid = '3797007';
+                        UPDATE applicable_diagnostic SET pt = 'quiste radicular' WHERE sctid = '89988002';
+                        UPDATE applicable_diagnostic SET pt = 'quiste residual' WHERE sctid = '109608003';
+                        UPDATE applicable_diagnostic SET pt = 'quiste radicular lateral' WHERE sctid = '234988003';
+                        UPDATE applicable_diagnostic SET pt = 'trastorno del tejido periapical de los dientes' WHERE sctid = '34282009';
+                        UPDATE applicable_diagnostic SET pt = 'trastorno de la pulpa dental' WHERE sctid = '57203004';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad de pulpa y tejido periapical' WHERE sctid = '266417001';
+                        UPDATE applicable_diagnostic SET pt = 'exposición de la pulpa dental' WHERE sctid = '370484007';
+                        UPDATE applicable_diagnostic SET pt = 'sobrellenado endodóncico' WHERE sctid = '307001000119105';
+                        UPDATE applicable_diagnostic SET pt = 'infrallenado endodóncico' WHERE sctid = '307011000119108';
+                        UPDATE applicable_diagnostic SET pt = 'pellizcamiento posterior de partes blandas sobre los dientes' WHERE sctid = '318161000119106';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis aguda' WHERE sctid = '31642005';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis ulcerosa aguda necrosante' WHERE sctid = '172697005';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad gingival alérgica por contacto con material dental de acrílico' WHERE sctid = '713236007';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis' WHERE sctid = '66383009';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad gingival causada por el embarazo' WHERE sctid = '95212006';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis leve' WHERE sctid = '714249007';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis severa' WHERE sctid = '714477000';
+                        UPDATE applicable_diagnostic SET pt = 'gingivitis moderada' WHERE sctid = '714478005';
+                        UPDATE applicable_diagnostic SET pt = 'absceso periodontal' WHERE sctid = '83412009';
+                        UPDATE applicable_diagnostic SET pt = 'pericoronitis aguda' WHERE sctid = '91863007';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis ulcerosa necrosante aguda' WHERE sctid = '235010005';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis aguda localizada leve' WHERE sctid = '715843008';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis aguda moderada localizada' WHERE sctid = '715859008';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis aguda severa localizada' WHERE sctid = '715860003';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis aguda generalizada leve' WHERE sctid = '718064007';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis aguda severa generalizada' WHERE sctid = '718065008';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis moderada aguda generalizada' WHERE sctid = '718066009';
+                        UPDATE applicable_diagnostic SET pt = 'pericoronitis crónica' WHERE sctid = '4264000';
+                        UPDATE applicable_diagnostic SET pt = 'pericoronitis' WHERE sctid = '22240003';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis' WHERE sctid = '41565005';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis debida a traumatismo oclusal primario' WHERE sctid = '713213003';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis crónica localizada leve' WHERE sctid = '715285004';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis crónica moderada localizada' WHERE sctid = '715286003';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis crónica localizada severa' WHERE sctid = '715287007';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis crónica generalizada leve' WHERE sctid = '718060003';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis crónica generalizada severa' WHERE sctid = '718061004';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis crónica moderada generalizada' WHERE sctid = '718062006';
+                        UPDATE applicable_diagnostic SET pt = 'periodontits juvenil' WHERE sctid = '49965002';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis prepuberal localizada' WHERE sctid = '304985000';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis prepuberal generalizada' WHERE sctid = '304986004';
+                        UPDATE applicable_diagnostic SET pt = 'periodontitis localizada de inicio temprano' WHERE sctid = '304987008';
+                        UPDATE applicable_diagnostic SET pt = 'lesión periodóncica y endodóncica' WHERE sctid = '235006007';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad de las estructuras de sostén de los dientes' WHERE sctid = '2556008';
+                        UPDATE applicable_diagnostic SET pt = 'engrosamiento de folículo dental' WHERE sctid = '235005006';
+                        UPDATE applicable_diagnostic SET pt = 'depósitos gingivales' WHERE sctid = '249411008';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad gingival y periodontal' WHERE sctid = '266418006';
+                        UPDATE applicable_diagnostic SET pt = 'recesión gingival' WHERE sctid = '4356008';
+                        UPDATE applicable_diagnostic SET pt = 'agrandamiento gingival' WHERE sctid = '54711002';
+                        UPDATE applicable_diagnostic SET pt = 'lesión de encía y cresta alveolar desdentada asociada con traumatismo' WHERE sctid = '196376007';
+                        UPDATE applicable_diagnostic SET pt = 'pólipo fibroepitelial gingival' WHERE sctid = '235001002';
+                        UPDATE applicable_diagnostic SET pt = 'granuloma piogénico de encía' WHERE sctid = '235002009';
+                        UPDATE applicable_diagnostic SET pt = 'cresta alveolar fácida' WHERE sctid = '235014001';
+                        UPDATE applicable_diagnostic SET pt = 'ausencia de encía queratinizada' WHERE sctid = '707219007';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad gingival' WHERE sctid = '18718003';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad gingival concomitante con diabetes mellitus' WHERE sctid = '716362006';
+                        UPDATE applicable_diagnostic SET pt = 'exfoliación de dientes por enfermedad sistémica' WHERE sctid = '9984005';
+                        UPDATE applicable_diagnostic SET pt = 'exfoliación precoz generalizada de dientes relacionada con enfermedad sistémica' WHERE sctid = '109531008';
+                        UPDATE applicable_diagnostic SET pt = 'ausencia adquirida de los dientes' WHERE sctid = '37320007';
+                        UPDATE applicable_diagnostic SET pt = 'ausencia adquirida de todos los dientes' WHERE sctid = '441935006';
+                        UPDATE applicable_diagnostic SET pt = 'edentulismo completo de clase IV debido a caries' WHERE sctid = '1085521000119100';
+                        UPDATE applicable_diagnostic SET pt = 'atrofia de cresta alveolar desdentada' WHERE sctid = '91950000';
+                        UPDATE applicable_diagnostic SET pt = 'raíz dental retenida' WHERE sctid = '66569006';
+                        UPDATE applicable_diagnostic SET pt = 'pérdida de múltiples dientes' WHERE sctid = '109673006';
+                        UPDATE applicable_diagnostic SET pt = 'restauración dental insatisfactoria' WHERE sctid = '112481000119103';
+                        UPDATE applicable_diagnostic SET pt = 'apófisis alveolar irregular' WHERE sctid = '38285004';
+                        UPDATE applicable_diagnostic SET pt = 'pérdida horizontal de hueso alveolar' WHERE sctid = '109709002';
+                        UPDATE applicable_diagnostic SET pt = 'pérdida vertical de hueso alveolar' WHERE sctid = '109710007';
+                        UPDATE applicable_diagnostic SET pt = 'restauración dental defectuosa' WHERE sctid = '109728009';
+                        UPDATE applicable_diagnostic SET pt = 'saliente en una restauración dental' WHERE sctid = '109729001';
+                        UPDATE applicable_diagnostic SET pt = 'restauración dental estéticamente inadecuada o desagradable' WHERE sctid = '109730006';
+                        UPDATE applicable_diagnostic SET pt = 'fracaso de restauración dental que afecta la integridad de los dientes adyacentes' WHERE sctid = '109734002';
+                        UPDATE applicable_diagnostic SET pt = 'fracaso de restauración dental que afecta la integridad dental marginal' WHERE sctid = '109735001';
+                        UPDATE applicable_diagnostic SET pt = 'fracaso de restauración dental que afecta la integridad anatómica periodontal' WHERE sctid = '109736000';
+                        UPDATE applicable_diagnostic SET pt = 'fractura de restauración dental' WHERE sctid = '109741008';
+                        UPDATE applicable_diagnostic SET pt = 'arreglo dental que ya no puede repararse' WHERE sctid = '109743006';
+                        UPDATE applicable_diagnostic SET pt = 'profundidad vestibular inadecuada luego de la pérdida dentaria' WHERE sctid = '109794004';
+                        UPDATE applicable_diagnostic SET pt = 'falta de distancia vertical intermaxilar adecuada' WHERE sctid = '109798001';
+                        UPDATE applicable_diagnostic SET pt = 'altura clínica insuficiente de corona de diente' WHERE sctid = '110313007';
+                        UPDATE applicable_diagnostic SET pt = 'filtración en restauración dental' WHERE sctid = '278549007';
+                        UPDATE applicable_diagnostic SET pt = 'prótesis dental fracturada' WHERE sctid = '278616006';
+                        UPDATE applicable_diagnostic SET pt = 'caída de diente de prótesis dental' WHERE sctid = '278617002';
+                        UPDATE applicable_diagnostic SET pt = 'ruptura de gancho de retención de prótesis dental' WHERE sctid = '278618007';
+                        UPDATE applicable_diagnostic SET pt = 'arreglo dental perdido' WHERE sctid = '416673002';
+                        UPDATE applicable_diagnostic SET pt = 'falla de cohesión de restauración dental' WHERE sctid = '702645001';
+                        UPDATE applicable_diagnostic SET pt = 'falla de adhesivo de restauración dental' WHERE sctid = '702745006';
+                        UPDATE applicable_diagnostic SET pt = 'restauración dental biológicamente inaceptable' WHERE sctid = '711469000';
+                        UPDATE applicable_diagnostic SET pt = 'restauración dental oclusal inadecuada' WHERE sctid = '716294003';
+                        UPDATE applicable_diagnostic SET pt = 'perforación de restauración dental' WHERE sctid = '716296001';
+                        UPDATE applicable_diagnostic SET pt = 'trastorno de los dientes Y/O estructuras de sostén' WHERE sctid = '105995000';
+                        UPDATE applicable_diagnostic SET pt = 'limitación para abrir la boca' WHERE sctid = '109639001';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad crónica de los dientes Y/O de las estructuras de soporte' WHERE sctid = '128285007';
+                        UPDATE applicable_diagnostic SET pt = 'trastorno dental' WHERE sctid = '234947003';
+                        UPDATE applicable_diagnostic SET pt = 'anormalidad de cresta alveolar' WHERE sctid = '235013007';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad no congénita de los dientes' WHERE sctid = '255988004';
+                        UPDATE applicable_diagnostic SET pt = 'anomalía de la cresta alveolar del maxilar superior' WHERE sctid = '698030002';
+                        UPDATE applicable_diagnostic SET pt = 'lesión no cariada en margen cervical de diente' WHERE sctid = '717062009';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de erupción' WHERE sctid = '42323001';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de conducto nasopalatino' WHERE sctid = '4749004';
+                        UPDATE applicable_diagnostic SET pt = 'quiste mandibular mediano' WHERE sctid = '24140005';
+                        UPDATE applicable_diagnostic SET pt = 'quiste palatino mediano' WHERE sctid = '64268004';
+                        UPDATE applicable_diagnostic SET pt = 'quiste globulomaxilar' WHERE sctid = '78753008';
+                        UPDATE applicable_diagnostic SET pt = 'quiste palatino del recién nacido' WHERE sctid = '109553005';
+                        UPDATE applicable_diagnostic SET pt = 'quiste mandibular del desarrollo no odontogénico' WHERE sctid = '196452003';
+                        UPDATE applicable_diagnostic SET pt = 'quiste maxilar anterior medial' WHERE sctid = '196453008';
+                        UPDATE applicable_diagnostic SET pt = 'quiste maxilar' WHERE sctid = '426190008';
+                        UPDATE applicable_diagnostic SET pt = 'quiste linfoepitelial de la boca' WHERE sctid = '67045005';
+                        UPDATE applicable_diagnostic SET pt = 'quiste nasolabial' WHERE sctid = '90516007';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de bifurcación bucal' WHERE sctid = '109552000';
+                        UPDATE applicable_diagnostic SET pt = 'quiste gastrointestinal oral ectópico' WHERE sctid = '109554004';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de partes blandas de la boca' WHERE sctid = '196546001';
+                        UPDATE applicable_diagnostic SET pt = 'quiste epidermoide de la boca' WHERE sctid = '196548000';
+                        UPDATE applicable_diagnostic SET pt = 'nódulo de Bohn' WHERE sctid = '413678004';
+                        UPDATE applicable_diagnostic SET pt = 'perla palatina de Epstein' WHERE sctid = '414116002';
+                        UPDATE applicable_diagnostic SET pt = 'atrofia de glándula salival' WHERE sctid = '48128006';
+                        UPDATE applicable_diagnostic SET pt = 'atrofia de glándula parótida' WHERE sctid = '196474009';
+                        UPDATE applicable_diagnostic SET pt = 'atrofia de glándula submaxilar' WHERE sctid = '196475005';
+                        UPDATE applicable_diagnostic SET pt = 'atrofia de glándula sublingual' WHERE sctid = '196476006';
+                        UPDATE applicable_diagnostic SET pt = 'hipertrofia de la glándula submaxilar' WHERE sctid = '28401004';
+                        UPDATE applicable_diagnostic SET pt = 'hipertrofia de la glándula parótida' WHERE sctid = '29748005';
+                        UPDATE applicable_diagnostic SET pt = 'hipertrofia de la glándula salival' WHERE sctid = '45338009';
+                        UPDATE applicable_diagnostic SET pt = 'hiperplasia adenomatoide de la glándula salival menor' WHERE sctid = '109763004';
+                        UPDATE applicable_diagnostic SET pt = 'hipertrofia de glándula sublingual' WHERE sctid = '196479004';
+                        UPDATE applicable_diagnostic SET pt = 'hipertrofia de glándulas salivales menores' WHERE sctid = '235121004';
+                        UPDATE applicable_diagnostic SET pt = 'hiperplasia de glándula salival' WHERE sctid = '698070009';
+                        UPDATE applicable_diagnostic SET pt = 'hiperplasia oncocítica nodular multifocal de glándula salival' WHERE sctid = '698071008';
+                        UPDATE applicable_diagnostic SET pt = 'hiperplasia oncocítica nodular multifocal de glándula parótida' WHERE sctid = '699192000';
+                        UPDATE applicable_diagnostic SET pt = 'parotitis' WHERE sctid = '14756005';
+                        UPDATE applicable_diagnostic SET pt = 'parotitis tóxica' WHERE sctid = '26558007';
+                        UPDATE applicable_diagnostic SET pt = 'sialodoquitis' WHERE sctid = '41569004';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis' WHERE sctid = '42982001';
+                        UPDATE applicable_diagnostic SET pt = 'parotitis alérgica' WHERE sctid = '48269007';
+                        UPDATE applicable_diagnostic SET pt = 'parotitis supurativa' WHERE sctid = '95303006';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis aguda' WHERE sctid = '109764005';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis infecciosa de glándula salival mayor' WHERE sctid = '109765006';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis de la glándula salival menor' WHERE sctid = '109766007';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis obstructiva de glándula salival mayor' WHERE sctid = '109768008';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis de glándula submaxilar' WHERE sctid = '196485006';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis de glándula sublingual' WHERE sctid = '196486007';
+                        UPDATE applicable_diagnostic SET pt = 'sialoangitis' WHERE sctid = '196487003';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis infecciosa' WHERE sctid = '196489000';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis viral aguda' WHERE sctid = '235122006';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis bacteriana aguda' WHERE sctid = '235124007';
+                        UPDATE applicable_diagnostic SET pt = 'parotitis recurrente' WHERE sctid = '235125008';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis crónica' WHERE sctid = '235126009';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis obstructiva' WHERE sctid = '235127000';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis submaxilar por parotiditis' WHERE sctid = '240527008';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis sublingual por parotiditis' WHERE sctid = '240529006';
+                        UPDATE applicable_diagnostic SET pt = 'parotiditis no urliana' WHERE sctid = '274106005';
+                        UPDATE applicable_diagnostic SET pt = 'sialadenitis esclerosante crónica' WHERE sctid = '448131008';
+                        UPDATE applicable_diagnostic SET pt = 'sialadenitis necrosante subaguda' WHERE sctid = '698055008';
+                        UPDATE applicable_diagnostic SET pt = 'sialoadenitis crónica reagudizada' WHERE sctid = '702714007';
+                        UPDATE applicable_diagnostic SET pt = 'absceso de glándula salival' WHERE sctid = '80483009';
+                        UPDATE applicable_diagnostic SET pt = 'absceso de glándula parótida' WHERE sctid = '196491008';
+                        UPDATE applicable_diagnostic SET pt = 'absceso de glándula submaxilar' WHERE sctid = '196492001';
+                        UPDATE applicable_diagnostic SET pt = 'absceso de glándula sublingual' WHERE sctid = '196493006';
+                        UPDATE applicable_diagnostic SET pt = 'fístula de glándula salival' WHERE sctid = '75260002';
+                        UPDATE applicable_diagnostic SET pt = 'fístula de glándula parótida' WHERE sctid = '196495004';
+                        UPDATE applicable_diagnostic SET pt = 'fístula de glándula submaxilar' WHERE sctid = '196496003';
+                        UPDATE applicable_diagnostic SET pt = 'fístula de glándula sublingual' WHERE sctid = '196497007';
+                        UPDATE applicable_diagnostic SET pt = 'sialolitiasis' WHERE sctid = '28826002';
+                        UPDATE applicable_diagnostic SET pt = 'sialodocolitiasis' WHERE sctid = '80567007';
+                        UPDATE applicable_diagnostic SET pt = 'al examen: cálculo salival' WHERE sctid = '168047004';
+                        UPDATE applicable_diagnostic SET pt = 'al examen: cálculo parotídeo' WHERE sctid = '168048009';
+                        UPDATE applicable_diagnostic SET pt = 'al examen: cálculo submaxilar' WHERE sctid = '168049001';
+                        UPDATE applicable_diagnostic SET pt = 'sialolitiasis parotídea' WHERE sctid = '196499005';
+                        UPDATE applicable_diagnostic SET pt = 'sialolitiasis de glándula submaxilar' WHERE sctid = '196500001';
+                        UPDATE applicable_diagnostic SET pt = 'sialolitiasis sublingual' WHERE sctid = '196501002';
+                        UPDATE applicable_diagnostic SET pt = 'sialodocolitiasis parotídea' WHERE sctid = '196502009';
+                        UPDATE applicable_diagnostic SET pt = 'sialodocolitiasis submandibular' WHERE sctid = '196503004';
+                        UPDATE applicable_diagnostic SET pt = 'sialodocolitiasis sublingual' WHERE sctid = '196504005';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de extravasación de la glándula salival' WHERE sctid = '10480003';
+                        UPDATE applicable_diagnostic SET pt = 'ránula' WHERE sctid = '14919007';
+                        UPDATE applicable_diagnostic SET pt = 'mucocele de la glándula salival' WHERE sctid = '69825009';
+                        UPDATE applicable_diagnostic SET pt = 'quiste por extravasación de la glándula salival menor' WHERE sctid = '235128005';
+                        UPDATE applicable_diagnostic SET pt = 'quiste por retención mucosa de la glándula salival menor' WHERE sctid = '235129002';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de glándula salival' WHERE sctid = '300258005';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de glándula parótida' WHERE sctid = '300259002';
+                        UPDATE applicable_diagnostic SET pt = 'quiste mucoso por extravasación de glándula salival' WHERE sctid = '334831000';
+                        UPDATE applicable_diagnostic SET pt = 'ránula hundida' WHERE sctid = '698032005';
+                        UPDATE applicable_diagnostic SET pt = 'quiste de ambas glándulas parótidas' WHERE sctid = '15977991000119101';
+                        UPDATE applicable_diagnostic SET pt = 'xerostomía' WHERE sctid = '87715008';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad de Mikulicz' WHERE sctid = '7826003';
+                        UPDATE applicable_diagnostic SET pt = 'cólico salival' WHERE sctid = '29330004';
+                        UPDATE applicable_diagnostic SET pt = 'lesión linfoepitelial benigna de la glándula salival' WHERE sctid = '45517002';
+                        UPDATE applicable_diagnostic SET pt = 'estenosis del conducto salival' WHERE sctid = '54553003';
+                        UPDATE applicable_diagnostic SET pt = 'obstrucción del conducto salival' WHERE sctid = '66522001';
+                        UPDATE applicable_diagnostic SET pt = 'sialectasia' WHERE sctid = '90377008';
+                        UPDATE applicable_diagnostic SET pt = 'sialometaplasia necrosante' WHERE sctid = '109769000';
+                        UPDATE applicable_diagnostic SET pt = 'sialectasia parotídea' WHERE sctid = '196517008';
+                        UPDATE applicable_diagnostic SET pt = 'sialectasia submandibular' WHERE sctid = '196518003';
+                        UPDATE applicable_diagnostic SET pt = 'sialectasia sublingual' WHERE sctid = '196519006';
+                        UPDATE applicable_diagnostic SET pt = 'estenosis de conducto parotídeo' WHERE sctid = '196521001';
+                        UPDATE applicable_diagnostic SET pt = 'estenosis de conducto submandibular' WHERE sctid = '196522008';
+                        UPDATE applicable_diagnostic SET pt = 'estenosis de conducto sublingual' WHERE sctid = '196523003';
+                        UPDATE applicable_diagnostic SET pt = 'conducto salival ocluidos' WHERE sctid = '300261006';
+                        UPDATE applicable_diagnostic SET pt = 'Salivary duct gritty (finding)' WHERE sctid = '300262004';
+                        UPDATE applicable_diagnostic SET pt = 'masa de glándula salival' WHERE sctid = '427779000';
+                        UPDATE applicable_diagnostic SET pt = 'neumoparótida' WHERE sctid = '698008003';
+                        UPDATE applicable_diagnostic SET pt = 'síndrome de hipoacusia e insensibilidad de glándulas salivales a la aldosterona' WHERE sctid = '716239006';
+                        UPDATE applicable_diagnostic SET pt = 'caries dental por disfunción salival' WHERE sctid = '95249000';
+                        UPDATE applicable_diagnostic SET pt = 'úlcera aftosa de la cavidad bucal' WHERE sctid = '426965005';
+                        UPDATE applicable_diagnostic SET pt = 'celulitis Y estomatitis flemonosas' WHERE sctid = '38541002';
+                        UPDATE applicable_diagnostic SET pt = 'úlcera traumática de la mucosa oral' WHERE sctid = '50882004';
+                        UPDATE applicable_diagnostic SET pt = 'estomatitis' WHERE sctid = '61170000';
+                        UPDATE applicable_diagnostic SET pt = 'estomatitis por prótesis dental' WHERE sctid = '69254008';
+                        UPDATE applicable_diagnostic SET pt = 'fístula oral' WHERE sctid = '20674003';
+                        UPDATE applicable_diagnostic SET pt = 'absceso de labio' WHERE sctid = '82770004';
+                        UPDATE applicable_diagnostic SET pt = 'mucositis periimplante dental' WHERE sctid = '699684005';
+                        UPDATE applicable_diagnostic SET pt = 'absceso de labio' WHERE sctid = '82770004';
+                        UPDATE applicable_diagnostic SET pt = 'mordedura de carrillo' WHERE sctid = '59901004';
+                        UPDATE applicable_diagnostic SET pt = 'mordedura de labio' WHERE sctid = '196575007';
+                        UPDATE applicable_diagnostic SET pt = 'mordedura de la mucosa oral' WHERE sctid = '235035004';
+                        UPDATE applicable_diagnostic SET pt = 'leucoplasia de la mucosa oral' WHERE sctid = '414603003';
+                        UPDATE applicable_diagnostic SET pt = 'deformidad mucogingival sobre cresta alveolar desdentada debida a falta de encía queratinizada' WHERE sctid = '715838001';
+                        UPDATE applicable_diagnostic SET pt = 'leucoplaquia pilosa bucal asociada a inmunodeficiencia' WHERE sctid = '402900005';
+                        UPDATE applicable_diagnostic SET pt = 'leucoplasia vellosa bucal asociada a enfermedad por virus de la inmunodeficiencia humana' WHERE sctid = '402901009';
+                        UPDATE applicable_diagnostic SET pt = 'pelo bucal' WHERE sctid = '403450001';
+                        UPDATE applicable_diagnostic SET pt = 'leucoplasia vellosa lingual' WHERE sctid = '414375004';
+                        UPDATE applicable_diagnostic SET pt = 'leucoplasia vellosa de la lengua asociada con enfermedad por virus de la inmunodeficiencia humana' WHERE sctid = '414376003';
+                        UPDATE applicable_diagnostic SET pt = 'leucoplasia vellosa oral' WHERE sctid = '414952002';
+                        UPDATE applicable_diagnostic SET pt = 'granuloma de labio' WHERE sctid = '1826005';
+                        UPDATE applicable_diagnostic SET pt = 'granuloma eosinofílico de la mucosa oral' WHERE sctid = '8090002';
+                        UPDATE applicable_diagnostic SET pt = 'granulomatosis bucofacial' WHERE sctid = '235048000';
+                        UPDATE applicable_diagnostic SET pt = 'xantoma verruciforme de mucosa bucal' WHERE sctid = '708013001';
+                        UPDATE applicable_diagnostic SET pt = 'granuloma fisurado de membranas mucosas' WHERE sctid = '735129008';
+                        UPDATE applicable_diagnostic SET pt = 'fibrosis submucosa oral' WHERE sctid = '32883009';
+                        UPDATE applicable_diagnostic SET pt = 'hiperplasia fibrosa inflamatoria de la boca' WHERE sctid = '109787002';
+                        UPDATE applicable_diagnostic SET pt = 'mucocele bucal' WHERE sctid = '235017008';
+                        UPDATE applicable_diagnostic SET pt = 'ulceración traumática de la lengua' WHERE sctid = '12779007';
+                        UPDATE applicable_diagnostic SET pt = 'absceso de lengua' WHERE sctid = '44283002';
+                        UPDATE applicable_diagnostic SET pt = 'glositis' WHERE sctid = '45534005';
+                        UPDATE applicable_diagnostic SET pt = 'glositis causada por aceite de canela' WHERE sctid = '49123007';
+                        UPDATE applicable_diagnostic SET pt = 'úlcera de la lengua' WHERE sctid = '66123000';
+                        UPDATE applicable_diagnostic SET pt = 'glositis aguda' WHERE sctid = '109807006';
+                        UPDATE applicable_diagnostic SET pt = 'glositis crónica' WHERE sctid = '109808001';
+                        UPDATE applicable_diagnostic SET pt = 'celulitis de la lengua' WHERE sctid = '109810004';
+                        UPDATE applicable_diagnostic SET pt = 'al examen: glositis' WHERE sctid = '163170007';
+                        UPDATE applicable_diagnostic SET pt = 'al examen: úlcera en lengua' WHERE sctid = '163173009';
+                        UPDATE applicable_diagnostic SET pt = 'glositis por deficiencia de folato' WHERE sctid = '403452009';
+                        UPDATE applicable_diagnostic SET pt = 'glositis por deficiencia de vitamina B12' WHERE sctid = '403453004';
+                        UPDATE applicable_diagnostic SET pt = 'glositis por deficiencia de hierro' WHERE sctid = '403454005';
+                        UPDATE applicable_diagnostic SET pt = 'granuloma ulcerativo traumático de la lengua con eosinofilia estromal' WHERE sctid = '403455006';
+                        UPDATE applicable_diagnostic SET pt = 'glositis intersticial' WHERE sctid = '449773001';
+                        UPDATE applicable_diagnostic SET pt = 'enfermedad de Riga-Fede' WHERE sctid = '449780004';
+                        UPDATE applicable_diagnostic SET pt = 'papilitis lingual transitoria' WHERE sctid = '710003004';
+                        UPDATE applicable_diagnostic SET pt = 'lengua geográfica' WHERE sctid = '59032001';
+                        UPDATE applicable_diagnostic SET pt = 'tubérculo impar persistente' WHERE sctid = '7522008';
+                        UPDATE applicable_diagnostic SET pt = 'hipertrofia de las papilas foliadas' WHERE sctid = '5126000';
+                        UPDATE applicable_diagnostic SET pt = 'hipertrofia de las papilas linguales' WHERE sctid = '6971002';
+                        UPDATE applicable_diagnostic SET pt = 'lengua pilosa negra' WHERE sctid = '81934005';
+                        UPDATE applicable_diagnostic SET pt = 'grandes papilas fungiformes' WHERE sctid = '249384007';
+                        UPDATE applicable_diagnostic SET pt = 'revestimiento de membrana mucosa de la lengua' WHERE sctid = '698193000';
+                        UPDATE applicable_diagnostic SET pt = 'atrofia de papila lingual' WHERE sctid = '9491003';
+                        UPDATE applicable_diagnostic SET pt = 'lengua escrotal' WHERE sctid = '52368004';
+                        UPDATE applicable_diagnostic SET pt = 'al examen: lengua fisurada' WHERE sctid = '163172004';
+                        UPDATE applicable_diagnostic SET pt = 'glosodinia' WHERE sctid = '30731004';
+                        UPDATE applicable_diagnostic SET pt = 'glosopirosis' WHERE sctid = '399044006';
+                        UPDATE applicable_diagnostic SET pt = 'incrustacion estética' WHERE sctid = '80764003';
+                        UPDATE applicable_diagnostic SET pt = 'incrustación metalica' WHERE sctid = '57673005';
+                        UPDATE applicable_diagnostic SET pt = 'carilla dental' WHERE sctid = '398891000221108';
+                        UPDATE applicable_diagnostic SET pt = 'contención ortodoncia' WHERE sctid = '398881000221105';
+                        UPDATE applicable_diagnostic SET pt = 'corona de acero provisoria por destrucción coronaria.' WHERE sctid = '398981000221101';
+                        UPDATE applicable_diagnostic SET pt = 'corona metaloceramica' WHERE sctid = '44764005';
+                        UPDATE applicable_diagnostic SET pt = 'corona forjada' WHERE sctid = '306740006';
+                        UPDATE applicable_diagnostic SET pt = 'corona metalica' WHERE sctid = '468240009';
+                        UPDATE applicable_diagnostic SET pt = 'corona de zirconio' WHERE sctid = '787881007';
+                        UPDATE applicable_diagnostic SET pt = 'corona de porcelana' WHERE sctid = '468254001';
+                        UPDATE applicable_diagnostic SET pt = 'corona colada' WHERE sctid = '399271000221103';
+                        UPDATE applicable_diagnostic SET pt = 'corona revestida' WHERE sctid = '399301000221101';
+                        UPDATE applicable_diagnostic SET pt = 'corona libre de metal por tecnologia cad cam' WHERE sctid = '398871000221107';
+                        UPDATE applicable_diagnostic SET pt = 'corona acrilica' WHERE sctid = '285065008';
+                        UPDATE applicable_diagnostic SET pt = 'endodoncia multirradicular' WHERE sctid = '399001000221103';
+                        UPDATE applicable_diagnostic SET pt = 'endodoncia unirradicular' WHERE sctid = '399011000221100';
+                        UPDATE applicable_diagnostic SET pt = 'inmovilización dentaria' WHERE sctid = '173328009';
+                        UPDATE applicable_diagnostic SET pt = 'implante dental' WHERE sctid = '789147006';
+                        UPDATE applicable_diagnostic SET pt = 'implante osteointegrado con forma radicular' WHERE sctid = '278123008';
+                        UPDATE applicable_diagnostic SET pt = 'inactivación de caries' WHERE sctid = '4721000221105';
+                        UPDATE applicable_diagnostic SET pt = 'incrustacion a perno' WHERE sctid = '398861000221103';
+                        UPDATE applicable_diagnostic SET pt = 'obturación con amalgama cavidad compuesta' WHERE sctid = '399031000221108';
+                        UPDATE applicable_diagnostic SET pt = 'obturación con amalgama cavidad simple' WHERE sctid = '399041000221101';
+                        UPDATE applicable_diagnostic SET pt = 'obturación con composite cavidad compuesta' WHERE sctid = '399051000221104';
+                        UPDATE applicable_diagnostic SET pt = 'obturación con composite cavidad simple' WHERE sctid = '399061000221102';
+                        UPDATE applicable_diagnostic SET pt = 'obturación con ionómero cavidad compuesta' WHERE sctid = '399071000221106';
+                        UPDATE applicable_diagnostic SET pt = 'obturación con ionómero cavidad simple' WHERE sctid = '399081000221109';
+                        UPDATE applicable_diagnostic SET pt = 'ortodoncia de alineadores' WHERE sctid = '398851000221100';
+                        UPDATE applicable_diagnostic SET pt = 'ortodoncia fija con brackets' WHERE sctid = '398841000221102';
+                        UPDATE applicable_diagnostic SET pt = 'ortopedia aparato removible' WHERE sctid = '398741000221106';
+                        UPDATE applicable_diagnostic SET pt = 'perno muñon' WHERE sctid = '398721000221102';
+                        UPDATE applicable_diagnostic SET pt = 'perno pasante' WHERE sctid = '398731000221104';
+                        UPDATE applicable_diagnostic SET pt = 'placa miorelajante' WHERE sctid = '399091000221107';
+                        UPDATE applicable_diagnostic SET pt = 'placa neuromuscular para ATM' WHERE sctid = '399101000221104';
+                        UPDATE applicable_diagnostic SET pt = 'placa prequirurgica para fisuras alveolopalatinas' WHERE sctid = '398831000221109';
+                        UPDATE applicable_diagnostic SET pt = 'poste endodontico' WHERE sctid = '398821000221106';
+                        UPDATE applicable_diagnostic SET pt = 'practica de restauracion atraumatica' WHERE sctid = '399111000221101';
+                        UPDATE applicable_diagnostic SET pt = 'apertura endodontica' WHERE sctid = '234700003';
+                        UPDATE applicable_diagnostic SET pt = 'protección pulpar con coronas provisorias (prótesis)' WHERE sctid = '399121000221106';
+                        UPDATE applicable_diagnostic SET pt = 'protesis dental' WHERE sctid = '272252005';
+                        UPDATE applicable_diagnostic SET pt = 'protesis completa acrilico' WHERE sctid = '463493005';
+                        UPDATE applicable_diagnostic SET pt = 'prótesis superior o inferior' WHERE sctid = '6502003';
+                        UPDATE applicable_diagnostic SET pt = 'protesis parcial removible flexible' WHERE sctid = '272256008';
+                        UPDATE applicable_diagnostic SET pt = 'protesis parcial de cromo cobalto' WHERE sctid = '38058004';
+                        UPDATE applicable_diagnostic SET pt = 'prótesis superior o inferior' WHERE sctid = '58113002';
+                        UPDATE applicable_diagnostic SET pt = 'protesis mucoimplantosoportadas' WHERE sctid = '398811000221101';
+                        UPDATE applicable_diagnostic SET pt = 'protesis parcial acrilico' WHERE sctid = '398801000221104';
+                        UPDATE applicable_diagnostic SET pt = 'reconstrucción de ángulo de dientes anteriores' WHERE sctid = '399131000221109';
+                        UPDATE applicable_diagnostic SET pt = 'protección pulpar directa' WHERE sctid = '3443008';
+                        UPDATE applicable_diagnostic SET pt = 'reimplante dentario' WHERE sctid = '173280002';
+                        UPDATE applicable_diagnostic SET pt = 'selladores de surcos, fosas y fisuras' WHERE sctid = '234713009';
+                        UPDATE applicable_diagnostic SET pt = 'selladores de surcos, fosas y fisuras' WHERE sctid = '399191000221108';
+                        UPDATE applicable_diagnostic SET pt = 'sobredentaduras' WHERE sctid = '278120006';
+                        UPDATE applicable_diagnostic SET pt = 'corona sobre implante' WHERE sctid = '468936006';
+                        UPDATE applicable_diagnostic SET pt = 'mancha blanca en superficie dentaria' WHERE sctid = '401271000221109';
+                        UPDATE applicable_diagnostic SET pt = 'restos radiculares' WHERE sctid = '401261000221100';
+                        UPDATE applicable_diagnostic SET pt = 'Distancia insuficiente entre el margen de la mucosa peri-implante y la cresta ósea' WHERE sctid = '703401001';
+
+
+    - changeSet:
+          id: applicable_procedure-updatePtData
+          comment: Set values of preferred terms in applicable_procedure
+          author: tmedina
+          context: "!schema-only"
+          changes:
+              - sql:
+                    sql: |-
+                        UPDATE applicable_procedure SET pt = 'desgaste de prótesis' WHERE sctid = '183120001';
+                        UPDATE applicable_procedure SET pt = 'alargamiento quirurgico de corona clinica' WHERE sctid = '31890001';
+                        UPDATE applicable_procedure SET pt = 'apicectomia' WHERE sctid = '398911000221105';
+                        UPDATE applicable_procedure SET pt = 'aplicación de cariostáticos en piezas dentarias' WHERE sctid = '398921000221100';
+                        UPDATE applicable_procedure SET pt = 'medicación intermedia intraconducto' WHERE sctid = '234710007';
+                        UPDATE applicable_procedure SET pt = 'barniz fluorado' WHERE sctid = '313042009';
+                        UPDATE applicable_procedure SET pt = 'topicación de fluor' WHERE sctid = '35889000';
+                        UPDATE applicable_procedure SET pt = 'incrustacion estética' WHERE sctid = '80764003';
+                        UPDATE applicable_procedure SET pt = 'incrustación metalica' WHERE sctid = '57673005';
+                        UPDATE applicable_procedure SET pt = 'biopsia por aspiracion' WHERE sctid = '48635004';
+                        UPDATE applicable_procedure SET pt = 'biopsia por puncion' WHERE sctid = '129249002';
+                        UPDATE applicable_procedure SET pt = 'clareamiento interno dentario' WHERE sctid = '398961000221108';
+                        UPDATE applicable_procedure SET pt = 'bulbo aspiración' WHERE sctid = '398931000221102';
+                        UPDATE applicable_procedure SET pt = 'cambio de sustancia antiséptica endodontica' WHERE sctid = '398941000221109';
+                        UPDATE applicable_procedure SET pt = 'carilla dental' WHERE sctid = '398891000221108';
+                        UPDATE applicable_procedure SET pt = 'cefalograma de Ricketts' WHERE sctid = '398951000221106';
+                        UPDATE applicable_procedure SET pt = 'telerradiografía de perfil' WHERE sctid = '399311000221103';
+                        UPDATE applicable_procedure SET pt = 'consulta estomatológica' WHERE sctid = '398971000221104';
+                        UPDATE applicable_procedure SET pt = 'contención ortodoncia' WHERE sctid = '398881000221105';
+                        UPDATE applicable_procedure SET pt = 'corona de acero provisoria por destrucción coronaria.' WHERE sctid = '398981000221101';
+                        UPDATE applicable_procedure SET pt = 'corona metaloceramica' WHERE sctid = '44764005';
+                        UPDATE applicable_procedure SET pt = 'corona forjada' WHERE sctid = '306740006';
+                        UPDATE applicable_procedure SET pt = 'corona metalica' WHERE sctid = '468240009';
+                        UPDATE applicable_procedure SET pt = 'corona de zirconio' WHERE sctid = '787881007';
+                        UPDATE applicable_procedure SET pt = 'corona de porcelana' WHERE sctid = '468254001';
+                        UPDATE applicable_procedure SET pt = 'corona colada' WHERE sctid = '399271000221103';
+                        UPDATE applicable_procedure SET pt = 'corona revestida' WHERE sctid = '399301000221101';
+                        UPDATE applicable_procedure SET pt = 'corona libre de metal por tecnologia cad cam' WHERE sctid = '398871000221107';
+                        UPDATE applicable_procedure SET pt = 'corona acrilica' WHERE sctid = '285065008';
+                        UPDATE applicable_procedure SET pt = 'desgaste selectivo dentario' WHERE sctid = '398991000221103';
+                        UPDATE applicable_procedure SET pt = 'detección de control de placa bacteriana ' WHERE sctid = '399181000221105';
+                        UPDATE applicable_procedure SET pt = 'drenaje de absceso dental por mucosa' WHERE sctid = '450526008';
+                        UPDATE applicable_procedure SET pt = 'drenaje de absceso dentario por piel' WHERE sctid = '450525007';
+                        UPDATE applicable_procedure SET pt = 'enseñanza de tecnica de cepillado' WHERE sctid = '243086005';
+                        UPDATE applicable_procedure SET pt = 'elevacion de piso de seno maxilar' WHERE sctid = '46748004';
+                        UPDATE applicable_procedure SET pt = 'endodoncia multirradicular' WHERE sctid = '399001000221103';
+                        UPDATE applicable_procedure SET pt = 'endodoncia unirradicular' WHERE sctid = '399011000221100';
+                        UPDATE applicable_procedure SET pt = 'enseñanza sobre el uso de elementos de higiene bucal' WHERE sctid = '399201000221106';
+                        UPDATE applicable_procedure SET pt = 'estudios cefalométricos' WHERE sctid = '398751000221108';
+                        UPDATE applicable_procedure SET pt = 'extracción de cuerpo extraño' WHERE sctid = '399021000221105';
+                        UPDATE applicable_procedure SET pt = 'extracción dentaria de retenidos' WHERE sctid = '404198007';
+                        UPDATE applicable_procedure SET pt = 'extracción dentaria simple' WHERE sctid = '173291009';
+                        UPDATE applicable_procedure SET pt = 'inmovilización dentaria' WHERE sctid = '173328009';
+                        UPDATE applicable_procedure SET pt = 'gingivectomia' WHERE sctid = '64544008';
+                        UPDATE applicable_procedure SET pt = 'implante dental' WHERE sctid = '789147006';
+                        UPDATE applicable_procedure SET pt = 'implante osteointegrado con forma radicular' WHERE sctid = '278123008';
+                        UPDATE applicable_procedure SET pt = 'inactivación de caries' WHERE sctid = '4721000221105';
+                        UPDATE applicable_procedure SET pt = 'incrustacion a perno' WHERE sctid = '398861000221103';
+                        UPDATE applicable_procedure SET pt = 'protesis parcial removible flexible' WHERE sctid = '234808001';
+                        UPDATE applicable_procedure SET pt = 'mantenedor de espacio' WHERE sctid = '272373007';
+                        UPDATE applicable_procedure SET pt = 'motivación' WHERE sctid = '225223002';
+                        UPDATE applicable_procedure SET pt = 'obturación con amalgama cavidad compuesta' WHERE sctid = '399031000221108';
+                        UPDATE applicable_procedure SET pt = 'obturación con amalgama cavidad simple' WHERE sctid = '399041000221101';
+                        UPDATE applicable_procedure SET pt = 'obturación con composite cavidad compuesta' WHERE sctid = '399051000221104';
+                        UPDATE applicable_procedure SET pt = 'obturación con composite cavidad simple' WHERE sctid = '399061000221102';
+                        UPDATE applicable_procedure SET pt = 'obturación con ionómero cavidad compuesta' WHERE sctid = '399071000221106';
+                        UPDATE applicable_procedure SET pt = 'obturación con ionómero cavidad simple' WHERE sctid = '399081000221109';
+                        UPDATE applicable_procedure SET pt = 'ortodoncia de alineadores' WHERE sctid = '398851000221100';
+                        UPDATE applicable_procedure SET pt = 'ortodoncia fija con brackets' WHERE sctid = '398841000221102';
+                        UPDATE applicable_procedure SET pt = 'ortopedia aparato removible' WHERE sctid = '398741000221106';
+                        UPDATE applicable_procedure SET pt = 'perno muñon' WHERE sctid = '398721000221102';
+                        UPDATE applicable_procedure SET pt = 'perno pasante' WHERE sctid = '398731000221104';
+                        UPDATE applicable_procedure SET pt = 'placa miorelajante' WHERE sctid = '399091000221107';
+                        UPDATE applicable_procedure SET pt = 'placa neuromuscular para ATM' WHERE sctid = '399101000221104';
+                        UPDATE applicable_procedure SET pt = 'placa prequirurgica para fisuras alveolopalatinas' WHERE sctid = '398831000221109';
+                        UPDATE applicable_procedure SET pt = 'poste endodontico' WHERE sctid = '398821000221106';
+                        UPDATE applicable_procedure SET pt = 'practica de restauracion atraumatica' WHERE sctid = '399111000221101';
+                        UPDATE applicable_procedure SET pt = 'apertura endodontica' WHERE sctid = '234700003';
+                        UPDATE applicable_procedure SET pt = 'profilaxis' WHERE sctid = '19837009';
+                        UPDATE applicable_procedure SET pt = 'protección pulpar con coronas provisorias (prótesis)' WHERE sctid = '399121000221106';
+                        UPDATE applicable_procedure SET pt = 'protesis dental' WHERE sctid = '272252005';
+                        UPDATE applicable_procedure SET pt = 'protesis completa acrilico' WHERE sctid = '463493005';
+                        UPDATE applicable_procedure SET pt = 'prótesis superior o inferior' WHERE sctid = '6502003';
+                        UPDATE applicable_procedure SET pt = 'protesis parcial removible flexible' WHERE sctid = '272256008';
+                        UPDATE applicable_procedure SET pt = 'protesis parcial de cromo cobalto' WHERE sctid = '38058004';
+                        UPDATE applicable_procedure SET pt = 'prótesis superior o inferior' WHERE sctid = '58113002';
+                        UPDATE applicable_procedure SET pt = 'protesis mucoimplantosoportadas' WHERE sctid = '398811000221101';
+                        UPDATE applicable_procedure SET pt = 'protesis parcial acrilico' WHERE sctid = '398801000221104';
+                        UPDATE applicable_procedure SET pt = 'radiografía panorámica' WHERE sctid = '446463003';
+                        UPDATE applicable_procedure SET pt = 'radiografía oclusal' WHERE sctid = '241048009';
+                        UPDATE applicable_procedure SET pt = 'radiografía intraoral periapical' WHERE sctid = '285569006';
+                        UPDATE applicable_procedure SET pt = 'alisado radicular' WHERE sctid = '29898002';
+                        UPDATE applicable_procedure SET pt = 'raspaje y alisado radicular' WHERE sctid = '234697002';
+                        UPDATE applicable_procedure SET pt = 'rebasado con acondicionador de tejidos. ' WHERE sctid = '398781000221103';
+                        UPDATE applicable_procedure SET pt = 'rebasado de protesis' WHERE sctid = '122858002';
+                        UPDATE applicable_procedure SET pt = 'toma de muestra bacteriológica' WHERE sctid = '31507001';
+                        UPDATE applicable_procedure SET pt = 'reconstrucción de ángulo de dientes anteriores' WHERE sctid = '399131000221109';
+                        UPDATE applicable_procedure SET pt = 'protección pulpar directa' WHERE sctid = '3443008';
+                        UPDATE applicable_procedure SET pt = 'reducción de luxación' WHERE sctid = '122944000';
+                        UPDATE applicable_procedure SET pt = 'desprogramación' WHERE sctid = '183289005';
+                        UPDATE applicable_procedure SET pt = 'regulación de bordes alveolares' WHERE sctid = '398771000221101';
+                        UPDATE applicable_procedure SET pt = 'reimplante dentario' WHERE sctid = '173280002';
+                        UPDATE applicable_procedure SET pt = 'retiro de sutrura' WHERE sctid = '234921007';
+                        UPDATE applicable_procedure SET pt = 'plastica comunicacion bucosinusal' WHERE sctid = '312390002';
+                        UPDATE applicable_procedure SET pt = 'frenectomia' WHERE sctid = '45205003';
+                        UPDATE applicable_procedure SET pt = 'revelado de placa bacteriana' WHERE sctid = '399141000221102';
+                        UPDATE applicable_procedure SET pt = 'revestimiento para prótesis dental, elástico, durabilidad prolongada' WHERE sctid = '468984002';
+                        UPDATE applicable_procedure SET pt = 'selladores de surcos, fosas y fisuras' WHERE sctid = '234713009';
+                        UPDATE applicable_procedure SET pt = 'selladores de surcos, fosas y fisuras' WHERE sctid = '399191000221108';
+                        UPDATE applicable_procedure SET pt = 'sobredentaduras' WHERE sctid = '278120006';
+                        UPDATE applicable_procedure SET pt = 'corona sobre implante' WHERE sctid = '468936006';
+                        UPDATE applicable_procedure SET pt = 'sutura' WHERE sctid = '89481001';
+                        UPDATE applicable_procedure SET pt = 'tartrectomía con ultrasonido' WHERE sctid = '399151000221100';
+                        UPDATE applicable_procedure SET pt = 'toma de muestra citológica' WHERE sctid = '399161000221103';
+                        UPDATE applicable_procedure SET pt = 'tomografía coputada de maxilares' WHERE sctid = '448770008';
+                        UPDATE applicable_procedure SET pt = 'tramo de puente' WHERE sctid = '398761000221105';
+                        UPDATE applicable_procedure SET pt = 'tratamiento de osteomielitis' WHERE sctid = '399171000221107';
+                        UPDATE applicable_procedure SET pt = 'condilografia (laminografía)' WHERE sctid = '398901000221107';
+
+    - changeSet:
+         id: odontology_consultation-addPatientMedicalCoverageIdColumn
+         comment: Create column patient_medical_coverage_id in odontology_consultation
+         author: tmedina
+         changes:
+            - addColumn:
+                  columns:
+                  - column:
+                        name: patient_medical_coverage_id
+                        type: int
+                  tableName: odontology_consultation
+
+
+    - changeSet:
+        id: immunization-add-DoctorInfo_InstitutionInfo
+        comment: Add columns DoctorInfo,InstitutionInfo in immunization table
+        author: etrapani
+        changes:
+            - addColumn:
+                  columns:
+                      - column:
+                            name: doctor_info
+                            type: varchar(255)
+                      - column:
+                            name: institution_info
+                            type: varchar(255)
+                  tableName: inmunization
+
+
+    - changeSet:
+        id: vaccine_consultation-addPatientMedicalCoverageIdColumn
+        comment: Create column patient_medical_coverage_id in vaccine_consultation
+        author: etrapani
+        changes:
+            - addColumn:
+                  columns:
+                      - column:
+                            name: patient_medical_coverage_id
+                            type: int
+                  tableName: vaccine_consultation
+
+    - changeSet:
+        id: snomed-dental-surfaces-data
+        comment: Insert tooth surfaces data in snomed table
+        author: tmedina
+        context: "!schema-only"
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245652002','cara mesial de pieza dentaria','245652002','cara mesial de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245653007','cara distal de pieza dentaria','245653007','cara distal de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245647007','cara vestibular de pieza dentaria','245647007','cara vestibular de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('362103001','cara oclusal de pieza dentaria','362103001','cara oclusal de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245645004','borde incisal de pieza dentaria','245645004','borde incisal de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('245650005','cara palatina de pieza dentaria','245650005','cara palatina de pieza dentaria') ON CONFLICT DO NOTHING;
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES('362104007','cara lingual de pieza dentaria','362104007','cara lingual de pieza dentaria') ON CONFLICT DO NOTHING;
+
+    - changeSet:
+        id: snomed-dental-surfaces-data
+        comment: Insert tooth surfaces data in snomed table
+        author: tmedina
+        context: "!schema-only"
+        dbms: mssql
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245652002','cara mesial de pieza dentaria','245652002','cara mesial de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245652002' AND pt = 'cara mesial de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245653007','cara distal de pieza dentaria','245653007','cara distal de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245653007' AND pt = 'cara distal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245647007','cara vestibular de pieza dentaria','245647007','cara vestibular de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245647007' AND pt = 'cara vestibular de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362103001','cara oclusal de pieza dentaria','362103001','cara oclusal de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '362103001' AND pt = 'cara oclusal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245645004','borde incisal de pieza dentaria','245645004','borde incisal de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245645004' AND pt = 'borde incisal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245650005','cara palatina de pieza dentaria','245650005','cara palatina de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '245650005' AND pt = 'cara palatina de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362104007','cara lingual de pieza dentaria','362104007','cara lingual de pieza dentaria' WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '362104007' AND pt = 'cara lingual de pieza dentaria');
+
+    - changeSet:
+        id: snomed-dental-surfaces-data
+        comment: Insert tooth surfaces data in snomed table
+        author: tmedina
+        context: "!schema-only"
+        dbms: db2
+        changes:
+          - sql:
+              sql: |-
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245652002','cara mesial de pieza dentaria','245652002','cara mesial de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245652002' AND pt = 'cara mesial de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245653007','cara distal de pieza dentaria','245653007','cara distal de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245653007' AND pt = 'cara distal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245647007','cara vestibular de pieza dentaria','245647007','cara vestibular de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245647007' AND pt = 'cara vestibular de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362103001','cara oclusal de pieza dentaria','362103001','cara oclusal de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '362103001' AND pt = 'cara oclusal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245645004','borde incisal de pieza dentaria','245645004','borde incisal de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245645004' AND pt = 'borde incisal de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '245650005','cara palatina de pieza dentaria','245650005','cara palatina de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '245650005' AND pt = 'cara palatina de pieza dentaria');
+                  INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '362104007','cara lingual de pieza dentaria','362104007','cara lingual de pieza dentaria' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '362104007' AND pt = 'cara lingual de pieza dentaria');
+
+
+    - changeSet:
+        id: shedlock-createTable
+        comment: Create table shedlock
+        author: etrapani
+        changes:
+            - createTable:
+                  tableName: shedlock
+                  columns:
+                      - column:
+                            constraints:
+                                primaryKey: true
+                                primaryKeyName: PK_shedlock
+                            name: name
+                            type: VARCHAR(255)
+                      - column:
+                            name: lock_until
+                            type: TIMESTAMP
+                      - column:
+                            name: locked_at
+                            type: TIMESTAMP
+                      - column:
+                            name: locked_by
+                            type: VARCHAR(255)
+
+    - changeSet:
+          id: sync_error-createTable
+          comment: Create table sync_error
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: sync_error
+                    columns:
+                        - column:
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_sync_error
+                              name: id
+                              type: BIGINT
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: entity
+                              type: VARCHAR(255)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: performed_date
+                              type: DATETIME
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: log
+                              type: VARCHAR(255)
+
+    - changeSet:
+          id:  v_nomivac_immunization_data-createView
+          comment: Create v_nomivac_immunization_data view
+          author: etrapani
+          changes:
+              -  createView:
+                     viewName: v_nomivac_immunization_data
+                     fullDefinition:  false
+                     replaceIfExists:  true
+                     selectQuery: |-
+                         WITH t AS (
+                         	SELECT inm.id, inm.patient_id, inm.snomed_id, inm.status_id, inm.administration_date, inm.expiration_date,
+                             inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.institution_id, inm.lot_number,
+                             inm.note_id, inm.billable, inm.updated_on, inm.updated_by,
+                             row_number() over (partition by inm.patient_id, inm.snomed_id, inm.condition_id, inm.scheme_id, inm.dose,
+                             inm.dose_order, inm.administration_date, inm.institution_id order by inm.updated_on desc) as rw
+                             FROM document d
+                             JOIN document_inmunization di on d.id = di.document_id
+                             JOIN inmunization inm on di.inmunization_id = inm.id
+                             WHERE d.status_id = '445665009'
+                             AND d.type_id IN (4,8)
+                             AND inm.billable = true
+                             AND inm.condition_id IS NOT NULL
+                             AND inm.scheme_id IS NOT NULL
+                             AND inm.dose IS NOT NULL
+                             AND inm.dose_order IS NOT NULL
+                             AND inm.institution_id IS NOT NULL
+                         )
+                         SELECT t.id as id, t.patient_id, s.sctid as vaccine_sctid, s.pt as vaccine_pt, t.status_id,
+                         administration_date, expiration_date, t.institution_id,
+                         t.condition_id, vca.description as condition_description,
+                         t.scheme_id, vs.description as scheme_description,
+                         t.dose as dose, t.dose_order,  t.lot_number, n.description as note,
+                         t.billable, t.updated_on, t.updated_by
+                         FROM t
+                         JOIN snomed s ON snomed_id = s.id
+                         LEFT JOIN note n ON (n.id = t.note_id)
+                         JOIN vaccine_condition_application vca on (t.condition_id = vca.id)
+                         JOIN vaccine_scheme as vs on (t.scheme_id = vs.id)
+                         WHERE rw = 1
+                         AND status_id <> '723510000'
+                         ORDER BY t.updated_on DESC;
+
+    - changeSet:
+          id: nomivac_immunization_sync-createTable
+          comment: Create table nomivac_immunization_sync
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: nomivac_immunization_sync
+                    columns:
+                        - column:
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_nomivac_immunization_sync
+                              name: immunization_id
+                              type: INT
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: priority
+                              type: INT
+                        - column:
+                              name: synchronized_date
+                              type: DATETIME
+                        - column:
+                              name: external_id
+                              type: VARCHAR(255)
+                        - column:
+                              name: status_code
+                              type: INT
+    - changeSet:
+        id: doctorsoffice_topic-addTopicColumn
+        comment: Create column topic in doctors_office
+        author: lmanterola
+        changes:
+            - addColumn:
+                  columns:
+                      - column:
+                            name: topic
+                            type: varchar(255)
+                  tableName: doctors_office

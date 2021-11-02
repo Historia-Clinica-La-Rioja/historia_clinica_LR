@@ -27,8 +27,8 @@ public class DocumentAuthorFinder {
         String sqlString = "" +
                 "SELECT hp.id, p.first_name, p.last_name, hp.license_number " +
                 "FROM document AS d " +
-                "JOIN users AS u ON (d.created_by = u.id) " +
-                "JOIN healthcare_professional hp ON (u.person_id = hp.person_id) " +
+                "JOIN user_person AS up ON (d.created_by = up.user_id) " +
+                "JOIN healthcare_professional hp ON (up.person_id = hp.person_id) " +
                 "JOIN person p ON (hp.person_id = p.id) " +
                 "WHERE d.id = :documentId" +
                 "";

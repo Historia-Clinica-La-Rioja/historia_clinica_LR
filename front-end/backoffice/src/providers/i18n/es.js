@@ -40,6 +40,9 @@ export default {
         "role":{
           "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
         },
+        "PROFESSIONAL_REQUIRED": "Alguno de los roles asignados requiere que el usuario sea un profesional",
+        "ROOT_LOST_PERMISSION": "El admin no puede perder el rol: ROOT",
+        "USER_INVALID_ROLE": "El usuario creado no puede tener el siguiente rol: ROOT",
         "user":{
             "exists": "Esta persona ya tiene un usuario en el sistema",
             "hasrole": "El profesional que quiere eliminar tiene un rol asociado"
@@ -99,7 +102,8 @@ export default {
               openingTime: 'Horario de apertura',
               closingTime: 'Horario de cierre',
               clinicalSpecialtySectorId: 'Especialidad | Sector',
-              institutionId: 'Institución'
+              institutionId: 'Institución',
+              topic: 'Tópico'
           },
           createRelated: 'Crear Consultorio',
         },
@@ -219,6 +223,18 @@ export default {
             createRelated: 'Crear Usuario',
             noEmail: "Sin información",
         },
+        admin: {
+            name: 'Admin |||| Admins',
+            fields: {
+                username: 'Nombre de usuario',
+                enable: 'Habilitado',
+                lastLogin: 'Último ingreso',
+                institutionId: 'Institución',
+                roleId: 'Rol',
+                email: "E-mail"
+            },
+            noEmail: "Sin información",
+        },
         internmentepisodes: {
             name: 'Episodio de internación |||| Episodios de internación',
             fields: {
@@ -241,6 +257,12 @@ export default {
                 details: 'Datos personales',
                 users: 'Usuario'
             },
-        }
+        },
+        "nomivac-immunizationdata": {
+            name: 'Historial de vacunas |||| Historial de vacunas',
+        },
+        "nomivac-immunizationsync": {
+            name: 'Nomivac |||| Nomivac',
+        },
     },
 };

@@ -236,7 +236,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setAllWeeklyDoctorsOfficeOcupation(): void {
-		if (!this.form.valid) {
+		if (!this.form.controls['startDate'].valid && !this.form.controls['endDate'].valid) {
 			return;
 		}
 		const formValue = this.form.getRawValue();

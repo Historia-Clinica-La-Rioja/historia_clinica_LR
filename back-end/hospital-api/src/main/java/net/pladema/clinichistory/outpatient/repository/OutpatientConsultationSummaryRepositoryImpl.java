@@ -151,4 +151,5 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
         );
         return result;
     }
+
 }

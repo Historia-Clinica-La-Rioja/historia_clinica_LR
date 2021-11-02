@@ -18,6 +18,7 @@ import { getError, hasError } from '@core/utils/form.utils';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-nota-evolucion-form',
@@ -43,6 +44,8 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
+	minDate = MIN_DATE;
+
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
@@ -53,7 +56,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
-		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService);
+		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 	}
 
 	ngOnInit(): void {

@@ -3,10 +3,15 @@
 }
 
 .gridGap {
-	grid-column-gap: 30px;
+	grid-column-gap: 10px;
+	grid-row-gap: 35px;
 }
 
 ::ng-deep .mat-tooltip {
 	white-space: pre-line !important;
 	font-size: 12px;
+}
+
+.indices {
+	margin-top: 3%;
 }

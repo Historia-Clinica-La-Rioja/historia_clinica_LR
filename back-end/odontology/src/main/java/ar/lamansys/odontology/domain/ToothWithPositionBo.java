@@ -31,10 +31,10 @@ public class ToothWithPositionBo extends ToothBo {
     public ToothSurfacesBo getSurfaces() {
         ToothSurfacesBo result = new ToothSurfacesBo();
 
-        result.setInternal(isTop() ? EToothSurfaces.PALATINA.getValue() : EToothSurfaces.LINGUAL.getValue());
-        result.setExternal(EToothSurfaces.VESTIBULAR.getValue());
-        result.setRight(isLeft() ? EToothSurfaces.MESIAL.getValue() : EToothSurfaces.DISTAL.getValue());
-        result.setLeft(isLeft() ? EToothSurfaces.DISTAL.getValue() : EToothSurfaces.MESIAL.getValue());
+        result.setInternal(isTop() ? EToothSurfaces.PALATINA.getValue() : EToothSurfaces.VESTIBULAR.getValue());
+        result.setExternal(isTop() ? EToothSurfaces.VESTIBULAR.getValue() : EToothSurfaces.LINGUAL.getValue());
+        result.setRight(isLeft() ? EToothSurfaces.DISTAL.getValue() : EToothSurfaces.MESIAL.getValue());
+        result.setLeft(isLeft() ? EToothSurfaces.MESIAL.getValue() : EToothSurfaces.DISTAL.getValue());
         result.setCentral(isPosterior() ? EToothSurfaces.OCLUSAL.getValue() : EToothSurfaces.INCISAL.getValue());
         logger.debug("Output -> {}", result);
         return result;

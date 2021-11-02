@@ -1,4 +1,5 @@
 import { getDraw, getHtmlName } from '../utils/draws';
+import { ToothSurfaceId } from '../utils/Surface';
 export class ToothDrawerService {
 
 	constructor(public toothNode: ChildNode) { }
@@ -13,7 +14,7 @@ export class ToothDrawerService {
 				// Que hacer con acciones que no tienen dibujo para pieza
 				return;
 			}
-			const newDrawNodes: HTMLElement[] = getDraw('central', svgName);
+			const newDrawNodes: HTMLElement[] = getDraw(ToothSurfaceId.CENTRAL, svgName);
 			this.draw(newDrawNodes);
 		}
 	}

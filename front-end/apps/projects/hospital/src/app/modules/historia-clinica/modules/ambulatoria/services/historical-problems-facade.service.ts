@@ -11,8 +11,8 @@ import { MapperService } from './../../../../presentation/services/mapper.servic
 @Injectable()
 export class HistoricalProblemsFacadeService {
 
-  	public specialties: ClinicalSpecialtyDto[] = [];
-  	public professionals: Professional[] = [];
+	public specialties: ClinicalSpecialtyDto[] = [];
+	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
 
 	private historicalProblemsSubject = new ReplaySubject<HistoricalProblems[]>(1);
@@ -24,13 +24,13 @@ export class HistoricalProblemsFacadeService {
 	constructor(
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly mapperService: MapperService,
-  	) {
+	) {
 		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
 		this.historicalProblemsFilter$ = this.historicalProblemsFilterSubject.asObservable();
 	}
 
 	setPatientId(patientId: number): void {
-		if (!this.originalHistoricalProblems.length) {
+		if (!this.originalHistoricalProblems?.length) {
 			this.loadEvolutionSummaryList(patientId);
 		}
 	}
@@ -60,9 +60,9 @@ export class HistoricalProblemsFacadeService {
 	public sendHistoricalProblemsFilter(newFilter: HistoricalProblemsFilter): void {
 		const historichalProblemsCopy = [...this.originalHistoricalProblems];
 		const result = historichalProblemsCopy.filter(historicalProblem => (this.filterBySpecialty(newFilter, historicalProblem)
-																	&& this.filterByProfessional(newFilter, historicalProblem)
-																	&& this.filterByProblem(newFilter, historicalProblem)
-																	&& this.filterByConsultationDate(newFilter, historicalProblem)));
+			&& this.filterByProfessional(newFilter, historicalProblem)
+			&& this.filterByProblem(newFilter, historicalProblem)
+			&& this.filterByConsultationDate(newFilter, historicalProblem)));
 		this.historicalProblemsSubject.next(result);
 		this.historicalProblemsFilterSubject.next(newFilter);
 	}
@@ -76,7 +76,7 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	private filterByProblem(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
-		return (filter.problem ? problem.problemId === filter.problem :	true);
+		return (filter.problem ? problem.problemId === filter.problem : true);
 	}
 
 	private filterByConsultationDate(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
@@ -99,14 +99,14 @@ export class HistoricalProblemsFacadeService {
 			}
 
 			if (!outpatientEvolution.healthConditions.length) {
-				this.problems = pushIfNotExists(this.problems, {problemId: 'Problema no informado', problemDescription: 'Problema no informado'}, this.compareProblems);
+				this.problems = pushIfNotExists(this.problems, { problemId: 'Problema no informado', problemDescription: 'Problema no informado' }, this.compareProblems);
 			} else {
 				outpatientEvolution.healthConditions.forEach(oe => {
-					this.problems = pushIfNotExists(this.problems, {problemId: oe.snomed.sctid, problemDescription: oe.snomed.pt}, this.compareProblems);
+					this.problems = pushIfNotExists(this.problems, { problemId: oe.snomed.sctid, problemDescription: oe.snomed.pt }, this.compareProblems);
 				});
 			}
 
-			this.professionals = pushIfNotExists(this.professionals, {professionalId: outpatientEvolution.medic.id, professionalDescription: `${outpatientEvolution.medic.person.firstName} ${outpatientEvolution.medic.person.lastName}`} , this.compareProfessional);
+			this.professionals = pushIfNotExists(this.professionals, { professionalId: outpatientEvolution.medic.id, professionalDescription: `${outpatientEvolution.medic.person.firstName} ${outpatientEvolution.medic.person.lastName}` }, this.compareProfessional);
 
 		});
 	}
@@ -144,16 +144,16 @@ export class HistoricalProblems {
 	problemPt: string;
 	specialtyId: number;
 	specialtyPt: string;
-  	consultationReasons:
-	{
-		reasonId: string;
-		reasonPt: string;
-  	}[];
+	consultationReasons:
+		{
+			reasonId: string;
+			reasonPt: string;
+		}[];
 	consultationProcedures:
-	{
-		procedureDate: string;
-		procedureId: string;
-		procedurePt: string;
-	}[];
+		{
+			procedureDate: string;
+			procedureId: string;
+			procedurePt: string;
+		}[];
 }
 

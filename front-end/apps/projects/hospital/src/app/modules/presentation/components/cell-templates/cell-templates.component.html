@@ -7,9 +7,11 @@
 </ng-template>
 
 <ng-template #removeButtonTemplate let-action="action" let-rowIndex="rowIndex" appCtrlTemplate="removeButtonTemplate">
-	<button type="button" mat-icon-button color="warn" (click)="action(rowIndex)">
-		<mat-icon>delete_outline</mat-icon>
-	</button>
+	<div align="end">
+		<button  type="button" mat-icon-button color="warn" (click)="action(rowIndex)">
+			<mat-icon>delete_outline</mat-icon>
+		</button>
+	</div>
 </ng-template>
 
 <ng-template #snomedProblemTemplate let-rowData="data" appCtrlTemplate="snomedProblemTemplate">
@@ -35,9 +37,27 @@
 	</ng-container>
 </ng-template>
 
+<ng-template #allergyCriticalityTemplate let-rowData="data" let-text="text" appCtrlTemplate="allergyCriticalityTemplate">
+	<ng-container *ngIf="rowData.criticalityId === 1">
+		<mat-label class="grayText">
+			{{text}}
+		</mat-label>
+	</ng-container>
+	<ng-container *ngIf="rowData.criticalityId === 2">
+		<mat-error>
+			{{text}}
+		</mat-error>
+	</ng-container>
+	<ng-container *ngIf="rowData.criticalityId === 3">
+		<mat-label>
+			{{text}}
+		</mat-label>
+	</ng-container>
+</ng-template>
+
 <ng-template #startAndEndDateTemplate let-rowData="data" appCtrlTemplate="startAndEndDateTemplate">
 	<div class="mat-small grayText">
-		<span translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
+		<span *ngIf="rowData.fechaInicio" translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
 		{{formatDate(rowData.fechaInicio)}}
 	</div>
 	<div class="mat-small grayText" *ngIf="rowData.fechaFin">

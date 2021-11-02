@@ -1,0 +1,14 @@
+form {
+  font-size: 14px;
+  padding-top: 30px ;
+}
+mat-label, mat-form-field.mat-form-field {
+  margin-bottom: 6px;
+}
+.vaccine-error {
+  margin-bottom: 18px;
+  font-size: 90%;
+  div.mat-error {
+    margin-bottom: 17px;
+  }
+}

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
 import { PERSON } from '@core/constants/validation-constants';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,8 @@ export class HomeComponent implements OnInit {
 
   private readonly routePrefix;
   private genderTableView: string[] = [];
+
+  minDate = MIN_DATE;
 
   constructor(
 	private readonly formBuilder: FormBuilder,

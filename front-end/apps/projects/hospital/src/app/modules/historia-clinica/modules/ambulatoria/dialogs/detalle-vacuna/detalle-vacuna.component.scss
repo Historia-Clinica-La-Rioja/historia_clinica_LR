@@ -1,0 +1,66 @@
+@import "../../../../../../../assets/styles/mixins.scss";
+
+.mat-dialog-content {
+	@include general-font;
+}
+
+.mat-list-item {
+	padding-bottom: 5px;
+	padding-top: 15px;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.mat-list {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+.no-info {
+	color: #a8a8a8;
+}
+
+.appliedDoses {
+	border-radius: 2px;
+	padding: 2px;
+	background-color: #2687c533;
+	color: #2687c5;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.title {
+	padding-top: 5px;
+	font-size: 22px;
+	font-weight: 500;
+}
+
+.inst-prof-container {
+	margin-bottom: 30px;
+}
+
+.sub-title {
+	padding-block-end: 13px;
+	padding-top: 30px;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.observations {
+	padding-block-end: 30px;
+	font-size: 16px;
+	font-weight: 500;
+	color:#A8A8A8;
+    height: 19px;
+}
+
+.mat-values {
+	font-size: 16px;
+	font-weight: 400;
+}
+
+.inst-prof-values {
+	font-size: 16px;
+	font-weight: 400;
+    height: 18.75px;
+}

@@ -3,19 +3,20 @@ import {SnomedDto} from '@api-rest/api-model';
 import {ColumnConfig} from '@presentation/components/document-section/document-section.component';
 import {SEMANTICS_CONFIG} from '../constants/snomed-semantics';
 import {SnomedSemanticSearch, SnomedService} from './snomed.service';
-import {pushTo, removeFrom} from '@core/utils/array.utils';
+import {pushIfNotExists, removeFrom} from '@core/utils/array.utils';
 import {newMoment} from '@core/utils/moment.utils';
 import {Moment} from 'moment';
 import {hasError} from '@core/utils/form.utils';
 import {Observable, Subject} from 'rxjs';
 import {TableColumnConfig} from '@presentation/components/document-section-table/document-section-table.component';
 import {CellTemplates} from '@presentation/components/cell-templates/cell-templates.component';
+import {SnackBarService} from '@presentation/services/snack-bar.service';
 
 export interface Problema {
 	snomed: SnomedDto;
-	codigoSeveridad: string;
+	codigoSeveridad?: string;
 	cronico?: boolean;
-	fechaInicio: Moment;
+	fechaInicio?: Moment;
 	fechaFin?: Moment;
 }
 
@@ -33,13 +34,15 @@ export class ProblemasService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService
+
 	) {
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			severidad: [null, Validators.required],
+			severidad: [null],
 			cronico: [null],
-			fechaInicio: [null, Validators.required],
+			fechaInicio: [newMoment()],
 			fechaFin: [null]
 		});
 
@@ -86,8 +89,19 @@ export class ProblemasService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(problema: Problema): void {
-		this.data = pushTo<Problema>(this.data, problema);
+	add(problema: Problema): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<Problema>(this.data, problema, this.compareSpeciality);
+	 	return currentItems === this.data.length;
+	}
+
+	addControl(problema: Problema): void {
+		if (this.add(problema))
+			this.snackBarService.showError("Problema duplicado");
+	}
+
+	compareSpeciality(data: Problema, data1: Problema): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	addToList() {
@@ -99,7 +113,7 @@ export class ProblemasService {
 				fechaInicio: this.form.value.fechaInicio,
 				fechaFin: this.form.value.fechaFin
 			};
-			this.add(nuevoProblema);
+			this.addControl(nuevoProblema);
 			this.errorSource.next();
 			this.resetForm();
 		}
@@ -159,14 +173,18 @@ export class ProblemasService {
 	// adds the old error when the value is changed dynamically
 	checkValidFechaFin(): void {
 		this.form.controls.fechaFin.setErrors(null);
-		const today = newMoment();
 		if (this.form.value.fechaFin) {
-			const newFechaFin: Moment = this.form.value.fechaFin;
-			if (newFechaFin.isBefore(this.form.value.fechaInicio)) {
-				this.form.controls.fechaFin.setErrors({min: true});
-			}
-			if (newFechaFin.isAfter(today)) {
-				this.form.controls.fechaFin.setErrors({max: true});
+			if(this.form.value.fechaInicio) {
+				const today = newMoment();
+				const newFechaFin: Moment = this.form.value.fechaFin;
+				if (newFechaFin.isBefore(this.form.value.fechaInicio, 'day')) {
+					this.form.controls.fechaFin.setErrors({min: true});
+				}
+				if (newFechaFin.isAfter(today)) {
+					this.form.controls.fechaFin.setErrors({max: true});
+				}
+			} else {
+				this.form.controls.fechaFin.setErrors({required_init_date: true});
 			}
 		}
 	}

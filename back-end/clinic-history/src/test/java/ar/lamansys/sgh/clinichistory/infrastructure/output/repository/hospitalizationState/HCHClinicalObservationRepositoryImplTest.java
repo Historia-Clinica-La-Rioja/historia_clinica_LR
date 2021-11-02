@@ -25,8 +25,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
 public class HCHClinicalObservationRepositoryImplTest extends UnitRepository {

@@ -4,9 +4,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.*;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
-import ar.lamansys.sgh.clinichistory.domain.ips.Last2VitalSignsBo;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

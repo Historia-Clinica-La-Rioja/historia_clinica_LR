@@ -44,6 +44,7 @@ public final class CodingProfile {
     @UtilityClass
     public static class Immunization {
         public static final String URL="http://fhir.msal.gov.ar/StructureDefinition/NomivacImmunization";
+        public static final String URL2="http://fhir.msal.gob.ar/core/StructureDefinition/Immunization-ar-core";
         public static final String BASEURL="http://hl7.org/fhir/StructureDefinition/Immunization";
         public static final String TYPE="Immunization";
 

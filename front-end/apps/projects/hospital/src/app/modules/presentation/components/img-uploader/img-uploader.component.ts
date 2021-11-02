@@ -12,7 +12,7 @@ export class ImgUploaderComponent {
 	@Input() icon: string;
 	@Input() validations: ImgValidation;
 
-	@Output() selectFiles = new EventEmitter<string>();
+	@Output() selectFiles = new EventEmitter<File>();
 
 	@ViewChild('fileInput') fileInput: ElementRef;
 

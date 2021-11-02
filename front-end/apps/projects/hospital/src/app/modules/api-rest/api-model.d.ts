@@ -56,6 +56,7 @@ export interface APersonDto {
     nameSelfDetermination: string;
     number: string;
     occupationId: number;
+    otherGenderSelfDetermination?: string;
     otherLastNames: string;
     phoneNumber: string;
     postcode: string;
@@ -134,13 +135,19 @@ export interface AnnexIIDto {
     appointmentState: string;
     attentionDate: Date;
     completePatientName: string;
+    consultationDate: Date;
     documentNumber: string;
     documentType: string;
     establishment: string;
+    existsConsultation: boolean;
+    hasProcedures: boolean;
     medicalCoverage: string;
     patientAge: number;
     patientGender: string;
+    problems: string;
     reportDate: Date;
+    sisaCode: string;
+    specialty: string;
 }
 
 export interface AnthropometricDataDto extends Serializable {
@@ -384,6 +391,14 @@ export interface ConditionDto {
     verificationStatus: FhirCodeDto;
 }
 
+export interface ConsultationsDto extends Serializable {
+    completeProfessionalName: string;
+    consultationDate: Date;
+    documentId: number;
+    id: number;
+    specialty: string;
+}
+
 export interface CoverageDto extends Serializable {
     id: number;
     name: string;
@@ -601,6 +616,15 @@ export interface DosageInfoDto extends Serializable {
     startDate: DateDto;
 }
 
+export interface DrawingsDto extends Serializable {
+    central?: string;
+    external?: string;
+    internal?: string;
+    left?: string;
+    right?: string;
+    whole?: string;
+}
+
 export interface ECAdministrativeDto extends Serializable {
     administrative: NewEmergencyCareDto;
     triage: TriageAdministrativeDto;
@@ -730,6 +754,15 @@ export interface EvolutionNoteDto extends Serializable {
     vitalSigns?: VitalSignDto;
 }
 
+export interface ExternalClinicalHistoryDto extends Serializable {
+    consultationDate: DateDto;
+    id: number;
+    institution?: string;
+    notes: string;
+    professionalName?: string;
+    professionalSpecialty?: string;
+}
+
 export interface FhirAddressDto {
     address: string;
     city: string;
@@ -751,14 +784,18 @@ export interface FileDto {
 export interface FormVDto {
     address: string;
     affiliateNumber: string;
+    cie10Codes: string;
     completePatientName: string;
+    consultationDate: Date;
     documentNumber: string;
     documentType: string;
     establishment: string;
     medicalCoverage: string;
     patientAge: number;
     patientGender: string;
+    problems: string;
     reportDate: Date;
+    sisaCode: string;
 }
 
 export interface GenderDto extends AbstractMasterdataDto<number> {
@@ -771,10 +808,10 @@ export interface HCEAllergyDto extends ClinicalTermDto {
 }
 
 export interface HCEAnthropometricDataDto extends Serializable {
-    bloodType?: HCEClinicalObservationDto;
+    bloodType?: HCEEffectiveClinicalObservationDto;
     bmi?: HCEClinicalObservationDto;
-    height?: HCEClinicalObservationDto;
-    weight?: HCEClinicalObservationDto;
+    height?: HCEEffectiveClinicalObservationDto;
+    weight?: HCEEffectiveClinicalObservationDto;
 }
 
 export interface HCEClinicalObservationDto extends Serializable {
@@ -831,6 +868,12 @@ export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
     inactivationDate: string;
     severity: string;
     startDate: string;
+}
+
+export interface HCEToothRecordDto extends Serializable {
+    date: DateDto;
+    snomed: SnomedDto;
+    surfaceSctid?: string;
 }
 
 export interface HCEVitalSignDto extends Serializable {
@@ -916,8 +959,10 @@ export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
     billable?: boolean;
     conditionId?: number;
+    doctorInfo?: string;
     dose?: VaccineDoseInfoDto;
     institutionId?: number;
+    institutionInfo?: string;
     lotNumber?: string;
     note: string;
     schemeId?: number;
@@ -967,6 +1012,7 @@ export interface InstitutionDto extends Serializable {
 export interface InstitutionInfoDto extends Serializable {
     id: number;
     name: string;
+    sisaCode: string;
 }
 
 export interface InternmentEpisodeADto {
@@ -1032,7 +1078,7 @@ export interface InternmentSummaryDto {
     totalInternmentDays: number;
 }
 
-export interface JWTokenDto extends Serializable {
+export interface JWTokenDto {
     refreshToken: string;
     token: string;
 }
@@ -1045,6 +1091,17 @@ export interface Last2VitalSignsDto extends Serializable {
 export interface LimitedPatientSearchDto {
     actualPatientSearchSize: number;
     patientList: PatientSearchDto[];
+}
+
+export interface LoggedPersonDto extends Serializable {
+    firstName: string;
+    lastName: string;
+}
+
+export interface LoggedUserDto {
+    email: string;
+    id: number;
+    personDto: LoggedPersonDto;
 }
 
 export interface LoginDto extends Serializable {
@@ -1135,6 +1192,14 @@ export interface MedicationInteroperabilityDto {
     unitTime: string;
 }
 
+export interface MqttMetadataDto {
+    message: string;
+    qos: number;
+    retained: boolean;
+    topic: string;
+    type: string;
+}
+
 export interface NewDosageDto extends Serializable {
     chronic: boolean;
     diary: boolean;
@@ -1189,10 +1254,86 @@ export interface OdontogramQuadrantDto {
     top: boolean;
 }
 
+export interface OdontologyAllergyConditionDto extends Serializable {
+    categoryId: string;
+    criticalityId: number;
+    snomed: SnomedDto;
+    startDate: DateDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
 export interface OdontologyConceptDto extends Serializable {
     applicableToSurface: boolean;
     applicableToTooth: boolean;
     snomed: OdontologySnomedDto;
+}
+
+export interface OdontologyConsultationDto extends Serializable {
+    allergies?: OdontologyAllergyConditionDto[];
+    clinicalSpecialtyId: number;
+    dentalActions?: OdontologyDentalActionDto[];
+    diagnostics?: OdontologyDiagnosticDto[];
+    evolutionNote?: string;
+    medications?: OdontologyMedicationDto[];
+    permanentTeethPresent?: number;
+    personalHistories?: OdontologyPersonalHistoryDto[];
+    procedures?: OdontologyProcedureDto[];
+    reasons?: OdontologyReasonDto[];
+    temporaryTeethPresent?: number;
+}
+
+export interface OdontologyConsultationIndicesDto extends Serializable {
+    ceoIndex: number;
+    cpoIndex: number;
+    date: DateDto;
+    permanentC: number;
+    permanentO: number;
+    permanentP: number;
+    permanentTeethPresent: number;
+    temporaryC: number;
+    temporaryE: number;
+    temporaryO: number;
+    temporaryTeethPresent: number;
+}
+
+export interface OdontologyDentalActionDto extends Serializable {
+    diagnostic: boolean;
+    snomed: SnomedDto;
+    surfacePosition?: ESurfacePositionDto;
+    tooth: SnomedDto;
+}
+
+export interface OdontologyDiagnosticDto extends Serializable {
+    chronic: boolean;
+    endDate?: DateDto;
+    severity?: string;
+    snomed: SnomedDto;
+    startDate?: DateDto;
+}
+
+export interface OdontologyMedicationDto {
+    id?: number;
+    note: string;
+    snomed: SnomedDto;
+    statusId?: string;
+    suspended: boolean;
+}
+
+export interface OdontologyPersonalHistoryDto extends Serializable {
+    snomed: SnomedDto;
+    startDate: DateDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface OdontologyProcedureDto extends Serializable {
+    performedDate?: DateDto;
+    snomed: SnomedDto;
+}
+
+export interface OdontologyReasonDto extends Serializable {
+    snomed: SnomedDto;
 }
 
 export interface OdontologySnomedDto {
@@ -1267,9 +1408,9 @@ export interface OutpatientMedicationDto {
 export interface OutpatientProblemDto {
     chronic: boolean;
     endDate?: string;
-    severity: string;
+    severity?: string;
     snomed: SnomedDto;
-    startDate: string;
+    startDate?: string;
     statusId?: string;
     verificationId?: string;
 }
@@ -1310,6 +1451,10 @@ export interface Overlapping<T> {
 export interface PasswordResetDto {
     password: string;
     token: string;
+}
+
+export interface PasswordResetResponseDto {
+    username: string;
 }
 
 export interface PatientBedRelocationDto extends Serializable {
@@ -1597,6 +1742,10 @@ export interface SectorSummaryDto {
     sectorTypeId: number;
 }
 
+export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
+    id: number;
+}
+
 export interface Serializable {
 }
 
@@ -1629,6 +1778,11 @@ export interface TimeDto {
 export interface TimeRangeDto {
     from: string;
     to: string;
+}
+
+export interface ToothDrawingsDto extends Serializable {
+    drawings: DrawingsDto;
+    toothSctid: string;
 }
 
 export interface ToothDto {
@@ -1734,12 +1888,23 @@ export interface UIPageDto {
 
 export interface UserDto extends AbstractUserDto {
     email: string;
+    firstName: string;
     id: number;
-    personDto?: UserPersonDto;
+    lastName: string;
+    personDto: UserPersonDto;
+    personId: number;
+}
+
+export interface UserInfoDto {
+    enabled: boolean;
+    id: number;
+    password: string;
+    username: string;
 }
 
 export interface UserPersonDto extends Serializable {
     firstName: string;
+    id?: number;
     lastName: string;
 }
 
@@ -1829,7 +1994,12 @@ export const enum AppFeature {
     HABILITAR_ODONTOLOGY = "HABILITAR_ODONTOLOGY",
     HABILITAR_REPORTES = "HABILITAR_REPORTES",
     HABILITAR_VACUNAS_V2 = "HABILITAR_VACUNAS_V2",
-    HABILITAR_INFORMES_TURNOS = "HABILITAR_INFORMES_TURNOS",
+    HABILITAR_INFORMES = "HABILITAR_INFORMES",
+    HABILITAR_LLAMADO = "HABILITAR_LLAMADO",
+    HABILITAR_HISTORIA_CLINICA_EXTERNA = "HABILITAR_HISTORIA_CLINICA_EXTERNA",
+    HABILITAR_SERVICIO_RENAPER = "HABILITAR_SERVICIO_RENAPER",
+    RESTRINGIR_DATOS_EDITAR_PACIENTE = "RESTRINGIR_DATOS_EDITAR_PACIENTE",
+    HABILITAR_INTERCAMBIO_TEMAS = "HABILITAR_INTERCAMBIO_TEMAS",
 }
 
 export const enum EDocumentSearch {
@@ -1849,4 +2019,13 @@ export const enum ERole {
     ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE = "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE",
     ADMINISTRADOR_AGENDA = "ADMINISTRADOR_AGENDA",
     API_CONSUMER = "API_CONSUMER",
+    ESPECIALISTA_EN_ODONTOLOGIA = "ESPECIALISTA_EN_ODONTOLOGIA",
+}
+
+export const enum ESurfacePositionDto {
+    INTERNAL = "INTERNAL",
+    EXTERNAL = "EXTERNAL",
+    LEFT = "LEFT",
+    RIGHT = "RIGHT",
+    CENTRAL = "CENTRAL",
 }

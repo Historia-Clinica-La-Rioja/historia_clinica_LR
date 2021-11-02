@@ -2,9 +2,6 @@ package net.pladema.sgx.repository.dialect;
 
 import net.pladema.sgx.repository.dialect.type.ObjectArrayUserType;
 import org.hibernate.dialect.PostgreSQL95Dialect;
-import org.hibernate.dialect.function.StandardSQLFunction;
-import org.hibernate.type.CustomType;
-import org.hibernate.type.Type;
 
 import java.sql.Types;
 

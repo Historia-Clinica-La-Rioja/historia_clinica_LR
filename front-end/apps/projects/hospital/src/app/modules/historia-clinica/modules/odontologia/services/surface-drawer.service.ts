@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { ActionAndColor, getDraw, getHtmlName, getPaint } from '../utils/draws';
 
 export class SurfaceDrawerService {

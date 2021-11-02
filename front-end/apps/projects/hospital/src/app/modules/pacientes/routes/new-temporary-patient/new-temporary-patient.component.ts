@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -29,6 +29,8 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 export class NewTemporaryPatientComponent implements OnInit {
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
+	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
+	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
@@ -37,6 +39,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
+	public selfPerceivedGenders: SelfPerceivedGenderDto[];
+	public showOtherGender: boolean = false;
 	public countries: any[];
 	public provinces: any[];
 	public departments: any[];
@@ -96,6 +100,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
+					otherGenderSelfDetermination: [{ value: null, disabled: true }, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]],
+
 					// Address
 					addressStreet: [],
 					addressNumber: [],
@@ -124,6 +130,11 @@ export class NewTemporaryPatientComponent implements OnInit {
 				genders => {
 					this.genders = genders;
 				}
+			);
+
+		this.personMasterDataService.getSelfPerceivedGenders()
+			.subscribe(
+				genders => this.selfPerceivedGenders = genders
 			);
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
@@ -181,7 +192,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 
 	private mapToPersonRequest(): APatientDto {
-		return {
+		const patient: APatientDto = {
 			birthDate: this.form.controls.birthDate.value,
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
@@ -225,6 +236,11 @@ export class NewTemporaryPatientComponent implements OnInit {
 				generalPractitioner: false
 			}
 		};
+
+		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
+			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination;
+
+		return patient;
 	}
 
 	setProvinces() {
@@ -303,6 +319,20 @@ export class NewTemporaryPatientComponent implements OnInit {
 			this.form.controls.birthDate.disable();
 		}
 
+	}
+
+	public showOtherSelfPerceivedGender(): void {
+		this.showOtherGender = (this.form.value.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		this.form.get('otherGenderSelfDetermination').setValue(null);
+		if (this.showOtherGender)
+			this.form.get('otherGenderSelfDetermination').enable();
+		else
+			this.form.get('otherGenderSelfDetermination').disable();
+	}
+
+	public clearGenderSelfDetermination(): void {
+		this.form.controls.genderSelfDeterminationId.reset();
+		this.showOtherSelfPerceivedGender();
 	}
 
 }

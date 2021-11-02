@@ -62,6 +62,8 @@ public class ImmunizationDocumentStorageImpl implements ImmunizationDocumentStor
         ImmunizationDto result = new ImmunizationDto();
         result.setAdministrationDate(localDateMapper.fromLocalDateToString(immunizationInfoBo.getAdministrationDate()));
         result.setInstitutionId(immunizationInfoBo.getInstitutionId());
+        result.setInstitutionInfo(immunizationInfoBo.getInstitutionInfo());
+        result.setDoctorInfo(immunizationInfoBo.getDoctorInfo());
         result.setNote(immunizationInfoBo.getNote());
         result.setDose(mapDose(immunizationInfoBo.getDose()));
         result.setConditionId(immunizationInfoBo.getConditionId());

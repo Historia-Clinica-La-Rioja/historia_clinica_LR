@@ -1,39 +1,48 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
-import { ConceptsService } from '../../api-rest/concepts.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { HCEToothRecordDto, OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DateFormat, momentFormatDate } from '@core/utils/moment.utils';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
-import { ProcedureOrder, ToothAction } from '../../services/actions.service';
-import { OdontogramService } from '../../services/odontogram.service';
+import { ActionType, ProcedureOrder, ToothAction } from '../../services/actions.service';
+import { ConceptsFacadeService } from '../../services/concepts-facade.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
+import { SurfacesNamesFacadeService, ToothSurfaceNames } from '../../services/surfaces-names-facade.service';
 import { getSurfaceShortName } from '../../utils/surfaces';
-import { CommonActions, ToothComponent } from '../tooth/tooth.component';
+import { Actions, ToothComponent } from '../tooth/tooth.component';
+import { TypeaheadOption } from "@core/components/typeahead/typeahead.component";
+import { ScrollableData } from '../hidable-scrollable-data/hidable-scrollable-data.component';
+import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
+import { ShowActionsService } from "@historia-clinica/modules/odontologia/services/show-actions.service";
 
 @Component({
 	selector: 'app-tooth-dialog',
 	templateUrl: './tooth-dialog.component.html',
-	styleUrls: ['./tooth-dialog.component.scss']
+	styleUrls: ['./tooth-dialog.component.scss'],
 })
 export class ToothDialogComponent implements OnInit, AfterViewInit {
 
 	@ViewChild('tooth') toothComponent: ToothComponent;
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
 		private readonly odontogramRestService: OdontogramRestService,
-		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[] },
-		private readonly conceptsService: ConceptsService,
+		private readonly hceGeneralStateService: HceGeneralStateService,
+		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[], records: ToothAction[], patientId: string },
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
-		public odontogramService: OdontogramService
+		private conceptsFacadeService: ConceptsFacadeService,
+		private surfacesNamesFacadeService: SurfacesNamesFacadeService
 	) {
-
 	}
+	showOlderRecords = false;
+	readonly shortNameOf = getSurfaceShortName;
 
 	readonly toothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
 
-	form: FormGroup;
-	newHallazgoId: number;
+	historicalRecords$: Observable<ScrollableData[]>
+
+	newHallazgoId: string;
 
 	selectedSurfacesText: string;
 
@@ -42,73 +51,95 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 	private surfacesDto: ToothSurfacesDto;
 
 	private diagnostics: OdontologyConceptDto[];
-	filteredDiagnostics: OdontologyConceptDto[];
+	filteredDiagnosticsTypeaheadOptions: TypeaheadOption<OdontologyConceptDto>[];
+
+	initValueTypeaheadDiagnostics: TypeaheadOption<OdontologyConceptDto> = null;
 
 	private procedures: OdontologyConceptDto[];
-	filteredProcedures: OdontologyConceptDto[];
+	filteredProceduresTypeahead: TypeaheadOption<OdontologyConceptDto>[];
 
 	firstProcedureId: string;
+	initValueTypeaheadFirstProcedure: TypeaheadOption<OdontologyConceptDto> = null;
+
 	secondProcedureId: string;
+	initValueTypeaheadSecondProcedure: TypeaheadOption<OdontologyConceptDto> = null;
+
 	thirdProcedureId: string;
+	initValueTypeaheadThirdProcedure: TypeaheadOption<OdontologyConceptDto> = null;
+
+	lastProcedureAdded = -1;
+
+	showActionsService;
 
 	ngAfterViewInit(): void {
 		this.toothComponent.setFindingsAndProcedures(this.data.currentActions);
 		this.toothComponent.actionsSubject$.subscribe(actionsSctids => {
-			this.reciveCommonActions(actionsSctids)
+			this.reciveToothCurrentViewActions(actionsSctids)
 		});
+		if (this.data.records.length) {
+			this.toothComponent.setRecords(this.data.records);
+		}
 	}
 
 	ngOnInit(): void {
 
-		this.form = this.formBuilder.group(
-			{
-				findingId: [undefined],
-				procedures: this.formBuilder.group({
-					firstProcedureId: [undefined],
-					secondProcedureId: [undefined],
-					thirdProcedureId: [undefined],
-				})
-			}
-		);
+		this.loadToothSurfaceName();
 
 		this.odontogramRestService.getToothSurfaces(this.data.tooth.snomed.sctid).subscribe(surfaces => this.surfacesDto = surfaces);
-		const actions = this.data.currentActions?.filter(a => !a.surfaceId);
-		const currentProcedures = actions?.filter(a => a.isProcedure);
-		const currentFinding = actions?.find(a => !a.isProcedure);
-
 		const filterFunction = this.getFilterFuction(false);
-
-		this.conceptsService.getDiagnostics().subscribe(
+		this.conceptsFacadeService.getDiagnostics$().subscribe(
 			diagnostics => {
 				this.diagnostics = diagnostics;
 				this.setAppropiateFindings(filterFunction);
-				this.form.controls.findingId.patchValue(currentFinding?.actionSctid);
+				const hallazgoId = this.data.currentActions?.find(currentActions => currentActions.action.type === ActionType.DIAGNOSTIC && !currentActions.surfaceId)?.action.sctid
+				if (hallazgoId) {
+					this.setTypeaheadCurrentFinding(hallazgoId);
+				}
 			}
 		);
-		this.conceptsService.getProcedures().subscribe(
+		this.conceptsFacadeService.getProcedures$().subscribe(
 			procedures => {
 				this.procedures = procedures;
 				this.setAppropiateProcedures(filterFunction);
-				this.form.controls.procedures.patchValue({
-					firstProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
-					secondProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
-					thirdProcedureId: currentProcedures?.find(p => p.wholeProcedureOrder === ProcedureOrder.THIRD)?.actionSctid,
-				})
+				const onlyProcedures = (this.data.currentActions?.filter(currentActions => currentActions.action.type === ActionType.PROCEDURE));
+
+				const firstProcedureId = onlyProcedures?.find(first => first.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid;
+				if (firstProcedureId) {
+					this.setTypeaheadProcedures(firstProcedureId, ProcedureOrder.FIRST);
+					this.lastProcedureAdded = 0;
+				}
+				const secondProcedureId = onlyProcedures?.find(second => second.wholeProcedureOrder === ProcedureOrder.SECOND)?.action.sctid;
+				if (secondProcedureId) {
+					this.setTypeaheadProcedures(secondProcedureId, ProcedureOrder.SECOND);
+					this.lastProcedureAdded = 1;
+				}
+				const thirdProcedureId = onlyProcedures?.find(third => third.wholeProcedureOrder === ProcedureOrder.THIRD)?.action.sctid;
+				if (thirdProcedureId) {
+					this.setTypeaheadProcedures(thirdProcedureId, ProcedureOrder.THIRD);
+					this.lastProcedureAdded = 2;
+				}
+				this.showActionsService = new ShowActionsService(secondProcedureId, thirdProcedureId, this.lastProcedureAdded);
 			}
 		);
+
+		this.historicalRecords$ =
+			this.hceGeneralStateService.getToothRecords(parseInt(this.data.patientId), this.data.tooth.snomed.sctid)
+				.pipe(
+					map(this.toScrollableData)
+				);
 	}
 
-	confirm() {
+	public confirm(): void {
 		this.dialogRef.close(this.toothComponent.getFindingsAndProcedures());
 	}
 
-	reciveSelectedSurfaces(surfaces: string[]) {
+	public reciveSelectedSurfaces(surfaces: string[]): void {
 		this.selectedSurfaces = surfaces;
 		this.concatNames();
 		this.setAppropiateActions(surfaces.length != 0)
 	}
 
-	private setAppropiateActions(surfacesSelected: boolean) {
+	private setAppropiateActions(surfacesSelected: boolean): void {
 
 		const filterFuncion = this.getFilterFuction(surfacesSelected);
 
@@ -124,60 +155,237 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		return filterFuncion;
 	}
 
-	private setAppropiateFindings(filterFuncion) {
-		this.filteredDiagnostics = this.diagnostics?.filter(filterFuncion);
-	}
-
-	private setAppropiateProcedures(filterFuncion) {
-		this.filteredProcedures = this.procedures?.filter(filterFuncion);
-	}
-
-	findingChanged(hallazgoId) {
-		this.newHallazgoId = hallazgoId.value;
-	}
-
-	private reciveCommonActions(inCommon: CommonActions) {
-		if (inCommon?.findingId) {
-			this.form.controls.findingId.patchValue(inCommon.findingId);
-		} else {
-			this.form.controls.findingId.patchValue(undefined);
-			this.newHallazgoId = undefined;
+	private setAppropiateFindings(filterFuncion): void {
+		const filteredDiagnostics = this.diagnostics?.filter(filterFuncion);
+		if (filteredDiagnostics) {
+			this.filteredDiagnosticsTypeaheadOptions = filteredDiagnostics.map(this.toTypeaheadOptions);
 		}
-		const procedures = {
-			firstProcedureId: inCommon.procedures?.firstProcedureId,
-			secondProcedureId: inCommon.procedures?.secondProcedureId,
-			thirdProcedureId: inCommon.procedures?.thirdProcedureId
-		};
-		this.form.patchValue({
-			procedures
-		});
 	}
 
-	private concatNames() {
+	private setAppropiateProcedures(filterFuncion): void {
+		const filteredProcedures = this.procedures?.filter(filterFuncion);
+		if (filteredProcedures) {
+			this.filteredProceduresTypeahead = filteredProcedures.map(this.toTypeaheadOptions);
+		}
+	}
+
+	private concatNames(): void {
 		this.selectedSurfacesText = '';
 		if (this.selectedSurfaces.length) {
 			this.selectedSurfacesText = this.selectedSurfaces.length === 1 ? 'Cara ' : 'Caras ';
-			const mappedNames = this.selectedSurfaces.map(surface => this.findSutableName(surface));
+			const mappedNames = this.selectedSurfaces.map(surface => this.findSuitableName(surface));
 			this.selectedSurfacesText += mappedNames.filter(Boolean).join(', ');
 		}
 	}
 
-	private findSutableName(surface: string): string {
-		const sctid = this.surfacesDto[surface].sctid;
+	public findSuitableName(surface: string): string {
+		const sctid = this.surfacesDto[surface]?.sctid;
 		return getSurfaceShortName(sctid);
 	}
 
-	firstProcedureChanged() {
-		this.firstProcedureId = this.form.value.procedures.firstProcedureId;
+	private toTypeaheadOptions(odontologyConcept: OdontologyConceptDto): TypeaheadOption<OdontologyConceptDto> {
+		return {
+			compareValue: odontologyConcept?.snomed.pt,
+			value: odontologyConcept
+		}
 	}
 
-	secondProcedureChanged() {
-		this.secondProcedureId = this.form.value.procedures.secondProcedureId;
+	private setTypeaheadCurrentFinding(currentFindingSctid: string): void {
+		const typeaheadConcept = this.filteredDiagnosticsTypeaheadOptions?.find(diagnosticsTypeahead => diagnosticsTypeahead.value.snomed.sctid === currentFindingSctid);
+		this.initValueTypeaheadDiagnostics = typeaheadConcept;
 	}
 
-	thirdProcedureChanged() {
-		this.thirdProcedureId = this.form.value.procedures.thirdProcedureId;
+	private setTypeaheadProcedures(procedureSctid: string, order: ProcedureOrder) {
+		const typeaheadConcept = this.filteredProceduresTypeahead?.find(procedureTypeahead => procedureTypeahead.value.snomed.sctid === procedureSctid);
+		if (order === ProcedureOrder.FIRST) {
+			this.initValueTypeaheadFirstProcedure = typeaheadConcept;
+		}
+		else {
+			if (order === ProcedureOrder.SECOND) {
+				this.initValueTypeaheadSecondProcedure = typeaheadConcept;
+			}
+			else {
+				this.initValueTypeaheadThirdProcedure = typeaheadConcept;
+			}
+		}
+	}
+
+	public findingChanged(hallazgo: OdontologyConceptDto): void {
+		if (hallazgo) {
+			this.newHallazgoId = hallazgo.snomed.sctid;
+			this.setTypeaheadCurrentFinding(hallazgo.snomed.sctid);
+		}
+		else {
+			if (this.initValueTypeaheadDiagnostics?.compareValue) {
+				this.reorganizeAndDeleteActions(this.initValueTypeaheadDiagnostics, ActionType.DIAGNOSTIC, undefined);
+			}
+		}
+	}
+
+	public firstProcedureChanged(firstProcedure: OdontologyConceptDto): void {
+		if (firstProcedure) {
+			this.firstProcedureId = firstProcedure.snomed.sctid;
+			this.setTypeaheadProcedures(firstProcedure.snomed.sctid, ProcedureOrder.FIRST);
+			if (!this.selectedSurfaces.length) {
+				this.lastProcedureAdded = 0;
+				if (this.showActionsService.getThirdProcedure) {
+					this.showActionsService.setIsNotPreviousProcedureSet(false);
+				}
+				else {
+					this.showActionsService.setIsNotPreviousProcedureSet(true);
+				}
+			}
+		}
+		else {
+			if (this.initValueTypeaheadFirstProcedure?.compareValue) {
+				this.reorganizeAndDeleteActions(this.initValueTypeaheadFirstProcedure, ActionType.PROCEDURE, ProcedureOrder.FIRST);
+			}
+		}
+	}
+
+	public secondProcedureChanged(secondProcedure: OdontologyConceptDto): void {
+		if (secondProcedure) {
+			this.secondProcedureId = secondProcedure.snomed.sctid;
+			this.setTypeaheadProcedures(secondProcedure.snomed.sctid, ProcedureOrder.SECOND);
+			this.lastProcedureAdded = 1;
+			this.showActionsService.getThirdProcedure ? this.showActionsService.setIsNotPreviousProcedureSet(false) : this.showActionsService.setIsNotPreviousProcedureSet(true);
+		}
+		else {
+			if (this.initValueTypeaheadSecondProcedure?.compareValue) {
+				this.reorganizeAndDeleteActions(this.initValueTypeaheadSecondProcedure, ActionType.PROCEDURE, ProcedureOrder.SECOND);
+			}
+		}
+	}
+
+	public thirdProcedureChanged(thirdProcedure: OdontologyConceptDto): void {
+		if (thirdProcedure) {
+			this.thirdProcedureId = thirdProcedure.snomed.sctid;
+			this.setTypeaheadProcedures(thirdProcedure.snomed.sctid, ProcedureOrder.THIRD);
+			this.lastProcedureAdded = 2;
+		}
+		else {
+			if (this.initValueTypeaheadThirdProcedure?.compareValue) {
+				this.reorganizeAndDeleteActions(this.initValueTypeaheadThirdProcedure, ActionType.PROCEDURE, ProcedureOrder.THIRD);
+			}
+		}
+	}
+
+	private reciveToothCurrentViewActions(actions: Actions): void {
+		if (actions?.findingId) {
+			this.setTypeaheadCurrentFinding(actions.findingId);
+		}
+		else {
+			this.newHallazgoId = undefined;
+			this.initValueTypeaheadDiagnostics = null;
+		}
+		if (actions?.procedures.firstProcedureId) {
+			this.setTypeaheadProcedures(actions.procedures.firstProcedureId, ProcedureOrder.FIRST);
+		}
+		if (actions?.procedures.secondProcedureId) {
+			this.setTypeaheadProcedures(actions.procedures.secondProcedureId, ProcedureOrder.SECOND);
+		}
+		if (actions?.procedures.thirdProcedureId) {
+			this.setTypeaheadProcedures(actions.procedures.thirdProcedureId, ProcedureOrder.THIRD);
+		}
+		if (!(actions?.procedures.firstProcedureId) && !(actions?.procedures.secondProcedureId) && !(actions?.procedures.thirdProcedureId)) {
+			this.initValueTypeaheadFirstProcedure = null;
+
+			this.initValueTypeaheadSecondProcedure = null;
+			this.initValueTypeaheadThirdProcedure = null;
+			this.firstProcedureId = undefined;
+			this.secondProcedureId = undefined;
+			this.thirdProcedureId = undefined;
+		}
+	}
+
+	private reorganizeAndDeleteActions(elementToDelete: TypeaheadOption<OdontologyConceptDto>, actionType: ActionType, order: ProcedureOrder) {
+		this.toothComponent.deleteAction(elementToDelete?.value?.snomed.sctid, this.selectedSurfaces, actionType, order);
+		switch (order) {
+			case ProcedureOrder.FIRST:
+				this.initValueTypeaheadFirstProcedure = null;
+				this.firstProcedureId = null;
+				this.lastProcedureAdded = -1;
+				if (this.initValueTypeaheadSecondProcedure?.compareValue) {
+					this.organizeTypeaheadProcedures(ProcedureOrder.SECOND);
+					this.initValueTypeaheadSecondProcedure = null;
+				}
+				if (this.initValueTypeaheadThirdProcedure?.compareValue) {
+					this.organizeTypeaheadProcedures(ProcedureOrder.THIRD);
+					this.initValueTypeaheadThirdProcedure = null;
+				}
+				this.showActionsService.showProcedures(this.lastProcedureAdded, false);
+				(this.initValueTypeaheadFirstProcedure?.compareValue) ? this.showActionsService.setIsNotPreviousProcedureSet(false) : this.showActionsService.setIsNotPreviousProcedureSet(true);
+				break;
+			case ProcedureOrder.SECOND:
+				this.initValueTypeaheadSecondProcedure = null;
+				this.secondProcedureId = null;
+				this.lastProcedureAdded = 0;
+				if (this.initValueTypeaheadThirdProcedure?.compareValue) {
+					this.organizeTypeaheadProcedures(ProcedureOrder.THIRD);
+					this.initValueTypeaheadThirdProcedure = null;
+				}
+				this.showActionsService.showProcedures(this.lastProcedureAdded, false);
+				this.showActionsService.setIsNotPreviousProcedureSet(false);
+				break;
+			case ProcedureOrder.THIRD:
+				this.initValueTypeaheadThirdProcedure = null;
+				this.thirdProcedureId = null;
+				this.lastProcedureAdded = 1;
+				this.showActionsService.setIsNotPreviousProcedureSet(false);
+				this.showActionsService.showProcedures(this.lastProcedureAdded, false);
+				break;
+			default:
+				this.initValueTypeaheadDiagnostics = null;
+				this.newHallazgoId = null;
+				break;
+		}
+	}
+
+	private toScrollableData(toothRecordDtos: HCEToothRecordDto[]): ScrollableData[] {
+		const toSingleScrolleableData = (toothRecordDto: HCEToothRecordDto): ScrollableData => {
+			const surfaceText = toothRecordDto.surfaceSctid ? ` ( ${getSurfaceShortName(toothRecordDto.surfaceSctid)} )` : ''
+			return {
+				firstElement: momentFormatDate(dateDtoToDate(toothRecordDto.date), DateFormat.VIEW_DATE),
+				secondElement: toothRecordDto.snomed.pt + surfaceText
+			}
+		}
+		return toothRecordDtos.map(toSingleScrolleableData);
+	}
+
+	private loadToothSurfaceName() {
+		this.surfacesNamesFacadeService.loadSurfaceNameOf(this.data.tooth.snomed.sctid);
+		this.surfacesNamesFacadeService.toothSurfaceNames$
+			.subscribe(
+				(toothSurfaceNames: ToothSurfaceNames) => {
+					if (toothSurfaceNames?.toothSctid === this.data.tooth.snomed.sctid) {
+						this.surfacesDto = toothSurfaceNames.names
+					}
+				}
+			);
+	}
+
+	public addTypeaheadProcedure() {
+		if (!this.selectedSurfaces.length) {
+			this.showActionsService.showProcedures(this.lastProcedureAdded, true);
+			this.showActionsService.setIsNotPreviousProcedureSet(true);
+		}
+	}
+
+	private organizeTypeaheadProcedures(order) {
+		if (order === ProcedureOrder.SECOND) {
+			this.initValueTypeaheadFirstProcedure = this.initValueTypeaheadSecondProcedure;
+			this.toothComponent.deleteAction(this.initValueTypeaheadSecondProcedure.value?.snomed.sctid, this.selectedSurfaces, ActionType.PROCEDURE, ProcedureOrder.SECOND);
+			this.firstProcedureId = this.secondProcedureId;
+			this.secondProcedureId = null;
+			this.lastProcedureAdded = 0;
+		}
+		if (order === ProcedureOrder.THIRD) {
+			this.initValueTypeaheadSecondProcedure = this.initValueTypeaheadThirdProcedure;
+			this.toothComponent.deleteAction(this.initValueTypeaheadThirdProcedure.value?.snomed.sctid, this.selectedSurfaces, ActionType.PROCEDURE, ProcedureOrder.THIRD);
+			this.secondProcedureId = this.thirdProcedureId;
+			this.thirdProcedureId = null;
+			this.lastProcedureAdded = 1;
+		}
 	}
 
 }
-

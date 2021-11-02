@@ -16,7 +16,7 @@
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
 		</section>
 
-		<section id="procedimientos" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD']">
+		<section id="procedimientos" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
 				[tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
 				[columns]="procedimientosService.getColumns()"
@@ -48,7 +48,7 @@
 								<mat-label [translate]="'internaciones.anamnesis.procedimientos.FECHA'">
 								</mat-label>
 								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-									formControlName="performedDate" [max]="procedimientosService.getFechaMax()">
+									formControlName="performedDate" [min]="minDate" [max]="procedimientosService.getFechaMax()">
 								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
 								<mat-datepicker #datePicker></mat-datepicker>
 							</mat-form-field>

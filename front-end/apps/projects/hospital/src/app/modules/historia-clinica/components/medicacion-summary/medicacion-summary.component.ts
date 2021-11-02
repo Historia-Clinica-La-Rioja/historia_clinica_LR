@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { MEDICACION } from '../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
 import { HealthConditionDto, MasterDataInterface, MedicationDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { SummaryHeader } from "@presentation/components/summary-card/summary-card.component";
 
 @Component({
 	selector: 'app-medicacion-summary',
@@ -12,8 +12,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 
 export class MedicacionSummaryComponent implements OnChanges {
 	@Input() medications: MedicationDto[];
-
-	public readonly medicacionSummary = MEDICACION;
+	@Input() medicationsHeader: SummaryHeader;
 
 	tableModel: TableModel<HealthConditionDto>;
 

@@ -31,4 +31,13 @@ public class ToothBo {
         logger.debug("Output -> {}", result);
         return result;
     }
+
+    public boolean isTemporary() {
+        return quadrantCode >= 5 && quadrantCode <= 8;
+    }
+
+    public boolean isPermanent() {
+        return quadrantCode >= 1 && quadrantCode <= 4;
+    }
+
 }

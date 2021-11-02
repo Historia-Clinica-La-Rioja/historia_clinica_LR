@@ -3,13 +3,14 @@ package net.pladema.permissions.service.impl;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.permissions.controller.external.LoggedUserExternalServiceImpl;
-import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
-import net.pladema.permissions.service.domain.UserBo;
+import net.pladema.permissions.service.LoggedUserStorage;
+import net.pladema.permissions.service.UserAssignmentService;
+import net.pladema.permissions.service.domain.LoggedUserBo;
 import net.pladema.permissions.service.dto.RoleAssignment;
-import net.pladema.user.repository.UserRepository;
-import net.pladema.user.repository.entity.User;
+import net.pladema.permissions.service.exceptions.LoggedUserException;
+import net.pladema.permissions.service.exceptions.LoggedUserExceptionEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,16 @@ public class LoggedUserServiceImpl implements LoggedUserService {
 	private static final Logger LOG = LoggerFactory.getLogger(LoggedUserExternalServiceImpl.class);
 	public static final String OUTPUT = "Output -> {}";
 
-	private final UserRoleRepository userRoleRepository;
+	private final UserAssignmentService userAssignmentService;
 
-	private final UserRepository userRepository;
+	private final LoggedUserStorage loggedUserStorage;
 
-	public LoggedUserServiceImpl(UserRoleRepository userRoleRepository, UserRepository userRepository) {
-		this.userRoleRepository = userRoleRepository;
-		this.userRepository = userRepository;
+	public LoggedUserServiceImpl(UserAssignmentService userAssignmentService,
+								 LoggedUserStorage loggedUserStorage) {
+		this.userAssignmentService = userAssignmentService;
+		this.loggedUserStorage = loggedUserStorage;
 	}
+
 
 	@Override
 	public Integer getUserId() {
@@ -40,13 +43,13 @@ public class LoggedUserServiceImpl implements LoggedUserService {
 
 	@Override
 	public List<RoleAssignment> getPermissionAssignment() {
-		return userRoleRepository.getRoleAssignments(getUserId());
+		return userAssignmentService.getRoleAssignment(getUserId());
 	}
 
 	@Override
-	public UserBo getInfo() {
-		User user = userRepository.findById(this.getUserId()).orElse(new User());
-		return new UserBo(user);
+	public LoggedUserBo getInfo() {
+		return loggedUserStorage.getUserInfo(this.getUserId())
+				.orElseThrow(() -> new LoggedUserException(LoggedUserExceptionEnum.INVALID_USER, "Usuario invalido"));
 	}
 
 	@Override
