@@ -401,38 +401,61 @@
 
 		<div id="signos-vitales">
 			<div class="margin-bottom">
-				<app-document-section class="margin-bottom"
-									  [sectionTitle]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TITLE'">
+				<h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TITLE'"></h2>
+					<div *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" class="dialog">
+						<mat-icon  online class="icon"  color="primary">error_outline</mat-icon>
+						<div class="info-text">
+							<span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DESCRIPTION'" [translateParams]="{date: signosVitalesNuevaConsultaService.getDate()}"> </span>
+							<span class="question" [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.QUESTION'"></span>
+							<span fxLayout="row">
+								<button class="button" id=include_vital_signs mat-button color="primary" (click)=signosVitalesNuevaConsultaService.savePreloadedVitalSignsData()>
+									<span [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.ADD'"></span>
+								</button>
+								<button class="button" id=discard_vital_signs mat-button color="warn" (click)=signosVitalesNuevaConsultaService.discardPreloadedVitalSignsData()>
+									<span [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DISCARD'"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+				<app-document-section class="margin-bottom">
 					<ng-container concept-form>
 						<form fxLayout="column" fxLayoutGap="10px" [formGroup]="signosVitalesNuevaConsultaService.getForm()">
 							<div fxLayout="row wrap" fxFlex="100%" fxLayoutGap="5px" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="heartRate">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'"></mat-label>
-									<mat-form-field [floatLabel]="'never'" appearance="outline">
-										<input id="heart_rate"
-											   name="heart_rate"
-											   formControlName="value"
-											   placeholder="00"
-											   type="number"
-											   matInput>
-									</mat-form-field>
+									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'"></mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="heart_rate"
+												name="heart_rate"
+												formControlName="value"
+												placeholder="00"
+												type="number"
+												matInput>
+										</mat-form-field>
+										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
+											<mat-icon  class="field-icon-vital-sign"  color="primary">error_outline</mat-icon>
+										</ng-container>
+									</div>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.heartRate.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'heartRate')">
 									</app-effective-time>
 								</div>
 								<div class="signos-vitales-field" formGroupName="respiratoryRate">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'"></mat-label>
-									<mat-form-field [floatLabel]="'never'" appearance="outline">
-										<input id="respiratory_rate"
-											   name="respiratory_rate"
-											   formControlName="value"
-											   placeholder="00"
-											   type="number"
-											   matInput>
-									</mat-form-field>
+									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'"></mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="respiratory_rate"
+												name="respiratory_rate"
+												formControlName="value"
+												placeholder="00"
+												type="number"
+												matInput>
+										</mat-form-field>
+										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
+											<mat-icon  class="field-icon-vital-sign"  color="primary">error_outline</mat-icon>
+										</ng-container>
+									</div>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'respiratoryRate')">
@@ -442,32 +465,40 @@
 
 							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="temperature">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'"></mat-label>
-									<mat-form-field [floatLabel]="'never'" appearance="outline">
-										<input id="temperature"
-											   name="temperature"
-											   formControlName="value"
-											   placeholder="00.0"
-											   type="number"
-											   matInput>
-									</mat-form-field>
+									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'"></mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="temperature"
+												name="temperature"
+												formControlName="value"
+												placeholder="00.0"
+												type="number"
+												matInput>
+										</mat-form-field>
+										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
+											<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
+										</ng-container>
+									</div>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.temperature.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'temperature')">
 									</app-effective-time>
 								</div>
 								<div class="signos-vitales-field" formGroupName="bloodOxygenSaturation">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'"></mat-label>
-									<mat-form-field [floatLabel]="'never'" appearance="outline">
-										<input id="blood_oxygen_saturation"
-											   name="blood_oxygen_saturation"
-											   formControlName="value"
-											   placeholder="00"
-											   type="number"
-											   matInput>
-									</mat-form-field>
+									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'"></mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="blood_oxygen_saturation"
+												name="blood_oxygen_saturation"
+												formControlName="value"
+												placeholder="00"
+												type="number"
+												matInput>
+										</mat-form-field>
+										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
+											<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
+										</ng-container>
+									</div>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
@@ -477,16 +508,20 @@
 
 							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="systolicBloodPressure">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
-									<mat-form-field [floatLabel]="'never'" appearance="outline">
-										<input id="systolic_blood_pressure"
-											   name="systolicBloodPressure"
-											   formControlName="value"
-											   placeholder="00"
-											   type="number"
-											   matInput>
-									</mat-form-field>
+									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="systolic_blood_pressure"
+												name="systolicBloodPressure"
+												formControlName="value"
+												placeholder="00"
+												type="number"
+												matInput>
+										</mat-form-field>
+											<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
+												<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
+											</ng-container>
+									</div>
 									<h5 class="recomendado recomendado-tension" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
@@ -494,16 +529,20 @@
 									</app-effective-time>
 								</div>
 								<div class="signos-vitales-field" formGroupName="diastolicBloodPressure">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
-									<mat-form-field [floatLabel]="'never'" appearance="outline">
-										<input id="diastolic_blood_pressure"
-											   name="diastolicBloodPressure"
-											   formControlName="value"
-											   placeholder="00"
-											   type="number"
-											   matInput>
-									</mat-form-field>
+									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+												<input id="diastolic_blood_pressure"
+												name="diastolicBloodPressure"
+												formControlName="value"
+												placeholder="00"
+												type="number"
+												matInput>
+										</mat-form-field>
+										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
+											<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
+										</ng-container>
+									</div>
 									<h5 class="recomendado recomendado-tension" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
