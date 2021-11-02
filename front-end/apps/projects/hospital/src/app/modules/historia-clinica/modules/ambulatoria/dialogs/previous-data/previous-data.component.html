@@ -1,0 +1,27 @@
+<div class="report" fxLayout="column" fxLayoutGap="7px" fxLayoutAlign="center center">
+
+	<div fxLayout="row" fxLayoutAlign="end">
+		<button matSuffix class="close" mat-icon-button [mat-dialog-close] (click)="goBack()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+    <div fxLayout="row" class="image" fxLayout="row" fxLayoutAlign="center">
+        <img src='assets/images/error_outline.png'>
+    </div>
+
+    <div fxLayout="column" class="message" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <span [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.CONTENT'"></span>
+		<span class="question" [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.ASK'"></span>
+    </div>
+
+    <mat-dialog-actions>
+        <button mat-raised-button color="primary" type="button" (click)="discardData()">
+            <span [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.ADD'"></span>
+        </button>
+        <button mat-stroked-button color="warn" (click)="addData()">
+            <span [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.DISCARD'"></span>
+        </button>
+    </mat-dialog-actions>
+
+</div>
