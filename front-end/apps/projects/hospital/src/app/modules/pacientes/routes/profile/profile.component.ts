@@ -6,6 +6,7 @@ import {
 	PersonPhotoDto,
 	UserDataDto
 } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
@@ -25,11 +26,15 @@ import { UserService } from "@api-rest/services/user.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { processErrors } from "@core/utils/form.utils";
+import { take } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { PermissionsService } from "@core/services/permissions.service";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
+const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
 
 @Component({
 	selector: 'app-profile',
@@ -69,6 +74,7 @@ export class ProfileComponent implements OnInit {
 		private readonly userService: UserService,
 		private readonly snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
+		private readonly permissionService: PermissionsService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -92,11 +98,15 @@ export class ProfileComponent implements OnInit {
 						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
-						this.userService.getUserData(this.personId)
-							.subscribe(userDataDto => {
-									this.userData = userDataDto
-									this.form.controls.enable.setValue(this.userData.enable);
-							});
+						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe( hasRoleToViewUserData => {
+							if (this.createUsersIsEnable && hasRoleToViewUserData) {
+								this.userService.getUserData(this.personId)
+									.subscribe(userDataDto => {
+										this.userData = userDataDto
+										this.form.controls.enable.setValue(this.userData.enable);
+									});
+							}
+						})
 					});
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
