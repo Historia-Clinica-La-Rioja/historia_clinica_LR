@@ -23,8 +23,8 @@ import { MyPersonalDataComponent } from './routes/my-personal-data/my-personal-d
 		CommonModule,
 		CoreModule,
 		PresentationModule,
-		HistoriaClinicaModule,
 		PortalPacienteRoutingModule,
+		HistoriaClinicaModule,
 	]
 })
 export class PortalPacienteModule {
