@@ -1,8 +1,7 @@
-package net.pladema.user.controller.service.validator;
+package net.pladema.user.application.validator;
 
 import net.pladema.permissions.RoleUtils;
 import net.pladema.permissions.repository.UserRoleRepository;
-import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;

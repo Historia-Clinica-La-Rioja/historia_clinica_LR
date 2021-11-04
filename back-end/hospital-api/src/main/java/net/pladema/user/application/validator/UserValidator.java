@@ -1,4 +1,4 @@
-package net.pladema.user.controller.service.validator;
+package net.pladema.user.application.validator;
 
 
 import net.pladema.sgx.exceptions.PermissionDeniedException;

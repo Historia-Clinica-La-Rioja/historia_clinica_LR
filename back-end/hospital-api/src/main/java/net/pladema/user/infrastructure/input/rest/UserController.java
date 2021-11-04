@@ -1,11 +1,11 @@
-package net.pladema.user.controller;
+package net.pladema.user.infrastructure.input.rest;
 
 import io.swagger.annotations.Api;
-import net.pladema.user.controller.dto.UserDataDto;
-import net.pladema.user.controller.mappers.UserDtoMapper;
-import net.pladema.user.controller.service.UpdateEnable.UpdateEnableService;
-import net.pladema.user.controller.service.createDefaultUser.CreateDefaultUserService;
-import net.pladema.user.controller.service.getUser.GetUserService;
+import net.pladema.user.application.updateEnable.UpdateEnable;
+import net.pladema.user.application.createDefaultUser.CreateDefaultUser;
+import net.pladema.user.application.getUser.GetUser;
+import net.pladema.user.infrastructure.input.rest.dto.UserDataDto;
+import net.pladema.user.infrastructure.input.rest.mapper.UserDataDtoMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,28 +26,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final Logger logger;
-    private final GetUserService getUserService;
-    private final UserDtoMapper userDtoMapper;
-    private final CreateDefaultUserService createDefaultUserService;
-    private final UpdateEnableService updateEnableService;
+    private final GetUser getUser;
+    private final UserDataDtoMapper userDataDtoMapper;
+    private final CreateDefaultUser createDefaultUser;
+    private final UpdateEnable updateEnable;
 
 
-    public UserController(GetUserService getUserService,
-                          UserDtoMapper userDtoMapper,
-                          CreateDefaultUserService createDefaultUserService,
-                          UpdateEnableService updateEnableService) {
+    public UserController(GetUser getUser,
+                          UserDataDtoMapper userDataDtoMapper,
+                          CreateDefaultUser createDefaultUser,
+                          UpdateEnable updateEnable) {
         this.logger = LoggerFactory.getLogger(this.getClass());
-        this.getUserService = getUserService;
-        this.userDtoMapper = userDtoMapper;
-        this.createDefaultUserService = createDefaultUserService;
-        this.updateEnableService = updateEnableService;
+        this.getUser = getUser;
+        this.userDataDtoMapper = userDataDtoMapper;
+        this.createDefaultUser = createDefaultUser;
+        this.updateEnable = updateEnable;
     }
 
     @GetMapping("/person/{personId}")
     public UserDataDto getUserData(@PathVariable(name = "institutionId") Integer institutionId,
                                    @PathVariable(name = "personId") Integer personId) {
         logger.debug("Input parameters -> {}", personId);
-        UserDataDto result = userDtoMapper.UserDataBoToUserDataDto(getUserService.run(personId));
+        UserDataDto result = userDataDtoMapper.UserDataBoToUserDataDto(getUser.run(personId));
         logger.debug("Output -> {}", result);
         return result;
     }
@@ -58,7 +58,7 @@ public class UserController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "personId") Integer personId) {
         logger.debug("Input parameters -> {}", personId);
-        Integer result = createDefaultUserService.run(personId);
+        Integer result = createDefaultUser.run(personId);
         logger.debug("Output -> {}", result);
         return result;
     }
@@ -71,7 +71,7 @@ public class UserController {
             @RequestBody Boolean enable
     ) {
         logger.debug("Input parameters -> userId {}, enable {}", userId, enable);
-        Boolean result = updateEnableService.run(userId, enable);
+        Boolean result = updateEnable.run(userId, enable);
         logger.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }

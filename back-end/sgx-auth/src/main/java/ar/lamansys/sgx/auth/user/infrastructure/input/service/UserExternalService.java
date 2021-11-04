@@ -17,4 +17,6 @@ public interface UserExternalService {
     void updatePassword(String username, String password);
 
     void updateLoginDate(String username);
+
+    void disableUser(String username);
 }

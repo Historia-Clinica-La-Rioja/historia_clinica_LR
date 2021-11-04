@@ -1,7 +1,7 @@
 package net.pladema.user.service;
 
 import net.pladema.user.controller.service.domain.UserPersonInfoBo;
-import net.pladema.user.service.domain.HospitalUserStorage;
+import net.pladema.user.application.port.HospitalUserStorage;
 import org.springframework.stereotype.Service;
 
 @Service

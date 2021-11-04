@@ -1,27 +1,29 @@
-package net.pladema.user.controller.dto;
+package net.pladema.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDataDto {
-    @Nullable
+@AllArgsConstructor
+public class UserDataBo {
+
     private Integer id;
-    @Nullable
     private String username;
-    @Nullable
     private Boolean enable;
-    @Nullable
     private LocalDateTime lastLogin;
 
-    public UserDataDto(Integer id){
+    public UserDataBo(Integer id){
+        this(id,null,null);
+    }
+    public UserDataBo(Integer id, String username, Boolean enable){
         this.id = id;
+        this.username = username;
+        this.enable = enable;
     }
 }

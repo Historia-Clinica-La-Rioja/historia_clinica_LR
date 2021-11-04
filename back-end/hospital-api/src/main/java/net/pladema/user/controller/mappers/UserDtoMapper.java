@@ -3,8 +3,6 @@ package net.pladema.user.controller.mappers;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import net.pladema.user.controller.dto.BackofficeUserDto;
-import net.pladema.user.controller.dto.UserDataDto;
-import net.pladema.user.controller.service.domain.UserDataBo;
 import net.pladema.user.repository.entity.VHospitalUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,12 +25,6 @@ public interface UserDtoMapper {
 	@Named("fromVHospitalUserToDto")
 	@Mapping(target = "id", source = "user.userId")
 	BackofficeUserDto fromVHospitalUserToDto(VHospitalUser user);
-
-	@Named("UserDataBoToUserDataDto")
-	UserDataDto UserDataBoToUserDataDto(UserDataBo user);
-
-	@Named("userDataBoToUserDataDto")
-	UserDataDto userDataBoToUserDataDto(UserDataBo user);
 
 	@Named("toVHospitalUser")
 	@Mapping(target = "userId", source = "dto.id")
