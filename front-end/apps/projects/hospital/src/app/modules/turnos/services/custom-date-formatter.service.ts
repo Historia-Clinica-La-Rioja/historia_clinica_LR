@@ -1,26 +1,22 @@
 import { Injectable } from '@angular/core';
 import { CalendarDateFormatter, DateFormatterParams } from 'angular-calendar';
-import { DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
+import { endOfISOWeek, startOfISOWeek } from 'date-fns';
+import { DatePipe } from '@angular/common';
+import { DEFAULT_LANG } from '../../../app.component';
+import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Injectable()
 export class CustomDateFormatter extends CalendarDateFormatter {
 
-	public weekViewTitle({ date, locale }: DateFormatterParams): string {
-		let start: string;
-		if (locale === 'es-AR') {
-			const startDay = dateToMoment(date).startOf('isoWeek').format('D');
-			const month = dateToMoment(date).startOf('isoWeek').format('MMMM');
-			start = `${startDay} de ${month}`;
-		} else {
-			start = dateToMoment(date).startOf('isoWeek').format('LL');
-		}
-		const end = dateToMoment(date).endOf('isoWeek').format('LL');
-
+	datePipe = new DatePipe(DEFAULT_LANG);
+	public weekViewTitle({ date }: DateFormatterParams): string {
+		const start = this.datePipe.transform(startOfISOWeek(date), DatePipeFormat.LONG_DATE)
+		const end = this.datePipe.transform(endOfISOWeek(date), DatePipeFormat.LONG_DATE)
 		return `${start} - ${end}`;
 	}
 
-	public dayViewTitle({date, locale}: DateFormatterParams): string {
-		return momentFormat(dateToMoment(date), DateFormat.HUMAN);
+	public dayViewTitle({ date }: DateFormatterParams): string {
+		return this.datePipe.transform(date, DatePipeFormat.LONG_DATE);
 	}
 
 }

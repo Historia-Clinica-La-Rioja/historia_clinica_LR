@@ -33,6 +33,7 @@ import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 import { MatPaginatorIntlAR } from '@presentation/components/table/table.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DEFAULT_LANG } from '../../app.component';
 
 @NgModule({
 	imports: [
@@ -104,9 +105,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 	],
 	providers: [
 		{
-			provide:
-			MAT_DATE_LOCALE,
-			useValue: 'es-AR'
+			provide: MAT_DATE_LOCALE,
+			useValue: DEFAULT_LANG
 		},
 		{
 			provide: DateAdapter,

@@ -14,7 +14,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Theme } from './components/exchangeable-theme/exchangeable-theme.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
-const DEFAULT_LANG = 'es-AR';
+export const DEFAULT_LANG = 'es-AR';
 
 @Component({
 	selector: 'app-root',
