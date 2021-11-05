@@ -1,6 +1,6 @@
 package net.pladema.sgx.backoffice.rest;
 
-import net.pladema.sgx.exceptions.PermissionDeniedException;
+import net.pladema.sgx.backoffice.exceptions.PermissionDeniedException;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import org.springframework.http.HttpMethod;
 

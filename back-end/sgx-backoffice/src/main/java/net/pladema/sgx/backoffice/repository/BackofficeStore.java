@@ -1,5 +1,6 @@
 package net.pladema.sgx.backoffice.repository;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,10 +29,9 @@ import java.util.Optional;
  * @param <I>
  */
 public interface BackofficeStore<E, I> {
+	Page<E> findAll(E example, Pageable pageable);
 
 	List<E> findAll();
-
-	Page<E> findAll(E example, Pageable pageable);
 
 	List<E> findAllById(List<I> ids);
 
@@ -40,4 +40,6 @@ public interface BackofficeStore<E, I> {
 	E save(E entity);
 
 	void deleteById(I id);
+
+    Example<E> buildExample(E entity);
 }
