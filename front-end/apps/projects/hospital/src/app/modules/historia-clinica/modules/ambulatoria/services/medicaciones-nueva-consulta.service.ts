@@ -1,12 +1,11 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL} from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
-import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
-import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
-import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
+import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 export interface Medicacion {
 	snomed: SnomedDto;
@@ -15,8 +14,6 @@ export interface Medicacion {
 }
 
 export class MedicacionesNuevaConsultaService {
-
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
@@ -120,7 +117,7 @@ export class MedicacionesNuevaConsultaService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.medicine
+				eclFilter: SnomedECL.MEDICINE
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

@@ -1,8 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
-import { SnomedDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { SEMANTICS_CONFIG } from '../constants/snomed-semantics';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment, momentParseDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
@@ -17,8 +16,6 @@ export interface Procedimiento {
 
 export class ProcedimientosService {
 
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
-
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
 	private readonly columns: ColumnConfig[];
@@ -27,7 +24,7 @@ export class ProcedimientosService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService,	
+		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 
 	) {
@@ -92,7 +89,7 @@ export class ProcedimientosService {
 			this.snackBarService.showError("Procedimiento duplicado");
 		}
 	}
-	
+
 	compareSpeciality(data: Procedimiento, data1: Procedimiento): boolean {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
@@ -121,7 +118,7 @@ export class ProcedimientosService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.procedure
+				eclFilter: SnomedECL.PROCEDURE
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

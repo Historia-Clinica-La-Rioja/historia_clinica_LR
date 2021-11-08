@@ -1,7 +1,6 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { SEMANTICS_CONFIG } from '../constants/snomed-semantics';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { newMoment } from '@core/utils/moment.utils';
@@ -25,8 +24,6 @@ export interface AmbulatoryConsultationProblem {
 }
 
 export class AmbulatoryConsultationProblemsService {
-
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	private readonly form: FormGroup;
 	private snomedConcept: SnomedDto;
@@ -166,7 +163,7 @@ export class AmbulatoryConsultationProblemsService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.diagnosis
+				eclFilter: SnomedECL.DIAGNOSIS
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from '@historia-clinica/constants/summaries';
@@ -12,7 +13,7 @@ import {
 	NuevaPrescripcionComponent
 } from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { VerResultadosEstudioComponent } from '../../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
-import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
+import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './../../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 
@@ -101,7 +102,7 @@ export class CardEstudiosComponent implements OnInit {
 						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY',
 						showDosage: false,
 						showStudyCategory: true,
-						eclTerm: 'procedure',
+						eclTerm: SnomedECL.PROCEDURE,
 					}
 				},
 				width: '35%',

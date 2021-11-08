@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SnomedDto } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -21,7 +21,6 @@ export class AddInmunizationComponent implements OnInit {
 	form: FormGroup;
 	loading = false;
 	today: Moment = newMoment();
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	searching = false;
 	snowstormServiceNotAvailable = false;
@@ -81,7 +80,7 @@ export class AddInmunizationComponent implements OnInit {
 	onSearch(searchValue: string): void {
 		if (searchValue) {
 			this.searching = true;
-			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
+			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: SnomedECL.VACCINE })
 				.subscribe(
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);

@@ -1,16 +1,15 @@
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SnomedDto} from '@api-rest/api-model';
-import {ColumnConfig} from '@presentation/components/document-section/document-section.component';
-import {SEMANTICS_CONFIG} from '../constants/snomed-semantics';
-import {SnomedSemanticSearch, SnomedService} from './snomed.service';
-import {pushIfNotExists, removeFrom} from '@core/utils/array.utils';
-import {newMoment} from '@core/utils/moment.utils';
-import {Moment} from 'moment';
-import {hasError} from '@core/utils/form.utils';
-import {Observable, Subject} from 'rxjs';
-import {TableColumnConfig} from '@presentation/components/document-section-table/document-section-table.component';
-import {CellTemplates} from '@presentation/components/cell-templates/cell-templates.component';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
+import { SnomedSemanticSearch, SnomedService } from './snomed.service';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
+import { newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
+import { hasError } from '@core/utils/form.utils';
+import { Observable, Subject } from 'rxjs';
+import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
+import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface Problema {
 	snomed: SnomedDto;
@@ -21,8 +20,6 @@ export interface Problema {
 }
 
 export class ProblemasService {
-
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	private readonly form: FormGroup;
 	private snomedConcept: SnomedDto;
@@ -138,7 +135,7 @@ export class ProblemasService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.diagnosis
+				eclFilter: SnomedECL.DIAGNOSIS
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
