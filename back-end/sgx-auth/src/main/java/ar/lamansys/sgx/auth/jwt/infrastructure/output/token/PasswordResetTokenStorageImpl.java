@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Service
 public class PasswordResetTokenStorageImpl implements PasswordResetTokenStorage {
 
@@ -28,6 +31,18 @@ public class PasswordResetTokenStorageImpl implements PasswordResetTokenStorage 
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token)
                 .orElseThrow(() ->
                         new PasswordResetTokenStorageException(PasswordResetTokenStorageEnumException.TOKEN_NOT_FOUND, String.format("Token %s inexistente ", token)));
+        return mapPasswordResetTokenBo(passwordResetToken);
+    }
+
+    @Override
+    public PasswordResetTokenBo createToken(Integer userId) {
+        logger.debug("Create password reset token for userId {} ",userId);
+        PasswordResetToken entity = new PasswordResetToken();
+        entity.setUserId(userId);
+        entity.setExpiryDate(LocalDateTime.now().plusDays(2));
+        entity.setToken(UUID.randomUUID().toString());
+        entity.setEnable(true);
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.save(entity);
         return mapPasswordResetTokenBo(passwordResetToken);
     }
 

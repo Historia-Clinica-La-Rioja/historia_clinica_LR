@@ -19,4 +19,6 @@ public interface UserExternalService {
     void updateLoginDate(String username);
 
     void disableUser(String username);
+
+    String createTokenPasswordReset(Integer userId);
 }

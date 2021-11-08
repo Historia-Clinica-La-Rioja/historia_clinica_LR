@@ -80,7 +80,7 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     public UserDataBo getUserByUsername(String username){
         return userExternalService.getUser(username)
                 .map(userInfoDto -> {
-                     return new UserDataBo(userInfoDto.getId(), userInfoDto.getUsername(), userInfoDto.isEnabled());
+                    return new UserDataBo(userInfoDto.getId(), userInfoDto.getUsername(), userInfoDto.isEnabled());
                 }).orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
     }
     @Override
@@ -89,12 +89,17 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
                 .map(userId -> vHospitalUserRepository.getOne(userId))
                 .map(vHospitalUser -> mapUserBo(vHospitalUser));
     }
-    
+
     @Override
     public Boolean hasPassword(Integer userId){
         return userExternalService.getUser(userId)
                 .map(userInfoDto -> userInfoDto.getPassword()!=null)
                 .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
+    }
+
+    @Override
+    public String createTokenPasswordReset(Integer userId) {
+        return userExternalService.createTokenPasswordReset(userId);
     }
 
     private UserDataBo mapUserBo(VHospitalUser vHospitalUser) {

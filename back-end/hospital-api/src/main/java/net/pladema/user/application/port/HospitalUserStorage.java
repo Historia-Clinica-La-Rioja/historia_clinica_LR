@@ -15,4 +15,5 @@ public interface HospitalUserStorage {
     void enableUser(Integer userId);
     void disableUser(Integer userId);
     Boolean hasPassword(Integer userId);
+    String createTokenPasswordReset(Integer userId);
 }
