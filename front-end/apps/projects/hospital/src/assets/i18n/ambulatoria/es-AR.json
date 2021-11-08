@@ -210,6 +210,10 @@
 					"DISCARD": "NO, DESCARTARLOS",
 					"DESCRIPTION": "Últimos datos signos vitales cargados previamente el {{date}} hs",
 					"QUESTION": "¿Desea incluirlos en la consulta? "
+				},
+				"solicitud-referencia": {
+					"TITLE": "Solicitud de referencia",
+					"ADD_REQUEST": "+ Agregar solicitud"
 				}
 			},
 			"problemas": {

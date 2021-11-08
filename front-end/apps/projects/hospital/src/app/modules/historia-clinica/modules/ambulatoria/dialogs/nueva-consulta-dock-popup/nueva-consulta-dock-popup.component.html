@@ -623,6 +623,11 @@
 			</app-document-section>
 		</div>
 
+		<div id="solicitud-referencia" class="referencia" fxLayout="column" fxLayoutGap="10px">
+			<h2 [translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE'"></h2>
+			<span class="primary" [translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST'"></span>
+		</div>
+
 		<div id="validations"
 			 *ngIf="!isValidConsultation() || apiErrors.length > 0">
 			<mat-card>
