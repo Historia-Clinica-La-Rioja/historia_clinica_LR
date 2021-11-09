@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Locale;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice(basePackages = "ar.lamansys.sgx.auth.jwt")
+@RestControllerAdvice(basePackages = {"ar.lamansys.sgx.auth",
+		"net.pladema.user.infrastructure.input.rest"})
 public class UserExceptionHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserExceptionHandler.class);

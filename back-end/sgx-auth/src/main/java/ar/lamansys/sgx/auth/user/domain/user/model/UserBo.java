@@ -12,7 +12,7 @@ public class UserBo {
     private Integer id;
 
     @Getter
-    private final String username;
+    private String username;
 
     @Getter
     private boolean enable;
@@ -76,6 +76,10 @@ public class UserBo {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 
 }

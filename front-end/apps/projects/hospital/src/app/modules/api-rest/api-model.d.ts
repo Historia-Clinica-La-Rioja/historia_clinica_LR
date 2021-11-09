@@ -71,6 +71,13 @@ export interface AbstractMasterdataDto<T> extends MasterDataInterface<T>, Serial
 export interface AbstractUserDto extends Serializable {
 }
 
+export interface AccessDataDto {
+    password: string;
+    token: string;
+    userId: number;
+    username: string;
+}
+
 export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;

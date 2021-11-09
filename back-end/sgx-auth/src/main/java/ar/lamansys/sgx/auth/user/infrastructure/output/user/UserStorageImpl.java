@@ -46,7 +46,12 @@ public class UserStorageImpl implements UserStorage {
                 .orElse(null);
 
         updateUser(userBo, user);
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        }catch (Exception e){
+            throw new UserStorageException(UserStorageEnumException.DUPLICATE_USER,
+                    "El nombre de usuario ya existe");
+        }
         if(userBo.getPassword()!=null) {
             userPassword = (userPassword != null)? updateUserPassword(userBo, userPassword)
                     : mapUserPassword(userBo, user);
