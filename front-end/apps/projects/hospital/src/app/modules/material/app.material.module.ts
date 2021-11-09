@@ -22,7 +22,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -63,7 +62,6 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatSliderModule,
 		MatSlideToggleModule,
 		MatSnackBarModule,
-		MatStepperModule,
 		MatTableModule,
 		MatTabsModule,
 		MatToolbarModule,
@@ -97,7 +95,6 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatSliderModule,
 		MatSlideToggleModule,
 		MatSnackBarModule,
-		MatStepperModule,
 		MatTableModule,
 		MatTabsModule,
 		MatToolbarModule,

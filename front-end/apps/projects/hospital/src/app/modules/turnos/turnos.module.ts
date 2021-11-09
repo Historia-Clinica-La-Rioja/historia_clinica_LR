@@ -19,6 +19,7 @@ import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-
 import { MedicalCoverageComponent } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { AgendaComponent } from './routes/agenda/agenda.component';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { AgendaComponent } from './routes/agenda/agenda.component';
 		PresentationModule,
 		TurnosRoutingModule,
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+		LazyMaterialModule
 	],
 	providers: [
 		{
