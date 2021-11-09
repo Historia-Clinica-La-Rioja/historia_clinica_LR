@@ -214,7 +214,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			}
 		} else {
 			this.disableConfirmButton = false;
-			this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+			this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
 		}
 	}
 
@@ -237,7 +237,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	private createConsultation(nursingConsultationDto: NursingConsultationDto) {
 		this.nursingPatientConsultationService.createNursingPatientConsultation(nursingConsultationDto, this.data.idPaciente).subscribe(
 			_ => {
-				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
+				this.snackBarService.showSuccess('ambulatoria.paciente.new-nursing-consultation.messages.SUCCESS');
 				this.dockPopupRef.close(mapToFieldsToUpdate(nursingConsultationDto));
 			},
 			response => {
@@ -246,7 +246,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 					response.errors.forEach(val => {
 						this.apiErrors.push(val);
 					});
-				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+				this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
 			}
 		);
 

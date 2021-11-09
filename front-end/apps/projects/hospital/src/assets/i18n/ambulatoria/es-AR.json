@@ -26,7 +26,11 @@
 			"new-nursing-consultation":{
 				"TITLE": "Nueva consulta de enfermería",
 				"ASSOCIATED_PROBLEM":"Problema asociado",
-				"SPECIALTY": "Especialidad"
+				"SPECIALTY": "Especialidad",
+				"messages": {
+					"ERROR": "Error al guardar el documento nueva consulta de enfermería",
+					"SUCCESS": "El documento nueva consulta de enfermería se guardó exitosamente"
+				}
 			},
 			"nueva-consulta": {
 				"TITLE": "Nueva consulta",
