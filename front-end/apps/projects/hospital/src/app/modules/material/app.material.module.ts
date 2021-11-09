@@ -20,7 +20,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -60,7 +59,6 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatSelectModule,
 		MatSidenavModule,
 		MatSliderModule,
-		MatSlideToggleModule,
 		MatSnackBarModule,
 		MatTableModule,
 		MatTabsModule,
@@ -93,7 +91,6 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatSelectModule,
 		MatSidenavModule,
 		MatSliderModule,
-		MatSlideToggleModule,
 		MatSnackBarModule,
 		MatTableModule,
 		MatTabsModule,

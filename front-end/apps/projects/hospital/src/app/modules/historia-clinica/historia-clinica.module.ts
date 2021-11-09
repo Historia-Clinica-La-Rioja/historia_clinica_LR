@@ -29,6 +29,7 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 import { DocumentSectionComponent } from '../presentation/components/document-section/document-section.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { InternacionAntecedentesPersonalesSummaryComponent } from './components/
 		ApiRestModule,
 		PresentationModule,
 		InstitucionModule,
+		LazyMaterialModule,
 	],
 	exports: [
 		AlergiasSummaryComponent,

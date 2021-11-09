@@ -17,6 +17,7 @@ import { ViewPatientDetailComponent } from './component/view-patient-detail/view
 import { EditPatientComponent } from './routes/edit-patient/edit-patient.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { ReportsComponent } from './dialogs/reports/reports.component';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 
 @NgModule({
 	declarations: [
@@ -38,6 +39,7 @@ import { ReportsComponent } from './dialogs/reports/reports.component';
 		CoreModule,
 		PresentationModule,
 		PacientesRoutingModule,
+		LazyMaterialModule
 	]
 })
 export class PacientesModule {
