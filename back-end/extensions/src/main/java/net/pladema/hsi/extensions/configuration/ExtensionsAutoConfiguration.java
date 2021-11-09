@@ -1,16 +1,21 @@
 package net.pladema.hsi.extensions.configuration;
 
-import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
-import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
-import net.pladema.hsi.extensions.infrastructure.repository.RestExtensionService;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
+import net.pladema.hsi.extensions.configuration.plugins.SystemMenuExtensionPlugin;
 import net.pladema.hsi.extensions.domain.ExtensionService;
 import net.pladema.hsi.extensions.infrastructure.repository.DefaultExtensionService;
 import net.pladema.hsi.extensions.infrastructure.repository.DemoExtensionService;
+import net.pladema.hsi.extensions.infrastructure.repository.RestExtensionService;
+import net.pladema.hsi.extensions.infrastructure.repository.WrapperExtensionService;
+
 
 @Configuration
 @ComponentScan(basePackages = "net.pladema.hsi.extensions")
@@ -18,7 +23,17 @@ import net.pladema.hsi.extensions.infrastructure.repository.DemoExtensionService
 public class ExtensionsAutoConfiguration {
 
 	@Bean
-	public ExtensionService implExtensionService(RestExtensionWsConfig wsConfig) throws Exception {
+	public ExtensionService implExtensionService(
+			RestExtensionWsConfig wsConfig,
+			List<SystemMenuExtensionPlugin> systemMenuExtensionPlugins
+	) throws Exception {
+		return new WrapperExtensionService(
+				fromConfig(wsConfig),
+				systemMenuExtensionPlugins
+		);
+	}
+
+	private static ExtensionService fromConfig(RestExtensionWsConfig wsConfig) throws Exception {
 		if (wsConfig.getBaseUrl() == null || wsConfig.getBaseUrl().isBlank())
 			return new DefaultExtensionService();
 		if ("demo".equals(wsConfig.getBaseUrl()))

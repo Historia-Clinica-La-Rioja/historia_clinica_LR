@@ -17,7 +17,7 @@ Para cumplir con el propósito mencionado se creó un módulo bajo la carpeta de
 
 Actualmente SGH brinda tres puntos de extensión de la aplicación:
 
-* Extender el menú en la página principal del sistemas.
+* Extender el menú en la página principal del sistema.
 * Extender el menú una vez dentro de una institución.
 * Extender los tabs de la historia clínica de un paciente.  
 
@@ -62,4 +62,31 @@ Para conocer cómo es posible agregar componentes, se agrego un item al menu de 
  [1]: https://material.angular.io/guide/typography#using-typography-styles-in-your-application
  [2]: https://git.pladema.net/minsalud/sgh-os/-/blob/67b497d838947e7cccfa41bda1f9fa6279fa4bbf/front-end/apps/projects/hospital/src/app/modules/presentation/components/ui-component/ui-component.component.html
 
+# Extensiones Locales
 
+Los puntos de extensión también pueden ser aprovechados por módulos opcionales del sistema para mostrar información particular. Por ejemplo, el módulo [sgx-dashboards](../sgx-dashboards/src/main/java/ar/lamansys/sgx/cubejs/infrastructure/configuration/CubejsAutoConfiguration.java) cuando está activo extiende el menú en la página principal del sistema para mostrar tableros (actualmente un placeholder).
+
+Para agregar un menú en la página principal del sistema se debe crear un `@Bean` que implemente `SystemMenuExtensionPlugin` conteniendo información del menú y la página asociada. Convenientemente se implementó el método [SystemMenuExtensionPlugin fromResources(String menuId)](../extensions/src/main/java/net/pladema/hsi/extensions/configuration/plugins/SystemMenuExtensionPluginBuilder.java) que sencillamente retorna `menu` y su `page` cargando el json correspondiente en `classpath:extension/{menuId}/menu_o_page.json`.
+
+> Nota: cada módulo puede tener estos recursos dentro de su carpeta 'resources', como [sgx-dashboards](../sgx-dashboards/src/main/resources/extension/tableros/).
+
+Esto crea una dependencia de este módulo con `extensions`, en el [pom.xml](../sgx-dashboards/pom.xml#L24). 
+
+``` xml
+ <dependency>
+     <groupId>ar.lamansys</groupId>
+     <artifactId>extensions</artifactId>
+     <version>${revision}</version>
+     <scope>compile</scope>
+ </dependency>
+```
+
+Esta dependencia no es un problema si es desde un módulo `net.pladema.sgh` (los módulos `sgx-` no deberían tener esta dependencia).
+
+## FeatureFlags
+
+Definir si se necesita integración con FeatureFlags
+
+## Authorization
+
+Será necesario que las extensiones estén habilitadas para determinados roles.

@@ -20,8 +20,9 @@ public class UIPageDto {
 	public static UIPageDto pageMessage(String textMessage) {
 		return new UIPageDto(
 				"message",
-				new UIComponentDto[]{new UIComponentDto("text", Map.of("text", textMessage), new UIComponentDto[0], new UIComponentDto[0])}
+				new UIComponentDto[]{new UIComponentDto("text", Map.of("text", textMessage))}
 
 		);
 	}
+
 }
