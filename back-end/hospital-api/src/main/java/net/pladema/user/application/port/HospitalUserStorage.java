@@ -1,6 +1,6 @@
 package net.pladema.user.application.port;
-
 import net.pladema.user.controller.service.domain.UserPersonInfoBo;
+import net.pladema.user.domain.PersonDataBo;
 import net.pladema.user.domain.UserDataBo;
 
 import java.util.Optional;
@@ -16,4 +16,7 @@ public interface HospitalUserStorage {
     void disableUser(Integer userId);
     Boolean hasPassword(Integer userId);
     String createTokenPasswordReset(Integer userId);
+    Integer getUserIdByToken(String token);
+    PersonDataBo getPersonDataBoByUserId(Integer userId);
+
 }

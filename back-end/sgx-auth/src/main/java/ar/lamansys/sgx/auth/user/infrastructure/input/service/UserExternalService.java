@@ -21,4 +21,6 @@ public interface UserExternalService {
     void disableUser(String username);
 
     String createTokenPasswordReset(Integer userId);
+
+    Integer getUserIdByToken(String token);
 }

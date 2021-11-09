@@ -1,10 +1,12 @@
 package net.pladema.user.infrastructure.output;
 
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.application.port.exceptions.UserPersonStorageEnumException;
 import net.pladema.user.application.port.exceptions.UserPersonStorageException;
 import net.pladema.user.controller.service.domain.UserPersonInfoBo;
+import net.pladema.user.domain.PersonDataBo;
 import net.pladema.user.domain.UserDataBo;
 import net.pladema.user.repository.UserPersonRepository;
 import net.pladema.user.repository.VHospitalUserRepository;
@@ -86,8 +88,8 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     @Override
     public Optional<UserDataBo> getUserDataByPersonId(Integer personId) {
         return userPersonRepository.getUserIdByPersonId(personId)
-                .map(userId -> vHospitalUserRepository.getOne(userId))
-                .map(vHospitalUser -> mapUserBo(vHospitalUser));
+                .map(vHospitalUserRepository::getOne)
+                .map(this::mapUserBo);
     }
 
     @Override
@@ -100,6 +102,28 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     @Override
     public String createTokenPasswordReset(Integer userId) {
         return userExternalService.createTokenPasswordReset(userId);
+    }
+
+    @Override
+    public Integer getUserIdByToken(String token) {
+        return userExternalService.getUserIdByToken(token);
+    }
+
+    @Override
+    public PersonDataBo getPersonDataBoByUserId(Integer userId) {
+        return userPersonRepository.getPersonIdByUserId(userId)
+                .map(personExternalService::getBasicDataPerson)
+                .map(dataPerson -> mapPersonDataBo(dataPerson,userId))
+                .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
+    }
+
+    private PersonDataBo mapPersonDataBo(BasicDataPersonDto person,Integer userId) {
+        return new PersonDataBo(
+                person.getFirstName(),
+                person.getLastName(),
+                person.getIdentificationType(),
+                person.getIdentificationNumber(),
+                userId);
     }
 
     private UserDataBo mapUserBo(VHospitalUser vHospitalUser) {
@@ -117,3 +141,4 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
         return userPersonInfoBo;
     }
 }
+
