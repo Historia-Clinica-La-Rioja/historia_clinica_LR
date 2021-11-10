@@ -1,6 +1,8 @@
 package net.pladema.snowstorm.services.impl;
 
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import ar.lamansys.sgx.shared.restclient.services.RestClient;
+import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
 import net.pladema.snowstorm.configuration.SnowstormRestTemplateAuth;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
 import net.pladema.snowstorm.repository.SnowstormRepository;
@@ -12,22 +14,20 @@ import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
-import net.pladema.snowstorm.services.exceptions.SnowstormTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.pladema.snowstorm.services.exceptions.SnowstormEnumException.SNOWSTORM_TIMEOUT_SERVICE;
 
 @Service
-public class SnowstormServiceImpl extends RestClient implements SnowstormService {
+public class SnowstormServiceImpl implements SnowstormService {
 
     public static final String FAIL_COMMUNICATION = "Fallo la comunicación con el servidor de snowstorm -> %s";
-    public static final String SNOWSTORM_FAIL_SERVICE = "Snowstorm fail service ";
     public static final String OUTPUT = "Output -> {}";
     private final Logger logger;
 
@@ -37,19 +37,21 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
 
     private final SnowstormRepository snowstormRepository;
 
+    private final RestClientInterface restClientInterface;
+
     public SnowstormServiceImpl(SnowstormRestTemplateAuth restTemplateSSL,
                                 SnowstormWSConfig wsConfig,
                                 SnomedSemantics snomedSemantics,
                                 SnowstormRepository snowstormRepository) {
-        super(restTemplateSSL, wsConfig);
         this.snowstormWSConfig = wsConfig;
         this.snomedSemantics = snomedSemantics;
         this.snowstormRepository = snowstormRepository;
-        logger = LoggerFactory.getLogger(CalculateCie10CodesServiceImpl.class);
+        this.restClientInterface = new RestClient(restTemplateSSL, wsConfig);
+        this.logger = LoggerFactory.getLogger(CalculateCie10CodesServiceImpl.class);
     }
 
     @Override
-    public SnowstormSearchResponse getConcepts(String term, String eclKey) {
+    public SnowstormSearchResponse getConcepts(String term, String eclKey) throws RestTemplateApiException {
 
         StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getConceptsUrl());
 
@@ -68,41 +70,31 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
             var snomedEcl = SnomedECL.map(eclKey);
             urlWithParams.append("&ecl=" + snomedSemantics.getEcl(snomedEcl));
         }
-
-        SnowstormSearchResponse result;
-        try {
-            ResponseEntity<SnowstormSearchResponse> response = exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
-            result = response.getBody();
-            if (result == null)
-                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        } catch (Exception e) {
-            logger.error(SNOWSTORM_FAIL_SERVICE, e);
-            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        }
+        ResponseEntity<SnowstormSearchResponse> response = restClientInterface.exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
+        SnowstormSearchResponse result = response.getBody();
+        if (result == null)
+            throw new RestTemplateApiException(HttpStatus.OK, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
         return result;
     }
 
     @Override
-    public List<SnowstormItemResponse> getConceptAncestors(String conceptId) {
+    public List<SnowstormItemResponse> getConceptAncestors(String conceptId) throws RestTemplateApiException {
         String urlWithParams = snowstormWSConfig.getBrowserConceptUrl()
                 .concat(conceptId)
                 .concat("/ancestors")
                 .concat("?form=inferred");
 
         SnowstormConcept result;
-        try {
-            ResponseEntity<SnowstormConcept> response = exchangeGet(urlWithParams, SnowstormConcept.class);
-            result = response.getBody();
-            if (result == null)
-                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        } catch (Exception e) {
-            logger.error(SNOWSTORM_FAIL_SERVICE, e);
-            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        }
+
+        ResponseEntity<SnowstormConcept> response = restClientInterface.exchangeGet(urlWithParams, SnowstormConcept.class);
+        result = response.getBody();
+        if (result == null)
+            throw new RestTemplateApiException(HttpStatus.OK, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+
         return result.getItems();
     }
 
-    public <T> T getRefsetMembers(String referencedComponentId, String referenceSetId, String limit, Class<T> type) {
+    public <T> T getRefsetMembers(String referencedComponentId, String referenceSetId, String limit, Class<T> type) throws RestTemplateApiException {
         StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getRefsetMembersUrl());
 
         urlWithParams.append("?referenceSet=" + referenceSetId);
@@ -112,35 +104,29 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
         urlWithParams.append("&limit=" + limit);
 
         T result;
-        try {
-            ResponseEntity<T> response = exchangeGet(urlWithParams.toString(), type);
-            result = response.getBody();
-            if (result == null)
-                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        } catch (Exception e) {
-            logger.error(SNOWSTORM_FAIL_SERVICE, e);
-            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        }
+
+        ResponseEntity<T> response = restClientInterface.exchangeGet(urlWithParams.toString(), type);
+        result = response.getBody();
+        if (result == null)
+            throw new RestTemplateApiException(HttpStatus.OK, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+
         return result;
     }
 
     @Override
-    public SnowstormSearchResponse getConcepts(String ecl) {
+    public SnowstormSearchResponse getConcepts(String ecl) throws RestTemplateApiException {
         StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getConceptsUrl());
 
         urlWithParams.append("?termActive=" + snowstormWSConfig.getTermActive());
         urlWithParams.append("&ecl=" + ecl);
 
         SnowstormSearchResponse result;
-        try {
-            ResponseEntity<SnowstormSearchResponse> response = exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
-            result = response.getBody();
-            if (result == null)
-                throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        } catch (Exception e) {
-            logger.error(SNOWSTORM_FAIL_SERVICE, e);
-            throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
-        }
+
+        ResponseEntity<SnowstormSearchResponse> response = restClientInterface.exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
+        result = response.getBody();
+        if (result == null)
+            throw new RestTemplateApiException(HttpStatus.OK, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
+
         return result;
     }
 

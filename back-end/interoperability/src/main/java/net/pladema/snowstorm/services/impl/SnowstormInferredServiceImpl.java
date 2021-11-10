@@ -1,5 +1,6 @@
 package net.pladema.snowstorm.services.impl;
 
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import net.pladema.snowstorm.services.SnowstormInferredService;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
@@ -20,9 +21,13 @@ public class SnowstormInferredServiceImpl implements SnowstormInferredService {
 
     @Override
     public InferredAllergyAttributes getInferredAllergyAttributes(String conceptId) {
-        List<SnowstormItemResponse> ancestors = snowstormService.getConceptAncestors(conceptId);
-        if(!ancestors.isEmpty())
-            return InferredAllergyRules.inferred(ancestors);
+        try {
+            List<SnowstormItemResponse> ancestors = snowstormService.getConceptAncestors(conceptId);
+            if(!ancestors.isEmpty())
+                return InferredAllergyRules.inferred(ancestors);
+        } catch (RestTemplateApiException e) {
+            return null;
+        }
         return null;
     }
 }

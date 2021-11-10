@@ -1,5 +1,6 @@
 package net.pladema.snowstorm.services.impl;
 
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import net.pladema.snowstorm.services.CalculateCie10CodesService;
 import net.pladema.snowstorm.services.Cie10RuleChecker;
 import net.pladema.snowstorm.services.SnowstormService;
@@ -33,10 +34,9 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
     }
 
     @Override
-    public String execute(String sctid, Cie10RuleFeature features) {
+    public String execute(String sctid, Cie10RuleFeature features) throws RestTemplateApiException {
         LOG.debug("Input parameters -> sctid {}, patient {}", sctid, features);
-        SnowstormCie10RefsetMembersResponse cie10RefsetMembers =
-                snowstormService.getRefsetMembers(sctid, CIE10_REFERENCE_SET_ID, CIE10_LIMIT, SnowstormCie10RefsetMembersResponse.class);
+        SnowstormCie10RefsetMembersResponse cie10RefsetMembers = snowstormService.getRefsetMembers(sctid, CIE10_REFERENCE_SET_ID, CIE10_LIMIT, SnowstormCie10RefsetMembersResponse.class);
         List<String> cie10CodesList = calculateCie10Codes(cie10RefsetMembers, features);
         String cie10Codes = cie10CodesList.isEmpty() ? null : concatCodes(cie10CodesList);
         LOG.debug(OUTPUT, cie10Codes);

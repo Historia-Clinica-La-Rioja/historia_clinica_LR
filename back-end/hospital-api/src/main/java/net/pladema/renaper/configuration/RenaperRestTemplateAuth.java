@@ -1,9 +1,9 @@
 package net.pladema.renaper.configuration;
 
-import org.springframework.context.annotation.Conditional;
-import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateAuth;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.stereotype.Service;
 
 @Service
 @Conditional(RenaperCondition.class)

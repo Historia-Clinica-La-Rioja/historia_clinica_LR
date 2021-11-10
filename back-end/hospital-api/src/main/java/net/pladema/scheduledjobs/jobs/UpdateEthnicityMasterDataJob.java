@@ -1,5 +1,6 @@
 package net.pladema.scheduledjobs.jobs;
 
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import net.pladema.person.controller.mapper.EthnicityMapper;
 import net.pladema.person.controller.service.PersonMasterDataExternalService;
 import net.pladema.snowstorm.services.SnowstormService;
@@ -43,7 +44,7 @@ public class UpdateEthnicityMasterDataJob {
             "${scheduledjobs.updateethnicities.dayofmonth} " +
             "${scheduledjobs.updateethnicities.month} " +
             "${scheduledjobs.updateethnicities.dayofweek}")
-    public void execute(){
+    public void execute() throws RestTemplateApiException {
         LOG.debug("Executing UpdateEthnicityMasterDataJob at {}", new Date());
         SnowstormSearchResponse response = snowstormService.getConcepts(ECL);
         personMasterDataExternalService.updateActiveEthnicities(ethnicityMapper.fromSnowstormItemResponseList(response.getItems()));

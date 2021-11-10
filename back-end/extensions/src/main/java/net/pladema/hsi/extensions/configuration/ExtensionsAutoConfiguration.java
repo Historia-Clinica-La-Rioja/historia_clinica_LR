@@ -1,12 +1,5 @@
 package net.pladema.hsi.extensions.configuration;
 
-import java.util.List;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-
 import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import net.pladema.hsi.extensions.configuration.plugins.SystemMenuExtensionPlugin;
@@ -15,6 +8,12 @@ import net.pladema.hsi.extensions.infrastructure.repository.DefaultExtensionServ
 import net.pladema.hsi.extensions.infrastructure.repository.DemoExtensionService;
 import net.pladema.hsi.extensions.infrastructure.repository.RestExtensionService;
 import net.pladema.hsi.extensions.infrastructure.repository.WrapperExtensionService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+
+import java.util.List;
 
 
 @Configuration
