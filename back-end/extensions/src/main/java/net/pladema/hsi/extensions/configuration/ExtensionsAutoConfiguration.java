@@ -24,10 +24,12 @@ public class ExtensionsAutoConfiguration {
 
 	@Bean
 	public ExtensionService implExtensionService(
+			ExtensionAuthorization extensionAuthorization,
 			RestExtensionWsConfig wsConfig,
 			List<SystemMenuExtensionPlugin> systemMenuExtensionPlugins
 	) throws Exception {
 		return new WrapperExtensionService(
+				extensionAuthorization,
 				fromConfig(wsConfig),
 				systemMenuExtensionPlugins
 		);
