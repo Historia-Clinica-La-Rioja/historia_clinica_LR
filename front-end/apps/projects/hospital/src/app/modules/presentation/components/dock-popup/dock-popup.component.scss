@@ -1,5 +1,13 @@
 @import '../../../../../assets/styles/variables.scss';
 
+.dock-popup {
+	box-shadow: 0 4px 30px 0px rgba(0, 0, 0, 0.50);
+}
+
+#popup-header {
+	border-radius: 5px 5px 0 0;
+}
+
 .action-bar {
 	max-height: 10vh;
 	padding: 0 2vw;
@@ -9,6 +17,9 @@
 
 	.title {
 		font-size: large;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	button {
@@ -19,18 +30,18 @@
 }
 
 .content {
-	max-height: 60vh;
+	max-height: 88vh;
 
 	.body {
-		max-height: 50vh;
+		max-height: 75vh;
 		padding: 35px 30px;
 		overflow-y: auto
 	}
 
 	.actions {
 		justify-content: flex-end;
-		margin-right: 2vw;
-		margin-bottom: 2vh;
+		padding: 20px;
+		box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
 	}
 }
 

@@ -1,13 +1,13 @@
 <div class="dock-popup" fxLayout="column" style="background-color: white">
-	<div fxLayout="row" fxLayoutAlign="space-between center"
+	<div id="popup-header" fxLayout="row" fxLayoutAlign="space-between center"
 		 class="background-color-primary action-bar"
 		 (click)="toggle(); $event.stopPropagation()">
 		<div id="title" class="mat-body-1 title">
 			{{ title | translate }}
 		</div>
-		<div>
+		<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="3px">
 			<button id="minimize-maximize" mat-icon-button (click)="toggle(); $event.stopPropagation()">
-				<mat-icon *ngIf="!dockPopupRef.isMinimized() else openInFull">minimize</mat-icon>
+				<mat-icon *ngIf="!dockPopupRef.isMinimized() else maximizePopup">minimize</mat-icon>
 			</button>
 			<button id="close" mat-icon-button (click)="close(); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
@@ -15,7 +15,7 @@
 		</div>
 	</div>
 
-	<div class="content app-background-color" fxLayout="column" fxLayoutGap="20px">
+	<div class="content app-background-color" fxLayout="column">
 		<div id="dock-popup-body" class="body" *ngIf="!dockPopupRef.isMinimized()">
 			<ng-content select="[body]"></ng-content>
 		</div>
@@ -26,6 +26,6 @@
 	</div>
 </div>
 
-<ng-template #openInFull>
-	<mat-icon>open_in_full</mat-icon>
+<ng-template #maximizePopup>
+	<mat-icon>maximize</mat-icon>
 </ng-template>

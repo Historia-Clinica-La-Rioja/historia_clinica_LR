@@ -60,8 +60,8 @@ export class DockPopupService {
 		const overlayConfig = new OverlayConfig({
 			scrollStrategy: this.overlay.scrollStrategies.noop(),
 			positionStrategy,
-			maxHeight: '70vh',
-			width: '30vw',
+			maxHeight: '95vh',
+			width: '40vw',
 			panelClass: ['dock-popup-overlay', 'maximized'],
 		});
 

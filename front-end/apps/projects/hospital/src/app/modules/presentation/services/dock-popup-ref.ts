@@ -49,4 +49,5 @@ export class DockPopupRef {
 	isMinimized(): boolean {
 		return this.minimized;
 	}
+
 }
