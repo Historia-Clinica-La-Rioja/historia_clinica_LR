@@ -248,8 +248,8 @@
 							</div>
 
 							<div fxLayout="column" fxFlex.gt-sm="70" class="historical-list"
-								id="historical-problem-mapping" *ngIf="this.historicalProblemsList?.length">
-								<div *ngFor="let historicalProblem of this.historicalProblemsList">
+								id="historical-problem-mapping" *ngIf="historicalProblemsList?.length">
+								<div *ngFor="let historicalProblem of historicalProblemsList">
 									<div class="historical-item">
 										<div fxLayout="row" fxLayoutGap="15px">
 											<div fxFlex="7" fxLayout="row" fxLayoutAlign="end">
@@ -352,7 +352,7 @@
 
 			</mat-tab>
 
-			<ng-container *ngIf="this.showExternalClinicalHistoryTab">
+			<ng-container *ngIf="showExternalClinicalHistoryTab">
 				<mat-tab>
 					<ng-template mat-tab-label>
 						<span class="tab-label">
@@ -367,25 +367,25 @@
 								<div class="filter-panel historical-item" fxFlex.gt-sm="30">
 									<div fxLayout="row" fxLayoutAlign="space-between center">
 										<mat-card-subtitle>
-											<span *ngIf="this.externalClinicalHistoryList">
+											<span *ngIf="externalClinicalHistoryList">
 												{{ externalClinicalHistoryAmount }} {{
 												'ambulatoria.paciente.problemas.RESULTS' | translate }}
 											</span>
 										</mat-card-subtitle>
 										<button mat-icon-button color="primary" fxShow.gt-sm="false"
-											(click)="this.toggleExternalFilters()">
+											(click)="toggleExternalFilters()">
 											<mat-icon fontSet="material-icons-outlined">filter_list</mat-icon>
 										</button>
 									</div>
-									<div fxLayout="column" [fxShow]="this.showExternalFilters" fxShow.gt-sm="true">
+									<div fxLayout="column" [fxShow]="showExternalFilters" fxShow.gt-sm="true">
 										<app-external-clinical-histories-filters>
 										</app-external-clinical-histories-filters>
 									</div>
 								</div>
 
 								<div fxLayout="column" fxFlex.gt-sm="70" class="historical-list"
-									*ngIf="this.externalClinicalHistoryList?.length">
-									<div *ngFor="let externalClinicalHistory of this.externalClinicalHistoryList">
+									*ngIf="externalClinicalHistoryList?.length">
+									<div *ngFor="let externalClinicalHistory of externalClinicalHistoryList">
 										<div class="historical-item">
 											<app-external-clinical-history
 												[externalClinicalHistory]="externalClinicalHistory">
@@ -396,14 +396,14 @@
 								</div>
 
 								<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
-									*ngIf="!this.externalHistoriesInformation">
+									*ngIf="!externalHistoriesInformation">
 									<div class="no-data-styles">
 										<span [translate]="'messages.NO_DATA'"></span>
 									</div>
 								</section>
 
 								<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex.gt-sm="70"
-									*ngIf="this.externalHistoriesInformation && !this.externalClinicalHistoryList?.length">
+									*ngIf="externalHistoriesInformation && !externalClinicalHistoryList?.length">
 									<div class="no-data-styles">
 										<span
 											[translate]="'ambulatoria.paciente.problemas.NO_FILTERED_PROBLEMS'"></span>

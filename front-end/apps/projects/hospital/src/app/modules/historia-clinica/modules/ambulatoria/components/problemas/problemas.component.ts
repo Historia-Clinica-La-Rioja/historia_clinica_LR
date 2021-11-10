@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
 	PROBLEMAS_ACTIVOS,
 	PROBLEMAS_CRONICOS,
@@ -75,6 +75,13 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public showExternalClinicalHistoryTab: boolean = false;
 	public externalHistoriesInformation: boolean = false;
 
+	// Injected dependencies
+	private contextService: ContextService;
+	private dockPopupService: DockPopupService;
+	private readonly internacionMasterDataService: InternacionMasterDataService;
+	private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService;
+	private readonly featureFlagService: FeatureFlagService;
+
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private historicalProblemsFacadeService: HistoricalProblemsFacadeService,
@@ -82,16 +89,18 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private readonly router: Router,
 		public dialog: MatDialog,
-		private contextService: ContextService,
-		private dockPopupService: DockPopupService,
-		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService,
-		private readonly featureFlagService: FeatureFlagService
+		private injector: Injector
 	) {
+		this.contextService = this.injector.get<ContextService>(ContextService);
+		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
+		this.internacionMasterDataService = this.injector.get<InternacionMasterDataService>(InternacionMasterDataService);
+		this.externalClinicalHistoryService = this.injector.get<ExternalClinicalHistoryFacadeService>(ExternalClinicalHistoryFacadeService);
+		this.featureFlagService = this.injector.get<FeatureFlagService>(FeatureFlagService);
+
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
-				externalClinicalHistoryService.loadInformation(this.patientId);
+				this.externalClinicalHistoryService.loadInformation(this.patientId);
 				historicalProblemsFacadeService.setPatientId(this.patientId);
 			});
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -249,14 +258,14 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	private loadExternalClinicalHistoryList(): void {
-		this.externalClinicalHistoryService.getFilteredHistories().pipe(
+		this.externalClinicalHistoryService.getFilteredHistories$().pipe(
 			tap((filteredHistories: ExternalClinicalHistoryDto[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
 		).subscribe(
 			(filteredHistories: ExternalClinicalHistoryDto[]) =>
-				this.externalClinicalHistoryList = filteredHistories.sort(this.compareByDate)
+				this.externalClinicalHistoryList = [...filteredHistories].sort(this.compareByDate)
 		);
 
-		this.externalClinicalHistoryService.hasInformation().subscribe(
+		this.externalClinicalHistoryService.hasInformation$().subscribe(
 			(hasInfo: boolean) => this.externalHistoriesInformation = hasInfo
 		);
 	}

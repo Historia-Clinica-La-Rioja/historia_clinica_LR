@@ -9,9 +9,9 @@
 		<div fxLayout="column" fxLayoutAlign fxLayoutGap="0" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between"
 			fxLayoutGap.gt-sm="15px">
 			<div>
-				<ng-container *ngIf="this.externalClinicalHistory.professionalName else noProfessionalData">
+				<ng-container *ngIf="externalClinicalHistory.professionalName else noProfessionalData">
 					<h2 class="color-primary min-line-height capitalize-first-letter">
-						{{ this.externalClinicalHistory.professionalName }}
+						{{ externalClinicalHistory.professionalName }}
 					</h2>
 				</ng-container>
 			</div>
@@ -26,31 +26,27 @@
 					{{ 'ambulatoria.paciente.problemas.external-clinical-history.CONSULTATION_DATE' | translate }}
 				</div>
 				<div>
-					{{ this.DATE_TO_VIEW | viewDateDto : 'date' | date: 'dd/MM/yyyy'}}
+					{{ DATE_TO_VIEW | viewDateDto : 'date' | date: 'dd/MM/yyyy'}}
 				</div>
 			</div>
 		</div>
 
 		<div fxLayout="column" fxLayoutGap="15px">
-			<div *ngIf="this.externalClinicalHistory.professionalSpecialty">
-				<div>
-					<strong>
-						{{ 'ambulatoria.paciente.problemas.external-clinical-history.SPECIALTY' | translate }}
-					</strong>
-				</div>
+			<div *ngIf="externalClinicalHistory.professionalSpecialty">
+				<strong>
+					{{ 'ambulatoria.paciente.problemas.external-clinical-history.SPECIALTY' | translate }}
+				</strong>
 				<div class="capitalize-first-letter">
-					{{ this.externalClinicalHistory.professionalSpecialty }}
+					{{ externalClinicalHistory.professionalSpecialty }}
 				</div>
 			</div>
 
-			<div *ngIf="this.externalClinicalHistory.institution">
-				<div>
-					<strong>
-						{{ 'ambulatoria.paciente.problemas.external-clinical-history.INSTITUTION' | translate }}
-					</strong>
-				</div>
+			<div *ngIf="externalClinicalHistory.institution">
+				<strong>
+					{{ 'ambulatoria.paciente.problemas.external-clinical-history.INSTITUTION' | translate }}
+				</strong>
 				<div class="capitalize-first-letter">
-					{{ this.externalClinicalHistory.institution }}
+					{{ externalClinicalHistory.institution }}
 				</div>
 			</div>
 
@@ -59,7 +55,7 @@
 					{{ 'ambulatoria.paciente.problemas.external-clinical-history.NOTES' | translate }}
 				</div>
 				<div class="capitalize-first-letter">
-					{{ this.externalClinicalHistory.notes }}
+					{{ externalClinicalHistory.notes }}
 				</div>
 			</div>
 		</div>
