@@ -92,7 +92,7 @@
 						</ng-template>
 						<ng-template matTabContent>
 							<ng-container *ngIf="(extensionTab.body$ | async) as tabPage; else loading">
-								<app-page [page]="tabPage"></app-page>
+								<app-page-layout [page]="tabPage"></app-page-layout>
 							</ng-container>
 						</ng-template>
 					</mat-tab>

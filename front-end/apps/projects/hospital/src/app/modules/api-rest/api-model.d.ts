@@ -1907,27 +1907,6 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
-export interface UIComponentDto {
-    args: { [index: string]: any };
-    type: string;
-}
-
-export interface UILabelDto {
-    key?: string;
-    text?: string;
-}
-
-export interface UIMenuItemDto {
-    icon: string;
-    id: string;
-    label: UILabelDto;
-}
-
-export interface UIPageDto {
-    content: UIComponentDto[];
-    type: string;
-}
-
 export interface UserDataDto {
     enable?: boolean;
     id?: number;

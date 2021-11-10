@@ -1,13 +1,22 @@
 <ng-container [ngSwitch]="uiComponent.type">
-	<div *ngSwitchCase="'typography'">
+	<div *ngSwitchCase="'columns'">
+		<app-ui-component-list [list]="uiComponent.args.content" class="columns"></app-ui-component-list>
+	</div>
+	<div *ngSwitchCase="'typography'" >
 		<span [ngClass]="'mat-' + uiComponent.args.className">
 			{{uiComponent.args.value}}
 		</span>
 	</div>
 	<div *ngSwitchCase="'link'">
 		<a mat-raised-button color="primary" [href]="uiComponent.args.value" target="_blank">
-			<app-label [label]="uiComponent.args.label"></app-label>
+			<ng-container *ngIf="uiComponent.args.label">
+				<span *ngIf="uiComponent.args.label.key" [translate]="uiComponent.args.label.key"></span>
+				<span *ngIf="uiComponent.args.label.text">{{uiComponent.args.label.text}}</span>
+			</ng-container>
 		</a>
+	</div>
+	<div *ngSwitchCase="'tabs'">
+		<app-tabs [tabs]="uiComponent.args.tabs"></app-tabs>
 	</div>
 	<div *ngSwitchCase="'html'" [innerHTML]="valueAsHtml"></div>
 

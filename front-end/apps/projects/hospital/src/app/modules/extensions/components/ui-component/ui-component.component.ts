@@ -1,12 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-
-export class UIComponent {
-	type: string;
-	args: { [index: string]: any };
-	children?: UIComponent[];
-	actions?: UIComponent[];
-}
+import { UIComponentDto } from '@extensions/extensions-model';
 
 @Component({
 	selector: 'app-ui-component',
@@ -14,7 +8,7 @@ export class UIComponent {
 	styleUrls: ['./ui-component.component.scss']
 })
 export class UiComponentComponent {
-	@Input() uiComponent: UIComponent;
+	@Input() uiComponent: UIComponentDto;
 	constructor(
 		private sanitizer: DomSanitizer,
 	) { }

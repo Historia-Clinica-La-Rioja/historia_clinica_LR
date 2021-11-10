@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { UIMenuItemDto, UIPageDto } from '@api-rest/api-model';
+import { UIMenuItemDto, UIPageDto } from '@extensions/extensions-model';
 
-const EXTENSION_URL = `${environment.apiBase}/extensions`;
+export const EXTENSION_URL = `${environment.apiBase}/extensions`;
 
 @Injectable({
 	providedIn: 'root'
@@ -21,19 +21,9 @@ export class ExtensionsService {
 		return this.http.get<UIMenuItemDto[]>(systemMenuUrl);
 	}
 
-	getSystemPage(menuId: string): Observable<UIPageDto> {
-		const systemPageUrl = `${EXTENSION_URL}/page/${menuId}`;
-		return this.http.get<UIPageDto>(systemPageUrl);
-	}
-
 	getInstitutionMenu(institutionId: number): Observable<UIMenuItemDto[]> {
 		const institutionMenuUrl = `${EXTENSION_URL}/institution/${institutionId}/menu`;
 		return this.http.get<UIMenuItemDto[]>(institutionMenuUrl);
-	}
-
-	getInstitutionPage(institutionId: number, menuId: string): Observable<UIPageDto> {
-		const institutionPageUrl = `${EXTENSION_URL}/institution/${institutionId}/page/${menuId}`;
-		return this.http.get<UIPageDto>(institutionPageUrl);
 	}
 
 	getPatientMenu(patientId: number): Observable<UIMenuItemDto[]> {

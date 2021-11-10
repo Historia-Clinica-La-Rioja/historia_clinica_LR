@@ -6,6 +6,7 @@ import { PortalModule } from '@angular/cdk/portal';
 
 import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
+import { ExtensionsModule } from '@extensions/extensions.module';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { PacientesModule } from '../../../pacientes/pacientes.module';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
@@ -41,6 +42,7 @@ import { ExternalClinicalHistoriesFiltersComponent } from './components/external
 import { ExternalClinicalHistoryComponent } from './components/external-clinical-history/external-clinical-history.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report/epidemiological-report.component';
+
 
 @NgModule({
 	declarations: [
@@ -81,6 +83,7 @@ import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report
 		PortalModule,
 		CoreModule,
 		PresentationModule,
+		ExtensionsModule,
 		HistoriaClinicaModule,
 		AmbulatoriaRoutingModule,
 		PacientesModule,

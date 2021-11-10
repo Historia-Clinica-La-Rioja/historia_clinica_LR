@@ -2,17 +2,17 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { Page } from '@presentation/components/page/page.component';
+import { UIPageDto } from '@extensions/extensions-model';
 
 import { PageService } from '../../services/page.service';
 
 class RoutedExtensionComponent {
-	page$: Observable<Page>;
+	page$: Observable<UIPageDto>;
 	fetching: boolean = false;
 
 	constructor(
 		activatedRoute: ActivatedRoute,
-		mapper: (menuData: { menuItemId: string, id: any }) => Observable<Page>,
+		mapper: (menuData: { menuItemId: string, id: any }) => Observable<UIPageDto>,
 	) {
 		// el id está en el parent y cambiaría junto con este
 		const id = activatedRoute.parent.snapshot.paramMap.get('id');

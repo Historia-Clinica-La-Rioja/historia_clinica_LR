@@ -288,6 +288,7 @@
                     </classPatterns>
                     <excludeClassPatterns>
                         <pattern>ar.lamansys.sgh.publicapi.**.dto.**Dto</pattern>
+                        <pattern>net.pladema.hsi.extensions.infrastructure.controller.dto.**Dto</pattern>
                     </excludeClassPatterns>
                     <outputKind>module</outputKind>
                     <outputFile>../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-model.d.ts</outputFile>

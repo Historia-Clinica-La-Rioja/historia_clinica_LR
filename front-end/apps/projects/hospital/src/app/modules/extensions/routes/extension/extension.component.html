@@ -1,8 +1,8 @@
 <app-content>
 	<ng-container *ngIf="!fetching && (page$ | async) as page; else loading">
-		<app-page [page]="page"></app-page>
+		<app-page-layout [page]="page"></app-page-layout>
 	</ng-container>
 	<ng-template #loading>
-		<app-page></app-page>
+		<app-page-layout></app-page-layout>
 	</ng-template>
 </app-content>

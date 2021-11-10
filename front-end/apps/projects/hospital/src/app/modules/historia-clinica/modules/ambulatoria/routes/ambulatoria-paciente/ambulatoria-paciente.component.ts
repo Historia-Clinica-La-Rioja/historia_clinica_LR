@@ -10,6 +10,8 @@ import { InteroperabilityBusService } from '@api-rest/services/interoperability-
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { UIPageDto } from '@extensions/extensions-model';
+
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from '../../dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -19,13 +21,13 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MedicacionesService } from '../../services/medicaciones.service';
 import { MenuItem } from '@presentation/components/menu/menu.component';
-import { Page } from '@presentation/components/page/page.component';
 import { ExtensionPatientService } from '@extensions/services/extension-patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
 import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
+
 
 
 const RESUMEN_INDEX = 0;
@@ -42,7 +44,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	dialogRef: DockPopupRef;
 	patient: PatientBasicData;
 	patientId: number;
-	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<Page> }[]>;
+	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
 	public personInformation: AdditionalInfo[];
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;

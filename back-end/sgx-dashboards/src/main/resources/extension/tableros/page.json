@@ -1,5 +1,5 @@
 {
-  "type": "components",
+  "layout": "components",
   "content": [
     {
       "type":"typography",

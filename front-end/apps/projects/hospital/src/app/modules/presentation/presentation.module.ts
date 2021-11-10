@@ -33,9 +33,6 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 import { SignoVitalComponent } from './components/signo-vital-current/signo-vital.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
-import { PageComponent } from './components/page/page.component';
-import { PageComponentsComponent } from './components/page-components/page-components.component';
-import { UiComponentComponent } from './components/ui-component/ui-component.component';
 import { NewDocumentSectionComponent } from './components/new-document-section/new-document-section-component.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
@@ -79,10 +76,7 @@ import { DatePickerComponent } from './dialogs/date-picker/date-picker.component
 		CtrlTemplateDirective,
 		DocumentSectionTableComponent,
 		NewDocumentSectionComponent,
-		PageComponent,
-		PageComponentsComponent,
 		TypeaheadComponent,
-		UiComponentComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -128,7 +122,6 @@ import { DatePickerComponent } from './dialogs/date-picker/date-picker.component
 		CtrlTemplateDirective,
 		DocumentSectionTableComponent,
 		NewDocumentSectionComponent,
-		PageComponent,
 		TypeaheadComponent,
 	],
 	entryComponents: [
