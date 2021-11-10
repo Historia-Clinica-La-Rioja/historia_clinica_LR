@@ -53,5 +53,3 @@ end_tests=$(date +%s)
 echo "Elapsed Time for app tests: $(($start_be_tests-$start_fe_tests)) seconds"
 echo "Elapsed Time for backend tests: $(($end_tests-$start_be_tests)) seconds"
 
-rm -rf front-end/apps/node_modules
-rm -rf front-end/backoffice/node_modules

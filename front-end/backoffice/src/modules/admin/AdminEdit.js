@@ -15,7 +15,7 @@ import {
 
 import CustomToolbar from '../components/CustomToolbar';
 import PersonReferenceField from '../person/PersonReferenceField';
-import authProvider from '../../providers/authProvider';
+import authProvider from '../../providers/legacyAuthProvider';
 import SgxDateField from "../../dateComponents/sgxDateField";
 
 const redirect = (basePath, id, data) => (data.personId !== -1) ? `/person/${data.personId}/show/1` : '/admin';
