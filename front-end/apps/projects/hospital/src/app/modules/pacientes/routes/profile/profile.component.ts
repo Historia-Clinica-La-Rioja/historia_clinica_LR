@@ -100,7 +100,7 @@ export class ProfileComponent implements OnInit {
 						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
-						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe( hasRoleToViewUserData => {
+						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe(hasRoleToViewUserData => {
 							if (this.createUsersIsEnable && hasRoleToViewUserData) {
 								this.userService.getUserData(this.personId)
 									.subscribe(userDataDto => {
@@ -160,7 +160,7 @@ export class ProfileComponent implements OnInit {
 			.subscribe(userId => {
 				this.userService.getUserData(this.personId).subscribe(userDataDto => this.userData = userDataDto);
 				this.snackBarService.showSuccess('pacientes.user_data.messages.SUCCESS');
-		}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
+			}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
 	}
 
 	enableUser() {

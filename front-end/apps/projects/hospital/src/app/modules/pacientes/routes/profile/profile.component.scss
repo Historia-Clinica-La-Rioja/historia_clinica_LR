@@ -3,25 +3,25 @@
 
 span {
 	float: left;
-	clear: left
+	clear: left;
 }
 
-.header{
+.header {
 	display: flex;
 	justify-content: flex-end;
 }
 
-.profile-card{
+.profile-card {
 	width: 80%;
 }
 
-button{
+button {
 	margin-bottom: 25px;
 }
 
 .reports {
 	margin-top: 5%;
-	margin-bottom: 0%
+	margin-bottom: 0%;
 }
 
 user-data {
@@ -29,7 +29,7 @@ user-data {
 }
 
 .no-information {
-	color: #A8A8A8;
+	color: #a8a8a8;
 	line-height: 20px;
 	font-size: 14px;
 }
