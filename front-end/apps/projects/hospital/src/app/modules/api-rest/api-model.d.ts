@@ -1908,9 +1908,7 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
 }
 
 export interface UIComponentDto {
-    actions: UIComponentDto[];
     args: { [index: string]: any };
-    children: UIComponentDto[];
     type: string;
 }
 

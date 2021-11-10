@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Page } from '@presentation/components/page/page.component';
+
 import { PageService } from '../../services/page.service';
 
 class RoutedExtensionComponent {
 	page$: Observable<Page>;
+	fetching: boolean = false;
 
 	constructor(
 		activatedRoute: ActivatedRoute,
@@ -16,7 +18,9 @@ class RoutedExtensionComponent {
 		const id = activatedRoute.parent.snapshot.paramMap.get('id');
 		this.page$ = activatedRoute.paramMap.pipe(
 			map(params => ({ menuItemId: params.get('menuItemId'), id })),
-			switchMap(menuData => mapper(menuData))
+			tap(() => this.fetching = true),
+			switchMap(menuData => mapper(menuData)),
+			tap(() => this.fetching = false),
 		);
 	}
 

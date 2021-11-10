@@ -1,8 +1,8 @@
 package net.pladema.hsi.extensions.infrastructure.repository;
 
+import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.stream.Stream;
 
 import net.pladema.hsi.extensions.configuration.plugins.SystemMenuExtensionPlugin;
 import net.pladema.hsi.extensions.domain.ExtensionService;
@@ -21,11 +21,11 @@ public class WrapperExtensionService implements ExtensionService {
 
 	@Override
 	public UIMenuItemDto[] getSystemMenu() {
-		UIMenuItemDto[] menu = extensionService.getSystemMenu();
-		UIMenuItemDto[] pluginsMenu = plugins.stream()
-				.map(SystemMenuExtensionPlugin::menu)
-				.toArray(UIMenuItemDto[]::new);
-		return ArrayUtils.addAll(menu, pluginsMenu);
+		return Stream.concat(
+				Arrays.stream(extensionService.getSystemMenu()),
+				plugins.stream().map(SystemMenuExtensionPlugin::menu)
+		)
+		.toArray(UIMenuItemDto[]::new);
 	}
 
 	@Override
@@ -33,13 +33,14 @@ public class WrapperExtensionService implements ExtensionService {
 		return plugins.stream()
 				.filter(plugin -> plugin.menu().id.equals(menuId))
 				.findFirst()
-				.map(plugin -> plugin.page())
+				.map(SystemMenuExtensionPlugin::page)
 				.orElseGet(() -> extensionService.getSystemPage(menuId));
 	}
 
 	@Override
 	public UIMenuItemDto[] getInstitutionMenu(Integer institutionId) {
-		return extensionService.getInstitutionMenu(institutionId);
+		return Arrays.stream(extensionService.getInstitutionMenu(institutionId))
+				.toArray(UIMenuItemDto[]::new);
 	}
 
 	@Override

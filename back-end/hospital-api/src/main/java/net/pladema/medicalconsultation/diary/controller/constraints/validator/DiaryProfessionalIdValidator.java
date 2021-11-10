@@ -1,30 +1,37 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
-import lombok.RequiredArgsConstructor;
-import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
-import net.pladema.permissions.controller.external.LoggedUserExternalService;
-import net.pladema.permissions.repository.enums.ERole;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import java.util.List;
+import java.util.function.Function;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
-import java.util.List;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
-@RequiredArgsConstructor
-@SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDiaryProfessionalId, Object[]> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DiaryProfessionalIdValidator.class);
-
+    private final Logger logger;
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+    private final Function<Integer, Boolean> hasAdministrativeRole;
+    private final Function<Integer, Boolean> hasProfessionalRole;
 
-    private final LoggedUserExternalService loggedUserExternalService;
+    public DiaryProfessionalIdValidator(Logger logger, HealthcareProfessionalExternalService healthcareProfessionalExternalService, LoggedUserExternalService loggedUserExternalService) {
+        this.logger = logger;
+        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+        this.hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
+                ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO
+        );
+        this.hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(
+                ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO
+        );
+    }
 
     @Override
     public void initialize(ValidDiaryProfessionalId constraintAnnotation) {
@@ -35,22 +42,17 @@ public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDi
     public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
         Integer institutionId = (Integer) parameters[0];
         Integer healthcareProfessionalId = (Integer) parameters[1];
-        LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
+        logger.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
         boolean valid = true;
 
-        boolean hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-                List.of(ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO));
+        if (!hasAdministrativeRole.apply(institutionId)) {
 
-        if (!hasAdministrativeRole) {
-            boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO));
-
-            if (hasProfessionalRole) {
+            if (hasProfessionalRole.apply(institutionId)) {
                 Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
                 valid = professionalId.equals(healthcareProfessionalId);
             }
         }
-        LOG.debug("Output -> {}", valid);
+        logger.debug("Output -> {}", valid);
         return valid;
     }
 

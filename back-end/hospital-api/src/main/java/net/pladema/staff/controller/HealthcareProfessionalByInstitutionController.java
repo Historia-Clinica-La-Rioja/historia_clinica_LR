@@ -50,7 +50,7 @@ public class HealthcareProfessionalByInstitutionController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<List<HealthcareProfessionalDto>> getAllDoctors(@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
-		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId, List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA));
+		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId, ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA);
 		List<HealthcarePersonBo> doctors = healthcareProfessionalService.getAllDoctorsByInstitution(institutionId);
 		if (!isAdministrativeRole) {
 			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -69,7 +69,7 @@ public class HealthcareProfessionalByInstitutionController {
 			@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-				List.of(ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
+				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE);
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		if (!isAdministrativeRole) {
 			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());

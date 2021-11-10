@@ -46,7 +46,7 @@ public final class UserAuthoritiesValidator {
 		return loggedUserService.getUserId().equals(id);
 	}
 
-	private static final List<String> toRoleName(List<RoleAssignment> assignments) {
+	private static List<String> toRoleName(List<RoleAssignment> assignments) {
 		return assignments.stream()
 				.map(assignment -> assignment.role.getValue())
 				.collect(Collectors.toList());

@@ -8,16 +8,14 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { SystemExtensionComponent, InstitutionExtensionComponent } from './routes/extension/extension.component';
 
 @NgModule({
+	imports: [
+		CommonModule,
+		CoreModule,
+		PresentationModule,
+	],
 	declarations: [
 		SystemExtensionComponent,
 		InstitutionExtensionComponent,
 	],
-	imports: [
-		CommonModule,
-		CoreModule,
-		ApiRestModule,
-		PresentationModule,
-
-	]
 })
 export class ExtensionsModule { }

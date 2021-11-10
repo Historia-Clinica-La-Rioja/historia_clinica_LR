@@ -1,5 +1,6 @@
 <ng-container [ngSwitch]="page.type">
 	<app-page-components *ngSwitchCase="'components'" [content]="page.content"></app-page-components>
+	<mat-progress-bar mode="indeterminate" *ngSwitchCase="'loading'"></mat-progress-bar>
 	<div *ngSwitchDefault>
 		<div class="mat-title">
 			Página reconocida: <code>{{page.type}}</code>
