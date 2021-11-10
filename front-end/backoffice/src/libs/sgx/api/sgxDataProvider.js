@@ -11,7 +11,7 @@ import {
   HttpError,
 } from "react-admin";
 
-import apiRest from './utils/sgxApiRest';
+import apiRest from '../../../providers/utils/sgxApiRest';
 
 /**
  * Maps react-admin queries to a REST API implemented using Java Spring Boot and Swagger

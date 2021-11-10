@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { BackofficeComponent } from '@core/components/backoffice/backoffice.component';
+
 export enum AppRoutes {
 	Institucion = 'institucion',
+	Backoffice = 'backoffice',
 }
 
 const routes: Routes = [
@@ -22,6 +25,10 @@ const routes: Routes = [
 	{
 		path: 'paciente',
 		loadChildren: () => import('./modules/portal-paciente/portal-paciente.module').then(m => m.PortalPacienteModule),
+	},
+	{
+		path: AppRoutes.Backoffice,
+		component: BackofficeComponent,
 	},
 ];
 

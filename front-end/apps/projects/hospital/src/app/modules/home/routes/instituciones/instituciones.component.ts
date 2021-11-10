@@ -58,7 +58,7 @@ export class InstitucionesComponent {
 
 	ingresar(institutionDto: { id: number }, backoffice): void {
 		if (backoffice) {
-			window.location.href = '/backoffice/index.html';
+			this.router.navigate([AppRoutes.Backoffice]);
 		} else {
 			this.router.navigate([AppRoutes.Institucion, institutionDto.id]);
 		}
