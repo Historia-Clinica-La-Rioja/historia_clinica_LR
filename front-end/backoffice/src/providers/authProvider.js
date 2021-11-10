@@ -1,6 +1,10 @@
 
 import apiRest from './utils/sgxApiRest';
 
+import {
+    retrieveToken,
+} from '../libs/sgx/api/tokenStorage';
+
 const rolesTable = {
     1: 'ROOT',
     2: 'ADMINISTRADOR',
@@ -21,15 +25,7 @@ const authProvider = {
         apiRest.logout();
         return Promise.resolve();
     },
-    checkAuth: () => {
-        return apiRest.permission$
-            .then(permissions => {
-                if (!permissions.hasAnyAuthority({role: 'ROOT'}, {role: 'ADMINISTRADOR'},
-                    {role: 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE'})) {
-                    return Promise.reject({ redirectTo: '/home' });
-                }
-            });
-    },
+    checkAuth: () => retrieveToken() ? Promise.resolve() : Promise.reject(),
     checkError: (error) => {
         const status = error.status;
         if (status === 401) {

@@ -1,20 +1,15 @@
-import {setHeader, sgxFetchApi} from '../../libs/sgx/utils/sgxFetch';
-import {configureRefreshFetch} from 'refresh-fetch';
-import SGXPermissions from './SGXPermissions';
+import { setHeader, sgxFetchApi } from '../../libs/sgx/utils/sgxFetch';
+import { configureRefreshFetch } from 'refresh-fetch';
+import SGXPermissions from '../../libs/sgx/auth/SGXPermissions';
 
-const TOKEN_KEY_STORE = 'token';
-const TOKENREFRESH_KEY_STORE = 'refreshtoken';
+import roleAssignments from '../../libs/sgx/api/role-assignments'
 
-const retrieveToken = () => localStorage.getItem(TOKEN_KEY_STORE)
-const retrieveRefreshToken = () => localStorage.getItem(TOKENREFRESH_KEY_STORE)
-const saveTokens = (token, refreshToken) => {
-    localStorage.setItem(TOKEN_KEY_STORE, token);
-    localStorage.setItem(TOKENREFRESH_KEY_STORE, refreshToken);
-}
-const clearTokens = () => {
-    localStorage.removeItem(TOKEN_KEY_STORE);
-    localStorage.removeItem(TOKENREFRESH_KEY_STORE);
-}
+import {
+    retrieveToken,
+    retrieveRefreshToken, 
+    saveTokens,
+    clearTokens,
+} from '../../libs/sgx/api/tokenStorage';
 
 const buildPostOptions = body => ({ method: 'POST', body: JSON.stringify(body) });
 
@@ -65,10 +60,13 @@ class SgxApiRest {
         if (!this.isAuthenticated()) {
             return Promise.reject();
         }
-        if(!this._permission$) {
-            this._permission$ = Promise.all([this.fetch('/account/permissions'), this.fetch('/public/info')])
-                .then(values => {
-                    return new SGXPermissions({ roleAssignments: values[0].roleAssignments, featureFlags: values[1].features})
+        if (!this._permission$) {
+            this._permission$ = Promise.all([
+                roleAssignments(this.fetch('/account/permissions')), 
+                this.fetch('/public/info'),
+            ])
+                .then(([{ roleAssignments }, { features }]) => {
+                    return new SGXPermissions(roleAssignments, features)
                 })
         }
 
@@ -88,6 +86,6 @@ class SgxApiRest {
         this._permission$ = undefined;
     }
 
-  }
+}
 
-  export default new SgxApiRest();
+export default new SgxApiRest();
