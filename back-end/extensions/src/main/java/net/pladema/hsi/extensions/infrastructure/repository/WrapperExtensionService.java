@@ -28,7 +28,7 @@ public class WrapperExtensionService implements ExtensionService {
 				Arrays.stream(extensionService.getSystemMenu()),
 				plugins.stream().map(SystemMenuExtensionPlugin::menu)
 		)
-		.filter(uiMenuItemDto -> extensionAuthorization.isSystemMenuAllowed(uiMenuItemDto.id))
+		.filter(uiMenuItemDto -> uiMenuItemDto != null && extensionAuthorization.isSystemMenuAllowed(uiMenuItemDto.id))
 		.toArray(UIMenuItemDto[]::new);
 	}
 
