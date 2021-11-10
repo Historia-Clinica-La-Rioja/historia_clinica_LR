@@ -133,7 +133,7 @@ const messages = {
                 addressId: 'Dirección',
                 sectors: 'Sectores',
                 dependencyId: 'Dependencia',
-                provinceCode: 'Código de provincia',
+                provinceCode: 'Código de provincia'
             },
         }, 
         sectors: {
@@ -258,6 +258,23 @@ const messages = {
                 details: 'Datos personales',
                 users: 'Usuario'
             },
+        },
+        carelines: {
+            name: 'Línea de cuidado |||| Líneas de cuidado',
+            fields: {
+                description: 'Nombre',
+                atentionType: 'Tipo de atención',
+                consultation: 'Consulta',
+                procedure: 'Procedimiento',
+            }
+        },
+        clinicalspecialtycarelines: {
+            name: 'Especialidades',
+            fields: {
+                clinicalSpecialtyId: 'Especialidad',
+                careLineId: 'Línea de cuidado',
+            },
+            addRelated: 'Agregar especialidad',
         },
         "nomivac-immunizationdata": {
             name: 'Historial de vacunas |||| Historial de vacunas',

@@ -25,6 +25,8 @@ import person from './person';
 import admin from './admin';
 import users from './users';
 import passwordReset from './password-reset';
+import careLines from "./carelines";
+import clinicalspecialtycarelines from "./clinicalspecialtycarelines";
 
 const resourcesAdminInstitucional = [
     <Resource name="sectortypes" />,
@@ -81,6 +83,8 @@ const resourcesAdminRoot = [
     <Resource name="beds" {...beds} />,
     <Resource name="admin" {...admin}/>,
     <Resource name="users" {...users} />,
+    <Resource name="carelines" {...careLines} />,
+    <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
 ];
 
 const resourcesFor = (permissions: SGXPermissions) =>
