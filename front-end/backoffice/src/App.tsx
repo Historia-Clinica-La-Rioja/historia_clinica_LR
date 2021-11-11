@@ -8,6 +8,7 @@ import {
 
 import { 
     Dashboard,
+    Layout,
     LoginPage,
 } from './layout';
 
@@ -26,6 +27,7 @@ const App = () => (
         i18nProvider={i18nProvider}
         loginPage={LoginPage}
         dashboard={Dashboard}
+        layout={Layout}
         disableTelemetry >
         {permissions => resources(permissions)}
     </Admin>
