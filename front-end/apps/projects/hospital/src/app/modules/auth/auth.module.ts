@@ -11,6 +11,8 @@ import { LoginComponent } from './routes/login/login.component';
 import { PasswordResetComponent } from './routes/password-reset/password-reset.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
 import { OauthLoginComponent } from './routes/chaco-login/oauth-login.component';
+import { AccessDataResetComponent } from './routes/access-data-reset/access-data-reset.component';
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 @NgModule({
 	declarations: [
@@ -18,7 +20,8 @@ import { OauthLoginComponent } from './routes/chaco-login/oauth-login.component'
 		LoginComponent,
 		PasswordResetComponent,
 		FormInputComponent,
-		OauthLoginComponent
+		OauthLoginComponent,
+  		AccessDataResetComponent
 	],
 	imports: [
 		FormsModule,
@@ -26,6 +29,7 @@ import { OauthLoginComponent } from './routes/chaco-login/oauth-login.component'
 		CoreModule,
 		PresentationModule,
 		AuthRoutingModule,
+		ClipboardModule,
 	]
 })
 export class AuthModule { }

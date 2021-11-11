@@ -1,0 +1,97 @@
+<app-content width="narrow">
+	<mat-card *ngIf="!apiResponse">
+		<mat-card-header>
+			<mat-card-title fxLayoutAlign="space-around center">
+				<span translate="auth.access-data-reset.TITLE"></span>
+			</mat-card-title>
+			<mat-card-subtitle>
+				<span translate="auth.access-data-reset.SUBTITLE"></span>
+			</mat-card-subtitle>
+			<mat-card-subtitle fxLayoutAlign="space-around center">
+			</mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-content fxLayout="column" fxLayoutAlign="space-around center" >
+			<button  mat-stroked-button color="primary" [cdkCopyToClipboard]="location">
+				<span translate="auth.access-data-reset.COPY_LINK">
+					<mat-icon fontSet="material-icons-outlined">insert_link</mat-icon>
+				</span>
+			</button>
+			<mat-list class="mat-form-field-wrapper">
+				<mat-list-item id="patient">
+					<mat-icon  color="primary" mat-list-icon [inline]="true">person</mat-icon>
+					<div>
+						<strong class="capitalize">{{userPerson?.firstName}} {{userPerson?.lastName}}</strong>
+						<div fxLayout="row">
+						<span >ID {{userPerson?.userId}} </span>
+							-
+						<span > {{userPerson?.identificationType}} {{userPerson?.identificationNumber}}</span>
+						</div>
+					</div>
+				</mat-list-item>
+			</mat-list>
+			<form [formGroup]="form" class="form"  (ngSubmit)="submit()">
+				<app-form-input>
+					<mat-form-field appearance="outline">
+						<mat-label translate="auth.access-data-reset.form.USERNAME_LABEL"></mat-label>
+						<input formControlName="username"
+							   type="text"
+							   placeholder="{{'auth.access-data-reset.form.USERNAME_PLACEHOLDER' | translate }}"
+							   matInput>
+						<mat-error *ngIf="hasError('required', 'username')">
+							<span translate="auth.access-data-reset.form.USERNAME_REQUIRED"></span>
+						</mat-error>
+					</mat-form-field>
+				</app-form-input>
+				<app-form-input>
+					<mat-form-field appearance="outline">
+						<mat-label translate="auth.access-data-reset.form.PASSWORD_LABEL"></mat-label>
+						<input formControlName="password"
+							   type="password"
+							   placeholder="{{'auth.access-data-reset.form.PASSWORD_PLACEHOLDER' | translate }}" matInput>
+						<mat-error *ngIf="hasError('required', 'password')">
+							<span translate="auth.access-data-reset.form.PASSWORD_REQUIRED"></span>
+						</mat-error>
+					</mat-form-field>
+				</app-form-input>
+				<app-form-input>
+					<mat-form-field appearance="outline">
+						<mat-label translate="auth.access-data-reset.form.REPASSWORD_LABEL"></mat-label>
+						<input formControlName="repassword"
+							   type="password"
+							   placeholder="{{'auth.access-data-reset.form.REPASSWORD_PLACEHOLDER' | translate }}" matInput>
+						<mat-error *ngIf="hasError('required', 'repassword')">
+							<span translate="auth.access-data-reset.form.REPASSWORD_REQUIRED"></span>
+						</mat-error>
+						<mat-error *ngIf="hasError('notEquivalent', 'repassword')">
+							<span translate="auth.access-data-reset.form.REPASSWORD_NOTEQUIVALENT"></span>
+						</mat-error>
+					</mat-form-field>
+				</app-form-input>
+				<mat-card-actions align="end" >
+					<button class="uppercase" content mat-button  mat-raised-button color="primary" type="submit" translate="auth.access-data-reset.form.SUBMIT"></button>
+				</mat-card-actions>
+			</form>
+		</mat-card-content>
+	</mat-card>
+
+	<mat-card *ngIf="apiResponse"  fxLayout="column" fxLayoutAlign="space-between center">
+		<div *ngIf="apiResponse.ok">
+			<mat-icon [inline]="true" class="material-icons-outlined icon" color="primary">check_circle</mat-icon>
+		</div>
+		<div *ngIf="apiResponse.error">
+			<mat-icon [inline]="true" class="material-icons-outlined icon" >history</mat-icon>
+		</div>
+		<mat-card-header >
+			<mat-card-title align="center">
+				<span *ngIf="apiResponse.ok" translate="auth.access-data-reset.result.OK"></span>
+				<span *ngIf="apiResponse.error" translate="auth.access-data-reset.result.ERROR_TITLE"></span>
+			</mat-card-title>
+			<mat-card-subtitle  *ngIf="apiResponse.error" >
+				<span translate="auth.access-data-reset.result.ERROR_SUBTITLE"></span>
+			</mat-card-subtitle>
+			<div class="spinner" *ngIf="apiResponse.loading">
+				<mat-spinner color="primary"></mat-spinner>
+			</div>
+		</mat-card-header>
+	</mat-card>
+</app-content>

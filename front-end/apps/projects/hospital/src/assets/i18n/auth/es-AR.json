@@ -31,6 +31,30 @@
 				"TITLE": "Definiendo nueva clave"
 			}
 		},
+		"access-data-reset": {
+			"TITLE": "Establecer datos de aceso",
+			"SUBTITLE": "Puede copiar el link para compartir con otro usuario o establecer los datos de acceso en el siguiente formulario.",
+			"COPY_LINK": "Copiar link para compartir",
+			"form": {
+				"USERNAME_LABEL": "Nombre de usuario",
+				"USERNAME_PLACEHOLDER": "hola@example.com",
+				"USERNAME_REQUIRED": "Campo requerido",
+				"PASSWORD_LABEL": "Nueva clave",
+				"PASSWORD_PLACEHOLDER": "Ingresar clave",
+				"PASSWORD_REQUIRED": "Debe especificar una clave",
+				"REPASSWORD_LABEL": "Repetir clave",
+				"REPASSWORD_PLACEHOLDER": "Repetir clave",
+				"REPASSWORD_NOTEQUIVALENT": "Deben coincidir las claves",
+				"REPASSWORD_REQUIRED": "Debe reingresar la clave",
+				"SUBMIT": "Confirmar"
+			},
+			"result": {
+				"OK": "Sus datos de acceso fueron establecidos correctamente",
+				"ERROR_TITLE": "El link ha expirado",
+				"ERROR_SUBTITLE": "Por favor solicite un nuevo link para establecer datos de acceso de usuario"
+			}
+
+		},
 		"roles": {
 			"LEVEL0": "De todo el sistema",
 			"names": {
