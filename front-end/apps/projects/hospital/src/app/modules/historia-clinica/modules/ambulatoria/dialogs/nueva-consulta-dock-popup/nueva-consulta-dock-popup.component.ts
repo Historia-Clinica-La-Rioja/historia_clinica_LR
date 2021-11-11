@@ -171,9 +171,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe( isOn => this.ffIsOn = isOn);
 	}
 
-	isValidSelectPreviousAnthropometricData():boolean{
-		return(!this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()===true)
-	}
 
 	previousDataIsConfirmed(): boolean {
 		if ((this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) ||
@@ -183,27 +180,19 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				autoFocus: false
 			});
 			dialogRef.afterClosed().subscribe((loadData: boolean) => {
-				if ( (loadData != null) && (loadData)) {
-
-					if (this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData())
-						{ this.datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData() }
-					if (this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData())
-						{ this.signosVitalesNuevaConsultaService.savePreloadedVitalSignsData() }
-
-				} else {
-
-					if (this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData())
-						{ this.datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData() }
-					if (this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData())
-						{ this.signosVitalesNuevaConsultaService.discardPreloadedVitalSignsData() }
-
+				if (loadData != null) {
+					if (loadData) {
+						if (this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()) { this.datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData() }
+						if (this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) { this.signosVitalesNuevaConsultaService.savePreloadedVitalSignsData() }
+					} else {
+						if (this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()) { this.datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData() }
+						if (this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) { this.signosVitalesNuevaConsultaService.discardPreloadedVitalSignsData() }
+					}
 				}
-
 			});
 			return false;
-		}
+		};
 		return true;
-
 	}
 
 	save(): void {
