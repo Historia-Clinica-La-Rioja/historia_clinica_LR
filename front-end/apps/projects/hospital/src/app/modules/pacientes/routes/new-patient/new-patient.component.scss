@@ -3,7 +3,13 @@
 
 form {
 
-	@include mat-form-field-background-white;
+	.white-bg-color {
+		@include mat-form-field-background-white;
+	}
+
+	.color-disabled {
+		color: rgba(0, 0, 0, 0.38);
+	}
 
 	.form-row{
 		@include form-row;
@@ -11,7 +17,11 @@ form {
 }
 
 mat-form-field{
-    margin-right: 20px;
+    width: 100%;
+}
+
+#address-fields mat-form-field {
+	width: fit-content;
 }
 
 .mat-radio-button {
@@ -31,4 +41,3 @@ button.medical-coverage {
 	margin-top: 5px;
 	text-transform: uppercase;
 }
-

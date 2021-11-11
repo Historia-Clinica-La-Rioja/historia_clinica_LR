@@ -43,7 +43,8 @@
             "REQUIRED": "El campo es requerido",
             "REQUIRED_GENDER": "Género requerido",
             "SELECT": "Seleccionar",
-            "UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura"
+            "UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura",
+			"IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres"
         },
         "home": {
             "TITLE": "Pacientes",
@@ -60,7 +61,12 @@
                         "ERROR": "El escaneo no pudo completarse correctamente. Intente de nuevo o proceda a una búsqueda manual.",
                         "SUCCESS": "Resultados encontrados."
                     }
-                }
+                },
+				"IDENTIFY_TYPE_LABEL": "Tipo",
+				"IDENTIFY_NUMBER_LABEL": "Nro. de documento",
+				"GENDER_LABEL": "Sexo",
+				"SELECT_REASON_LABEL": "Seleccione motivo",
+				"COMMENTS_LABEL": "Comentarios"
             }
         },
         "new": {

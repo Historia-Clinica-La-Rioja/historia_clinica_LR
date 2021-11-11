@@ -8,7 +8,7 @@
 		<mat-card-content fxLayout="column" fxLayoutGap="20px">
 			<div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutGap.lt-md="0">
 				<mat-form-field appearance="outline" fxFlex="50%">
-					<mat-label>Tipo</mat-label>
+					<mat-label>{{ 'pacientes.home.find_add_section.IDENTIFY_TYPE_LABEL' | translate }}</mat-label>
 					<mat-select formControlName="identifType" (openedChange)="onIdentifTypeChange()">
 						<mat-option id="identifType" name="identifType" *ngFor="let type of identifyTypeArray"
 							[value]="type.id">
@@ -20,7 +20,7 @@
 					</mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="outline" fxFlex="50%">
-					<mat-label>Nro de documento</mat-label>
+					<mat-label>{{ 'pacientes.home.find_add_section.IDENTIFY_NUMBER_LABEL' | translate }}</mat-label>
 					<input matInput type="text" id="identifNumber" name="identifNumber" formControlName="identifNumber"
 						placeholder="Nro de documento">
 					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'identifNumber')">
@@ -35,7 +35,7 @@
 				</mat-form-field>
 			</div>
 			<div>
-				<mat-label>Sexo</mat-label>
+				<mat-label>{{ 'pacientes.home.find_add_section.GENDER_LABEL' | translate }}</mat-label>
 				<div>
 					<mat-radio-group name="gender" id="gender" formControlName="gender">
 						<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions"
@@ -51,7 +51,7 @@
 			<div *appHasRole="['ADMINISTRATIVO']">
 				<section>
 					<mat-checkbox (change)="noIdentityChange()">
-						No acredita identidad
+						{{ 'pacientes.home.find_add_section.NO_IDENTITY' | translate }}
 					</mat-checkbox>
 				</section>
 				<mat-card-header *ngIf="noIdentity">
@@ -61,7 +61,7 @@
 				<mat-card-content *ngIf="noIdentity" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-md="column"
 					fxLayoutGap.lt-md="0">
 					<mat-form-field appearance="outline" fxFlex="50">
-						<mat-label>Seleccione motivo</mat-label>
+						<mat-label>{{ 'pacientes.home.find_add_section.SELECT_REASON_LABEL' | translate }}</mat-label>
 						<mat-select formControlName="IdentityVerificationStatus">
 							<mat-option id="IdentityVerificationStatus"
 								*ngFor="let cause of identityVerificationStatusArray" [value]="cause.id">
@@ -73,14 +73,14 @@
 						</mat-error>
 					</mat-form-field>
 					<mat-form-field appearance="outline" fxFlex="50">
-						<mat-label>Comentarios</mat-label>
+						<mat-label>{{ 'pacientes.home.find_add_section.COMMENTS_LABEL' | translate }}</mat-label>
 						<textarea matInput cdkTextareaAutosize id="comments" cdkAutosizeMinRows="1"
 							cdkAutosizeMaxRows="5" formControlName="comments">
 						</textarea>
 					</mat-form-field>
 				</mat-card-content>
 			</div>
-			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" align="end">
+			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
 				<div class="search" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
 					<button mat-stroked-button color="primary" type="button" (click)="openScanPatientDialog(formDirectiveSearchForm)" [disabled]="disableButtonScan">
 						<span class="material-icons" color="primary">crop_free</span>

@@ -9,11 +9,11 @@
 			<span [translate]="'pacientes.search.SUBTITLE_TWO'"></span>
 		</p>
 		<div class="content">
-			<form [formGroup]="formSearch" (ngSubmit)="submit()">
-				<div class="form-row" id="id_identification">
-					<div>
+			<form [formGroup]="formSearch" (ngSubmit)="submit()" fxLayout="column" fxLayoutGap="20px">
+				<div id="id_identification" fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+					<div [ngClass]="!identificationTypeFieldDisabled ? 'white-bg-color' : ''" fxFlex="30" fxFlex.lt-md="100">
 						<div>
-							<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
+							<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'" [ngClass]="identificationTypeFieldDisabled ? 'color-disabled' : ''"></span>
 						</div>
 						<mat-form-field appearance="outline">
 							<mat-select
@@ -31,9 +31,9 @@
 						</mat-form-field>
 					</div>
 
-					<div>
+					<div [ngClass]="!identificationNumberFieldDisabled ? 'white-bg-color' : ''" fxFlex="30" fxFlex.lt-md="100">
 						<div>
-							<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
+							<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'" [ngClass]="identificationNumberFieldDisabled ? 'color-disabled' : ''"></span>
 						</div>
 						<mat-form-field appearance="outline">
 							<input id="identificationNumber"
@@ -49,82 +49,94 @@
 						</mat-form-field>
 					</div>
 				</div>
-				<mat-label>
-					<span [translate]="'pacientes.form.GENDER'"></span>
-				</mat-label>
 				<div>
-					<mat-radio-group name="genderId" id="genderId" formControlName="genderId">
-						<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
-							{{gender.description}}
-						</mat-radio-button>
-					</mat-radio-group>
-					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'genderId')">
-						<span [translate]="'pacientes.form.REQUIRED_GENDER'"></span>
-					</mat-error>
+					<mat-label>
+						<span [translate]="'pacientes.form.GENDER'" [ngClass]="genderFieldDisabled ? 'color-disabled' : ''"></span>
+					</mat-label>
+					<div [ngClass]="!genderFieldDisabled ? 'white-bg-color' : ''">
+						<mat-radio-group name="genderId" id="genderId" formControlName="genderId">
+							<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
+								{{gender.description}}
+							</mat-radio-button>
+						</mat-radio-group>
+						<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'genderId')">
+							<span [translate]="'pacientes.form.REQUIRED_GENDER'"></span>
+						</mat-error>
+					</div>
 				</div>
 				<br>
-				<div>
-					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
+
+				<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="7px">
+					<div>
+						<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
+					</div>
+					<div id="id_names" class="white-bg-color" fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+							<input  id="firstName"
+									formControlName="firstName"
+									placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+									[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.firstName"
+									matInput>
+							<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
+								<span [translate]="'pacientes.form.REQUIRED'"></span>
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+							<input  id="middleNames"
+									formControlName="middleNames"
+									placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
+									[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.middleNames"
+									matInput>
+						</mat-form-field>
+					</div>
 				</div>
-				<div class="form-row" id="id_names">
-					<mat-form-field appearance="outline">
-						<input  id="firstName"
-								formControlName="firstName"
-								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
-								[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.firstName"
-								matInput>
-						<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'firstName')">
-							<span [translate]="'pacientes.form.REQUIRED'"></span>
-						</mat-error>
-					</mat-form-field>
-					<mat-form-field appearance="outline">
-						<input  id="middleNames"
-								formControlName="middleNames"
-								placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
-								[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.middleNames"
-								matInput>
-					</mat-form-field>
+
+				<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="7px">
+					<div>
+						<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
+					</div>
+					<div id="id_lastName" class="white-bg-color" fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+							<input  id="lastName"
+									formControlName="lastName"
+									placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+									[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.lastName"
+									matInput>
+							<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
+								<span [translate]="'pacientes.form.REQUIRED'"></span>
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+							<input  id="otherLastNames"
+									formControlName="otherLastNames"
+									[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.otherLastNames"
+									placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+									matInput>
+						</mat-form-field>
+					</div>
 				</div>
-				<div>
-					<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
-				</div>
-				<div class="form-row" id="id_lastName">
-					<mat-form-field appearance="outline">
-						<input  id="lastName"
-								formControlName="lastName"
-								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
-								[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.lastName"
-								matInput>
-						<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'lastName')">
-							<span [translate]="'pacientes.form.REQUIRED'"></span>
-						</mat-error>
-					</mat-form-field>
-					<mat-form-field appearance="outline">
-						<input  id="otherLastNames"
-								formControlName="otherLastNames"
-								[maxLength]="PERSON_MAX_LENGHT.MAX_LENGTH.otherLastNames"
-								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
-								matInput>
-					</mat-form-field>
-				</div>
-				<div>
-					<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
-				</div>
-				<div>
-					<mat-form-field appearance="outline">
-						<input matInput id="birthDate"
-							   formControlName="birthDate"
-							   [matDatepicker]="picker"
-							   [min]="minDate"
-							   [max]="today">
-						<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
-							<span [translate]="'pacientes.form.REQUIRED'"></span>
-						</mat-error>
-						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-						<mat-datepicker #picker></mat-datepicker>
-					</mat-form-field>
+
+				<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="7px">
+					<div>
+						<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
+					</div>
+					<div class="white-bg-color" fxLayout="row">
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+							<input matInput id="birthDate"
+								formControlName="birthDate"
+								[matDatepicker]="picker"
+								[min]="minDate"
+								[max]="today">
+							<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
+								<span [translate]="'pacientes.form.REQUIRED'"></span>
+							</mat-error>
+							<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+							<mat-datepicker #picker></mat-datepicker>
+						</mat-form-field>
+					</div>
 				</div>
 				<br>
+
 				<mat-action-row *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
 					<button mat-stroked-button type="button" (click)="back()">
 						<span [translate]="'buttons.BACK'"></span>

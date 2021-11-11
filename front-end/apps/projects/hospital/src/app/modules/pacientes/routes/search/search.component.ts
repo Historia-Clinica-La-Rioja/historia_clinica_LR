@@ -52,6 +52,9 @@ export class SearchComponent implements OnInit {
 	public searchPatient;
 	public noIdentity: boolean;
 	private readonly routePrefix;
+	public genderFieldDisabled = false;
+	public identificationTypeFieldDisabled = false;
+	public identificationNumberFieldDisabled = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -231,12 +234,15 @@ export class SearchComponent implements OnInit {
 
 		if (params.identificationNumber) {
 			this.formSearch.controls.identificationNumber.disable();
+			this.identificationNumberFieldDisabled = true;
 		}
 		if (params.identificationTypeId) {
 			this.formSearch.controls.identificationTypeId.disable();
+			this.identificationTypeFieldDisabled = true;
 		}
 		if (params.genderId) {
 			this.formSearch.controls.genderId.disable();
+			this.genderFieldDisabled = true;
 		}
 
 	}

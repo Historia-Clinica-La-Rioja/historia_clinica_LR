@@ -2,10 +2,11 @@
 	<section class="page">
 		<h2 class="page-title" [translate]="'pacientes.new.TITLE'"></h2>
 		<h3 [translate]="'pacientes.new.SUBTITLE'"></h3>
-		<form [formGroup]="form" (ngSubmit)="save()">
-			<div class="form-row">
-				<div>
-					<div>
+		<form [formGroup]="form" (ngSubmit)="save()" fxLayout="column" fxLayoutGap="10px" fxLayoutGap.lt-sm="15px">
+			<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+				<div fxFlex="30" fxFlex.lt-md="100" fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px"
+					[ngClass]="!identificationTypeIdDisabled ? 'white-bg-color' : ''">
+					<div [ngClass]="identificationTypeIdDisabled ? 'color-disabled' : ''">
 						<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>*
 					</div>
 					<mat-form-field appearance="outline">
@@ -21,8 +22,9 @@
 					</mat-form-field>
 				</div>
 
-				<div>
-					<div>
+				<div fxFlex="30" fxFlex.lt-md="100" fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px"
+					[ngClass]="!identificationNumberDisabled ? 'white-bg-color' : ''">
+					<div [ngClass]="identificationNumberDisabled ? 'color-disabled' : ''">
 						<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>*
 					</div>
 					<mat-form-field appearance="outline">
@@ -32,14 +34,14 @@
 						<mat-error *ngIf="hasError(form, 'required', 'identificationNumber')"
 							[translate]="'pacientes.form.REQUIRED'"></mat-error>
 						<mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')">
-							Introduzca como máximo 11 caracteres
+							{{ 'pacientes.form.IDENTIFICATION_NUMBER_MAXLENGHT_ERROR' | translate }}
 						</mat-error>
 					</mat-form-field>
 				</div>
 			</div>
 
-			<div>
-				<div>
+			<div [ngClass]="!genderIdDisabled ? 'white-bg-color' : ''">
+				<div [ngClass]="genderIdDisabled ? 'color-disabled' : ''">
 					<span [translate]="'pacientes.form.GENDER'"></span>*
 				</div>
 				<mat-radio-group formControlName="genderId">
@@ -51,73 +53,81 @@
 			</div>
 			<br>
 
-			<div>
-				<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>*
-			</div>
-			<div class="form-row">
-				<div>
-					<mat-form-field appearance="outline">
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div [ngClass]="firstNameDisabled ? 'color-disabled' : ''">
+					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>*
+				</div>
+				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0"
+					[ngClass]="!firstNameDisabled ? 'white-bg-color' : ''">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 						<input id="firstName" name="firstName" formControlName="firstName"
 							placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
 							[maxLength]="PERSON_MAX_LENGTH.firstName" matInput>
 						<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 					</mat-form-field>
-				</div>
 
-				<mat-form-field appearance="outline">
-					<input id="middleNames" name="middleNames" formControlName="middleNames"
-						placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
-						[maxLength]="PERSON_MAX_LENGTH.middleNames" matInput>
-				</mat-form-field>
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input id="middleNames" name="middleNames" formControlName="middleNames"
+							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
+							[maxLength]="PERSON_MAX_LENGTH.middleNames" matInput>
+					</mat-form-field>
+				</div>
 			</div>
 
-			<div class="form-row">
-				<div>
-					<div>
-						<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>*
-					</div>
-					<mat-form-field appearance="outline">
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div [ngClass]="lastNameDisabled ? 'color-disabled' : ''">
+					<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>*
+				</div>
+				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0"
+					[ngClass]="!lastNameDisabled ? 'white-bg-color' : ''">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 						<input id="lastName" name="lastName" formControlName="lastName"
-							placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
-							[maxLength]="PERSON_MAX_LENGTH.lastName" matInput>
+						placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+						[maxLength]="PERSON_MAX_LENGTH.lastName" matInput>
 						<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 					</mat-form-field>
-					<mat-form-field appearance="outline">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 						<input id="otherLastNames" name="otherLastNames" formControlName="otherLastNames"
-							placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
-							[maxLength]="PERSON_MAX_LENGTH.otherLastNames" matInput>
+						placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+						[maxLength]="PERSON_MAX_LENGTH.otherLastNames" matInput>
 					</mat-form-field>
 				</div>
 			</div>
 
-			<div>
-				<span [translate]="'pacientes.form.MOTHERS_LAST_NAME'"></span>
-			</div>
-			<mat-form-field appearance="outline">
-				<input id="mothersLastName" name="mothersLastName" formControlName="mothersLastName"
-					placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
-					[maxLength]="PERSON_MAX_LENGTH.mothersLastName" matInput>
-			</mat-form-field>
-
-			<div>
-				<span [translate]="'pacientes.form.BIRTH_DATE'"></span>*
-			</div>
-			<div>
-				<mat-form-field appearance="outline">
-					<input formControlName="birthDate" id="birthDate" matInput [max]="today" [matDatepicker]="picker2">
-					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-					<mat-datepicker #picker2></mat-datepicker>
-				</mat-form-field>
-				<mat-error *ngIf="hasError(form,'required', 'birthDate')  && formSubmitted"
-					[translate]="'pacientes.form.REQUIRED'"></mat-error>
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div>
+					<span [translate]="'pacientes.form.MOTHERS_LAST_NAME'"></span>
+				</div>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input id="mothersLastName" name="mothersLastName" formControlName="mothersLastName"
+							placeholder="{{'pacientes.form.MOTHERS_LAST_NAME' | translate}}"
+							[maxLength]="PERSON_MAX_LENGTH.mothersLastName" matInput>
+					</mat-form-field>
+				</div>
 			</div>
 
-			<div>
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div [ngClass]="birthDateDisabled ? 'color-disabled' : ''">
+					<span [translate]="'pacientes.form.BIRTH_DATE'"></span>*
+				</div>
+				<div fxLayout="row" [ngClass]="!birthDateDisabled ? 'white-bg-color' : ''">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input formControlName="birthDate" id="birthDate" matInput [max]="today" [matDatepicker]="picker2">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker #picker2></mat-datepicker>
+					</mat-form-field>
+					<mat-error *ngIf="hasError(form,'required', 'birthDate')  && formSubmitted"
+						[translate]="'pacientes.form.REQUIRED'"></mat-error>
+				</div>
+			</div>
+
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
 				<div>
 					<span [translate]="'pacientes.form.GENDER_SELF_DETERMINATION'"></span>
 				</div>
-				<div class="form-row">
-					<mat-form-field appearance="outline">
+				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="50" fxFlex.lt-sm="100">
 						<mat-select formControlName="genderSelfDeterminationId"
 							(selectionChange)="showOtherSelfPerceivedGender()"
 							placeholder="{{ 'pacientes.form.GENDER_SELF_DETERMINATION' | translate }}">
@@ -130,8 +140,8 @@
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
-					<ng-container *ngIf="showOtherGender">
-						<mat-form-field appearance="outline">
+					<ng-container *ngIf="showOtherGender" class="white-bg-color">
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 							<input matInput maxlength="GENDER_MAX_LENGTH" required
 								formControlName="otherGenderSelfDetermination"
 								placeholder="{{ 'pacientes.form.OTHER_SELF_PERCEIVED_GENDER_LABEL' | translate }}">
@@ -146,123 +156,138 @@
 					</ng-container>
 				</div>
 			</div>
-			<br>
 
-			<div>
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
 				<div>
 					<span [translate]="'pacientes.form.NAME_SELF_DETERMINATION'"></span>
 				</div>
-				<mat-form-field appearance="outline">
-					<input id="nameSelfDetermination" name="nameSelfDetermination"
-						formControlName="nameSelfDetermination"
-						placeholder="{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}" maxlength="25" matInput>
-				</mat-form-field>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input id="nameSelfDetermination" name="nameSelfDetermination"
+							formControlName="nameSelfDetermination"
+							placeholder="{{'pacientes.form.NAME_SELF_DETERMINATION' | translate}}" maxlength="25" matInput>
+					</mat-form-field>
+				</div>
 			</div>
 
-			<div>
-				<span [translate]="'pacientes.form.CUIT_CUIL'"></span>
-			</div>
-			<mat-form-field appearance="outline">
-				<input id="cuil" name="cuil" formControlName="cuil"
-					placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
-			</mat-form-field>
-			<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
-				Introduzca como máximo 11 caracteres
-			</mat-error>
-
-			<div>
-				<span [translate]="'pacientes.form.ADDRESS'"></span>
-			</div>
-			<div class="form-row">
-				<mat-form-field appearance="outline">
-					<mat-select id="addressCountryId" name="addressCountryId" formControlName="addressCountryId"
-						placeholder="{{'pacientes.form.ADDRESS_COUNTRY' | translate}}"
-						(selectionChange)="setProvinces()">
-						<mat-option *ngFor="let country of countries" [value]="country.id">
-							{{country.description}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<mat-select id="addressProvinceId" name="addressProvinceId" formControlName="addressProvinceId"
-						placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}"
-						(selectionChange)="setDepartments()">
-						<mat-option *ngFor="let province of provinces" [value]="province.id">
-							{{province.description}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<mat-select id="addressDepartmentId" name="addressDepartmentId"
-						formControlName="addressDepartmentId"
-						placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}"
-						(selectionChange)="setCities()">
-						<mat-option *ngFor="let department of departments" [value]="department.id">
-							{{department.description}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<mat-select id="addressCityId" name="addressCityId" formControlName="addressCityId"
-						placeholder="{{'pacientes.form.ADDRESS_CITY' | translate}}">
-						<mat-option *ngFor="let city of cities" [value]="city.id">
-							{{city.description}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-					<input id="addressPostcode" name="addressPostcode" formControlName="addressPostcode" maxlength="6"
-						pattern="[0-9]{1,6}" placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}" matInput>
-					<mat-error *ngIf="hasError(form,'pattern', 'addressPostcode')  && formSubmitted"
-						[translate]="'pacientes.form.INVALID'"></mat-error>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<input id="addressStreet" name="addressStreet" formControlName="addressStreet" maxlength="35"
-						maxlength="35" placeholder="{{'pacientes.form.ADDRESS_STREET' | translate}}" matInput>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<input id="addressNumber" name="addressNumber" formControlName="addressNumber" maxlength="5"
-						placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}" matInput>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<input id="addressFloor" name="addressFloor" formControlName="addressFloor" maxlength="2"
-						placeholder="{{'pacientes.form.ADDRESS_FLOOR' | translate}}" matInput>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<input id="addressApartment" name="addressApartment" formControlName="addressApartment"
-						maxlength="3" placeholder="{{'pacientes.form.ADDRESS_APARTMENT' | translate}}" matInput>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<input id="addressQuarter" name="addressQuarter" formControlName="addressQuarter" maxlength="30"
-						placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}" matInput>
-				</mat-form-field>
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div>
+					<span [translate]="'pacientes.form.CUIT_CUIL'"></span>
+				</div>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input id="cuil" name="cuil" formControlName="cuil"
+							placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
+					</mat-form-field>
+					<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
+						{{ 'pacientes.form.IDENTIFICATION_NUMBER_MAXLENGHT_ERROR' | translate }}
+					</mat-error>
+				</div>
 			</div>
 
-			<div>
-				<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
-			</div>
-			<mat-form-field appearance="outline">
-				<input id="phoneNumber" name="phoneNumber" formControlName="phoneNumber" maxlength="15"
-					placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
-			</mat-form-field>
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div>
+					<span [translate]="'pacientes.form.ADDRESS'"></span>
+				</div>
+				<div class="form-row" id="address-fields" fxLayoutGap="10px" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<mat-select id="addressCountryId" name="addressCountryId" formControlName="addressCountryId"
+							placeholder="{{'pacientes.form.ADDRESS_COUNTRY' | translate}}"
+							(selectionChange)="setProvinces()">
+							<mat-option *ngFor="let country of countries" [value]="country.id">
+								{{country.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
 
-			<div>
-				<span [translate]="'pacientes.form.EMAIL'"></span>
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<mat-select id="addressProvinceId" name="addressProvinceId" formControlName="addressProvinceId"
+							placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}"
+							(selectionChange)="setDepartments()">
+							<mat-option *ngFor="let province of provinces" [value]="province.id">
+								{{province.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<mat-select id="addressDepartmentId" name="addressDepartmentId"
+							formControlName="addressDepartmentId"
+							placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}"
+							(selectionChange)="setCities()">
+							<mat-option *ngFor="let department of departments" [value]="department.id">
+								{{department.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<mat-select id="addressCityId" name="addressCityId" formControlName="addressCityId"
+							placeholder="{{'pacientes.form.ADDRESS_CITY' | translate}}">
+							<mat-option *ngFor="let city of cities" [value]="city.id">
+								{{city.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<input id="addressPostcode" name="addressPostcode" formControlName="addressPostcode" maxlength="6"
+							pattern="[0-9]{1,6}" placeholder="{{'pacientes.form.ADDRESS_POSTCODE' | translate}}" matInput>
+						<mat-error *ngIf="hasError(form,'pattern', 'addressPostcode')  && formSubmitted"
+							[translate]="'pacientes.form.INVALID'"></mat-error>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<input id="addressStreet" name="addressStreet" formControlName="addressStreet" maxlength="35"
+							maxlength="35" placeholder="{{'pacientes.form.ADDRESS_STREET' | translate}}" matInput>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<input id="addressNumber" name="addressNumber" formControlName="addressNumber" maxlength="5"
+							placeholder="{{'pacientes.form.ADDRESS_NUMBER' | translate}}" matInput>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<input id="addressFloor" name="addressFloor" formControlName="addressFloor" maxlength="2"
+							placeholder="{{'pacientes.form.ADDRESS_FLOOR' | translate}}" matInput>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<input id="addressApartment" name="addressApartment" formControlName="addressApartment"
+							maxlength="3" placeholder="{{'pacientes.form.ADDRESS_APARTMENT' | translate}}" matInput>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" fxFlex.lt-sm="100">
+						<input id="addressQuarter" name="addressQuarter" formControlName="addressQuarter" maxlength="30"
+							placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}" matInput>
+					</mat-form-field>
+				</div>
 			</div>
-			<mat-form-field appearance="outline">
-				<input id="email" name="email" formControlName="email" placeholder="usuario@usuario.com" maxlength="100"
-					matInput>
-				<mat-error *ngIf="hasError(form,'email', 'email')  && formSubmitted"
-					[translate]="'pacientes.form.INVALID'"></mat-error>
-			</mat-form-field>
+
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div>
+					<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
+				</div>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input id="phoneNumber" name="phoneNumber" formControlName="phoneNumber" maxlength="15"
+							placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+				<div>
+					<span [translate]="'pacientes.form.EMAIL'"></span>
+				</div>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input id="email" name="email" formControlName="email" placeholder="usuario@usuario.com" maxlength="100"
+							matInput>
+						<mat-error *ngIf="hasError(form,'email', 'email')  && formSubmitted"
+							[translate]="'pacientes.form.INVALID'"></mat-error>
+					</mat-form-field>
+				</div>
+			</div>
 
 			<div fxLayout="column">
 				<span [translate]="'pacientes.form.MEDICAL_COVERAGE'"></span>
@@ -273,7 +298,7 @@
 			</div>
 
 			<ng-container *appFeatureFlag="'agregarMedicosAdicionales'">
-				<div class="form-row">
+				<div class="form-row" class="white-bg-color">
 					<div>
 						<div>
 							<span [translate]="'pacientes.form.GENERAL_PRACTITIONER'"></span>
@@ -297,7 +322,7 @@
 					</div>
 				</div>
 
-				<div class="form-row">
+				<div class="form-row" class="white-bg-color">
 					<div>
 						<div>
 							<span [translate]="'pacientes.form.PAMI_DOCTOR'"></span>
@@ -320,66 +345,79 @@
 					</div>
 				</div>
 			</ng-container>
-			<div>
+
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
 				<div>
 					<span [translate]="'pacientes.form.RELIGION'"></span>
 				</div>
-				<mat-form-field appearance="outline">
-					<input id="religion" name="religion" formControlName="religion" maxlength="25"
-						placeholder="{{'pacientes.form.RELIGION' | translate}}" matInput>
-				</mat-form-field>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<input id="religion" name="religion" formControlName="religion" maxlength="25"
+							placeholder="{{'pacientes.form.RELIGION' | translate}}" matInput>
+					</mat-form-field>
+				</div>
 			</div>
-			<div>
+
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
 				<div>
 					<span [translate]="'pacientes.form.ETHNIC'"></span>
 				</div>
-				<mat-form-field appearance="outline">
-					<mat-select id="ethnicity-select" formControlName="ethnicityId"
-						placeholder="{{'pacientes.form.ETHNIC' | translate}}">
-						<mat-option *ngFor="let ethnicity of ethnicities" [value]="ethnicity.id">
-							{{ethnicity.pt | titlecase}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<mat-select id="ethnicity-select" formControlName="ethnicityId"
+							placeholder="{{'pacientes.form.ETHNIC' | translate}}">
+							<mat-option *ngFor="let ethnicity of ethnicities" [value]="ethnicity.id">
+								{{ethnicity.pt | titlecase}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
 			</div>
-			<div>
+
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
 				<div>
 					<span [translate]="'pacientes.form.OCCUPATION'"></span>
 				</div>
-				<mat-form-field appearance="outline">
-					<mat-select id="occupation-select" formControlName="occupationId"
-						placeholder="{{'pacientes.form.OCCUPATION' | translate}}">
-						<mat-option *ngFor="let occupation of occupations" [value]="occupation.id"
-							matTooltip="{{ occupation.description }}">
-							{{occupation.description}}
-						</mat-option>
-					</mat-select>
-					<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value"
-						matSuffix color="warn" mat-icon-button
-						(click)="form.controls.occupationId.reset(); $event.stopPropagation()">
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<mat-select id="occupation-select" formControlName="occupationId"
+							placeholder="{{'pacientes.form.OCCUPATION' | translate}}">
+							<mat-option *ngFor="let occupation of occupations" [value]="occupation.id"
+								matTooltip="{{ occupation.description }}">
+								{{occupation.description}}
+							</mat-option>
+						</mat-select>
+						<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value"
+							matSuffix color="warn" mat-icon-button
+							(click)="form.controls.occupationId.reset(); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+				</div>
 			</div>
-			<div>
+
+			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
 				<div>
 					<span [translate]="'pacientes.form.EDUCATION_LEVEL'"></span>
 				</div>
-				<mat-form-field appearance="outline">
-					<mat-select id="educationLevel-select" formControlName="educationLevelId"
-						placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
-						<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id"
-							matTooltip="{{ educationLevel.description }}">
-							{{educationLevel.description}}
-						</mat-option>
-					</mat-select>
-					<button id="clear-educationLevel" type="button" mat-button
-						*ngIf="form.controls.educationLevelId.value" matSuffix color="warn" mat-icon-button
-						(click)="form.controls.educationLevelId.reset(); $event.stopPropagation()">
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
+				<div fxLayout="row" class="white-bg-color">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+						<mat-select id="educationLevel-select" formControlName="educationLevelId"
+							placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
+							<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id"
+								matTooltip="{{ educationLevel.description }}">
+								{{educationLevel.description}}
+							</mat-option>
+						</mat-select>
+						<button id="clear-educationLevel" type="button" mat-button
+							*ngIf="form.controls.educationLevelId.value" matSuffix color="warn" mat-icon-button
+							(click)="form.controls.educationLevelId.reset(); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+				</div>
 			</div>
+
 			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" class="form-buttons">
 				<button mat-stroked-button type="button" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>

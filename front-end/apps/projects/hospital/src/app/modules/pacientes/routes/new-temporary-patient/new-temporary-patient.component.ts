@@ -55,6 +55,15 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public occupations: PersonOccupationDto[];
 	public educationLevels: EducationLevelDto[];
 
+	public identificationNumberDisabled = false;
+	public identificationTypeIdDisabled = false;
+	public genderIdDisabled = false;
+	public firstNameDisabled = false;
+	public middleNamesDisabled = false;
+	public lastNameDisabled = false;
+	public otherLastNamesDisabled = false;
+	public birthDateDisabled = false;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -296,27 +305,35 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 		if (params.identificationNumber) {
 			this.form.controls.identificationNumber.disable();
+			this.identificationNumberDisabled = true;
 		}
 		if (params.identificationTypeId) {
 			this.form.controls.identificationTypeId.disable();
+			this.identificationTypeIdDisabled = true;
 		}
 		if (params.genderId) {
 			this.form.controls.genderId.disable();
+			this.genderIdDisabled = true;
 		}
 		if (params.firstName) {
 			this.form.controls.firstName.disable();
+			this.firstNameDisabled = true;
 		}
 		if (params.middleNames) {
 			this.form.controls.middleNames.disable();
+			this.middleNamesDisabled = true;
 		}
 		if (params.lastName) {
 			this.form.controls.lastName.disable();
+			this.lastNameDisabled = true;
 		}
 		if (params.otherLastNames) {
 			this.form.controls.otherLastNames.disable();
+			this.otherLastNamesDisabled = true;
 		}
 		if (params.birthDate) {
 			this.form.controls.birthDate.disable();
+			this.birthDateDisabled = true;
 		}
 
 	}
