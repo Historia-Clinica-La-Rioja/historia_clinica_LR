@@ -84,6 +84,20 @@
 										</mat-slide-toggle>
 									</form>
 								</div>
+								<ng-container>
+									<div content>
+										<button mat-stroked-button color="primary" (click)="goResetAccessData()">
+											<span class="uppercase" [translate]="'pacientes.user_data.buttons.RESET_ACCESS_DATA'"></span>
+										</button>
+									</div>
+								</ng-container>
+							</ng-container>
+							<ng-container *ngIf="!userData.username">
+								<div content>
+								<button mat-raised-button color="primary" (click)="goResetAccessData()">
+									<span [translate]="'pacientes.user_data.buttons.SET_ACCESS_DATA'" class="uppercase"></span>
+								</button>
+								</div>
 							</ng-container>
 							<mat-divider inset></mat-divider>
 						</div>

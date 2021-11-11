@@ -138,7 +138,9 @@
             "WITHOUT_USER": "Sin usuario",
             "NO_INFO": "Sin información",
             "buttons": {
-                "CREATE_USER": "CREAR USUARIO"
+                "CREATE_USER": "CREAR USUARIO",
+				"SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
+				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO"
             },
             "messages": {
                 "SUCCESS": "El usuario se creó exitosamente",
