@@ -139,3 +139,149 @@ databaseChangeLog:
                 referencedColumnNames: id
                 referencedTableName: care_line
                 validate: true
+    
+    - changeSet:
+        id: snomed_group-createTable
+        comment: Create table snomed_group
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: snomed_group
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_snomed_group
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+            - column:
+                constraints:
+                    nullable: false
+                name: ecl
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: custom_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: last_update
+                type: date
+                
+    - changeSet:
+        id: snomed_related_group-createTable
+        comment: Create table snomed_related_group
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: snomed_related_group
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: snomed_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: group_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: orden
+                type: int
+        -  addPrimaryKey:
+                clustered: true        
+                columnNames:  snomed_id, group_id  
+                constraintName:  PK_snomed_related_group
+                tableName:  snomed_related_group  
+                validate: true
+        - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: snomed_related_group
+                constraintName: FK_snomed_related_group_snomed_id
+                referencedColumnNames: id
+                referencedTableName: snomed
+        - addForeignKeyConstraint:
+                baseColumnNames: group_id
+                baseTableName: snomed_related_group
+                constraintName: FK_snomed_related_group_group_id
+                referencedColumnNames: id
+                referencedTableName: snomed_group
+                
+    - changeSet:
+        id: manual_classification-createTable
+        comment: Create table manual_classification
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: manual_classification
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_manual_classification
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+    
+    - changeSet:
+        id: snvs_group-createTable
+        comment: Create table snvs_group
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: snvs_group
+            columns: 
+            - column:
+                name: group_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: event_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: group_event_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: environment
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: manual_classification_id
+                type: int
+        - addForeignKeyConstraint:
+                baseColumnNames: group_id
+                baseTableName: snvs_group
+                constraintName: FK_snvs_group_group_id
+                referencedColumnNames: id
+                referencedTableName: snomed_group
+        - addForeignKeyConstraint:
+                baseColumnNames: manual_classification_id
+                baseTableName: snvs_group
+                constraintName: FK_snvs_group_manual_classification_id
+                referencedColumnNames: id
+                referencedTableName: manual_classification
+        - addUniqueConstraint:
+                constraintName: UQ_snvs_attributes
+                columnNames: group_id, event_id, group_event_id, environment, manual_classification_id
+                tableName: snvs_group    
