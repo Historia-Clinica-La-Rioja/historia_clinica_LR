@@ -24,7 +24,7 @@ const Home = () => {
     }
 
     return <Card>
-            <Title title={translate('covid.home.title')} />
+            <Title title={translate('sgh.dashboard.title')} />
             <CardContent>
                 { authenticated? <OkMessage /> : <ForbiddenMessage /> }
             </CardContent>

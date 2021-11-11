@@ -49,12 +49,9 @@ const resourcesAdminInstitucional = [
     <Resource name="rooms" {...rooms} />,
     <Resource name="beds" {...beds} />,
     <Resource name="clinicalspecialties" show={ClinicalSpecialtyShow} />,
-    <Resource name="dependencies" />,
-    <Resource name="personextended" />,
 ];
 
 const resourcesAdminRoot = [
-    <Resource name="person" {...person} />,
     <Resource name="identificationTypes" />,
     <Resource name="genders" />,
     <Resource name="sectortypes" />,
@@ -84,20 +81,18 @@ const resourcesAdminRoot = [
     <Resource name="beds" {...beds} />,
     <Resource name="admin" {...admin}/>,
     <Resource name="users" {...users} />,
+];
+
+const resourcesFor = (permissions: SGXPermissions) =>
+    permissions.hasAnyAssignment(
+        { role: 'ROOT', institutionId: -1 }, { role: 'ADMINISTRADOR', institutionId: -1 }
+    ) ? resourcesAdminRoot : resourcesAdminInstitucional;
+
+const resources = (permissions: SGXPermissions) => [
+    <Resource name="person" {...person(permissions)} />,
+    ...resourcesFor(permissions),
     <Resource name="dependencies" />,
     <Resource name="personextended" />,
 ];
-
-const resources = (permissions: SGXPermissions) => 
-    permissions.hasAnyAssignment(
-    { role: 'ROOT', institutionId: -1 },
-    { role: 'ADMINISTRADOR', institutionId: -1 }) ?
-    [
-        resourcesAdminRoot
-    ]
-    :
-    [
-        resourcesAdminInstitucional
-    ];
 
 export default resources;

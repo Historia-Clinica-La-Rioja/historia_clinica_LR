@@ -1,11 +1,11 @@
 
-import SettingsIcon from '@material-ui/icons/Settings';
+import icon from '@material-ui/icons/LocationCity';
 
 import CityShow from './CityShow';
 import CityList from './CityList';
 
 const cities = {
-    icon: SettingsIcon,
+    icon,
     show: CityShow,
     list: CityList,
 };
