@@ -40,7 +40,7 @@ public class BackofficeClinicalSpecialtyCareLineValidator implements BackofficeP
     public void assertCreate(ClinicalSpecialtyCareLine entity) {
         ClinicalSpecialtyCareLine clinicalSpecialtyCareLine = this.repository.findByCareLineIdAndClinicalSpecialtyId(entity.getCareLineId(), entity.getClinicalSpecialtyId());
         if (clinicalSpecialtyCareLine != null && !clinicalSpecialtyCareLine.isDeleted())
-            throw new BackofficeValidationException("clinical-specialty.care-line.exists");
+            throw new BackofficeValidationException("care-line.clinical-specialty-exists");
     }
 
     @Override

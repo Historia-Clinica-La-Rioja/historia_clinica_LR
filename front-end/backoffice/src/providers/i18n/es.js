@@ -52,7 +52,10 @@ const messages = {
           "parentOfItself": "Un sector no puede ser padre de sí mismo"
         },
         forbidden: 'No tiene los permisos necesarios',
-        "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución"
+        "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución",
+        "care-line":{
+            "clinical-specialty-exists": "La especialidad clínica ya se encuentra asociada a la línea de cuidado"
+        }
     },
     resources: {
         beds: {
