@@ -330,6 +330,11 @@ export interface BreathingDto extends Serializable {
     stridor?: boolean;
 }
 
+export interface CareLineDto extends Serializable {
+    description: string;
+    id: number;
+}
+
 export interface ChangeStateMedicationRequestDto extends Serializable {
     dayQuantity?: number;
     medicationsIds: number[];
