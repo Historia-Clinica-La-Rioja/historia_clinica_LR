@@ -174,10 +174,10 @@
 					"WEIGHT": "Peso (kg)"
 				},
 				"previous-data": {
-					"ADD": "SI, CONSERVAR",
+					"ADD": "SI, INCLUIRLOS",
 					"DISCARD": "NO, DESCARTARLOS",
 					"ASK":"¿Desea incluirlos en la consulta?",
-					"CONTENT": "Hay datos antropométricos y/o signos vitales cargados previamente"
+					"CONTENT": "Hay datos antropométricos y/o signos vitales cargados previamente."
 				},
 				"alergias": {
 					"TITLE": "Alergias",
