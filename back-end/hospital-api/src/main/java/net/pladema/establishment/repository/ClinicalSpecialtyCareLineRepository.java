@@ -1,6 +1,7 @@
 package net.pladema.establishment.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.establishment.repository.entity.ClinicalSpecialtyCareLine;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,13 @@ public interface ClinicalSpecialtyCareLineRepository extends SGXAuditableEntityJ
             "WHERE cscl.careLineId = :careLineId " +
             "AND cscl.deleteable.deleted = false")
     List<ClinicalSpecialtyCareLine> findByCareLineId(@Param("careLineId") Integer careLineId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT cs FROM ClinicalSpecialty as cs " +
+            "JOIN ClinicalSpecialtyCareLine as cscl " +
+            "ON cs.id = cscl.clinicalSpecialtyId " +
+            "WHERE cscl.careLineId = :careLineId " +
+            "AND cscl.deleteable.deleted = false")
+    List<ClinicalSpecialty> getAllByCareLineId(@Param("careLineId") Integer careLineId);
+
 }
