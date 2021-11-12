@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ApiErrorMessageDto, PersonDataDto } from "@api-rest/api-model";
-import { PublicUserService } from "@api-rest/services/public-user.service";
-import { AccessDataService } from "@api-rest/services/access-data.service";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { processErrors } from "@core/utils/form.utils";
+import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiErrorMessageDto, PersonDataDto } from '@api-rest/api-model';
+import { PublicUserService } from '@api-rest/services/public-user.service';
+import { AccessDataService } from '@api-rest/services/access-data.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { processErrors } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-access-data-reset',
@@ -18,6 +18,7 @@ export class AccessDataResetComponent implements OnInit {
 	public userPerson: PersonDataDto;
 	public apiResponse: any = null;
 	public location: string = window.location.href;
+
 	constructor(private route: ActivatedRoute,
 				private formBuilder: FormBuilder,
 				private publicUserService: PublicUserService,
@@ -63,7 +64,7 @@ export class AccessDataResetComponent implements OnInit {
 
 	submit() {
 		if (this.form.valid) {
-			this.apiResponse ={
+			this.apiResponse = {
 				loading: true
 			}
 			this.accessDataService.updateAccessData(
@@ -80,7 +81,7 @@ export class AccessDataResetComponent implements OnInit {
 				},
 				(error: ApiErrorMessageDto) => {
 					processErrors(error, (msg) => this.snackBarService.showError(msg));
-					this.apiResponse=null;
+					this.apiResponse = null;
 				}
 			);
 		}

@@ -34,9 +34,7 @@
 					<mat-form-field appearance="outline">
 						<mat-label translate="auth.access-data-reset.form.USERNAME_LABEL"></mat-label>
 						<input formControlName="username"
-							   type="text"
-							   placeholder="{{'auth.access-data-reset.form.USERNAME_PLACEHOLDER' | translate }}"
-							   matInput>
+							   type="text" matInput>
 						<mat-error *ngIf="hasError('required', 'username')">
 							<span translate="auth.access-data-reset.form.USERNAME_REQUIRED"></span>
 						</mat-error>
@@ -46,8 +44,7 @@
 					<mat-form-field appearance="outline">
 						<mat-label translate="auth.access-data-reset.form.PASSWORD_LABEL"></mat-label>
 						<input formControlName="password"
-							   type="password"
-							   placeholder="{{'auth.access-data-reset.form.PASSWORD_PLACEHOLDER' | translate }}" matInput>
+							   type="password" matInput>
 						<mat-error *ngIf="hasError('required', 'password')">
 							<span translate="auth.access-data-reset.form.PASSWORD_REQUIRED"></span>
 						</mat-error>
@@ -57,8 +54,7 @@
 					<mat-form-field appearance="outline">
 						<mat-label translate="auth.access-data-reset.form.REPASSWORD_LABEL"></mat-label>
 						<input formControlName="repassword"
-							   type="password"
-							   placeholder="{{'auth.access-data-reset.form.REPASSWORD_PLACEHOLDER' | translate }}" matInput>
+							   type="password" matInput>
 						<mat-error *ngIf="hasError('required', 'repassword')">
 							<span translate="auth.access-data-reset.form.REPASSWORD_REQUIRED"></span>
 						</mat-error>
@@ -81,17 +77,20 @@
 		<div *ngIf="apiResponse.error">
 			<mat-icon [inline]="true" class="material-icons-outlined icon" >history</mat-icon>
 		</div>
-		<mat-card-header >
+		<mat-card-header  *ngIf="!(apiResponse.loading)">
 			<mat-card-title align="center">
 				<span *ngIf="apiResponse.ok" translate="auth.access-data-reset.result.OK"></span>
 				<span *ngIf="apiResponse.error" translate="auth.access-data-reset.result.ERROR_TITLE"></span>
 			</mat-card-title>
+			<mat-card-subtitle  align="center" *ngIf="apiResponse.ok" >
+				<strong class="primary link" [routerLink]="'/auth'" translate="auth.access-data-reset.result.GO_TO_LINK"></strong>
+			</mat-card-subtitle>
 			<mat-card-subtitle  *ngIf="apiResponse.error" >
 				<span translate="auth.access-data-reset.result.ERROR_SUBTITLE"></span>
 			</mat-card-subtitle>
-			<div class="spinner" *ngIf="apiResponse.loading">
-				<mat-spinner color="primary"></mat-spinner>
-			</div>
 		</mat-card-header>
+		<div class="spinner" *ngIf="apiResponse.loading">
+			<mat-spinner color="primary"></mat-spinner>
+		</div>
 	</mat-card>
 </app-content>
