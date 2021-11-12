@@ -1,20 +1,20 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
-import java.util.List;
-import java.util.function.Function;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.constraintvalidation.SupportedValidationTarget;
+import javax.validation.constraintvalidation.ValidationTarget;
+import java.util.function.Function;
+
+@SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDiaryProfessionalId, Object[]> {
 
     private final Logger logger;
@@ -22,8 +22,8 @@ public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDi
     private final Function<Integer, Boolean> hasAdministrativeRole;
     private final Function<Integer, Boolean> hasProfessionalRole;
 
-    public DiaryProfessionalIdValidator(Logger logger, HealthcareProfessionalExternalService healthcareProfessionalExternalService, LoggedUserExternalService loggedUserExternalService) {
-        this.logger = logger;
+    public DiaryProfessionalIdValidator(HealthcareProfessionalExternalService healthcareProfessionalExternalService, LoggedUserExternalService loggedUserExternalService) {
+        this.logger = LoggerFactory.getLogger(this.getClass());
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
                 ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO
