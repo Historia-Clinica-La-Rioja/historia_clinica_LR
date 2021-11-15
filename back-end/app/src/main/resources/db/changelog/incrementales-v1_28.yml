@@ -145,3 +145,124 @@ databaseChangeLog:
                   constraintName: FK_snvs_reports_institution_id
                   referencedColumnNames: id
                   referencedTableName: institution
+    
+    - changeSet:
+        id: reference_note-createTable
+        comment: Create table reference_note
+        author: bchacon
+        changes:
+            - createTable:
+                tableName: reference_note
+                columns:
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_reference_note
+                        name: id
+                        type: int
+                    - column:
+                        name: description
+                        type: varchar(1024)
+
+    - changeSet:
+        id: reference-createTable
+        comment: Create table reference
+        author: bchacon
+        changes:
+            - createTable:
+                tableName: reference
+                columns:
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_reference
+                        name: id
+                        type: int
+                    - column:
+                        name: encounter_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: source_type_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: consultation
+                        type: boolean
+                    - column:
+                        name: procedure
+                        type: boolean
+                    - column:
+                        name: care_line_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: clinical_specialty_id
+                        type: int
+                        constraints:
+                            nullable: false
+                    - column:
+                        name: reference_note_id
+                        type: int
+            - addForeignKeyConstraint:
+                baseColumnNames: source_type_id
+                baseTableName: reference
+                constraintName: FK_reference_source_type_id
+                referencedColumnNames: id
+                referencedTableName: source_type
+            - addForeignKeyConstraint:
+                baseColumnNames: care_line_id
+                baseTableName: reference
+                constraintName: FK_reference_care_line_id
+                referencedColumnNames: id
+                referencedTableName: care_line
+            - addForeignKeyConstraint:
+                baseColumnNames: clinical_specialty_id
+                baseTableName: reference
+                constraintName: FK_reference_clinical_specialty_id
+                referencedColumnNames: id
+                referencedTableName: clinical_specialty
+            - addForeignKeyConstraint:
+                baseColumnNames: reference_note_id
+                baseTableName: reference
+                constraintName: FK_reference_reference_note_id
+                referencedColumnNames: id
+                referencedTableName: reference_note
+                
+    - changeSet:
+        id: reference_health_condition-createTable
+        comment: Create table reference_health_condition
+        author: bchacon
+        changes:
+            - createTable:
+                tableName: reference_health_condition
+                columns:
+                    - column:
+                        name: reference_id
+                        type: int
+                    - column:
+                        name: health_condition_id
+                        type: int
+            - addPrimaryKey:
+                clustered: true        
+                columnNames: reference_id, health_condition_id  
+                constraintName: PK_reference_health_condition
+                tableName: reference_health_condition  
+                validate: true
+            - addForeignKeyConstraint:
+                baseColumnNames: reference_id
+                baseTableName: reference_health_condition
+                constraintName: FK_reference_health_condition_reference_id
+                referencedColumnNames: id
+                referencedTableName: reference
+            - addForeignKeyConstraint:
+                baseColumnNames: health_condition_id
+                baseTableName: reference_health_condition
+                constraintName: FK_reference_health_condition_health_condition_id
+                referencedColumnNames: id
+                referencedTableName: health_condition
