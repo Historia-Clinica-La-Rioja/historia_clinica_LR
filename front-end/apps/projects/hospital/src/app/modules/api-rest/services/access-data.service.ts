@@ -13,7 +13,7 @@ export class AccessDataService {
 	}
 
 	updateAccessData(accessDataDto: AccessDataDto): Observable<void> {
-		const url = `${environment.apiBase}/access-data`;
+		const url = `${environment.apiBase}/auth/access-data`;
 		return this.http.put<void>(url, accessDataDto);
 	}
 }

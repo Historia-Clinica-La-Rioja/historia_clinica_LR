@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@RequestMapping("access-data")
+@RequestMapping("auth/access-data")
 public class AccessDataController {
     private final Logger logger;
     private final ResetPassword resetPassword;
