@@ -6,6 +6,8 @@ import { PublicUserService } from '@api-rest/services/public-user.service';
 import { AccessDataService } from '@api-rest/services/access-data.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { processErrors } from '@core/utils/form.utils';
+import { PasswordTokenExpirationService } from '@api-rest/services/password-token-expiration.service';
+import {Observable} from "rxjs";
 
 @Component({
 	selector: 'app-access-data-reset',
@@ -18,11 +20,12 @@ export class AccessDataResetComponent implements OnInit {
 	public userPerson: PersonDataDto;
 	public apiResponse: any = null;
 	public location: string = window.location.href;
-
+	hoursExpiration$ : Observable<number>;
 	constructor(private route: ActivatedRoute,
 				private formBuilder: FormBuilder,
 				private publicUserService: PublicUserService,
 				private accessDataService: AccessDataService,
+				private readonly passwordTokenExpirationService :PasswordTokenExpirationService,
 				private readonly snackBarService: SnackBarService) {
 	}
 
@@ -39,6 +42,7 @@ export class AccessDataResetComponent implements OnInit {
 					};
 				})
 			});
+		this.hoursExpiration$ = this.passwordTokenExpirationService.get();
 		this.form = this.formBuilder.group({
 			username: [null, Validators.required],
 			password: [null, Validators.required],

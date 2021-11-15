@@ -8,6 +8,7 @@
 				<span translate="auth.access-data-reset.SUBTITLE"></span>
 			</mat-card-subtitle>
 			<mat-card-subtitle fxLayoutAlign="space-around center">
+				<span class="text-danger" translate="auth.access-data-reset.WARNING_EXPIRATION" [translateParams]="{hours: (hoursExpiration$ | async)}"></span>
 			</mat-card-subtitle>
 		</mat-card-header>
 		<mat-card-content fxLayout="column" fxLayoutAlign="space-around center" >

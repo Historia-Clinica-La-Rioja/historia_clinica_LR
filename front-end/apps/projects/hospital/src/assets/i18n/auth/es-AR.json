@@ -35,6 +35,7 @@
 			"TITLE": "Establecer datos de aceso",
 			"SUBTITLE": "Puede copiar el link para compartir con otro usuario o establecer los datos de acceso en el siguiente formulario.",
 			"COPY_LINK": "Copiar link para compartir",
+			"WARNING_EXPIRATION": "Este link será válido sólo por {{hours}} hs",
 			"form": {
 				"USERNAME_LABEL": "Nombre de usuario",
 				"USERNAME_REQUIRED": "Campo requerido",
