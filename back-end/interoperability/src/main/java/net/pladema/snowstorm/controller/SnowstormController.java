@@ -1,10 +1,12 @@
 package net.pladema.snowstorm.controller;
 
 import io.swagger.annotations.Api;
-import lombok.RequiredArgsConstructor;
+import net.pladema.snowstorm.controller.dto.ManualClassificationDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
+import net.pladema.snowstorm.controller.mapper.ManualClassificationMapper;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
+import net.pladema.snowstorm.services.domain.ManualClassificationBo;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -21,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/snowstorm")
 @Api(value = "Snowstorm", tags = { "Snowstorm" })
@@ -29,18 +30,30 @@ public class SnowstormController {
 
     private static final String CONCEPTS = "/concepts";
 
+    private static final String REPORTABLE = "/is-reportable";
+
     private static final String REFSET_MEMBERS = "/refset-members";
 
     private static final Logger LOG = LoggerFactory.getLogger(SnowstormController.class);
 
     private static final String TIMEOUT_MSG = "Timeout en WS Snowstorm";
 
+    public static final String OUTPUT = "Output -> {}";
+
     private final SnowstormService snowstormService;
 
     private final FetchAllSnomedEcl fetchAllSnomedEcl;
+    
+    private final ManualClassificationMapper manualClassificationMapper;
 
     @Value("${ws.snowstorm.request.timeout:15000}")
     private long requestTimeOut;
+
+    public SnowstormController(SnowstormService snowstormService, FetchAllSnomedEcl fetchAllSnomedEcl, ManualClassificationMapper manualClassificationMapper){
+        this.snowstormService = snowstormService;
+        this.fetchAllSnomedEcl = fetchAllSnomedEcl;
+        this.manualClassificationMapper = manualClassificationMapper;
+    }
 
     @GetMapping(value = CONCEPTS)
     public DeferredResult<ResponseEntity<SnowstormSearchResponse>> getConcepts(
@@ -59,6 +72,17 @@ public class SnowstormController {
             }
         });
         return deferredResult;
+    }
+
+    @GetMapping(value = REPORTABLE)
+    public ResponseEntity<List<ManualClassificationDto>> isSnvsReportable(
+            @RequestParam(value = "sctid", required = true) String sctid,
+            @RequestParam(value = "pt", required = true) String pt) {
+        LOG.debug("Input data -> sctid: {} , pt: {} ", sctid, pt);
+        List<ManualClassificationBo> resultService = snowstormService.isSnvsReportable(sctid, pt);
+        List<ManualClassificationDto> result = manualClassificationMapper.fromManualClassificationBoList(resultService);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
     }
 
     private <R> void setCallbacks(DeferredResult<ResponseEntity<R>> deferredResult, String serviceName) {

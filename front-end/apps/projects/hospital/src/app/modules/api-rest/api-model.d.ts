@@ -1119,6 +1119,11 @@ export interface MainDiagnosisDto extends Serializable {
     notes: DocumentObservationsDto;
 }
 
+export interface ManualClassificationDto {
+    description: string;
+    id: number;
+}
+
 export interface MasterDataDto extends AbstractMasterdataDto<number> {
     id: number;
 }

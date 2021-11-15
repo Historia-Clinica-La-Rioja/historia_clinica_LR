@@ -3,7 +3,10 @@ package net.pladema.snowstorm.services.impl;
 import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import net.pladema.snowstorm.configuration.SnowstormRestTemplateAuth;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
+import net.pladema.snowstorm.repository.SnowstormRepository;
+import net.pladema.snowstorm.repository.entity.ManualClassification;
 import net.pladema.snowstorm.services.SnowstormService;
+import net.pladema.snowstorm.services.domain.ManualClassificationBo;
 import net.pladema.snowstorm.services.domain.SnowstormConcept;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
@@ -16,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.pladema.snowstorm.services.exceptions.SnowstormEnumException.SNOWSTORM_TIMEOUT_SERVICE;
 
@@ -24,18 +28,23 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
 
     public static final String FAIL_COMMUNICATION = "Fallo la comunicación con el servidor de snowstorm -> %s";
     public static final String SNOWSTORM_FAIL_SERVICE = "Snowstorm fail service ";
+    public static final String OUTPUT = "Output -> {}";
     private final Logger logger;
 
     private final SnowstormWSConfig snowstormWSConfig;
 
     private final SnomedSemantics snomedSemantics;
 
+    private final SnowstormRepository snowstormRepository;
+
     public SnowstormServiceImpl(SnowstormRestTemplateAuth restTemplateSSL,
                                 SnowstormWSConfig wsConfig,
-                                SnomedSemantics snomedSemantics) {
+                                SnomedSemantics snomedSemantics,
+                                SnowstormRepository snowstormRepository) {
         super(restTemplateSSL, wsConfig);
         this.snowstormWSConfig = wsConfig;
         this.snomedSemantics = snomedSemantics;
+        this.snowstormRepository = snowstormRepository;
         logger = LoggerFactory.getLogger(CalculateCie10CodesServiceImpl.class);
     }
 
@@ -132,6 +141,15 @@ public class SnowstormServiceImpl extends RestClient implements SnowstormService
             logger.error(SNOWSTORM_FAIL_SERVICE, e);
             throw new SnowstormTimeoutException(SNOWSTORM_TIMEOUT_SERVICE, String.format(FAIL_COMMUNICATION, snowstormWSConfig.getBaseUrl()+urlWithParams));
         }
+        return result;
+    }
+
+    @Override
+    public List<ManualClassificationBo> isSnvsReportable(String sctid, String pt) {
+        logger.debug("Input parameters -> sctid {}, pt {}", sctid, pt);
+        List<ManualClassification> resultQuery = snowstormRepository.isSnvsReportable(sctid, pt);
+        List<ManualClassificationBo> result = resultQuery.stream().map(ManualClassificationBo::new).collect(Collectors.toList());
+        logger.debug(OUTPUT, result);
         return result;
     }
 }
