@@ -139,6 +139,196 @@
     {
       "type":"typography",
       "args":{
+        "value":"Componente: columns",
+        "className":"title"
+      }
+    },
+    {
+      "type": "columns",
+      "args": {
+        "content": [
+          {
+            "type":"typography",
+            "args":{
+              "value":"Primer componente",
+              "className":"title"
+            }
+          },
+          {
+            "type":"link",
+            "args":{
+              "value":"http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+              "label":{
+                "text":"Segundo componente"
+              }
+            }
+          },
+          {
+            "type":"typography",
+            "args":{
+              "value":"Tercer componente",
+              "className":"title"
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "type":"code",
+      "args":{
+        "value": {
+          "type": "columns",
+          "args": {
+            "content": [
+              {
+                "type": "typography",
+                "args": {
+                  "value": "Primer componente",
+                  "className": "title"
+                }
+              },
+              {
+                "type": "link",
+                "args": {
+                  "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+                  "label": {
+                    "text": "Segundo componente"
+                  }
+                }
+              },
+              {
+                "type": "typography",
+                "args": {
+                  "value": "Tercer componente",
+                  "className": "title"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+
+
+    {
+      "type": "html",
+      "args": {
+        "value":"<hr>"
+      }
+    },
+
+    {
+      "type":"typography",
+      "args":{
+        "value":"Componente: Tabs",
+        "className":"title"
+      }
+    },
+    {
+      "type": "tabs",
+      "args": {
+        "tabs": [
+          {
+            "args": {
+              "label": "Primer Tab",
+              "content": [
+                {
+                  "type": "typography",
+                  "args": {
+                    "value": "Componente del primer tab",
+                    "className": "title"
+                  }
+                }
+              ]
+            }
+          },
+
+          {
+            "args": {
+              "label": "Segundo Tab",
+              "content": [
+                {
+                  "type": "typography",
+                  "args": {
+                    "value": "Primer componente del segundo tab",
+                    "className": "title"
+                  }
+                },
+                {
+                  "type": "typography",
+                  "args": {
+                    "value": "Segundo componente del segundo tab",
+                    "className": "title"
+                  }
+                }
+              ]
+            }
+          }
+
+        ]
+      }
+    },
+
+    {
+      "type":"code",
+      "args": {
+        "value": {
+          "type": "tabs",
+          "args": {
+            "tabs": [
+              {
+                "args": {
+                  "label": "Primer Tab",
+                  "content": [
+                    {
+                      "type": "typography",
+                      "args": {
+                        "value": "Componente del primer tab",
+                        "className": "title"
+                      }
+                    }
+                  ]
+                }
+              },
+
+              {
+                "args": {
+                  "label": "Segundo Tab",
+                  "content": [
+                    {
+                      "type": "typography",
+                      "args": {
+                        "value": "Primer componente del segundo tab",
+                        "className": "title"
+                      }
+                    },
+                    {
+                      "type": "typography",
+                      "args": {
+                        "value": "Segundo componente del segundo tab",
+                        "className": "title"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "type": "html",
+      "args": {
+        "value":"<hr>"
+      }
+    },
+
+    {
+      "type":"typography",
+      "args":{
         "value":"Componente: no definido ",
         "className":"title"
       }
@@ -149,6 +339,5 @@
         "value": "Valor sin sentido"
       }
     }
-
   ]
 }
