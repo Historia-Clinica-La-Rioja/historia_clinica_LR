@@ -25,6 +25,7 @@ public class CreateDefaultUserImpl implements CreateDefaultUser {
         hospitalUserStorage.registerUser(username, null, null);
         UserDataBo saved = hospitalUserStorage.getUserByUsername(username);
         hospitalUserStorage.saveUserPerson(saved.getId(), personId);
+        hospitalUserStorage.enableUser(saved.getId());
         Integer result = saved.getId();
         logger.debug("Output -> {}", result);
         return result;
