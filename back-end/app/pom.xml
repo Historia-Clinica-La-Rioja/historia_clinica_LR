@@ -62,6 +62,12 @@
 
         <dependency>
             <groupId>ar.lamansys</groupId>
+            <artifactId>reference-counter-ref</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ar.lamansys</groupId>
             <artifactId>sgx-auth</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
