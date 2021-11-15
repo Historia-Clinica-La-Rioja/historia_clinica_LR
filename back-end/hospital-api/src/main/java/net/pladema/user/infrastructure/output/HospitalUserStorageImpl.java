@@ -113,17 +113,18 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     public PersonDataBo getPersonDataBoByUserId(Integer userId) {
         return userPersonRepository.getPersonIdByUserId(userId)
                 .map(personExternalService::getBasicDataPerson)
-                .map(dataPerson -> mapPersonDataBo(dataPerson,userId))
+                .map(dataPerson -> mapPersonDataBo(dataPerson,vHospitalUserRepository.getOne(userId)))
                 .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
     }
 
-    private PersonDataBo mapPersonDataBo(BasicDataPersonDto person,Integer userId) {
+    private PersonDataBo mapPersonDataBo(BasicDataPersonDto person,VHospitalUser user) {
         return new PersonDataBo(
                 person.getFirstName(),
                 person.getLastName(),
                 person.getIdentificationType(),
                 person.getIdentificationNumber(),
-                userId);
+                user.getUserId(),
+                user.getUsername());
     }
 
     private UserDataBo mapUserBo(VHospitalUser vHospitalUser) {

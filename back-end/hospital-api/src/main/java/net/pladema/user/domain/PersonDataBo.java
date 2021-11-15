@@ -24,4 +24,7 @@ public class PersonDataBo {
     private String identificationNumber;
 
     private Integer userId;
+
+    @Nullable
+    private String username;
 }

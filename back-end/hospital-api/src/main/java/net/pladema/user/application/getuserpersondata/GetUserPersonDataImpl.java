@@ -22,6 +22,8 @@ public class GetUserPersonDataImpl implements GetUserPersonData {
     public PersonDataBo execute(String token) {
         Integer userId = hospitalUserStorage.getUserIdByToken(token);
         PersonDataBo result = hospitalUserStorage.getPersonDataBoByUserId(userId);
+        if(!(hospitalUserStorage.hasPassword(userId)))
+            result.setUsername(null);
         logger.debug("Output -> {}", result);
         return result;
     }

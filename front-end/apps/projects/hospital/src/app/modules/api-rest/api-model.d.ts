@@ -1607,6 +1607,15 @@ export interface PersonBasicDataResponseDto extends Serializable {
     photo: string;
 }
 
+export interface PersonDataDto {
+    firstName?: string;
+    identificationNumber: string;
+    identificationType: string;
+    lastName?: string;
+    userId: number;
+    username?: string;
+}
+
 export interface PersonOccupationDto extends Serializable {
     code: number;
     description: string;

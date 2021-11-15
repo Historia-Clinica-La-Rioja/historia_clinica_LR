@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { ApiErrorMessageDto, PersonDataDto } from '@api-rest/api-model';
 import { PublicUserService } from '@api-rest/services/public-user.service';
 import { AccessDataService } from '@api-rest/services/access-data.service';
@@ -36,6 +36,8 @@ export class AccessDataResetComponent implements OnInit {
 				this.publicUserService.getUserPersonData(this.token).subscribe
 				(userPerson => {
 					this.userPerson = userPerson;
+					if (userPerson.username)
+						this.form.setControl('username', new FormControl((userPerson.username), Validators.required));
 				}, error => {
 					this.apiResponse = {
 						error
@@ -48,6 +50,7 @@ export class AccessDataResetComponent implements OnInit {
 			password: [null, Validators.required],
 			repassword: [null, Validators.required],
 		}, {validator: this.checkIfMatchingPasswords('password', 'repassword')});
+
 	}
 
 	private checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {

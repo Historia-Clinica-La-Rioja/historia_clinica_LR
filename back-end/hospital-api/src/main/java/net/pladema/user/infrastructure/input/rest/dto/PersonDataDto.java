@@ -22,4 +22,7 @@ public class PersonDataDto {
     private String identificationNumber;
 
     private Integer userId;
+
+    @Nullable
+    private String username;
 }
