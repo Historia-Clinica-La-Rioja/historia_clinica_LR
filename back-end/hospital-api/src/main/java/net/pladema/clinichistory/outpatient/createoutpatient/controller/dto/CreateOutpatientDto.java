@@ -30,6 +30,8 @@ public class CreateOutpatientDto {
 
     private List<@Valid OutpatientAllergyConditionDto> allergies = new ArrayList<>();
 
+    private List<@Valid OutpatientReferenceDto> references = new ArrayList<>();
+
     @Valid
     @Nullable
     private OutpatientAnthropometricDataDto anthropometricData;

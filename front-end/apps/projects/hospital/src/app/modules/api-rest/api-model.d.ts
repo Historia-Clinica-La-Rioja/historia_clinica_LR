@@ -438,6 +438,7 @@ export interface CreateOutpatientDto {
     problems: OutpatientProblemDto[];
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
+    references: OutpatientReferenceDto[];
     vitalSigns?: OutpatientVitalSignDto;
 }
 
@@ -1482,6 +1483,20 @@ export interface OutpatientProcedureDto {
 }
 
 export interface OutpatientReasonDto {
+    snomed: SnomedDto;
+}
+
+export interface OutpatientReferenceDto {
+    careLineId: number;
+    clinicalSpecialtyId: number;
+    consultation?: boolean;
+    note?: string;
+    problems: OutpatientReferenceProblemDto[];
+    procedure?: boolean;
+}
+
+export interface OutpatientReferenceProblemDto {
+    id?: string;
     snomed: SnomedDto;
 }
 
