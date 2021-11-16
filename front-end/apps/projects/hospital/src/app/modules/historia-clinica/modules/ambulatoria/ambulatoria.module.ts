@@ -43,6 +43,7 @@ import { ExternalClinicalHistoryComponent } from './components/external-clinical
 import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report/epidemiological-report.component';
 import { PreviousDataComponent } from './dialogs/previous-data/previous-data.component';
+import { ReferenceComponent } from './dialogs/reference/reference.component';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { PreviousDataComponent } from './dialogs/previous-data/previous-data.com
 		NuevaConsultaDockPopupEnfermeriaComponent,
 		ExternalClinicalHistoryComponent,
 		PreviousDataComponent,
-		EpidemiologicalReportComponent
+		EpidemiologicalReportComponent,
+		ReferenceComponent
 	],
 	imports: [
 		CommonModule,

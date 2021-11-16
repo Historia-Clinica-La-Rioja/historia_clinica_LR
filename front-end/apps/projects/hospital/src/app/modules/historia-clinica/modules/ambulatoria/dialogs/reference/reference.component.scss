@@ -1,0 +1,64 @@
+.reference-dialog {
+
+	position: relative;
+	margin-left: 20px;
+	margin-right: 20px;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+
+	::ng-deep .mat-form-field-wrapper {
+		padding-bottom: 0.5em;
+	}
+
+}
+
+h2 {
+	width: 400px;
+	height: 40px;
+	font-weight: 500;
+	font-size: 20px;
+}
+
+.span-clickable {
+
+	span:hover {
+		text-decoration: underline;
+	}
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.associated-problem{
+	margin-bottom: 30px;
+}
+
+.close{
+	transform: scale(1.0);
+	position: absolute;
+	top: 0px;
+}
+
+.reference-type {
+	font-size: 15px;
+	
+	.mat-radio-button ~ .mat-radio-button {
+		margin-left: 50px;
+	}
+
+	.consultation {
+		margin-right: 20px;
+	}
+
+	mat-label {
+		font-weight: 500;
+		height: 30px;
+	}
+
+	height: 60px;
+}
+
+
+.example-additional-selection {
+	opacity: 0.75;
+	font-size: 0.75em;
+}

@@ -31,6 +31,7 @@ import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { AmbulatoryConsultationReferenceService } from '../../services/ambulatory-consultation-reference.service';
 
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipe } from '@angular/common';
@@ -66,6 +67,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	criticalityTypes: any[];
 	minDate = MIN_DATE;
 	public ffIsOn: boolean;
+	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -93,6 +95,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
+		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 	}
 
 	setProfessionalSpecialties() {
@@ -377,7 +380,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	setDefaultSpecialty() {
 		this.defaultSpecialty = this.formEvolucion.controls.clinicalSpecialty.value;
 	}
-
 }
 
 export interface NuevaConsultaData {

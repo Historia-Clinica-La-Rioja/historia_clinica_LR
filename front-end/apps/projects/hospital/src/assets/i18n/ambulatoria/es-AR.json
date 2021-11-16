@@ -214,6 +214,20 @@
 				"solicitud-referencia": {
 					"TITLE": "Solicitud de referencia",
 					"ADD_REQUEST": "+ Agregar solicitud"
+				},
+				"reference-dialog": {
+					"TITLE": "Agregar solicitud de referencia",
+					"PLACEHOLDER_ASSOCIATED_PROBLEM": "Problema asociado",
+					"ADD_ASSOCIATED_PROBLEM": "+ Agregar otro problema asociado",
+					"PLACEHOLDER_CARE_LINE": "Línea de cuidado",
+					"REFERENCE_TYPE": "Tipo de referencia",
+					"CONSULTATION_OPTION": "Consulta",
+					"PROCEDURE_OPTION": "Procedimiento",
+					"PLACEHOLDER_SPECIALITY": "Especialidad",
+					"PLACEHOLDER_INSTITUTION": "Institución",
+					"PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
+					"ATTACH_FILE": "Adjuntar archivos",
+					"ADD_REFERENCE": "AGREGAR SOLICITUD"
 				}
 			},
 			"problemas": {
