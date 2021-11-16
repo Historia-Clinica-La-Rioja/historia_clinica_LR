@@ -11,7 +11,8 @@ const htmlDraws = {
 	red_horizontal_line: ['234713009', '399191000221108'],
 	red_cross_and_red_vertical_line: ['278123008'],
 	TC: ['399001000221103', '399011000221100'],
-	red_long_line: ['469111006', '398761000221105', '469108005', '468782009', '285071002', '398791000221100', '468785006']
+	red_long_line: ['469111006', '398761000221105', '469108005', '468782009', '285071002', '398791000221100', '468785006'],
+	red_circle_and_vertical_line: ['468936006']
 };
 
 export const getHtmlName = (sctid: string): string => {
@@ -74,7 +75,9 @@ const moveCenter = (svgName: string): number => {
 		case 'TC':
 		case 'red_long_line':
 			toTransformY -= 37.5;
-
+			break;
+		case 'red_circle_and_vertical_line':
+			toTransformY -= 14.6;
 			break;
 	}
 	return toTransformY;
