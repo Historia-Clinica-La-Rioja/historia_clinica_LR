@@ -20,4 +20,6 @@ public interface HealthcareProfessionalService {
 
     HealthcareProfessionalBo findProfessionalById(Integer healthcareProfessionalId);
 
+    HealthcareProfessionalBo findProfessionalByPersonId(Integer personId);
+
 }

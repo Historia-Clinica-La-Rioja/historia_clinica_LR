@@ -1,6 +1,7 @@
-package net.pladema.staff.controller;
+package net.pladema.staff.infrastructure.input.rest;
 
 import io.swagger.annotations.Api;
+import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import net.pladema.staff.service.HealthcareProfessionalService;
@@ -8,7 +9,10 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +31,15 @@ public class HealthcareProfessionalController {
 
 	private final HealthcareProfessionalMapper healthcareProfessionalMapper;
 
+	private final GetHealthcareProfessional getHealthcareProfessional;
+
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
-											HealthcareProfessionalMapper healthcareProfessionalMapper) {
+											HealthcareProfessionalMapper healthcareProfessionalMapper,
+											GetHealthcareProfessional getHealthcareProfessional) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
+		this.getHealthcareProfessional = getHealthcareProfessional;
 	}
-
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
@@ -43,4 +50,14 @@ public class HealthcareProfessionalController {
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+
+    @GetMapping("/institution/{institutionId}/person/{personId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+    public ResponseEntity<ProfessionalDto> get(@PathVariable(name = "institutionId") Integer institutionId,
+											   @PathVariable(name = "personId") Integer personId) {
+        LOG.debug("Input parameters -> {}", personId);
+		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(getHealthcareProfessional.execute(personId));
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
 }

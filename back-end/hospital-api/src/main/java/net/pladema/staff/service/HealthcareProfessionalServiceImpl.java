@@ -90,5 +90,13 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         return result;
     }
 
+    @Override
+    public HealthcareProfessionalBo findProfessionalByPersonId(Integer personId){
+        LOG.debug("Input parameters -> personId {}", personId);
+        return healthcareProfessionalRepository.findProfessionalByPersonId(personId)
+                .map(professionalId -> healthcareProfessionalRepository.findProfessionalById(professionalId)
+                        .map(HealthcareProfessionalBo::new).orElse(null))
+                .orElse(null);
+    }
 
 }
