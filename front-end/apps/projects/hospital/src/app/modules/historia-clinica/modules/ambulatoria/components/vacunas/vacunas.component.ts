@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { VACUNAS } from '@historia-clinica/constants/summaries';
 import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-vacunas.component';
 import { DetalleVacunaComponent } from '../../dialogs/detalle-vacuna/detalle-vacuna.component';
+import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 
 @Component({
 	selector: 'app-vacunas',
@@ -23,6 +24,7 @@ export class VacunasComponent implements OnInit {
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly route: ActivatedRoute,
+		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		public dialog: MatDialog,
 	) {
 	}
@@ -52,6 +54,7 @@ export class VacunasComponent implements OnInit {
 				this.hceGeneralStateService.getImmunizations(this.patientId).subscribe(dataTable => {
 					this.vaccines = dataTable;
 				});
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(submitted);
 			}
 		});
 	}
