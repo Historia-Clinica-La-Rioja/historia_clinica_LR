@@ -1,9 +1,12 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
+import ar.lamansys.refcounterref.application.CreateReference;
+import ar.lamansys.refcounterref.domain.ReferenceBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
@@ -69,6 +72,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     
     private final OutpatientSummaryService outpatientSummaryService;
 
+    private final CreateReference createReference;
+
     public OutpatientConsultationController(CreateOutpatientConsultationService createOutpatientConsultationService,
                                             CreateOutpatientDocumentService createOutpatientDocumentService,
                                             OutpatientReasonService outpatientReasonService,
@@ -77,7 +82,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
                                             AppointmentExternalService appointmentExternalService,
                                             DateTimeProvider dateTimeProvider,
                                             OutpatientSummaryService outpatientSummaryService,
-                                            PatientExternalService patientExternalService) {
+                                            PatientExternalService patientExternalService,
+                                            CreateReference createReference) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
         this.outpatientReasonService = outpatientReasonService;
@@ -87,6 +93,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         this.dateTimeProvider = dateTimeProvider;
         this.outpatientSummaryService = outpatientSummaryService;
         this.patientExternalService = patientExternalService;
+        this.createReference = createReference;
     }
 
     @Override
@@ -122,6 +129,11 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
             appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
+
+        if(!createOutpatientDto.getReferences().isEmpty()) {
+            List<ReferenceBo> referenceBoList = outpatientConsultationMapper.fromListOutpatientReferenceDto(createOutpatientDto.getReferences());
+            createReference.run(newOutPatient.getId(), (int)SourceType.OUTPATIENT, referenceBoList);
+        }
 
         LOG.debug(OUTPUT, true);
         return  ResponseEntity.ok().body(true);

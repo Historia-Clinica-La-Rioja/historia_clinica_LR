@@ -363,8 +363,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
-			clinicalSpecialtyId: this.defaultSpecialty?.id
-
+			clinicalSpecialtyId: this.defaultSpecialty?.id,
+			references: []
 		};
 	}
 
