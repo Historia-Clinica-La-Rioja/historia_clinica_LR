@@ -1,6 +1,7 @@
 package net.pladema.staff.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import org.springframework.data.jpa.repository.Query;
@@ -46,5 +47,13 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
             + "WHERE hps.healthcareProfessionalId IN :professionalsIds "
             + "AND hps.deleteable.deleted = false")
     List<ProfessionalClinicalSpecialtyVo> getAllByProfessionals(@Param("professionalsIds") List<Integer> professionalsIds);
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT NEW net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo" +
+            "(hps.id,hps.healthcareProfessionalId, hps.professionalSpecialtyId, hps.clinicalSpecialtyId) " +
+            "FROM HealthcareProfessionalSpecialty hps "
+            + "WHERE hps.healthcareProfessionalId =:professionalId "
+            + "AND hps.deleteable.deleted = false")
+    List<HealthcareProfessionalSpecialtyVo> getAllByProfessional(@Param("professionalId") Integer professionalId);
 
 }

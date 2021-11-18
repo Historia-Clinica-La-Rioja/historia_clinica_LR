@@ -2,8 +2,10 @@ package net.pladema.staff.service;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
+import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
 import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,25 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
         professionalsSpecialties.forEach(pS -> this.addToProfessionalsBySpecialty(pS, professionalsBySpecialty));
 
         return professionalsBySpecialty;
+    }
+
+    @Override
+    public List<HealthcareProfessionalSpecialtyBo> getProfessionsByProfessional(Integer professionalId) {
+        List<HealthcareProfessionalSpecialtyBo> result = new ArrayList<>();
+        healthcareProfessionalSpecialtyRepository.getAllByProfessional(professionalId)
+                .forEach(healthcareProfessionalSpecialtyVo ->
+                        result.add(mapToHealthcareProfessionalSpecialtyBo(healthcareProfessionalSpecialtyVo))
+                );
+        return result;
+    }
+
+    private HealthcareProfessionalSpecialtyBo mapToHealthcareProfessionalSpecialtyBo(HealthcareProfessionalSpecialtyVo hpsVo) {
+        return new HealthcareProfessionalSpecialtyBo(
+                hpsVo.getId(),
+                hpsVo.getHealthcareProfessionalId(),
+                hpsVo.getProfessionalSpecialtyId(),
+                hpsVo.getClinicalSpecialtyId()
+        );
     }
 
     private void addToProfessionalsBySpecialty(ProfessionalClinicalSpecialtyVo pSVo,

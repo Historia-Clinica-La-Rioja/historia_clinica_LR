@@ -980,6 +980,13 @@ export interface HealthcareProfessionalDto {
     personId: number;
 }
 
+export interface HealthcareProfessionalSpecialtyDto {
+    clinicalSpecialtyId: number;
+    healthcareProfessionalId: number;
+    id: number;
+    professionalSpecialtyId: number;
+}
+
 export interface HospitalizationProcedureDto {
     performedDate?: string;
     snomed: SnomedDto;
@@ -1766,6 +1773,11 @@ export interface ProfessionalPersonDto extends Serializable {
     firstName: string;
     id: number;
     lastName: string;
+}
+
+export interface ProfessionalSpecialtyDto {
+    description: string;
+    id: number;
 }
 
 export interface ProfessionalsByClinicalSpecialtyDto {
