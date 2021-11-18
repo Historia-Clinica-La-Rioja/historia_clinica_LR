@@ -178,7 +178,9 @@
 					"ADD": "SI, INCLUIRLOS",
 					"DISCARD": "NO, DESCARTARLOS",
 					"ASK":"¿Desea incluirlos en la consulta?",
-					"CONTENT": "Hay datos antropométricos y/o signos vitales cargados previamente."
+					"CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
+					"CONTENT_VITAL_SIGNS": "Hay signos vitales cargados previamente.",
+					"CONTENT": "Hay datos antropométricos y signos vitales cargados previamente."
 				},
 				"alergias": {
 					"TITLE": "Alergias",

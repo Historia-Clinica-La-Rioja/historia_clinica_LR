@@ -35,6 +35,8 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipe } from '@angular/common';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
+import { Observable, of } from 'rxjs';
+
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
 	templateUrl: './nueva-consulta-dock-popup.component.html',
@@ -172,48 +174,47 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 
-	previousDataIsConfirmed(): boolean {
+	previousDataIsConfirmed(): Observable<boolean> {
 		if ((this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) ||
 			(this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData())) {
-			const dialogRef = this.dialog.open(PreviousDataComponent, {
-				disableClose: true,
-				autoFocus: false
-			});
-			dialogRef.afterClosed().subscribe((loadData: boolean) => {
-				if (loadData != null) {
-					if (loadData) {
-						if (this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()) { this.datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData() }
-						if (this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) { this.signosVitalesNuevaConsultaService.savePreloadedVitalSignsData() }
-					} else {
-						if (this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()) { this.datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData() }
-						if (this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) { this.signosVitalesNuevaConsultaService.discardPreloadedVitalSignsData() }
-					}
-				}
-			});
-			return false;
-		};
-		return true;
+			const dialogRef = this.dialog.open(PreviousDataComponent,
+				 {
+					data: {
+						signosVitalesNuevaConsultaService: this.signosVitalesNuevaConsultaService,
+						datosAntropometricosNuevaConsultaService: this.datosAntropometricosNuevaConsultaService
+					},
+					disableClose: true,
+					autoFocus: false
+				});
+			return	dialogRef.afterClosed();
+		}
+		else return of(true);
 	}
 
 	save(): void {
-		const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
-		const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
+		this.previousDataIsConfirmed().subscribe((answerPreviousData: boolean) => {
 
-		this.apiErrors = [];
-		this.addErrorMessage(nuevaConsulta);
-		if (this.previousDataIsConfirmed())
-			if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
-				if (!fieldsService.nonCompletedFields .length) {
-					this.createConsultation(nuevaConsulta);
-					this.disableConfirmButton = true;
+			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+			const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
+
+			this.apiErrors = [];
+			this.addErrorMessage(nuevaConsulta);
+
+			if (answerPreviousData) {
+				if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
+					if (!fieldsService.nonCompletedFields.length) {
+						this.createConsultation(nuevaConsulta);
+						this.disableConfirmButton = true;
+					}
+					else {
+						this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta);
+					}
+				} else {
+					this.disableConfirmButton = false;
 				}
-				else {
-					this.openDialog(fieldsService.nonCompletedFields , fieldsService.presentFields, nuevaConsulta);
-				}
-			} else {
-				this.disableConfirmButton = false;
 			}
 
+		});
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], nuevaConsulta: CreateOutpatientDto): void {
