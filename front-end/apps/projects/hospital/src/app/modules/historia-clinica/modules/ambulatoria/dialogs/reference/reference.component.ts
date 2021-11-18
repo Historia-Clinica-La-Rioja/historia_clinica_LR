@@ -1,7 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { CareLineService } from '@api-rest/services/care-line.service';
+import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { Observable, of } from 'rxjs';
 @Component({
@@ -14,26 +16,38 @@ export class ReferenceComponent implements OnInit {
 	formReference: FormGroup;
 	problemsList$: Observable<any[]>;
 	problemsList: any[];
-	specialties$: Observable<any[]>;
-	careLines$: Observable<any[]>;
-	isAssociatedProblemSet = false;
+	specialties$: Observable<ClinicalSpecialtyDto[]>;
+	careLines$: Observable<CareLineDto[]>;
+	careLineId: number;
+	specialtyId: number;
+	problemsReference: any[]
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly careLineService: CareLineService,
+		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
+		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 	) { }
 
 	ngOnInit(): void {
 		this.formReference = this.formBuilder.group({
-			problems: [null],
+			problems: [null, [Validators.required]],
 			consultation: [null],
 			procedure: [null],
-			careLine: [null],
-			clinicalSpecialtyId: [null],
+			careLine: [null, [Validators.required]],
+			clinicalSpecialtyId: [null, [Validators.required]],
 			summary: [null],
 		});
 		this.setProblems();
+
+		this.formReference.controls.clinicalSpecialtyId.disable();
+		this.formReference.controls.procedure.disable();
+
+		this.careLines$ = this.careLineService.getCareLines();
+
+		this.problemsReference = [];
 	}
 
 	setProblems() {
@@ -55,11 +69,64 @@ export class ReferenceComponent implements OnInit {
 		({
 			pt: problem.snomed.pt,
 			sctid: problem.snomed.sctid,
-		})
-		);
+		}));
 	}
 
 	get associatedProblemsControls(): FormControl {
 		return this.formReference.get('problems') as FormControl;
 	}
+
+	setSpecialtyCareLine(description: string): void {
+		if (this.formReference.value.careLine) {
+			this.formReference.controls.clinicalSpecialtyId.enable();
+			this.formReference.controls.clinicalSpecialtyId.setValidators([Validators.required]);
+			this.formReference.updateValueAndValidity();
+			this.careLines$.subscribe(
+				(careLineArray: CareLineDto[]) => {
+					this.careLineId = careLineArray.find(careLine => careLine.description === description).id;
+					this.specialties$ = this.clinicalSpecialtyCareLine.getSpecialtyCareLine(this.careLineId);
+				}
+			);
+		}
+	}
+
+	setSpecialtyId(specialtyName: string) {
+		this.specialties$.subscribe(specialties => {
+			this.specialtyId = specialties.find(specialty => specialty.name === specialtyName).id;
+		})
+	}
+
+	setProblemsReference(problemsArray: string[]) {
+		this.problemsReference = problemsArray.map(problemPt => ({
+			pt: problemPt,
+			sctid: this.problemsList.find(problem => problem.pt === problemPt).sctid,
+		}));
+	}
+
+	save(): void {
+		if (this.formReference.valid) {
+			const reference = this.buildReference();
+			this.dialogRef.close(reference);
+		}
+	}
+
+	private buildReference(): Reference {
+		return {
+			problems: this.problemsReference,
+			consultation: true,
+			procedure: false,
+			careLineId: this.careLineId,
+			clinicalSpecialtyId: this.specialtyId,
+			note: this.formReference.value.summary
+		}
+	}
+}
+
+export interface Reference {
+	problems: any[];
+	consultation: boolean;
+	procedure: boolean;
+	careLineId: number,
+	clinicalSpecialtyId: number;
+	note: string;
 }
