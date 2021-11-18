@@ -32,11 +32,13 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationReferenceService } from '../../services/ambulatory-consultation-reference.service';
+import { CareLineService } from '@api-rest/services/care-line.service';
 
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipe } from '@angular/common';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
 import { Observable, of } from 'rxjs';
+import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -85,6 +87,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly snowstormService: SnowstormService,
 		private readonly datePipe: DatePipe,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly careLineService: CareLineService,
+		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -95,7 +99,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
+		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
 	}
 
 	setProfessionalSpecialties() {

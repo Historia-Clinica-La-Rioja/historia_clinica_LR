@@ -213,7 +213,18 @@
 				},
 				"solicitud-referencia": {
 					"TITLE": "Solicitud de referencia",
-					"ADD_REQUEST": "+ Agregar solicitud"
+					"ADD_REQUEST": "+ Agregar solicitud",
+					"REQUESTED_REFERENCE": "Referencias solicitadas",
+					"table":{
+						"columns": {
+							"REFERENCES": "Referencias agregadas"
+						},
+						"row": {
+							"PROBLEMS": "Problema asociado:",
+							"CARE_LINE": "Línea de cuidado:",
+							"SPECIALTY": "Especialidad:"
+						}
+					}
 				},
 				"reference-dialog": {
 					"TITLE": "Agregar solicitud de referencia",

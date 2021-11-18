@@ -69,3 +69,23 @@
 		{{formatDate(rowData.fechaFin)}}
 	</div>
 </ng-template>
+
+<ng-template #referenceTemplate let-rowData="data" appCtrlTemplate="referenceTemplate">
+	<div class="reference">
+		<div fxLayout="column">	
+			<span class="bold-text" translate="ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.row.PROBLEMS"></span>
+			<span *ngFor="let problem of rowData.problems">
+				{{problem?.pt}}
+			</span>
+		</div>
+		<div fxLayout="column">	
+			<span class="bold-text" translate="ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.row.CARE_LINE"></span>
+			{{rowData.careLine?.description}}
+		</div>
+		<div fxLayout="column">	
+			<span class="bold-text" translate="ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.row.SPECIALTY"></span>
+			{{rowData.clinicalSpecialty?.name}}
+		</div>
+		<span class="mat-small grayText">{{rowData.note}}</span>
+	</div>	
+</ng-template>
