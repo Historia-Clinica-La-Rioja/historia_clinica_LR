@@ -1,10 +1,10 @@
 package net.pladema.snowstorm.services;
 
-import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
+import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 
 public interface CalculateCie10CodesService {
 
-    String execute(String sctid, Cie10RuleFeature features) throws RestTemplateApiException;
+    String execute(String sctid, Cie10RuleFeature features) throws SnowstormApiException;
 
 }

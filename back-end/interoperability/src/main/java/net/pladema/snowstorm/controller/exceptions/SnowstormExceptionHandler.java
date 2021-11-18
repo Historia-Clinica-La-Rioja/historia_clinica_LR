@@ -1,7 +1,7 @@
 package net.pladema.snowstorm.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
-import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
+import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -16,11 +16,10 @@ public class SnowstormExceptionHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnowstormExceptionHandler.class);
 
-	@ExceptionHandler({ RestTemplateApiException.class })
-	protected ResponseEntity<ApiErrorMessageDto> handleRestTemplateApiException(RestTemplateApiException ex) {
-		LOG.error("RestTemplateApiException exception -> {}", ex.getMessage());
-		var message = new ApiErrorMessageDto(ex.getStatusCode().toString(), ex.getMessage());
-		return new ResponseEntity<>(message, ex.getStatusCode());
+	@ExceptionHandler({ SnowstormApiException.class })
+	protected ResponseEntity<ApiErrorMessageDto> handleSnowstormApiException(SnowstormApiException ex) {
+		LOG.error("SnowstormException exception -> {}", ex.getMessage());
+		return new ResponseEntity<>(new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage()), ex.getStatusCode());
 	}
 }
 

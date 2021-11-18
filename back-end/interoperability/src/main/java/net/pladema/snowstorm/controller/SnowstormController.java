@@ -1,6 +1,5 @@
 package net.pladema.snowstorm.controller;
 
-import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import io.swagger.annotations.Api;
 import net.pladema.snowstorm.controller.dto.ManualClassificationDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
@@ -11,6 +10,7 @@ import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
 import net.pladema.snowstorm.services.domain.ManualClassificationBo;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
+import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +41,8 @@ public class SnowstormController {
 
     private final ManualClassificationMapper manualClassificationMapper;
 
-    public SnowstormController(SnowstormService snowstormService, FetchAllSnomedEcl fetchAllSnomedEcl, ManualClassificationMapper manualClassificationMapper){
+    public SnowstormController(SnowstormService snowstormService, FetchAllSnomedEcl fetchAllSnomedEcl,
+                               ManualClassificationMapper manualClassificationMapper){
         this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
         this.manualClassificationMapper = manualClassificationMapper;
@@ -50,15 +51,15 @@ public class SnowstormController {
     @GetMapping(value = CONCEPTS)
     public SnowstormSearchResponse getConcepts(
             @RequestParam(value = "term") String term,
-            @RequestParam(value = "ecl", required = false) String eclKey) throws RestTemplateApiException {
+            @RequestParam(value = "ecl", required = false) String eclKey) throws SnowstormApiException {
         LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
         return snowstormService.getConcepts(term, eclKey);
     }
 
     @GetMapping(value = REPORTABLE)
     public ResponseEntity<List<ManualClassificationDto>> isSnvsReportable(
-            @RequestParam(value = "sctid", required = true) String sctid,
-            @RequestParam(value = "pt", required = true) String pt) {
+            @RequestParam(value = "sctid") String sctid,
+            @RequestParam(value = "pt") String pt) {
         LOG.debug("Input data -> sctid: {} , pt: {} ", sctid, pt);
         List<ManualClassificationBo> resultService = snowstormService.isSnvsReportable(sctid, pt);
         List<ManualClassificationDto> result = manualClassificationMapper.fromManualClassificationBoList(resultService);

@@ -1,10 +1,10 @@
 package net.pladema.scheduledjobs.jobs;
 
-import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import net.pladema.person.controller.mapper.EthnicityMapper;
 import net.pladema.person.controller.service.PersonMasterDataExternalService;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
+import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -44,7 +44,7 @@ public class UpdateEthnicityMasterDataJob {
             "${scheduledjobs.updateethnicities.dayofmonth} " +
             "${scheduledjobs.updateethnicities.month} " +
             "${scheduledjobs.updateethnicities.dayofweek}")
-    public void execute() throws RestTemplateApiException {
+    public void execute() throws SnowstormApiException {
         LOG.debug("Executing UpdateEthnicityMasterDataJob at {}", new Date());
         SnowstormSearchResponse response = snowstormService.getConcepts(ECL);
         personMasterDataExternalService.updateActiveEthnicities(ethnicityMapper.fromSnowstormItemResponseList(response.getItems()));
