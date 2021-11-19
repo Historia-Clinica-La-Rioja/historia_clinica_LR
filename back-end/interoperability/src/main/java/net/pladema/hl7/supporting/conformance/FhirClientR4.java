@@ -8,8 +8,11 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
+import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
+import net.pladema.hl7.supporting.conformance.exceptions.FhirClientEnumException;
+import net.pladema.hl7.supporting.conformance.exceptions.FhirClientException;
 import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
 import org.hl7.fhir.r4.model.Bundle;
@@ -21,6 +24,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -76,7 +80,7 @@ public class FhirClientR4 {
                 .execute();
     }
 
-    public Bundle operationPatientLocation(StringType id){
+    public Bundle operationPatientLocation(StringType id) throws FhirClientException {
         Parameters parameters = new Parameters();
         parameters.addParameter(new Parameters.ParametersParameterComponent()
                 .setName(Patient.SP_IDENTIFIER)
@@ -90,7 +94,9 @@ public class FhirClientR4 {
                     .useHttpGet()
                     .returnResourceType(Bundle.class)
                     .execute();
-        } catch(InternalErrorException ex){
+        } catch (AuthenticationException ex) {
+            throw new FhirClientException(FhirClientEnumException.BUS_AUTHENTICATION_EXCEPTION, HttpStatus.valueOf(ex.getStatusCode()), ex.getResponseBody());
+        } catch (InternalErrorException ex) {
             return new Bundle();
         }
     }
