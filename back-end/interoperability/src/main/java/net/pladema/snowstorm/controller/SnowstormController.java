@@ -3,18 +3,20 @@ package net.pladema.snowstorm.controller;
 import io.swagger.annotations.Api;
 import net.pladema.snowstorm.controller.dto.ManualClassificationDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
-
-
+import net.pladema.snowstorm.controller.dto.SnvsReportDto;
+import net.pladema.snowstorm.controller.dto.SnvsToReportDto;
 import net.pladema.snowstorm.controller.mapper.ManualClassificationMapper;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
 import net.pladema.snowstorm.services.domain.ManualClassificationBo;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
+import net.pladema.snowstorm.services.domain.SnvsToReportBo;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,9 +33,11 @@ public class SnowstormController {
 
     private static final String REPORTABLE = "/is-reportable";
 
-    public static final String OUTPUT = "Output -> {}";
+    private static final String REPORT = "/report";
 
     private static final Logger LOG = LoggerFactory.getLogger(SnowstormController.class);
+
+    public static final String OUTPUT = "Output -> {}";
 
     private final SnowstormService snowstormService;
 
@@ -66,6 +70,16 @@ public class SnowstormController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+    @PostMapping(value = REPORT)
+    public ResponseEntity<List<SnvsReportDto>> reportSnvs(
+            @RequestParam(value = "toReportList", required = true) List<SnvsToReportDto> toReportList) {
+        List<SnvsToReportBo> resultService = snowstormService.tryReportAndSave(toReportList);
+        //List<SnvsToReportDto> result = mapper.fromSnvsToReportBoList(resultService);
+        LOG.debug(OUTPUT, resultService);
+        return ResponseEntity.ok().body(null);
+    }
+
 
     @GetMapping(value = "/ecl")
     public List<SnomedEclDto> getEcls() {
