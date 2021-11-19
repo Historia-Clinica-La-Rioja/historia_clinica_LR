@@ -103,12 +103,18 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	loadExternalInstitutions() {
-		const externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location => {
-			if (location.length === 0) {
-				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
-				this.loaded = false;
-			} else { this.externalInstitutions = location; }
-		});
+		const externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString())
+			.subscribe(
+				location => {
+					if (location.length === 0) {
+						this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
+						this.loaded = false;
+					} else { this.externalInstitutions = location; }
+				},
+				error => {
+					this.snackBarService.showError('ambulatoria.bus-interoperabilidad.INSTITUTION_LOADING_ERROR');
+					this.loaded = false;
+				});
 		this.showTimeOutMessages(externalInstitutions);
 	}
 
