@@ -51,3 +51,97 @@ databaseChangeLog:
                     INSERT INTO applicable_diagnostic(sctid, permanent_c, permanent_p, permanent_o, temporary_c, temporary_e, temporary_o, applicable_to_surface, applicable_to_tooth, applicable_to_quadrant, applicable_to_soft_tissue, pt) VALUES( '278599006', ${boolean.true}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, 'corona dental que filtra');                       
                     INSERT INTO applicable_diagnostic(sctid, permanent_c, permanent_p, permanent_o, temporary_c, temporary_e, temporary_o, applicable_to_surface, applicable_to_tooth, applicable_to_quadrant, applicable_to_soft_tissue, pt) VALUES ( '110338002', ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, 'exfoliación dental');
                     INSERT INTO applicable_diagnostic(sctid, permanent_c, permanent_p, permanent_o, temporary_c, temporary_e, temporary_o, applicable_to_surface, applicable_to_tooth, applicable_to_quadrant, applicable_to_soft_tissue, pt) VALUES ( '234948008', ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, 'carilla dental');
+
+
+    - changeSet:
+          id: snvs_report-createTable
+          comment: Create table snvs_report
+          author: lbergottini
+          changes:
+              - createTable:
+                    tableName: snvs_report
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_snvs_reports
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: group_event_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: event_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: manual_classification_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: status
+                              type: varchar(1024)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: response_code
+                              type: smallint
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: professional_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: snomed_sctid
+                              type: varchar(20)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: snomed_pt
+                              type: varchar(100)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: institution_id
+                              type: int
+                        - column:
+                              name: sisa_registered_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: last_update
+                              type: date
+                              defaultValueDate: ${date.now}
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: snvs_report
+                    constraintName: FK_snvs_reports_patient_id
+                    referencedColumnNames: id
+                    referencedTableName: patient
+              - addForeignKeyConstraint:
+                    baseColumnNames: professional_id
+                    baseTableName: snvs_report
+                    constraintName: FK_snvs_reports_professional_id
+                    referencedColumnNames: id
+                    referencedTableName: healthcare_professional
+              - addForeignKeyConstraint:
+                  baseColumnNames: institution_id
+                  baseTableName: snvs_report
+                  constraintName: FK_snvs_reports_institution_id
+                  referencedColumnNames: id
+                  referencedTableName: institution
