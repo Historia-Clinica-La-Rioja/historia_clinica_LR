@@ -108,11 +108,13 @@ export class DatosAntropometricosNuevaConsultaService {
 		this.form.get('weight').setValue(weight);
 		this.form.get('height').setValue(height);
 		this.form.get('bloodType').setValue(this.bloodTypes.find(b => b.description === bloodDescription));
+		this.form.disable();
 	}
 
 	discardPreloadedAnthropometricData() {
 		this.notShowPreloadedAnthropometricData = false;
 		this.form.reset();
+		this.form.enable();
 	}
 
 	getShowPreloadedAnthropometricData(): boolean {
@@ -121,6 +123,7 @@ export class DatosAntropometricosNuevaConsultaService {
 
 	savePreloadedAnthropometricData() {
 		this.notShowPreloadedAnthropometricData = false;
+		this.form.enable();
 	}
 
 	setDateOfLastData(dateList: string[]) {

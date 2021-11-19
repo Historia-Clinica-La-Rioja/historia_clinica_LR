@@ -219,6 +219,7 @@ export class SignosVitalesNuevaConsultaService {
 		this.form.patchValue({ respiratoryRate: { value: respiratoryRate } });
 		this.form.patchValue({ systolicBloodPressure: { value: systolicBloodPressure } });
 		this.form.patchValue({ temperature: { value: temperature } });
+		this.form.disable();
 	}
 
 	discardPreloadedVitalSignsData() {
@@ -227,6 +228,7 @@ export class SignosVitalesNuevaConsultaService {
 		Object.keys(this.form.controls).forEach((key: string) => {
 			this.form.patchValue({ [key]:defaultValue});
 		});
+		this.form.enable();
 	}
 
 	getShowPreloadedVitalSignsData(): boolean {
@@ -235,6 +237,7 @@ export class SignosVitalesNuevaConsultaService {
 
 	savePreloadedVitalSignsData() {
 		this.notShowPreloadedVitalSignsData = false;
+		this.form.enable();
 	}
 
 	setDateOfLastData(dateList: string[]) {
