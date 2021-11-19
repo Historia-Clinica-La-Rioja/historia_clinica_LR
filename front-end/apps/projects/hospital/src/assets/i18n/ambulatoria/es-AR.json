@@ -3,7 +3,8 @@
 		"bus-interoperabilidad": {
 			"TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
 			"PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",
-			"PACIENTE-SIN-DATOS": "Este paciente no posee datos en la institución seleccionada"
+			"PACIENTE-SIN-DATOS": "Este paciente no posee datos en la institución seleccionada",
+			"INSTITUTION_LOADING_ERROR": "Error al comunicarse con el bus"
 		},
 		"home": {
 			"TITLE": "Historia Clínica",
