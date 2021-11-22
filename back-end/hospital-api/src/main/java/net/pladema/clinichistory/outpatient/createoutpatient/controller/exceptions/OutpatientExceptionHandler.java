@@ -1,7 +1,9 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.exceptions;
 
-import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgh.clinichistory.application.calculatecie10.exceptions.HCICIE10Exception;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -24,6 +26,13 @@ public class OutpatientExceptionHandler {
 	protected ApiErrorMessageDto handleHCICIE10Exception(HCICIE10Exception ex, Locale locale) {
 		LOG.error("HCICIE10Exception exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ CreateOutpatientDocumentException.class })
+	protected ApiErrorDto handleCreateOutpatientDocumentException(CreateOutpatientDocumentException ex, Locale locale) {
+		LOG.error("CreateOutpatientDocumentException exception -> {}", ex.getMessage());
+		return new ApiErrorDto(ex.getCode().toString(), ex.getMessages());
 	}
 }
 

@@ -1,10 +1,10 @@
 package net.pladema.emergencycare.triage.controller;
 
-import io.swagger.annotations.Api;
+import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.VitalSignExternalService;
-import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
+import io.swagger.annotations.Api;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageVitalSignMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
@@ -22,7 +22,7 @@ import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 import net.pladema.medicalconsultation.doctorsoffice.controller.service.DoctorsOfficeExternalService;
 import net.pladema.user.controller.dto.UserDto;
-import net.pladema.user.controller.service.UserExternalService;
+import net.pladema.user.controller.service.UserPersonExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +62,7 @@ public class TriageController {
 
     private final DoctorsOfficeExternalService doctorsOfficeExternalService;
 
-    private final UserExternalService userExternalService;
+    private final UserPersonExternalService userPersonExternalService;
 
     private final EmergencyCareMapper emergencyCareMapper;
 
@@ -73,7 +73,7 @@ public class TriageController {
                             EmergencyCareEpisodeService emergencyCareEpisodeService,
                             VitalSignExternalService vitalSignExternalService,
                             TriageVitalSignMapper triageVitalSignMapper, DoctorsOfficeExternalService doctorsOfficeExternalService,
-                            UserExternalService userExternalService,
+                            UserPersonExternalService userPersonExternalService,
                             EmergencyCareMapper emergencyCareMapper){
         super();
         this.triageService=triageService;
@@ -84,7 +84,7 @@ public class TriageController {
         this.vitalSignExternalService = vitalSignExternalService;
         this.triageVitalSignMapper = triageVitalSignMapper;
         this.doctorsOfficeExternalService = doctorsOfficeExternalService;
-        this.userExternalService = userExternalService;
+        this.userPersonExternalService = userPersonExternalService;
         this.emergencyCareMapper = emergencyCareMapper;
     }
 
@@ -108,7 +108,7 @@ public class TriageController {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
         TriageListDto result = triageMapper.toTriageListDto(triageBo);
         // set user data
-        UserDto userDto = userExternalService.getUser(triageBo.getCreatedBy());
+        UserDto userDto = userPersonExternalService.getUser(triageBo.getCreatedBy()).get();
         result.setCreatedBy(emergencyCareMapper.toEmergencyCareUserDto(userDto));
         // set doctor's office data
         if (triageBo.getDoctorsOfficeId() != null)

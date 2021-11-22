@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.federar.controller.FederarExternalService;
 import net.pladema.federar.services.domain.FederarResourceAttributes;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
@@ -116,9 +117,10 @@ public class PatientController {
 		return ResponseEntity.ok(result);
 	}
 
-	@PostMapping
+	@PostMapping(value = "/institution/{institutionId}")
 	@Transactional
-	public ResponseEntity<Integer> addPatient(@RequestBody APatientDto patientDto) throws URISyntaxException {
+	public ResponseEntity<Integer> addPatient(@RequestBody APatientDto patientDto,
+											  @PathVariable(name = "institutionId") Integer institutionId) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
@@ -129,23 +131,32 @@ public class PatientController {
 			Person person = personMapper.fromPersonDto(createdPerson);
 			FederarResourceAttributes attributes = new FederarResourceAttributes();
 			BeanUtils.copyProperties(person, attributes);
-			federarExternalService.federatePatient(attributes, createdPatient.getId()).ifPresent(
-					nationalId -> {
-						createdPatient.setNationalId(nationalId);
-						createdPatient.setTypeId(PatientType.PERMANENT);
-						patientService.addPatient(createdPatient);
-						LOG.debug("Successful federated patient with nationalId => {}", nationalId);
-					}
-			);
+			try {
+				federarExternalService.federatePatient(attributes, createdPatient.getId()).ifPresent(
+						nationalId -> {
+							createdPatient.setNationalId(nationalId);
+							createdPatient.setTypeId(PatientType.PERMANENT);
+							LOG.debug("Successful federated patient with nationalId => {}", nationalId);
+						}
+				);
+			}
+			catch (Exception ex){
+				LOG.error(ex.getMessage(), ex);
+			}
+			patientService.addPatient(createdPatient);
 		}
+
+		patientService.auditActionPatient(institutionId, createdPatient.getId(), EActionType.CREATE);
+
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 
 
-	@PutMapping(value = "/{patientId}")
+	@PutMapping(value = "/{patientId}/institution/{institutionId}")
 	@Transactional
 	@PatientUpdateValid
 	public ResponseEntity<Integer> updatePatient(@PathVariable(name = "patientId") Integer patientId,
+												 @PathVariable(name = "institutionId") Integer institutionId,
 												 @RequestBody APatientDto patientDto) throws URISyntaxException {
 		LOG.debug("Input data -> APatientDto {} ", patientDto);
 		Patient patient = patientService.getPatient(patientId).orElseThrow(() -> new NotFoundException("patient-not-found", "Patient not found"));
@@ -154,6 +165,9 @@ public class PatientController {
 				createdPerson.getId());
 		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, (Patient pat) -> pat.setId(patientId));
+
+		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
+
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
 

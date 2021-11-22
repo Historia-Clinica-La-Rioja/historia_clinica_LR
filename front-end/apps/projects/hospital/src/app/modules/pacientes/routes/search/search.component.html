@@ -115,6 +115,7 @@
 						<input matInput id="birthDate"
 							   formControlName="birthDate"
 							   [matDatepicker]="picker"
+							   [min]="minDate"
 							   [max]="today">
 						<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'birthDate')">
 							<span [translate]="'pacientes.form.REQUIRED'"></span>

@@ -1,0 +1,23 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_23 
+
+    - changeSet:
+        id: delete-concept-from-applicable_diagnostic
+        comment: Delete repeated concept in applicable_diagnostic
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    DELETE FROM applicable_diagnostic WHERE sctid='234713009';
+
+    - changeSet:
+        id: delete-concept-from-applicable_procedure
+        comment: Delete repeated concept in applicable_procedure
+        author: tmedina
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    DELETE FROM applicable_procedure WHERE sctid='234713009';
+

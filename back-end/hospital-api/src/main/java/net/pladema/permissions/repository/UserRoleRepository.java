@@ -36,5 +36,10 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UserRolePK> 
 			)
 	List<RoleAssignment> getRoleAssignments(@Param("userId") Integer userId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT ur.userRolePK.userId "+
+			"FROM UserRole ur " +
+			"WHERE ur.userRolePK.roleId IN :rolesId ")
+	List<Integer> findAllByRoles(@Param("rolesId") List<Short> rolesId);
 	// @formatter:on
 }

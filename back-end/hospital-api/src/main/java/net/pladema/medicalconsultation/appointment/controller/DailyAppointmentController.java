@@ -73,7 +73,7 @@ public class DailyAppointmentController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<InputStreamResource> getDailyAppointmentsByDiaryIdAndDate(@PathVariable(name = "institutionId") Integer institutionId,
                                                                                     @RequestParam(name = "diaryId") Integer diaryId,
                                                                                     @RequestParam(name = "date") String date)

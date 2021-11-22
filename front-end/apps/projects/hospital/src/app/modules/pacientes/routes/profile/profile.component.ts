@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonalInformationDto, CompletePatientDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +11,10 @@ import { PatientTypeData } from '@presentation/components/patient-type-logo/pati
 import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { MatDialog } from "@angular/material/dialog";
+import { ReportsComponent } from "@pacientes/dialogs/reports/reports.component";
+import { patientCompleteName } from '@core/utils/patient.utils';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -34,6 +39,8 @@ export class ProfileComponent implements OnInit {
 	private readonly routePrefix;
 	public internmentEpisode;
 
+	public downloadReportIsEnabled: boolean;
+
 	constructor(
 		private patientService: PatientService,
 		private mapperService: MapperService,
@@ -43,8 +50,11 @@ export class ProfileComponent implements OnInit {
 		private contextService: ContextService,
 		private internmentPatientService: InternmentPatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly featureFlagService: FeatureFlagService,
+		public dialog: MatDialog
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 	}
 
 	ngOnInit(): void {
@@ -94,6 +104,13 @@ export class ProfileComponent implements OnInit {
 		};
 		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
 			queryParams: person
+		});
+	}
+
+	reports(): void {
+		this.dialog.open(ReportsComponent, {
+			width: '700px',
+			data: { patientId: this.patientId, patientName: patientCompleteName(this.patientBasicData) }
 		});
 	}
 

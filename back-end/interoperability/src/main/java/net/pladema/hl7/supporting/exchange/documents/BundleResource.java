@@ -30,7 +30,6 @@ import net.pladema.hl7.supporting.exchange.restful.validator.DocumentReferenceVa
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Medication;
 import org.hl7.fhir.r4.model.MedicationStatement;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Resource;

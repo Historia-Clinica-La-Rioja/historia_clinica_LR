@@ -25,10 +25,10 @@ class ToothWithPositionBoTest {
         ToothSurfacesBo toothSurfacesBo = toothWithPositionBo.getSurfaces();
 
         assertThat(toothSurfacesBo.getCentral()).isEqualTo(EToothSurfaces.INCISAL.getValue());
-        assertThat(toothSurfacesBo.getLeft()).isEqualTo(EToothSurfaces.MESIAL.getValue());
-        assertThat(toothSurfacesBo.getRight()).isEqualTo(EToothSurfaces.DISTAL.getValue());
-        assertThat(toothSurfacesBo.getExternal()).isEqualTo(EToothSurfaces.VESTIBULAR.getValue());
-        assertThat(toothSurfacesBo.getInternal()).isEqualTo(EToothSurfaces.LINGUAL.getValue());
+        assertThat(toothSurfacesBo.getLeft()).isEqualTo(EToothSurfaces.DISTAL.getValue());
+        assertThat(toothSurfacesBo.getRight()).isEqualTo(EToothSurfaces.MESIAL.getValue());
+        assertThat(toothSurfacesBo.getExternal()).isEqualTo(EToothSurfaces.LINGUAL.getValue());
+        assertThat(toothSurfacesBo.getInternal()).isEqualTo(EToothSurfaces.VESTIBULAR.getValue());
 
 
         toothWithPositionBo = new ToothWithPositionBo();
@@ -39,8 +39,8 @@ class ToothWithPositionBoTest {
         toothSurfacesBo = toothWithPositionBo.getSurfaces();
 
         assertThat(toothSurfacesBo.getCentral()).isEqualTo(EToothSurfaces.OCLUSAL.getValue());
-        assertThat(toothSurfacesBo.getLeft()).isEqualTo(EToothSurfaces.DISTAL.getValue());
-        assertThat(toothSurfacesBo.getRight()).isEqualTo(EToothSurfaces.MESIAL.getValue());
+        assertThat(toothSurfacesBo.getLeft()).isEqualTo(EToothSurfaces.MESIAL.getValue());
+        assertThat(toothSurfacesBo.getRight()).isEqualTo(EToothSurfaces.DISTAL.getValue());
         assertThat(toothSurfacesBo.getExternal()).isEqualTo(EToothSurfaces.VESTIBULAR.getValue());
         assertThat(toothSurfacesBo.getInternal()).isEqualTo(EToothSurfaces.PALATINA.getValue());
     }

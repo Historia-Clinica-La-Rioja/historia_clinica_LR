@@ -1,12 +1,11 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
+import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionPermissionEvaluator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
-
-import net.pladema.security.authorization.InstitutionPermissionEvaluator;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 @Configuration

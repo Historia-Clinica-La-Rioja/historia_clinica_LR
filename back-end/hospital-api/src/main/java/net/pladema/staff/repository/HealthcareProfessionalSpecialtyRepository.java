@@ -3,7 +3,6 @@ package net.pladema.staff.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

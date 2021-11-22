@@ -15,13 +15,7 @@ Levantar una DDBB de PostgreSQL:
 docker-compose up -d postgresql
 ```
 
-Popular la base con las estructuras y metadatos requeridos:
-
-```shell
-mvn -Dliquibase.propertyFile=liquibase/postgresql.properties -Dliquibase.contexts=default liquibase:update
-```
-> Todos los comandos deben correrse dentro de la carpeta ```dba/```
-
+La creación o actualización de las estructuras y metadatos requeridos en el sistema lo realiza el backend al iniciar.
 
 ## Popular DDBB con datos de ambiente
 

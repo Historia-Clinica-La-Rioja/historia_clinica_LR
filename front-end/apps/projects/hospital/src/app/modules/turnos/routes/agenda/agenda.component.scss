@@ -1,28 +1,25 @@
-@import '../../../../../assets/styles/mixins';
+@import "../../../../../assets/styles/mixins";
 
-$green-month-cell: #009B68;
-$blue-month-cell: #2687C5;
-$orange-month-cell: #FF5C00;
+$green-month-cell: #009b68;
+$blue-month-cell: #2687c5;
+$orange-month-cell: #ff5c00;
 $border-color-calendar: #e1e1e1;
-
 
 div.spinner {
 	@include centered-spinner;
 }
 
 .turnos {
-
 	background-color: white;
 
 	::ng-deep {
 		.cal-week-view .cal-day-columns {
-
 			.bg-green {
-				background-color: #C9E7CB !important;
+				background-color: #c9e7cb !important;
 			}
 
 			.bg-blue {
-				background-color: #92C3E2 !important;
+				background-color: #92c3e2 !important;
 			}
 
 			.cursor-pointer {
@@ -38,25 +35,9 @@ div.spinner {
 			color: black;
 		}
 
-		.toggle-view {
-			.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
-				background-color: #0062CD;
-			}
-
-			.mat-button-toggle-appearance-standard {
-				background-color: #007AFF;
-				color: white;
-			}
-		}
-
-		.navigation.mat-button-toggle-appearance-standard {
-			background-color: #007AFF;
-			color: white;
-		}
-
 		.today.mat-button-toggle-appearance-standard {
 			background-color: white;
-			color: #747C85;
+			color: #747c85;
 		}
 
 		.cal-cell-row.cal-header {
@@ -65,18 +46,16 @@ div.spinner {
 					width: 1px;
 					style: solid;
 					color: $border-color-calendar;
-				};
+				}
 				right: {
 					width: 1px;
 					style: solid;
 					color: $border-color-calendar;
-				};
+				}
 				bottom: none;
 			}
 		}
-
 	}
-
 }
 
 .header {
@@ -142,7 +121,6 @@ div.spinner {
 
 	.cal-month-view .cal-day-cell.cal-out-month .cal-day-number.darker-color {
 		opacity: 1;
-		color: #8C8C8C;
+		color: #8c8c8c;
 	}
 }
-

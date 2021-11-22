@@ -31,6 +31,7 @@ public class VaccineConsultationStorageImpl implements VaccineConsultationStorag
         return new VaccineConsultation(null,
                 vaccineConsultationBo.getInstitutionId(),
                 vaccineConsultationBo.getPatientId(),
+                vaccineConsultationBo.getPatientMedicalCoverageId(),
                 vaccineConsultationBo.getDoctorId(),
                 vaccineConsultationBo.getClinicalSpecialtyId(),
                 vaccineConsultationBo.getPerformedDate(),

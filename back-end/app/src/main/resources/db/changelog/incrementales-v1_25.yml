@@ -1,0 +1,419 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_25 
+    
+    - changeSet:
+        id: self_perceived_gender-createTable
+        comment: Create table self_perceived_gender
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: self_perceived_gender
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_self_perceived_gender
+                name: id
+                type: smallint
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(25)
+            - column:
+                constraints:
+                    nullable: false
+                name: orden
+                type: smallint
+    
+    - changeSet: 
+        id: self_perceived_gender-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (1,'Mujer cis',2);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (2,'Varón cis',5);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (3,'Travesti',1);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (4,'Mujer trans',3);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (5,'No binarie',4);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (6,'Varón trans',6);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (7,'Gay',7);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (8,'Lesbiana',8);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (9,'Género fluido',9);
+                    INSERT INTO self_perceived_gender (id,description,orden) VALUES (10,'Ninguna de las anteriores',10);
+                    
+    - changeSet:
+        id: person_extended-addColumn-other_gender_self_determination
+        comment: add new column other_gender_self_determination to person_extended table
+        author: lbergottini
+        changes:
+        - addColumn:
+            tableName: person_extended
+            columns:
+            - column:
+                name: other_gender_self_determination
+                type: varchar(40)
+                
+    - changeSet:
+        id: dropFK-person_extended-gender_self_determination
+        comment: drop FK constraint from person_extended table
+        author: lbergottini
+        changes:
+        - dropForeignKeyConstraint:
+            baseTableName: person_extended
+            constraintName: FK_person_extended_gender_id
+            
+    - changeSet:
+        id: fk_person_extended-gender_self_determination-gender_id
+        comment: add FK constraint in person_extended table to change DM values
+        author: lbergottini
+        changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: gender_self_determination
+            baseTableName: person_extended
+            constraintName: FK_person_extended_gender_self_determination_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: self_perceived_gender
+            validate: true
+
+    - changeSet:
+        id: odontology_consultation_indices-createTable
+        comment: Create table odontology_consultation_indices
+        author: tmedina
+        changes: 
+            - createTable: 
+                tableName: odontology_consultation_indices
+                columns: 
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_odontology_consultation_indices
+                        name: id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: odontology_consultation_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_c
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_p
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: permanent_o
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporary_c
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporary_e
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: temporary_o
+                        type: int
+                    - column:
+                        name: permanent_teeth_present
+                        type: int
+                    - column:
+                        name: temporary_teeth_present
+                        type: int                
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: date
+                        type: datetime
+                        defaultValueDate: ${date.now}
+            - addForeignKeyConstraint:
+                baseColumnNames: odontology_consultation_id
+                baseTableName: odontology_consultation_indices
+                constraintName: FK_odontology_consultation_indices_odontology_consultation_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: odontology_consultation
+                validate: true
+
+    - changeSet:      
+          id: tooth_indices-createTable
+          comment: Create table tooth_indices
+          author: tmedina
+          changes:
+              - createTable:
+                    tableName: tooth_indices
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false      
+                              name: tooth_id
+                              type: varchar(20)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: temporary
+                              type: boolean
+                        - column:
+                              name: whole_tooth
+                              type: varchar(10)
+                        - column:
+                              name: internal_surface
+                              type: varchar(10)
+                        - column:
+                              name: external_surface
+                              type: varchar(10)
+                        - column:
+                              name: central_surface
+                              type: varchar(10)
+                        - column:
+                              name: left_surface
+                              type: varchar(10)
+                        - column:
+                              name: right_surface
+                              type: varchar(10)
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: patient_id, tooth_id
+                    constraintName: PK_tooth_indices
+                    tableName: tooth_indices
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_id
+                    baseTableName: tooth_indices
+                    constraintName: FK_tooth_indices_patient_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: tooth_id
+                    baseTableName: tooth_indices
+                    constraintName: FK_tooth_indices_tooth_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: sctid
+                    referencedTableName: tooth
+                    validate: true
+
+    - changeSet:
+        id: user_person-createTable
+        comment: Create table user_person
+        author: etrapani
+        changes:
+          - createTable:
+              tableName: user_person
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: user_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: person_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: user_id, person_id
+              constraintName: pk_user_person
+              tableName: user_person
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: user_person
+              constraintName: FK_user_person_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: person_id
+              baseTableName: user_person
+              constraintName: FK_user_person_person_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: person
+              validate: true
+
+    - changeSet:
+        id: populate-user-person
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO user_person(user_id,person_id) SELECT id, person_id FROM users
+                WHERE person_id IS NOT NULL
+                AND person_id IN (SELECT id FROM person);
+
+    - changeSet:
+        id: dropColumn-person_id_from_table_user
+        author: etrapani
+        changes:
+          - dropColumn:
+              columnName: person_id
+              tableName: users
+
+    - changeSet:
+        id: createView-v_hospital_users-postgresql
+        author: etrapani
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_hospital_users
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id
+                FROM users u
+                LEFT JOIN user_person as up ON (u.id = up.user_id)
+
+    - changeSet:
+        id: addData-applicable_diagnostic
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('468785006','barra metalica sobre implantes',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('398791000221100','puente por tecnologia cad cam',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('285071002','puente dental transitorio',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('468782009','puente dental, de cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('469108005','puente dental, de metal y cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('469111006','puente adhesivo',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false});
+                INSERT INTO applicable_diagnostic(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue) VALUES('398761000221105','tramo de puente',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false});
+
+    - changeSet:
+        id: addData-applicable_procedure
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('468785006','barra metalica sobre implantes',${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('398791000221100','puente por tecnologia cad cam',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('285071002','puente dental transitorio',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('468782009','puente dental, de cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('469108005','puente dental, de metal y cerámica',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+                INSERT INTO applicable_procedure(sctid,pt,permanent_c,permanent_p,permanent_o,temporary_c,temporary_e,temporary_o,applicable_to_surface,applicable_to_tooth,applicable_to_quadrant,applicable_to_soft_tissue, applicable_to_mouth) VALUES('469111006','puente adhesivo',${boolean.false},${boolean.false},${boolean.true},${boolean.false},${boolean.false},${boolean.false},${boolean.false},${boolean.true},${boolean.true},${boolean.false},${boolean.false});
+    
+    - changeSet:    
+        id: institution-addProvinceCodeColumn
+        comment: Create column province_code to institution
+        author: ltoloza
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: province_code
+                    type: varchar(25)
+              tableName: institution
+
+    - changeSet:
+          id: attention_reads-createTable
+          comment: Create table attention_reads
+          author: ltoloza
+          changes:
+              - createTable:
+                    tableName: attention_reads
+                    columns:
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: attention_id
+                              type: bigint
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: user_id
+                              type: varchar(100)
+                        - column:
+                              name: processed
+                              type: boolean
+                        - column:
+                              name: performed_date
+                              type: datetime
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: attention_id, user_id
+                    constraintName: PK_attention_reads
+                    tableName: attention_reads
+
+    - changeSet:
+          id:  v_attention-createView
+          comment: Create v_attention view
+          author: ltoloza
+          changes:
+              -  createView:
+                     viewName: v_attention
+                     fullDefinition:  false
+                     replaceIfExists:  true
+                     selectQuery: |-
+                         SELECT d.id as id, oc.patient_id as patient_id, oc.institution_id as institution_id, oc.clinical_specialty_id as clinical_speciality_id,
+                                 oc.start_date as performed_date, d.source_id as encounter_id, d.source_type_id as scope_id, oc.doctor_id as doctor_id,
+                                 oc.created_by as created_by, oc.created_on as created_on, oc.updated_by as updated_by, oc.updated_on as updated_on,
+                                 oc.deleted_by as deleted_by, oc.deleted_on as deleted_on, oc.deleted as deleted
+                         FROM outpatient_consultation as oc
+                         JOIN document as d ON (oc.id = d.source_id and d.source_type_id = 1)
+                             UNION ALL
+                         SELECT d.id as id, ie.patient_id, ie.institution_id , ie.clinical_specialty_id , ie.entry_date, d.source_id, d.source_type_id, hpg.healthcare_professional_id,
+                                 ie.created_by, ie.created_on, ie.updated_by, ie.updated_on, ie.deleted_by, ie.deleted_on, ie.deleted
+                         FROM internment_episode as ie
+                         JOIN document AS d ON (ie.id = d.source_id and d.source_type_id = 0)
+                         JOIN healthcare_professional_group AS hpg ON (ie.id = hpg.internment_episode_id and hpg.responsible)
+                             UNION ALL
+                         SELECT d.id as id, dc.patient_id, dc.institution_id , dc.clinical_specialty_id , dc.performed_date, d.source_id, d.source_type_id, dc.doctor_id,
+                                 dc.created_by, dc.created_on, dc.updated_by, dc.updated_on, dc.deleted_by, dc.deleted_on, dc.deleted
+                         FROM odontology_consultation as dc
+                         JOIN document as d ON (dc.id = d.source_id and d.source_type_id = 6)
+                             UNION ALL
+                         SELECT d.id as id, vc.patient_id, vc.institution_id , vc.clinical_specialty_id , vc.performed_date, d.source_id, d.source_type_id, vc.doctor_id,
+                                 vc.created_by, vc.created_on, vc.updated_by, vc.updated_on, vc.deleted_by, vc.deleted_on, vc.deleted
+                         FROM vaccine_consultation as vc
+                         JOIN document as d ON (vc.id = d.source_id and d.source_type_id = 5)
+
+
+    - changeSet:
+        id: update-v_hospital_users-postgresql-error-admin
+        author: etrapani
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_hospital_users
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id
+                FROM users u
+                INNER JOIN user_person as up ON (u.id = up.user_id)
+                UNION
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, -1
+                FROM users u
+                WHERE u.id NOT IN (SELECT up.user_id FROM user_person as up)

@@ -1,7 +1,10 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentExceptionEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,26 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
             throw new ConstraintViolationException("El id de la institución es obligatorio", Collections.emptySet());
         if (outpatient.getEncounterId() == null)
             throw new ConstraintViolationException("El id del encuentro asociado es obligatorio", Collections.emptySet());
+
+        CreateOutpatientDocumentException repeatedErrors = new CreateOutpatientDocumentException(CreateOutpatientDocumentExceptionEnum.REPEATED_CLINICAL_TERM);
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getReasons()))
+            repeatedErrors.addError("Motivos repetidos");
+
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getProblems()))
+            repeatedErrors.addError("Problemas médicos repetidos");
+
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getFamilyHistories()))
+            repeatedErrors.addError("Antecedentes familiares repetidos");
+
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getAllergies()))
+            repeatedErrors.addError("Alergias repetidas");
+
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getProcedures()))
+            repeatedErrors.addError("Procedimientos repetidos");
+        if (repeatedErrors.hasErrors())
+            throw repeatedErrors;
     }
+
+
 }
 

@@ -3,7 +3,6 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.ProceduresValid;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -23,7 +22,6 @@ public class CreateOutpatientDto {
 
     private List<@Valid OutpatientProblemDto> problems = new ArrayList<>();
 
-    @ProceduresValid
     private List<@Valid OutpatientProcedureDto> procedures = new ArrayList<>();
 
     private List<@Valid OutpatientFamilyHistoryDto> familyHistories = new ArrayList<>();

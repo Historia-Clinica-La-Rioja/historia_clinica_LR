@@ -50,7 +50,7 @@ public class SGXAuditableEntityJPARepositoryTest extends UnitRepository {
 
             @Override
             public Object getPrincipal() {
-                return 144;
+                return new SgxUserDetails(144);
             }
 
             @Override

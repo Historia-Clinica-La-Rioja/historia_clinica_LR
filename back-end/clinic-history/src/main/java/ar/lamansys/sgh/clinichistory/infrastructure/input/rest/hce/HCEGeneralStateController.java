@@ -5,12 +5,14 @@ import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservation
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEHealthConditionsService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEImmunizationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEMedicationService;
+import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEToothRecordService;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEToothRecordBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationDoseBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
@@ -20,11 +22,14 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEImmuni
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import io.swagger.annotations.Api;
@@ -47,7 +52,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/hce/general-state")
 @Api(value = "HCE General State", tags = { "HCE General State" })
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 public class HCEGeneralStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HCEGeneralStateController.class);
@@ -67,6 +72,8 @@ public class HCEGeneralStateController {
 
     private final HCEAllergyService hceAllergyService;
 
+    private final HCEToothRecordService hceToothRecordService;
+
     private final LocalDateMapper localDateMapper;
 
     private final SharedImmunizationPort sharedImmunizationPort;
@@ -81,6 +88,7 @@ public class HCEGeneralStateController {
                                      HCEImmunizationService hceImmunizationService,
                                      HCEMedicationService hceMedicationService,
                                      HCEAllergyService hceAllergyService,
+                                     HCEToothRecordService hceToothRecordService,
                                      LocalDateMapper localDateMapper,
                                      SharedImmunizationPort sharedImmunizationPort,
                                      SharedInstitutionPort sharedInstitutionPort,
@@ -91,6 +99,7 @@ public class HCEGeneralStateController {
         this.hceImmunizationService = hceImmunizationService;
         this.hceMedicationService = hceMedicationService;
         this.hceAllergyService = hceAllergyService;
+        this.hceToothRecordService = hceToothRecordService;
         this.localDateMapper = localDateMapper;
         this.sharedImmunizationPort = sharedImmunizationPort;
         this.sharedInstitutionPort = sharedInstitutionPort;
@@ -163,10 +172,24 @@ public class HCEGeneralStateController {
         result.setScheme(hceImmunizationBo.getSchemeId() != null ? sharedImmunizationPort.fetchVaccineSchemeInfo(hceImmunizationBo.getSchemeId()) : null);
         result.setDose(mapVaccineDose(hceImmunizationBo.getDose()));
         result.setNote(hceImmunizationBo.getNote());
-        result.setInstitution(hceImmunizationBo.getInstitutionId() != null ? sharedInstitutionPort.fetchInstitutionById(hceImmunizationBo.getInstitutionId()) : null);
+        result.setInstitution(mapInstitutionInfo(hceImmunizationBo));
         result.setLotNumber(hceImmunizationBo.getLotNumber());
-        result.setDoctor(sharedStaffPort.getProfessionalCompleteInfo(hceImmunizationBo.getCreatedByUserId()));
+        result.setDoctor(mapProfessionalInfoDto(hceImmunizationBo));
         return  result;
+    }
+
+    private ProfessionalInfoDto mapProfessionalInfoDto(HCEImmunizationBo hceImmunizationBo) {
+        if (hceImmunizationBo.isBillable())
+            return sharedStaffPort.getProfessionalCompleteInfo(hceImmunizationBo.getCreatedByUserId());
+        return new ProfessionalInfoDto(null, null, hceImmunizationBo.getDoctorInfo(), null, null, null, null);
+    }
+
+    private InstitutionInfoDto mapInstitutionInfo(HCEImmunizationBo hceImmunizationBo) {
+        if (hceImmunizationBo.getInstitutionId() == null && hceImmunizationBo.getInstitutionInfo() == null)
+            return null;
+        return hceImmunizationBo.getInstitutionId() != null ?
+                sharedInstitutionPort.fetchInstitutionById(hceImmunizationBo.getInstitutionId()) :
+                new InstitutionInfoDto(null, hceImmunizationBo.getInstitutionInfo(), null);
     }
 
     private VaccineDoseInfoDto mapVaccineDose(ImmunizationDoseBo dose) {
@@ -227,6 +250,19 @@ public class HCEGeneralStateController {
         List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getSolvedProblems(patientId);
         List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/toothRecords/tooth/{toothSctid}")
+    public ResponseEntity<List<HCEToothRecordDto>> getToothRecords(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "patientId") Integer patientId,
+            @PathVariable(name = "toothSctid") String toothSctid) {
+        LOG.debug("Input parameters -> institutionId {}, patientId {}, toothSctid {}", institutionId, patientId, toothSctid);
+        List<HCEToothRecordBo> resultService = hceToothRecordService.getToothRecords(patientId, toothSctid);
+        List<HCEToothRecordDto> result = hceGeneralStateMapper.toListHCEToothRecordDto(resultService);
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 

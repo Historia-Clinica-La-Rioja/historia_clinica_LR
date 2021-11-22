@@ -17,25 +17,18 @@
 				</div>
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-antecedentes-familiares-summary [familyHistories]="familyHistories$ | async"
 							[familyHistoriesHeader]="familyHistoriesHeader">
 						</app-antecedentes-familiares-summary>
-						<app-external-summary-card *ngIf="loadExternal" [header]="this.patientExternalSummary.organization.name">
-							<app-table [showTableHeader]="false" [model]="this.familyHistoriesTable"
-									   *ngIf="familyHistoriesTable?.data?.length > 0 else noInfo"></app-table>
-							<ng-template #noInfo>
-								<app-no-data></app-no-data>
-							</ng-template>
-						</app-external-summary-card>
 					</ng-container>
 				</div>
 			</div>
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
-						<app-medicacion-summary [medications]="medications$ | async"></app-medicacion-summary>
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-medicacion-summary [medicationsHeader]="medicationsHeader" [medications]="medications$ | async"></app-medicacion-summary>
 						<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
 							<app-table class="mante" [showTableHeader]="true" [model]="this.medicationsTable"
 									   *ngIf="medicationsTable?.data?.length > 0 else noInfo"></app-table>
@@ -47,7 +40,7 @@
 				</div>
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-alergias-summary [allergies]="allergies$ | async">
 						</app-alergias-summary>
 						<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
@@ -63,14 +56,14 @@
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-antropometricos-summary [anthropometricData$]="anthropometricData$">
 						</app-antropometricos-summary>
 					</ng-container>
 				</div>
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD']">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-signos-vitales-summary [editable]="false" [vitalSigns$]="vitalSigns$">
 						</app-signos-vitales-summary>
 					</ng-container>

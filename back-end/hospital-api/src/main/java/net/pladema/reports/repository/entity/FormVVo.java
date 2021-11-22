@@ -1,18 +1,12 @@
 package net.pladema.reports.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.Period;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class FormVVo {
 
     private String establishment;
@@ -33,22 +27,28 @@ public class FormVVo {
 
     private String documentNumber;
 
-    private String medicalCoverage;
-
-    private String affiliateNumber;
-
     private String streetName;
 
     private String streetNumber;
 
     private String city;
 
-    @JsonIgnore
-    public Short getAge(){
-        if (patientBirthDate == null)
-            return null;
-        LocalDate today = LocalDate.now();
-        Period p = Period.between(patientBirthDate, today);
-        return (short) p.getYears();
+    private String sisaCode;
+
+    public FormVVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
+                   LocalDate patientBirthDate, String documentType, String documentNumber, String streetName, String streetNumber, String city, String sisaCode){
+        this.establishment = establishment;
+        this.firstName = firstName;
+        this.middleNames = middleNames;
+        this.lastName = lastName;
+        this.otherLastNames = otherLastNames;
+        this.patientGender = patientGender;
+        this.patientBirthDate = patientBirthDate;
+        this.documentType = documentType;
+        this.documentNumber = documentNumber;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
+        this.city = city;
+        this.sisaCode = sisaCode;
     }
 }

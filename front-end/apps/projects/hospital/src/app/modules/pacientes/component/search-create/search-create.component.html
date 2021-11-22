@@ -1,17 +1,17 @@
 <mat-card class="mat-typography">
-	<form [formGroup]="formSearch" (ngSubmit)="search()">
+	<form [formGroup]="formSearch" #formDirectiveSearchForm="ngForm" (ngSubmit)="search(formDirectiveSearchForm)">
 		<mat-card-header>
 			<mat-card-title [translate]="'pacientes.home.find_add_section.TITLE'"></mat-card-title>
 			<mat-card-subtitle [translate]="'pacientes.home.SUBTITLE'">
 			</mat-card-subtitle>
 		</mat-card-header>
 		<mat-card-content fxLayout="column" fxLayoutGap="20px">
-			<div fxLayout="row" fxLayoutGap="20px"  fxLayout.lt-md="column" fxLayoutGap.lt-md="0">
+			<div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutGap.lt-md="0">
 				<mat-form-field appearance="outline" fxFlex="50%">
 					<mat-label>Tipo</mat-label>
 					<mat-select formControlName="identifType" (openedChange)="onIdentifTypeChange()">
 						<mat-option id="identifType" name="identifType" *ngFor="let type of identifyTypeArray"
-									[value]="type.id">
+							[value]="type.id">
 							{{type.description}}
 						</mat-option>
 					</mat-select>
@@ -22,12 +22,12 @@
 				<mat-form-field appearance="outline" fxFlex="50%">
 					<mat-label>Nro de documento</mat-label>
 					<input matInput type="text" id="identifNumber" name="identifNumber" formControlName="identifNumber"
-						   placeholder="Nro de documento">
+						placeholder="Nro de documento">
 					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'identifNumber')">
 						<span translate="forms.REQUIRED"></span>
 					</mat-error>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'maxlength', 'identifNumber')"
-							   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 11}">
+						translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 11}">
 					</mat-error>
 					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'pattern', 'identifNumber')">
 						<span translate="forms.FORMAT_WHITOUT_BLANK_SPACES"></span>
@@ -43,7 +43,7 @@
 							{{gender.description}}
 						</mat-radio-button>
 					</mat-radio-group>
-					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'gender')">
+					<mat-error *ngIf="formSearchSubmitted && !messageOff && hasError(formSearch, 'required', 'gender')">
 						<span translate="forms.REQUIRED"></span>
 					</mat-error>
 				</div>
@@ -58,7 +58,8 @@
 					<mat-card-title [translate]="'pacientes.home.find_add_section.NO_IDENTITY'">
 					</mat-card-title>
 				</mat-card-header>
-				<mat-card-content *ngIf="noIdentity" fxLayout="row" fxLayoutGap="20px"  fxLayout.lt-md="column" fxLayoutGap.lt-md="0">
+				<mat-card-content *ngIf="noIdentity" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-md="column"
+					fxLayoutGap.lt-md="0">
 					<mat-form-field appearance="outline" fxFlex="50">
 						<mat-label>Seleccione motivo</mat-label>
 						<mat-select formControlName="IdentityVerificationStatus">
@@ -80,9 +81,21 @@
 				</mat-card-content>
 			</div>
 			<div *appHasRole="['ADMINISTRATIVO']" align="end">
-				<button mat-flat-button color="primary" type="submit">
-					<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
-				</button>
+				<div class="search" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+					<button mat-stroked-button color="primary" type="button" (click)="openScanPatientDialog(formDirectiveSearchForm)" [disabled]="disableButtonScan">
+						<span class="material-icons" color="primary">crop_free</span>
+						<span [translate]="'pacientes.home.find_add_section.scan.BUTTON_SCAN'"></span>
+					</button>
+					<button mat-flat-button color="primary" type="submit" [disabled]="disableButtonConfirm">
+						<span [translate]="'pacientes.home.find_add_section.BUTTON_SEARCH'"></span>
+					</button>
+				</div>
+			</div>
+			<div id="messagesScan" fxLayout="column" fxLayoutGap="20px">
+				<span *ngIf="(patientInformationError == 0)" [translate]="'pacientes.home.find_add_section.scan.messages.SUCCESS'"></span>
+				<mat-error class = "errorScan" *ngIf="(patientInformationError == 1)">
+					<span [translate]="'pacientes.home.find_add_section.scan.messages.ERROR'"></span>
+				</mat-error>
 			</div>
 		</mat-card-content>
 	</form>

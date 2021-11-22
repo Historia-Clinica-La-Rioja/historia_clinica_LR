@@ -4,23 +4,21 @@ import ar.lamansys.immunization.UnitRepository;
 import ar.lamansys.immunization.domain.vaccine.Thresholds;
 import ar.lamansys.immunization.domain.vaccine.VaccineDescription;
 import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
-import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationBo;
+import ar.lamansys.immunization.infrastructure.output.repository.vaccine.NomivacSnomedMap;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.Vaccine;
+import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineConditionApplication;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineNomivacRule;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineScheme;
 import ar.lamansys.immunization.infrastructure.output.repository.vaccine.VaccineStorageImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-@ExtendWith(MockitoExtension.class)
 class FetchVaccineByIdTest extends UnitRepository {
 
     private FetchVaccineById fetchVaccineById;
@@ -46,8 +44,8 @@ class FetchVaccineByIdTest extends UnitRepository {
         var dose2 = new VaccineDoseBo("Dose2", (short)2);
         var dose3 = new VaccineDoseBo("Dose3", (short)3);
 
-        var asplenicCondition = new VaccineConditionApplicationBo((short)1, "Asplenic");
-        var nationalCalendarCondition = new VaccineConditionApplicationBo((short)3, "National Calendar");
+        var asplenicCondition = save(new VaccineConditionApplication((short)1, "Asplenic"));
+        var nationalCalendarCondition = save(new VaccineConditionApplication((short)3, "National Calendar"));
         save(new VaccineNomivacRule(meningococo.getSisaCode(), asplenicCondition.getId(), asplenicoGT5.getId(), dose1.getDescription(), dose1.getOrder(), 0, 0, 0));
         save(new VaccineNomivacRule(meningococo.getSisaCode(), asplenicCondition.getId(), asplenicoGT5.getId(), reinforcement.getDescription(), reinforcement.getOrder(),  0, 0, 56));
         save(new VaccineNomivacRule(meningococo.getSisaCode(), asplenicCondition.getId(), asplenicoLT5.getId(), dose1.getDescription(), dose1.getOrder(),  0, 0, 0));
@@ -60,9 +58,11 @@ class FetchVaccineByIdTest extends UnitRepository {
         save(new VaccineNomivacRule(quintuple.getSisaCode(), nationalCalendarCondition.getId(), atrasado.getId(), dose3.getDescription(), dose3.getOrder(),  240, 2189, 56));
         save(new VaccineNomivacRule(quintuple.getSisaCode(), nationalCalendarCondition.getId(), atrasado.getId(), reinforcement.getDescription(), reinforcement.getOrder(), 730, 2189, 180));
 
+        save(new NomivacSnomedMap((short)162, "sctid"));
         var result = fetchVaccineById.run("sctid");
 
-        Assertions.assertEquals((short)130, result.getId());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals((short)162, result.getSisaCode());
         Assertions.assertEquals(new VaccineDescription("Meningocócica Tetravalente Conjugada"), result.getDescription());
         Assertions.assertEquals(new Thresholds(56, 23725), result.getThreshold());
         Assertions.assertEquals(6, result.getRules().size());

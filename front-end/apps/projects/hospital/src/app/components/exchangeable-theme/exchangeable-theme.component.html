@@ -1,0 +1,12 @@
+<div fxLayout="row" fxLayoutAlign="end" class=" mat-app-background" [ngClass]="selectedTheme?.class">
+	<button class=" theme-button" mat-icon-button [matMenuTriggerFor]="menu">
+		<mat-icon>format_color_fill</mat-icon>
+	</button>
+	<mat-menu #menu="matMenu">
+		<div *ngFor="let theme of themesOptions">
+			<button mat-menu-item (click)="setTheme(theme)">
+				<span>{{theme.name}}</span>
+			</button>
+		</div>
+	</mat-menu>
+</div>

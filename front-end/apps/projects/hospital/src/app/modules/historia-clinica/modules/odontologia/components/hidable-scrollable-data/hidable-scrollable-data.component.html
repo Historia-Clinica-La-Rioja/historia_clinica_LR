@@ -1,0 +1,22 @@
+<div class="color-primary pointer" *ngIf="!showingMore" (click)="showingMore = true" fxLayoutAlign="start center">
+	<mat-icon>arrow_drop_down</mat-icon>
+	<span *ngIf="data.length === 1 ; else multipleElements">Ver 1 registro anterior</span>
+	<ng-template #multipleElements>
+		<span>Ver {{ data.length}} registros anteriores</span>
+	</ng-template>
+</div>
+
+<div *ngIf="showingMore" fxLayout="column" fxLayoutGap="10px">
+	<div class="scrolleable-records" fxLayout="column" fxLayoutGap="10px">
+		<div id="scrolleable_records" style="color: grey" fxLayout="row" fxLayoutGap="5px"
+			*ngFor="let element of data ">
+			<span id="firstElement">{{element.firstElement}}</span>
+			<span id="secondElement">{{element.secondElement}}</span>
+		</div>
+	</div>
+
+	<div class="color-primary pointer" (click)="showingMore = false" fxLayoutAlign="start center">
+		<mat-icon>arrow_drop_up</mat-icon>
+		<span>Ocultar registros anteriores</span>
+	</div>
+</div>

@@ -12,7 +12,8 @@ import {
 	GenderDto,
 	IdentificationTypeDto,
 	PatientMedicalCoverageDto,
-	PersonPhotoDto
+	PersonPhotoDto,
+	SelfPerceivedGenderDto
 } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
@@ -25,6 +26,7 @@ import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
+import { NavigationService } from '@pacientes/services/navigation.service';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -37,6 +39,8 @@ const ROUTE_HOME_PATIENT = 'pacientes';
 export class NewPatientComponent implements OnInit {
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
+	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
+	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
@@ -44,6 +48,8 @@ export class NewPatientComponent implements OnInit {
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
+	public selfPerceivedGenders: SelfPerceivedGenderDto[];
+	public showOtherGender: boolean = false;
 	public countries: any[];
 	public provinces: any[];
 	public departments: any[];
@@ -71,11 +77,13 @@ export class NewPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private mapperService: MapperService,
 		private patientMedicalCoverageService: PatientMedicalCoverageService,
+		public navigationService: NavigationService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
 	ngOnInit(): void {
+		this.navigationService.saveURL(this.router.url);
 		this.route.queryParams
 			.subscribe(params => {
 				this.form = this.formBuilder.group({
@@ -99,6 +107,7 @@ export class NewPatientComponent implements OnInit {
 					religion: [],
 					nameSelfDetermination: [],
 					genderSelfDeterminationId: [],
+					otherGenderSelfDetermination: [{ value: null, disabled: true }, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]],
 
 					// Address
 					addressStreet: [],
@@ -128,6 +137,11 @@ export class NewPatientComponent implements OnInit {
 			.subscribe(genders => {
 				this.genders = genders;
 			});
+
+		this.personMasterDataService.getSelfPerceivedGenders()
+			.subscribe(
+				genders => this.selfPerceivedGenders = genders
+			);
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -210,7 +224,7 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	private mapToPersonRequest(): APatientDto {
-		return {
+		const patient: APatientDto = {
 			birthDate: this.form.controls.birthDate.value.toDate(),
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
@@ -255,6 +269,11 @@ export class NewPatientComponent implements OnInit {
 
 			}
 		};
+
+		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
+			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination;
+
+		return patient;
 
 	}
 
@@ -304,6 +323,20 @@ export class NewPatientComponent implements OnInit {
 	goBack(): void {
 		this.formSubmitted = false;
 		this.router.navigate([this.routePrefix + ROUTE_HOME_PATIENT]);
+	}
+
+	public showOtherSelfPerceivedGender(): void {
+		this.showOtherGender = (this.form.value.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		this.form.get('otherGenderSelfDetermination').setValue(null);
+		if (this.showOtherGender)
+			this.form.get('otherGenderSelfDetermination').enable();
+		else
+			this.form.get('otherGenderSelfDetermination').disable();
+	}
+
+	public clearGenderSelfDetermination(): void {
+		this.form.controls.genderSelfDeterminationId.reset();
+		this.showOtherSelfPerceivedGender();
 	}
 
 }

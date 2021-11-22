@@ -7,6 +7,7 @@ import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-vacunas',
@@ -49,6 +50,8 @@ export class VacunasComponent implements OnInit {
 		},
 	];
 	displayedColumns: string[] = [];
+
+	minDate = MIN_DATE;
 
 	constructor(
 		private formBuilder: FormBuilder,

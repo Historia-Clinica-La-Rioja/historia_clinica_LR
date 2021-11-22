@@ -6,7 +6,7 @@ import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginPayload;
 import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginResponse;
 import net.pladema.hl7.supporting.exchange.services.federar.JWTUtils;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

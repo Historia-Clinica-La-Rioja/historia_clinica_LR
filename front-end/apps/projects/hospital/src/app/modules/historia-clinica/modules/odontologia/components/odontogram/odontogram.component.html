@@ -1,8 +1,11 @@
 <div style="margin: 40px;" fxLayout="column" fxLayoutGap="15px">
 
 
-	<div id="actions" fxLayout="row" fxLayoutAlign="end">
+	<div id="actions" *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']" fxLayout="row" fxLayoutGap="15px"
+		fxLayoutAlign="end">
 		<button mat-stroked-button color="primary" class="uppercase" (click)="clearOdontogram()">Restablecer</button>
+		<button mat-raised-button color="primary" class="uppercase" (click)="openConsultationPopup()">Completar
+			consulta</button>
 	</div>
 
 
@@ -12,7 +15,8 @@
 				<span>{{quadrants.quadrant1.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant1.code)"
 					matTooltip="Pieza {{quadrants.quadrant1.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 
@@ -22,7 +26,8 @@
 				<span>{{quadrants.quadrant2.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant2.code)"
 					matTooltip="Pieza {{quadrants.quadrant2.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -30,8 +35,9 @@
 			<div *ngFor="let tooth of quadrants?.quadrant5.teeth" fxLayout="column" fxLayoutAlign="center center">
 				<span>{{quadrants.quadrant5.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant5.code)"
-					matTooltip="Pieza {{quadrants.quadrant5.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -40,7 +46,8 @@
 				<span>{{quadrants.quadrant6.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant6.code)"
 					matTooltip="Pieza {{quadrants.quadrant6.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -49,7 +56,8 @@
 				<span>{{quadrants.quadrant8.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant8.code)"
 					matTooltip="Pieza {{quadrants.quadrant8.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -58,7 +66,8 @@
 				<span>{{quadrants.quadrant7.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant7.code)"
 					matTooltip="Pieza {{quadrants.quadrant7.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -67,7 +76,8 @@
 				<span>{{quadrants.quadrant4.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant4.code)"
 					matTooltip="Pieza {{quadrants.quadrant4.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
@@ -76,11 +86,17 @@
 				<span>{{quadrants.quadrant3.code}}{{tooth.code}}</span>
 				<app-tooth [toothTreatment]="toothTreatment" (click)="openToothDialog(tooth,quadrants.quadrant3.code)"
 					matTooltip="Pieza {{quadrants.quadrant3.code}}{{tooth.code}}" matTooltipClass="multiline-tooltip"
-					[findingsAndProcedures]="odontogramService.getActionsFrom(tooth.snomed.sctid)">
+					[findingsAndProcedures]="actionsFrom[tooth.snomed.sctid]"
+					[records]="currentDraws[tooth.snomed.sctid]">
 				</app-tooth>
 			</div>
 		</div>
 
+	</div>
+
+	<div *ngIf="(consultationsIndices$ | async ) as consultationsIndices">
+		<app-indices *ngIf="consultationsIndices.length" fxLayoutAlign="center" class="indices"
+			[consultations]="consultationsIndices"></app-indices>
 	</div>
 
 </div>

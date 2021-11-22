@@ -1,25 +1,41 @@
-@import 'mat-mixins';
-@import 'palettes';
-@import '~@angular/cdk/overlay-prebuilt.css';
+@import "mat-mixins";
+@import "palettes";
+@import "~@angular/cdk/overlay-prebuilt.css";
+@import "mixins";
 
 @include mat-core();
 
 $primary: mat-palette($primary-palette, 400);
-$accent:  mat-palette($accent-palette);
+$accent: mat-palette($accent-palette);
 
 $theme: mat-light-theme($primary, $accent);
 
-@include angular-material-theme($theme);
+$dark-primary: mat-palette($mat-blue-grey);
+$dark-accent: mat-palette($mat-amber, A200, A100, A400);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme(
+  (
+    color: (
+      primary: $dark-primary,
+      accent: $dark-accent,
+      warn: $dark-warn,
+    ),
+  )
+);
 
-@include mat-nav-list($theme);
-@include mat-selection-list($theme);
-@include mat-table($theme);
-@include mat-card-box($theme);
-@include signos-vitales-box($theme);
-@include detail-box($theme);
-@include mat-dialog($theme);
-@include mat-button($theme);
-@include no-data($theme);
-@include general($theme);
-@include header($theme);
-@include mat-theme-color($theme)
+$candy-app-primary: mat-palette($mat-red);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$candy-app-warn: mat-palette($mat-green);
+$candy-app-theme: mat-light-theme(
+  (
+    color: (
+      primary: $candy-app-primary,
+      accent: $candy-app-accent,
+      warn: $candy-app-warn,
+    ),
+  )
+);
+
+@include angular-material-theme($theme);
+@include custom-components-color($theme);
+@include material-mixins($theme);

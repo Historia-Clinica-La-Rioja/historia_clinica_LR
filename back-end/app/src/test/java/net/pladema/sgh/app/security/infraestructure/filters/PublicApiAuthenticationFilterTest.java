@@ -2,7 +2,6 @@ package net.pladema.sgh.app.security.infraestructure.filters;
 
 import ar.lamansys.sgx.auth.apiKey.infrastructure.input.service.ApiKeyExternalService;
 import ar.lamansys.sgx.auth.apiKey.infrastructure.input.service.dto.ApiKeyInfoDto;
-import io.jsonwebtoken.ExpiredJwtException;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.permissions.service.dto.RoleAssignment;
@@ -10,10 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,8 +19,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

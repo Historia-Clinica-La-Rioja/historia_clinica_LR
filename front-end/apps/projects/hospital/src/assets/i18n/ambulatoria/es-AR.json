@@ -33,10 +33,7 @@
 				"PESO": "Peso",
 				"MOTIVO": "Motivos de consulta",
 				"PROBLEMA": "Problema de la consulta",
-				"REGRESAR": "Regresar y completar",
-				"CONFIRMAR": "Confirmar de todos modos",
 				"RECOMENDADO": "*Recomendado",
-				"CAMPOS_SUGERIDOS":"Se sugiere completar los siguientes campos",
 				"evolucion": {
 					"TITLE": "Evolucion",
 					"DESCRIPCION": "Descripcion"
@@ -78,7 +75,10 @@
 					"OBSERVACIONES": "Observaciones",
 					"SUSPENDIDO": "Suspendido",
 					"TABLE_TITLE": "Medicaciones registradas",
-					"TITLE": "Medicación habitual"
+					"TITLE": "Medicación habitual",
+					"STATE": "Estado",
+					"MEDICATION": "Medicación",
+					"ADD": "Agregar Medicación"
 				},
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
@@ -140,6 +140,22 @@
 					"ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
 					"FECHA": "Fecha de registro"
 				},
+				"antecedentes-personales": {
+					"buttons": {
+						"ADD": "Agregar antecedente personal"
+					},
+					"table": {
+						"TITLE": "Antecedentes registrados",
+						"columns": {
+							"ANTECEDENTE_PERSONAL": "Antecedente",
+							"FECHA": "Fecha de registro"
+						}
+					},
+					"TITLE": "Antecedentes personales",
+					"ANTECEDENTES_PERSONALES": "Antecedentes personales",
+					"TIPO_DE_PROBLEMA": "Tipo de problema",
+					"FECHA": "Fecha de registro"
+				},
 				"datos-antropometricos": {
 					"TITLE": "Datos antropométricos",
 					"BLOOD_TYPE": "Grupo y factor sanguíneo",
@@ -185,21 +201,37 @@
 					"START_DATE": "Desde",
 					"END_DATE": "Hasta"
 				},
+				"HISTORICAL_TITLE": "Histórico de evoluciones",
+				"HISTORICAL_HSI_TAB_LABEL": "Histórico HSI",
+				"HISTORICAL_EXTERNAL_TAB_LABEL": "Histórico Externo",
+				"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
+				"RESULTS": "resultados",
 				"historical-problems": {
-					"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
-					"NO_HISTORICAL": "No existe informacion para mostrar",
-					"HISTORICAL_TITLE": "Histórico de evoluciones",
 					"REASONS": "Motivos",
 					"PROCEDURES": "Procedimientos",
-					"SPECIALITY": "Especialidad",
+					"SPECIALTY": "Especialidad",
 					"PROFESSIONAL": "Médico",
 					"EVOLUTION_NOTE": "Descripción/Resumen",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
-				"historical-filters": {
-					"SPECIALITY": "Especialidad",
+				"historical-problems-filters": {
+					"SPECIALTY": "Especialidad",
 					"PROFESSIONAL": "Médico",
 					"PROBLEM": "Problema",
+					"CONSULTATION_DATE": "Fecha de consulta"
+				},
+				"external-clinical-history": {
+					"SPECIALTY": "Especialidad",
+					"NOTES": "Descripción/Resumen",
+					"CONSULTATION_DATE": "Fecha de consulta",
+					"INSTITUTION": "Institución",
+					"NO_PROFESSIONAL_DATA": "No hay información del profesional"
+				},
+				"external-clinical-histories-filters": {
+					"SEARCH_BY_KEYWORD": "Buscar por palabra clave",
+					"SPECIALTY": "Especialidad",
+					"PROFESSIONAL": "Profesional",
+					"INSTITUTION": "Institución",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
 				"nueva_opened_confirm_dialog": {
@@ -213,13 +245,13 @@
 				"TAB_LABEL": "Órdenes y prescripciones",
 				"TITLE": "Órdenes y prescripciones",
 				"MEDICACION": "Medicación",
-				"RECOMENDACIONES":"Recomendaciones generales",
-				"ESTUDIOS":"Estudios",
-				"SIN_RECETA":"Sin receta",
-				"DESDE_HOY":"Desde hoy",
-				"UN_DIA":"Hace 1 día",
-				"APLICACION_DIARIA":"Una aplicación por día",
-				"USO_CRONICO":"Uso crónico",
+				"RECOMENDACIONES": "Recomendaciones generales",
+				"ESTUDIOS": "Estudios",
+				"SIN_RECETA": "Sin receta",
+				"DESDE_HOY": "Desde hoy",
+				"UN_DIA": "Hace 1 día",
+				"APLICACION_DIARIA": "Una aplicación por día",
+				"USO_CRONICO": "Uso crónico",
 				"add_prescription_item_dialog": {
 					"MEDICATION": "Medicación",
 					"MEDICATION_TITLE": "Agregar medicación",
@@ -288,19 +320,19 @@
 					"DOWNLOAD": "Descargar receta",
 					"DOWNLOAD_STUDY": "Descargar orden",
 					"RE_PRESCRIBE": "Volver a recetar",
-					"SUSPEND":"Suspender",
-					"FINALIZE":"Finalizar",
-					"COMPLETE":"Completar",
-					"DELETE":"Eliminar",
+					"SUSPEND": "Suspender",
+					"FINALIZE": "Finalizar",
+					"COMPLETE": "Completar",
+					"DELETE": "Eliminar",
 					"REACTIVATE": "Reactivar",
 					"SHOW_RESULTS": "Ver resultados"
 				},
 				"filter": {
-					"STATE":"Estado",
-					"MEDICATION":"Medicamento",
-					"PROBLEM":"Problema asociado",
-					"STUDY":"Estudio",
-					"CATEGORY":"Categoría",
+					"STATE": "Estado",
+					"MEDICATION": "Medicamento",
+					"PROBLEM": "Problema asociado",
+					"STUDY": "Estudio",
+					"CATEGORY": "Categoría",
 					"BUTTON_FILTER": "Aplicar filtro"
 				}
 			},
@@ -315,18 +347,49 @@
 			"vacunas": {
 				"TAB_LABEL": "Vacunas",
 				"TITLE": "Historial de vacunación",
-				"ADD": "Aplicar vacuna",
-				"aplicar": {
-					"TITLE": "Aplicar vacuna",
-					"INMUNIZATION": "Vacuna",
-					"NOTE": "Evolución",
-					"SUBMIT": "Confirmar",
-					"SUBMIT_CONJUNTO_VACUNAS": "Confirmar vacunaciones",
-					"ADMINISTRATION_DATE": "Fecha de vacunación",
-					"save": {
-						"SUCCESS": "Las vacunas aplicadas se guardaron exitosamente",
-						"ERROR": "Error al guardar las vacunas aplicadas",
-						"CHANGE_STATE": "¿Desea aplicar más vacunas?"
+				"ADD": "Agregar vacunas",
+				"DETAILS": "Ver detalle",
+				"NO-INFO": "No hay información para mostrar",
+				"VACCINE": "Vacuna",
+				"DOSE": "Dosis",
+				"DATE": "Fecha",
+				"details": {
+					"DOSE": "Dosis",
+					"DATE": "Fecha",
+					"LOT_NUMBER": "Lote",
+					"INSTITUTION": "Institución",
+					"PROFESSIONAL": "Profesional",
+					"CONDITION_MOTIVE": "Condición o motivo",
+					"SCHEME": "Esquema",
+					"NO-INFO": "Sin información",
+					"NO-OBS": "Sin observaciones"
+				},
+				"agregar_vacunas": {
+					"TITLE": "Agregar vacunas",
+					"SPECIALTY": "Especialidad",
+					"ADD": "Agregar vacuna",
+					"NEW_VACCINE_TITLE": "Aplicación de vacuna",
+					"PREVIOUS_VACCINE_TITLE": "Registro de vacuna previa",
+					"SUCCESS": "Vacunas agregadas exitosamente",
+					"ERROR": "Error al guardar las vacunas agregadas",
+					"agregar_vacuna": {
+						"TITLE": "Agregar vacuna",
+						"NEW_VACCINE_TAB": "Aplicar vacuna",
+						"PREVIOUS_VACCINE_TAB": "Registrar vacuna previa",
+						"ADMINISTRATION_DATE": "Fecha de vacunación",
+						"NOTE": "Observaciones",
+						"IMMUNIZATION": "Vacuna",
+						"CONDITION": "Condición o motivo",
+						"SCHEME": "Esquema",
+						"DOSE": "Dosis",
+						"LOT": "Lote",
+						"INSTITUTION": "Institución",
+						"PROFESSIONAL": "Profesional",
+						"NOT_VACCINE_SELECTED_ERROR": "Debe seleccionar una vacuna",
+						"NOT_SCHEME_SELECTED_ERROR": "Si selecciona una condición, debe elegir un esquema",
+						"NOT_DOSE_SELECTED_ERROR": "Si selecciona un esquema, debe elegir una dosis",
+						"NULL_OPTION_MESSAGE": "Seleccione una opción",
+						"COLUMN_VACCINE_HEADER": "Descripción SNOMED"
 					}
 				}
 			}

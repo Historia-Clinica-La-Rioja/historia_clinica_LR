@@ -12,13 +12,15 @@ import {
 } from '@api-rest/api-model';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import {ContextService} from "@core/services/context.service";
 
 @Injectable({
 	providedIn: 'root'
 })
 export class PatientService {
 
-	constructor(private http: HttpClient) {
+	constructor(private http: HttpClient,
+				private readonly contextService: ContextService) {
 	}
 
 	getPatientMinimal(params): Observable<number[]> {
@@ -27,7 +29,7 @@ export class PatientService {
 	}
 
 	addPatient(datosPersonales: APatientDto): Observable<number> {
-		const url = `${environment.apiBase}/patient`;
+		const url = `${environment.apiBase}/patient/institution/${this.contextService.institutionId}`;
 		return this.http.post<number>(url, datosPersonales);
 	  }
 
@@ -57,7 +59,7 @@ export class PatientService {
 	}
 
 	editPatient(datosPersonales: APatientDto, patientId: number): Observable<BMPatientDto> {
-		const url = `${environment.apiBase}/patient/${patientId}`;
+		const url = `${environment.apiBase}/patient/${patientId}/institution/${this.contextService.institutionId}`;
 		return this.http.put<BMPatientDto>(url, datosPersonales);
 	}
 

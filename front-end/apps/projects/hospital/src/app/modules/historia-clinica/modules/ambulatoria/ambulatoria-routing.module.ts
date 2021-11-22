@@ -23,7 +23,7 @@ const routes: Routes = [
 			}
 		],
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO] },
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] },
 	},
 
 ];

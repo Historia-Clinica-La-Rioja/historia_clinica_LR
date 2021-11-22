@@ -96,7 +96,7 @@ public class FhirPersistentStore {
                 .setParameter("docStatusId", CodingCode.DocumentReference.FINAL_STATUS)
                 .setParameter(STATUSID, ResourceStatus.ENTERED_IN_ERROR)
                 .setParameter(PATIENTID, Integer.valueOf(patientId))
-                .setParameter(DOCUMENTTYPEID, CodingCode.DocumentReference.OUTPATIENT_TYPE)
+                .setParameter(DOCUMENTTYPEID, Arrays.asList(8, CodingCode.DocumentReference.OUTPATIENT_TYPE))
                 .getResultList();
     }
 

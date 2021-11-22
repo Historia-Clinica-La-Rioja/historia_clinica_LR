@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{ 'forms.SUGGESTED_FIELDS' | translate}}</h1>
+<div mat-dialog-content>
+
+	<ul class="cosas-completas">
+		<li *ngFor="let present of data.presentFields">
+			{{present}}
+		</li>
+	</ul>
+
+	<ul class="cosas-faltantes">
+		<li *ngFor="let nonCompleted of data.nonCompletedFields">
+			{{nonCompleted}}
+		</li>
+	</ul>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="center">
+	<button mat-stroked-button [mat-dialog-close]=false class="uppercase" id="cancel-button" name="cancel-button">
+		{{'buttons.BACK_AND_COMPLETE' | translate}}</button>
+	<button mat-raised-button color="primary" [mat-dialog-close]=true class="uppercase" id="okButton-button"
+		name="okButton-button">
+		{{'buttons.CONFIRM_ANYWAY' | translate}}</button>
+</div>

@@ -2,10 +2,9 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
@@ -19,9 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteService {
@@ -79,20 +75,10 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     private void assertEvolutionNoteValid(EvolutionNoteBo evolutionNote) {
         evolutionNote.validateSelf();
-        if (repeatedClinicalTerms(evolutionNote.getDiagnosis()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(evolutionNote.getDiagnosis()))
             throw new ConstraintViolationException("Diagnósticos secundarios repetidos", Collections.emptySet());
-        if (repeatedClinicalTerms(evolutionNote.getProcedures()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(evolutionNote.getProcedures()))
             throw new ConstraintViolationException("Procedimientos repetidos", Collections.emptySet());
-    }
-
-    private boolean repeatedClinicalTerms(List<? extends ClinicalTerm> clinicalTerms) {
-        if (clinicalTerms == null || clinicalTerms.isEmpty())
-            return false;
-        final Set<SnomedBo> set = new HashSet<>();
-        for (ClinicalTerm ct : clinicalTerms)
-            if (!set.add(ct.getSnomed()))
-                return true;
-        return false;
     }
 
     private void assertAnthropometricData(EvolutionNoteBo evolutionNoteBo) {

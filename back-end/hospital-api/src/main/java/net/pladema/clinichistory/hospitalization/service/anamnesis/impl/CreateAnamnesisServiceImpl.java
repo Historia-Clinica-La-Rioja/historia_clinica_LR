@@ -1,9 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
@@ -11,7 +12,6 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
 import net.pladema.featureflags.service.FeatureFlagsService;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
@@ -80,26 +77,15 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     private void assertAnamnesisValid(AnamnesisBo anamnesis) {
         anamnesis.validateSelf();
         assertMainDiagnosisValid(anamnesis);
-        if (repeatedClinicalTerms(anamnesis.getDiagnosis()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(anamnesis.getDiagnosis()))
             throw new ConstraintViolationException("Diagnósticos secundarios repetidos", Collections.emptySet());
-        if (repeatedClinicalTerms(anamnesis.getPersonalHistories()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(anamnesis.getPersonalHistories()))
             throw new ConstraintViolationException("Antecedentes personales repetidos", Collections.emptySet());
-        if (repeatedClinicalTerms(anamnesis.getFamilyHistories()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(anamnesis.getFamilyHistories()))
             throw new ConstraintViolationException("Antecedentes familiares repetidos", Collections.emptySet());
-        if (repeatedClinicalTerms(anamnesis.getProcedures()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(anamnesis.getProcedures()))
             throw new ConstraintViolationException("Procedimientos repetidos", Collections.emptySet());
     }
-
-    private boolean repeatedClinicalTerms(List<? extends ClinicalTerm> clinicalTerms) {
-        if (clinicalTerms == null || clinicalTerms.isEmpty())
-            return false;
-        final Set<SnomedBo> set = new HashSet<>();
-        for (ClinicalTerm ct : clinicalTerms)
-            if (!set.add(ct.getSnomed()))
-                return true;
-        return false;
-    }
-
 
     private void assertEffectiveVitalSignTimeValid(AnamnesisBo anamnesis, LocalDate entryDate) {
         var validator = new EffectiveVitalSignTimeValidator();

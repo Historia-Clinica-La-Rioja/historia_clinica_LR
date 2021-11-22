@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
   selector: 'app-probable-discharge-dialog',
@@ -14,6 +15,7 @@ export class ProbableDischargeDialogComponent implements OnInit {
 
 	form: FormGroup;
 	loading = false;
+	minDate = MIN_DATE;
 
   	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number, lastProbableDischargeDate: Date },

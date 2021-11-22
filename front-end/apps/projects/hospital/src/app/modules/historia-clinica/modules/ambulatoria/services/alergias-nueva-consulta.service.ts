@@ -3,7 +3,10 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto } from '@api-rest/api-model';
 import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
-import { pushTo } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
+import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
+import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface Alergia {
 	snomed: SnomedDto;
@@ -13,6 +16,7 @@ export interface Alergia {
 export class AlergiasNuevaConsultaService {
 
 	private readonly columns: ColumnConfig[];
+	private readonly tableColumnConfig: TableColumnConfig[];
 	private form: FormGroup;
 	private data: Alergia[] = [];
 	private snomedConcept: SnomedDto;
@@ -21,7 +25,10 @@ export class AlergiasNuevaConsultaService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService) {
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService
+
+	) {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
@@ -41,6 +48,25 @@ export class AlergiasNuevaConsultaService {
 			}
 		];
 
+		this.tableColumnConfig = [
+			{
+				def: 'problemType',
+				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.ALLERGY',
+				template: CellTemplates.SNOMED_PROBLEM
+			},
+			{
+				def: 'criticality',
+				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.CRITICALITY',
+				text: (row) => this.getDisplayName(row.criticalityId),
+				template: CellTemplates.ALLERGY_CRITICALITY
+			},
+			{
+				def: 'delete',
+				template: CellTemplates.REMOVE_BUTTON,
+				action: (rowIndex) => this.removeAlergia(rowIndex)
+			}
+		]
+
 	}
 
 	private getDisplayName(criticalityId) {
@@ -53,6 +79,10 @@ export class AlergiasNuevaConsultaService {
 
 	getColumns(): ColumnConfig[] {
 		return this.columns;
+	}
+
+	getTableColumnConfig(): TableColumnConfig[] {
+		return this.tableColumnConfig;
 	}
 
 	getAlergias(): Alergia[] {
@@ -69,8 +99,23 @@ export class AlergiasNuevaConsultaService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(alergia: Alergia): void {
-		this.data = pushTo<Alergia>(this.data, alergia);
+	add(alergia: Alergia): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<Alergia>(this.data, alergia, this.compareSpeciality);
+		return currentItems === this.data.length;
+	}
+
+	addControl(alergia: Alergia): void {
+		if (this.add(alergia))
+			this.snackBarService.showError("Alergia duplicada");
+	}
+
+	compareSpeciality(data: Alergia, data1: Alergia): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
+	}
+
+	removeAlergia(index: number): void {
+		this.data = removeFrom<Alergia>(this.data, index);
 	}
 
 	addToList() {
@@ -79,7 +124,7 @@ export class AlergiasNuevaConsultaService {
 				snomed: this.snomedConcept,
 				criticalityId: this.form.value.criticality,
 			};
-			this.add(alergia);
+			this.addControl(alergia);
 			this.resetForm();
 		}
 	}

@@ -4,7 +4,7 @@
 </ng-template>
 <app-summary-card id="estudios" [header]="estudios"
                                 [editable]="true"
-                                [canEdit]="['ESPECIALISTA_MEDICO']"
+                                [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 								(openInNew)="openDialogNewStudy()">
 
 	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
@@ -93,22 +93,22 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 							<button mat-menu-item (click)="downloadOrder(diagnosticReport.serviceRequestId)">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
 							</button>
 						</ng-container>
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 							<button mat-menu-item (click)="completeStudy(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
 							</button>
 						</ng-container>
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 							<button mat-menu-item (click)="deleteStudy(diagnosticReport.id)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
 							</button>
 						</ng-container>
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
+						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 							<button mat-menu-item (click)="showStudyResults(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.FINAL.id">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SHOW_RESULTS'"></span>
 							</button>

@@ -12,7 +12,8 @@ public enum EDocumentType {
     RECIPE(5, "receta", "recipe_order"),
     ORDER(6, "orden", "recipe_order"),
     EMERGENCY_CARE(7, "guardia", "emergency_care"),
-    IMMUNIZATION(8, "inmunización", "immunization");
+    IMMUNIZATION(8, "inmunización", "immunization"),
+    ODONTOLOGY(9, "odontología", "odontology_consultation");
 
     private Short id;
     private String value;

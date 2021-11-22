@@ -1,6 +1,10 @@
 <ng-container *ngIf="(publicInfo$ | async) as publicInfo; else loading">
-	<div class="app mat-typography mat-app-background " [ngClass]="publicInfo.flavor">
-		<router-outlet></router-outlet>
+	<div *ngIf="isExchangeableTheme$ | async" fxLayout="row" fxLayoutAlign="end" class=" mat-app-background" [ngClass]="selectedTheme?.class">
+		<app-exchangeable-theme class="theme-button" (themeChanged)="selectedTheme = $event"> </app-exchangeable-theme>
+	</div>
+
+	<div class="app mat-typography mat-app-background" [ngClass]="publicInfo.flavor" [ngClass]="selectedTheme?.class">
+		<router-outlet> </router-outlet>
 	</div>
 </ng-container>
 <ng-template #loading>
@@ -8,5 +12,3 @@
 		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 	</div>
 </ng-template>
-
-

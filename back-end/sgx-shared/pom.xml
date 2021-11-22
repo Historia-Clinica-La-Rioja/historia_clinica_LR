@@ -119,7 +119,7 @@
 		<dependency>
 			<groupId>net.sf.cssbox</groupId>
 			<artifactId>pdf2dom</artifactId>
-			<version>1.6</version>
+			<version>2.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -156,6 +156,43 @@
 			<artifactId>togglz-testing</artifactId>
 			<version>2.6.1.Final</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.javacrumbs.shedlock</groupId>
+			<artifactId>shedlock-spring</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.javacrumbs.shedlock</groupId>
+			<artifactId>shedlock-provider-jdbc-template</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+		<!-- Provides everything you need to write JUnit 5 Jupiter tests. -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.7.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.junit.vintage/junit-vintage-engine -->
+		<!-- Enables any legacy JUnit 3 and JUnit 4 tests you may have. Not needed for JUnit 5 tests. -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.7.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-model</artifactId>
+			<version>2.0.5</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -198,6 +235,43 @@
 						</compilerArg>
 					</compilerArgs>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+			</plugin>
+
+			<!-- Plugin for creating a pom.properties file in the classpath -->
+			<plugin>
+				<groupId>com.internetitem</groupId>
+				<artifactId>write-properties-file-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>write-properties-file</goal>
+						</goals>
+						<configuration>
+							<filename>pom.properties</filename>
+							<properties>
+								<property>
+									<name>artifactId</name>
+									<value>${project.artifactId}</value>
+								</property>
+								<property>
+									<name>groupId</name>
+									<value>${project.groupId}</value>
+								</property>
+								<property>
+									<name>version</name>
+									<value>${revision}</value>
+								</property>
+							</properties>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

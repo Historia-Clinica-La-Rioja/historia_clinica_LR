@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { EducationLevelDto, EthnicityDto, GenderDto, IdentificationTypeDto, PersonOccupationDto } from '@api-rest/api-model';
+import { EducationLevelDto, EthnicityDto, GenderDto, IdentificationTypeDto, PersonOccupationDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,33 +9,41 @@ import { Observable } from 'rxjs';
 })
 export class PersonMasterDataService {
 
+	private readonly URL_BASE: string;
+
 	constructor(
 		private http: HttpClient
-	) { }
+	) {
+		this.URL_BASE = `${environment.apiBase}/person/masterdata`;
+	}
 
-	getGenders(): Observable<GenderDto[]> {
-		const url = `${environment.apiBase}/person/masterdata/genders`;
+	public getGenders(): Observable<GenderDto[]> {
+		const url = `${this.URL_BASE}/genders`;
 		return this.http.get<GenderDto[]>(url);
 	}
 
-
-	getIdentificationTypes(): Observable<IdentificationTypeDto[]> {
-		const url = `${environment.apiBase}/person/masterdata/identificationTypes`;
+	public getIdentificationTypes(): Observable<IdentificationTypeDto[]> {
+		const url = `${this.URL_BASE}/identificationTypes`;
 		return this.http.get<IdentificationTypeDto[]>(url);
 	}
 
-	getEthnicities(): Observable<EthnicityDto[]> {
-		const url = `${environment.apiBase}/person/masterdata/ethnicities`;
+	public getEthnicities(): Observable<EthnicityDto[]> {
+		const url = `${this.URL_BASE}/ethnicities`;
 		return this.http.get<EthnicityDto[]>(url);
 	}
 
-	getOccupations(): Observable<PersonOccupationDto[]> {
-		const url = `${environment.apiBase}/person/masterdata/occupations`;
+	public getOccupations(): Observable<PersonOccupationDto[]> {
+		const url = `${this.URL_BASE}/occupations`;
 		return this.http.get<PersonOccupationDto[]>(url);
 	}
 
-	getEducationLevels(): Observable<EducationLevelDto[]> {
-		const url = `${environment.apiBase}/person/masterdata/educationLevel`;
+	public getEducationLevels(): Observable<EducationLevelDto[]> {
+		const url = `${this.URL_BASE}/educationLevel`;
 		return this.http.get<EducationLevelDto[]>(url);
+	}
+
+	public getSelfPerceivedGenders(): Observable<SelfPerceivedGenderDto[]> {
+		const url = `${this.URL_BASE}/self-perceived-genders`;
+		return this.http.get<SelfPerceivedGenderDto[]>(url);
 	}
 }

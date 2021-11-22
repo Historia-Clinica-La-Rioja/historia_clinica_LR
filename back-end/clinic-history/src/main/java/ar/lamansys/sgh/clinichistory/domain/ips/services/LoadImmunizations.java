@@ -88,6 +88,8 @@ public class LoadImmunizations {
                 immunizationBo.getStatusId(),
                 immunizationBo.getAdministrationDate(),
                 immunizationBo.getInstitutionId(),
+                immunizationBo.getInstitutionInfo(),
+                immunizationBo.getDoctorInfo(),
                 immunizationBo.getConditionId(),
                 immunizationBo.getSchemeId(),
                 immunizationBo.getDose() != null ? immunizationBo.getDose().getDescription() : null,

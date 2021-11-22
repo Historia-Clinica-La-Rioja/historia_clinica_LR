@@ -34,4 +34,9 @@ public class UserAssignmentServiceImpl implements UserAssignmentService {
 		}
 	}
 
+	@Override
+	public void removeAllPermissions(Integer userId) {
+		userRoleRepository.deleteByUserId(userId);
+	}
+
 }

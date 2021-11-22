@@ -12,6 +12,8 @@ import { ProfileComponent } from './routes/profile/profile.component';
 import { PresentationModule } from '../presentation/presentation.module';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { EditPatientComponent } from './routes/edit-patient/edit-patient.component';
+import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
+import { ReportsComponent } from './dialogs/reports/reports.component';
 
 @NgModule({
 	declarations: [
@@ -24,6 +26,8 @@ import { EditPatientComponent } from './routes/edit-patient/edit-patient.compone
 		SearchComponent,
 		ViewPatientDetailComponent,
 		EditPatientComponent,
+  		ScanPatientComponent,
+		ReportsComponent,
 	],
 	imports: [
 		CoreModule,

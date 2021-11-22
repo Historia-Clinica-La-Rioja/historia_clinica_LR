@@ -2,12 +2,10 @@ package net.pladema.reports.service.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.reports.repository.entity.AnnexIIVo;
+import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
+import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -35,19 +33,49 @@ public class AnnexIIBo {
 
     private String affiliateNumber;
 
-    public AnnexIIBo(AnnexIIVo annexIIVo){
+    private Boolean existsConsultation;
+
+    private Boolean hasProcedures;
+
+    private String specialty;
+
+    private LocalDate consultationDate;
+
+    private String sisaCode;
+
+    private String problems;
+
+    public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.reportDate = LocalDate.now();
-        this.establishment = annexIIVo.getEstablishment();
-        this.completePatientName = Stream.of(annexIIVo.getFirstName(), annexIIVo.getMiddleNames(), annexIIVo.getLastName(),annexIIVo.getOtherLastNames())
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining(" "));
-        this.documentType = annexIIVo.getDocumentType ();
-        this.documentNumber = annexIIVo.getDocumentNumber();
-        this.patientGender = annexIIVo.getPatientGender();
-        this.patientAge = annexIIVo.getAge();
-        this.attentionDate = annexIIVo.getAttentionDate();
-        this.appointmentState = annexIIVo.getAppointmentState();
-        this.medicalCoverage = annexIIVo.getMedicalCoverage();
-        this.affiliateNumber = annexIIVo.getAffiliateNumber();
+        this.establishment = annexIIOutpatientVo.getEstablishment();
+        this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
+        this.documentType = annexIIOutpatientVo.getDocumentType ();
+        this.documentNumber = annexIIOutpatientVo.getDocumentNumber();
+        this.patientGender = annexIIOutpatientVo.getPatientGender();
+        this.patientAge = annexIIOutpatientVo.getAge();
+        this.sisaCode = annexIIOutpatientVo.getSisaCode();
+
+        this.existsConsultation = annexIIOutpatientVo.getExistsConsultation();
+        this.hasProcedures = annexIIOutpatientVo.getHasProcedures();
+        this.specialty = annexIIOutpatientVo.getSpecialty();
+        this.consultationDate = annexIIOutpatientVo.getConsultationDate();
+        this.problems = annexIIOutpatientVo.getProblems();
     }
+
+    public AnnexIIBo(AnnexIIAppointmentVo annexIIAppointmentVo){
+        this.reportDate = LocalDate.now();
+        this.establishment = annexIIAppointmentVo.getEstablishment();
+        this.completePatientName = annexIIAppointmentVo.getCompletePatientName();
+        this.documentType = annexIIAppointmentVo.getDocumentType ();
+        this.documentNumber = annexIIAppointmentVo.getDocumentNumber();
+        this.patientGender = annexIIAppointmentVo.getPatientGender();
+        this.patientAge = annexIIAppointmentVo.getAge();
+        this.sisaCode = annexIIAppointmentVo.getSisaCode();
+
+        this.attentionDate = annexIIAppointmentVo.getAttentionDate();
+        this.appointmentState = annexIIAppointmentVo.getAppointmentState();
+        this.medicalCoverage = annexIIAppointmentVo.getMedicalCoverage();
+        this.affiliateNumber = annexIIAppointmentVo.getAffiliateNumber();
+    }
+
 }

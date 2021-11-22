@@ -1,0 +1,25 @@
+<div class="mat-dialog">
+	<h1 mat-dialog-title fxLayout="row" [translate]="'pacientes.search_patient.scan.TITLE'"></h1>
+	<ol class="numeration-list" fxLayout="column">
+		<li>
+			<span [translate]="'pacientes.search_patient.scan.ITEM_1'"></span>
+		</li>
+		<li>
+			<span [translate]="'pacientes.search_patient.scan.ITEM_2'"></span>
+		</li>
+		<li>
+			<span [translate]="'pacientes.search_patient.scan.ITEM_3'"></span>
+		</li>
+	</ol>
+	<div class="image" fxLayout="row" fxLayoutAlign="center">
+		<img src='assets/images/example-scan.png'>
+	</div>
+	<form [formGroup]="formScanPatient" fxLayout="row" fxLayoutAlign="center" autocomplete="off">
+		<mat-form-field appearance="outline" fxFlex="83%">
+			<input matInput name="information" formControlName="informationPatient" (change)="captureInformation($event)">
+		</mat-form-field>
+	</form>
+	<button class="close" type="button" mat-icon-button matSuffix (click)="closeDialog()" fxLayout="column">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>

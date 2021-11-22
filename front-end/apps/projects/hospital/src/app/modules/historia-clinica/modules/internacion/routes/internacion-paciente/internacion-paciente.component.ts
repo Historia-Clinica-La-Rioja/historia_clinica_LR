@@ -36,7 +36,7 @@ import {
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
-import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES } from '../../../../constants/summaries';
+import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION } from '../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../constants/permissions';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { ProbableDischargeDialogComponent } from '../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
@@ -76,6 +76,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public anthropometricData$: Observable<AnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
+	public readonly medicationsHeader = MEDICACION;
 	private readonly routePrefix;
 	private patientId: number;
 

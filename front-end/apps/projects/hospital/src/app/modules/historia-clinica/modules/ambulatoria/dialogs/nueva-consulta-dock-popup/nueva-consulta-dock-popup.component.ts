@@ -1,30 +1,33 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {DockPopupRef} from '@presentation/services/dock-popup-ref';
-import {SnomedService} from '../../../../services/snomed.service';
-import {OVERLAY_DATA} from '@presentation/presentation-model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MotivoNuevaConsultaService} from '../../services/motivo-nueva-consulta.service';
-import {Medicacion, MedicacionesNuevaConsultaService} from '../../services/medicaciones-nueva-consulta.service';
-import {Problema, ProblemasService} from '../../../../services/problemas-nueva-consulta.service';
-import {ProcedimientosService} from '../../../../services/procedimientos.service';
-import {DatosAntropometricosNuevaConsultaService} from '../../services/datos-antropometricos-nueva-consulta.service';
-import {SignosVitalesNuevaConsultaService} from '../../services/signos-vitales-nueva-consulta.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { SnomedService } from '../../../../services/snomed.service';
+import { OVERLAY_DATA } from '@presentation/presentation-model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
+import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
+import { Problema, ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
+import { ProcedimientosService } from '../../../../services/procedimientos.service';
+import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
+import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
-import {Alergia, AlergiasNuevaConsultaService} from '../../services/alergias-nueva-consulta.service';
-import {DateFormat, dateToMomentTimeZone, momentFormat, newMoment} from '@core/utils/moment.utils';
-import {ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto} from '@api-rest/api-model';
-import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
-import {OutpatientConsultationService} from '@api-rest/services/outpatient-consultation.service';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
-import {HealthConditionService} from '@api-rest/services/healthcondition.service';
-import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
-import {MatDialog} from '@angular/material/dialog';
-import {ConfirmarNuevaConsultaPopupComponent} from '../confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
-import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
-import {hasError} from '@core/utils/form.utils';
+import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
+import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { HealthConditionService } from '@api-rest/services/healthcondition.service';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SuggestedFieldsPopupComponent } from '../../../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { hasError } from '@core/utils/form.utils';
+import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -53,6 +56,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	public hasError = hasError;
 	severityTypes: any[];
 	criticalityTypes: any[];
+	minDate = MIN_DATE;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -64,21 +68,22 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly healthConditionService: HealthConditionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
-		private readonly dialog: MatDialog
+		private readonly dialog: MatDialog,
+		private readonly translateService: TranslateService,
 	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService);
-		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService);
-		this.problemasService = new ProblemasService(formBuilder, this.snomedService);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService);
+		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
+		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
+		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
-		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService);
+		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 	}
 
 	setProfessionalSpecialties() {
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe( specialties => {
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
 			this.setSpecialtyFields(specialties, false);
 		});
 	}
@@ -88,6 +93,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.fixedSpecialty = fixedSpecialty;
 		this.defaultSpecialty = specialtyArray[0];
 		this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
+		this.formEvolucion.controls['clinicalSpecialty'].markAsTouched();
 	}
 
 	ngOnInit(): void {
@@ -103,7 +109,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		this.formEvolucion = this.formBuilder.group({
 			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-			clinicalSpecialty: []
+			clinicalSpecialty: [null, [Validators.required]],
 		});
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
@@ -149,15 +155,17 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	save(): void {
 		const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+		const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
+
 		this.apiErrors = [];
 		this.addErrorMessage(nuevaConsulta);
-		if (this.isValidConsultation()) {
-			if (this.suggestedFieldsCompleted(nuevaConsulta)){
+		if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
+			if (!fieldsService.nonCompletedFields .length) {
 				this.createConsultation(nuevaConsulta);
 				this.disableConfirmButton = true;
 			}
-			else{
-				this.openDialog(nuevaConsulta);
+			else {
+				this.openDialog(fieldsService.nonCompletedFields , fieldsService.presentFields, nuevaConsulta);
 			}
 		} else {
 			this.disableConfirmButton = false;
@@ -165,9 +173,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 	}
 
-	private openDialog(nuevaConsulta: CreateOutpatientDto): void {
-		const dialogRef = this.dialog.open(ConfirmarNuevaConsultaPopupComponent, {
-			data: {	nuevaConsulta }
+	private openDialog(nonCompletedFields: string[], presentFields: string[], nuevaConsulta: CreateOutpatientDto): void {
+
+		const dialogRef = this.dialog.open(SuggestedFieldsPopupComponent, {
+			data: {
+				nonCompletedFields,
+				presentFields
+			}
 		});
 		dialogRef.afterClosed().subscribe(confirmado => {
 			if (confirmado) {
@@ -177,26 +189,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
-	private suggestedFieldsCompleted(nuevaConsulta: CreateOutpatientDto) {
-		return nuevaConsulta.vitalSigns?.diastolicBloodPressure &&
-			nuevaConsulta.vitalSigns?.systolicBloodPressure &&
-			nuevaConsulta.anthropometricData?.height &&
-			nuevaConsulta.anthropometricData?.weight &&
-			nuevaConsulta.problems?.length &&
-			nuevaConsulta.reasons?.length;
-	}
-
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
 				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 			},
-			errors => {
-				Object.getOwnPropertyNames(errors).forEach(val => {
-					this.apiErrors.push(errors[val]);
-				});
+			response => {
 				this.disableConfirmButton = false;
+				if (response.errors)
+					response.errors.forEach(val => {
+						this.apiErrors.push(val);
+					});
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 			}
 		);
@@ -215,7 +219,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	public isValidConsultation(): boolean {
-		return(this.errores.find( elem =>
+		return (this.errores.find(elem =>
 			elem !== undefined
 		) === undefined);
 	}
@@ -258,7 +262,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 
 		hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
-			this.errores[10] =  'ambulatoria.paciente.nueva-consulta.errors.MAX_LENGTH_NOTA'
+			this.errores[10] = 'ambulatoria.paciente.nueva-consulta.errors.MAX_LENGTH_NOTA'
 			: this.errores[10] = undefined;
 	}
 
@@ -267,7 +271,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			snomed: p.snomed,
 			codigoSeveridad: p.severity,
 			cronico: p.isChronic,
-			fechaInicio: dateToMomentTimeZone(p.startDate),
+			fechaInicio: p.startDate ? dateToMomentTimeZone(p.startDate) : newMoment(),
 			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
 		};
 		return problema;
@@ -294,12 +298,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				};
 			}),
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
-					return {
-						note: medicacion.observaciones,
-						snomed: medicacion.snomed,
-						suspended: medicacion.suspendido,
-					};
-				}
+				return {
+					note: medicacion.observaciones,
+					snomed: medicacion.snomed,
+					suspended: medicacion.suspendido,
+				};
+			}
 			),
 			problems: this.problemasService.getProblemas().map(
 				(problema: Problema) => {
@@ -308,14 +312,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 						chronic: problema.cronico,
 						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,
-						startDate: momentFormat(problema.fechaInicio, DateFormat.API_DATE)
+						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
 					};
 				}
 			),
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
-			clinicalSpecialtyId: this.defaultSpecialty.id
+			clinicalSpecialtyId: this.defaultSpecialty?.id
 
 		};
 	}

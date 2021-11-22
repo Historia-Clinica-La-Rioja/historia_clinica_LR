@@ -2,7 +2,7 @@ package net.pladema;
 
 import ar.lamansys.sgh.clinichistory.EnableClinicHistoryLibrary;
 import ar.lamansys.sgx.shared.EnableSharedLibrary;
-import net.pladema.person.service.impl.PersonServiceImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

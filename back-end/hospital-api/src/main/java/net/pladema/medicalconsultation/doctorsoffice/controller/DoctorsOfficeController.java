@@ -49,7 +49,7 @@ public class DoctorsOfficeController {
     }
 
     @GetMapping("/sectorType/{sectorTypeId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<List<DoctorsOfficeDto>> getBySectorType(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "sectorTypeId") Short sectorTypeId) {

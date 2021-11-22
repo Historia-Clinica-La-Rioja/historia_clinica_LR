@@ -15,6 +15,7 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorS
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
+import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -23,6 +24,7 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +63,8 @@ public class AppointmentsController {
 
     private final DateTimeProvider dateTimeProvider;
 
+    private final NotifyPatient notifyPatient;
+
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
 
@@ -73,7 +77,7 @@ public class AppointmentsController {
                                   CreateAppointmentService createAppointmentService,
                                   AppointmentMapper appointmentMapper,
                                   PatientExternalService patientExternalService,
-                                  HealthcareProfessionalExternalService healthcareProfessionalExternalService, DateTimeProvider dateTimeProvider) {
+                                  HealthcareProfessionalExternalService healthcareProfessionalExternalService, DateTimeProvider dateTimeProvider, NotifyPatient notifyPatient) {
         super();
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
@@ -83,11 +87,12 @@ public class AppointmentsController {
         this.patientExternalService = patientExternalService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.dateTimeProvider = dateTimeProvider;
+        this.notifyPatient = notifyPatient;
     }
 
     @Transactional
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @ValidAppointment
     public ResponseEntity<Integer> create(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -101,7 +106,7 @@ public class AppointmentsController {
     }
 
 	@GetMapping(value = "/{appointmentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<AppointmentDto> get(@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId) {
 		LOG.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
@@ -113,7 +118,7 @@ public class AppointmentsController {
 
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<Collection<AppointmentListDto>> getList(@PathVariable(name = "institutionId")  Integer institutionId,
                                                                   @RequestParam(name = "diaryIds") @NotEmpty List<Integer> diaryIds){
         LOG.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
@@ -140,7 +145,7 @@ public class AppointmentsController {
 
     @Transactional
     @PutMapping(value = "/{appointmentId}/change-state")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Boolean> changeState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
@@ -155,7 +160,7 @@ public class AppointmentsController {
 
 
     @GetMapping("/confirmed-appointment")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Boolean> hasNewConsultationEnabled(@PathVariable(name = "institutionId")  Integer institutionId,
                                                            @RequestParam(name = "patientId") Integer patientId){
         LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
@@ -166,7 +171,7 @@ public class AppointmentsController {
     }
 
     @GetMapping("/consider-appointment")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Boolean> considerAppointment(@PathVariable(name = "institutionId")  Integer institutionId){
         LOG.debug("Input parameters -> institutionId {}", institutionId);
         boolean result = !disableValidation && !enableNewConsultation;
@@ -174,7 +179,7 @@ public class AppointmentsController {
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @PutMapping(value = "/{appointmentId}/update-phone-number")
     public ResponseEntity<Boolean> updatePhoneNumber(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -186,7 +191,7 @@ public class AppointmentsController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @PutMapping(value = "/{appointmentId}/update-medical-coverage")
     public ResponseEntity<Boolean> updateMedicalCoverage(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -200,7 +205,7 @@ public class AppointmentsController {
     }
 
     @GetMapping("/getDailyAmounts")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ADMINISTRADOR_AGENDA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam(name = "diaryId") String diaryId) {
@@ -216,6 +221,15 @@ public class AppointmentsController {
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/{appointmentId}/notifyPatient")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @ResponseStatus(HttpStatus.OK)
+    public void notifyPatient(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @PathVariable(name = "appointmentId") Integer appointmentId) {
+        notifyPatient.run(institutionId, appointmentId);
     }
 
 }

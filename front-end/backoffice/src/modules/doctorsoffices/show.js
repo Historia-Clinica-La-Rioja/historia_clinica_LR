@@ -1,7 +1,7 @@
 import React from 'react';
 import {ReferenceField, Show, SimpleShowLayout, TextField} from 'react-admin';
 
-const DoctorsOfficeShow = props => (
+const DoctorsOfficeShow = ({ permissions, ...props }) => (
     <Show  {...props}>
         <SimpleShowLayout>
             <TextField source="description" />
@@ -12,6 +12,9 @@ const DoctorsOfficeShow = props => (
             <ReferenceField source="institutionId" reference="institutions">
                 <TextField source="name" />
             </ReferenceField>
+
+            { permissions && permissions.isOn("HABILITAR_LLAMADO") && <TextField source="topic"/> }
+
         </SimpleShowLayout>
     </Show>
 );

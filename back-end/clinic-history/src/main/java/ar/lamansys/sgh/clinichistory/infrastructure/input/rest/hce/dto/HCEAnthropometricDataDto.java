@@ -15,15 +15,15 @@ public class HCEAnthropometricDataDto implements Serializable {
 
     @Valid
     @Nullable
-    private HCEClinicalObservationDto bloodType;
+    private HCEEffectiveClinicalObservationDto bloodType;
 
     @Valid
     @Nullable
-    private HCEClinicalObservationDto height;
+    private HCEEffectiveClinicalObservationDto height;
 
     @Valid
     @Nullable
-    private HCEClinicalObservationDto weight;
+    private HCEEffectiveClinicalObservationDto weight;
 
     @Nullable
     private HCEClinicalObservationDto bmi;

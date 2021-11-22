@@ -3,12 +3,13 @@ div {
 }
 
 .subtitle {
-	font-size: 16px;
 	font-style: normal;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 14px;
 	letter-spacing: 0em;
 	text-align: left;
+	margin-top: 10px;
+	height: 5px;
 }
 
 .title {
@@ -20,6 +21,39 @@ div {
 	text-align: left;
 }
 
-.pointer {
-	cursor: pointer;
+.mat-dialog-actions{
+	margin-top: 15px;
+	margin-bottom: auto;
+	min-height: auto;
+}
+
+.subtitle-font-size{
+	font-size: 16px;
+}
+
+.subtitle-findings-procedures-font-size{
+	font-size: 13.5px;
+}
+
+.activate-button{
+	color: #2687C5;
+}
+
+.activate-button:hover{
+	text-decoration: underline;
+}
+
+.disable-button{
+	color: #9c9fa3;
+}
+
+.tooth-dialog{
+	position: relative;
+}
+
+.close{
+	transform: scale(1.0);
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }

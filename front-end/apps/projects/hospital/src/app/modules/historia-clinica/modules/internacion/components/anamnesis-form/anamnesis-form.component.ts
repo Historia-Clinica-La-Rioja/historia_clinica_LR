@@ -17,6 +17,7 @@ import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-anamnesis-form',
@@ -47,6 +48,8 @@ export class AnamnesisFormComponent implements OnInit {
 	apiErrors: string[] = [];
 	procedimientosService: ProcedimientosService;
 
+	minDate = MIN_DATE;
+
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
@@ -57,7 +60,7 @@ export class AnamnesisFormComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
-		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService);
+		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 	}
 
 	ngOnInit(): void {

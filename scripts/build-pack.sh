@@ -7,7 +7,7 @@ cd "$BASEDIR"
 cd front-end/apps
 yarn install
 npm run lint
-npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+npm run ci:test
 npm run build:odontology
 npm run build:prod
 cd -

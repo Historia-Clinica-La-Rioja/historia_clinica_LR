@@ -3,9 +3,6 @@ package net.pladema.user.controller.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.annotation.Nullable;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -16,12 +13,33 @@ public class UserDto extends AbstractUserDto {
 	 */
 	private static final long serialVersionUID = 1314611830338628432L;
 
-	@NotNull(message = "{email.mandatory}")
-	@Email(message = "{email.mandatory}")
 	private String email;
 
 	private Integer id;
 
-	@Nullable
 	private UserPersonDto personDto;
+
+	public UserDto(String email, Integer id, Integer personId, String firstName, String lastName) {
+		this.email = email;
+		this.id = id;
+		this.personDto = new UserPersonDto(personId, firstName, lastName);
+	}
+
+	public Integer getPersonId() {
+		if (personDto == null)
+			return null;
+		return personDto.getId();
+	}
+
+	public String getFirstName() {
+		if (personDto == null)
+			return null;
+		return personDto.getFirstName();
+	}
+
+	public String getLastName() {
+		if (personDto == null)
+			return null;
+		return personDto.getLastName();
+	}
 }

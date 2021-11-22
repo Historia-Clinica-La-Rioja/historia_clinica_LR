@@ -3,8 +3,8 @@ package net.pladema.sgh.app.security.infraestructure.filters;
 import ar.lamansys.sgx.auth.apiKey.infrastructure.input.service.ApiKeyExternalService;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.permissions.service.UserAssignmentService;
-import net.pladema.security.authorization.InstitutionGrantedAuthority;
-import ar.lamansys.sgx.auth.apiKey.application.login.ApiKeyLogin;
+import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGrantedAuthority;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

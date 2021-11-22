@@ -27,14 +27,14 @@ public interface PatientRepository extends JpaRepository<Patient, Integer>, Pati
 												@Param("identificationNumber") String identificationNumber, @Param("birthDate") LocalDate birthDate);
 
 	@Query(value = " SELECT p.id " +
-			"FROM User u " +
-			"LEFT JOIN Patient p ON (p.personId = u.personId) " +
-			"WHERE u.id = :userId")
+			"FROM UserPerson up " +
+			"LEFT JOIN Patient p ON (p.personId = up.pk.personId) " +
+			"WHERE up.pk.userId = :userId")
 	public Optional<Integer> getPatientIdByUser(@Param("userId") Integer userId);
 
-	@Query(value = " SELECT u.personId " +
-			"FROM User u " +
-			"WHERE u.id = :userId")
+	@Query(value = " SELECT up.pk.personId " +
+			"FROM UserPerson up " +
+			"WHERE up.pk.userId = :userId")
 	public Optional<Integer> getPersonIdByUser(@Param("userId") Integer userId);
 
 	@Query(value = "SELECT new net.pladema.patient.repository.domain.PatientPersonVo(patient, person) " +

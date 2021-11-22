@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ActionsService, CurrentDraw, ProcedureOrder, ToothAction } from '../../services/actions.service';
+import { ActionsService, CurrentDraw, ProcedureOrder, ToothAction, ActionType } from '../../services/actions.service';
 import { SurfaceDrawerService, ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothDrawerService } from '../../services/tooth-drawer.service';
 import { Surface } from '../../utils/Surface';
@@ -23,6 +23,15 @@ export class ToothComponent implements AfterViewInit {
 	private toothDrawerService: ToothDrawerService;
 
 	@Input()
+	set records(records: ToothAction[]) {
+		this.setRecords(records);
+	}
+
+	setRecords(records: ToothAction[]) {
+		this.actionsService.setRecords(records);
+	}
+
+	@Input()
 	set findingsAndProcedures(actions: ToothAction[]) {
 		this.setFindingsAndProcedures(actions);
 	}
@@ -31,7 +40,7 @@ export class ToothComponent implements AfterViewInit {
 	set newFinding(newFinding: string) {
 		if (newFinding) {
 			const selectedSurfacesIds: string[] = this.surfacesHandler.filter(node => node.isSelected).map(s => s.id);
-			this.actionsService.setFinding(newFinding, selectedSurfacesIds);
+			this.actionsService.addFinding(newFinding, selectedSurfacesIds);
 		}
 	}
 
@@ -59,7 +68,7 @@ export class ToothComponent implements AfterViewInit {
 	@Input() toothTreatment: ToothTreatment = ToothTreatment.AS_FRACTIONAL_TOOTH;
 
 	@Output() selectedSurfacesEmitter = new BehaviorSubject<any[]>([]);
-	private actionsSubject = new BehaviorSubject<CommonActions>(null);
+	private actionsSubject = new BehaviorSubject<Actions>(null);
 	actionsSubject$ = this.actionsSubject.asObservable();
 
 	ngAfterViewInit(): void {
@@ -109,14 +118,15 @@ export class ToothComponent implements AfterViewInit {
 
 	setFindingsAndProcedures(actions: ToothAction[]) {
 		this.actionsService.setActions(actions);
+		this.emitFindingAndProcedures();
 	}
 
 	private emitFindingAndProcedures() {
-		const result = this.findCommonActions();
+		const result = this.findToothCurrentViewActions();
 		this.actionsSubject.next(result);
 	}
 
-	private findCommonActions(): CommonActions {
+	private findToothCurrentViewActions(): Actions {
 
 		const selectedSurfacesIds: string[] = this.surfacesHandler.filter(node => node.isSelected).map(surface => surface.id);
 
@@ -124,19 +134,19 @@ export class ToothComponent implements AfterViewInit {
 
 			const actions = this.actionsService.getActions();
 			return {
-				findingId: actions.find(a => !a.isProcedure)?.actionSctid,
+				findingId: actions.find(a => a.action.type === ActionType.DIAGNOSTIC)?.action.sctid,
 				procedures: {
-					firstProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.FIRST)?.actionSctid,
-					secondProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.SECOND)?.actionSctid,
-					thirdProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.THIRD)?.actionSctid
+					firstProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.FIRST)?.action.sctid,
+					secondProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.SECOND)?.action.sctid,
+					thirdProcedureId: actions.find(a => a.wholeProcedureOrder === ProcedureOrder.THIRD)?.action.sctid
 				}
 			}
 		}
 
 
 		const actions: ToothAction[] = this.actionsService.getActions(selectedSurfacesIds);
-		const findingsSctids: string[] = actions.filter(a => !a.isProcedure).map(a => a.actionSctid);
-		const proceduresSctids: string[] = actions.filter(a => a.isProcedure).map(a => a.actionSctid);
+		const findingsSctids: string[] = actions.filter(a => a.action.type === ActionType.DIAGNOSTIC).map(a => a.action.sctid);
+		const proceduresSctids: string[] = actions.filter(a => a.action.type === ActionType.PROCEDURE).map(a => a.action.sctid);
 
 		const count = (array: string[]) =>
 			array.reduce((a, b) => ({
@@ -160,9 +170,22 @@ export class ToothComponent implements AfterViewInit {
 			this.actionsService.addProcedure(sctid, selectedSurfacesIds, order);
 		}
 	}
+
+	public deleteAction(sctid: string, selectedSurfaces: string[], actionType: ActionType, order: ProcedureOrder){
+		if (!selectedSurfaces.length){
+			this.actionsService.deleteAction(undefined, sctid, actionType, order);
+		}
+		else {
+			selectedSurfaces.forEach(
+				surface => {
+					this.actionsService.deleteAction(surface, sctid, actionType, order);
+				}
+			);
+		}
+	}
 }
 
-export interface CommonActions {
+export interface Actions {
 	findingId: string;
 	procedures: {
 		firstProcedureId: string,

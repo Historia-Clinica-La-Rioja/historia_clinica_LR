@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 
 import { AppFeature } from '@api-rest/api-model';
-import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto} from '@api-rest/api-model';
+import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 
@@ -23,6 +23,7 @@ import { MenuItem } from '@presentation/components/menu/menu.component';
 import { Page } from '@presentation/components/page/page.component';
 import { ExtensionPatientService } from '@extensions/services/extension-patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
+import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
 
 
 const RESUMEN_INDEX = 0;
@@ -64,15 +65,15 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private medicacionesService: MedicacionesService,
 		private readonly featureFlagService: FeatureFlagService,
 		private extensionPatientService: ExtensionPatientService,
+		private readonly odontogramService: OdontogramService
 	) { }
-
 	ngOnInit(): void {
-		this.personInformation = [ ];
+		this.personInformation = [];
 		this.route.paramMap.subscribe((params) => {
 			this.patientId = Number(params.get('idPaciente'));
 			this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 				patient => {
-					this.personInformation.push({description: patient.person.identificationType, data: patient.person.identificationNumber});
+					this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 					this.patient = this.mapperService.toPatientBasicData(patient);
 				}
 			);
@@ -90,6 +91,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 		this.extensionTabs$ = this.extensionPatientService.getTabs(this.patientId);
 
+		this.odontogramService.resetOdontogram();
 	}
 
 	loadExternalInstitutions() {

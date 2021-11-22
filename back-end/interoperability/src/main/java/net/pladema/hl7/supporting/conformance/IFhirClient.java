@@ -1,16 +1,20 @@
 package net.pladema.hl7.supporting.conformance;
 
+import ca.uhn.fhir.rest.annotation.Create;
 import ca.uhn.fhir.rest.annotation.IdParam;
 import ca.uhn.fhir.rest.annotation.OptionalParam;
 import ca.uhn.fhir.rest.annotation.Read;
 import ca.uhn.fhir.rest.annotation.RequiredParam;
+import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.annotation.Search;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IRestfulClient;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
+import org.hl7.fhir.r4.model.Immunization;
 
 /**
 * This is a simple client interface. It can have many methods for various searches
@@ -47,4 +51,8 @@ public interface IFhirClient extends IRestfulClient {
      */
     @Read
     Bundle getResourceById(@IdParam IIdType theId);
+
+    @Create
+    MethodOutcome postImmunizationToNomivac(@ResourceParam Immunization immunization);
+
 }

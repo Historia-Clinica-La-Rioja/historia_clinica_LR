@@ -13,7 +13,7 @@ import {
 } from '@api-rest/api-model';
 import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
-import {ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES} from '../../../../constants/summaries';
+import {ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES} from '../../../../constants/summaries';
 import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
 import {TableModel} from '@presentation/components/table/table.component';
 import {SnackBarService} from '@presentation/services/snack-bar.service';
@@ -34,11 +34,11 @@ export class ResumenComponent implements OnInit, OnChanges {
 	public anthropometricData$: Observable<HCEAnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
+	public readonly medicationsHeader = MEDICACION_HABITUAL;
 	public loadExternal = false;
 	public healthConditionsTable: TableModel<ConditionDto>;
 	public allergiesTable: TableModel<AllergyIntoleranceDto>;
 	public medicationsTable: TableModel<MedicationInteroperabilityDto>;
-	public familyHistoriesTable: TableModel<OutpatientFamilyHistoryDto>;
 	@Input() patientExternalSummary: PatientSummaryDto;
 
 	constructor(

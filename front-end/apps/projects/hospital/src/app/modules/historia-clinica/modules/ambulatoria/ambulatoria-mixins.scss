@@ -1,0 +1,5 @@
+@import "./components/vacunas/vacunas.component.scss-theme.scss";
+
+@mixin ambulatoria-mixins($theme) {
+    @include app-vacunas($theme);
+}

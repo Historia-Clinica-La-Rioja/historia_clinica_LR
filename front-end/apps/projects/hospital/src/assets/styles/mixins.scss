@@ -1,9 +1,13 @@
 @import "variables";
 
+@import "./../../app/modules/presentation/presentation-mixins.scss";
+@import "./../../app/modules/turnos/turnos-mixins.scss";
+@import "./../../app/modules/historia-clinica/historia-clinica-mixins.scss";
+
 @mixin form-row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 @mixin card-properties {
@@ -53,4 +57,14 @@
 	font-size: 12px;
 	font-weight: normal;
 	line-height: 14px;
+}
+
+@mixin general-font {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@mixin custom-components-color($theme) {
+	@include presentation-mixins($theme);
+	@include turnos-mixins($theme);
+	@include historia-clinica-mixins($theme);
 }

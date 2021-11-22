@@ -2,11 +2,11 @@
 
 ## Definición de FF
 
-Todos los FF están definidos como enumerados en la clase [AppFeature.java](../hospital-api/src/main/java/net/pladema/sgx/featureflags/AppFeature.java).
+Todos los FF están definidos como enumerados en la clase [AppFeature.java](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/featureflags/AppFeature.java).
 
 ## Estados de FF
 
-Cada sabor definido en la clase [FlavorBo.java](../hospital-api/src/main/java/net/pladema/featureflags/service/domain/FlavorBo.java) debe definir los FF activos usando la clase [InitialFeatureStatesStrategy.java](../hospital-api/src/main/java/net/pladema/flavor/service/impl/InitialFeatureStatesStrategy.java).
+Cada sabor definido en la clase [FlavorBo.java](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/flavor/FlavorBo.java) debe definir los FF activos usando la clase [InitialFeatureStatesStrategy.java](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/flavor/InitialFeatureStatesStrategy.java).
 
 ## Sobreescribir FF
  
@@ -29,7 +29,7 @@ AppFeature.HABILITAR_ALTA_SIN_EPICRISIS.isActive()
 
 ## Uso de FF en el frontend
 
-Los FF en el frontend están disponibles también como el enum AppFeature definido en [@api-rest/api-model.d](../../front-end/webapp/src/app/modules/api-rest/api-model.d.ts).
+Los FF en el frontend están disponibles también como el enum AppFeature definido en [@api-rest/api-model.d.ts](../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-model.d.ts).
 
 Para evaluar si una Feature se encuentra activada o desactivada se debe hacer:
 

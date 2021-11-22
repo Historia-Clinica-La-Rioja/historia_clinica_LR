@@ -24,13 +24,13 @@ const routes: Routes = [
 		path: '',
 		component: InternacionesHomeComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente',
 		component: InternacionPacienteComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',
@@ -48,13 +48,13 @@ const routes: Routes = [
 		path: 'internacion/:idInternacion/paciente/:idPaciente/nota-evolucion',
 		component: NotaEvolucionComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos/:idDiagnostico',
 		component: EvaluacionClinicaDiagnosticosComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/cambiar-diag-principal',

@@ -166,7 +166,7 @@ export const MOCKS_TURNOS = [
 		loads: [
 			{
 				name: 'Appointments.get(appointmentId: number): AppointmentDto',
-				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD',
+				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD y ESPECIALISTA_EN_ODONTOLOGIA',
 				path: '/api/institutions/{institutionId}/medicalConsultations/appointments/{appointmentId}',
 				method: 'GET',
 				fetch: {
@@ -189,7 +189,7 @@ export const MOCKS_TURNOS = [
 			},
 			{
 				name: 'Appointments.changeState(appointmentStateId: number): void',
-				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD',
+				roles: 'Todo ADMINISTRATIVO sobre la institución, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD y ESPECIALISTA_EN_ODONTOLOGIA',
 				path: '/api/institutions/{institutionId}/medicalConsultations/appointments/{appointmentId}/change-state?appointmentStateId=3',
 				method: 'PUT',
 				comments: 'stateId via QueryParams'
@@ -329,7 +329,7 @@ export const MOCKS_TURNOS = [
 			},
 			{
 				name: 'Appointments.create(createAppointmentDto: CreateAppointmentDto): number',
-				roles: 'Todo ADMINISTRATIVO sobre la institución. ESPECIALISTA_MEDICO y PROFESIONAL_DE_SALUD para el caso que puedan otorgar turnos',
+				roles: 'Todo ADMINISTRATIVO sobre la institución. ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD  y ESPECIALISTA_EN_ODONTOLOGIA para el caso que puedan otorgar turnos',
 				path: '/api/institutions/{institutionId}/medicalConsultations/appointments',
 				method: 'POST',
 				/* CreateAppointmentDto

@@ -38,6 +38,9 @@ public class VaccineConsultation extends SGXAuditableEntity<Integer> {
     @Column(name = "patient_id", nullable = false)
     private Integer patientId;
 
+    @Column(name = "patient_medical_coverage_id")
+    private Integer patientMedicalCoverageId;
+
     @Column(name = "clinical_specialty_id")
     private Integer clinicalSpecialtyId;
 
@@ -53,12 +56,13 @@ public class VaccineConsultation extends SGXAuditableEntity<Integer> {
     @Column(name = "billable", nullable = false)
     private Boolean billable;
 
-    public VaccineConsultation(Integer id, Integer institutionId, Integer patientId, Integer doctorId,
-                               Integer clinicalSpecialtyId, LocalDate performedDate, boolean billable) {
+    public VaccineConsultation(Integer id, Integer institutionId, Integer patientId, Integer patientMedicalCoverageId,
+                               Integer doctorId, Integer clinicalSpecialtyId, LocalDate performedDate, boolean billable) {
         super();
         this.id = id;
         this.institutionId = institutionId;
         this.patientId = patientId;
+        this.patientMedicalCoverageId = patientMedicalCoverageId;
         this.billable = billable;
         this.doctorId = doctorId;
         this.performedDate = performedDate;

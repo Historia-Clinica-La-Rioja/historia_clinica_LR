@@ -1,0 +1,48 @@
+::ng-deep .cdk-overlay-pane {
+	app-odontology-consultation-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+.margin-checkbox {
+	margin-bottom: 15px;
+}
+
+.margin-bottom {
+	margin-bottom: 3vh;
+}
+
+.recomendado {
+	color: lightgray;
+	font-size: 13px;
+	font-weight: lighter;
+}
+
+span {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+}
+
+.form_dental_pieces {
+	.mat-form-field {
+		width: 80%;
+		margin-top: 10px;
+		::ng-deep .mat-form-field-wrapper{
+			background-color: white;
+			height: 38px;
+		}
+	}
+}
+
+.mat-error{
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+}

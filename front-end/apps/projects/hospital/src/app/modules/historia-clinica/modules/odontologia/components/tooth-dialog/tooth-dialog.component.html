@@ -1,69 +1,73 @@
-<div>
+<div class="tooth-dialog" fxLayout="column" fxLayoutGap="7px">
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 		<app-tooth #tooth [toothTreatment]="toothTreatment" (selectedSurfacesEmitter)="reciveSelectedSurfaces($event)"
 			[newFinding]="newHallazgoId" [setFirstProcedure]="firstProcedureId" [setSecondProcedure]="secondProcedureId"
-			[setThirdProcedure]="thirdProcedureId"
-			[findingsAndProcedures]="odontogramService.getActionsFrom(data.tooth.snomed.sctid)">
+			[setThirdProcedure]="thirdProcedureId">
 		</app-tooth>
 		<div fxLayout="column">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
-			<span class="subtitle">{{selectedSurfacesText}}</span>
+			<span class="subtitle subtitle-font-size">{{selectedSurfacesText}}</span>
 		</div>
 	</div>
 
-	<div fxLayout="column">
-		<form [formGroup]="form" (ngSubmit)="confirm()" fxLayout="column">
-			<mat-form-field appearance="outline">
-				<mat-label>Seleccione hallazgo</mat-label>
-				<mat-select formControlName="findingId" name="findingId" (selectionChange)="findingChanged($event)">
-					<mat-option *ngFor="let finding of filteredDiagnostics" [value]="finding.snomed.sctid">
-						<span>{{finding.snomed.pt}}</span>
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
-
-			<div fxLayout="column" formGroupName="procedures">
-
-				<mat-form-field appearance="outline">
-					<mat-label>Seleccione 1er procedimiento</mat-label>
-					<mat-select formControlName="firstProcedureId" name="firstProcedureId"
-						(selectionChange)="firstProcedureChanged()">
-						<mat-option *ngFor="let procedure of filteredProcedures" [value]="procedure.snomed.sctid">
-							<span>{{procedure.snomed.pt}}</span>
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<div *ngIf="!selectedSurfaces.length" fxLayout="column">
-					<mat-form-field appearance="outline">
-						<mat-label>Seleccione 2do procedimiento</mat-label>
-						<mat-select formControlName="secondProcedureId" name="secondProcedureId"
-							(selectionChange)="secondProcedureChanged()">
-							<mat-option *ngFor="let procedure of filteredProcedures" [value]="procedure.snomed.sctid">
-								<span>{{procedure.snomed.pt}}</span>
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-
-					<mat-form-field appearance="outline">
-						<mat-label>Seleccione 3er procedimiento</mat-label>
-						<mat-select formControlName="thirdProcedureId" name="thirdProcedureId"
-							(selectionChange)="thirdProcedureChanged()">
-							<mat-option *ngFor="let procedure of filteredProcedures" [value]="procedure.snomed.sctid">
-								<span>{{procedure.snomed.pt}}</span>
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
+	<div id="records" style="font-size: 13.5px;" *ngIf="historicalRecords$ | async as historicalRecords">
+		<span *ngIf="!historicalRecords.length; else displayRecords" style="color: #A8A8A8;">Sin registros previos.</span>
+		<ng-template #displayRecords>
+			<div fxLayout="column" fxLayoutGap="10px">
+				<div fxLayout="row" fxLayoutGap="5px">
+					<span id="firstElement">{{historicalRecords[0].firstElement}}</span>
+					<span id="secondElement">{{historicalRecords[0].secondElement}}</span>
 				</div>
-
-
+				<div *ngIf="historicalRecords.length === 1; else olderRecords"></div>
 			</div>
 
-			<mat-dialog-actions fxLayoutAlign="end end">
-				<button mat-stroked-button color="primary" mat-dialog-close type="button">Cancelar </button>
-				<button mat-raised-button color="primary">Confirmar </button>
-			</mat-dialog-actions>
-		</form>
+			<ng-template #olderRecords>
+				<app-hidable-scrollable-data [data]="historicalRecords.slice(1)"></app-hidable-scrollable-data>
+			</ng-template>
+		</ng-template>
 	</div>
+
+	<div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center" *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']">
+		<span class="subtitle subtitle-findings-procedures-font-size">Nuevos hallazgos sobre la pieza:</span>
+		<app-typeahead id="finding" [placeholder]="'Seleccione hallazgo'"
+			[options]="filteredDiagnosticsTypeaheadOptions" [externalSetValue]="initValueTypeaheadDiagnostics"
+			(selectionChange)="findingChanged($event)">
+		</app-typeahead>
+		<span class="subtitle subtitle-findings-procedures-font-size" >Nuevos procedimientos sobre la pieza:</span>
+		<app-typeahead
+			id="first_procedure"
+			[placeholder]="'Seleccione 1er procedimiento'"
+			[options]="filteredProceduresTypeahead"
+			[externalSetValue]="initValueTypeaheadFirstProcedure"
+			(selectionChange)="firstProcedureChanged($event)"
+		>
+		</app-typeahead>
+		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
+			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()"
+						   id="second_procedure"
+						   [placeholder]="'Seleccione 2do procedimiento'"
+						   [externalSetValue]="initValueTypeaheadSecondProcedure"
+						   [options]="filteredProceduresTypeahead"
+						   (selectionChange)="secondProcedureChanged($event)"
+			>
+			</app-typeahead>
+			<app-typeahead *ngIf="showActionsService?.getThirdProcedure()" id="third_procedure"
+				[placeholder]="'Seleccione 3er procedimiento'" [externalSetValue]="initValueTypeaheadThirdProcedure"
+				[options]="filteredProceduresTypeahead" (selectionChange)="thirdProcedureChanged($event)">
+			</app-typeahead>
+		</div>
+		<span
+			[ngClass]="{'activate-button': (!showActionsService?.getIsNotPreviousProcedureSet() && !selectedSurfaces.length), 'disable-button': (showActionsService?.getIsNotPreviousProcedureSet() || selectedSurfaces.length)}"
+			(click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
+	</div>
+
+	<mat-dialog-actions fxLayoutAlign="end end">
+		<button *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']" mat-raised-button color="primary"
+			(click)="confirm()">Confirmar </button>
+			<button class="close" type="button" mat-dialog-close mat-icon-button matSuffix fxLayout="column">
+				<mat-icon>close</mat-icon>
+			</button>	
+	</mat-dialog-actions>
+
 </div>

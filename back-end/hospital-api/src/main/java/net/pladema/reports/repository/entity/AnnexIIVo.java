@@ -1,52 +1,41 @@
 package net.pladema.reports.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.Period;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class AnnexIIVo {
 
     private String establishment;
 
-    private String firstName;
-
-    private String middleNames;
-
-    private String lastName;
-
-    private String otherLastNames;
-
-    private String documentType;
-
-    private String documentNumber;
+    private String completePatientName;
 
     private String patientGender;
 
     private LocalDate patientBirthDate;
 
-    private String appointmentState;
+    private String documentType;
 
-    private LocalDate attentionDate;
+    private String documentNumber;
 
-    private String medicalCoverage;
+    private String sisaCode;
 
-    private String affiliateNumber;
-
-    @JsonIgnore
-    public Short getAge(){
-        if (patientBirthDate == null)
-            return null;
-        LocalDate today = LocalDate.now();
-        Period p = Period.between(patientBirthDate, today);
-        return (short) p.getYears();
+    public AnnexIIVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
+                     LocalDate patientBirthDate, String documentType, String documentNumber, String sisaCode){
+        this.establishment = establishment;
+        this.completePatientName = Stream.of(firstName, middleNames, lastName, otherLastNames)
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(" "));
+        this.documentType = documentType;
+        this.documentNumber = documentNumber;
+        this.patientGender = patientGender;
+        this.patientBirthDate = patientBirthDate;
+        this.sisaCode = sisaCode;
     }
 }

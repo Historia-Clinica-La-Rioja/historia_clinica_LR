@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs';
 import {HCEAllergyDto, HCEAnthropometricDataDto, HCELast2VitalSignsDto, HCEMedicationDto, HCEPersonalHistoryDto} from '@api-rest/api-model';
-import {ANTECEDENTES_FAMILIARES, PROBLEMAS_ANTECEDENTES} from '../../../historia-clinica/constants/summaries';
+import {ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES} from '../../../historia-clinica/constants/summaries';
 import {PatientPortalService} from '@api-rest/services/patient-portal.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class ResumenHistoriaClinicaComponent implements OnInit {
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public personalHistory$: Observable<HCEPersonalHistoryDto[]>;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
+	public readonly medicationsHeader = MEDICACION_HABITUAL;
 	public medications$: Observable<HCEMedicationDto[]>;
 	public vitalSigns$: Observable<HCELast2VitalSignsDto>;
 	public anthropometricData$: Observable<HCEAnthropometricDataDto>;

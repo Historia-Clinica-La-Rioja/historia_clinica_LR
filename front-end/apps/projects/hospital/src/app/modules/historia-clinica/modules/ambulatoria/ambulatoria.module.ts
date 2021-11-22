@@ -12,9 +12,8 @@ import { ResumenComponent } from './components/resumen/resumen.component';
 import { ProblemasComponent } from './components/problemas/problemas.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
-import { AplicarVacunaComponent } from './dialogs/aplicar-vacuna/aplicar-vacuna.component';
 import { AppMaterialModule } from '../../../material/app.material.module';
-import {SolveProblemComponent} from '../../dialogs/solve-problem/solve-problem.component';
+import { SolveProblemComponent } from '../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
@@ -30,9 +29,14 @@ import { CardIndicacionesComponent } from './components/ordenes/card-indicacione
 import { ItemPrescripcionesComponent } from './components/ordenes/item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
-import {ExternalSummaryCardComponent} from '@presentation/components/external-summary-card/external-summary-card.component';
-import {ConfirmarNuevaConsultaPopupComponent} from './dialogs/confirmar-nueva-consulta-popup/confirmar-nueva-consulta-popup.component';
+import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
+import { SuggestedFieldsPopupComponent } from '../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
+import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
+import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacunas.component';
+import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.component';
+import { ExternalClinicalHistoriesFiltersComponent } from './components/external-clinical-histories-filters/external-clinical-histories-filters.component';
+import { ExternalClinicalHistoryComponent } from './components/external-clinical-history/external-clinical-history.component';
 
 
 @NgModule({
@@ -43,7 +47,6 @@ import { OdontologiaModule } from '../odontologia/odontologia.module';
 		ResumenComponent,
 		ProblemasComponent,
 		VacunasComponent,
-		AplicarVacunaComponent,
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent,
@@ -59,7 +62,12 @@ import { OdontologiaModule } from '../odontologia/odontologia.module';
 		CompletarEstudioComponent,
 		VerResultadosEstudioComponent,
 		ExternalSummaryCardComponent,
-		ConfirmarNuevaConsultaPopupComponent
+		SuggestedFieldsPopupComponent,
+		AgregarVacunasComponent,
+		AgregarVacunaComponent,
+		DetalleVacunaComponent,
+		ExternalClinicalHistoriesFiltersComponent,
+		ExternalClinicalHistoryComponent
 	],
 	imports: [
 		AmbulatoriaRoutingModule,

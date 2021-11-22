@@ -81,7 +81,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
         if (apmtOpt.isPresent() && !hasAdministrativeRole) {
         	DiaryBo diary = diaryService.getDiaryById(apmtOpt.get().getDiaryId());
             boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO));
+                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO));
 
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
             if (hasProfessionalRole && !diary.getHealthcareProfessionalId().equals(professionalId)) {

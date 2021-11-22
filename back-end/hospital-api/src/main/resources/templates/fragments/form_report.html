@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="headerfiles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <style type="text/css">
+
+        .table {
+            width: 650px;
+            font-size: 12px;
+        }
+
+        .row > div {
+            padding-top: 5px;
+        }
+
+        .row-whitout-padding > div {
+            border-top: 0px;
+        }
+
+        .row > div, .row-whitout-padding > div, .row-data > div {
+            display: table-cell;
+        }
+
+        .row-data > div, .row-whitout-padding > div, .space  {
+            border: 1px solid black;
+        }
+
+        .row-data > div {
+            padding: 3px;
+        }
+
+        .space {
+            height: 25px;
+        }
+
+        .border-bottom, .authorization-title, .total-billing-data {
+            border-bottom: 1px solid black;
+        }
+
+        .space, .row-data div, .concept-title, .signature, .billing, .data-billing div, .affiliate-billing, .authorization-title,
+        .authorization .professional-signature, .delegation-stamp,
+        .practice-autor, .practice-autor .professional-signature {
+            text-align: center;
+        }
+
+        .establishment {
+            width: 500px;
+        }
+
+        .code, .data-billing {
+            width: 150px;
+        }
+
+        .establishment, .code, .professional-signature, .delegation-stamp, .authorization, .practice-autor {
+            display: inline-block;
+        }
+
+        .complete-name {
+            width: 350px;
+        }
+
+        .doc-number {
+            width: 135px;
+        }
+
+        .billing {
+            width: 140px;
+        }
+
+        .address, .practice-autor, .practice-autor .professional-signature {
+            width: 200px;
+        }
+
+        .date, .doc-type, .hcn {
+            width: 100px;
+        }
+
+        .gender, .room {
+            width: 75px;
+        }
+
+        .row .gender {
+            width: 80px;
+        }
+
+        .age, .ce {
+            width: 55px;
+        }
+
+        .bed {
+            width: 60px;
+        }
+
+        .coverage {
+            width: 280px;
+        }
+
+        .affiliate-type {
+            width: 130px;
+        }
+
+        .diagnosis {
+            width: 600px;
+        }
+
+        .condition, .cant-code, .affiliate-number {
+            width: 120px;
+        }
+
+        .concept {
+            width: 330px;
+        }
+
+        .rp-concept {
+            font-style: italic;
+            margin-left: 10px;
+            text-align: left;
+        }
+
+        .cant-code .space, .concept .space, .unitary .space, .total .space {
+            height: 130px;
+        }
+
+        .unitary {
+            width: 90px;
+        }
+
+        .total {
+            width: 110px;
+        }
+
+        .total-billing, .signature {
+            width: 180px;
+        }
+
+        .total-billing-data {
+            text-align: right;
+        }
+
+        .total-billing-data p {
+            padding-top: 10%;
+        }
+
+        .billing div, .signature div, .data-billing div, .total-billing-data {
+            height: 50px;
+        }
+
+        .signature .enrollment-stamp {
+            position: relative;
+        }
+
+        .signature .enrollment-stamp p {
+            position: absolute;
+            width: 100%;
+            bottom: 0px;
+        }
+
+        .authorization {
+            width: 450px;
+        }
+
+        .authorization, .practice-autor {
+            height: 180px;
+        }
+
+        .authorization .professional-signature, .delegation-stamp {
+            width: 220px;
+        }
+
+        .authorization .professional-signature {
+            border-right: 1px solid black;
+        }
+
+        .signature .enrollment-stamp p, .signature .signature-data,
+        .authorization .professional-signature div,
+        .practice-autor .professional-signature div {
+            border-top: 1px solid black;
+        }
+
+        .authorization .professional-signature div,
+        .practice-autor .professional-signature div {
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 30%;
+        }
+
+        .diagnosis::first-letter {
+            text-transform: uppercase;
+        }
+
+    </style>
+</head>
+
+<body th:fragment="data">
+<div style="text-align: center" th:fragment="header (title)">
+    <h2 th:text="${title}"></h2>
+</div>
+<div class="table">
+    <div class="row">
+        <div class="establishment">1. ESTABLECIMIENTO</div>
+        <div class="code">CÓDIGO</div>
+    </div>
+    <div class="row-data">
+        <div class="establishment" th:text="${establishment}"></div>
+        <div class="code" th:text="${sisaCode}"></div>
+    </div>
+    <div class="row">
+        <div class="complete-name">2. APELLIDOS Y NOMBRES</div>
+        <div class="address">DOMICILIO</div>
+        <div class="date">3. FECHA</div>
+    </div>
+    <div class="row-data">
+        <div class="complete-name" th:text="${completePatientName}"></div>
+        <div class="address" th:text="${address}"></div>
+        <div class="date">
+            <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
+            <label th:unless="${consultationDate != null}" th:text="${reportDate}"></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="gender">4. SEXO</div>
+        <div class="age">5. EDAD</div>
+        <div class="doc-number">6. N° DOCUMENTO</div>
+        <div class="doc-type">7. TIPO. DOC</div>
+        <div class="ce">8. C.E.</div>
+        <div class="room">9. SALA</div>
+        <div class="bed">10. CAMA</div>
+        <div class="hcn">11. H.C.N°</div>
+    </div>
+    <div class="row-data">
+        <div class="gender" th:text="${patientGender}"></div>
+        <div class="age" th:text="${patientAge}"></div>
+        <div class="doc-number" th:text="${documentNumber}"></div>
+        <div class="doc-type" th:text="${documentType}"></div>
+        <div class="ce">&nbsp;</div>
+        <div class="room">&nbsp;</div>
+        <div class="bed">&nbsp;</div>
+        <div class="hcn">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="condition">12. CONDICIÓN</div>
+        <div class="coverage">13. OBRA SOCIAL O MUTUAL</div>
+        <div class="affiliate-type">14. TIPO DE AFILIADO</div>
+        <div class="affiliate-number">15. N° DE AFILIADO</div>
+    </div>
+    <div class="row-data">
+        <div class="condition">&nbsp;</div>
+        <div class="coverage" th:text="${medicalCoverage}"></div>
+        <div class="affiliate-type">&nbsp;</div>
+        <div class="affiliate-number" th:text="${affiliateNumber}"></div>
+    </div>
+    <div class="row">
+        <div class="diagnosis">16. DIAGNÓSTICO CLÍNICO</div>
+        <div class="code">17. CÓDIGO</div>
+    </div>
+    <div th:if="${problems != null}">
+        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
+             th:with="cie10CodesList = ${#strings.arraySplit(cie10Codes,'|')}">
+            <div class="diagnosis" th:text="${problem}"></div>
+            <div class="code" th:text="${cie10CodesList[iter.index]}"></div>
+        </div>
+    </div>
+    <div th:unless="${problems != null}">
+        <div class="row-data">
+            <div class="diagnosis">&nbsp;</div>
+            <div class="code">&nbsp;</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="cant-code">
+            <div>18. CANT O CÓD</div>
+            <div class="space">&nbsp;</div>
+        </div>
+        <div class="concept">
+            <div class="concept-title">19. CONCEPTO</div>
+            <div class="space"><p class="rp-concept">Rp/</p>
+            </div>
+        </div>
+        <div class="unitary">
+            <div>20. UNITARIO</div>
+            <div class="space">&nbsp;</div>
+        </div>
+        <div class="total">
+            <div>21. TOTAL</div>
+            <div class="space">&nbsp;</div>
+        </div>
+    </div>
+    <div class="row-whitout-padding">
+        <div class="billing">
+            <div class="border-bottom">22. FACTURACIÓN INTERVINO</div>
+            <div class="border-bottom">&nbsp;</div>
+            <div>&nbsp;</div>
+        </div>
+        <div class="signature">
+            <div>&nbsp;</div>
+            <div class="signature-data">23. FIRMA PROFESIONAL</div>
+            <div class="enrollment-stamp"><p>Sello y Matrícula</p></div>
+        </div>
+        <div class="total-billing">
+            <div class="total-billing-data"><p>24. TOTAL</p></div>
+            <div class="affiliate-billing">25. CONFORME AFILIADO</div>
+        </div>
+        <div class="data-billing">
+            <div class="border-bottom">&nbsp;</div>
+            <div class="border-bottom">26. ABONAR p/ AFILIADO</div>
+            <div>26.1 ABONAR p/ O.S.</div>
+        </div>
+    </div>
+    <div class="row-whitout-padding">
+        <div class="authorization">
+            <div class="authorization-title">27. AUTORIZACIÓN O.S. INTERNACIÓN / PRÁCTICA</div>
+            <div class="professional-signature">
+                <div>Firma Profesional</div>
+                <div>Sello aclaratorio</div>
+            </div>
+            <div class="delegation-stamp">SELLO O DELEGACIÓN</div>
+        </div>
+        <div class="practice-autor">
+            <div>28. PRÁCTICA REALIZADA POR</div>
+            <div class="professional-signature">
+                <div>Firma Profesional</div>
+                <div>Sello y Matrícula</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>

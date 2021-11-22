@@ -1,9 +1,9 @@
 package ar.lamansys.sgx.shared.auth.user;
 
-import java.util.Collection;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 public class SgxUserDetails implements UserDetails {
 
@@ -53,6 +53,10 @@ public class SgxUserDetails implements UserDetails {
 	@Override
 	public String getUsername() {
 		return username;
+	}
+
+	public Integer getUserId() {
+		return userId;
 	}
 
 	@Override

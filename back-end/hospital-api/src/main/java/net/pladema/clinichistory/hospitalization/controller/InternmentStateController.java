@@ -6,9 +6,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
 import io.swagger.annotations.Api;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
-import ar.lamansys.sgh.clinichistory.domain.ips.Last2VitalSignsBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ import java.util.List;
 @RequestMapping("/institutions/{institutionId}/internments-state")
 @Api(value = "Internment State", tags = { "Internment State" })
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 public class InternmentStateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentStateController.class);

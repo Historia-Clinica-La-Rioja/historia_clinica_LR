@@ -1,5 +1,6 @@
 package net.pladema.reports.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +22,15 @@ public class QueryFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public List<OutpatientDetail> query(Integer institutionId, LocalDate startDate, LocalDate endDate,
-                                        Integer clinicalSpecialtyId, Integer doctorId) {
+    public List<ConsultationDetail> query(Integer institutionId, LocalDate startDate, LocalDate endDate,
+                                          Integer clinicalSpecialtyId, Integer doctorId) {
 
-        Query query = entityManager.createNamedQuery("Reports.OutpatientDetail");
+        Query query = entityManager.createNamedQuery("Reports.ConsultationDetail");
         query.setParameter("institutionId", institutionId);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
-        List<OutpatientDetail> data = query.getResultList();
+        query.setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC));
+        List<ConsultationDetail> data = query.getResultList();
 
         //Optional filter: by specialty or professional if specified
         return data.stream()
@@ -39,8 +41,8 @@ public class QueryFactory {
 
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
-    public List<OutpatientSummary> getOutpatientSummaryData(Integer institutionId, LocalDate startDate, LocalDate endDate){
-        return entityManager.createNamedQuery("Reports.OutpatientSummary")
+    public List<ConsultationSummary> fetchConsultationSummaryData(Integer institutionId, LocalDate startDate, LocalDate endDate){
+        return entityManager.createNamedQuery("Reports.ConsultationSummary")
                 .setParameter("institutionId", institutionId)
                 .setParameter("from", startDate)
                 .setParameter("to", endDate)

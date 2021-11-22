@@ -61,6 +61,9 @@ public class PersonExtended implements Serializable {
     @Column(name = "gender_self_determination")
     private Short genderSelfDeterminationId;
 
+    @Column(name = "other_gender_self_determination", length = 40)
+    private String otherGenderSelfDetermination;
+
     @Column(name = "photo_file_path", length = 200)
     private String photoFilePath;
 }

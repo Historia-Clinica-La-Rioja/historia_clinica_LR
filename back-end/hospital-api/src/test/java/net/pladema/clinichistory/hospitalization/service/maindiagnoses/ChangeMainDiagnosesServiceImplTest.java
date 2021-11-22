@@ -6,30 +6,26 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.validation.ConstraintViolationException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(MockitoExtension.class)
-@DataJpaTest(showSql = false)
-class ChangeMainDiagnosesServiceImplTest {
+class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
     private ChangeMainDiagnosesService changeMainDiagnosesService;
 
@@ -97,7 +93,7 @@ class ChangeMainDiagnosesServiceImplTest {
 
     @Test
     void createDocumentWithInternmentInOtherInstitution() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
                 changeMainDiagnosesService.execute(validMainDiagnosisBo(internmentEpisode.getInstitutionId()+1, internmentEpisode.getId()))
         );
@@ -108,7 +104,7 @@ class ChangeMainDiagnosesServiceImplTest {
 
     @Test
     void createDocumentWithEpicrisis() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(1l));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(1l));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 changeMainDiagnosesService.execute(validMainDiagnosisBo(8, internmentEpisode.getId()))
         );
@@ -119,7 +115,7 @@ class ChangeMainDiagnosesServiceImplTest {
 
     @Test
     void createDocument_withoutMainDiagnosis() {
-        var internmentEpisode = internmentEpisodeRepository.saveAndFlush(newInternmentEpisodeWithEpicrisis(null));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
         var mainDiagnosisBo = validMainDiagnosisBo(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         mainDiagnosisBo.setMainDiagnosis(null);
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->

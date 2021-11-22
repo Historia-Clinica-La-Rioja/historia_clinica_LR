@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {HealthcareProfessionalByInstitutionService} from '@api-rest/services/healthcare-professional-by-institution.service';
-import {ProfessionalDto, ProfessionalsByClinicalSpecialtyDto} from '@api-rest/api-model';
-import {map} from 'rxjs/operators';
-import {TypeaheadOption} from '@core/components/typeahead/typeahead.component';
-import {ClinicalSpecialtyService} from '@api-rest/services/clinical-specialty.service';
-import {Observable} from 'rxjs/internal/Observable';
-import {REPORT_TYPES} from '../../constants/report-types';
-import {dateToMoment, newMoment} from '@core/utils/moment.utils';
-import {Moment} from 'moment';
-import {ReportsService} from '@api-rest/services/reports.service';
-import {hasError} from '@core/utils/form.utils';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
+import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
+import { map } from 'rxjs/operators';
+import { TypeaheadOption } from '@core/components/typeahead/typeahead.component';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { Observable } from 'rxjs';
+import { REPORT_TYPES } from '../../constants/report-types';
+import { dateToMoment, newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
+import { ReportsService } from '@api-rest/services/reports.service';
+import { hasError } from '@core/utils/form.utils';
+import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-home',
@@ -35,6 +36,8 @@ export class HomeComponent implements OnInit {
 	idSpecialty: number;
 
 	REPORT_TYPES = REPORT_TYPES;
+
+	minDate = MIN_DATE;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -70,7 +73,7 @@ export class HomeComponent implements OnInit {
 
 	maxStartDate(endDate) {
 		const today = newMoment();
-		if (endDate){
+		if (endDate) {
 			return (today.isBefore(endDate)) ? today : endDate;
 		}
 		return today;
@@ -134,8 +137,8 @@ export class HomeComponent implements OnInit {
 		if (this.form.value.startDate && this.form.value.endDate) {
 			const endDate: Moment = this.form.value.endDate;
 			if (endDate.isBefore(this.form.value.startDate)) {
-				this.form.controls.endDate.setErrors({min: true});
-				this.form.controls.startDate.setErrors({max: true});
+				this.form.controls.endDate.setErrors({ min: true });
+				this.form.controls.startDate.setErrors({ max: true });
 			} else {
 				this.form.controls.endDate.setErrors(null);
 				this.checkStartDateIsSameOrBeforeToday();
@@ -151,7 +154,7 @@ export class HomeComponent implements OnInit {
 		const today = newMoment();
 		(today.isSameOrAfter(this.form.value.startDate))
 			? this.form.controls.startDate.setErrors(null)
-			: this.form.controls.startDate.setErrors({afterToday: true});
+			: this.form.controls.startDate.setErrors({ afterToday: true });
 	}
 
 	generateReport() {
@@ -164,7 +167,7 @@ export class HomeComponent implements OnInit {
 				professionalId: this.form.controls.professionalId.value
 			}
 			const reportId = this.form.controls.reportType.value;
-			switch (reportId){
+			switch (reportId) {
 				case 1:
 					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe();
 					break;

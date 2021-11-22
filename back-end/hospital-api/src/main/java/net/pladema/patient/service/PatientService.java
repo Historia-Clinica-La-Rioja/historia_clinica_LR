@@ -1,5 +1,6 @@
 package net.pladema.patient.service;
 
+import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
@@ -25,4 +26,6 @@ public interface PatientService {
     List<PatientPersonVo> getAllValidatedPatients();
 
     void updatePatientPermanent(PatientPersonVo patientPersonVo, Integer nationalId);
+
+    void auditActionPatient(Integer institutionId, Integer patientId, EActionType eActionType);
 }

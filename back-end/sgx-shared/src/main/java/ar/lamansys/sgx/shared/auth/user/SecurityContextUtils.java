@@ -14,7 +14,7 @@ public class SecurityContextUtils {
 		if (authentication == null || !authentication.isAuthenticated() ||
 				authentication.getPrincipal().equals("anonymousUser"))
 			return ANONYMOUS_USER;
-		return new SgxUserDetails(((Integer) authentication.getPrincipal()));
+		return (SgxUserDetails)authentication.getPrincipal();
 
 	}
 

@@ -1,8 +1,10 @@
 package net.pladema.patient.service;
 
 import net.pladema.UnitRepository;
+import net.pladema.audit.repository.HospitalAuditRepository;
 import net.pladema.federar.services.FederarService;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
@@ -38,6 +40,12 @@ public class PatientServiceImplTest extends UnitRepository {
     @MockBean
     private PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
 
+    @MockBean
+    private HospitalAuditRepository hospitalAuditRepository;
+
+    @MockBean
+    private PatientAuditRepository patientAuditRepository;
+
     private PatientService patientService;
 
     @Before
@@ -47,7 +55,10 @@ public class PatientServiceImplTest extends UnitRepository {
                 patientMedicalCoverageRepository,
                 medicalCoverageRepository,
                 privateHealthInsuranceDetailsRepository,
-                federarService);
+                federarService,
+                hospitalAuditRepository,
+                patientAuditRepository
+                );
     }
 
     @Test

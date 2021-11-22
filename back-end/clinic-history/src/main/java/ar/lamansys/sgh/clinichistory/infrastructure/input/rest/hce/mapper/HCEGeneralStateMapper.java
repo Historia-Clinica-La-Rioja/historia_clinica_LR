@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Snomed
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -42,4 +43,12 @@ public interface HCEGeneralStateMapper {
 
     @Named("toHCEDiagnoseDto")
     HCEDiagnoseDto toHCEDiagnoseDto(HCEHospitalizationBo source);
+
+    @Named("toListHCEToothRecordDto")
+    @IterableMapping(qualifiedByName = "toHCEToothRecordDto")
+    List<HCEToothRecordDto> toListHCEToothRecordDto(List<HCEToothRecordBo> sourceList);
+
+    @Named("toHCEToothRecordDto")
+    @Mapping(target = "date", source = "performedDate")
+    HCEToothRecordDto toHCEToothRecordDto(HCEToothRecordBo source);
 }

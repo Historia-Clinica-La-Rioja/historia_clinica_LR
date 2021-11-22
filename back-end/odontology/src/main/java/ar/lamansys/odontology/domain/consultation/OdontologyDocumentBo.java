@@ -37,6 +37,8 @@ public class OdontologyDocumentBo {
 
     private List<ConsultationAllergyBo> allergies;
 
+    private List<ConsultationMedicationBo> medications;
+
     private String evolutionNote;
 
     public OdontologyDocumentBo(Long id,
@@ -55,6 +57,7 @@ public class OdontologyDocumentBo {
         this.procedures = consultation.getProcedures();
         this.personalHistories = consultation.getPersonalHistories();
         this.allergies = consultation.getAllergies();
+        this.medications = consultation.getMedications();
         this.evolutionNote = consultation.getEvolutionNote();
     }
 

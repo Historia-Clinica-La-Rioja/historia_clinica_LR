@@ -1,0 +1,60 @@
+<div class="index-box">
+    <div id="consultation" class="consultation">
+        <mat-select id="select_consultation" [(value)]="selectedConsultation" style="width: 200px;">
+            <mat-option *ngFor="let consultation of consultations" [value]="consultation">
+                <strong *ngIf="consultation === consultations[0]; else firstConsultation">Ultima consulta: </strong>
+                <ng-template #firstConsultation>
+                    <strong>Consulta inicial: </strong>
+                </ng-template>
+                <span> {{consultation.date | viewDateDto : 'date' | date: 'dd/MM/yyyy'}}</span>
+            </mat-option>
+        </mat-select>
+        <div id="indices" class="index">
+            <div id="permanent_c">
+                <span>C: </span>
+                <strong>{{selectedConsultation.permanentC}}</strong>
+            </div>
+            <div id="permanent_p">
+                <span>P: </span>
+                <strong>{{selectedConsultation.permanentP}}</strong>
+            </div>
+            <div id="permanent_o">
+                <span>O: </span>
+                <strong>{{selectedConsultation.permanentO}}</strong>
+            </div>
+            <div id="CPO_index">
+                <span>Indice CPO: </span>
+                <strong>{{selectedConsultation.cpoIndex}}</strong>
+            </div>
+            <div id="permanents">
+                <span>Presentes permanentes: </span>
+                <strong *ngIf="selectedConsultation.permanentTeethPresent === undefined">Sin información</strong>
+                <strong
+                    *ngIf="selectedConsultation.permanentTeethPresent !== undefined">{{selectedConsultation.permanentTeethPresent}}</strong>
+            </div>
+            <div id="temporary_c">
+                <span>c: </span>
+                <strong>{{selectedConsultation.temporaryC}}</strong>
+            </div>
+            <div id="temporary_e">
+                <span>e: </span>
+                <strong>{{selectedConsultation.temporaryE}}</strong>
+            </div>
+            <div id="temporary_o">
+                <span>o: </span>
+                <strong>{{selectedConsultation.temporaryO}}</strong>
+            </div>
+            <div id="ceo_index">
+                <span>Indice ceo: </span>
+                <strong>{{selectedConsultation.ceoIndex}}</strong>
+            </div>
+            <div id="temporaries">
+                <span>Presentes temporarios: </span>
+                <strong *ngIf="selectedConsultation.temporaryTeethPresent === undefined">Sin información</strong>
+                <strong
+                    *ngIf="selectedConsultation.temporaryTeethPresent !== undefined">{{selectedConsultation.temporaryTeethPresent}}</strong>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { State, SurfaceDrawerService } from '../services/surface-drawer.service';
 
 export class Surface {
@@ -53,4 +53,13 @@ export class Surface {
 		this.setProcedure(null);
 	}
 
+}
+
+export enum ToothSurfaceId {
+	WHOLE = 'whole',
+	RIGHT = 'right',
+	LEFT = 'left',
+	EXTERNAL = 'external',
+	INTERNAL = 'internal',
+	CENTRAL = 'central'
 }

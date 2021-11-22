@@ -13,8 +13,11 @@ import {
 	PatientMedicalCoverageDto,
 	EthnicityDto,
 	PersonOccupationDto,
-	EducationLevelDto
+	EducationLevelDto,
+	SelfPerceivedGenderDto
 } from '@api-rest/api-model';
+
+import { AppFeature, } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -34,7 +37,6 @@ import { PERSON } from '@core/constants/validation-constants';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
-const RESTRICT_EDIT_FFLAG = 'restringirDatosEditarPaciente';
 
 @Component({
 	selector: 'app-edit-patient',
@@ -44,6 +46,8 @@ const RESTRICT_EDIT_FFLAG = 'restringirDatosEditarPaciente';
 export class EditPatientComponent implements OnInit {
 
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
+	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
+	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
@@ -51,6 +55,8 @@ export class EditPatientComponent implements OnInit {
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
+	public selfPerceivedGenders: SelfPerceivedGenderDto[];
+	public showOtherGender: boolean;
 	public countries: any[];
 	public provinces: any[];
 	public departments: any[];
@@ -109,6 +115,16 @@ export class EditPatientComponent implements OnInit {
 									this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
 								}
 								this.form.setControl('genderSelfDeterminationId', new FormControl(Number(personInformationData.genderSelfDeterminationId)));
+
+								const OTHER_GENDER_VALUE = personInformationData.otherGenderSelfDetermination ? personInformationData.otherGenderSelfDetermination : null;
+								this.form.setControl('otherGenderSelfDetermination', new FormControl(OTHER_GENDER_VALUE, [Validators.required, Validators.maxLength(this.GENDER_MAX_LENGTH)]));
+								if (personInformationData.genderSelfDeterminationId !== this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID) {
+									this.form.get('otherGenderSelfDetermination').disable();
+									this.showOtherGender = false;
+								}
+								else
+									this.showOtherGender = true;
+
 								this.form.setControl('nameSelfDetermination', new FormControl(personInformationData.nameSelfDetermination));
 								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
 								this.form.setControl('cuil', new FormControl(personInformationData.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)));
@@ -151,6 +167,11 @@ export class EditPatientComponent implements OnInit {
 			.subscribe(genders => {
 				this.genders = genders;
 			});
+
+		this.personMasterDataService.getSelfPerceivedGenders()
+			.subscribe(
+				genders => this.selfPerceivedGenders = genders
+			);
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -246,7 +267,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private mapToPersonRequest(): APatientDto {
-		return {
+		const patient: APatientDto = {
 			birthDate: this.form.controls.birthDate.value,
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
@@ -293,6 +314,11 @@ export class EditPatientComponent implements OnInit {
 
 			}
 		};
+
+		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
+			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination;
+
+		return patient;
 
 	}
 
@@ -357,7 +383,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private restrictFormEdit(): void {
-		this.featureFlagService.isOn(RESTRICT_EDIT_FFLAG)
+		this.featureFlagService.isActive(AppFeature.RESTRINGIR_DATOS_EDITAR_PACIENTE)
 			.subscribe(result => {
 				if (result && this.isLockablePatientType()) {
 					this.disableFormField();
@@ -374,6 +400,20 @@ export class EditPatientComponent implements OnInit {
 				)
 			)
 			.subscribe((s: PatientMedicalCoverage[]) => { this.medicalCoverages = s; });
+	}
+
+	public showOtherSelfPerceivedGender(): void {
+		this.showOtherGender = (this.form.value.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		this.form.get('otherGenderSelfDetermination').setValue(null);
+		if (this.showOtherGender)
+			this.form.get('otherGenderSelfDetermination').enable();
+		else
+			this.form.get('otherGenderSelfDetermination').disable();
+	}
+
+	public clearGenderSelfDetermination(): void {
+		this.form.controls.genderSelfDeterminationId.reset();
+		this.showOtherSelfPerceivedGender();
 	}
 
 }

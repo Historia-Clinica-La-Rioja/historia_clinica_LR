@@ -1,8 +1,8 @@
 package net.pladema.user.controller;
 
+import ar.lamansys.sgx.auth.user.infrastructure.output.userpassword.PasswordResetToken;
+import ar.lamansys.sgx.auth.user.infrastructure.output.userpassword.PasswordResetTokenRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
-import net.pladema.user.repository.PasswordResetTokenRepository;
-import net.pladema.user.repository.entity.PasswordResetToken;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

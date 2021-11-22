@@ -16,7 +16,7 @@ public class ToothSurfacesBo {
     private OdontologySnomedBo external;
     private OdontologySnomedBo central;
 
-    public OdontologySnomedBo getSurface(ESurfacePosition position) {
+    public OdontologySnomedBo getSurface(ESurfacePositionBo position) {
         switch (position) {
             case EXTERNAL:
                 return external;
