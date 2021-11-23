@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -6,15 +6,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 	templateUrl: './epidemiological-report.component.html',
 	styleUrls: ['./epidemiological-report.component.scss']
 })
-export class EpidemiologicalReportComponent implements OnInit {
+export class EpidemiologicalReportComponent {
 
-	isDengueProblem: boolean;
-
-	constructor(@Inject(MAT_DIALOG_DATA) public data, private dialogRef: MatDialogRef<EpidemiologicalReportComponent>) { }
-
-	ngOnInit(): void {
-		this.data ? this.isDengueProblem = true : this.isDengueProblem = false;
-	}
+	constructor(@Inject(MAT_DIALOG_DATA) public isDengueProblem: boolean, private dialogRef: MatDialogRef<EpidemiologicalReportComponent>) { }
 
 	reportProblem(): void {
 		this.dialogRef.close(true);

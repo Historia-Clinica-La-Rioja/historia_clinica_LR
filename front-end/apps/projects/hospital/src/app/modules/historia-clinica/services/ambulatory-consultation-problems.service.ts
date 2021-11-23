@@ -20,7 +20,7 @@ export interface AmbulatoryConsultationProblem {
 	cronico?: boolean;
 	fechaInicio?: Moment;
 	fechaFin?: Moment;
-	reportProblem?: any;
+	isReportable?: boolean;
 }
 
 export class AmbulatoryConsultationProblemsService {
@@ -126,8 +126,8 @@ export class AmbulatoryConsultationProblemsService {
 								data: nuevoProblema.snomed.pt.includes("dengue")
 							});
 							dialogRef.afterClosed().subscribe((reportProblem: boolean) => {
-								nuevoProblema.reportProblem = reportProblem;
-								if (nuevoProblema.reportProblem != null) {
+								nuevoProblema.isReportable = reportProblem;
+								if (nuevoProblema.isReportable != null) {
 									this.addControlAndResetForm(nuevoProblema);
 								}
 							})
