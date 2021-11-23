@@ -22,7 +22,7 @@ export class DatosAntropometricosNuevaConsultaService {
 	private weightErrorSource = new Subject<string>();
 	private _weightError$: Observable<string>;
 	private notShowPreloadedAnthropometricData = true;
-	private dateOfLastData: Date;
+	private dateList: string[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -98,16 +98,20 @@ export class DatosAntropometricosNuevaConsultaService {
 				if (anthropometricData === null)
 					this.notShowPreloadedAnthropometricData = false;
 				else {
-					this.setAnthropometric(anthropometricData.weight.value, anthropometricData.height.value, anthropometricData.bloodType.value);
-					this.setDateOfLastData([anthropometricData.bloodType.effectiveTime, anthropometricData.weight.effectiveTime, anthropometricData.height.effectiveTime]);
-				}
-			});
+					this.setAnthropometric(anthropometricData.weight?.value , anthropometricData.height?.value, anthropometricData.bloodType?.value);
+					Object.keys(anthropometricData).forEach((key: string) => {
+						if (anthropometricData[key].effectiveTime != undefined) {
+							this.dateList.push(anthropometricData[key].effectiveTime);
+						}
+				})
+			}});
 	}
 
-	setAnthropometric(weight: string, height: string, bloodDescription: string): void {
+	setAnthropometric(weight?: string, height?: string, bloodDescription?: string): void {
 		this.form.get('weight').setValue(weight);
 		this.form.get('height').setValue(height);
-		this.form.get('bloodType').setValue(this.bloodTypes.find(b => b.description === bloodDescription));
+		if(bloodDescription != null )
+			this.form.get('bloodType').setValue(this.bloodTypes.find(b => b.description === bloodDescription));
 		this.form.disable();
 	}
 
@@ -126,11 +130,7 @@ export class DatosAntropometricosNuevaConsultaService {
 		this.form.enable();
 	}
 
-	setDateOfLastData(dateList: string[]) {
-		this.dateOfLastData = new Date(Math.max.apply(null, dateList.map((date) => new Date(date))));
-	}
-
 	getDate(): string {
-		return this.datePipe.transform(this.dateOfLastData, DatePipeFormat.SHORT);
+		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
 	}
 }

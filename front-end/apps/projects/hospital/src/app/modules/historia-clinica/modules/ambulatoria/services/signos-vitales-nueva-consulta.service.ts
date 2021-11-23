@@ -34,7 +34,7 @@ export class SignosVitalesNuevaConsultaService {
 	private _diastolicBloodPressureError$: Observable<string>;
 	private form: FormGroup;
 	private notShowPreloadedVitalSignsData = true;
-	private dateOfLastData: Date;
+	private dateList: string[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -204,22 +204,15 @@ export class SignosVitalesNuevaConsultaService {
 				if (vitalSignsData.current === undefined)
 					this.notShowPreloadedVitalSignsData = false;
 				else {
-					this.setVitalSigns(vitalSignsData.current.bloodOxygenSaturation.value, vitalSignsData.current.diastolicBloodPressure.value, vitalSignsData.current.heartRate.value,
-						vitalSignsData.current.respiratoryRate.value, vitalSignsData.current.systolicBloodPressure.value, vitalSignsData.current.temperature.value);
-					this.setDateOfLastData([vitalSignsData.current.bloodOxygenSaturation.effectiveTime, vitalSignsData.current.diastolicBloodPressure.effectiveTime, vitalSignsData.current.heartRate.effectiveTime,
-					vitalSignsData.current.respiratoryRate.effectiveTime, vitalSignsData.current.systolicBloodPressure.effectiveTime, vitalSignsData.current.temperature.effectiveTime]);
+					Object.keys(vitalSignsData.current).forEach((key: string) => {
+						if (vitalSignsData.current[key].value != undefined) {
+							this.form.patchValue({ [key]: { value: vitalSignsData.current[key].value } });
+							this.dateList.push(vitalSignsData.current[key].effectiveTime);
+						}
+					});
+					this.form.disable();
 				}
 			});
-	}
-
-	setVitalSigns(bloodOxygenSaturation: string, diastolicBloodPressure: string, heartRate: string, respiratoryRate: string, systolicBloodPressure: string, temperature: string): void {
-		this.form.patchValue({ bloodOxygenSaturation: { value: bloodOxygenSaturation } });
-		this.form.patchValue({ diastolicBloodPressure: { value: diastolicBloodPressure } });
-		this.form.patchValue({ heartRate: { value: heartRate } });
-		this.form.patchValue({ respiratoryRate: { value: respiratoryRate } });
-		this.form.patchValue({ systolicBloodPressure: { value: systolicBloodPressure } });
-		this.form.patchValue({ temperature: { value: temperature } });
-		this.form.disable();
 	}
 
 	discardPreloadedVitalSignsData() {
@@ -240,11 +233,7 @@ export class SignosVitalesNuevaConsultaService {
 		this.form.enable();
 	}
 
-	setDateOfLastData(dateList: string[]) {
-		this.dateOfLastData = new Date(Math.max.apply(null, dateList.map((date) => new Date(date))));
-	}
-
 	getDate(): string {
-		return this.datePipe.transform(this.dateOfLastData, DatePipeFormat.SHORT);
+		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
 	}
 }
