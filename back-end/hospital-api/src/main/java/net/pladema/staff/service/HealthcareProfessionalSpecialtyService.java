@@ -10,4 +10,6 @@ public interface HealthcareProfessionalSpecialtyService {
     List<ProfessionalsByClinicalSpecialtyBo> getProfessionalsByClinicalSpecialtyBo(List<Integer> professionalsIds);
 
     List<HealthcareProfessionalSpecialtyBo> getProfessionsByProfessional(Integer professionalId);
+
+    Integer createProfessionalSpecialty(HealthcareProfessionalSpecialtyBo healthcareProfessionalSpecialtyBo);
 }

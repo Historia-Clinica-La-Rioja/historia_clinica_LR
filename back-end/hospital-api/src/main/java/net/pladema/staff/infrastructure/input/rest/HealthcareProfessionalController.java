@@ -1,7 +1,9 @@
 package net.pladema.staff.infrastructure.input.rest;
 
 import io.swagger.annotations.Api;
+import net.pladema.staff.application.createprofessional.CreateHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
+import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import net.pladema.staff.service.HealthcareProfessionalService;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,12 +37,16 @@ public class HealthcareProfessionalController {
 
 	private final GetHealthcareProfessional getHealthcareProfessional;
 
+	private final CreateHealthcareProfessional createHealthcareProfessional;
+
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
 											HealthcareProfessionalMapper healthcareProfessionalMapper,
-											GetHealthcareProfessional getHealthcareProfessional) {
+											GetHealthcareProfessional getHealthcareProfessional,
+											CreateHealthcareProfessional createHealthcareProfessional) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.getHealthcareProfessional = getHealthcareProfessional;
+		this.createHealthcareProfessional = createHealthcareProfessional;
 	}
 
 	@GetMapping
@@ -60,4 +68,14 @@ public class HealthcareProfessionalController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@PostMapping(value = "/institution/{institutionId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	public ResponseEntity<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
+										  @RequestBody HealthcareProfessionalCompleteDto professionalDto) {
+		LOG.debug("Input parameters -> {}", professionalDto);
+		Integer result = createHealthcareProfessional.execute(professionalDto);
+		LOG.debug(OUTPUT,result);
+		return ResponseEntity.ok().body(result);
+	}
 }

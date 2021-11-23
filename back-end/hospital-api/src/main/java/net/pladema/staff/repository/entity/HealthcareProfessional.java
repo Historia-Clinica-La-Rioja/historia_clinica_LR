@@ -6,8 +6,10 @@ import javax.persistence.*;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -16,6 +18,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(SGXAuditListener.class)
 public class HealthcareProfessional extends SGXAuditableEntity<Integer> implements Serializable {
@@ -34,4 +38,8 @@ public class HealthcareProfessional extends SGXAuditableEntity<Integer> implemen
 	@Column(name = "person_id", nullable = false, unique = true)
 	private Integer personId;
 
+	public HealthcareProfessional(String licenseNumber, Integer personId){
+		this.licenseNumber = licenseNumber;
+		this.personId = personId;
+	}
 }

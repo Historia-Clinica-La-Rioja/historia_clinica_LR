@@ -5,6 +5,7 @@ import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
 import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,16 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
                         result.add(mapToHealthcareProfessionalSpecialtyBo(healthcareProfessionalSpecialtyVo))
                 );
         return result;
+    }
+
+    @Override
+    public Integer createProfessionalSpecialty(HealthcareProfessionalSpecialtyBo healthcareProfessionalSpecialtyBo){
+        HealthcareProfessionalSpecialty saved = healthcareProfessionalSpecialtyRepository.save(new HealthcareProfessionalSpecialty(
+                healthcareProfessionalSpecialtyBo.getHealthcareProfessionalId(),
+                healthcareProfessionalSpecialtyBo.getProfessionalSpecialtyId(),
+                healthcareProfessionalSpecialtyBo.getClinicalSpecialtyId()
+        ));
+        return saved.getId();
     }
 
     private HealthcareProfessionalSpecialtyBo mapToHealthcareProfessionalSpecialtyBo(HealthcareProfessionalSpecialtyVo hpsVo) {

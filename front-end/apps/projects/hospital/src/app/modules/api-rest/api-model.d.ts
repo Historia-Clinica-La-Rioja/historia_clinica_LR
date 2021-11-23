@@ -973,6 +973,13 @@ export interface HealthInsuranceDto extends CoverageDto {
     type: "HealthInsuranceDto";
 }
 
+export interface HealthcareProfessionalCompleteDto {
+    id?: number;
+    licenseNumber: string;
+    personId: number;
+    professionalSpecialtyDtos: HealthcareProfessionalSpecialtyDto[];
+}
+
 export interface HealthcareProfessionalDto {
     id: number;
     licenseNumber: string;
@@ -982,8 +989,8 @@ export interface HealthcareProfessionalDto {
 
 export interface HealthcareProfessionalSpecialtyDto {
     clinicalSpecialtyId: number;
-    healthcareProfessionalId: number;
-    id: number;
+    healthcareProfessionalId?: number;
+    id?: number;
     professionalSpecialtyId: number;
 }
 

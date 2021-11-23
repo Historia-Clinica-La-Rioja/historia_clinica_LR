@@ -18,4 +18,12 @@ public class HealthcareProfessionalSpecialtyBo {
     private Integer professionalSpecialtyId;
 
     private Integer clinicalSpecialtyId;
+
+    public HealthcareProfessionalSpecialtyBo(Integer healthcareProfessionalId,
+                                             Integer professionalSpecialtyId,
+                                             Integer clinicalSpecialtyId){
+        this.healthcareProfessionalId = healthcareProfessionalId;
+        this.professionalSpecialtyId = professionalSpecialtyId;
+        this.clinicalSpecialtyId = clinicalSpecialtyId;
+    }
 }

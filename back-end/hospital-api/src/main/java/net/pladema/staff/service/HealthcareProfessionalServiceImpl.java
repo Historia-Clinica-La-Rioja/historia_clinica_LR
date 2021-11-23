@@ -5,8 +5,10 @@ import net.pladema.clinichistory.hospitalization.repository.HealthcareProfession
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
+import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
+import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -99,4 +101,15 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
                 .orElse(null);
     }
 
+    @Override
+    public Integer saveProfessional(HealthcareProfessionalCompleteBo professionalBo){
+        LOG.debug("Input parameters -> professionalBo {}", professionalBo);
+        HealthcareProfessional saved = healthcareProfessionalRepository.save(new HealthcareProfessional(
+                professionalBo.getLicenseNumber(),
+                professionalBo.getPersonId()
+        ));
+        Integer result = saved.getId();
+        LOG.debug(OUTPUT,result);
+        return result;
+    }
 }
