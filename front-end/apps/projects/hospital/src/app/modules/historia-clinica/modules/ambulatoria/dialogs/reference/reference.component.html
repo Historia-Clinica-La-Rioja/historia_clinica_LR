@@ -64,6 +64,17 @@
             </mat-form-field>
         </div>
 
+        <div id="institution">
+            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION'"></mat-label>
+                <mat-select name="institution" formControlName="institution">
+                    <mat-option *ngFor="let institution of institutions$ | async" [value]="institution.name">
+                        {{institution.name | translate}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
         <div id="summary">
             <mat-form-field appearance="outline" fxFlex="100%">
                 <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SUMMARY'"></mat-label>

@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { InstitutionService } from '@api-rest/services/institution.service';
 import { Observable, of } from 'rxjs';
 @Component({
 	selector: 'app-reference',
@@ -20,7 +21,8 @@ export class ReferenceComponent implements OnInit {
 	careLines$: Observable<CareLineDto[]>;
 	careLineId: number;
 	specialtyId: number;
-	problemsReference: any[]
+	problemsReference: any[];
+	institutions$: Observable<InstitutionBasicInfoDto[]>;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -29,6 +31,7 @@ export class ReferenceComponent implements OnInit {
 		private readonly careLineService: CareLineService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
+		private readonly institutionService: InstitutionService,
 	) { }
 
 	ngOnInit(): void {
@@ -38,6 +41,7 @@ export class ReferenceComponent implements OnInit {
 			procedure: [null],
 			careLine: [null, [Validators.required]],
 			clinicalSpecialtyId: [null, [Validators.required]],
+			institution: [null],
 			summary: [null],
 		});
 		this.setProblems();
@@ -46,6 +50,8 @@ export class ReferenceComponent implements OnInit {
 		this.formReference.controls.procedure.disable();
 
 		this.careLines$ = this.careLineService.getCareLines();
+
+		this.institutions$ = this.institutionService.getAllInstitutions();
 
 		this.problemsReference = [];
 	}
