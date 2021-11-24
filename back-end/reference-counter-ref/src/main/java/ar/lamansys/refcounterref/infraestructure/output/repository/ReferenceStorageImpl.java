@@ -1,7 +1,9 @@
-package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
+package ar.lamansys.refcounterref.infraestructure.output.repository;
 
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
-import ar.lamansys.refcounterref.domain.ReferenceBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthCondition;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionPk;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;

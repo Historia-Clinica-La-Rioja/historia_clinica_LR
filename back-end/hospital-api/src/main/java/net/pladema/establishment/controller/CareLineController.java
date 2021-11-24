@@ -1,9 +1,9 @@
 package net.pladema.establishment.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.CareLineDto;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.establishment.controller.dto.CareLineDto;
 import net.pladema.establishment.controller.mapper.CareLineMapper;
 import net.pladema.establishment.service.CareLineService;
 import net.pladema.establishment.service.domain.CareLineBo;

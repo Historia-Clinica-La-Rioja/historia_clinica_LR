@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.domain;
+package ar.lamansys.refcounterref.domain.referenceproblem;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.Getter;

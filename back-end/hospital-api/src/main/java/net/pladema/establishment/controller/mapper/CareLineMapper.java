@@ -1,7 +1,7 @@
 package net.pladema.establishment.controller.mapper;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.CareLineDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import net.pladema.establishment.controller.dto.CareLineDto;
 import net.pladema.establishment.service.domain.CareLineBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;

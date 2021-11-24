@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
-import ar.lamansys.refcounterref.application.CreateReference;
-import ar.lamansys.refcounterref.domain.ReferenceBo;
+import ar.lamansys.refcounterref.application.createreference.CreateReference;
+import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;

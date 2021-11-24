@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper;
 
-import ar.lamansys.refcounterref.domain.ReferenceBo;
-import ar.lamansys.refcounterref.domain.ReferenceProblemBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
+import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 

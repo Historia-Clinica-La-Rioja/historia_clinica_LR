@@ -1,10 +1,8 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
-import ar.lamansys.refcounterref.domain.ReferenceBo;
-import com.sun.source.doctree.SerialDataTree;
+import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 

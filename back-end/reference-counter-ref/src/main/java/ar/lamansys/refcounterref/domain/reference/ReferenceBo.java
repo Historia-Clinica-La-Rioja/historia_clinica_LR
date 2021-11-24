@@ -1,5 +1,6 @@
-package ar.lamansys.refcounterref.domain;
+package ar.lamansys.refcounterref.domain.reference;
 
+import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

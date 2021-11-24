@@ -1,7 +1,7 @@
-package ar.lamansys.refcounterref.application;
+package ar.lamansys.refcounterref.application.createreference;
 
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
-import ar.lamansys.refcounterref.domain.ReferenceBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
