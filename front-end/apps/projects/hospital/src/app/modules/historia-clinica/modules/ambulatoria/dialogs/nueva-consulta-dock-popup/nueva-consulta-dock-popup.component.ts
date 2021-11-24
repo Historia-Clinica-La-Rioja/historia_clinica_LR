@@ -371,7 +371,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
 			clinicalSpecialtyId: this.defaultSpecialty?.id,
-			references: []
+			references: this.ambulatoryConsultationReferenceService.getReferences(),
 		};
 	}
 

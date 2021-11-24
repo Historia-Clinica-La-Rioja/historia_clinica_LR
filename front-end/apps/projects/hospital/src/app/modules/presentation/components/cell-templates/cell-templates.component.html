@@ -75,7 +75,7 @@
 		<div fxLayout="column">	
 			<span class="bold-text" translate="ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.row.PROBLEMS"></span>
 			<span *ngFor="let problem of rowData.problems">
-				{{problem?.pt}}
+				{{problem?.snomed.pt}}
 			</span>
 		</div>
 		<div fxLayout="column">	

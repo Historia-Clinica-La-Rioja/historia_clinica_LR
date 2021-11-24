@@ -16,8 +16,8 @@
                            (+{{associatedProblemsControls.value.length - 1}} {{'más'}})
                          </span>
                      </mat-select-trigger>
-                     <mat-option *ngFor="let problem of problemsList$ | async" [value]="problem.pt">
-                         {{problem.pt | translate}}
+                     <mat-option *ngFor="let problem of problemsList$ | async" [value]="problem.snomed.pt">
+                         {{problem.snomed.pt | translate}}
                      </mat-option>
                  </mat-select>
                  <mat-error [translate]="'forms.REQUIRED'"></mat-error>

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, OutpatientReferenceDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { removeFrom } from '@core/utils/array.utils';
@@ -8,7 +8,7 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { Reference, ReferenceComponent } from '../dialogs/reference/reference.component';
+import { ReferenceComponent } from '../dialogs/reference/reference.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,7 +18,7 @@ export class AmbulatoryConsultationReferenceService {
 	specialties: ClinicalSpecialtyDto[];
 	careLines: CareLineDto[];
 	private readonly columns: TableColumnConfig[];
-	references: Reference[];
+	references: OutpatientReferenceDto[];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -58,7 +58,7 @@ export class AmbulatoryConsultationReferenceService {
 				idPatient: this.informationData.idPaciente,
 			}
 		});
-		dialogRef.afterClosed().subscribe((reference: Reference) => {
+		dialogRef.afterClosed().subscribe((reference: OutpatientReferenceDto) => {
 			if (reference){
 				this.references.push(reference);
 			}	
@@ -66,7 +66,7 @@ export class AmbulatoryConsultationReferenceService {
 	}
 
 	remove(index: number): void {
-		this.references = removeFrom<Reference>(this.references, index);
+		this.references = removeFrom<OutpatientReferenceDto>(this.references, index);
 	}
 
 	getColumns(): TableColumnConfig[] {
@@ -75,7 +75,7 @@ export class AmbulatoryConsultationReferenceService {
 
 	getData(): any[] {
 		return (this.references.map(
-			(reference: Reference) => ({
+			(reference: OutpatientReferenceDto) => ({
 				problems: reference.problems,
 				consultation: reference.consultation,
 				procedure: reference.procedure,
@@ -84,5 +84,9 @@ export class AmbulatoryConsultationReferenceService {
 				note: reference.note,
 			})
 		));
+	}
+
+	getReferences(): OutpatientReferenceDto[]{
+		return this.references;
 	}
 }

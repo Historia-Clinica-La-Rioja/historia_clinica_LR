@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, OutpatientReferenceDto, OutpatientReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -21,7 +21,7 @@ export class ReferenceComponent implements OnInit {
 	careLines$: Observable<CareLineDto[]>;
 	careLineId: number;
 	specialtyId: number;
-	problemsReference: any[];
+	problemsReference: OutpatientReferenceProblemDto[];
 	institutions$: Observable<InstitutionBasicInfoDto[]>;
 
 	constructor(
@@ -70,11 +70,10 @@ export class ReferenceComponent implements OnInit {
 		});
 	}
 
-	private mapProblems(problems: any[]): any {
-		return problems.map(problem =>
-		({
-			pt: problem.snomed.pt,
-			sctid: problem.snomed.sctid,
+	private mapProblems(problems: any[]): OutpatientReferenceProblemDto[] {
+		return problems.map(problem => ({
+			id: problem.id,
+			snomed: problem.snomed,
 		}));
 	}
 
@@ -103,9 +102,9 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	setProblemsReference(problemsArray: string[]) {
-		this.problemsReference = problemsArray.map(problemPt => ({
-			pt: problemPt,
-			sctid: this.problemsList.find(problem => problem.pt === problemPt).sctid,
+		this.problemsReference = problemsArray.map(problem => ({
+			id: this.problemsList.find(p => p.snomed.pt === problem).id,
+			snomed: this.problemsList.find(p => p.snomed.pt === problem).snomed,
 		}));
 	}
 
@@ -116,23 +115,14 @@ export class ReferenceComponent implements OnInit {
 		}
 	}
 
-	private buildReference(): Reference {
+	private buildReference(): OutpatientReferenceDto {
 		return {
-			problems: this.problemsReference,
-			consultation: true,
-			procedure: false,
 			careLineId: this.careLineId,
 			clinicalSpecialtyId: this.specialtyId,
-			note: this.formReference.value.summary
+			consultation: true,
+			note: this.formReference.value.summary,
+			problems: this.problemsReference,
+			procedure: false,
 		}
 	}
-}
-
-export interface Reference {
-	problems: any[];
-	consultation: boolean;
-	procedure: boolean;
-	careLineId: number,
-	clinicalSpecialtyId: number;
-	note: string;
 }
