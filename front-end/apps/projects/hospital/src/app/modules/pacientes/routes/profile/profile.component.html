@@ -63,6 +63,7 @@
 							</div>
 						</ng-container>
 					</mat-card-header>
+					<mat-divider inset></mat-divider>
 					<mat-card-content>
 						<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
 							<div fxLayout="row" fxLayoutGap="5px">
@@ -106,7 +107,14 @@
 								</button>
 								</div>
 							</ng-container>
-							<mat-divider inset></mat-divider>
+						</div>
+						<mat-divider inset></mat-divider>
+						<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
+							<div class="tooth-dialog" fxLayout="row" fxLayoutGap="7px">
+								<button class="edit-professions" mat-raised-button (click)="editProfessions()"
+									translate="pacientes.user_data.buttons.EDIT_PROFESSIONS">
+								</button>
+							</div>
 						</div>
 					</mat-card-content>
 				</mat-card>

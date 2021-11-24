@@ -140,7 +140,8 @@
             "buttons": {
                 "CREATE_USER": "CREAR USUARIO",
 				"SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
-				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO"
+				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO",
+				"EDIT_PROFESSIONS": "EDITAR PROFESIONES"
             },
             "messages": {
                 "SUCCESS": "El usuario se creó exitosamente",

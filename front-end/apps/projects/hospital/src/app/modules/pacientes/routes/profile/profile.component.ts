@@ -29,7 +29,7 @@ import { processErrors } from "@core/utils/form.utils";
 import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { PermissionsService } from "@core/services/permissions.service";
-import { UserPasswordResetService } from "@api-rest/services/user-password-reset.service";
+import {UserPasswordResetService} from "@api-rest/services/user-password-reset.service";
 import { EditProfessionsComponent } from '@pacientes/dialogs/edit-professions/edit-professions.component';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
