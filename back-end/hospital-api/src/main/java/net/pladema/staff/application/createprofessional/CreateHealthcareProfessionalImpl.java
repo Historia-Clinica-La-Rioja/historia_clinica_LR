@@ -29,7 +29,7 @@ public class CreateHealthcareProfessionalImpl implements CreateHealthcareProfess
         Integer professionalId = healthcareProfessionalService.saveProfessional(mapProfessionalToBo(professionalDto));
         professionalDto.getProfessionalSpecialtyDtos()
                 .forEach(healthcareProfessionalSpecialtyDto ->
-                        healthcareProfessionalSpecialtyService.createProfessionalSpecialty(
+                        healthcareProfessionalSpecialtyService.saveProfessionalSpeciality(
                                 new HealthcareProfessionalSpecialtyBo(
                                         professionalId,
                                         healthcareProfessionalSpecialtyDto.getProfessionalSpecialtyId(),

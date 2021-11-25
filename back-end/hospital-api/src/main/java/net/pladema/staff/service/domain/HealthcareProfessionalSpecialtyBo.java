@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
+
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class HealthcareProfessionalSpecialtyBo {
 
+    @Nullable
     private Integer id;
 
     private Integer healthcareProfessionalId;
@@ -19,11 +22,22 @@ public class HealthcareProfessionalSpecialtyBo {
 
     private Integer clinicalSpecialtyId;
 
-    public HealthcareProfessionalSpecialtyBo(Integer healthcareProfessionalId,
+    @Nullable
+    private Boolean deleted;
+
+    public HealthcareProfessionalSpecialtyBo(Integer id,
+                                             Integer healthcareProfessionalId,
                                              Integer professionalSpecialtyId,
-                                             Integer clinicalSpecialtyId){
+                                             Integer clinicalSpecialtyId) {
+        this.id = id;
         this.healthcareProfessionalId = healthcareProfessionalId;
         this.professionalSpecialtyId = professionalSpecialtyId;
         this.clinicalSpecialtyId = clinicalSpecialtyId;
+    }
+
+    public HealthcareProfessionalSpecialtyBo(Integer healthcareProfessionalId,
+                                             Integer professionalSpecialtyId,
+                                             Integer clinicalSpecialtyId) {
+        this(null, healthcareProfessionalId, professionalSpecialtyId, clinicalSpecialtyId);
     }
 }

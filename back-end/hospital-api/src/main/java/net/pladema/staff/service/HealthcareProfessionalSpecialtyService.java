@@ -11,5 +11,7 @@ public interface HealthcareProfessionalSpecialtyService {
 
     List<HealthcareProfessionalSpecialtyBo> getProfessionsByProfessional(Integer professionalId);
 
-    Integer createProfessionalSpecialty(HealthcareProfessionalSpecialtyBo healthcareProfessionalSpecialtyBo);
+    Integer saveProfessionalSpeciality(HealthcareProfessionalSpecialtyBo healthcareProfessionalSpecialtyBo);
+
+    void delete(Integer id);
 }

@@ -1,5 +1,8 @@
 package net.pladema.staff.application.createprofessional.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class CreateHealthcareProfessionalSpecialtyException extends RuntimeException {
 
     private final CreateHealthcareProfessionalSpecialtyEnumException code;
