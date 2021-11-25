@@ -1,6 +1,7 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter.AuthenticationTokenFilter;
+import ar.lamansys.sgx.auth.oauth.infrastructure.input.OAuth2AuthenticationFilter;
 import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgh.app.security.infraestructure.filters.AuthorizationFilter;
@@ -54,14 +55,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private final PublicApiAuthenticationFilter publicApiAuthenticationFilter;
 
+	private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
+
 	public WebSecurityConfiguration(AuthenticationTokenFilter authenticationTokenFilter,
 									ActuatorConfiguration actuatorConfiguration,
 									AuthorizationFilter authorizationFilter,
-									PublicApiAuthenticationFilter publicApiAuthenticationFilter) {
+									PublicApiAuthenticationFilter publicApiAuthenticationFilter,
+									OAuth2AuthenticationFilter oAuth2AuthenticationFilter) {
 		this.authenticationTokenFilter = authenticationTokenFilter;
 		this.actuatorConfiguration = actuatorConfiguration;
 		this.authorizationFilter = authorizationFilter;
 		this.publicApiAuthenticationFilter = publicApiAuthenticationFilter;
+		this.oAuth2AuthenticationFilter = oAuth2AuthenticationFilter;
 	}
 
 	@Override
@@ -98,7 +103,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// @formatter:on
 		httpSecurity.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 		httpSecurity.addFilterAfter(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-		httpSecurity.addFilterAfter(publicApiAuthenticationFilter, AuthenticationTokenFilter.class);
+		httpSecurity.addFilterAfter(oAuth2AuthenticationFilter, AuthenticationTokenFilter.class);
+		httpSecurity.addFilterAfter(publicApiAuthenticationFilter, OAuth2AuthenticationFilter.class);
 		httpSecurity.addFilterAfter(authorizationFilter, PublicApiAuthenticationFilter.class);
 	}
 
