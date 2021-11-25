@@ -29,6 +29,8 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = httpServletRequest.getHeader("Authorization");
         Optional<OAuthUserInfoBo> opUserInfo = fetchUserInfo.run(accessToken);
+        opUserInfo.flatMap(loadUserAuthentication::run)
+                .ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA));
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
