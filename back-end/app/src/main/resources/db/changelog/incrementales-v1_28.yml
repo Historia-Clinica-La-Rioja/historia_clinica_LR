@@ -1,3 +1,53 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_28 
 
+    - changeSet:
+        id: add-mising-snomed-concepts
+        comment: Agrega corona dental que filtra, exfoliación dental y carilla dental
+        author: jlardapide
+        context: "!schema-only"
+        dbms: postgresql
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES ('278599006','corona dental que filtra','278599006','corona dental que filtra') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES ('234948008','carilla dental','234948008','carilla dental') ON CONFLICT DO NOTHING;
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES ('110338002','exfoliación dental','110338002','exfoliación dental') ON CONFLICT DO NOTHING;
+
+    - changeSet:
+        id: add-mising-snomed-concepts
+        comment: Agrega corona dental que filtra, exfoliación dental y carilla dental
+        author: jlardapide
+        context: "!schema-only"
+        dbms: mssql
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES ('278599006','corona dental que filtra','278599006','corona dental que filtra') WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '278599006' AND pt = 'corona dental que filtra');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES ('234948008','carilla dental','234948008','carilla dental') WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '234948008' AND pt = 'carilla dental');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) VALUES ('110338002','exfoliación dental','110338002','exfoliación dental') WHERE NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = '110338002' AND pt = 'exfoliación dental');
+
+    - changeSet:
+        id: add-mising-snomed-concepts
+        comment: Agrega corona dental que filtra, exfoliación dental y carilla dental
+        author: jlardapide
+        context: "!schema-only"
+        dbms: db2
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '278599006','corona dental que filtra','278599006','corona dental que filtra' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '278599006' AND pt = 'corona dental que filtra');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '234948008','carilla dental','234948008','carilla dental' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '234948008' AND pt = 'carilla dental');
+                    INSERT INTO snomed(sctid,pt,parent_id,parent_fsn) SELECT '110338002','exfoliación dental','110338002','exfoliación dental' FROM ( values(1) ) WHERE NOT EXISTS (SELECT 1 FROM snomed where sctid = '110338002' AND pt = 'exfoliación dental');    
+    
+    - changeSet:
+        id: apply-snomed-concepts-as-diagnostics
+        comment: Aplica los conceptos faltantes como diagnosticos para dientes
+        author: jlardapide
+        context: "!schema-only"
+        changes:
+            - sql:
+                sql: |-
+                    INSERT INTO applicable_diagnostic(sctid, permanent_c, permanent_p, permanent_o, temporary_c, temporary_e, temporary_o, applicable_to_surface, applicable_to_tooth, applicable_to_quadrant, applicable_to_soft_tissue, pt) VALUES( '278599006', ${boolean.true}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, 'corona dental que filtra');                       
+                    INSERT INTO applicable_diagnostic(sctid, permanent_c, permanent_p, permanent_o, temporary_c, temporary_e, temporary_o, applicable_to_surface, applicable_to_tooth, applicable_to_quadrant, applicable_to_soft_tissue, pt) VALUES ( '110338002', ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, 'exfoliación dental');
+                    INSERT INTO applicable_diagnostic(sctid, permanent_c, permanent_p, permanent_o, temporary_c, temporary_e, temporary_o, applicable_to_surface, applicable_to_tooth, applicable_to_quadrant, applicable_to_soft_tissue, pt) VALUES ( '234948008', ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.false}, ${boolean.true}, ${boolean.false}, ${boolean.false}, 'carilla dental');
