@@ -1458,6 +1458,16 @@ export interface NursingVitalSignDto extends Serializable {
     temperature?: EffectiveClinicalObservationDto;
 }
 
+export interface OAuthUserInfoDto {
+    email: string;
+    email_verified: boolean;
+    family_name: string;
+    given_name: string;
+    name: string;
+    preferred_username: string;
+    sub: string;
+}
+
 export interface OauthConfigDto {
     enabled: boolean;
     loginUrl: string;

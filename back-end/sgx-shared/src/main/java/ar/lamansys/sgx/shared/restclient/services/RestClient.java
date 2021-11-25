@@ -26,6 +26,12 @@ public class RestClient implements RestClientInterface {
 		return restTemplate.exchange(fullUrl, HttpMethod.GET, entity, responseType);
 	}
 
+	public <T> ResponseEntity<T> exchangeGet(String relUrl, HttpHeaders headers, Class<T> responseType) {
+		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
+		HttpEntity<String> entity = new HttpEntity<>("body", headers);
+		return restTemplate.exchange(fullUrl, HttpMethod.GET, entity, responseType);
+	}
+
 	@Override
 	public <T> ResponseEntity<T> exchangeDelete(String relUrl, Class<T> responseType) {
 		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
