@@ -16,41 +16,28 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad               | Variable de ambiente       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| server.port | SERVER_PORT | 8080 | Opcional |  |  v0.2.0  |
-| api.domain | API_DOMAIN | /api | Opcional |  |  v0.2.0  |
 | admin.mail | ADMIN_MAIL | admin@example.com | Opcional | Nombre de usuario del usuario Administrador |  v0.2.0  |
 | admin.password | ADMIN_PASS | admin123 | **Obligatorio** | Contraseña del usuario Administrador |  v0.2.0  |
-| app.flavor  |  | 'minsal' | **Obligatorio** | Código del sabor de SGH. Opciones disponibles: `minsal`, `tandil`, `chaco`, `pba` | v0.2.0 |
-| app.default.language  | DEFAULT_LANGUAGE | 'es-AR' | Opcional | | v0.2.0 |
-| app.other.languages  | OTHER_LANGUAGES | 'en-US' | Opcional | | v0.2.0 |
 | internment.document.directory |DOCUMENT_ROOT_DIRECTORY | /temp | **Obligatorio** | Directorio donde se almacenan documentos clínicos y fotos de pacientes | v0.2.0 |
 | frontend.loginpage |  LOGIN_PAGE  | / | Opcional  |   | v0.2.0   |
 | spring.profiles.active  |   | default  | **Único**  | Valores posibles: dev, qa, prod   | v0.2.0  |
-
 
 
 # Config de login / auth / token 
 
 | Propiedad               | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| token.header |  | Authorization | Único | Nombre del header que almacena el token de session | v0.2.0 |
 | token.secret | TOKEN_SECRET | ultra_secret_token | **Obligatorio** | La clave secreta de generación de token, usada para validar los tokens recibidos desde los request. | v0.2.0 |
-| token.expiration | TOKEN_EXPIRATION | 30m | Opcional | Tiempo de expiración del token en m(inutos). Se puede elegir las siguientes medidas de duración: s(egundos), m(inutos), h(oras) | v0.2.0 |
-| validationToken.expiration | VALIDTOKEN_EXPIRATION | 1440 | Opcional |  | v0.2.0 | 
-| refreshToken.expiration | REFRESHTOKEN_EXPIRATION | 2880 | Opcional | Tiempo de expiración del refreshToken en segundos. Debe ser más grande que el tiempo del token |  |
-
 
 ## Configuración DDBB (SQL)
 
 | Propiedad | Variable de ambiente | Valor por defecto | Necesidad | Descripcion | Desde |
 | ---- | ---- | ---- | ------ | ---------------- | ---- |
 | spring.datasource.url | DATABASE_IP_PORT y DATABASE_SCHEMA | [JDBC](back-end/app/src/main/resources/application.properties#L63) | **Obligatorio** | Url de conexión a la base de datos | v0.2.0 |
-| spring.datasource.driver-class-name | | org.postgresql.Driver | Opcional | Nombre de la clase que representa el driver de conexión a la base de datos | v0.2.0 |
 | spring.datasource.username | DATABASE_USER | postgres | **Obligatorio** | Nombre de usuario utilizado para realizar la conexión a la base de datos | v0.2.0 |
 | spring.datasource.password | DATABASE_PASS | Local123 | **Obligatorio** | Contraseña utilizada para realizar la conexión a la base de datos | v0.2.0  |
 | spring.datasource.hikari.maximumPoolSize  | HICKARI_MAXIMUM_POOL_SIZE  |  4 | Opcional  |   | v0.2.0  |
 | spring.jpa.database-platform |  | [Dialect](back-end/app/src/main/resources/application.properties#L66) | Opcional | Nombre de la clase que representa el dialecto del motor de base de datos a utilizar  |  v0.2.0 |
-| spring.jpa.hibernate.ddl-auto |   | validate | Opcional | Acciones que realiza JPA al iniciar la aplicación. Valores posibles: none, validate, create, update, create-drop | v0.2.0 |
 
 ## Configuración de Mail
 

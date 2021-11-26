@@ -20,22 +20,4 @@ public enum FlavorBo {
         return text;
     }
 
-    public static FlavorBo getEnum(String text) {
-        Optional<FlavorBo> found = find(text);
-        if (found.isPresent()) {
-            return found.get();
-        }
-        return found.orElseThrow(IllegalArgumentException::new);
-    }
-
-    public static Optional<FlavorBo> find(String text) {
-        for (FlavorBo e : FlavorBo.values()) {
-            if (e.text.equalsIgnoreCase(text)) {
-                return Optional.of(e);
-            }
-        }
-        return Optional.empty();
-    }
-
-
 }
