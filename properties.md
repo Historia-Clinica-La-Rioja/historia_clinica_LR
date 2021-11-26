@@ -167,6 +167,21 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.nomivac.synchronization.cron.config  | - | - | **Obligatorio** | Cron que determina la periodicidad con la que se envia los datos a nomivac | v1.22.0  |
 | app.feature.HABILITAR_BUS_INTEROPERABILIDAD  | - | false | **Obligatorio** | Define si se va a realizar una comunicación con el bus de interoperabilidad | v1.22.0  |
 
+
+### Sisa reporte epimediológico (snvs)
+
+La funcionalidad para reporte epimediológico se activa solamente si el feature flag HABILITAR_REPORTE_EPIDEMIOLOGICO se encuentra activo.
+
+| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
+| ---------- | ------ | -------- | -------- | ------------ | ---- |
+| ws.sisa.snvs.enabled | - | false | **Obligatorio** | Determina sí esta activa la funcionalidad para hacer reportes epidmediológicos  | v1.28.0  |
+| ws.sisa.snvs.url.base | - | https://ws400-qa.sisa.msal.gov.ar | **Obligatorio** | Determina el dominio donde se encuentran el servicio de reporte epidmediológico  | v1.28.0  |
+| ws.sisa.snvs.appId.value  | - | PruebasWSQA_SNVS_ID | **Obligatorio** | Id de identificación para consulta de servicio | v1.28.0  |
+| ws.sisa.snvs.appKey.value  | - | PruebasWSQA_SNVS_KEY | **Obligatorio** | Key para la consulta del servicio | v1.28.0  |
+| ws.sisa.snvs.environment  | - | QA | **Obligatorio** | Define el set de datos a utilizar para el evento, grupoevento, clasificación manual. Los valores posibles son (QA, PROD) | v1.28.0  |
+
+
+
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |

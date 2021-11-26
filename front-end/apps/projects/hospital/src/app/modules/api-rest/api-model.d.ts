@@ -1837,6 +1837,24 @@ export interface SnomedResponseDto extends Serializable {
     total: number;
 }
 
+export interface SnvsReportDto {
+    lastUpdate?: DateDto;
+    problem: SnvsSnomedDto;
+    responseCode?: number;
+    sisaRegisteredId?: number;
+    status?: string;
+}
+
+export interface SnvsSnomedDto extends Serializable {
+    pt: string;
+    sctid: string;
+}
+
+export interface SnvsToReportDto {
+    manualClassificationId: number;
+    problem: SnvsSnomedDto;
+}
+
 export interface StudyDto extends Serializable {
     diagosticReportCategoryId: string;
     healthConditionId: number;
