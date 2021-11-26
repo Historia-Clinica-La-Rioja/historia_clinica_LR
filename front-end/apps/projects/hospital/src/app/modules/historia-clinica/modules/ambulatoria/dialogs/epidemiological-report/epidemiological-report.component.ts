@@ -8,7 +8,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EpidemiologicalReportComponent {
 
-	constructor(@Inject(MAT_DIALOG_DATA) public isDengueProblem: boolean, private dialogRef: MatDialogRef<EpidemiologicalReportComponent>) { }
+	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: { problemName: string },
+		private dialogRef: MatDialogRef<EpidemiologicalReportComponent>
+	) { }
 
 	reportProblem(): void {
 		this.dialogRef.close(true);

@@ -123,7 +123,7 @@ export class AmbulatoryConsultationProblemsService {
 							const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
 								disableClose: true,
 								autoFocus: false,
-								data: nuevoProblema.snomed.pt.includes("dengue")
+								data: { problemName: nuevoProblema.snomed.pt }
 							});
 							dialogRef.afterClosed().subscribe((reportProblem: boolean) => {
 								nuevoProblema.isReportable = reportProblem;

@@ -5,10 +5,8 @@
     </div>
 
     <div fxLayout="column" class="message" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <span *ngIf="isDengueProblem"
-            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.DENGUE_DESCRIPTION'"></span>
-        <span *ngIf="!isDengueProblem"
-            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.COVID_DESCRIPTION'"></span>
+        <span [innerHTML]="'ambulatoria.paciente.problemas.epidemiological_report.PROBLEM_DESCRIPTION' | translate: { problemName: data.problemName }">
+		</span>
         <span class="report-message"
             [translate]="'ambulatoria.paciente.problemas.epidemiological_report.REPORT'"></span>
     </div>

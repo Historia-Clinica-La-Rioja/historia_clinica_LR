@@ -302,8 +302,7 @@
 					"CANCEL_BUTTON": "Cancelar"
 				},
 				"epidemiological_report": {
-					"DENGUE_DESCRIPTION": "El problema Dengue es reportable a nivel epidemiológico.",
-					"COVID_DESCRIPTION": "El problema Covid es reportable a nivel epidemiológico.",
+					"PROBLEM_DESCRIPTION": "El problema <b>{{ problemName }}</b> es reportable a nivel epidemiológico.",
 					"REPORT": "¿Desea reportarlo?",
 					"buttons": {
 						"CONFIRM_REPORT": "SI, REPORTARLO",
