@@ -13,7 +13,7 @@ import net.pladema.clinichistory.hospitalization.service.ResponsibleContactServi
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
-import net.pladema.featureflags.service.FeatureFlagsService;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;

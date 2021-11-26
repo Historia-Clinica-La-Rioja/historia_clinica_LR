@@ -1,14 +1,14 @@
 package net.pladema.clinichistory.hospitalization.controller.constraints.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-import net.pladema.featureflags.service.FeatureFlagsService;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 public class InternmentDischargeValidator implements ConstraintValidator<InternmentDischargeValid, Integer> {
 

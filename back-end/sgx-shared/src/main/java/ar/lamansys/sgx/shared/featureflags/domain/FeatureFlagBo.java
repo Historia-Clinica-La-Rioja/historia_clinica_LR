@@ -1,4 +1,4 @@
-package net.pladema.featureflags.service.domain;
+package ar.lamansys.sgx.shared.featureflags.domain;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 

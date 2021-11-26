@@ -1,12 +1,10 @@
-package net.pladema.featureflags.service.impl;
+package ar.lamansys.sgx.shared.featureflags.application;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.togglz.core.manager.FeatureManager;
-
-import net.pladema.featureflags.service.FeatureFlagsService;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
 @Service
 public class FeatureFlagsServiceImpl implements FeatureFlagsService {
