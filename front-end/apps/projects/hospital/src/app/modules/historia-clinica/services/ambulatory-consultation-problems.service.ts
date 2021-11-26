@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { ManualClassificationDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -12,7 +12,7 @@ import { CellTemplates } from '@presentation/components/cell-templates/cell-temp
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { MatDialog } from '@angular/material/dialog';
-import { EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
+import { EpidemiologicalManualClassificationResult, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 
 export interface AmbulatoryConsultationProblem {
 	snomed: SnomedDto;
@@ -21,6 +21,7 @@ export interface AmbulatoryConsultationProblem {
 	fechaInicio?: Moment;
 	fechaFin?: Moment;
 	isReportable?: boolean;
+	epidemiologicalManualClassification?: ManualClassificationDto;
 }
 
 export class AmbulatoryConsultationProblemsService {
@@ -118,16 +119,21 @@ export class AmbulatoryConsultationProblemsService {
 			};
 			if (reportProblemIsOn) {
 				this.snowstormService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
-					(isReportable: boolean) => {
-						if (isReportable) {
+					(manualClassificationList: ManualClassificationDto[]) => {
+						if (manualClassificationList?.length) {
 							const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
 								disableClose: true,
 								autoFocus: false,
-								data: { problemName: nuevoProblema.snomed.pt }
+								data: {
+									problemName: nuevoProblema.snomed.pt,
+									manualClassificationList: manualClassificationList
+								}
 							});
-							dialogRef.afterClosed().subscribe((reportProblem: boolean) => {
-								nuevoProblema.isReportable = reportProblem;
-								if (nuevoProblema.isReportable != null) {
+							dialogRef.afterClosed().subscribe((result: EpidemiologicalManualClassificationResult) => {
+								if (result.isReportable != null) {
+									nuevoProblema.isReportable = result.isReportable;
+									if (result.manualClassification)
+										nuevoProblema.epidemiologicalManualClassification = result.manualClassification;
 									this.addControlAndResetForm(nuevoProblema);
 								}
 							})

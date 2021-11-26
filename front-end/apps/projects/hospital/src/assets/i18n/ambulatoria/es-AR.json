@@ -115,7 +115,6 @@
 					"ACLARACION_CRONICO": "(Crónico)",
 					"FECHA_INICIO_PREFIJO": "Desde",
 					"FECHA_FIN_PREFIJO": "Hasta",
-					"REPORT_PROBLEM": "A reportar",
 					"DO_NOT_REPORT_PROBLEM": "No reportar"
 				},
 				"procedimientos": {
@@ -303,6 +302,7 @@
 				},
 				"epidemiological_report": {
 					"PROBLEM_DESCRIPTION": "El problema <b>{{ problemName }}</b> es reportable a nivel epidemiológico.",
+					"CASE_CLASSIFICATION": "Clasificación del caso",
 					"buttons": {
 						"CONFIRM_REPORT": "REPORTAR CASO",
 						"CANCEL_REPORT": "OMITIR"
