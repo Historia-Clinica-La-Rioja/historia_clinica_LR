@@ -1,12 +1,11 @@
 package ar.lamansys.sgx.auth.oauth.infrastructure.input;
 
-import ar.lamansys.sgx.auth.jwt.infrastructure.input.service.AuthenticationExternalService;
 import ar.lamansys.sgx.auth.oauth.application.FetchUserInfo;
 import ar.lamansys.sgx.auth.oauth.application.LoadUserAuthentication;
 import ar.lamansys.sgx.auth.oauth.domain.OAuthUserInfoBo;
-import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,15 +21,26 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
+    @Value("${ws.oauth.enabled:false}")
+    private boolean filterEnabled;
+
     private final FetchUserInfo fetchUserInfo;
+
     private final LoadUserAuthentication loadUserAuthentication;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = httpServletRequest.getHeader("Authorization");
-        Optional<OAuthUserInfoBo> opUserInfo = fetchUserInfo.run(accessToken);
-        opUserInfo.flatMap(loadUserAuthentication::run)
-                .ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA));
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (this.filterEnabled
+                && securityContext.getAuthentication() == null) {
+            String accessToken = httpServletRequest.getHeader("Authorization");
+            if (accessToken != null) {
+                Optional<OAuthUserInfoBo> opUserInfo = fetchUserInfo.run(accessToken);
+                opUserInfo.flatMap(loadUserAuthentication::run)
+                        .ifPresent(securityContext::setAuthentication);
+            }
+        }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
