@@ -1,23 +1,22 @@
 <div class="epidemiological-report" fxLayout="column" fxLayoutGap="7px" fxLayoutAlign="center center">
+	<br>
+    <div fxLayout="row" fxLayoutAlign="center">
+		<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center" fxFlex="80">
+			<div class="image">
+				<img src='assets/images/error_outline.png'>
+			</div>
 
-    <div fxLayout="row" class="image" fxLayout="row" fxLayoutAlign="center">
-        <img src='assets/images/error_outline.png'>
-    </div>
-
-    <div fxLayout="column" class="message" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <span [innerHTML]="'ambulatoria.paciente.problemas.epidemiological_report.PROBLEM_DESCRIPTION' | translate: { problemName: data.problemName }">
-		</span>
-        <span class="report-message"
-            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.REPORT'"></span>
-    </div>
+			<span [innerHTML]="'ambulatoria.paciente.problemas.epidemiological_report.PROBLEM_DESCRIPTION' | translate: { problemName: data.problemName }">
+			</span>
+		</div>
+	</div>
 
     <mat-dialog-actions>
-        <button mat-raised-button color="primary" type="button" (click)="reportProblem()">
-            <span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
-        </button>
         <button mat-stroked-button color="warn" (click)="doNotReportProblem()">
-            <span
-                [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
+            <span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
+        </button>
+		<button mat-raised-button color="primary" type="button" (click)="reportProblem()">
+            <span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
         </button>
         <button class="close" type="button" mat-icon-button matSuffix fxLayout="column" (click)="goBack()">
             <mat-icon>close</mat-icon>

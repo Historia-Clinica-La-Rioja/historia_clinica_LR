@@ -19,9 +19,9 @@
 	<div *ngIf="rowData.cronico" class="mat-small grayText"
 		translate="ambulatoria.paciente.nueva-consulta.problemas.ACLARACION_CRONICO"></div>
 	<div>
-		<span class="blue-text" *ngIf="rowData?.isReportable"
+		<span class="color-primary" *ngIf="rowData?.isReportable"
 			translate="ambulatoria.paciente.nueva-consulta.problemas.REPORT_PROBLEM"></span>
-		<span class="red-text" *ngIf="rowData?.isReportable === false"
+		<span class="color-warn" *ngIf="rowData?.isReportable === false"
 			translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>
 	</div>
 </ng-template>

@@ -303,10 +303,9 @@
 				},
 				"epidemiological_report": {
 					"PROBLEM_DESCRIPTION": "El problema <b>{{ problemName }}</b> es reportable a nivel epidemiológico.",
-					"REPORT": "¿Desea reportarlo?",
 					"buttons": {
-						"CONFIRM_REPORT": "SI, REPORTARLO",
-						"CANCEL_REPORT": "NO, OMITIRLO"
+						"CONFIRM_REPORT": "REPORTAR CASO",
+						"CANCEL_REPORT": "OMITIR"
 					}
 				}
 			},
