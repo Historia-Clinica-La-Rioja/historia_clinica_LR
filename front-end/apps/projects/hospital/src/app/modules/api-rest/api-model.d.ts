@@ -2003,6 +2003,11 @@ export interface RoleAssignment extends Serializable {
     role: ERole;
 }
 
+export interface RoleDto {
+    description: string;
+    id: number;
+}
+
 export interface RoomDto extends Serializable {
     description: string;
     id: number;

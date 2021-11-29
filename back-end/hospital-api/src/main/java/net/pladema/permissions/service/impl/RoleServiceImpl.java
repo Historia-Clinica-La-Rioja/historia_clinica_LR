@@ -42,7 +42,8 @@ public class RoleServiceImpl implements RoleService {
 	 * @param eRole
 	 * @return
 	 */
-	private String getRoleDescription(ERole eRole) {
+	@Override
+	public String getRoleDescription(ERole eRole) {
 		switch (eRole) {
 			case ROOT: return "ROOT";
 			case ADMINISTRADOR: return "Administrador";
