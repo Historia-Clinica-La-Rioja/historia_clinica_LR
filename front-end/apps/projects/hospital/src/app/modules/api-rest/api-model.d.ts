@@ -1878,6 +1878,17 @@ export interface SnomedResponseDto extends Serializable {
     total: number;
 }
 
+export interface SnvsEventDto {
+    description: string;
+    eventId: number;
+    groupEventId: number;
+}
+
+export interface SnvsEventManualClassificationsDto {
+    manualClassifications: ManualClassificationDto[];
+    snvsEvent: SnvsEventDto;
+}
+
 export interface SnvsReportDto {
     eventId?: number;
     groupEventId?: number;

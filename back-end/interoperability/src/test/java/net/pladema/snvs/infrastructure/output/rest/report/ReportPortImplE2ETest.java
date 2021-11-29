@@ -3,7 +3,7 @@ package net.pladema.snvs.infrastructure.output.rest.report;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.snowstorm.repository.ManualClassificationRepository;
+import net.pladema.snvs.infrastructure.output.repository.snvs.ManualClassificationRepository;
 import net.pladema.snvs.application.ports.report.ReportPort;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortException;
 import net.pladema.snvs.domain.event.SnvsEventInfoBo;

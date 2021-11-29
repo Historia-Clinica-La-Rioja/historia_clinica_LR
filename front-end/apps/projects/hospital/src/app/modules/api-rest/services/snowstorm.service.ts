@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { map } from 'rxjs/operators';
 import { ManualClassificationDto, SnomedDto, SnomedResponseDto } from '@api-rest/api-model';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 export const SNOMED_RESULTS_LIMIT = '30';
 
@@ -37,12 +37,6 @@ export class SnowstormService {
 			}
 		}));
 	}
-
-	getIsReportable(params): Observable<ManualClassificationDto[]> {
-		const url = `${environment.apiBase}/snowstorm/is-reportable`;
-		return this.http.get<ManualClassificationDto[]>(url, { params });
-	}
-
 }
 
 export interface ConceptRequestParams {

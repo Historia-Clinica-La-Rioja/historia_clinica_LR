@@ -1,6 +1,6 @@
-package net.pladema.snowstorm.repository;
+package net.pladema.snvs.infrastructure.output.repository.snvs;
 
-import net.pladema.snowstorm.repository.entity.ManualClassification;
+import net.pladema.snvs.infrastructure.output.repository.snvs.entity.ManualClassification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,15 +12,11 @@ import java.util.List;
 public interface ManualClassificationRepository extends JpaRepository<ManualClassification, Integer> {
 
 	@Query("SELECT DISTINCT mc " +
-			"FROM Snomed s, " +
-			"SnomedRelatedGroup srg, " +
-			"SnomedGroup sg, " +
-			"SnvsGroup ng, " +
-			"ManualClassification mc " +
-			"WHERE sctid = :sctid AND pt = :pt " +
-			"AND srg.snomedId = s.id " +
-			"AND srg.groupId = sg.id " +
-			"AND ng.groupId = sg.id " +
-			"AND ng.manualClassificationId = mc.id")
+			"FROM Snomed s " +
+			"JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
+			"JOIN SnvsGroup ng ON (ng.groupId = srg.groupId) " +
+			"JOIN ManualClassification mc ON (mc.id = ng.manualClassificationId) " +
+			"WHERE sctid = :sctid " +
+			"AND pt = :pt")
 	List<ManualClassification> isSnvsReportable(@Param("sctid") String sctid, @Param("pt") String pt);
 }

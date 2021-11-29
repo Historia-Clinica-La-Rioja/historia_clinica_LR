@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ManualClassificationDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
+import {ManualClassificationDto, SnomedDto, SnomedECL, SnvsEventManualClassificationsDto} from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -10,8 +10,8 @@ import { Observable, Subject } from 'rxjs';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { MatDialog } from '@angular/material/dialog';
+import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { EpidemiologicalManualClassificationResult, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 
 export interface AmbulatoryConsultationProblem {
@@ -38,7 +38,7 @@ export class AmbulatoryConsultationProblemsService {
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
-		private readonly snowstormService: SnowstormService,
+		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly dialog: MatDialog,
 
 	) {
@@ -118,24 +118,26 @@ export class AmbulatoryConsultationProblemsService {
 				fechaFin: this.form.value.fechaFin
 			};
 			if (reportProblemIsOn) {
-				this.snowstormService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
-					(manualClassificationList: ManualClassificationDto[]) => {
-						if (manualClassificationList?.length) {
-							const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
-								disableClose: true,
-								autoFocus: false,
-								data: {
-									problemName: nuevoProblema.snomed.pt,
-									manualClassificationList: manualClassificationList
-								}
-							});
-							dialogRef.afterClosed().subscribe((result: EpidemiologicalManualClassificationResult) => {
-								if (result.isReportable != null) {
-									nuevoProblema.isReportable = result.isReportable;
-									if (result.manualClassification)
-										nuevoProblema.epidemiologicalManualClassification = result.manualClassification;
-									this.addControlAndResetForm(nuevoProblema);
-								}
+				this.snvsMasterDataService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
+					(snvsEventManualClassificationsList: SnvsEventManualClassificationsDto[]) => {
+						if (snvsEventManualClassificationsList?.length) {
+							snvsEventManualClassificationsList.forEach(value => {
+								const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
+									disableClose: true,
+									autoFocus: false,
+									data: {
+										problemName: nuevoProblema.snomed.pt,
+										manualClassificationList: value.manualClassifications
+									}
+								});
+								dialogRef.afterClosed().subscribe((result: EpidemiologicalManualClassificationResult) => {
+									if (result.isReportable != null) {
+										nuevoProblema.isReportable = result.isReportable;
+										if (result.manualClassification)
+											nuevoProblema.epidemiologicalManualClassification = result.manualClassification;
+										this.addControlAndResetForm(nuevoProblema);
+									}
+								})
 							})
 						}
 						else {

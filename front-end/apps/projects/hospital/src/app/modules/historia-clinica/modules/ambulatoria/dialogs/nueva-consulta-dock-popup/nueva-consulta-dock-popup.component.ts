@@ -29,7 +29,6 @@ import { NewConsultationSuggestedFieldsService } from '../../services/new-consul
 import { TranslateService } from '@ngx-translate/core';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationReferenceService } from '../../services/ambulatory-consultation-reference.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -39,6 +38,7 @@ import { DatePipe } from '@angular/common';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
 import { Observable, of } from 'rxjs';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
+import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -84,7 +84,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly translateService: TranslateService,
-		private readonly snowstormService: SnowstormService,
+		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly datePipe: DatePipe,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly careLineService: CareLineService,
@@ -92,7 +92,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snowstormService, this.dialog);
+		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.datePipe);
