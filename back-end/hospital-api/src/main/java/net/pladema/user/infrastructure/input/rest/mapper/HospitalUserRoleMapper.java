@@ -13,4 +13,7 @@ public interface HospitalUserRoleMapper {
     @Named("toListUserRoleDto")
     List<UserRoleDto> toListUserRoleDto(List<UserRoleBo> userRoles);
 
+    @Named("toListUserRoleBo")
+    List<UserRoleBo> toListUserRoleBo(List<UserRoleDto> userRoles);
+
 }

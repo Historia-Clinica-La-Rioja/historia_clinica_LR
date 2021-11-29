@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserRoleStorage {
 
     List<UserRoleBo> getRolesByUser(Integer userId);
+
+    void updateUserRole(List<UserRoleBo> userRolesBo, Integer userId);
 }
