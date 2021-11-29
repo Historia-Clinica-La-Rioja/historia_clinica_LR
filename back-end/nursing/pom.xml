@@ -2,33 +2,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.pladema</groupId>
         <artifactId>hospital-managment</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>ar.lamansys</groupId>
+    <groupId>ar.lamansys.hsi</groupId>
     <artifactId>nursing</artifactId>
     <description>SGX Nursing</description>
     <packaging>${packaging.type}</packaging>
 
     <properties>
         <packaging.type>jar</packaging.type>
-        <lombok.version>1.18.10</lombok.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>ar.lamansys.sgh</groupId>
+            <groupId>ar.lamansys.hsi</groupId>
             <artifactId>hospital-shared</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
-            <groupId>ar.lamansys.sgh</groupId>
+            <groupId>ar.lamansys.hsi</groupId>
             <artifactId>clinic-history</artifactId>
             <version>${revision}</version>
         </dependency>
@@ -42,7 +40,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.3.1.Final</version>
+            <version>${mapstruct.version}</version>
         </dependency>
 
         <dependency>
@@ -72,7 +70,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>1.3.0.Beta2</version>
+                            <version>${mapstruct.version}</version>
                         </path>
                         <path>
                             <groupId>org.projectlombok</groupId>
