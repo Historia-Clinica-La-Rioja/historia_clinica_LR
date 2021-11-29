@@ -8,7 +8,7 @@
 		<groupId>net.pladema.hospital</groupId>
 		<artifactId>hospital-parent</artifactId>
 		<version>${revision}</version>
-		<relativePath>../pom-parent.xml</relativePath>
+		<relativePath>./pom-parent.xml</relativePath>
 	</parent>
 	
 	<groupId>net.pladema</groupId>
