@@ -2229,6 +2229,13 @@ export interface UserPersonDto extends Serializable {
     lastName: string;
 }
 
+export interface UserRoleDto {
+    institutionId: number;
+    roleDescription: string;
+    roleId: number;
+    userId: number;
+}
+
 export interface VInstitutionDto {
     lastDateVitalSign: Date;
     latitude: number;
