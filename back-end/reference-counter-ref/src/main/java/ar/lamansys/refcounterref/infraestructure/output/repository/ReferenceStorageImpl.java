@@ -2,6 +2,8 @@ package ar.lamansys.refcounterref.infraestructure.output.repository;
 
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
+import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthCondition;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,6 +43,24 @@ public class ReferenceStorageImpl implements ReferenceStorage {
             List<ReferenceHealthCondition> referenceHealthConditionList = saveProblems(referenceId, referenceBo);
             log.debug("referenceHealthConditionList, referenceId -> {} {}", referenceHealthConditionList, referenceId);
         });
+    }
+
+    @Override
+    public List<ReferenceGetBo> getReferences(Integer institutionId, Integer patientId, List<Integer> clinicalSpecialtyIds) {
+        List<ReferenceGetBo> queryResult = referenceRepository.getReferences(institutionId, patientId, clinicalSpecialtyIds);
+        List<Integer> referenceIds = queryResult.stream().map(ReferenceGetBo::getId).collect(Collectors.toList());
+
+        Map<Integer, List<ReferenceProblemBo>> problems = referenceHealthConditionRepository.getReferencesProblems(referenceIds)
+                .stream()
+                .map(ReferenceProblemBo::new)
+                .collect(Collectors.groupingBy(ReferenceProblemBo::getReferenceId));
+
+        List<ReferenceGetBo> result = queryResult.stream().map(ref -> {
+            ref.setProblems(problems.get(ref.getId()));
+            return ref;
+        }).collect(Collectors.toList());
+
+        return result;
     }
 
     public List<ReferenceHealthCondition> saveProblems(Integer referenceId, ReferenceBo referenceBo) {

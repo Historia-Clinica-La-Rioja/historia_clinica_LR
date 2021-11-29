@@ -1727,6 +1727,12 @@ export interface ProfessionalInfoDto {
     phoneNumber: string;
 }
 
+export interface ProfessionalPersonDto extends Serializable {
+    firstName: string;
+    id: number;
+    lastName: string;
+}
+
 export interface ProfessionalsByClinicalSpecialtyDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     professionalsIds: number[];
@@ -1753,6 +1759,26 @@ export interface RecaptchaPublicConfigDto {
 export interface ReducedPatientDto {
     patientTypeId: number;
     personalDataDto: BasicPersonalDataDto;
+}
+
+export interface ReferenceDto extends Serializable {
+    careLine: CareLineDto;
+    clinicalSpecialty: ClinicalSpecialtyDto;
+    id: number;
+    note: ReferenceNoteDto;
+    problems: ReferenceProblemDto[];
+    professional: ProfessionalPersonDto;
+    referenceDate: DateDto;
+}
+
+export interface ReferenceNoteDto extends Serializable {
+    description: string;
+    id: number;
+}
+
+export interface ReferenceProblemDto extends Serializable {
+    id?: number;
+    snomed: SnomedDto;
 }
 
 export interface RefreshTokenDto {
