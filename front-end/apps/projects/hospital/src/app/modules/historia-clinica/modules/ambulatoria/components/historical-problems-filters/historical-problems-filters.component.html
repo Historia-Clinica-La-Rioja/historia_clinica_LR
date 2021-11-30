@@ -17,7 +17,7 @@
 		<mat-label [translate]="'ambulatoria.paciente.problemas.historical-problems-filters.PROFESSIONAL'"></mat-label>
 		<mat-select formControlName="professional" (selectionChange)="sendAllFiltersOnFilterChange()"
 			name="professional">
-			<mat-option *ngFor="let professional of professionals" [value]="professional.professionalId">
+			<mat-option *ngFor="let professional of professionals" [value]="professional.personId">
 				{{professional.professionalDescription}}
 			</mat-option>
 		</mat-select>

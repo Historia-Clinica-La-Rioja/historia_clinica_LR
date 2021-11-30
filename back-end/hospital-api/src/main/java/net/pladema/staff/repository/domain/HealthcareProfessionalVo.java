@@ -15,11 +15,13 @@ public class HealthcareProfessionalVo extends BasicPersonalDataVo {
 
     private String licenceNumber;
 
+    private Integer personId;
 
     public HealthcareProfessionalVo(Integer id, String licenceNumber, String firstName,
-                                    String lastName, String identificationNumber){
+                                    String lastName, String identificationNumber,Integer personId){
         super(firstName, lastName, identificationNumber);
         this.id = id;
         this.licenceNumber = licenceNumber;
+        this.personId = personId;
     }
 }

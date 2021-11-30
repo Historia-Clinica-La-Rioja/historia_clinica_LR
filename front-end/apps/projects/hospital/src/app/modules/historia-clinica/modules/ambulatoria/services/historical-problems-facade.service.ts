@@ -74,7 +74,7 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	private filterByProfessional(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
-		return (filter.professional ? problem.consultationProfessionalId === filter.professional : true);
+		return (filter.professional ? problem.consultationProfessionalPersonId === filter.professional : true);
 	}
 
 	private filterByProblem(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
@@ -108,7 +108,7 @@ export class HistoricalProblemsFacadeService {
 				});
 			}
 
-			this.professionals = pushIfNotExists(this.professionals, { professionalId: outpatientEvolution.professional.id, professionalDescription: `${outpatientEvolution.professional.person.firstName} ${outpatientEvolution.professional.person.lastName}` }, this.compareProfessional);
+			this.professionals = pushIfNotExists(this.professionals, { personId: outpatientEvolution.professional.personId, professionalId: outpatientEvolution.professional.id, professionalDescription: `${outpatientEvolution.professional.person.firstName} ${outpatientEvolution.professional.person.lastName}` }, this.compareProfessional);
 
 		});
 	}
@@ -118,7 +118,7 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	private compareProfessional(professional: Professional, professional2: Professional): boolean {
-		return professional.professionalId === professional2.professionalId;
+		return professional.personId === professional2.personId;
 	}
 
 	private compareProblems(problem: Problem, problem2: Problem): boolean {
@@ -128,6 +128,7 @@ export class HistoricalProblemsFacadeService {
 }
 
 export class Professional {
+	personId: number;
 	professionalId: number;
 	professionalDescription: string;
 }
@@ -141,6 +142,7 @@ export class HistoricalProblems {
 	consultationDate: string;
 	consultationEvolutionNote: string;
 	consultationProfessionalId: number;
+	consultationProfessionalPersonId: number;
 	consultationProfessionalName: string;
 	problemId: string;
 	problemPt: string;

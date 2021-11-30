@@ -944,6 +944,7 @@ export interface HealthcareProfessionalDto {
     id: number;
     licenseNumber: string;
     person: PersonBasicDataResponseDto;
+    personId: number;
 }
 
 export interface HospitalizationProcedureDto {
