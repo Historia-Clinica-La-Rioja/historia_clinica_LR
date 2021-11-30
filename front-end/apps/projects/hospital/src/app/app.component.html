@@ -3,7 +3,7 @@
 		<app-exchangeable-theme class="theme-button" (themeChanged)="selectedTheme = $event"> </app-exchangeable-theme>
 	</div>
 
-	<div class="app mat-typography mat-app-background" [ngClass]="publicInfo.flavor" [ngClass]="selectedTheme?.class">
+	<div class="app mat-typography mat-app-background" [ngClass]="selectedTheme?.class">
 		<router-outlet> </router-outlet>
 	</div>
 </ng-container>

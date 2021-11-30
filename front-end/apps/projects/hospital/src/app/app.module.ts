@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DatePipe, registerLocaleData } from '@angular/common';
@@ -19,11 +20,7 @@ import { AppComponent, DEFAULT_LANG } from './app.component';
 // deps
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
-
-// services
-import { PublicService } from '@api-rest/services/public.service';
-import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
-
+//
 import { environment } from '@environments/environment';
 
 registerLocaleData(localeEsAr, localeEsArExtras);
@@ -43,7 +40,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 			loader: {
 				provide: TranslateLoader,
 				useFactory: (createTranslateLoader),
-				deps: [HttpClient, PublicService]
+				deps: [HttpClient]
 			}
 		}),
 		// deps
@@ -66,10 +63,9 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 export class AppModule {
 }
 
-export function createTranslateLoader(http: HttpClient, publicService: PublicService): TranslateLoader {
-	return new FlavoredMultiTranslateHttpLoader(
+export function createTranslateLoader(http: HttpClient): TranslateLoader {
+	return new MultiTranslateHttpLoader(
 		http,
-		publicService.getInfo(),
 		[
 			{ prefix: './assets/i18n/', suffix: '.json' },
 			{ prefix: './assets/i18n/auth/', suffix: '.json' },

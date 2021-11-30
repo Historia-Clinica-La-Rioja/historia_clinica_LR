@@ -61,8 +61,3 @@ En la carpeta `styles` se encuentran los archivos *.scss* correspondientes a los
 5. `theme`: Configura propiedades del theme como la paleta de colores general y para distintos componentes en particular.
 
 
-##### Flavors
-
-Dentro de la carpeta `flavors` tenemos la configuracion de cada flavor separado en carpetas. En cada una de ellas se guardan las 
-imagenes, que contienen principalmente los logos, de la aplicación y los cambios en traducciones que sean requeridos (archivo *es-AR
-.json*).
