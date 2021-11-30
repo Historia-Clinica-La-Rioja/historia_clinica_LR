@@ -44,6 +44,7 @@ import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consu
 import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report/epidemiological-report.component';
 import { PreviousDataComponent } from './dialogs/previous-data/previous-data.component';
 import { ReferenceComponent } from './dialogs/reference/reference.component';
+import { ReferenceNotificationComponent } from './dialogs/reference-notification/reference-notification.component';
 
 
 @NgModule({
@@ -78,7 +79,8 @@ import { ReferenceComponent } from './dialogs/reference/reference.component';
 		ExternalClinicalHistoryComponent,
 		PreviousDataComponent,
 		EpidemiologicalReportComponent,
-		ReferenceComponent
+		ReferenceComponent,
+  		ReferenceNotificationComponent,
 	],
 	imports: [
 		CommonModule,
