@@ -245,7 +245,8 @@
 				"REFERENCE_REQUEST": "REFERENCIA SOLICITADA",
 				"OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
 				"DESCRIPTION": "Si no desea responder a la referencia y realizar una consulta independiente seleccione “Consulta clásica”.",
-				"NEW_CONSULTATION": "CONSULTA CLÁSICA"
+				"NEW_CONSULTATION": "CONSULTA CLÁSICA",
+				"COUNTERREFERENCE": "CONTRARREFERENCIA"
 			},
 			"problemas": {
 				"TAB_LABEL": "Problemas",
