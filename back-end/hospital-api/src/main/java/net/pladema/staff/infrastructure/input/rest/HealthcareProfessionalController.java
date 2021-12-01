@@ -85,12 +85,12 @@ public class HealthcareProfessionalController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@PutMapping("/institution/{institutionId}/healthcareProfessional/{healthcareProfessionalId}")
+	@PutMapping("/{healthcareProfessionalId}/institution/{institutionId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void update(@PathVariable(name = "institutionId") Integer institutionId,
-					   @PathVariable(name = "healthcareProfessionalSpecialtyId") Integer healthcareProfessionalSpecialtyId,
+					   @PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
 					   @RequestBody HealthcareProfessionalCompleteDto professionalCompleteDto) {
-		LOG.debug("Input parameters -> {}", healthcareProfessionalSpecialtyId);
+		LOG.debug("Input parameters -> {}", healthcareProfessionalId);
 		updateHealthcareProfessional.execute(professionalCompleteDto);
 	}
 }
