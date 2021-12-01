@@ -40,10 +40,6 @@ public abstract class AbstractDiaryPeriodValidator<A extends Annotation, T exten
 			return false;
 		}
 
-		if (startDate.getYear() != endDate.getYear()) {
-			buildResponse(context, "{diary.period.invalid.year}");
-			return false;
-		}
 
 		List<Integer> overlappingDiary = getOverlappingDiary(diary, startDate, endDate);
 
