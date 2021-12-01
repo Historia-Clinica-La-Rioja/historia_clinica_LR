@@ -1879,7 +1879,10 @@ export interface SnomedResponseDto extends Serializable {
 }
 
 export interface SnvsReportDto {
+    eventId?: number;
+    groupEventId?: number;
     lastUpdate?: DateDto;
+    manualClassificationId?: number;
     problem: SnvsSnomedDto;
     responseCode?: number;
     sisaRegisteredId?: number;
@@ -1892,6 +1895,8 @@ export interface SnvsSnomedDto extends Serializable {
 }
 
 export interface SnvsToReportDto {
+    eventId: number;
+    groupEventId: number;
     manualClassificationId: number;
     problem: SnvsSnomedDto;
 }

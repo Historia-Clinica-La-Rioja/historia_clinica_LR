@@ -2,6 +2,7 @@ package net.pladema.snvs.application.reportproblems;
 
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.snowstorm.repository.EEnvironment;
 import net.pladema.snvs.application.ports.doctor.SnvsDoctorStorage;
 import net.pladema.snvs.application.ports.event.SnvsStorage;
 import net.pladema.snvs.application.ports.event.exceptions.SnvsStorageException;
@@ -12,11 +13,13 @@ import net.pladema.snvs.application.ports.report.ReportStorage;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortException;
 import net.pladema.snvs.application.reportproblems.exceptions.ReportProblemEnumException;
 import net.pladema.snvs.application.reportproblems.exceptions.ReportProblemException;
+import net.pladema.snvs.domain.event.SnvsEventInfoBo;
 import net.pladema.snvs.domain.event.exceptions.SnvsEventInfoBoException;
 import net.pladema.snvs.domain.report.ReportCommandBo;
 import net.pladema.snvs.domain.report.SnvsReportBo;
 import net.pladema.snvs.domain.report.SnvsToReportBo;
 import net.pladema.snvs.infrastructure.configuration.SnvsCondition;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,19 +83,18 @@ public class ReportProblems {
             throw new ReportProblemException(ReportProblemEnumException.NULL_REPORT,"No se pueden enviar reportes nulos");
     }
 
-
     private SnvsToReportBo buildReport(ReportCommandBo reportCommandBo) throws ReportProblemException, SnvsEventInfoBoException, SnvsStorageException {
         var patient = patientStorage.getPatientInfo(reportCommandBo.getPatientId())
                 .orElseThrow(() -> new ReportProblemException(ReportProblemEnumException.UNKNOWN_PATIENT,
                         String.format("El paciente %s no existe", reportCommandBo.getPatientId())));
         var institution = institutionStorage.getInstitutionInfo(reportCommandBo.getInstitutionId())
                 .orElseThrow(() -> new ReportProblemException(ReportProblemEnumException.UNKNOWN_INSTITUTION,
-                        String.format("La institución %s no existe", reportCommandBo.getPatientId())));
+                        String.format("La institución %s no existe", reportCommandBo.getInstitutionId())));
         var snvsEventInfo = snvsStorage.fetchSnvsEventInfo(reportCommandBo.getProblemBo(),
-                        reportCommandBo.getManualClassificationId())
+                reportCommandBo.getManualClassificationId(), reportCommandBo.getGroupEventId(), reportCommandBo.getEventId())
                 .orElseThrow(() -> new ReportProblemException(ReportProblemEnumException.UNKNOWN_EVENT,
-                        String.format("No existe datos de evento para el problema=%s con la clasificación manual=%s",
-                                reportCommandBo.getProblemBo(), reportCommandBo.getManualClassificationId())));
+                        String.format("No existe datos del evento=%s, grupo=%s para el problema=%s con la clasificación manual=%s",
+                                reportCommandBo.getEventId(), reportCommandBo.getGroupEventId(), reportCommandBo.getProblemBo(), reportCommandBo.getManualClassificationId())));
         return new SnvsToReportBo(snvsEventInfo, dateTimeProvider.nowDate(), patient, institution);
     }
 }

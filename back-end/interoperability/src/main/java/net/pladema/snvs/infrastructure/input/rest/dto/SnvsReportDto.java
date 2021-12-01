@@ -17,6 +17,15 @@ public class SnvsReportDto {
 	private SnvsSnomedDto problem;
 
 	@Nullable
+	private Integer groupEventId;
+
+	@Nullable
+	private Integer eventId;
+
+	@Nullable
+	private Integer manualClassificationId;
+
+	@Nullable
 	private String status;
 
 	@Nullable
@@ -28,3 +37,5 @@ public class SnvsReportDto {
 	@Nullable
 	private DateDto lastUpdate;
 }
+
+

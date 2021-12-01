@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface SnvsStorage {
 
-    Optional<SnvsEventInfoBo> fetchSnvsEventInfo(SnvsProblemBo problemBo, Integer manualClassificationId) throws SnvsEventInfoBoException, SnvsStorageException;
+    Optional<SnvsEventInfoBo> fetchSnvsEventInfo(SnvsProblemBo problemBo, Integer manualClassificationId, Integer groupEventId, Integer eventId) throws SnvsEventInfoBoException, SnvsStorageException;
 }

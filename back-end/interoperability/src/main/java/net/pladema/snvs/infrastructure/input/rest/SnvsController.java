@@ -68,6 +68,9 @@ public class SnvsController {
     private SnvsReportDto buildSnvsReportDto(SnvsReportBo snvsReportBo) {
         var result = new SnvsReportDto();
         result.setSisaRegisteredId(snvsReportBo.getSisaRegisteredId());
+        result.setEventId(snvsReportBo.getEventId());
+        result.setGroupEventId(snvsReportBo.getGroupEventId());
+        result.setManualClassificationId(snvsReportBo.getManualClassificationId());
         result.setProblem(buildSnomedDto(snvsReportBo.getProblemBo()));
         result.setLastUpdate(buildDate(snvsReportBo.getLastUpdate()));
         result.setResponseCode(snvsReportBo.getResponseCode());
@@ -91,7 +94,8 @@ public class SnvsController {
     private List<ReportCommandBo> buildCommand(List<SnvsToReportDto> toReportList, Integer institutionId, Integer patientId) throws SnvsProblemBoException, ReportCommandBoException {
         List<ReportCommandBo> result = new ArrayList<>();
         for (SnvsToReportDto reportDto: toReportList)
-            result.add(new ReportCommandBo(patientId, institutionId, reportDto.getManualClassificationId(), buildProblem(reportDto.getProblem())));
+            result.add(new ReportCommandBo(patientId, institutionId, reportDto.getManualClassificationId(),
+                    reportDto.getGroupEventId(), reportDto.getEventId(), buildProblem(reportDto.getProblem())));
         return result;
     }
 
