@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.exceptions;
 
+import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.Locale;
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice(basePackages = "ar.lamansys.refcounterref")
-public class ReferenceExceptionHandler {
+public class ReferenceCounterReferenceExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ReferenceException.class})
@@ -26,4 +27,10 @@ public class ReferenceExceptionHandler {
         return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({CreateCounterReferenceException.class})
+    protected ApiErrorMessageDto handleCreateCounterReferenceException(CreateCounterReferenceException ex, Locale locale) {
+        log.debug("CreateCounterReferenceException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+    }
 }

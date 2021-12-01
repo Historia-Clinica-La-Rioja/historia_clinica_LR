@@ -411,6 +411,37 @@ export interface ConsultationsDto extends Serializable {
     specialty: string;
 }
 
+export interface CounterReferenceAllergyDto extends Serializable {
+    categoryId: string;
+    criticalityId: number;
+    snomed: SnomedDto;
+    startDate: DateDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface CounterReferenceDto extends Serializable {
+    allergies: CounterReferenceAllergyDto[];
+    clinicalSpecialtyId: number;
+    counterReferenceNote: string;
+    medications: CounterReferenceMedicationDto[];
+    procedures: CounterReferenceProcedureDto[];
+    referenceId: number;
+}
+
+export interface CounterReferenceMedicationDto extends Serializable {
+    id?: number;
+    note: string;
+    snomed: SnomedDto;
+    statusId?: string;
+    suspended: boolean;
+}
+
+export interface CounterReferenceProcedureDto extends Serializable {
+    performedDate?: DateDto;
+    snomed: SnomedDto;
+}
+
 export interface CoverageDto extends Serializable {
     id: number;
     name: string;
