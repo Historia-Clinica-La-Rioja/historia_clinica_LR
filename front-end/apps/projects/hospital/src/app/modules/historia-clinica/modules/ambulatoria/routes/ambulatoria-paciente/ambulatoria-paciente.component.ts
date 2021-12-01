@@ -239,11 +239,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			data: references,
 			autoFocus: false
 		})
-		dialogRef.afterClosed().subscribe((isACounterrefer: boolean) => {
-			if (isACounterrefer === false) {
+		dialogRef.afterClosed().subscribe(counterreference => {
+			if (counterreference === false) {
 				this.openNuevaConsulta();
 			}
-			if (isACounterrefer === null) {
+			if (counterreference === null) {
 				return;
 			}
 		});
