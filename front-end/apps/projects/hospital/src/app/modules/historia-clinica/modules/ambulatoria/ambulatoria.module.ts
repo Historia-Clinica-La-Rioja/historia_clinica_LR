@@ -45,6 +45,7 @@ import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report
 import { PreviousDataComponent } from './dialogs/previous-data/previous-data.component';
 import { ReferenceComponent } from './dialogs/reference/reference.component';
 import { ReferenceNotificationComponent } from './dialogs/reference-notification/reference-notification.component';
+import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
 
 
 @NgModule({
@@ -81,6 +82,7 @@ import { ReferenceNotificationComponent } from './dialogs/reference-notification
 		EpidemiologicalReportComponent,
 		ReferenceComponent,
   		ReferenceNotificationComponent,
+    	CounterreferenceDockPopupComponent,
 	],
 	imports: [
 		CommonModule,

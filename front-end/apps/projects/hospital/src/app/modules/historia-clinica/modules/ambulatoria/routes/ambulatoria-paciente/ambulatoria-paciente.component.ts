@@ -31,6 +31,7 @@ import { ReferenceService } from '@api-rest/services/reference.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ReferenceNotificationComponent } from '../../dialogs/reference-notification/reference-notification.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { CounterreferenceDockPopupComponent } from '../../dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
 
 const RESUMEN_INDEX = 0;
 
@@ -246,7 +247,17 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			if (counterreference === null) {
 				return;
 			}
+			if (counterreference.isACountisACounterrefer === true) {
+				this.openCounterreference(counterreference.reference);
+			}
 		});
 	}
 
+	openCounterreference(reference: ReferenceDto) {
+		console.log(reference);
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent, { reference: reference });
+		}
+		
+	}
 }

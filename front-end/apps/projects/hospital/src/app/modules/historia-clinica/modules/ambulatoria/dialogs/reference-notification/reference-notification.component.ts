@@ -26,4 +26,9 @@ export class ReferenceNotificationComponent implements OnInit {
 		this.dialogRef.close(null);
 	}
 
+	goToCounterreference(reference): void {
+		const counterreference = {isACountisACounterrefer: true, reference: reference}
+		this.dialogRef.close(counterreference);
+	}
+
 }
