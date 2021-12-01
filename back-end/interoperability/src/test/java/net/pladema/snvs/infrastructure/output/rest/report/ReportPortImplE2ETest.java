@@ -1,6 +1,7 @@
 package net.pladema.snvs.infrastructure.output.rest.report;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.snvs.infrastructure.output.repository.snvs.ManualClassificationRepository;
@@ -42,6 +43,9 @@ class ReportPortImplE2ETest {
     private SharedInstitutionPort sharedInstitutionPort;
 
     @MockBean
+    private SharedStaffPort sharedStaffPort;
+
+    @MockBean
     private ManualClassificationRepository manualClassificationRepository;
 
     @MockBean
@@ -56,8 +60,8 @@ class ReportPortImplE2ETest {
     }
 
     @Test
-    void success() throws ReportPortException, SnvsEventInfoBoException {
-        var result = reportPort.run(buildMock());
+    void errorEvents() throws ReportPortException, SnvsEventInfoBoException {
+        var result = reportPort.run(buildMock(999,999,999));
         Assertions.assertNotNull(result);
         Assertions.assertEquals(999, result.getEventId());
         Assertions.assertEquals(999, result.getGroupEventId());
@@ -67,18 +71,63 @@ class ReportPortImplE2ETest {
         Assertions.assertEquals(LocalDate.of(2020,11,26), result.getLastUpdate());
     }
 
-    private SnvsToReportBo buildMock() throws SnvsEventInfoBoException {
-        return new SnvsToReportBo(new SnvsEventInfoBo(999,999,999,1),
-                LocalDate.of(2020,11,26),
+    private SnvsToReportBo buildMock(Integer eventId, Integer groupEventId, Integer manualClassificationId) throws SnvsEventInfoBoException {
+        return new SnvsToReportBo(new SnvsEventInfoBo(eventId,groupEventId,manualClassificationId,1),
+                LocalDate.of(2021,11,12),
                 new PatientDataBo(-1, mockPerson()),
                 new InstitutionDataBo(-20, "10064902100232"));
     }
 
     private PersonDataBo mockPerson() {
-        return new PersonDataBo("PLADEMA_NOMBRE", "PLADEMA_APELLIDO", (short)1,
-                "99999999",
-                null, LocalDate.of(9999,12,12),
-                (short)1, null,  "pladema@mail.com",
+        return new PersonDataBo("Test1", "Prueba", (short)1,
+                "34000001",
+                null, LocalDate.of(2000,1,1),
+                (short)2, null,  "pladema@mail.com",
                 null);
     }
+
+    @Test
+    void errorDuplicatedReport() throws ReportPortException, SnvsEventInfoBoException {
+        var result = reportPort.run(buildSuccesMock());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(109, result.getEventId());
+        Assertions.assertEquals(168, result.getGroupEventId());
+        Assertions.assertEquals(596, result.getManualClassificationId());
+        Assertions.assertEquals(-1, result.getPatientId());
+        Assertions.assertEquals((short)400, result.getResponseCode());
+        Assertions.assertEquals(2066766, result.getSisaRegisteredId());
+        Assertions.assertEquals(LocalDate.of(2021,11,12), result.getLastUpdate());
+    }
+
+
+
+    @Test
+    void success() throws ReportPortException, SnvsEventInfoBoException {
+        var result = reportPort.run(buildSuccesMock());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(109, result.getEventId());
+        Assertions.assertEquals(168, result.getGroupEventId());
+        Assertions.assertEquals(596, result.getManualClassificationId());
+        Assertions.assertEquals(-1, result.getPatientId());
+        Assertions.assertEquals((short)200, result.getResponseCode());
+        Assertions.assertNotNull(result.getSisaRegisteredId());
+        Assertions.assertEquals(LocalDate.of(2021,11,12), result.getLastUpdate());
+    }
+
+    private SnvsToReportBo buildSuccesMock() throws SnvsEventInfoBoException {
+        return new SnvsToReportBo(new SnvsEventInfoBo(109,168,596,1),
+                LocalDate.of(2021,11,12),
+                new PatientDataBo(-1, mockSuccessPerson()),
+                new InstitutionDataBo(-20, "10064902100232"));
+    }
+
+    private PersonDataBo mockSuccessPerson() {
+        return new PersonDataBo("Test1", "Prueba", (short)1,
+                "70000011", //TODO aumentar en 1 para probar con otros dnis, por si ya existe la persona
+                null, LocalDate.of(2000,1,1),
+                (short)2, null,  "pladema@mail.com",
+                null);
+    }
+
+
 }

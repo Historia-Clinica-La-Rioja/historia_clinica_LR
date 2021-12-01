@@ -166,6 +166,7 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.sisa.snvs.appId.value  | - | PruebasWSQA_SNVS_ID | **Obligatorio** | Id de identificación para consulta de servicio | v1.28.0  |
 | ws.sisa.snvs.appKey.value  | - | PruebasWSQA_SNVS_KEY | **Obligatorio** | Key para la consulta del servicio | v1.28.0  |
 | ws.sisa.snvs.environment  | - | QA | **Obligatorio** | Define el set de datos a utilizar para el evento, grupoevento, clasificación manual. Los valores posibles son (QA, PROD) | v1.28.0  |
+| ws.sisa.snvs.rest-client.config.trust-invalid-certificate  | - | false | **Opcional** | Define si valida certificado https | v1.29.0  |
 
 
 

@@ -9,5 +9,10 @@ public class RestTemplateAuth<I extends ClientHttpRequestInterceptor> extends Re
 		super(loggingRequestInterceptor);
 		this.getInterceptors().add(authInterceptor);
 	}
+
+	public RestTemplateAuth(I authInterceptor, LoggingRequestInterceptor loggingRequestInterceptor, boolean trustInvalidCertificate) throws Exception {
+		super(loggingRequestInterceptor, trustInvalidCertificate);
+		this.getInterceptors().add(authInterceptor);
+	}
 		
 }
