@@ -10,4 +10,6 @@ public interface ClinicalSpecialtyService {
     Optional<ClinicalSpecialtyBo> getClinicalSpecialty(Integer clinicalSpecialtyId);
 
     List<ClinicalSpecialtyBo> getSpecialtiesByProfessional(Integer professionalId);
+
+    List<ClinicalSpecialtyBo> getAll();
 }

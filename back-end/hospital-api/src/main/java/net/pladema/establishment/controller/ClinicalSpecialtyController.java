@@ -28,7 +28,6 @@ import java.util.List;
 
 @RestController
 @Api(value = "ClinicalSpecialty", tags = { "Clinical Specialty" })
-@RequestMapping("/institution/{institutionId}/clinicalspecialty")
 public class ClinicalSpecialtyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClinicalSpecialtyController.class);
@@ -57,7 +56,7 @@ public class ClinicalSpecialtyController {
         this.clinicalSpecialtyMapper = clinicalSpecialtyMapper;
     }
 
-    @GetMapping("/professional/{professionalId}")
+    @GetMapping("/institution/{institutionId}/clinicalspecialty/professional/{professionalId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<List<ClinicalSpecialtyDto>> getAllSpecialtyByProfessional(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -69,7 +68,7 @@ public class ClinicalSpecialtyController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/professional", params = "professionalsIds")
+    @GetMapping(value = "/institution/{institutionId}/clinicalspecialty/professional", params = "professionalsIds")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByProfessionals(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -85,7 +84,7 @@ public class ClinicalSpecialtyController {
         return ResponseEntity.ok(professionalsByClinicalSpecialtyDtos);
     }
     
-    @GetMapping("/patient/{patientId}")
+    @GetMapping("/institution/{institutionId}/clinicalspecialty/patient/{patientId}")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<ClinicalSpecialtyDto> getAppointmentSpecialty(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -104,7 +103,7 @@ public class ClinicalSpecialtyController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/loggedProfessionalClinicalSpecialty")
+    @GetMapping("/institution/{institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<List<ClinicalSpecialtyDto>> getLoggedInProfessionalClinicalSpecialties(
             @PathVariable(name = "institutionId") Integer institutionId) {
@@ -114,6 +113,14 @@ public class ClinicalSpecialtyController {
         LOG.debug("Get all Clinical Specialty by Professional {} and Institution {} => {}", professionalId, institutionId,
                 result);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/clinicalSpecialty")
+    public ResponseEntity<List<ClinicalSpecialtyDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
+        LOG.debug("No input parameters");
+        List<ClinicalSpecialtyDto> result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialtyService.getAll());
+        LOG.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
 }
