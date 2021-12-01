@@ -4,17 +4,6 @@ import { PublicService } from '@api-rest/services/public.service';
 import { map } from 'rxjs/operators';
 import { AppFeature } from '@api-rest/api-model';
 
-const FEATURE_FLAGS = [
-	{
-		name: 'agregarMedicosAdicionales',
-		flavorMatch: []
-	},
-	{
-		name: 'habilitarBotonCovidDiagnosticoPresuntivo',
-		flavorMatch: []
-	},
-	// No usar esta lista
-];
 
 @Injectable({
 	providedIn: 'root'
@@ -33,16 +22,6 @@ export class FeatureFlagService {
 	}
 
 	/**
- 	 * @deprecated No usar este método
- 	 */
-	public isOn(ff: string): Observable<boolean> {
-		return this.publicService.getInfo().pipe(map(data => {
-			const ffObject = this.getIfIsPresent(ff);
-			return ffObject && ffObject.flavorMatch.includes(data.flavor);
-		}));
-	}
-
-	/**
 	 * Permite filtrar una lista según los feature flags activos.
 	 * La lista debe contener objetos que tengan el atributo featureFlag de tipo AppFeature.
 	 */
@@ -55,10 +34,6 @@ export class FeatureFlagService {
 				return true;
 			});
 		}));
-	}
-
-	private getIfIsPresent(ff: string) {
-		return FEATURE_FLAGS.find(element => element.name === ff);
 	}
 
 }

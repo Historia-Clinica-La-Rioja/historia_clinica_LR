@@ -71,6 +71,9 @@ public enum AppFeature implements Feature {
     
     @Label("Indica si esta habilitado la opcion de reportar epidemiológicamente un problema")
     HABILITAR_REPORTE_EPIDEMIOLOGICO,
+
+    @Label("Indica si esta habilitado la opcion de agregar médicos de responsables/cabecera")
+    AGREGAR_MEDICOS_ADICIONALES,
     ;
 
     public boolean isActive() {
