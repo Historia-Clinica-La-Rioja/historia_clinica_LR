@@ -1,3 +1,48 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_29 
+    - logicalFilePath: incrementales-v1_29
+
+    - changeSet:
+        id: fill_date_dimension-createProcedure-29
+        author: etrapani
+        changes:
+            - createProcedure:
+                  dbms: postgresql
+                  encoding: UTF-8
+                  procedureBody: |-
+                      DROP PROCEDURE IF EXISTS fill_date_dimension;
+                      CREATE PROCEDURE fill_date_dimension(IN startdate DATE,IN stopdate DATE)
+                      LANGUAGE plpgsql
+                      AS $$
+                      DECLARE
+                          currentdate DATE;
+                      BEGIN
+                          currentdate := startdate;
+                          WHILE currentdate <= stopdate LOOP
+                              BEGIN
+                                  INSERT INTO date_type VALUES (
+                                      currentdate,
+                                      EXTRACT(DAY FROM currentdate),
+                                      EXTRACT(MONTH FROM currentdate),
+                                      EXTRACT(YEAR FROM currentdate),
+                                      EXTRACT(DOW FROM currentdate)
+                                      );
+                              EXCEPTION WHEN OTHERS THEN
+                                  RAISE NOTICE '% % %', SQLERRM, SQLSTATE, currentdate;
+                              END;
+                              currentdate := currentdate + '1 day'::INTERVAL ;
+                          END LOOP;
+                      END; $$;
+                  procedureName: fill_date_dimension
+                  relativeToChangelogFile: true
+
+    - changeSet:
+        id: load_dates_to_2050-29
+        author: etrapani
+        changes:
+            - sql:
+                dbms: postgresql
+                sql: |-
+                  CALL fill_date_dimension('01-01-2021','01-01-2050');
+
+
 
