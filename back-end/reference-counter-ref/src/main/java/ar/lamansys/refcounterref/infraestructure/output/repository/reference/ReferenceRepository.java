@@ -25,7 +25,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "JOIN Person p ON (p.id = hp.personId) " +
             "WHERE oc.institutionId = :institutionId " +
             "AND oc.patientId = :patientId " +
-            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds)")
+            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds)" +
+            "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
     List<ReferenceGetBo> getReferences(@Param("institutionId") Integer institutionId, @Param("patientId") Integer patientId, @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 }
