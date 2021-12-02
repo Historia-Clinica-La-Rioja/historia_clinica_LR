@@ -53,4 +53,43 @@ databaseChangeLog:
                       type: datetime
                       defaultValueDate: ${date.now}
 
-
+    - changeSet:
+          id: external_patient-createTable
+          comment: Create table external_patient
+          author: mvenere
+          changes:
+              - createTable:
+                    tableName: external_patient
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: PK_external_patient
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: patient_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: external_id
+                              type: varchar(20)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: external_encounter_id
+                              type: varchar(20)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: external_encounter_date
+                              type: datetime
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: external_encounter_type
+                              type: varchar(100)
