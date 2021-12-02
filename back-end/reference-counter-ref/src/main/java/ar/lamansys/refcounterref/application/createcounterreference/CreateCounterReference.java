@@ -7,6 +7,7 @@ import ar.lamansys.refcounterref.application.port.CounterReferenceDoctorStorage;
 import ar.lamansys.refcounterref.application.port.CounterReferenceDocumentStorage;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceBo;
+import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceClinicalTermsValidatorUtils;
 import ar.lamansys.refcounterref.domain.document.CounterReferenceDocumentBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.doctor.CounterReferenceDoctorInfoBo;
@@ -69,6 +70,20 @@ public class CreateCounterReference {
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_CLINICAL_SPECIALTY_ID, "El id de especialidad es obligatorio");
         if (!doctorInfoBo.hasSpecialty(counterReferenceBo.getClinicalSpecialtyId()))
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_CLINICAL_SPECIALTY_ID, "El doctor no posee la especialidad indicada");
+        assertThereAreNoRepeatedConcepts(counterReferenceBo);
     }
 
+    private void assertThereAreNoRepeatedConcepts(CounterReferenceBo counterReferenceBo) {
+        CreateCounterReferenceException exception = new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.REPEATED_CONCEPTS);
+        if (CounterReferenceClinicalTermsValidatorUtils.repeatedClinicalTerms(counterReferenceBo.getProcedures()))
+            exception.addError("Procedimientos repetidos");
+        if (CounterReferenceClinicalTermsValidatorUtils.repeatedClinicalTerms(counterReferenceBo.getMedications()))
+            exception.addError("Medicaciones repetidas");
+        if (CounterReferenceClinicalTermsValidatorUtils.repeatedClinicalTerms(counterReferenceBo.getAllergies()))
+            exception.addError("Alergias repetidas");
+
+        if (exception.hasErrors())
+            throw exception;
+    }
+    
 }

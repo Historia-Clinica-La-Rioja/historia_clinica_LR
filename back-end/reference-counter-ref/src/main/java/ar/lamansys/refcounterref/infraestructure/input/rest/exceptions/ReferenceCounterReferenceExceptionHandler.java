@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest.exceptions;
 
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,8 @@ public class ReferenceCounterReferenceExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({CreateCounterReferenceException.class})
-    protected ApiErrorMessageDto handleCreateCounterReferenceException(CreateCounterReferenceException ex, Locale locale) {
-        log.debug("CreateCounterReferenceException exception -> {}", ex.getMessage());
-        return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+    protected ApiErrorDto handleCreateCounterReferenceException(CreateCounterReferenceException ex, Locale locale) {
+        log.debug("CreateCounterReferenceException exception -> {}", ex.getMessages());
+        return new ApiErrorDto(ex.getCode().toString(), ex.getMessages());
     }
 }
