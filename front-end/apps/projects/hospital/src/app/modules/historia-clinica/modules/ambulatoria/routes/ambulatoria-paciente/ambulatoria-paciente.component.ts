@@ -32,7 +32,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReferenceNotificationComponent } from '../../dialogs/reference-notification/reference-notification.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 
-
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -215,7 +214,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.CurrentUserIsAllowedToMakeBothQueries = false
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.CurrentUserIsAllowedToMakeBothQueries = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
-			(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO ])))
+				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
 		});
 	}
 
@@ -240,6 +239,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			data: references,
 			autoFocus: false
 		})
+		dialogRef.afterClosed().subscribe((isACounterrefer: boolean) => {
+			if (isACounterrefer === false) {
+				this.openNuevaConsulta();
+			}
+			if (isACounterrefer === null) {
+				return;
+			}
+		});
 	}
 
 }

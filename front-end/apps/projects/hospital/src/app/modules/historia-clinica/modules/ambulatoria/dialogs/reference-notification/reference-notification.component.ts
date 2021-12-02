@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ReferenceDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-reference-notification',
@@ -7,9 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReferenceNotificationComponent implements OnInit {
 
-	constructor() { }
+	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: ReferenceDto[],
+		private readonly dialogRef: MatDialogRef<ReferenceNotificationComponent>,
+	) { }
 
 	ngOnInit(): void {
+
+	}
+
+	goToNewConsultation(): void {
+		this.dialogRef.close(false);
+	}
+
+	goBack(): void {
+		this.dialogRef.close(null);
 	}
 
 }

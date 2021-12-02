@@ -240,6 +240,13 @@
 					"ADD_REFERENCE": "AGREGAR SOLICITUD"
 				}
 			},
+			"reference-notification": {
+				"TITLE": "Hay al menos una solicitud de referencia en relación a la línea de cuidado a la que usted pertenece: ",
+				"REFERENCE_REQUEST": "REFERENCIA SOLICITADA",
+				"OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
+				"DESCRIPTION": "Si no desea responder a la referencia y realizar una consulta independiente seleccione “Consulta clásica”.",
+				"NEW_CONSULTATION": "CONSULTA CLÁSICA"
+			},
 			"problemas": {
 				"TAB_LABEL": "Problemas",
 				"TITLE": "Problemas y evoluciones",
