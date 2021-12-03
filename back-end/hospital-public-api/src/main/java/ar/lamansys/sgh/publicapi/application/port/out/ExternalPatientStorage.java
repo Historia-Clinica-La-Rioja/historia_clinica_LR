@@ -1,0 +1,17 @@
+package ar.lamansys.sgh.publicapi.application.port.out;
+
+import ar.lamansys.sgh.publicapi.domain.ExternalPatientBo;
+import ar.lamansys.sgh.publicapi.domain.ExternalPatientExtendedBo;
+
+import java.util.Optional;
+
+public interface ExternalPatientStorage {
+
+    Optional<ExternalPatientBo> findByExternalId(String externalId);
+
+    Integer save(ExternalPatientBo externalPatientBo);
+
+    Optional<Integer> getPatientId(Short identificationTypeId, String identificationNumber, Short genderId);
+
+    Integer createPatient(ExternalPatientExtendedBo externalPatientExtendedBo);
+}
