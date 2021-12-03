@@ -3,7 +3,6 @@ package net.pladema.establishment.service.impl;
 import net.pladema.establishment.repository.ClinicalSpecialtyCareLineRepository;
 import net.pladema.establishment.service.ClinicalSpecialtyCareLineService;
 
-import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -23,7 +23,6 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraintvalidation.SupportedValidationTarget;
 import javax.validation.constraintvalidation.ValidationTarget;
 import java.time.*;
-import java.util.List;
 
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)

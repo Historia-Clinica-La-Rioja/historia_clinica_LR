@@ -1,6 +1,5 @@
 package ar.lamansys.sgx.shared.flavor;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
