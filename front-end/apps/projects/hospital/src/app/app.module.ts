@@ -16,7 +16,6 @@ import { pwaInstallProviders } from '@core/services/pwa-install.service';
 import { AppRoutingModule } from './app-routing.module';
 // components
 import { AppComponent, DEFAULT_LANG } from './app.component';
-import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 // deps
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
@@ -34,7 +33,6 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 	declarations: [
 		// components
 		AppComponent,
-		ExchangeableThemeComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,

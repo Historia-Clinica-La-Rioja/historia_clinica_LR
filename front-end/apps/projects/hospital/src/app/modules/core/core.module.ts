@@ -10,6 +10,7 @@ import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 import { AppMaterialModule } from '@material/app.material.module';
 // components
 import { ContentComponent } from './components/content/content.component';
+import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 // directives
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
@@ -18,6 +19,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 	declarations: [
 		// components
 		ContentComponent,
+		ExchangeableThemeComponent,
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
@@ -48,6 +50,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		AppMaterialModule,
 		// components
 		ContentComponent,
+		ExchangeableThemeComponent,
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,

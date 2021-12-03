@@ -13,7 +13,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 import { PublicInfoDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
-import { Theme } from './components/exchangeable-theme/exchangeable-theme.component';
+import { Theme } from '@core/components/exchangeable-theme/exchangeable-theme.component';
 
 export const DEFAULT_LANG = 'es-AR';
 
