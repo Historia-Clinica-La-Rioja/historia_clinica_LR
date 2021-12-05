@@ -1,14 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { ContextService } from '@core/services/context.service';
+
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
-import { ContextService } from '@core/services/context.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { TypeaheadOption } from '@core/components/typeahead/typeahead.component';
-import { Observable, Subscription } from 'rxjs';
-import { AgendaSearchService } from '../../services/agenda-search.service';
+
+import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+
+import { AgendaSearchService } from '../../services/agenda-search.service';
 
 @Component({
 	selector: 'app-home',

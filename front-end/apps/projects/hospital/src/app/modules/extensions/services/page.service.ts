@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-import { Page } from '@presentation/components/page/page.component';
-
-import { ExtensionsService } from '@api-rest/services/extensions.service';
-import { mapPage } from '../mappers.utils';
+import { EXTENSION_URL } from './extensions.service';
+import { UIPageDto } from '@extensions/extensions-model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,20 +11,16 @@ import { mapPage } from '../mappers.utils';
 export class PageService {
 
 	constructor(
-		private extensionsService: ExtensionsService,
+		private http: HttpClient,
 	) { }
 
-	getSystemPage(menuId: string): Observable<Page> {
-		return this.extensionsService.getSystemPage(menuId)
-			.pipe(
-				map(mapPage)
-			);
+	getSystemPage(menuId: string): Observable<UIPageDto> {
+		const systemPageUrl = `${EXTENSION_URL}/page/${menuId}`;
+		return this.http.get<UIPageDto>(systemPageUrl);
 	}
 
-	getInstitutionPage(institutionId: number, menuId: string): Observable<Page> {
-		return this.extensionsService.getInstitutionPage(institutionId, menuId)
-			.pipe(
-				map(mapPage)
-			);
+	getInstitutionPage(institutionId: number, menuId: string): Observable<UIPageDto> {
+		const institutionPageUrl = `${EXTENSION_URL}/institution/${institutionId}/page/${menuId}`;
+		return this.http.get<UIPageDto>(institutionPageUrl);
 	}
 }

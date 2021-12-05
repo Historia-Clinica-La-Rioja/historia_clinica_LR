@@ -3,7 +3,8 @@
 		"bus-interoperabilidad": {
 			"TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
 			"PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",
-			"PACIENTE-SIN-DATOS": "Este paciente no posee datos en la institución seleccionada"
+			"PACIENTE-SIN-DATOS": "Este paciente no posee datos en la institución seleccionada",
+			"INSTITUTION_LOADING_ERROR": "Error al comunicarse con el bus"
 		},
 		"home": {
 			"TITLE": "Historia Clínica",
@@ -23,6 +24,15 @@
 					"NUEVA_CONSULTA": "Nueva consulta"
 				}
 			},
+			"new-nursing-consultation":{
+				"TITLE": "Nueva consulta de enfermería",
+				"ASSOCIATED_PROBLEM":"Problema asociado",
+				"SPECIALTY": "Especialidad",
+				"messages": {
+					"ERROR": "Error al guardar el documento nueva consulta de enfermería",
+					"SUCCESS": "El documento nueva consulta de enfermería se guardó exitosamente"
+				}
+			},
 			"nueva-consulta": {
 				"TITLE": "Nueva consulta",
 				"SUBTITLE": "Completa los siguientes datos.",
@@ -35,8 +45,8 @@
 				"PROBLEMA": "Problema de la consulta",
 				"RECOMENDADO": "*Recomendado",
 				"evolucion": {
-					"TITLE": "Evolucion",
-					"DESCRIPCION": "Descripcion"
+					"TITLE": "Evolución",
+					"DESCRIPCION": "Descripción"
 				},
 				"errors": {
 					"MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
@@ -104,7 +114,9 @@
 					"TITLE": "Problema",
 					"ACLARACION_CRONICO": "(Crónico)",
 					"FECHA_INICIO_PREFIJO": "Desde",
-					"FECHA_FIN_PREFIJO": "Hasta"
+					"FECHA_FIN_PREFIJO": "Hasta",
+					"REPORT_PROBLEM": "A reportar",
+					"DO_NOT_REPORT_PROBLEM": "No reportar"
 				},
 				"procedimientos": {
 					"buttons": {
@@ -210,13 +222,13 @@
 					"REASONS": "Motivos",
 					"PROCEDURES": "Procedimientos",
 					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Médico",
+					"PROFESSIONAL": "Profesional",
 					"EVOLUTION_NOTE": "Descripción/Resumen",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
 				"historical-problems-filters": {
 					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Médico",
+					"PROFESSIONAL": "Profesional",
 					"PROBLEM": "Problema",
 					"CONSULTATION_DATE": "Fecha de consulta"
 				},
@@ -239,6 +251,15 @@
 					"CONTENT": "Ya existe una nueva consulta abierta, de continuar se perderán los datos cargados",
 					"OK_BUTTON": "Continuar",
 					"CANCEL_BUTTON": "Cancelar"
+				},
+				"epidemiological_report": {
+					"DESCRIPTION_DENGUE": "El problema Dengue es reportable a nivel epidemiológico.",
+					"DESCRIPTION_COVID": "El problema Covid es reportable a nivel epidemiológico.",
+					"REPORT": "¿Desea reportarlo?",
+					"buttons": {
+						"CONFIRM_REPORT": "SI, REPORTARLO",
+						"CANCEL_REPORT": "NO, OMITIRLO"
+					}
 				}
 			},
 			"ordenes_prescripciones": {

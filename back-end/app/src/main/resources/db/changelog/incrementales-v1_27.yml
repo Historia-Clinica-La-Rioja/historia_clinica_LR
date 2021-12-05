@@ -1,0 +1,618 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_27 
+
+    - changeSet:
+        id: care_line-createTable
+        comment: Create table care_line
+        author: bchacon
+        changes:
+            - createTable:
+                tableName: care_line
+                columns:
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_care_line
+                        name: id
+                        type: int
+                    - column:
+                        name: description
+                        type: varchar(255)
+                    - column:
+                        name: consultation
+                        type: boolean
+                        defaultValue: ${boolean.false}
+                    - column:
+                        name: procedure
+                        type: boolean
+                        defaultValue: ${boolean.false}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: deleted
+                        type: BOOLEAN
+                        defaultValue: ${boolean.false}
+                    - column:
+                        name: deleted_by
+                        type: int
+                    - column:
+                        name: deleted_on
+                        type: datetime
+                
+    - changeSet:
+        id: care_line_clinical_specialty-createTable
+        comment: Create table care_line_clinical_specialty
+        author: bchacon
+        changes:
+            - createTable:
+                tableName: care_line_clinical_specialty
+                columns:
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_care_line_clinical_specialty
+                        name: id
+                        type: int
+                    - column:
+                        name: care_line_id
+                        type: int
+                    - column:
+                        name: clinical_specialty_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: deleted
+                        type: BOOLEAN
+                        defaultValue: ${boolean.false}
+                    - column:
+                        name: deleted_by
+                        type: int
+                    - column:
+                        name: deleted_on
+                        type: datetime
+            - addForeignKeyConstraint:
+                baseColumnNames: clinical_specialty_id
+                baseTableName: care_line_clinical_specialty
+                constraintName: FK_care_line_clinical_specialty_clinical_specialty
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: clinical_specialty
+                validate: true
+            - addForeignKeyConstraint:
+                baseColumnNames: care_line_id
+                baseTableName: care_line_clinical_specialty
+                constraintName: FK_care_line_clinical_specialty_care_line
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: care_line
+                validate: true
+    
+    - changeSet:
+        id: snomed_group-createTable
+        comment: Create table snomed_group
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: snomed_group
+            columns: 
+            - column:
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_snomed_group
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(100)
+            - column:
+                constraints:
+                    nullable: false
+                name: ecl
+                type: varchar(255)
+            - column:
+                constraints:
+                    nullable: false
+                name: custom_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: last_update
+                type: date
+                
+    - changeSet:
+        id: snomed_related_group-createTable
+        comment: Create table snomed_related_group
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: snomed_related_group
+            columns: 
+            - column:
+                constraints:
+                    nullable: false
+                name: snomed_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: group_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: orden
+                type: int
+        -  addPrimaryKey:
+                clustered: true        
+                columnNames:  snomed_id, group_id  
+                constraintName:  PK_snomed_related_group
+                tableName:  snomed_related_group  
+                validate: true
+        - addForeignKeyConstraint:
+                baseColumnNames: snomed_id
+                baseTableName: snomed_related_group
+                constraintName: FK_snomed_related_group_snomed_id
+                referencedColumnNames: id
+                referencedTableName: snomed
+        - addForeignKeyConstraint:
+                baseColumnNames: group_id
+                baseTableName: snomed_related_group
+                constraintName: FK_snomed_related_group_group_id
+                referencedColumnNames: id
+                referencedTableName: snomed_group
+                
+    - changeSet:
+        id: manual_classification-createTable
+        comment: Create table manual_classification
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: manual_classification
+            columns: 
+            - column:
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_manual_classification
+                name: id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: description
+                type: varchar(255)
+    
+    - changeSet:
+        id: snvs_group-createTable
+        comment: Create table snvs_group
+        author: lbergottini
+        changes: 
+        - createTable: 
+            tableName: snvs_group
+            columns: 
+            - column:
+                name: group_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: event_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: group_event_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: environment
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: manual_classification_id
+                type: int
+        - addForeignKeyConstraint:
+                baseColumnNames: group_id
+                baseTableName: snvs_group
+                constraintName: FK_snvs_group_group_id
+                referencedColumnNames: id
+                referencedTableName: snomed_group
+        - addForeignKeyConstraint:
+                baseColumnNames: manual_classification_id
+                baseTableName: snvs_group
+                constraintName: FK_snvs_group_manual_classification_id
+                referencedColumnNames: id
+                referencedTableName: manual_classification
+        - addUniqueConstraint:
+                constraintName: UQ_snvs_attributes
+                columnNames: group_id, event_id, group_event_id, environment, manual_classification_id
+                tableName: snvs_group    
+                
+    - changeSet:
+        id:  safeInsertSnomed-createProcedure
+        author:  lbergottini
+        changes:
+        -  createProcedure:
+            dbms:  postgresql
+            encoding:  UTF-8
+            procedureBody:  |-
+                            CREATE OR REPLACE PROCEDURE safeInsertSnomed(newSctid varchar, newPt varchar, newParentId varchar, newParentFsn varchar)
+                            AS '
+                            DECLARE
+                            BEGIN
+                                IF (NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = newSctid  AND pt = newPt)) THEN
+                                    INSERT INTO snomed (sctid, pt, parent_id, parent_fsn) VALUES (newSctid, newPt, newParentId, newParentFsn);
+                                END IF;
+                            END;' LANGUAGE plpgsql;
+            procedureName: safeInsertSnomed
+            relativeToChangelogFile: true
+            
+    - changeSet: 
+        id: snomed-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    call safeInsertSnomed('866057003', 'mielitis causada por virus Dengue', '900000000000207008', 'mielitis causada por virus Dengue (trastorno)');
+                    call safeInsertSnomed('722863008', 'dengue con signos de alarma', '900000000000207008', 'dengue con signos de alarma (trastorno)');
+                    call safeInsertSnomed('722862003', 'dengue sin signos de alarma', '900000000000207008', 'dengue sin signos de alarma (trastorno)');
+                    call safeInsertSnomed('409679007', 'fiebre hemorrágica por Dengue, grado IV', '900000000000207008', 'fiebre hemorrágica por Dengue, grado IV (trastorno)');
+                    call safeInsertSnomed('409678004', 'fiebre hemorrágica por Dengue, grado III', '900000000000207008', 'fiebre hemorrágica por Dengue, grado III (trastorno)');
+                    call safeInsertSnomed('409677009', 'fiebre hemorrágica por Dengue, grado II', '900000000000207008', 'fiebre hemorrágica por Dengue, grado II (trastorno)');
+                    call safeInsertSnomed('409676000', 'fiebre hemorrágica por Dengue, grado I', '900000000000207008', 'fiebre hemorrágica por Dengue, grado I (trastorno)');
+                    call safeInsertSnomed('409671005', 'síndrome de shock por Dengue', '900000000000207008', 'síndrome de shock por Dengue (trastorno)');
+                    call safeInsertSnomed('38362002', 'dengue', '900000000000207008', 'dengue (trastorno)');
+                    call safeInsertSnomed('20927009', 'fiebre hemorrágica dengue', '900000000000207008', 'fiebre hemorrágica dengue (trastorno)');
+                    call safeInsertSnomed('840544004', 'sospecha de enfermedad causada por COVID-19', '900000000000207008', 'sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)');
+                    call safeInsertSnomed('840546002', 'exposición a COVID-19', '900000000000207008', 'exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)');
+                    
+    - changeSet: 
+        id: snomed_group-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO snomed_group (description, ecl, custom_id, last_update) VALUES('SNVS grupo dengue GRP_EVENTO 168', '<<38362002 | dengue (trastorno) |', 1, ${date.now});
+                    INSERT INTO snomed_group (description, ecl, custom_id, last_update) VALUES('Sindrome Febril Agudo Inespecífico (SFAI) GRP_EVENTO 107', '<<38362002 | dengue (trastorno) |', 2, ${date.now});
+                    INSERT INTO snomed_group (description, ecl, custom_id, last_update) VALUES('Infecciones respiratorias agudas EVENTO 307', '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|', 1, ${date.now});
+                    INSERT INTO snomed_group (description, ecl, custom_id, last_update) VALUES('Infecciones respiratorias agudas EVENTO 309', '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|', 1, ${date.now});
+                    
+    - changeSet: 
+        id: snomed_related_group-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '866057003' AND pt = 'mielitis causada por virus Dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2; 
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '866057003' AND pt = 'mielitis causada por virus Dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2; 
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '722863008' AND pt = 'dengue con signos de alarma'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '722863008' AND pt = 'dengue con signos de alarma'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2; 
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '722862003' AND pt = 'dengue sin signos de alarma'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '722862003' AND pt = 'dengue sin signos de alarma'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2; 
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409679007' AND pt = 'fiebre hemorrágica por Dengue, grado IV'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409679007' AND pt = 'fiebre hemorrágica por Dengue, grado IV'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2; 					
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409678004' AND pt = 'fiebre hemorrágica por Dengue, grado III'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409678004' AND pt = 'fiebre hemorrágica por Dengue, grado III'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2; 
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409677009' AND pt = 'fiebre hemorrágica por Dengue, grado II'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409677009' AND pt = 'fiebre hemorrágica por Dengue, grado II'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409676000' AND pt = 'fiebre hemorrágica por Dengue, grado I'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409676000' AND pt = 'fiebre hemorrágica por Dengue, grado I'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409671005' AND pt = 'síndrome de shock por Dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '409671005' AND pt = 'síndrome de shock por Dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '38362002' AND pt = 'dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '38362002' AND pt = 'dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '20927009' AND pt = 'fiebre hemorrágica dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '20927009' AND pt = 'fiebre hemorrágica dengue'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '840544004' AND pt = 'sospecha de enfermedad causada por COVID-19'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '840546002' AND pt = 'exposición a COVID-19'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        
+    - changeSet: 
+        id: manual_classification-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO manual_classification (id, description) VALUES(162, 'Caso confirmado por nexo epidemiológico autóctono');
+                    INSERT INTO manual_classification (id, description) VALUES(596, 'Caso invalidado por epidemiología');
+                    INSERT INTO manual_classification (id, description) VALUES(99, 'Caso descartado por epidemiología');
+                    INSERT INTO manual_classification (id, description) VALUES(169, 'Caso descartado por diagnóstico diferencial');
+                    INSERT INTO manual_classification (id, description) VALUES(273,	'Caso confirmado sin serotipo');
+                    INSERT INTO manual_classification (id, description) VALUES(269, 'Probable flavivirus');
+                    INSERT INTO manual_classification (id, description) VALUES(264, 'Confirmado flavivirus');
+                    INSERT INTO manual_classification (id, description) VALUES(104, 'Caso sospechoso');
+                    INSERT INTO manual_classification (id, description) VALUES(174, 'Caso probable');
+                    INSERT INTO manual_classification (id, description) VALUES(173, 'Caso sospechoso no conclusivo');
+                    INSERT INTO manual_classification (id, description) VALUES(265, 'Caso confirmado DEN-1');
+                    INSERT INTO manual_classification (id, description) VALUES(267, 'Caso confirmado DEN-3');
+                    INSERT INTO manual_classification (id, description) VALUES(266, 'Caso confirmado DEN-2');
+                    INSERT INTO manual_classification (id, description) VALUES(268, 'Caso confirmado DEN-4');
+                    INSERT INTO manual_classification (id, description) VALUES(168, 'Caso descartado');
+                    INSERT INTO manual_classification (id, description) VALUES(167, 'Caso confirmado por nexo epidemiológico importado');
+                    INSERT INTO manual_classification (id, description) VALUES(754, 'Caso confirmado de COVID-19');
+                    INSERT INTO manual_classification (id, description) VALUES(752, 'Caso sospechoso de COVID-19');
+                    INSERT INTO manual_classification (id, description) VALUES(788, 'Descartado COVID - No estudiado OVR');
+                    INSERT INTO manual_classification (id, description) VALUES(798, 'Caso descartado de SIM asociado a COVID-19');
+                    INSERT INTO manual_classification (id, description) VALUES(799, 'Caso descartado de SIM asociado a COVID-19');
+                    INSERT INTO manual_classification (id, description) VALUES(800, 'Sospecha de Reinfección por SARS-CoV-2');
+                    INSERT INTO manual_classification (id, description) VALUES(801, 'Probable Reinfección por SARS-CoV-2');
+                    INSERT INTO manual_classification (id, description) VALUES(804, 'Caso testeado con resultado negativo-no conclusivo');
+                    INSERT INTO manual_classification (id, description) VALUES(797, 'Caso testeado con resultado negativo-no conclusivo');
+                    INSERT INTO manual_classification (id, description) VALUES(802, 'Confirmación de Reinfección por SARS-CoV-2 (secuenciación genómica)');
+                    INSERT INTO manual_classification (id, description) VALUES(803, 'Caso probable de reactivación viral por SARS-CoV-2');
+                    INSERT INTO manual_classification (id, description) VALUES(807, 'No sospechoso - No requiere seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(832, 'No sospechoso - No requiere seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(828, 'Día 10 - Asintomático - Final de seguimiento en cuarentena acortada');
+                    INSERT INTO manual_classification (id, description) VALUES(795, 'Confirmado por test de antígeno en terreno');
+                    INSERT INTO manual_classification (id, description) VALUES(793, 'Confirmado por test de antígeno en terreno');
+                    INSERT INTO manual_classification (id, description) VALUES(787, 'Confirmado COVID - Coinfección con OVR');
+                    INSERT INTO manual_classification (id, description) VALUES(781, 'Caso confirmado con criterio epidemiológico de fin de seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(786, 'Descartado COVID - Confirmado OVR');
+                    INSERT INTO manual_classification (id, description) VALUES(789, 'Descartado COVID-19 por laboratorio');
+                    INSERT INTO manual_classification (id, description) VALUES(756, 'Caso sospechoso validado por autoridad sanitaria');
+                    INSERT INTO manual_classification (id, description) VALUES(775, 'Caso confirmado con criterio laboratorial para fin de seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(792, 'Caso confirmado por criterio clínico-epidemoilógico');
+                    INSERT INTO manual_classification (id, description) VALUES(760, 'Día 04 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(774, 'Contacto no ubicable');
+                    INSERT INTO manual_classification (id, description) VALUES(772, 'Sintomático - continúa seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(765, 'Día 09 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(764, 'Día 08 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(763, 'Día 07 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(762, 'Día 06 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(761, 'Día 05 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(759, 'Día 03 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(768, 'Día 12 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(758, 'Día 02 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(757, 'Día 01 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(769, 'Día 13 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(770, 'Día 14 - Asintomático - Fin del seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(766, 'Día 10 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(771, 'Sintomático - Caso sospechoso COVID-19');
+                    INSERT INTO manual_classification (id, description) VALUES(767, 'Día 11 - Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(776, 'Estudiado por laboratorio y negativo');
+                    INSERT INTO manual_classification (id, description) VALUES(790, 'Ver en Caso Sospechoso de COVID-19');
+      
+    - changeSet: 
+        id: snvs_group-metadata
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 162 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 99 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 169 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 273 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 269 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 264 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 104 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 174 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 173 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 265 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 267 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 266 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 268 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 168 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 1, 167 from t1; 
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 104 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 162 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 269 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 168 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 268 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 174 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 167 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 99 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 169 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 273 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 173 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 265 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 267 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 266 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 1, 264 from t1; 
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 800 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 795 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 803 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 804 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 787 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 781 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 786 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 789 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 169 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 775 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 752 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 754 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 792 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 788 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 802 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 801 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 1, 832 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 828 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 765 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 764 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 763 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 762 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 761 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 759 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 768 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 758 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 757 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 769 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 770 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 766 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 771 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 767 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 776 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 790 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 760 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 774 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 1, 772 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 162 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 99 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 169 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 273 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 269 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 264 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 104 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 174 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 173 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 265 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 267 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 266 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 268 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 168 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 168, 2, 167 from t1; 
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 104 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 162 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 269 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 168 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 268 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 174 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 167 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 99 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 169 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 273 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 173 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 265 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 267 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 266 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<38362002 | dengue (trastorno) |' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 109, 107, 2, 264 from t1; 
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 787 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 781 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 786 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 789 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 756 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 169 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 775 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 752 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 754 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 792 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 788 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 793 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 307, 113, 2, 797 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 765 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 774 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 760 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 772 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 764 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 763 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 762 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 761 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 759 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 768 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 758 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 757 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 769 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 770 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 169 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 766 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 771 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 767 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 776 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 309, 113, 2, 790 from t1;
+
+    - changeSet:
+          id: fill_date_dimension-createProcedure-27
+          author: etrapani
+          changes:
+              - createProcedure:
+                    dbms: postgresql
+                    encoding: UTF-8
+                    procedureBody: |-
+                        DROP PROCEDURE IF EXISTS fill_date_dimension;
+                        CREATE PROCEDURE fill_date_dimension(IN startdate DATE,IN stopdate DATE)
+                        LANGUAGE plpgsql
+                        AS $$
+                        DECLARE
+                            currentdate DATE;
+                        BEGIN
+                            currentdate := startdate;
+                            WHILE currentdate <= stopdate LOOP
+                                BEGIN
+                                    INSERT INTO date_type VALUES (
+                                        currentdate,
+                                        EXTRACT(DAY FROM currentdate),
+                                        EXTRACT(MONTH FROM currentdate),
+                                        EXTRACT(YEAR FROM currentdate),
+                                        EXTRACT(DOW FROM currentdate)
+                                        );
+                                EXCEPTION WHEN OTHERS THEN
+                                    RAISE NOTICE '% % %', SQLERRM, SQLSTATE, currentdate;
+                                END;
+                                currentdate := currentdate + '1 day'::INTERVAL ;
+                            END LOOP;
+                        END; $$;
+                    procedureName: fill_date_dimension
+                    relativeToChangelogFile: true
+
+    - changeSet:
+          id: load_dates_to_2050-27
+          author: etrapani
+          changes:
+              - sql:
+                    dbms: postgresql
+                    sql: |-
+                        CALL fill_date_dimension('01-01-2021','01-01-2050');

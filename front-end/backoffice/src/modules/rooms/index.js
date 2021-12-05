@@ -1,11 +1,13 @@
-import RoomShow from './show';
-import RoomList from './list';
-import RoomCreate from './create';
-import RoomEdit from './edit';
+import RoomShow from './RoomShow';
+import RoomList from './RoomList';
+import RoomCreate from './RoomCreate';
+import RoomEdit from './RoomEdit';
 
-export default {
+const rooms = {
     show: RoomShow,
     list: RoomList,
     create: RoomCreate,
     edit: RoomEdit,
 };
+
+export default rooms;

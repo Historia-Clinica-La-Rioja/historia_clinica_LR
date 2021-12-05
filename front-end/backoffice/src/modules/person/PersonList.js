@@ -13,7 +13,7 @@ const PersonFilter = props =>(
     </Filter>
 );
 
-export const PersonList = props => (
+const PersonList = props => (
     <List {...props} filters={<PersonFilter />} bulkActionButtons={false}>
         <Datagrid rowClick="show">
             <TextField source="firstName" />
@@ -29,3 +29,5 @@ export const PersonList = props => (
         </Datagrid>
     </List>
 );
+
+export default PersonList;

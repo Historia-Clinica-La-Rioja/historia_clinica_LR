@@ -23,13 +23,13 @@ class DemoExtensionServiceTest {
 	@Test
 	void getSystemMenu() {
 		UIMenuItemDto[] menuItems = demoExtensionService.getSystemMenu();
-		assertTrue(menuItems.length == 1);
+		assertTrue(menuItems.length == 2);
 		Arrays.stream(menuItems).map(
 				item -> demoExtensionService.getSystemPage(item.id)
 		).forEach(
 				page -> {
-					assertNotNull(page.type);
-					assertNotEquals(page.type, "message");
+					assertNotNull(page.layout);
+					assertNotEquals(page.layout, "message");
 				}
 		);
 	}
@@ -37,7 +37,7 @@ class DemoExtensionServiceTest {
 	@Test
 	void getSystemPage() {
 		UIPageDto pageDto = demoExtensionService.getSystemPage("sarasa");
-		assertEquals(pageDto.type, "message");
+		assertEquals(pageDto.layout, "message");
 
 		UIComponentDto content = pageDto.content[0];
 		assertTrue(content.type == "text");
@@ -52,8 +52,8 @@ class DemoExtensionServiceTest {
 				item -> demoExtensionService.getInstitutionPage(institutionId, item.id)
 		).forEach(
 				page -> {
-					assertNotNull(page.type);
-					assertNotEquals(page.type, "message");
+					assertNotNull(page.layout);
+					assertNotEquals(page.layout, "message");
 				}
 		);
 	}
@@ -67,8 +67,8 @@ class DemoExtensionServiceTest {
 				item -> demoExtensionService.getPatientPage(patientId, item.id)
 		).forEach(
 				page -> {
-					assertNotNull(page.type);
-					assertNotEquals(page.type, "message");
+					assertNotNull(page.layout);
+					assertNotEquals(page.layout, "message");
 				}
 		);
 	}

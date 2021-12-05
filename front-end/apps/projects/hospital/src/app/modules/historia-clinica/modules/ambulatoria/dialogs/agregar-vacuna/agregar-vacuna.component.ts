@@ -4,9 +4,17 @@ import { Moment } from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DateFormat, momentParseDate, newMoment } from '@core/utils/moment.utils';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { ImmunizationDto, SnomedDto, SnomedResponseDto, VaccineConditionsDto, VaccineDoseInfoDto, VaccineInformationDto, VaccineSchemeDto } from '@api-rest/api-model';
+import {
+	ImmunizationDto,
+	SnomedDto,
+	SnomedResponseDto,
+	VaccineConditionsDto,
+	VaccineDoseInfoDto,
+	VaccineInformationDto,
+	VaccineSchemeDto
+} from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { VaccineService } from '@api-rest/services/vaccine.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,7 +35,6 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
 	conditions: VaccineConditionsDto[];
-	private readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 	today: Moment = newMoment();
 	minDate = MIN_DATE;
 
@@ -279,7 +286,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		if (searchValue) {
 			this.searchingNew = true;
 			this.tryToSubmit = false;
-			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
+			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: SnomedECL.VACCINE })
 				.subscribe(
 					(results: SnomedResponseDto) => {
 						this.buildConceptsResultsTableBillableForm(results.items);
@@ -298,7 +305,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		if (searchValue) {
 			this.searchingPrevious = true;
 			this.tryToSubmitPrevious = false;
-			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: this.SEMANTICS_CONFIG.vaccine })
+			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: SnomedECL.VACCINE })
 				.subscribe(
 					(results: SnomedResponseDto) => {
 						this.buildConceptsResultsTablePreviousForm(results.items);

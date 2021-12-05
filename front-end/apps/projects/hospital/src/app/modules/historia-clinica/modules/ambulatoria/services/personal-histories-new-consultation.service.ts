@@ -1,10 +1,9 @@
-import { SnomedDto } from "@api-rest/api-model";
+import { SnomedDto, SnomedECL } from "@api-rest/api-model";
 import { Moment } from "moment";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { SnomedSemanticSearch, SnomedService } from "@historia-clinica/services/snomed.service";
 import { DateFormat, momentFormat, newMoment } from "@core/utils/moment.utils";
 import { pushIfNotExists, removeFrom } from "@core/utils/array.utils";
-import { SEMANTICS_CONFIG } from "@historia-clinica/constants/snomed-semantics";
 import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
 import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
@@ -19,7 +18,6 @@ export class PersonalHistoriesNewConsultationService {
 	private form: FormGroup;
 	private data: AntecedentePersonal[];
 	private snomedConcept: SnomedDto;
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	private readonly tableColumnConfig : TableColumnConfig[];
 
@@ -120,7 +118,7 @@ export class PersonalHistoriesNewConsultationService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.personalRecord
+				eclFilter: SnomedECL.PERSONAL_RECORD
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

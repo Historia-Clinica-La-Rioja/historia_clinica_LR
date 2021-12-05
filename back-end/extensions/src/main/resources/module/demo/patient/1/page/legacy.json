@@ -1,5 +1,5 @@
 {
-  "type": "components",
+  "layout": "components",
   "content": [
     { "type": "typography", "args": { "value": "Resumen de historia clínica", "className": "title" } },
     { "type": "typography", "args": { "value": "Información contenida en sistema legado", "className": "caption" } },

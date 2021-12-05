@@ -1,5 +1,5 @@
 {
-  "type": "components",
+  "layout": "components",
   "content": [
     { "type": "typography", "args": { "value": "Este contenido se muestra a modo de ejemplo del potencial de los Puntos de extensión", "className": "caption" } },
     { "type": "typography", "args": { "value": "Manuales de ayuda para la configuración del sistema", "className": "title" } },

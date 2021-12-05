@@ -14,7 +14,7 @@ export class ExternalClinicalHistoryFacadeService {
 
 	private externalClinicalHistoryList: ExternalClinicalHistoryDto[] = [];
 	private hasInformationSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
-	private hasInformation$: Observable<boolean>;
+	private hasInfo$: Observable<boolean>;
 
 	private filtersOptions: ExternalClinicalHistoryFiltersOptions;
 	private filtersOptionsSubject: ReplaySubject<ExternalClinicalHistoryFiltersOptions> = new ReplaySubject<ExternalClinicalHistoryFiltersOptions>(1);
@@ -28,7 +28,7 @@ export class ExternalClinicalHistoryFacadeService {
 	constructor(private readonly externalClinicalHistoryService: ExternalClinicalHistoryService) {
 		this.filteredHistories$ = this.filteredHistoriesSubject.asObservable();
 		this.filtersOptions$ = this.filtersOptionsSubject.asObservable();
-		this.hasInformation$ = this.hasInformationSubject.asObservable();
+		this.hasInfo$ = this.hasInformationSubject.asObservable();
 	}
 
 	// It's necessary to invoke this method to bring the information from Backend
@@ -45,11 +45,11 @@ export class ExternalClinicalHistoryFacadeService {
 		);
 	}
 
-	public getFilteredHistories(): Observable<ExternalClinicalHistoryDto[]> {
+	public getFilteredHistories$(): Observable<ExternalClinicalHistoryDto[]> {
 		return this.filteredHistories$;
 	}
 
-	public getFiltersOptions(): Observable<ExternalClinicalHistoryFiltersOptions> {
+	public getFiltersOptions$(): Observable<ExternalClinicalHistoryFiltersOptions> {
 		return this.filtersOptions$;
 	}
 
@@ -59,8 +59,8 @@ export class ExternalClinicalHistoryFacadeService {
 
 	}
 
-	public hasInformation(): Observable<boolean> {
-		return this.hasInformation$;
+	public hasInformation$(): Observable<boolean> {
+		return this.hasInfo$;
 	}
 
 	private applyFilters(): void {

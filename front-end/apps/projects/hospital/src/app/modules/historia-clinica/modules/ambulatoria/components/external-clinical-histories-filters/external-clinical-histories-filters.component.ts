@@ -27,6 +27,7 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 	public specialties: string[] = [];
 	public professionals: string[] = [];
 	public institutions: string[] = [];
+	private filters: ExternalClinicalHistoryFilter = {};
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -42,7 +43,7 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 			consultationDate: [null]
 		});
 
-		this.externalClinicalHistoryFacadeService.getFiltersOptions().subscribe(
+		this.externalClinicalHistoryFacadeService.getFiltersOptions$().subscribe(
 			(filtersOtions: ExternalClinicalHistoryFiltersOptions) => {
 				this.specialties = filtersOtions.specialties;
 				this.professionals = filtersOtions.professionals;
@@ -51,25 +52,50 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 		);
 	}
 
-	public sendAllFilters(): void {
-		const filters: ExternalClinicalHistoryFilter = {};
-		if (this.form.controls.consultationDate.value)
-			filters.consultationDate = this.form.controls.consultationDate.value;
-		if (this.form.controls.institution.value)
-			filters.institution = this.form.controls.institution.value;
-		if (this.form.controls.keyWord.value)
-			filters.keyWord = this.form.controls.keyWord.value;
-		if (this.form.controls.professional.value)
-			filters.professional = this.form.controls.professional.value;
-		if (this.form.controls.specialty.value)
-			filters.specialty = this.form.controls.specialty.value;
-
-		this.externalClinicalHistoryFacadeService.setFilters(filters);
+	public setSpecialtyFilter(): void {
+		if (this.form.value.specialty)
+			this.filters.specialty = this.form.value.specialty;
+		else
+			delete this.filters.specialty;
+		this.externalClinicalHistoryFacadeService.setFilters(this.filters);
 	}
 
-	public clear(control: AbstractControl): void {
+	public setProfessionalFilter(): void {
+		if (this.form.value.professional)
+			this.filters.professional = this.form.value.professional;
+		else
+			delete this.filters.professional;
+		this.externalClinicalHistoryFacadeService.setFilters(this.filters);
+	}
+
+	public setConsultationDateFilter(): void {
+		if (this.form.value.consultationDate)
+			this.filters.consultationDate = this.form.value.consultationDate;
+		else
+			delete this.filters.consultationDate;
+		this.externalClinicalHistoryFacadeService.setFilters(this.filters);
+	}
+
+	public setKeyWordFilter(): void {
+		if (this.form.value.keyWord)
+			this.filters.keyWord = this.form.value.keyWord;
+		else
+			delete this.filters.keyWord;
+		this.externalClinicalHistoryFacadeService.setFilters(this.filters);
+	}
+
+	public setInstitutionFilter(): void {
+		if (this.form.value.institution)
+			this.filters.institution = this.form.value.institution;
+		else
+			delete this.filters.institution;
+		this.externalClinicalHistoryFacadeService.setFilters(this.filters);
+	}
+
+	public clear(control: AbstractControl, propertyName: string): void {
 		control.reset();
-		this.sendAllFilters();
+		delete this.filters[propertyName];
+		this.externalClinicalHistoryFacadeService.setFilters(this.filters);
 	}
 
 }

@@ -1,23 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SystemExtensionComponent, InstitutionExtensionComponent } from './routes/extension/extension.component';
-import { ApiRestModule } from '@api-rest/api-rest.module';
+
 import { CoreModule } from '@core/core.module';
-import { PresentationModule } from '@presentation/presentation.module';
 
-
+import { SystemExtensionComponent, InstitutionExtensionComponent } from './routes/extension/extension.component';
+import { PageLayoutComponent } from './components/page-layout/page-layout.component';
+import { TabsComponent } from './components/tabs/tabs.component';
+import { UiComponentComponent } from './components/ui-component/ui-component.component';
+import { UiComponentListComponent } from './components/ui-component-list/ui-component-list.component';
 
 @NgModule({
-  declarations: [
-	SystemExtensionComponent,
-	InstitutionExtensionComponent,
-  ],
-  imports: [
-	ApiRestModule,
-	CommonModule,
-	CoreModule,
-	PresentationModule,
-
-  ]
+	imports: [
+		CommonModule,
+		CoreModule,
+	],
+	declarations: [
+		SystemExtensionComponent,
+		InstitutionExtensionComponent,
+		PageLayoutComponent,
+		UiComponentComponent,
+		TabsComponent,
+		UiComponentListComponent,
+	],
+	exports: [
+		PageLayoutComponent,
+	]
 })
 export class ExtensionsModule { }

@@ -1,7 +1,6 @@
-import { SnomedDto } from '@api-rest/api-model';
+import {SnomedDto, SnomedECL} from '@api-rest/api-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
-import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { Observable, Subject } from 'rxjs';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -23,7 +22,6 @@ export class MotivoNuevaConsultaService {
 	private readonly columns: ColumnConfig[];
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private snomedConcept: SnomedDto;
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -79,7 +77,7 @@ export class MotivoNuevaConsultaService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.consultationReason
+				eclFilter: SnomedECL.CONSULTATION_REASON
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

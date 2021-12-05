@@ -16,7 +16,7 @@ const OkMessage = () => (
     <span>Bienvenido</span>
 );
 
-export default () => {
+const Home = () => {
     const translate = useTranslate();
     const { loading, authenticated } = useAuthState();
     if (loading) {
@@ -24,7 +24,7 @@ export default () => {
     }
 
     return <Card>
-            <Title title={translate('covid.home.title')} />
+            <Title title={translate('sgh.dashboard.title')} />
             <CardContent>
                 { authenticated? <OkMessage /> : <ForbiddenMessage /> }
             </CardContent>
@@ -32,4 +32,4 @@ export default () => {
 
 };
 
-
+export default Home;

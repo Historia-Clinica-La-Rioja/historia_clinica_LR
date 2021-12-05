@@ -22,7 +22,7 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
@@ -63,6 +63,15 @@ export class NewPatientComponent implements OnInit {
 	public ethnicities: EthnicityDto[];
 	public occupations: PersonOccupationDto[];
 	public educationLevels: EducationLevelDto[];
+
+	public identificationNumberDisabled = false;
+	public identificationTypeIdDisabled = false;
+	public genderIdDisabled = false;
+	public firstNameDisabled = false;
+	public middleNamesDisabled = false;
+	public lastNameDisabled = false;
+	public otherLastNamesDisabled = false;
+	public birthDateDisabled = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -175,23 +184,31 @@ export class NewPatientComponent implements OnInit {
 	private lockFormField(params) {
 		if (params.identificationNumber) {
 			this.form.controls.identificationNumber.disable();
+			this.identificationNumberDisabled = true;
 		}
 		if (params.identificationTypeId) {
 			this.form.controls.identificationTypeId.disable();
+			this.identificationTypeIdDisabled = true;
 		}
 		if (params.genderId) {
 			this.form.controls.genderId.disable();
+			this.genderIdDisabled = true;
 		}
 		if (params.firstName) {
 			this.form.controls.firstName.disable();
+			this.firstNameDisabled = true;
 			this.form.controls.middleNames.disable();
+			this.middleNamesDisabled = true;
 		}
 		if (params.lastName) {
 			this.form.controls.lastName.disable();
+			this.lastNameDisabled = true;
 			this.form.controls.otherLastNames.disable();
+			this.otherLastNamesDisabled = true;
 		}
 		if (params.birthDate) {
 			this.form.controls.birthDate.disable();
+			this.birthDateDisabled = true;
 		}
 	}
 

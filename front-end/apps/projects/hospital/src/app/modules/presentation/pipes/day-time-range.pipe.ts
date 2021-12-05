@@ -1,21 +1,26 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
+import { Pipe, PipeTransform } from '@angular/core';
+import { capitalize } from '@core/utils/core.utils';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { DEFAULT_LANG } from '../../../app.component';
+
 
 @Pipe({
-  name: 'dayTimeRange'
+	name: 'dayTimeRange'
 })
 export class DayTimeRangePipe implements PipeTransform {
 
-  transform(initDate: Date, endDate: Date): string {
+	constructor(){}
 
-	const dayOfWeekNumber: number = initDate.getDay();
-	let dayOfWeek: string =  moment().localeData().weekdays()[dayOfWeekNumber];
-	dayOfWeek = dayOfWeek[0].toUpperCase() +  dayOfWeek.slice(1);
+	datePipe = new DatePipe(DEFAULT_LANG);
 
-	const initHourMin = new DatePipe('es-AR').transform(initDate, 'HH:mm');
-	const endHourMin = new DatePipe('es-AR').transform(endDate, 'HH:mm');
-	return dayOfWeek + ', ' + initHourMin + 'hs a ' +  endHourMin + 'hs';
-  }
+	transform(initDate: Date, endDate: Date): string {
+		if (initDate && endDate) {
+			const dayOfWeek: string = this.datePipe.transform(initDate, 'EEEE');
+			const initHourMin = this.datePipe.transform(initDate, DatePipeFormat.SHORT_TIME);
+			const endHourMin = this.datePipe.transform(endDate, DatePipeFormat.SHORT_TIME);
+			return `${capitalize(dayOfWeek)}, ${initHourMin}hs a ${endHourMin}hs`;
+		}
+	}
 
 }

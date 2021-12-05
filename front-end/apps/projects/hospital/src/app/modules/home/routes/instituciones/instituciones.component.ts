@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import { RoleAssignment } from '@api-rest/api-model';
-import { ERole } from '@api-rest/api-model';
-import { AppFeature } from '@api-rest/api-model';
 import { Router } from '@angular/router';
+
+import { AppRoutes } from '../../../../app-routing.module';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
+
+import { RoleAssignment } from '@api-rest/api-model';
+import { ERole, AppFeature } from '@api-rest/api-model';
+
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 
@@ -55,9 +58,9 @@ export class InstitucionesComponent {
 
 	ingresar(institutionDto: { id: number }, backoffice): void {
 		if (backoffice) {
-			window.location.href = '/backoffice/index.html';
+			this.router.navigate([AppRoutes.Backoffice]);
 		} else {
-			this.router.navigate(['/institucion', institutionDto.id]);
+			this.router.navigate([AppRoutes.Institucion, institutionDto.id]);
 		}
 	}
 

@@ -1,6 +1,9 @@
 package ar.lamansys.sgx.auth.user.infrastructure.input.service;
 
+import ar.lamansys.sgx.auth.user.application.createtokenpasswordreset.CreateTokenPasswordReset;
+import ar.lamansys.sgx.auth.user.application.disableUser.DisableUser;
 import ar.lamansys.sgx.auth.user.application.enableuser.EnableUser;
+import ar.lamansys.sgx.auth.user.application.getuseridbytoken.GetUserIdByToken;
 import ar.lamansys.sgx.auth.user.application.registeruser.RegisterUser;
 import ar.lamansys.sgx.auth.user.application.updatelogindate.UpdateLoginDate;
 import ar.lamansys.sgx.auth.user.application.updatepassword.UpdatePassword;
@@ -24,16 +27,28 @@ public class UserExternalServiceImpl implements UserExternalService {
 
     private final UpdateLoginDate updateLoginDate;
 
+    private final DisableUser disableUser;
+
+    private final CreateTokenPasswordReset createTokenPasswordReset;
+
+    private final GetUserIdByToken getUserIdByToken;
+
     public UserExternalServiceImpl(RegisterUser registerUser,
                                    UpdatePassword updatePassword,
                                    UserStorage userStorage,
                                    EnableUser enableUser,
-                                   UpdateLoginDate updateLoginDate) {
+                                   UpdateLoginDate updateLoginDate,
+                                   DisableUser disableUser,
+                                   CreateTokenPasswordReset createTokenPasswordReset,
+                                   GetUserIdByToken getUserIdByToken) {
         this.registerUser = registerUser;
         this.updatePassword = updatePassword;
         this.userStorage = userStorage;
         this.enableUser = enableUser;
         this.updateLoginDate = updateLoginDate;
+        this.disableUser = disableUser;
+        this.createTokenPasswordReset = createTokenPasswordReset;
+        this.getUserIdByToken = getUserIdByToken;
     }
 
     @Override
@@ -80,5 +95,18 @@ public class UserExternalServiceImpl implements UserExternalService {
         updateLoginDate.execute(username);
     }
 
+    @Override
+    public void disableUser(String username){
+        disableUser.execute(username);
+    }
 
+    @Override
+    public String createTokenPasswordReset(Integer userId) {
+        return createTokenPasswordReset.execute(userId);
+    }
+
+    @Override
+    public Integer getUserIdByToken(String token) {
+        return getUserIdByToken.execute(token);
+    }
 }

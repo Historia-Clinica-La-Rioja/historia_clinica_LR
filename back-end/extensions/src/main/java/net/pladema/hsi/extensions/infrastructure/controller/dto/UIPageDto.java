@@ -6,22 +6,23 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UIPageDto {
-	public final String type;
+	public final String layout;
 	public final UIComponentDto[] content;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public UIPageDto(
-			@JsonProperty("type") String type,
+			@JsonProperty("layout") String layout,
 			@JsonProperty("content") UIComponentDto[] content) {
-		this.type = type;
+		this.layout = layout;
 		this.content = content;
 	}
 
 	public static UIPageDto pageMessage(String textMessage) {
 		return new UIPageDto(
 				"message",
-				new UIComponentDto[]{new UIComponentDto("text", Map.of("text", textMessage), new UIComponentDto[0], new UIComponentDto[0])}
+				new UIComponentDto[]{new UIComponentDto("text", Map.of("text", textMessage))}
 
 		);
 	}
+
 }

@@ -31,7 +31,7 @@ public class OdontologyEvolutionSummaryVo implements Serializable {
 
     private List<ReasonSummaryVo> reasons;
 
-    private HealthcareProfessional medic;
+    private HealthcareProfessional professional;
 
     private Person person;
 
@@ -40,14 +40,14 @@ public class OdontologyEvolutionSummaryVo implements Serializable {
     private String evolutionNote;
 
     public OdontologyEvolutionSummaryVo(Integer id, LocalDate startDate, ClinicalSpecialty clinicalSpecialty,
-                                        HealthcareProfessional medic, Person person, String evolutionNote){
+                                        HealthcareProfessional professional, Person person, String evolutionNote){
         this.consultationId = id;
         if(clinicalSpecialty != null) {
             clinicalSpecialty.fixSpecialtyType();
             this.clinicalSpecialty = new ClinicalSpecialtyVo(clinicalSpecialty);
         }
         this.startDate = startDate;
-        this.medic = medic;
+        this.professional = professional;
         this.person = person;
         this.evolutionNote = evolutionNote;
     }

@@ -1,8 +1,10 @@
 
-import appInfoProvider from '../appInfoProvider'
+const WEBAPP_ROOT_URL = process.env.NODE_ENV === 'production'? '' : 'http://localhost:4200';
 
-export const openPasswordReset = (token) => window.open(`/auth/password-reset/${token}`, '_blank');
+const openNewTab = (url) => window.open(url, '_blank');
+const navigateUrl = (url) => window.location.href = url;
 
-export const oAuth = (url) => {
-    window.open(appInfoProvider.getInfo().oauthConfig.loginUrl, '_self');
-}
+const openPasswordReset = (token) => openNewTab(`${WEBAPP_ROOT_URL}/auth/password-reset/${token}`);
+const goToInstitutionsHome = () => navigateUrl(`${WEBAPP_ROOT_URL}/home`);
+
+export { openPasswordReset, goToInstitutionsHome };

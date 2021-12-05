@@ -2,28 +2,32 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { AppFeature, ERole } from '@api-rest/api-model';
 
-import { AppFeature } from '@api-rest/api-model';
 import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
-
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { UIPageDto } from '@extensions/extensions-model';
+
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { NuevaConsultaDockPopupEnfermeriaComponent } from '../../dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MedicacionesService } from '../../services/medicaciones.service';
-
 import { MenuItem } from '@presentation/components/menu/menu.component';
-import { Page } from '@presentation/components/page/page.component';
 import { ExtensionPatientService } from '@extensions/services/extension-patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
+import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
+import { anyMatch } from '@core/utils/array.utils';
+import { PermissionsService } from '@core/services/permissions.service';
+
 
 
 const RESUMEN_INDEX = 0;
@@ -40,7 +44,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	dialogRef: DockPopupRef;
 	patient: PatientBasicData;
 	patientId: number;
-	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<Page> }[]>;
+	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
 	public personInformation: AdditionalInfo[];
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;
@@ -53,6 +57,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public loaded = false;
 	public spinner = false;
 	private timeOut = 15000;
+	public CurrentUserIsAllowedToMakeBothQueries = false;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -62,12 +67,15 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		private readonly interoperabilityBusService: InteroperabilityBusService,
 		private readonly snackBarService: SnackBarService,
-		private medicacionesService: MedicacionesService,
+		private readonly medicacionesService: MedicacionesService,
 		private readonly featureFlagService: FeatureFlagService,
-		private extensionPatientService: ExtensionPatientService,
-		private readonly odontogramService: OdontogramService
+		private readonly extensionPatientService: ExtensionPatientService,
+		private readonly odontogramService: OdontogramService,
+		private readonly permissionsService: PermissionsService
+
 	) { }
 	ngOnInit(): void {
+		this.setActionsLayout();
 		this.personInformation = [];
 		this.route.paramMap.subscribe((params) => {
 			this.patientId = Number(params.get('idPaciente'));
@@ -95,12 +103,18 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	loadExternalInstitutions() {
-		const externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString()).subscribe(location => {
-			if (location.length === 0) {
-				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
-				this.loaded = false;
-			} else { this.externalInstitutions = location; }
-		});
+		const externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString())
+			.subscribe(
+				location => {
+					if (location.length === 0) {
+						this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-NO-FEDERADO');
+						this.loaded = false;
+					} else { this.externalInstitutions = location; }
+				},
+				error => {
+					this.snackBarService.showError('ambulatoria.bus-interoperabilidad.INSTITUTION_LOADING_ERROR');
+					this.loaded = false;
+				});
 		this.showTimeOutMessages(externalInstitutions);
 	}
 
@@ -152,6 +166,24 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		}
 	}
 
+	openNuevaConsultaEnfermeria(): void {
+		if (!this.dialogRef) {
+			this.patientId = Number(this.route.snapshot.paramMap.get('idPaciente'));
+			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupEnfermeriaComponent, { idPaciente: this.patientId });
+			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+				delete this.dialogRef;
+				this.medicacionesService.updateMedication();
+				if (fieldsToUpdate) {
+					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
+	}
+
 	onTabChanged(event: MatTabChangeEvent) {
 		// TODO Utilizar este método para actualizar componentes asociados a Tabs
 
@@ -167,4 +199,17 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			});
 		}
 	}
+
+	updateFields(fieldsToUpdate: FieldsToUpdate) {
+		this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+	}
+
+	setActionsLayout() {
+		this.CurrentUserIsAllowedToMakeBothQueries = false
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.CurrentUserIsAllowedToMakeBothQueries = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
+			(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO ])))
+		});
+	}
+
 }

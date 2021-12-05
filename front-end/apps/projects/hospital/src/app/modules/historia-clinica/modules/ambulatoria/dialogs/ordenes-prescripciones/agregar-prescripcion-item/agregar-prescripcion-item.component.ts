@@ -1,14 +1,13 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HCEPersonalHistoryDto, SnomedDto } from '@api-rest/api-model';
+import { HCEPersonalHistoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { SEMANTICS_CONFIG } from '@historia-clinica/constants/snomed-semantics';
 import { hasError } from '@core/utils/form.utils';
-import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -30,7 +29,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	OTHER_RADIO_OPTION = 0;
 	hasError = hasError;
 
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	@ViewChild('intervalHoursInput') intervalHoursInput: ElementRef;
@@ -135,7 +133,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	onSearch(searchValue: string): void {
 		if (searchValue) {
 			this.searching = true;
-			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.SEMANTICS_CONFIG[this.data.eclTerm]})
+			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.data.eclTerm})
 				.subscribe(
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);
@@ -248,7 +246,7 @@ export class NewPrescriptionItemData {
 	searchSnomedLabel: string;
 	showDosage: boolean;
 	showStudyCategory: boolean;
-	eclTerm: string;
+	eclTerm: SnomedECL;
 	item?: NewPrescriptionItem;
 }
 

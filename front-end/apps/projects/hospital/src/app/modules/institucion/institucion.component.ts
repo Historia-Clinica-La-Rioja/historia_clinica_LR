@@ -6,7 +6,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ContextService } from '@core/services/context.service';
 
 import { SIDEBAR_MENU } from './constants/menu';
-import { PermissionsService } from '../core/services/permissions.service';
+import { PermissionsService } from '@core/services/permissions.service';
 import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { InstitutionDto } from '@api-rest/api-model';

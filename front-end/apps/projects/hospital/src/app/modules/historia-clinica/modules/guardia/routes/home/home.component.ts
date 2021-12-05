@@ -17,7 +17,7 @@ import { EpisodeStateService } from '../../services/episode-state.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { map } from 'rxjs/operators';

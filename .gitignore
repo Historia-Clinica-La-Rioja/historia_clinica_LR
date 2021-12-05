@@ -5,6 +5,7 @@
 
 #for docker-build
 .m2/repository 
+.npm/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -66,5 +67,3 @@ sonarlint.json
 
 #jenv
 .java-version
-
-*.properties

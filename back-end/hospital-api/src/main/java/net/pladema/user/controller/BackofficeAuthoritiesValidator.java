@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public final class BackofficeAuthoritiesValidator {
@@ -26,7 +27,7 @@ public final class BackofficeAuthoritiesValidator {
 			UserRoleRepository userRoleRepository
 	) {
 		this.loggedUserService = loggedUserService;
-		this.loggedUserClaims = () -> toRoleName(loggedUserService.getPermissionAssignment());
+		this.loggedUserClaims = () -> toRoleName(loggedUserService.currentAssignments());
 		this.entityUserClaims = (Integer userId) -> toRoleName(userRoleRepository.getRoleAssignments(userId));
 	}
 
@@ -49,19 +50,22 @@ public final class BackofficeAuthoritiesValidator {
 	}
 
 	public boolean hasRole(ERole role) {
-		return loggedUserService.getPermissionAssignment()
-				.stream()
-				.anyMatch(roleAssignment -> roleAssignment.role == role);
+		return loggedUserService.currentAssignments()
+				.anyMatch(roleAssignment -> roleAssignment.isRole(role));
 	}
 
-	private static final List<String> toRoleName(List<RoleAssignment> assignments) {
-		return assignments.stream()
+	private static List<String> toRoleName(Stream<RoleAssignment> assignments) {
+		return assignments
 				.map(assignment -> assignment.role.getValue())
 				.collect(Collectors.toList());
 	}
 
+	private static List<String> toRoleName(List<RoleAssignment> assignments) {
+		return toRoleName(assignments.stream());
+	}
+
 	public List<Integer> allowedInstitutionIds(List<ERole> permissions) {
-		return loggedUserService.getPermissionAssignment().stream()
+		return loggedUserService.currentAssignments()
 				.filter(roleAssignment -> permissions.contains(roleAssignment.role))
 				.map(assignment -> assignment.institutionId)
 				.collect(Collectors.toList());

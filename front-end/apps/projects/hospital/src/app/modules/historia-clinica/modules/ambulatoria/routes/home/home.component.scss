@@ -5,16 +5,12 @@ form {
 
 	@include mat-form-field-background-white;
 
-	.form-row {
-		@include form-row;
-	}
-
 	.mat-radio-button {
 		@include form-radio-button;
 	}
 
 	mat-form-field {
-		margin-right: 20px;
+		width: 100%;
 	}
 }
 

@@ -13,7 +13,7 @@ import {
 	TriageListDto
 } from '@api-rest/api-model';
 import { parse } from 'date-fns';
-import { Problema } from '../../../services/problemas-nueva-consulta.service';
+import { Problema } from '../../../services/problemas.service';
 import { DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
 import { EffectiveObservation, VitalSignsValue } from '../../../services/vital-signs-form.service';

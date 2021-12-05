@@ -12,7 +12,7 @@ span {
 }
 
 .profile-card{
-	width: 40%;
+	width: 80%;
 }
 
 button{
@@ -22,4 +22,26 @@ button{
 .reports {
 	margin-top: 5%;
 	margin-bottom: 0%
+}
+
+user-data {
+	width: 100%;
+}
+
+.no-information {
+	color: #A8A8A8;
+	line-height: 20px;
+	font-size: 14px;
+}
+
+mat-card {
+	mat-card-header {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+		.create-user {
+			margin: 0px;
+		}
+	}
 }

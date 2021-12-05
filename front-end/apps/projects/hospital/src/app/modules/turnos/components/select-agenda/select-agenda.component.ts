@@ -1,17 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DiaryListDto } from '@api-rest/api-model';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
-import { DiaryService } from '@api-rest/services/diary.service';
-import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { MatOptionSelectionChange } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+
 import { ContextService } from '@core/services/context.service';
 import { processErrors } from '@core/utils/form.utils';
-import { DatePickerComponent } from '@core/dialogs/date-picker/date-picker.component';
+
 import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
+import { DiaryService } from '@api-rest/services/diary.service';
+import { DiaryListDto } from '@api-rest/api-model';
+
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-picker.component';
+
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
 
 @Component({

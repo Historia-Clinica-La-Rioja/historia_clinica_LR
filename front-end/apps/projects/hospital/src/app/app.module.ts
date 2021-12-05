@@ -6,14 +6,12 @@ import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { DatePipe } from '@angular/common';
-
-import { registerLocaleData } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
-
+import localeEsArExtras from '@angular/common/locales/extra/es-AR';
 import { httpInterceptorProviders } from './http-interceptors';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { AppComponent, DEFAULT_LANG } from './app.component';
 // Módulos nuestros que se cargan al inicio
 import { CoreModule } from '@core/core.module';
 import { pwaInstallProviders } from '@core/services/pwa-install.service';
@@ -21,13 +19,11 @@ import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-tra
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { PublicService } from '@api-rest/services/public.service';
 import { PresentationModule } from '@presentation/presentation.module';
-import { AppMaterialModule } from './modules/material/app.material.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { environment } from '@environments/environment';
-import { ExtensionsModule } from '@extensions/extensions.module';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 
-registerLocaleData(localeEsAr, 'es-AR');
+registerLocaleData(localeEsAr, localeEsArExtras);
 
 @NgModule({
 	declarations: [
@@ -49,14 +45,12 @@ registerLocaleData(localeEsAr, 'es-AR');
 		}),
 		// Módulos nuestros que se cargan al inicio
 		ApiRestModule,
-		AppMaterialModule,
 		AuthModule,
 		CoreModule,
 		PresentationModule,
 		// Module import order
 		// https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
-		ExtensionsModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {
 			enabled: environment.production,
 		}),
@@ -65,7 +59,7 @@ registerLocaleData(localeEsAr, 'es-AR');
 		httpInterceptorProviders,
 		pwaInstallProviders,
 		DatePipe,
-		{ provide: LOCALE_ID, useValue: 'es-AR' },
+		{ provide: LOCALE_ID, useValue: DEFAULT_LANG }, // Esto lo usa el calendario
 	],
 	bootstrap: [AppComponent]
 })

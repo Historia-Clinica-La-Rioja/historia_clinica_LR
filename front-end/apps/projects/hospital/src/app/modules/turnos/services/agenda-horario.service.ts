@@ -1,16 +1,18 @@
 import { ChangeDetectorRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable } from 'rxjs';
 import { finalize, map, takeUntil } from 'rxjs/operators';
 import { CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { WeekViewHourSegment } from 'calendar-utils';
 import { addDays, addMinutes, endOfWeek } from 'date-fns';
+import { Moment } from 'moment';
+
+import { buildFullDate, currentWeek, DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
+import { REMOVEATTENTION } from '@core/constants/validation-constants';
+import { DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api-model';
+
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { NewAttentionComponent } from '../dialogs/new-attention/new-attention.component';
-import { MatDialog } from '@angular/material/dialog';
-import { DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api-model';
-import { buildFullDate, currentWeek, DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
-import { REMOVEATTENTION } from '@core/constants/validation-constants';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;

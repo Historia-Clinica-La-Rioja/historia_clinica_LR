@@ -15,7 +15,7 @@ export class NavigationService {
 	public resetURL(){
 		this.delete();
 	}
-	public goBackFromNewPatien(): boolean {
+	public goBackFromNewPatient(): boolean {
 		if ((this.currentUrl != null) && (this.currentUrl.toString().indexOf('/new') != -1)) {
 			this.delete();
 			return true;

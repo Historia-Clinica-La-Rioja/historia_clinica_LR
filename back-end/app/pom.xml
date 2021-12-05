@@ -43,6 +43,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys</groupId>
+            <artifactId>nursing</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.pladema</groupId>
             <artifactId>hospital-api</artifactId>
             <version>${revision}</version>
@@ -278,9 +284,11 @@
                         <pattern>net.pladema.**.masterdata.**Dto</pattern>
                         <pattern>net.pladema.hl7.**.dto.**Dto</pattern>
                         <pattern>ar.lamansys.**.dto.**Dto</pattern>
+                        <pattern>net.pladema.**.infrastructure.**.dto.**Dto</pattern>
                     </classPatterns>
                     <excludeClassPatterns>
                         <pattern>ar.lamansys.sgh.publicapi.**.dto.**Dto</pattern>
+                        <pattern>net.pladema.hsi.extensions.infrastructure.controller.dto.**Dto</pattern>
                     </excludeClassPatterns>
                     <outputKind>module</outputKind>
                     <outputFile>../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-model.d.ts</outputFile>
@@ -292,9 +300,9 @@
             </plugin>
             <!-- Plugin para obtener información de git y generar el archivo git.properties -->
             <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>4.0.0</version>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>5.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -303,7 +311,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <verbose>true</verbose>
+                    <verbose>false</verbose>
                     <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>

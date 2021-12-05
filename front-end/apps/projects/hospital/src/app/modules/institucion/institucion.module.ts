@@ -12,6 +12,7 @@ import { BedFiltersComponent } from './components/bed-filters/bed-filters.compon
 import { BedDetailComponent } from './components/bed-detail/bed-detail.component';
 import { BedMappingComponent } from './components/bed-mapping/bed-mapping.component';
 import { SearchPatientComponent } from '../pacientes/component/search-patient/search-patient.component';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { SearchPatientComponent } from '../pacientes/component/search-patient/se
 		CoreModule,
 		PresentationModule,
 		InstitucionRoutingModule,
+		LazyMaterialModule
 	],
 	exports: [
 		BedFiltersComponent,

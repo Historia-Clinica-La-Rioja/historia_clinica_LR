@@ -2,6 +2,7 @@ package net.pladema.sgh.app.security.infraestructure.filters;
 
 import ar.lamansys.sgx.auth.apiKey.infrastructure.input.service.ApiKeyExternalService;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
 import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGrantedAuthority;
 
@@ -53,7 +54,7 @@ public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
 						auth -> SecurityContextHolder.getContext().setAuthentication(auth),
 						() -> extractApiKey(request)
 								.flatMap(apiKeyExternalService::login)
-								.map(userInfo -> new UsernamePasswordAuthenticationToken(userInfo.getId(), "", getAuthorities(userInfo.getId())))
+								.map(userInfo -> new UsernamePasswordAuthenticationToken(new SgxUserDetails(userInfo.getId()), "", getAuthorities(userInfo.getId())))
 								.ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA)));
 		logger.debug("Request {}", request);
 		chain.doFilter(request, response);

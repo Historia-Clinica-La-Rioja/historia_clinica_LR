@@ -22,7 +22,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { scrollIntoError, hasError, futureTimeValidation, MinTimeValidator, TIME_PATTERN } from '@core/utils/form.utils';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { ContextService } from '@core/services/context.service';
 import { BedService } from '@api-rest/services/bed.service';
 import { newMoment, momentFormat, DateFormat, momentParseDateTime, momentParseDate, dateToMoment } from '@core/utils/moment.utils';

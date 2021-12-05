@@ -5,7 +5,7 @@ import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
-import { Problema, ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
+import { Problema, ProblemasService } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
@@ -15,7 +15,7 @@ import {
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -28,6 +28,9 @@ import { hasError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MIN_DATE } from "@core/utils/date.utils";
+import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
+import { SnowstormService } from '@api-rest/services/snowstorm.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -40,7 +43,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	errores: string[] = [];
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
-	problemasService: ProblemasService;
+	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
@@ -57,6 +60,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	severityTypes: any[];
 	criticalityTypes: any[];
 	minDate = MIN_DATE;
+	public ffIsOn: boolean;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -70,10 +74,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
+		private readonly snowstormService: SnowstormService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
+		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snowstormService, this.dialog);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
@@ -103,7 +109,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if (this.data.idProblema) {
 			this.readOnlyProblema = true;
 			this.healthConditionService.getHealthCondition(this.data.idProblema).subscribe(p => {
-				this.problemasService.addProblemToList(this.buildProblema(p));
+				this.ambulatoryConsultationProblemsService.addProblemToList(this.buildProblema(p));
 			});
 		}
 
@@ -114,7 +120,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
 		});
-		this.problemasService.error$.subscribe(problemasError => {
+		this.ambulatoryConsultationProblemsService.error$.subscribe(problemasError => {
 			this.errores[1] = problemasError;
 		});
 		this.datosAntropometricosNuevaConsultaService.heightError$.subscribe(tallaError => {
@@ -144,13 +150,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypes = healthConditionSeverities;
-			this.problemasService.setSeverityTypes(healthConditionSeverities);
+			this.ambulatoryConsultationProblemsService.setSeverityTypes(healthConditionSeverities);
 		});
 
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
 			this.criticalityTypes = allergyCriticalities;
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe( isOn => this.ffIsOn = isOn);
 	}
 
 	save(): void {
@@ -305,7 +313,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				};
 			}
 			),
-			problems: this.problemasService.getProblemas().map(
+			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(problema: Problema) => {
 					return {
 						severity: problema.codigoSeveridad,
@@ -325,7 +333,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	editProblema() {
-		if (this.problemasService.editProblem()) {
+		if (this.ambulatoryConsultationProblemsService.editProblem()) {
 			this.readOnlyProblema = false;
 		}
 	}

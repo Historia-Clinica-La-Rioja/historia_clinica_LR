@@ -1,6 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { BackofficeComponent } from '@core/components/backoffice/backoffice.component';
+
+export enum AppRoutes {
+	Institucion = 'institucion',
+	Backoffice = 'backoffice',
+}
+
 const routes: Routes = [
 	{
 		path: '',
@@ -12,12 +19,16 @@ const routes: Routes = [
 		loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
 	},
 	{
-		path: 'institucion',
+		path: AppRoutes.Institucion,
 		loadChildren: () => import('./modules/institucion/institucion.module').then(m => m.InstitucionModule),
 	},
 	{
 		path: 'paciente',
 		loadChildren: () => import('./modules/portal-paciente/portal-paciente.module').then(m => m.PortalPacienteModule),
+	},
+	{
+		path: AppRoutes.Backoffice,
+		component: BackofficeComponent,
 	},
 ];
 

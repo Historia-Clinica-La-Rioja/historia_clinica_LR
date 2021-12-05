@@ -1,10 +1,12 @@
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
-import AdminList from "./list";
-import AdminEdit from "./edit";
+import AdminList from "./AdminList";
+import AdminEdit from "./AdminEdit";
 
-export default {
+const admin =  {
     icon: AccountBoxIcon,
     list: AdminList,
     edit: AdminEdit,
 };
+
+export default admin;

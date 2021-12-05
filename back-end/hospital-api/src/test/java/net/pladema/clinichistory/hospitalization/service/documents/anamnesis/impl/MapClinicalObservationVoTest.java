@@ -65,7 +65,7 @@ public class MapClinicalObservationVoTest {
 
 
 	private List<ClinicalObservationVo> mockVitalSign(String status, LocalDateTime localDateTime){
-		List<ClinicalObservationVo> vitalSigns = new ArrayList();
+		List<ClinicalObservationVo> vitalSigns = new ArrayList<>();
 		for (int i=0;i<1;i++){
 			ClinicalObservationVo diastolic = new ClinicalObservationVo(i+1, EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(), status,"1", localDateTime.plusSeconds(i));
 			vitalSigns.add(diastolic);

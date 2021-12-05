@@ -71,6 +71,13 @@ export interface AbstractMasterdataDto<T> extends MasterDataInterface<T>, Serial
 export interface AbstractUserDto extends Serializable {
 }
 
+export interface AccessDataDto {
+    password: string;
+    token: string;
+    userId: number;
+    username: string;
+}
+
 export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;
@@ -328,6 +335,11 @@ export interface BreathingDto extends Serializable {
     respiratoryRate?: NewEffectiveClinicalObservationDto;
     respiratoryRetractionId?: number;
     stridor?: boolean;
+}
+
+export interface CareLineDto extends Serializable {
+    description: string;
+    id: number;
 }
 
 export interface ChangeStateMedicationRequestDto extends Serializable {
@@ -1114,6 +1126,11 @@ export interface MainDiagnosisDto extends Serializable {
     notes: DocumentObservationsDto;
 }
 
+export interface ManualClassificationDto {
+    description: string;
+    id: number;
+}
+
 export interface MasterDataDto extends AbstractMasterdataDto<number> {
     id: number;
 }
@@ -1232,6 +1249,50 @@ export interface NewVitalSignsObservationDto extends Serializable {
     respiratoryRate?: NewEffectiveClinicalObservationDto;
     systolicBloodPressure?: NewEffectiveClinicalObservationDto;
     temperature?: NewEffectiveClinicalObservationDto;
+}
+
+export interface NursingAnthropometricDataDto extends Serializable {
+    bloodType?: ClinicalObservationDto;
+    bmi?: ClinicalObservationDto;
+    height: ClinicalObservationDto;
+    weight: ClinicalObservationDto;
+}
+
+export interface NursingConsultationDto extends Serializable {
+    anthropometricData?: NursingAnthropometricDataDto;
+    clinicalSpecialtyId: number;
+    evolutionNote?: string;
+    problem: NursingProblemDto;
+    procedures?: NursingProcedureDto[];
+    vitalSigns?: NursingVitalSignDto;
+}
+
+export interface NursingHealtConditionDto extends Serializable {
+    id?: number;
+    snomed: SnomedDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface NursingProblemDto extends Serializable {
+    severity?: string;
+    snomed: SnomedDto;
+    startDate?: string;
+    statusId?: string;
+}
+
+export interface NursingProcedureDto extends Serializable {
+    performedDate?: string;
+    snomed: SnomedDto;
+}
+
+export interface NursingVitalSignDto extends Serializable {
+    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    diastolicBloodPressure: EffectiveClinicalObservationDto;
+    heartRate?: EffectiveClinicalObservationDto;
+    respiratoryRate?: EffectiveClinicalObservationDto;
+    systolicBloodPressure: EffectiveClinicalObservationDto;
+    temperature?: EffectiveClinicalObservationDto;
 }
 
 export interface OauthConfigDto {
@@ -1377,8 +1438,8 @@ export interface OutpatientEvolutionSummaryDto extends Serializable {
     consultationID: number;
     evolutionNote: string;
     healthConditions: OutpatientSummaryHealthConditionDto[];
-    medic: HealthcareProfessionalDto;
     procedures: OutpatientProcedureDto[];
+    professional: HealthcareProfessionalDto;
     reasons: OutpatientReasonDto[];
     startDate: string;
 }
@@ -1544,6 +1605,15 @@ export interface PersonBasicDataResponseDto extends Serializable {
     firstName: string;
     lastName: string;
     photo: string;
+}
+
+export interface PersonDataDto {
+    firstName?: string;
+    identificationNumber: string;
+    identificationType: string;
+    lastName?: string;
+    userId: number;
+    username?: string;
 }
 
 export interface PersonOccupationDto extends Serializable {
@@ -1757,6 +1827,11 @@ export interface SnomedDto extends Serializable {
     sctid: string;
 }
 
+export interface SnomedEclDto {
+    key: SnomedECL;
+    value: string;
+}
+
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
@@ -1863,27 +1938,11 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
-export interface UIComponentDto {
-    actions: UIComponentDto[];
-    args: { [index: string]: any };
-    children: UIComponentDto[];
-    type: string;
-}
-
-export interface UILabelDto {
-    key?: string;
-    text?: string;
-}
-
-export interface UIMenuItemDto {
-    icon: string;
-    id: string;
-    label: UILabelDto;
-}
-
-export interface UIPageDto {
-    content: UIComponentDto[];
-    type: string;
+export interface UserDataDto {
+    enable?: boolean;
+    id?: number;
+    lastLogin?: Date;
+    username?: string;
 }
 
 export interface UserDto extends AbstractUserDto {
@@ -1993,13 +2052,14 @@ export const enum AppFeature {
     HABILITAR_BUS_INTEROPERABILIDAD = "HABILITAR_BUS_INTEROPERABILIDAD",
     HABILITAR_ODONTOLOGY = "HABILITAR_ODONTOLOGY",
     HABILITAR_REPORTES = "HABILITAR_REPORTES",
-    HABILITAR_VACUNAS_V2 = "HABILITAR_VACUNAS_V2",
     HABILITAR_INFORMES = "HABILITAR_INFORMES",
     HABILITAR_LLAMADO = "HABILITAR_LLAMADO",
     HABILITAR_HISTORIA_CLINICA_EXTERNA = "HABILITAR_HISTORIA_CLINICA_EXTERNA",
     HABILITAR_SERVICIO_RENAPER = "HABILITAR_SERVICIO_RENAPER",
     RESTRINGIR_DATOS_EDITAR_PACIENTE = "RESTRINGIR_DATOS_EDITAR_PACIENTE",
     HABILITAR_INTERCAMBIO_TEMAS = "HABILITAR_INTERCAMBIO_TEMAS",
+    HABILITAR_CREACION_USUARIOS = "HABILITAR_CREACION_USUARIOS",
+    HABILITAR_REPORTE_EPIDEMIOLOGICO = "HABILITAR_REPORTE_EPIDEMIOLOGICO",
 }
 
 export const enum EDocumentSearch {
@@ -2028,4 +2088,17 @@ export const enum ESurfacePositionDto {
     LEFT = "LEFT",
     RIGHT = "RIGHT",
     CENTRAL = "CENTRAL",
+}
+
+export const enum SnomedECL {
+    BLOOD_TYPE = "BLOOD_TYPE",
+    PERSONAL_RECORD = "PERSONAL_RECORD",
+    FAMILY_RECORD = "FAMILY_RECORD",
+    ALLERGY = "ALLERGY",
+    HOSPITAL_REASON = "HOSPITAL_REASON",
+    VACCINE = "VACCINE",
+    MEDICINE = "MEDICINE",
+    PROCEDURE = "PROCEDURE",
+    CONSULTATION_REASON = "CONSULTATION_REASON",
+    DIAGNOSIS = "DIAGNOSIS",
 }

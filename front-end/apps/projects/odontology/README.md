@@ -1,6 +1,6 @@
 # Odontology
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.6.
+This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
 
 ## Code scaffolding
 

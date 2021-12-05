@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AllergyConditionDto, EvolutionNoteDto, SnomedDto } from '@api-rest/api-model';
+import { SnomedECL} from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SEMANTICS_CONFIG } from '../../constants/snomed-semantics';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
@@ -18,7 +18,6 @@ export class AddAllergyComponent implements OnInit {
 	snomedConcept: SnomedDto;
 	form: FormGroup;
 	loading = false;
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	searching = false;
 	snowstormServiceNotAvailable = false;
@@ -77,7 +76,7 @@ export class AddAllergyComponent implements OnInit {
 	onSearch(searchValue: string): void {
 		if (searchValue) {
 			this.searching = true;
-			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: this.SEMANTICS_CONFIG.allergy})
+			this.snowstormService.getSNOMEDConcepts({term: searchValue, ecl: SnomedECL.ALLERGY})
 				.subscribe(
 					results => {
 						this.conceptsResultsTable = this.buildConceptsResultsTable(results.items);

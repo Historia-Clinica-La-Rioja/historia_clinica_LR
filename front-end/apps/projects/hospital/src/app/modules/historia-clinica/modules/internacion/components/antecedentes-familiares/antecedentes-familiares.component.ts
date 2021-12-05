@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
+import { HealthHistoryConditionDto, SnomedDto} from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';
 
 @Component({
@@ -29,7 +29,6 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 	snomedConcept: SnomedDto;
 
 	form: FormGroup;
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	// Mat table
 	columns = [
@@ -89,7 +88,7 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.familyRecord
+				eclFilter: SnomedECL.FAMILY_RECORD
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

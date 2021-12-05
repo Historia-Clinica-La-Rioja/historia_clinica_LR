@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { OdontologyConsultationIndicesDto, ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
@@ -9,7 +9,7 @@ import { OdontogramService } from '../../services/odontogram.service';
 import { ToothTreatment } from '../../services/surface-drawer.service';
 import { ToothSurfaceId } from '../../utils/Surface';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
-import { OdontologyConsultationDockPopupComponent } from '../odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
+import { FieldsToUpdate, OdontologyConsultationDockPopupComponent } from '../odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
 import { OdontologyConsultationService } from '../../api-rest/odontology-consultation.service';
 import { Observable } from 'rxjs';
@@ -20,6 +20,8 @@ import { Observable } from 'rxjs';
 	styleUrls: ['./odontogram.component.scss']
 })
 export class OdontogramComponent implements OnInit {
+
+	@Output() consultationCompleted = new EventEmitter<FieldsToUpdate>()
 
 	constructor(
 		private readonly odontogramRestService: OdontogramRestService,
@@ -101,10 +103,11 @@ export class OdontogramComponent implements OnInit {
 
 	openConsultationPopup() {
 		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
-		dialogRef.afterClosed().subscribe(confirmed => {
-			if (confirmed) {
+		dialogRef.afterClosed().subscribe(consultationResult => {
+			if (consultationResult.confirmed) {
 				this.setActionsAsRecords();
 				this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
+				this.consultationCompleted.emit(consultationResult.fieldsToUpdate);
 			}
 		})
 	}

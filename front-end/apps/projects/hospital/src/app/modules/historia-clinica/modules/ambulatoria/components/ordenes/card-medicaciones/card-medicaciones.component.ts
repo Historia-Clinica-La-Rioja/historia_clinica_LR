@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationInfoDto } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ORDENES_MEDICACION } from '@historia-clinica/constants/summaries';
 import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
@@ -112,7 +113,7 @@ export class CardMedicacionesComponent implements OnInit {
 						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION',
 						showDosage: true,
 						showStudyCategory: false,
-						eclTerm: 'medicine',
+						eclTerm: SnomedECL.MEDICINE,
 					},
 				},
 				width: '35%',

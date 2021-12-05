@@ -1,11 +1,11 @@
-<app-content width="full">
+<app-content >
     <section>
 		<h2 class="page-title" [translate]="'ambulatoria.home.TITLE'"></h2>
 		<h4 class="page-title" [translate]="'ambulatoria.home.SUBTITLE'"></h4>
 		<em class="text-danger" *ngIf="requiringValues" translate="forms.REQUIRING_FIELD_FOR_SEARCH"></em>
-		<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()">
-			<div class="form-row">
-				<div>
+		<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()" fxLayout="column" fxLayoutGap="20px">
+			<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+				<div fxFlex="30" fxFlex.lt-md="100">
 					<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
 					<br>
 					<mat-form-field appearance="outline">
@@ -20,7 +20,7 @@
 						</mat-select>
 					</mat-form-field>
 				</div>
-				<div>
+				<div fxFlex="30" fxFlex.lt-md="100">
 					<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
 					<br>
 					<mat-form-field appearance="outline">
@@ -48,40 +48,44 @@
 			<br>
 
 			<div>
-				<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
-			</div>
-			<div class="form-row">
 				<div>
-					<mat-form-field appearance="outline">
-						<input id="firstName"
-								name="firstName"
-								formControlName="firstName"
-								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
-								matInput>
-						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'firstName')"
-							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.firstName}">
-						</mat-error>
-					</mat-form-field>
+					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
 				</div>
+				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+					<div fxFlex="30" fxFlex.lt-md="100">
+						<mat-form-field appearance="outline">
+							<input id="firstName"
+									name="firstName"
+									formControlName="firstName"
+									placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+									matInput>
+							<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'firstName')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.firstName}">
+							</mat-error>
+						</mat-form-field>
+					</div>
 
-				<mat-form-field appearance="outline">
-					<input id="middleNames"
+					<div fxFlex="30" fxFlex.lt-md="100">
+						<mat-form-field appearance="outline">
+							<input id="middleNames"
 							name="middleNames"
 							formControlName="middleNames"
 							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
 							matInput>
-					<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'middleNames')"
-						translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.middleNames}">
-					</mat-error>
-				</mat-form-field>
+							<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'middleNames')"
+							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.middleNames}">
+							</mat-error>
+						</mat-form-field>
+					</div>
+				</div>
 			</div>
 
-			<div class="form-row">
+			<div>
 				<div>
-					<div>
-						<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
-					</div>
-					<mat-form-field appearance="outline">
+					<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
+				</div>
+				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 						<input id="lastName"
 								name="lastName"
 								formControlName="lastName"
@@ -91,7 +95,7 @@
 							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.lastName}">
 						</mat-error>
 					</mat-form-field>
-					<mat-form-field appearance="outline">
+					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 						<input id="otherLastNames"
 								name="otherLastNames"
 								formControlName="otherLastNames"
@@ -104,8 +108,8 @@
 				</div>
 			</div>
 
-			<div>
-				<mat-form-field appearance="outline">
+			<div fxLayout="row">
+				<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 					<mat-label [translate]="'pacientes.form.BIRTH_DATE'"></mat-label>
 					<input formControlName="birthDate" id="birthDate" matInput [min]="minDate" [max]="today"
 							[matDatepicker]="picker2">
@@ -115,9 +119,11 @@
 				</mat-form-field>
 			</div>
 
-			<button mat-raised-button color="primary" type="submit">
-				<span [translate]="'buttons.SEARCH'"></span>
-			</button>
+			<div>
+				<button mat-raised-button color="primary" type="submit">
+					<span [translate]="'buttons.SEARCH'"></span>
+				</button>
+			</div>
 
 		</form>
 	</section>

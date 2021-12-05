@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ImmunizationDto, SnomedDto } from '@api-rest/api-model';
+import { SnomedECL} from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { DatePipe } from '@angular/common';
 import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 
@@ -34,7 +34,6 @@ export class VacunasComponent implements OnInit {
 
 	form: FormGroup;
 	today: Moment = newMoment();
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	// Mat table
 	columns = [
@@ -123,7 +122,7 @@ export class VacunasComponent implements OnInit {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.vaccine
+				eclFilter: SnomedECL.VACCINE
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

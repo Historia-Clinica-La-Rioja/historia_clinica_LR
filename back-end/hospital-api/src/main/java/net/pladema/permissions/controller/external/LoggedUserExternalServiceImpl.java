@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class LoggedUserExternalServiceImpl implements LoggedUserExternalService {
@@ -32,11 +33,16 @@ public class LoggedUserExternalServiceImpl implements LoggedUserExternalService 
 	}
 
 	@Override
-	public boolean hasAnyRoleInstitution(Integer institutionId, List<ERole> roles) {
+	public boolean hasAnyRoleInstitution(Integer institutionId, ERole... roles) {
 		LOG.debug("Input parameters -> institutionId {}, roles {}", institutionId, roles);
-		boolean result = loggedUserService.hasAnyRoleInstitution(institutionId, roles);
+		boolean result = this.hasAnyRoleInstitution(roles).apply(institutionId);
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public Function<Integer, Boolean> hasAnyRoleInstitution(ERole... roles) {
+		return loggedUserService.hasAnyInstitutionRole(roles);
 	}
 
 }

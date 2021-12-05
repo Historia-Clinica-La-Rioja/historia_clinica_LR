@@ -1,7 +1,7 @@
-import { MainDiagnosisDto, PersonPhotoDto } from '@api-rest/api-model';
+import { MainDiagnosisDto, PersonPhotoDto, BasicPatientDto, InternmentSummaryDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { MainDiagnosesService } from '@api-rest/services/main-diagnoses.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BasicPatientDto, InternmentSummaryDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -15,10 +15,9 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';
-import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { MatSelectionList } from '@angular/material/list';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '@core/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
 	selector: 'app-cambiar-diagnostico-principal',
@@ -29,7 +28,6 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 
 	@ViewChild(MatSelectionList) selection: MatSelectionList;
 
-	private readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 	private internmentEpisodeId: number;
 	private patientId: number;
 
@@ -118,7 +116,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 			this.snackBarService.showError('internaciones.clinical-assessment-diagnosis.messages.WITHOUT_NEW_DIAGNOSIS');
 		}
 	}
-	
+
 	openConfirmDialog(): Observable<any> {
 		const previousDiagnosisHTML = `<strong>${this.currentMainDiagnosis.snomed.pt}</strong>`;
 		const newDiagnosisHTML = `<strong>${this.newMainDiagnosis.snomed.pt}</strong>`;
@@ -138,7 +136,7 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.diagnosis
+				eclFilter: SnomedECL.DIAGNOSIS
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => {

@@ -12,7 +12,7 @@ public class UserBo {
     private Integer id;
 
     @Getter
-    private final String username;
+    private String username;
 
     @Getter
     private boolean enable;
@@ -21,6 +21,15 @@ public class UserBo {
     private LocalDateTime lastLogin;
 
     private UserPasswordBo userPasswordBo;
+
+    public UserBo(String username){
+        this.username = username;
+    }
+    public UserBo(Integer id,String username, Boolean enable){
+        this.id = id;
+        this.username = username;
+        this.enable = enable;
+    }
 
     public UserBo(String username, String password, String salt, String hashAlgorithm) {
         this(null, username, false, password, salt, hashAlgorithm);
@@ -67,6 +76,10 @@ public class UserBo {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 
 }

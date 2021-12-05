@@ -148,6 +148,22 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.snowstorm.url.concepts |   | /MAIN/concepts | Único |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
 | ws.snowstorm.request.timeout |   | 15000 (*milisegundos*) | Opcional |  Valor de TimeOut para el servicio — *se recomienda no utilizar valores inferiores a los 15 segundos* —  | v1.2.0  |
 
+#### Snomed Ecls
+| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
+| ---------- | ------ | -------- | -------- | ------------ | ---- |
+| snomed-semantics.diagnosis.ecl |   | << 404684003 &#124;hallazgo clínico (hallazgo)&#124; OR << 243796009 &#124;situación con contexto explícito (situación)&#124; OR << 272379006 &#124; evento (evento)&#124; | Opcional |  Ecl para búsqueda de diagnósticos | v1.27.0  |
+| snomed-semantics.bloodType.ecl |   | < 112143006 &#124;ABO group phenotype (finding)&#124; | Opcional |  Ecl para búsqueda de tipos de sangre | v1.27.0  |
+| snomed-semantics.personalRecord.ecl |   | << 404684003 &#124;hallazgo clínico (hallazgo)&#124; OR <<  243796009 &#124;situación con contexto explícito (situación)&#124; OR << 272379006 &#124; evento (evento)&#124; | Opcional |  Ecl para búsqueda de antecedentes personales | v1.27.0  |
+| snomed-semantics.familyRecord.ecl |   | << 404684003 &#124;hallazgo clínico (hallazgo)&#124; OR <<  243796009 &#124;situación con contexto explícito (situación)&#124; OR << 272379006 &#124; evento (evento)&#124; | Opcional |  Ecl para búsqueda de antecedentes familiares | v1.27.0  |
+| snomed-semantics.allergy.ecl |   | < 609328004 &#124;disposición alérgica (hallazgo)&#124; | Opcional |  Ecl para búsqueda de alergias | v1.27.0  |
+| snomed-semantics.hospitalizationReason.ecl |   | < 404684003 &#124;hallazgo clínico (hallazgo)&#124; OR 272379006 &#124; evento (evento)&#124; OR 243796009 &#124;situación con contexto explícito (situación)&#124; OR 48176007 &#124;contexto social&#124; | Opcional |  Ecl para búsqueda de motivos de internación | v1.27.0  |
+| snomed-semantics.vaccine.ecl |   | ^ 2281000221106 &#124;conjunto de referencias simples de inmunizaciones notificables (metadato fundacional)&#124; | Opcional |  Ecl para búsqueda de vacunas | v1.27.0  |
+| snomed-semantics.medicine.ecl |   | < 763158003: 732943007 &#124;tiene base de sustancia de la potencia (atributo)&#124;=\*, [0..0] 774159003 &#124;tiene proveedor (atributo)&#124;=\* | Opcional |  Ecl para búsqueda de medicamentos | v1.27.0  |
+| snomed-semantics.procedureGroup.ecl |   | < 71388002 &#124;procedimiento (procedimiento)&#124; | Opcional |  Ecl para búsqueda de procedimientos | v1.27.0  |
+| snomed-semantics.consultationReason.ecl |   | << 404684003 &#124;hallazgo clínico (hallazgo)&#124; OR << 71388002 &#124;procedimiento (procedimiento)&#124; OR << 243796009 &#124;situación con contexto explícito (situación)&#124; OR << 272379006 &#124; evento (evento)&#124;  | Opcional |  Ecl para búsqueda de motivos de consulta | v1.27.0  |
+
+
+
 ### Nomivac sincronización de datos
 
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |

@@ -20,9 +20,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -33,11 +31,11 @@ import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 import { MatPaginatorIntlAR } from '@presentation/components/table/table.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DEFAULT_LANG } from '../../app.component';
 
 @NgModule({
 	imports: [
 		MatAutocompleteModule,
-		MatButtonModule,
 		MatButtonModule,
 		MatCardModule,
 		MatCheckboxModule,
@@ -48,9 +46,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		MatFormFieldModule,
 		MatGridListModule,
 		MatIconModule,
-		MatIconModule,
 		MatInputModule,
-		MatListModule,
 		MatListModule,
 		MatMenuModule,
 		MatMomentDateModule,
@@ -62,11 +58,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		MatRadioModule,
 		MatSelectModule,
 		MatSidenavModule,
-		MatSidenavModule,
 		MatSliderModule,
-		MatSlideToggleModule,
 		MatSnackBarModule,
-		MatStepperModule,
 		MatTableModule,
 		MatTabsModule,
 		MatToolbarModule,
@@ -85,9 +78,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		MatFormFieldModule,
 		MatGridListModule,
 		MatIconModule,
-		MatIconModule,
 		MatInputModule,
-		MatListModule,
 		MatListModule,
 		MatMenuModule,
 		MatMomentDateModule,
@@ -99,11 +90,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		MatRadioModule,
 		MatSelectModule,
 		MatSidenavModule,
-		MatSidenavModule,
 		MatSliderModule,
-		MatSlideToggleModule,
 		MatSnackBarModule,
-		MatStepperModule,
 		MatTableModule,
 		MatTabsModule,
 		MatToolbarModule,
@@ -111,9 +99,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 	],
 	providers: [
 		{
-			provide:
-			MAT_DATE_LOCALE,
-			useValue: 'es-AR'
+			provide: MAT_DATE_LOCALE,
+			useValue: DEFAULT_LANG
 		},
 		{
 			provide: DateAdapter,

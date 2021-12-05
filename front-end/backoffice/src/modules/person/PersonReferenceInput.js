@@ -4,7 +4,7 @@ import {
     AutocompleteInput,
 } from 'react-admin';
 
-const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
+const renderPerson = (choice) => choice ? `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}` : '';
 //Así evitamos mostrar valores cuando el input está vacío
 const searchToFilter = searchText => ({identificationNumber: searchText ? searchText : -1});
 

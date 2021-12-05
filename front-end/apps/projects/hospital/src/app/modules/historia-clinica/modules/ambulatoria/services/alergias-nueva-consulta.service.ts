@@ -1,8 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { SnomedDto } from '@api-rest/api-model';
-import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
+import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
 import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
@@ -20,7 +19,6 @@ export class AlergiasNuevaConsultaService {
 	private form: FormGroup;
 	private data: Alergia[] = [];
 	private snomedConcept: SnomedDto;
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 	private criticalityTypes: any[];
 
 	constructor(
@@ -142,7 +140,7 @@ export class AlergiasNuevaConsultaService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.allergy
+				eclFilter: SnomedECL.ALLERGY
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

@@ -10,7 +10,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Getter
 @ToString
-public class RoleAssignment implements Serializable{
+public class RoleAssignment implements Serializable {
 	
 	private static final long serialVersionUID = 4400712415700752391L;
 	
@@ -26,4 +26,11 @@ public class RoleAssignment implements Serializable{
 		this(ERole.map(roleId), institutionId);
 	}
 
+	public boolean isRole(ERole aRole) {
+		return this.role.equals(aRole);
+	}
+
+	public boolean isAssigment(ERole aRole, Integer institutionId) {
+		return isRole(aRole) && this.institutionId.equals(institutionId);
+	}
 }

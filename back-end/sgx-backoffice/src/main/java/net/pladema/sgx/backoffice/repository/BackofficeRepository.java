@@ -28,14 +28,14 @@ public class BackofficeRepository<E, I> implements BackofficeStore<E, I>{
 		this.queryAdapter = new BackofficeQueryAdapter<>();
 	}
 
-	@Override
-	public List<E> findAll() {
-		return this.repository.findAll();
-	}
-
 	public Page<E> findAll(E entity, Pageable pageable) {
 		Example<E> example = queryAdapter.buildExample(entity);
 		return repository.findAll(example, pageable);
+	}
+
+	@Override
+	public List<E> findAll() {
+		return repository.findAll();
 	}
 
 	public List<E> findAllById(List<I> ids) {
@@ -52,5 +52,10 @@ public class BackofficeRepository<E, I> implements BackofficeStore<E, I>{
 
 	public void deleteById(I id) {
 		repository.deleteById(id);
+	}
+
+	@Override
+	public Example<E> buildExample(E entity) {
+		return queryAdapter.buildExample(entity);
 	}
 }

@@ -1,7 +1,8 @@
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import { DEFAULT_LANG } from '../../../app.component';
 
-moment.locale('es-AR');
+moment.locale(DEFAULT_LANG);
 
 export enum DateFormat {
 	API_DATE = 'YYYY-MM-DD',
