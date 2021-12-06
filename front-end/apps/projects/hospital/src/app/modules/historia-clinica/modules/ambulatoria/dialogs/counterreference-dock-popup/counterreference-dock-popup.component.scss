@@ -1,0 +1,44 @@
+::ng-deep .cdk-overlay-pane {
+	app-counterreference-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
+.dose {
+	border-radius: 6px;
+    padding: 4px 17px;
+    background-color: #ffcece;
+    color: #EB5757;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19px;
+    width: 163px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.grayText {
+	color: #979797;
+}
+
+.reference-description {
+    margin-top: 10px;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+.margin-checkbox {
+	margin-bottom: 15px;
+}
+
+.icon{
+	padding: 20px 0px 20px 10px;
+}
+
+

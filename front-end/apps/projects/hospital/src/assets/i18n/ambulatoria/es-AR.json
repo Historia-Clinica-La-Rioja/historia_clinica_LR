@@ -248,6 +248,16 @@
 				"NEW_CONSULTATION": "CONSULTA CLÁSICA",
 				"COUNTERREFERENCE": "CONTRARREFERENCIA"
 			},
+			"counterreference": {
+				"TITLE": "Responder referencia",
+				"COUNTERREFERENCE": "Contrarreferencia",
+				"PLACEHOLDER_DESCRIPTION": "Descripción",
+				"CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
+				"messages": {
+					"ERROR": "Error al guardar documento de contrarreferencia",
+					"SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
+				}
+			},
 			"problemas": {
 				"TAB_LABEL": "Problemas",
 				"TITLE": "Problemas y evoluciones",

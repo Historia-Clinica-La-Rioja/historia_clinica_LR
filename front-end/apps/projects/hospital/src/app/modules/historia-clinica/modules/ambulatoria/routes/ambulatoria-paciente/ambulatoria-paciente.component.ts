@@ -62,6 +62,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	private timeOut = 15000;
 	public CurrentUserIsAllowedToMakeBothQueries = false;
 	specialtiesId: number[] = [];
+	reference: ReferenceDto;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -254,10 +255,25 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	openCounterreference(reference: ReferenceDto) {
-		console.log(reference);
 		if (!this.dialogRef) {
-			this.dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent, { reference: reference });
+			this.dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent, {
+				data: {
+					reference: reference,
+					patientId: this.patientId
+				}
+			});
+			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+				delete this.dialogRef;
+				this.medicacionesService.updateMedication();
+				if (fieldsToUpdate) {
+					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
 		}
-		
+		else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 }
