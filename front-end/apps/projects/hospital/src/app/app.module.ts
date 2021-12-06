@@ -19,7 +19,6 @@ import { AppComponent, DEFAULT_LANG } from './app.component';
 // deps
 import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
-import { PresentationModule } from '@presentation/presentation.module';
 
 // services
 import { PublicService } from '@api-rest/services/public.service';
@@ -50,7 +49,6 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		// deps
 		ApiRestModule,
 		CoreModule,
-		PresentationModule,
 		// routing https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {

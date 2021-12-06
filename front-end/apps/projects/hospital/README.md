@@ -19,6 +19,21 @@ corresponde una ruta particular.
 2. `components`: depende del reuso y/o modularización dentro del propio módulo, son utilizados por los componentes de *routes*.
 3. `services`: Estaran presentes dependiendo si es requerido algun servicio propio del modulo.
 
+### Dependencia de módulos
+
+1. [AppModule](./src/app/app.module.ts)
+	a. ==carga lazy=> *Feature Modules*[^1]
+
+2. *Feature Modules* ==depende de=> PresentationModule, LazyMaterialModule (opcional)
+
+3. [PresentationModule](./src/app/modules/presentation/presentation.module.ts) ==depende de=> AppMaterialModule, CoreModule
+
+4. CoreModule ==depende de=> MinMaterialModule
+
+5. AppModule ➡ ==depende de=> CoreModule, ApiRestModule
+
+[^1]: Feature Modules: Auth, Home, Institucion, Camas, Guardia, Turnos, etc
+
 ### Assets
 
 ##### Traducciones

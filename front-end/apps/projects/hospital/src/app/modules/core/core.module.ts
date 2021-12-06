@@ -7,7 +7,7 @@ import { FlexModule } from '@angular/flex-layout';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 // deps
-import { AppMaterialModule } from '@material/app.material.module';
+import { CoreMaterialModule } from './core.material.module';
 // components
 import { ContentComponent } from './components/content/content.component';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
@@ -35,7 +35,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		TranslateModule,
 		FlexModule,
 		// deps
-		AppMaterialModule,
+		CoreMaterialModule,
 	],
 	exports: [
 		CommonModule,
@@ -47,7 +47,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		RouterModule,
 		TranslateModule,
 		// deps
-		AppMaterialModule,
+		CoreMaterialModule,
 		// components
 		ContentComponent,
 		ExchangeableThemeComponent,
