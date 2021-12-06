@@ -8,10 +8,9 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 
 @Service
 public class MonitoringRequestInterceptor implements ClientHttpRequestInterceptor {
@@ -20,35 +19,26 @@ public class MonitoringRequestInterceptor implements ClientHttpRequestIntercepto
 	
 	@Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        traceRequest(request, body);
+        traceRequest(request);
+        Instant start = Instant.now();
         ClientHttpResponse response = execution.execute(request, body);
-        traceResponse(response);
+        Instant finish = Instant.now();
+        Duration timeElapsed = Duration.between(start, finish);
+        traceResponse(response, timeElapsed);
         return response;
     }
 
-    private void traceRequest(HttpRequest request, byte[] body){
+    private void traceRequest(HttpRequest request){
 		logger.debug("===========================Request begin================================================");
         logger.debug("URI         : {}", request.getURI());
         logger.debug("Method      : {}", request.getMethod());
-        logger.debug("Headers     : {}", request.getHeaders() );
-        logger.debug("Request body: {}", new String(body, StandardCharsets.UTF_8));
         logger.debug("===========================Request end================================================");
     }
 
-    private void traceResponse(ClientHttpResponse response) throws IOException {
-        StringBuilder inputStringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), StandardCharsets.UTF_8));
-        String line = bufferedReader.readLine();
-        while (line != null) {
-            inputStringBuilder.append(line);
-            inputStringBuilder.append('\n');
-            line = bufferedReader.readLine();
-        }
+    private void traceResponse(ClientHttpResponse response, Duration timeElapsed) throws IOException {
         logger.debug("============================Response begin==========================================");
         logger.debug("Status code  : {}", response.getStatusCode());
-        logger.debug("Status text  : {}", response.getStatusText());
-        logger.debug("Headers      : {}", response.getHeaders());
-        logger.debug("Response body: {}", inputStringBuilder);
+        logger.debug("Elapsed time : {}", timeElapsed);
         logger.debug("============================Response end=================================================");
     }
 

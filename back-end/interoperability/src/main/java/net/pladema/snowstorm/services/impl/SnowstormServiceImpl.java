@@ -33,7 +33,6 @@ public class SnowstormServiceImpl implements SnowstormService {
 
     private final RestClientInterface restClientInterface;
 
-
     public SnowstormServiceImpl(SnowstormRestTemplateAuth restTemplateSSL,
                                 SnowstormWSConfig wsConfig,
                                 SnomedSemantics snomedSemantics) {
