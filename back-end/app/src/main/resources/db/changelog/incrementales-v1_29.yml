@@ -205,3 +205,46 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO document_type VALUES (11, 'Contrarreferencia');
+    
+    - changeSet:  
+        id:  reference_counter_reference_file-createTable
+        author: bchacon  
+        changes:  
+        - createTable: 
+            tableName: reference_counter_reference_file  
+            columns:  
+            - column: 
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_reference_counter_reference_file
+                name:  id  
+                type:  int 
+            - column:
+                constraints:
+                    nullable: false
+                name: path
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: content_type
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: size
+                type: int8
+            - column:
+                constraints:
+                    nullable: false
+                name: type
+                type: int
+            - column:
+                name: reference_counter_reference_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: name
+                type: varchar
