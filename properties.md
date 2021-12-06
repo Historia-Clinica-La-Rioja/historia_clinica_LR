@@ -153,6 +153,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.nomivac.synchronization.url.base  | - | localhost | **Obligatorio** | URL del dominio donde se sincroniza las vacunas | v1.22.0  |
 | ws.nomivac.synchronization.cron.config  | - | - | **Obligatorio** | Cron que determina la periodicidad con la que se envia los datos a nomivac | v1.22.0  |
 | app.feature.HABILITAR_BUS_INTEROPERABILIDAD  | - | false | **Obligatorio** | Define si se va a realizar una comunicación con el bus de interoperabilidad | v1.22.0  |
+| ws.nomivac.rest-client.config.trust-invalid-certificate  | - | false | **Opcional** | Propiedad para ignorar certificados https vencidos | v1.29.0  |
 
 
 ### Sisa reporte epimediológico (snvs)

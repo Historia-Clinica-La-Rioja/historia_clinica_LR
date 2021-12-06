@@ -1,5 +1,6 @@
 package ar.lamansys.sgx.shared.restclient.configuration.resttemplate;
 
+import ar.lamansys.sgx.shared.restclient.configuration.RestUtils;
 import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
@@ -46,20 +47,12 @@ public class RestTemplateSSL extends RestTemplate {
 
 	private static HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory(Integer timeout, boolean trustInvalidCertificate) throws Exception {
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		clientHttpRequestFactory.setHttpClient(httpClient(trustInvalidCertificate));
+		clientHttpRequestFactory.setHttpClient(RestUtils.httpClient(trustInvalidCertificate));
 		clientHttpRequestFactory.setConnectTimeout((timeout != null) ? timeout : 15000);
 		clientHttpRequestFactory.setReadTimeout((timeout != null) ? timeout :15000);
 		return clientHttpRequestFactory;
 	}
 
-	private static HttpClient httpClient(boolean trustInvalidCertificate) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-		SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
-				new SSLContextBuilder().loadTrustMaterial(null, trustInvalidCertificate ? acceptingTrustStrategy : new TrustSelfSignedStrategy()).build());
-		return HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider)
-				.setSSLSocketFactory(socketFactory).build();
-	}
 
 
 }

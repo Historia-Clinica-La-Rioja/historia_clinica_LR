@@ -1,5 +1,6 @@
 package net.pladema.hl7.supporting.conformance;
 
+import ar.lamansys.sgx.shared.restclient.configuration.RestUtils;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.PerformanceOptionsEnum;
 import ca.uhn.fhir.parser.IParser;
@@ -15,6 +16,14 @@ import net.pladema.hl7.supporting.conformance.exceptions.FhirClientEnumException
 import net.pladema.hl7.supporting.conformance.exceptions.FhirClientException;
 import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
 import org.hl7.fhir.r4.model.IdType;
@@ -28,6 +37,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
 @Component
 @Conditional(InteroperabilityCondition.class)
 public class FhirClientR4 {
@@ -39,7 +53,8 @@ public class FhirClientR4 {
     public FhirClientR4(WebApplicationContext webApplicationContext,
                         @Value("${ws.federar.url.base}") String federador,
                         @Value("${ws.bus.url.base}") String bus,
-                        @Value("${ws.nomivac.synchronization.url.base:localhost}") String nomivac){
+                        @Value("${ws.nomivac.synchronization.url.base:localhost}") String nomivac,
+                        @Value("${ws.nomivac.rest-client.config.trust-invalid-certificate:false}") Boolean nomivacTrustInvalidCertificate) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         super();
 
         FhirContext context = FhirContext.forR4();
@@ -65,6 +80,7 @@ public class FhirClientR4 {
         busClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         this.nomivacClient = context.newRestfulGenericClient(nomivac);
+        nomivacClient.getFhirContext().getRestfulClientFactory().setHttpClient(RestUtils.httpClient(nomivacTrustInvalidCertificate));
         nomivacClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         federadorClient = context.newRestfulGenericClient(federador + CodingSystem.SERVER.PATIENT_SERVICE);
