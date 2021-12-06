@@ -14,4 +14,6 @@ public interface ExternalPatientStorage {
     Optional<Integer> getPatientId(Short identificationTypeId, String identificationNumber, Short genderId);
 
     Integer createPatient(ExternalPatientExtendedBo externalPatientExtendedBo);
+
+    void saveMedicalCoverages(ExternalPatientExtendedBo epeBo);
 }

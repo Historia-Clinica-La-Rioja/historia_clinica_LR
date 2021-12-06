@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,6 +34,8 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
 
     private String email;
 
+    private List<ExternalPatientCoverageBo> medicalCoverages;
+
     public ExternalPatientExtendedBo(@Nullable Integer id,
                                      @Nullable Integer patientId,
                                      String externalId,
@@ -46,7 +49,8 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
                                      Short identificationTypeId,
                                      String lastName,
                                      String phoneNumber,
-                                     String email) throws ExternalPatientBoException, ExternalPatientExtendedBoException {
+                                     String email,
+                                     List<ExternalPatientCoverageBo> medicalCoverages) throws ExternalPatientBoException, ExternalPatientExtendedBoException {
         super(id, patientId, externalId, externalEncounterId, externalEncounterDate, EExternalEncounterType);
         if(birthDate==null)
             throw new ExternalPatientExtendedBoException(ExternalPatientExtendedBoEnumException.NULL_BIRTHDATE,"La fecha de nacimiento es obligatoria");
@@ -72,5 +76,6 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
         if(email==null)
             throw new ExternalPatientExtendedBoException(ExternalPatientExtendedBoEnumException.NULL_EMAIL,"El email es obligatorio");
         this.email = email;
+        this.medicalCoverages = medicalCoverages;
     }
 }

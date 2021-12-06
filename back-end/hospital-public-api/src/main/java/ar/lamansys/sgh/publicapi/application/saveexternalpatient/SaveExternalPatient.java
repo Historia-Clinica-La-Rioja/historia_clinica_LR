@@ -25,6 +25,7 @@ public class SaveExternalPatient {
                                         epeBo.getGenderId())
                                 .orElse(externalPatientStorage.createPatient(epeBo)));
         epeBo.setPatientId(patientId);
+        externalPatientStorage.saveMedicalCoverages(epeBo);
         externalPatientStorage.save(epeBo);
         return patientId;
     }

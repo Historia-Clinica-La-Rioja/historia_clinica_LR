@@ -2,14 +2,18 @@ package ar.lamansys.sgh.publicapi.infrastructure.output;
 
 import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientBo;
+import ar.lamansys.sgh.publicapi.domain.ExternalPatientCoverageBo;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientExtendedBo;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalCoverageDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.RequiredPatientDataDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +71,28 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
         log.debug("Input parameter externalPatientExtended -> {}", epeBo);
         Integer result = sharedPatientPort.createPatient(mapToRequiredPatientDataDto(epeBo));
         log.debug("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public void saveMedicalCoverages(ExternalPatientExtendedBo epeBo) {
+        log.debug("Input parameter externalPatientExtended -> {}", epeBo);
+        sharedPatientPort.saveMedicalCoverages(mapToExternalPatientCoverageListDto(epeBo.getMedicalCoverages()), epeBo.getPatientId());
+    }
+
+    private List<ExternalPatientCoverageDto> mapToExternalPatientCoverageListDto(List<ExternalPatientCoverageBo> medicalCoverageListBo) {
+        List<ExternalPatientCoverageDto> result = new ArrayList<>();
+        medicalCoverageListBo
+                .forEach(mc -> result.add(new ExternalPatientCoverageDto(
+                        new ExternalCoverageDto(
+                                mc.getMedicalCoverage().getId(),
+                                mc.getMedicalCoverage().getCuit(),
+                                mc.getMedicalCoverage().getPlan(),
+                                mc.getMedicalCoverage().getName(),
+                                mc.getMedicalCoverage().getType().toString()),
+                        mc.getAffiliateNumber(),
+                        mc.isActive(),
+                        mc.getVigencyDate())));
         return result;
     }
 

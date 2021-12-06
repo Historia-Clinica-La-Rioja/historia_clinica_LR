@@ -9,4 +9,6 @@ public interface SharedPatientPort {
     List<Integer> getPatientId(Short identificationTypeId, String identificationNumber, Short genderId);
 
     Integer createPatient(RequiredPatientDataDto requiredPatientDataDto);
+
+    void saveMedicalCoverages(List<ExternalPatientCoverageDto> externalPatientCoverages, Integer patientId);
 }

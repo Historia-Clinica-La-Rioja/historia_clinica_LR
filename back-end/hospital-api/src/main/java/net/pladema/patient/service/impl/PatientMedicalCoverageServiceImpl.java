@@ -99,4 +99,10 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 		});
 		return result;
 	}
+
+	@Override
+	public List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId) {
+		return saveCoverages(coverages.stream().filter(c -> c.getMedicalCoverage().getId() == null || medicalCoverageRepository.existsById(c.getMedicalCoverage().getId()))
+				.collect(Collectors.toList()), patientId);
+	}
 }

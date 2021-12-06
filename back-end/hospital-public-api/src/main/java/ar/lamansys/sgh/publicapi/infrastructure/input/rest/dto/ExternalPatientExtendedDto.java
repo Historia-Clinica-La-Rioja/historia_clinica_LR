@@ -1,8 +1,8 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto;
 
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,6 +35,8 @@ public class ExternalPatientExtendedDto extends ExternalPatientDto {
 
     private String email;
 
+    private List<ExternalPatientCoverageDto> medicalCoverages;
+
     public ExternalPatientExtendedDto(@Nullable Integer id,
                                       @Nullable Integer patientId,
                                       String externalId,
@@ -47,7 +50,8 @@ public class ExternalPatientExtendedDto extends ExternalPatientDto {
                                       Short identificationTypeId,
                                       String lastName,
                                       String phoneNumber,
-                                      String email) {
+                                      String email,
+                                      List<ExternalPatientCoverageDto> medicalCoverages) {
         super(id, patientId, externalId, externalEncounterId, externalEncounterDate, EExternalEncounterType);
         this.birthDate = birthDate;
         this.firstName = firstName;
@@ -57,5 +61,6 @@ public class ExternalPatientExtendedDto extends ExternalPatientDto {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.medicalCoverages = medicalCoverages;
     }
 }
