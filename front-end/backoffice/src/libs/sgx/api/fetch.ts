@@ -93,4 +93,4 @@ const addAuth = (options: any = {}) => {
 
 const jsonPayload = (method: string, body: any) => ({ method, body: JSON.stringify(body) });
 
-export { sgxFetch, sgxFetchApi, jsonPayload, sgxFetchApiWithToken };
+export { sgxFetch, sgxFetchApi, jsonPayload, withHeader, sgxFetchApiWithToken };

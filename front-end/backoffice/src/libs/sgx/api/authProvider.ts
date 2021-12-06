@@ -1,8 +1,7 @@
 import { AuthProvider } from 'react-admin';
 import SGXPermissions from '../auth/SGXPermissions';
 import roleAssignments from './role-assignments'
-
-import { sgxFetchApi, sgxFetchApiWithToken, jsonPayload } from './fetch';
+import { sgxFetchApi, sgxFetchApiWithToken, jsonPayload, withHeader } from './fetch';
 import { LoggedUserDto, PermissionsDto, PublicInfoDto } from './model';
 import { clearTokens, retrieveToken, saveTokens } from './tokenStorage';
 
@@ -16,9 +15,10 @@ const getPermissions = (): Promise<SGXPermissions> =>
             })
 
 const authProvider: AuthProvider = {
-    login: ({ username, password }) => {
+    login: ({ username, password, raToken }) => {
         const options = jsonPayload('POST', { username, password });
-        return sgxFetchApi<{ token: string, refreshToken: string }>('auth', options)
+        const optionsWithReCaptcha = withHeader(options, 'recaptcha', raToken);
+        return sgxFetchApi<{ token: string, refreshToken: string }>('auth', optionsWithReCaptcha)
             .then(({ token, refreshToken }) => {
                 saveTokens(token, refreshToken);
             });
