@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { PublicInfoDto } from '@api-rest/api-model';
-import { AppFeature } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';
-import { MatIconRegistry } from '@angular/material/icon';
 import { PwaInstallService } from '@core/services/pwa-install.service';
 import { PwaUpdateService } from '@core/services/pwa-update.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Theme } from './components/exchangeable-theme/exchangeable-theme.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+
+import { PublicInfoDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
+import { Theme } from './components/exchangeable-theme/exchangeable-theme.component';
 
 export const DEFAULT_LANG = 'es-AR';
 

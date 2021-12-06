@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { CoreModule } from '@core/core.module';
-
+// deps
+import { PresentationModule } from '@presentation/presentation.module';
+// components
 import { InstitutionExtensionComponent, SystemExtensionComponent } from './routes/extension/extension.component';
 import { PageLayoutComponent } from './components/page-layout/page-layout.component';
 import { TabsComponent } from './components/tabs/tabs.component';
@@ -12,7 +12,8 @@ import { UiComponentListComponent } from './components/ui-component-list/ui-comp
 @NgModule({
 	imports: [
 		CommonModule,
-		CoreModule,
+		// deps
+		PresentationModule,
 	],
 	declarations: [
 		InstitutionExtensionComponent,
@@ -23,6 +24,7 @@ import { UiComponentListComponent } from './components/ui-component-list/ui-comp
 		UiComponentListComponent,
 	],
 	exports: [
+		// components
 		PageLayoutComponent,
 	]
 })

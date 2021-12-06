@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { CoreModule } from '@core/core.module';
-import { PresentationModule } from '@presentation/presentation.module';
-import { ApiRestModule } from '@api-rest/api-rest.module';
+// deps
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
+import { PresentationModule } from '@presentation/presentation.module';
+// routing
 import { InternacionesRoutingModule } from './internaciones-routing.module';
-
 import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
 import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
 import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
@@ -16,8 +14,9 @@ import { InternacionesHomeComponent } from './routes/home/internaciones-home.com
 import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
+import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
-
+// components
 import { AlergiasComponent } from './components/alergias/alergias.component';
 import { AnamnesisFormComponent } from './components/anamnesis-form/anamnesis-form.component';
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
@@ -30,41 +29,42 @@ import { MedicacionComponent } from './components/medicacion/medicacion.componen
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
 import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/nota-evolucion-form.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
-import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 
 @NgModule({
 	declarations: [
-		AlergiasComponent,
+		// routing
 		AnamnesisComponent,
+		CambiarDiagnosticoPrincipalComponent,
+		EpicrisisComponent,
+		EvaluacionClinicaDiagnosticosComponent,
+		InternacionesHomeComponent,
+		InternacionPacienteComponent,
+		NewInternmentComponent,
+		NotaEvolucionComponent,
+		PatientBedRelocationComponent,
+		PatientDischargeComponent,
+		// components
+		AlergiasComponent,
 		AnamnesisFormComponent,
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
-		CambiarDiagnosticoPrincipalComponent,
 		DiagnosticoPrincipalComponent,
 		DiagnosticosComponent,
-		EpicrisisComponent,
 		EpicrisisFormComponent,
-		EvaluacionClinicaDiagnosticosComponent,
-		InternacionesHomeComponent,
 		InternacionesTableComponent,
-		InternacionPacienteComponent,
 		MedicacionComponent,
 		MedicalDischargeComponent,
-		NewInternmentComponent,
-		NotaEvolucionComponent,
 		NotaEvolucionFormComponent,
-		PatientDischargeComponent,
 		VacunasComponent,
-		PatientBedRelocationComponent,
 	],
 	imports: [
 		CommonModule,
 		FormsModule,
-		CoreModule,
-		PresentationModule,
-		ApiRestModule,
-		HistoriaClinicaModule,
+		// routing
 		InternacionesRoutingModule,
+		// deps
+		HistoriaClinicaModule,
+		PresentationModule,
 	]
 })
 export class InternacionesModule { }

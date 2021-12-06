@@ -3,24 +3,26 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppMaterialModule } from '@material/app.material.module';
 import { FlexModule } from '@angular/flex-layout';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
-
+// deps
+import { AppMaterialModule } from '@material/app.material.module';
+// components
 import { ContentComponent } from './components/content/content.component';
+// directives
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 
-
 @NgModule({
 	declarations: [
+		// components
 		ContentComponent,
-		HasRoleDirective,
+		// directives
 		FeatureFlagDirective,
+		HasRoleDirective,
 	],
 	imports: [
-		AppMaterialModule,
 		CommonModule,
 		HttpClientModule,
 		FormsModule,
@@ -30,13 +32,11 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		RouterModule,
 		TranslateModule,
 		FlexModule,
+		// deps
+		AppMaterialModule,
 	],
 	exports: [
-		AppMaterialModule,
 		CommonModule,
-		ContentComponent,
-		FeatureFlagDirective,
-		HasRoleDirective,
 		HttpClientModule,
 		FormsModule,
 		ReactiveFormsModule,
@@ -44,6 +44,13 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		RecaptchaFormsModule,
 		RouterModule,
 		TranslateModule,
+		// deps
+		AppMaterialModule,
+		// components
+		ContentComponent,
+		// directives
+		FeatureFlagDirective,
+		HasRoleDirective,
 	],
 	providers: []
 })

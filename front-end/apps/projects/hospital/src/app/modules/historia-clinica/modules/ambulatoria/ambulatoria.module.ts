@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 
-import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { ExtensionsModule } from '@extensions/extensions.module';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
@@ -89,7 +88,6 @@ import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-d
 		FormsModule,
 		OverlayModule,
 		PortalModule,
-		CoreModule,
 		PresentationModule,
 		ExtensionsModule,
 		HistoriaClinicaModule,

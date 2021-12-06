@@ -9,24 +9,31 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import localeEsArExtras from '@angular/common/locales/extra/es-AR';
+// providers
 import { httpInterceptorProviders } from './http-interceptors';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent, DEFAULT_LANG } from './app.component';
-// Módulos nuestros que se cargan al inicio
-import { CoreModule } from '@core/core.module';
 import { pwaInstallProviders } from '@core/services/pwa-install.service';
-import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
-import { ApiRestModule } from '@api-rest/api-rest.module';
-import { PublicService } from '@api-rest/services/public.service';
-import { PresentationModule } from '@presentation/presentation.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { environment } from '@environments/environment';
+// routing
+import { AppRoutingModule } from './app-routing.module';
+// components
+import { AppComponent, DEFAULT_LANG } from './app.component';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
+// deps
+import { ApiRestModule } from '@api-rest/api-rest.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CoreModule } from '@core/core.module';
+import { PresentationModule } from '@presentation/presentation.module';
+
+// services
+import { PublicService } from '@api-rest/services/public.service';
+import { FlavoredMultiTranslateHttpLoader } from '@core/utils/flavored-multi-translate-http-loader';
+
+import { environment } from '@environments/environment';
 
 registerLocaleData(localeEsAr, localeEsArExtras);
 
 @NgModule({
 	declarations: [
+		// components
 		AppComponent,
 		ExchangeableThemeComponent,
 	],
@@ -43,13 +50,12 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 				deps: [HttpClient, PublicService]
 			}
 		}),
-		// Módulos nuestros que se cargan al inicio
+		// deps
 		ApiRestModule,
 		AuthModule,
 		CoreModule,
 		PresentationModule,
-		// Module import order
-		// https://angular.io/guide/router#module-import-order
+		// routing https://angular.io/guide/router#module-import-order
 		AppRoutingModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {
 			enabled: environment.production,
