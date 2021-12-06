@@ -23,9 +23,7 @@ public class RestTemplateReverseProxy implements ReverseProxy {
 			String baseUrl,
 			Map<String, String> defaultHeaders
 	) throws Exception {
-		this.restTemplate = new RestTemplateSSL(
-				new LoggingRequestInterceptor()
-		);
+		this.restTemplate = new RestTemplateSSL();
 		this.restTemplate.setErrorHandler(new ReverseProxyResponseErrorHandler());
 		this.baseUrl = baseUrl;
 		this.defaultHeaders = defaultHeaders;

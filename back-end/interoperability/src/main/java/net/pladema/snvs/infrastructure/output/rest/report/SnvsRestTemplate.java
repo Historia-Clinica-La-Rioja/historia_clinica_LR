@@ -1,6 +1,5 @@
 package net.pladema.snvs.infrastructure.output.rest.report;
 
-import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateAuth;
 import net.pladema.snvs.infrastructure.configuration.SnvsCondition;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,6 @@ public class SnvsRestTemplate extends RestTemplateAuth {
 
     public SnvsRestTemplate(SisaAuthInterceptor sisaAuthInterceptor,
                             @Value("${ws.sisa.snvs.rest-client.config.trust-invalid-certificate:false}") Boolean trustInvalidCertificate) throws Exception {
-        super(sisaAuthInterceptor, new LoggingRequestInterceptor(), trustInvalidCertificate);
+        super(sisaAuthInterceptor, trustInvalidCertificate);
     }
 }

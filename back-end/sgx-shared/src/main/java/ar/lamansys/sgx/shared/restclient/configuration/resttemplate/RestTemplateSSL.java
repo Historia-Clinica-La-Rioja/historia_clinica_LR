@@ -20,27 +20,27 @@ import java.security.cert.X509Certificate;
 
 public class RestTemplateSSL extends RestTemplate {
 	
-	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor) throws Exception {
+	public RestTemplateSSL() throws Exception {
 		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory(null, false)));
-		this.getInterceptors().add(loggingRequestInterceptor);
+		this.getInterceptors().add(new LoggingRequestInterceptor());
 		this.setErrorHandler(new RestTemplateExceptionHandler());
 	}
 
-	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor, Integer timeout) throws Exception {
+	public RestTemplateSSL(Integer timeout) throws Exception {
 		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory(timeout, false)));
-		this.getInterceptors().add(loggingRequestInterceptor);
+		this.getInterceptors().add(new LoggingRequestInterceptor());
 		this.setErrorHandler(new RestTemplateExceptionHandler());
 	}
 
-	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor, Integer timeout, boolean trustInvalidCertificate) throws Exception {
+	public RestTemplateSSL(Integer timeout, boolean trustInvalidCertificate) throws Exception {
 		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory(timeout, trustInvalidCertificate)));
-		this.getInterceptors().add(loggingRequestInterceptor);
+		this.getInterceptors().add(new LoggingRequestInterceptor());
 		this.setErrorHandler(new RestTemplateExceptionHandler());
 	}
 
-	public RestTemplateSSL(LoggingRequestInterceptor loggingRequestInterceptor, boolean trustInvalidCertificate) throws Exception {
+	public RestTemplateSSL(boolean trustInvalidCertificate) throws Exception {
 		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory(null, trustInvalidCertificate)));
-		this.getInterceptors().add(loggingRequestInterceptor);
+		this.getInterceptors().add(new LoggingRequestInterceptor());
 		this.setErrorHandler(new RestTemplateExceptionHandler());
 	}
 

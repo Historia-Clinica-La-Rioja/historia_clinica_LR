@@ -25,7 +25,7 @@ public class RenaperAuthService extends AuthService<RenaperLoginResponse> {
 	private RenaperWSConfig renaperWSConfig;
 
 	public RenaperAuthService(RenaperWSConfig wsConfig) throws Exception {
-		super(wsConfig.getLoginPath(), new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
+		super(wsConfig.getLoginPath(), new RestTemplateSSL(), wsConfig);
 		renaperWSConfig = wsConfig;
 	}
 

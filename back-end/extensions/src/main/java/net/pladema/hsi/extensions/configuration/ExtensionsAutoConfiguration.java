@@ -39,6 +39,6 @@ public class ExtensionsAutoConfiguration {
 			return new DefaultExtensionService();
 		if ("demo".equals(wsConfig.getBaseUrl()))
 			return new DemoExtensionService();
-		return new RestExtensionService(new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
+		return new RestExtensionService(new RestTemplateSSL(), wsConfig);
 	}
 }
