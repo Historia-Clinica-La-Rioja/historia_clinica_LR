@@ -12,8 +12,9 @@ import java.util.stream.Stream;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EReferenceCounterReferenceType {
 
-    REFERENCIA(1, "Referencia");
-    
+    REFERENCIA(1, "Referencia"),
+    CONTRARREFERENCIA(2, "Contrarreferencia");
+
     private final Short id;
     private final String description;
 

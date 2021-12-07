@@ -39,4 +39,6 @@ public class CounterReferenceBo {
 
     private List<@Valid CounterReferenceAllergyBo> allergies = new ArrayList<>();
 
+    private List<Integer> fileIds;
+
 }

@@ -96,6 +96,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 					snomed: procedure.snomed
 				};
 			}),
+			fileIds: [],
 		};
 	}
 

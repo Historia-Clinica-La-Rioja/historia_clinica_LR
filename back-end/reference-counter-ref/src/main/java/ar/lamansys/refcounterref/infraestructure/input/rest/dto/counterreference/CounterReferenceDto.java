@@ -32,4 +32,6 @@ public class CounterReferenceDto implements Serializable {
 
     private List<@Valid CounterReferenceAllergyDto> allergies = new ArrayList<>();
 
+    private List<Integer> fileIds = new ArrayList<>();
+
 }

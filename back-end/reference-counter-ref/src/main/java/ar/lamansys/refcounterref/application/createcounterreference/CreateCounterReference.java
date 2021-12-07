@@ -52,7 +52,8 @@ public class CreateCounterReference {
                         counterReferenceBo.getClinicalSpecialtyId(),
                         now,
                         doctorInfoBo.getId(),
-                        true));
+                        true,
+                        counterReferenceBo.getFileIds()));
 
         counterReferenceDocumentStorage.save(new CounterReferenceDocumentBo(null, counterReferenceBo, encounterId, doctorInfoBo.getId()));
 

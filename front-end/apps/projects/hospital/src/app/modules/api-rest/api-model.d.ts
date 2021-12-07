@@ -424,6 +424,7 @@ export interface CounterReferenceDto extends Serializable {
     allergies: CounterReferenceAllergyDto[];
     clinicalSpecialtyId: number;
     counterReferenceNote: string;
+    fileIds: number[];
     medications: CounterReferenceMedicationDto[];
     procedures: CounterReferenceProcedureDto[];
     referenceId: number;
