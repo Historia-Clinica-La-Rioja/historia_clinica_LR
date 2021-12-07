@@ -2,7 +2,6 @@ package net.pladema.snowstorm.configuration;
 
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.AuthService;
-import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
 import net.pladema.snowstorm.services.domain.SnowstormLoginResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

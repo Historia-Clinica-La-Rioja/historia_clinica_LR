@@ -1,7 +1,6 @@
 package ar.lamansys.sgx.shared.proxy.reverse.resttemplate;
 
 import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
-import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

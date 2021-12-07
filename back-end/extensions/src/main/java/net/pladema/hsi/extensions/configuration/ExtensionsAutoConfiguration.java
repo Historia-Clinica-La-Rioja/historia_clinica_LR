@@ -1,6 +1,5 @@
 package net.pladema.hsi.extensions.configuration;
 
-import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import net.pladema.hsi.extensions.configuration.plugins.SystemMenuExtensionPlugin;
 import net.pladema.hsi.extensions.domain.ExtensionService;
