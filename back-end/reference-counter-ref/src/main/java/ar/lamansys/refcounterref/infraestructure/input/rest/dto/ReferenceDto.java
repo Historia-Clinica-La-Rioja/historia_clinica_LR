@@ -33,4 +33,6 @@ public class ReferenceDto implements Serializable {
 
     private List<ReferenceProblemDto> problems;
 
+    private List<ReferenceFileDto> files;
+
 }

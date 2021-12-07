@@ -1797,11 +1797,17 @@ export interface ReducedPatientDto {
 export interface ReferenceDto extends Serializable {
     careLine: CareLineDto;
     clinicalSpecialty: ClinicalSpecialtyDto;
+    files: ReferenceFileDto[];
     id: number;
     note: ReferenceNoteDto;
     problems: ReferenceProblemDto[];
     professional: ProfessionalPersonDto;
     referenceDate: DateDto;
+}
+
+export interface ReferenceFileDto extends Serializable {
+    fileId: number;
+    fileName: string;
 }
 
 export interface ReferenceNoteDto extends Serializable {

@@ -1,6 +1,9 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.file;
 
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
+import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
+import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
+import ar.lamansys.refcounterref.domain.file.StoredFileBo;
 import ar.lamansys.sgx.shared.files.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -43,6 +48,29 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
             referenceFile.setReferenceCounterReferenceId(referenceCounterReferenceId);
             referenceCounterReferenceFileRepository.save(referenceFile);
         });
+    }
+
+    @Override
+    public StoredFileBo getFile(Integer fileId, Integer type) {
+        log.debug("Input parameters -> fileId {}, type {}", fileId, type);
+        StoredFileBo result = referenceCounterReferenceFileRepository.findByIdAndType(fileId, type).stream().map(rcrf ->
+                new StoredFileBo(
+                        fileService.loadFile(rcrf.getPath()),
+                        rcrf.getContentType(),
+                        rcrf.getSize())).findFirst().orElse(null);
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public Map<Integer, List<ReferenceCounterReferenceFileBo>> getFilesByReferenceCounterReferenceIdsAndType(List<Integer> referenceCounterReferenceIds, EReferenceCounterReferenceType type) {
+        log.debug("Input parameters -> referenceCounterReferenceIds {}, type {}", referenceCounterReferenceIds, type);
+        Map<Integer, List<ReferenceCounterReferenceFileBo>> result = referenceCounterReferenceFileRepository.findByReferenceCounterReferenceIdsAndType(referenceCounterReferenceIds, type.getId().intValue())
+                .stream()
+                .map(ReferenceCounterReferenceFileBo::new)
+                .collect(Collectors.groupingBy(ReferenceCounterReferenceFileBo::getReferenceCounterReferenceId));
+        log.debug(OUTPUT, result);
+        return result;
     }
 
     private String buildPartialPath(Integer patientId, String relativeFilePath) {

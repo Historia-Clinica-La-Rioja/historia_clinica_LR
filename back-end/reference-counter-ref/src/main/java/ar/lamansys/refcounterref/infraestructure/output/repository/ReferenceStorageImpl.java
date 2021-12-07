@@ -2,6 +2,8 @@ package ar.lamansys.refcounterref.infraestructure.output.repository;
 
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
+import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
+import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
@@ -58,8 +60,14 @@ public class ReferenceStorageImpl implements ReferenceStorage {
                 .map(ReferenceProblemBo::new)
                 .collect(Collectors.groupingBy(ReferenceProblemBo::getReferenceId));
 
-        List<ReferenceGetBo> result = queryResult.stream().map(ref -> {
+        queryResult = queryResult.stream().map(ref -> {
             ref.setProblems(problems.get(ref.getId()));
+            return ref;
+        }).collect(Collectors.toList());
+
+        Map<Integer, List<ReferenceCounterReferenceFileBo>> files = referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdsAndType(referenceIds, EReferenceCounterReferenceType.REFERENCIA);
+        List<ReferenceGetBo> result = queryResult.stream().map(ref -> {
+            ref.setFiles(files.get(ref.getId()));
             return ref;
         }).collect(Collectors.toList());
 
