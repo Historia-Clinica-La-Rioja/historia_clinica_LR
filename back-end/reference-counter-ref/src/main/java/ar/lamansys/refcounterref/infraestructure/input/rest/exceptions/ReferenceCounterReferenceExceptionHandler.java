@@ -1,7 +1,10 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.exceptions;
 
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
+import ar.lamansys.refcounterref.application.createcounterreferencefile.exceptions.CreateCounterReferenceFileException;
+import ar.lamansys.refcounterref.application.createreferencefile.exceptions.CreateReferenceFileException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
+import ar.lamansys.refcounterref.application.getreferencefile.exceptions.GetReferenceFileException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +36,26 @@ public class ReferenceCounterReferenceExceptionHandler {
     protected ApiErrorDto handleCreateCounterReferenceException(CreateCounterReferenceException ex, Locale locale) {
         log.debug("CreateCounterReferenceException exception -> {}", ex.getMessages());
         return new ApiErrorDto(ex.getCode().toString(), ex.getMessages());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({CreateReferenceFileException.class})
+    protected ApiErrorMessageDto handleCreateReferenceFileException(CreateReferenceFileException ex, Locale locale) {
+        log.debug("CreateReferenceFileException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({GetReferenceFileException.class})
+    protected ApiErrorMessageDto handleGetReferenceFileException(GetReferenceFileException ex, Locale locale) {
+        log.debug("GetReferenceFileException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({CreateCounterReferenceFileException.class})
+    protected ApiErrorMessageDto handleCreateCounterReferenceFileException(CreateCounterReferenceFileException ex, Locale locale) {
+        log.debug("CreateCounterReferenceFileException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
     }
 }

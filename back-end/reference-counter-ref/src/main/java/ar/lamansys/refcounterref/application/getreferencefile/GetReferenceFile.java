@@ -1,5 +1,9 @@
 package ar.lamansys.refcounterref.application.getreferencefile;
 
+import ar.lamansys.refcounterref.application.createreferencefile.exceptions.CreateReferenceFileException;
+import ar.lamansys.refcounterref.application.createreferencefile.exceptions.CreateReferenceFileExceptionEnum;
+import ar.lamansys.refcounterref.application.getreferencefile.exceptions.GetReferenceFileException;
+import ar.lamansys.refcounterref.application.getreferencefile.exceptions.GetReferenceFileExceptionEnum;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.file.StoredFileBo;
@@ -18,6 +22,10 @@ public class GetReferenceFile {
     @Transactional
     public StoredFileBo run(Integer fileId) {
         log.debug("Input parameters -> fileId {}", fileId);
+
+        if (fileId == null)
+            throw new GetReferenceFileException(GetReferenceFileExceptionEnum.NULL_FILE_ID, "El id del archivo es obligatorio");
+
         StoredFileBo result = referenceCounterReferenceFileStorage.getFile(fileId, EReferenceCounterReferenceType.REFERENCIA.getId().intValue());
         return result;
     }
