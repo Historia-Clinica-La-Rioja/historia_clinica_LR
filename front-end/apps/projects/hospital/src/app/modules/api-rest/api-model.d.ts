@@ -1522,6 +1522,7 @@ export interface OutpatientReferenceDto {
     careLineId: number;
     clinicalSpecialtyId: number;
     consultation?: boolean;
+    fileIds?: number[];
     note?: string;
     problems: OutpatientReferenceProblemDto[];
     procedure?: boolean;

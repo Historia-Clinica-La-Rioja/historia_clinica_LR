@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository;
 
+import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
@@ -29,6 +30,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     private final ReferenceNoteRepository referenceNoteRepository;
     private final ReferenceHealthConditionRepository referenceHealthConditionRepository;
     private final HealthConditionStorage healthConditionStorage;
+    private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 
     @Override
     public void save(List<ReferenceBo> referenceBoList) {
@@ -42,6 +44,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
             Integer referenceId = referenceRepository.save(ref).getId();
             List<ReferenceHealthCondition> referenceHealthConditionList = saveProblems(referenceId, referenceBo);
             log.debug("referenceHealthConditionList, referenceId -> {} {}", referenceHealthConditionList, referenceId);
+            referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
         });
     }
 
