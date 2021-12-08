@@ -147,6 +147,20 @@
                 "ERROR": "Error al crear el usuario",
 				"UPDATE_SUCCESS": "El usuario se actualizó exitosamente"
 			}
+        },
+		"edit_professions": {
+            "TITLE": "Editar profesión",
+            "LICENCE": "Matrícula",
+			"ENTER_LICENCE": "Ingrese matrícula",
+			"LICENCE_REQUIRED":"El campo es requerido",
+			"SELECT_PROFESSION": "Seleccione profesión",
+			"SELECT_SPECIALTY": "Seleccione especialidad",
+            "PROFESSION_SPECIALTY": "Profesión | Especialidad",
+			"ADD_ANOTHER_PROFESSION_AND_SPECIALTY": "+ Agregar otra profesión/especialidad",
+			"messages": {
+                "SUCCESS": "Se guardaron correctamente los cambios en profesiones",
+                "ERROR": "Error al guardaron los cambios en profesiones"
+			}
         }
     }
 }

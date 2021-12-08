@@ -18,6 +18,7 @@ import { ViewPatientDetailComponent } from './component/view-patient-detail/view
 // dialogs
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
+import { EditProfessionsComponent } from './dialogs/edit-professions/edit-professions.component';
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,9 @@ import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.compon
 		SearchCreateComponent,
 		ViewPatientDetailComponent,
 		// dialogs
+		EditPatientComponent,
+		ScanPatientComponent,
+		EditProfessionsComponent,
 		ReportsComponent,
 		ScanPatientComponent,
 	],

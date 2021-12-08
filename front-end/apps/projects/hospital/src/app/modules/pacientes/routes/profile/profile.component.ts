@@ -29,7 +29,8 @@ import { processErrors } from "@core/utils/form.utils";
 import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { PermissionsService } from "@core/services/permissions.service";
-import {UserPasswordResetService} from "@api-rest/services/user-password-reset.service";
+import { UserPasswordResetService } from "@api-rest/services/user-password-reset.service";
+import { EditProfessionsComponent } from '@pacientes/dialogs/edit-professions/edit-professions.component';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -68,7 +69,7 @@ export class ProfileComponent implements OnInit {
 		private router: Router,
 		private personService: PersonService,
 		private contextService: ContextService,
-		private userPasswordResetService : UserPasswordResetService,
+		private userPasswordResetService: UserPasswordResetService,
 		private internmentPatientService: InternmentPatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -145,6 +146,13 @@ export class ProfileComponent implements OnInit {
 		};
 		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
 			queryParams: person
+		});
+	}
+
+	editProfessions(): void {
+		this.dialog.open(EditProfessionsComponent, {
+			width: '350px',
+			data: { personId: this.personId }
 		});
 	}
 
