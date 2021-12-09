@@ -22,8 +22,8 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +54,7 @@ public class SnvsController {
     public List<SnvsReportDto> reportSnvs(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
-            @RequestParam(value = "toReportList") List<SnvsToReportDto> toReportList) throws ReportProblemException,
+            @RequestBody List<SnvsToReportDto> toReportList) throws ReportProblemException,
             SnvsProblemBoException, ReportCommandBoException, SnvsEventInfoBoException, SnvsStorageException, ReportPortException {
         List<SnvsReportBo> resultService = reportProblems.run(buildCommand(toReportList, institutionId, patientId));
         logger.debug(OUTPUT, resultService);
