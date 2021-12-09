@@ -28,11 +28,6 @@ const routes: Routes = [
 		path: 'oauth',
 		component: AuthComponent,
 		children: [
-			{
-				path: 'chaco',
-				redirectTo: 'login',
-				pathMatch: 'full',
-			},
 			{ path: 'login', component: OauthLoginComponent }
 		]
 	},
