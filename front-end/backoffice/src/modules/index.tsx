@@ -27,6 +27,7 @@ import users from './users';
 import passwordReset from './password-reset';
 import careLines from "./carelines";
 import clinicalspecialtycarelines from "./clinicalspecialtycarelines";
+import restClientMeasures from "./rest-client-measures";
 
 const resourcesAdminInstitucional = [
     <Resource name="sectortypes" />,
@@ -85,6 +86,7 @@ const resourcesAdminRoot = [
     <Resource name="users" {...users} />,
     <Resource name="carelines" {...careLines} />,
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
+    <Resource name="rest-client-measures" {...restClientMeasures} />,
 ];
 
 const resourcesFor = (permissions: SGXPermissions) =>

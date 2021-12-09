@@ -285,6 +285,20 @@ const messages = {
         "nomivac-immunizationsync": {
             name: 'Nomivac |||| Nomivac',
         },
+        "rest-client-measures": {
+            name: 'Monitoreo servicio',
+            fields: {
+                uri: 'Uri',
+                host: 'Host',
+                path: 'Path',
+                method: 'Método',
+                time: 'Tiempo de respuesta(seg)',
+                responseTimeInMillis: 'Tiempo de respuesta(ms)',
+                responseCode: 'Código de respuesta',
+                requestDate: 'Fecha de pedido',
+            },
+            addRelated: 'Agregar especialidad',
+        },
     },
 };
 
