@@ -67,7 +67,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	}
 
 	private buildCounterReferenceDto(): CounterReferenceDto {
-		
+
 		return {
 			referenceId: this.data.data.reference.id,
 			allergies: this.alergiasNuevaConsultaService.getAlergias().map((allergy: Alergia) => {
@@ -100,20 +100,22 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	}
 
 	private buildDateDto(date: string): DateDto {
-		const dateSplit = date.split("-");
-		return (
-			{
-				year: Number(dateSplit[0]),
-				month: Number(dateSplit[1]),
-				day: Number(dateSplit[2]),
-				
-			}
-		)
+		if (date) {
+			const dateSplit = date.split("-");
+			return (
+				{
+					year: Number(dateSplit[0]),
+					month: Number(dateSplit[1]),
+					day: Number(dateSplit[2]),
+				}
+			)
+		}
+		return null;
 	}
 
 	private createCounterreference(counterreference: CounterReferenceDto): void {
 		this.counterreferenceService.createCounterReference(this.data.data.patientId, counterreference).subscribe(
-			success=> {
+			success => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.counterreference.messages.SUCCESS');
 				this.dockPopupRef.close(mapToFieldsToUpdate());
 			},
