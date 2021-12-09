@@ -14,7 +14,7 @@ public class DemoExtensionService implements ExtensionService {
 	@Override
 	public UIMenuItemDto[] getSystemMenu() {
 		return JsonResourceUtils.readJson(
-				"classpath:module/demo/system/menu.json",
+				"module/demo/system/menu.json",
 				new TypeReference<>() {},
 				NO_MENU
 		);
@@ -23,7 +23,7 @@ public class DemoExtensionService implements ExtensionService {
 	@Override
 	public UIPageDto getSystemPage(String menuId) {
 		return JsonResourceUtils.readJson(
-				String.format("classpath:module/demo/system/page/%s.json", menuId),
+				String.format("module/demo/system/page/%s.json", menuId),
 				new TypeReference<>() {},
 				INVALID_PAGE
 		);
@@ -32,7 +32,7 @@ public class DemoExtensionService implements ExtensionService {
 	@Override
 	public UIMenuItemDto[] getInstitutionMenu(Integer institutionId) {
 		return JsonResourceUtils.readJson(
-				String.format("classpath:module/demo/institution/%s/menu.json", institutionId),
+				String.format("module/demo/institution/%s/menu.json", institutionId),
 				new TypeReference<>() {},
 				NO_MENU
 		);
@@ -41,7 +41,7 @@ public class DemoExtensionService implements ExtensionService {
 	@Override
 	public UIPageDto getInstitutionPage(Integer institutionId, String menuId) {
 		return JsonResourceUtils.readJson(
-				String.format("classpath:module/demo/institution/%s/page/%s.json", institutionId, menuId),
+				String.format("module/demo/institution/%s/page/%s.json", institutionId, menuId),
 				new TypeReference<>() {},
 				INVALID_PAGE
 		);
@@ -50,7 +50,7 @@ public class DemoExtensionService implements ExtensionService {
 	@Override
 	public UIMenuItemDto[] getPatientMenu(Integer patientId) {
 		return JsonResourceUtils.readJson(
-				String.format("classpath:module/demo/patient/%s/menu.json", patientId),
+				String.format("module/demo/patient/%s/menu.json", patientId),
 				new TypeReference<>() {},
 				NO_MENU
 		);
@@ -59,7 +59,7 @@ public class DemoExtensionService implements ExtensionService {
 	@Override
 	public UIPageDto getPatientPage(Integer patientId, String menuId) {
 		return JsonResourceUtils.readJson(
-				String.format("classpath:module/demo/patient/%s/page/%s.json", patientId, menuId),
+				String.format("module/demo/patient/%s/page/%s.json", patientId, menuId),
 				new TypeReference<>() {},
 				INVALID_PAGE
 		);
