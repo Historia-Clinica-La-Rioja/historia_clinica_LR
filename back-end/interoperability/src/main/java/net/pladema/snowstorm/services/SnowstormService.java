@@ -7,6 +7,8 @@ import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 public interface SnowstormService {
 
     SnowstormSearchResponse getConcepts(String term, String ecl) throws SnowstormApiException;
@@ -17,4 +19,5 @@ public interface SnowstormService {
 
     <T> T getRefsetMembers(String referencedComponentId, String referenceSetId, String limit, Class<T> type) throws SnowstormApiException;
 
+    ResponseEntity<SnowstormSearchResponse> status();
 }

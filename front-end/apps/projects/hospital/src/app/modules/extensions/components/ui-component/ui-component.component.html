@@ -24,6 +24,21 @@
 		<code>{{uiComponent.args.value | json}}</code>
 	</div>
 
+	<div *ngSwitchCase="'card'">
+		<app-card
+			[title]="uiComponent.args.title"
+			[content]="uiComponent.args.content"
+		></app-card>
+	</div>
+
+	<div *ngSwitchCase="'json'">
+		<app-json
+			[content]="uiComponent.args.content"
+		></app-json>
+	</div>
+
+	<mat-divider *ngSwitchCase="'divider'" inset></mat-divider>
+
 	<div *ngSwitchDefault>
 		<span class="mat-title">
 			Componente "<code>{{uiComponent.type}}</code>"

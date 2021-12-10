@@ -41,6 +41,13 @@
         </dependency>
 
         <dependency>
+            <groupId>ar.lamansys.hsi</groupId>
+            <artifactId>extensions</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
             <version>${hapifhir.version}</version>

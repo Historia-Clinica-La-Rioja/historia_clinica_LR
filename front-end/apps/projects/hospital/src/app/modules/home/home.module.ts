@@ -10,6 +10,9 @@ import { ProfileComponent } from './routes/profile/profile.component';
 import { SettingsComponent } from './routes/settings/settings.component';
 // components
 import { HomeComponent } from './home.component';
+import { LogoSettingsComponent } from './components/logo-settings/logo-settings.component';
+import { FeatureSettingsComponent } from './components/feature-settings/feature-settings.component';
+
 
 @NgModule({
 	declarations: [
@@ -19,6 +22,8 @@ import { HomeComponent } from './home.component';
 		SettingsComponent,
 		// components
 		HomeComponent,
+		LogoSettingsComponent,
+		FeatureSettingsComponent,
 	],
 	imports: [
 		CommonModule,

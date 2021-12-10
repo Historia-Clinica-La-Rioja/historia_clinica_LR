@@ -26,6 +26,14 @@
 			"confirm_dialog": {
 				"TITLE": "Restablecer"
 			}
+		},
+		"features": {
+			"TITLE": "Funcionalidad"
+		}
+	},
+	"ws": {
+		"snowstorm": {
+			"TITLE": "Snowstorm"
 		}
 	}
 }

@@ -13,6 +13,8 @@ import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import net.pladema.snowstorm.services.exceptions.SnowstormEnumException;
+import net.pladema.snowstorm.services.exceptions.SnowstormStatusException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -132,6 +134,15 @@ public class SnowstormServiceImpl implements SnowstormService {
         return result;
     }
 
+    @Override
+    public ResponseEntity<SnowstormSearchResponse> status() {
+
+        try {
+            return restClientInterface.exchangeGet(snowstormWSConfig.getConceptsUrl(), SnowstormSearchResponse.class);
+        } catch (Exception e) {
+            throw new SnowstormStatusException(e);
+        }
+    }
 
     private SnowstormApiException mapException(RestTemplateApiException apiException) {
         if (apiException.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR)

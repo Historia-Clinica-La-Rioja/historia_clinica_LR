@@ -1,0 +1,8 @@
+<app-content>
+	<ng-container *ngIf="(page$ | async) as page; else loading">
+		<app-page-layout [page]="page"></app-page-layout>
+	</ng-container>
+	<ng-template #loading>
+		<app-page-layout></app-page-layout>
+	</ng-template>
+</app-content>
