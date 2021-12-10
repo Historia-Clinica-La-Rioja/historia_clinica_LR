@@ -92,7 +92,8 @@
 				},
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
-					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente"
+					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente",
+					"ERROR_TO_UPDATE_FILES": "Error al guardar la solicitud de referencia"
 				},
 				"problemas": {
 					"buttons": {
@@ -236,7 +237,7 @@
 					"PLACEHOLDER_SPECIALITY": "Especialidad",
 					"PLACEHOLDER_INSTITUTION": "Institución",
 					"PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
-					"ATTACH_FILE": "Adjuntar archivos",
+					"UPLOAD_FILES": "Adjuntar archivos",
 					"ADD_REFERENCE": "AGREGAR SOLICITUD"
 				}
 			},

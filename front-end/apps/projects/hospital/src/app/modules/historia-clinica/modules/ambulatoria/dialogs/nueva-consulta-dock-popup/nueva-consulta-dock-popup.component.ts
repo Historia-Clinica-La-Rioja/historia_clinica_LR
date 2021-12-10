@@ -30,7 +30,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { AmbulatoryConsultationReferenceService } from '../../services/ambulatory-consultation-reference.service';
+import { AmbulatoryConsultationReferenceService, Reference } from '../../services/ambulatory-consultation-reference.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -39,6 +39,7 @@ import { PreviousDataComponent } from '../previous-data/previous-data.component'
 import { Observable, of } from 'rxjs';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
+import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -89,6 +90,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly careLineService: CareLineService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
+		private readonly referenceFileService: ReferenceFileService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -99,7 +101,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
+		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService, this.referenceFileService, this.snackBarService);
 	}
 
 	setProfessionalSpecialties() {
@@ -177,7 +179,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe( isOn => this.ffIsOn = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => this.ffIsOn = isOn);
 	}
 
 
@@ -185,7 +187,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if ((this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) ||
 			(this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData())) {
 			const dialogRef = this.dialog.open(PreviousDataComponent,
-				 {
+				{
 					data: {
 						signosVitalesNuevaConsultaService: this.signosVitalesNuevaConsultaService,
 						datosAntropometricosNuevaConsultaService: this.datosAntropometricosNuevaConsultaService
@@ -193,7 +195,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					disableClose: true,
 					autoFocus: false
 				});
-			return	dialogRef.afterClosed();
+			return dialogRef.afterClosed();
 		}
 		else return of(true);
 	}
@@ -210,8 +212,37 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			if (answerPreviousData) {
 				if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
 					if (!fieldsService.nonCompletedFields.length) {
-						this.createConsultation(nuevaConsulta);
-						this.disableConfirmButton = true;
+						let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+						if (!references.length) {
+							this.goToCreateConsultation(nuevaConsulta);
+							return;
+						}
+						let longReferences = 0;
+						for (let reference of references) {
+							if (!reference.referenceFiles.length) {
+								this.goToCreateConsultation(nuevaConsulta);
+								return;
+							}
+							let longFiles = 0;
+							for (let file of reference.referenceFiles) {
+								this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
+									fileId => {
+										longFiles = longFiles + 1;
+
+										reference.referenceIds.push(fileId);
+										this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
+
+										if ((longFiles === reference.referenceFiles.length) && (longReferences === references.length)) {
+											this.goToCreateConsultation(nuevaConsulta);
+										}
+									},
+									() => {
+										this.errorToUpdateReferenceFiles(references);
+									}
+								)
+							}
+							longReferences = longReferences + 1;
+						}
 					}
 					else {
 						this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta);
@@ -225,7 +256,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], nuevaConsulta: CreateOutpatientDto): void {
-
 		const dialogRef = this.dialog.open(SuggestedFieldsPopupComponent, {
 			data: {
 				nonCompletedFields,
@@ -234,8 +264,38 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(confirmado => {
 			if (confirmado) {
-				this.createConsultation(nuevaConsulta);
-				this.disableConfirmButton = true;
+				let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+				if (!references.length) {
+					this.goToCreateConsultation(nuevaConsulta);
+					return;
+				}
+				let longReferences = 0;
+				for (let reference of references) {
+					if (!reference.referenceFiles.length) {
+						this.goToCreateConsultation(nuevaConsulta);
+						return
+					}
+					let longFiles = 0;
+					for (let file of reference.referenceFiles) {
+
+						this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
+							fileId => {
+								longFiles = longFiles + 1;
+
+								reference.referenceIds.push(fileId);
+								this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
+
+								if ((longFiles === reference.referenceFiles.length) && (longReferences === references.length)) {
+									this.goToCreateConsultation(nuevaConsulta);
+								}
+							},
+							() => {
+								this.errorToUpdateReferenceFiles(references);
+							}
+						)
+					}
+					longReferences = longReferences + 1;
+				}
 			}
 		});
 	}
@@ -253,6 +313,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 						this.apiErrors.push(val);
 					});
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+				let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+				this.errorToUpdateReferenceFiles(references);
 			}
 		);
 
@@ -371,7 +433,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
 			clinicalSpecialtyId: this.defaultSpecialty?.id,
-			references: this.ambulatoryConsultationReferenceService.getReferences(),
+			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 		};
 	}
 
@@ -383,6 +445,23 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	setDefaultSpecialty() {
 		this.defaultSpecialty = this.formEvolucion.controls.clinicalSpecialty.value;
+	}
+
+
+	errorToUpdateReferenceFiles(references: Reference[]) {
+		this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPDATE_FILES');
+		for (let reference of references) {
+			this.referenceFileService.deleteReferenceFiles(reference.referenceIds).subscribe(
+				() => {
+					reference.referenceIds = [];
+				});
+		}
+	}
+
+	goToCreateConsultation(nuevaConsulta: CreateOutpatientDto) {
+		nuevaConsulta.references = this.ambulatoryConsultationReferenceService.getOutpatientReferences();
+		this.createConsultation(nuevaConsulta);
+		this.disableConfirmButton = true;
 	}
 }
 
