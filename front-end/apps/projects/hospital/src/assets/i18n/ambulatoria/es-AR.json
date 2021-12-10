@@ -322,6 +322,7 @@
 				"epidemiological_report": {
 					"PROBLEM_DESCRIPTION": "El problema <b>{{ problemName }}</b> es reportable a nivel epidemiológico.",
 					"CASE_CLASSIFICATION": "Clasificación del caso",
+					"MIN_ONE_REQUIRED_ERROR": "Se debe seleccionar alguna clasificación manual",
 					"buttons": {
 						"CONFIRM_REPORT": "REPORTAR CASO",
 						"CANCEL_REPORT": "OMITIR"

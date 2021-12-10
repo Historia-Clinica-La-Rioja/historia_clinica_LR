@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { map } from 'rxjs/operators';
-import { ManualClassificationDto, SnomedDto, SnomedResponseDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedResponseDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 
 export const SNOMED_RESULTS_LIMIT = '30';

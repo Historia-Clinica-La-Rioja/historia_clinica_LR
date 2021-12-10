@@ -13,8 +13,8 @@ export class SnvsMasterDataService {
 		private readonly http: HttpClient
 	) { }
 
-	getIsReportable(params): Observable<SnvsEventManualClassificationsDto[]> {
-		const url = `${environment.apiBase}/snvs/is-reportable`;
+	fetchManualClassification(params): Observable<SnvsEventManualClassificationsDto[]> {
+		const url = `${environment.apiBase}/snvs/manual-classifications`;
 		return this.http.get<SnvsEventManualClassificationsDto[]>(url, { params });
 	}
 

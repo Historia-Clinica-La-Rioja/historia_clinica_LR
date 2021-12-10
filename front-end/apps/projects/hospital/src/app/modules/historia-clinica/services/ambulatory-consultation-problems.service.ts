@@ -12,7 +12,7 @@ import { CellTemplates } from '@presentation/components/cell-templates/cell-temp
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
-import { EpidemiologicalManualClassificationResult, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
+import { EpidemiologicalManualClassificationResult, EpidemiologicalReport, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 
 export interface AmbulatoryConsultationProblem {
 	snomed: SnomedDto;
@@ -21,7 +21,7 @@ export interface AmbulatoryConsultationProblem {
 	fechaInicio?: Moment;
 	fechaFin?: Moment;
 	isReportable?: boolean;
-	epidemiologicalManualClassification?: ManualClassificationDto;
+	epidemiologicalManualClassifications?: string[];
 }
 
 export class AmbulatoryConsultationProblemsService {
@@ -118,26 +118,28 @@ export class AmbulatoryConsultationProblemsService {
 				fechaFin: this.form.value.fechaFin
 			};
 			if (reportProblemIsOn) {
-				this.snvsMasterDataService.getIsReportable({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
+				this.snvsMasterDataService.fetchManualClassification({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
 					(snvsEventManualClassificationsList: SnvsEventManualClassificationsDto[]) => {
-						if (snvsEventManualClassificationsList?.length) {
-							snvsEventManualClassificationsList.forEach(value => {
-								const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
-									disableClose: true,
-									autoFocus: false,
-									data: {
-										problemName: nuevoProblema.snomed.pt,
-										manualClassificationList: value.manualClassifications
+						if (snvsEventManualClassificationsList?.length > 0) {
+							nuevoProblema.isReportable = true;
+							const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
+								disableClose: true,
+								autoFocus: false,
+								data: {
+									problemName: nuevoProblema.snomed.pt,
+									snvsEventManualClassificationsList: snvsEventManualClassificationsList
+								}
+							});
+							dialogRef.afterClosed().subscribe((result: EpidemiologicalManualClassificationResult) => {
+								if (result) {
+									if (result.reportProblem && result.reports?.length){
+										nuevoProblema.epidemiologicalManualClassifications = [];
+										result.reports.forEach( report => {
+											nuevoProblema.epidemiologicalManualClassifications.push(this.findManualClassificationDescription(report, snvsEventManualClassificationsList));
+										});
 									}
-								});
-								dialogRef.afterClosed().subscribe((result: EpidemiologicalManualClassificationResult) => {
-									if (result.isReportable != null) {
-										nuevoProblema.isReportable = result.isReportable;
-										if (result.manualClassification)
-											nuevoProblema.epidemiologicalManualClassification = result.manualClassification;
-										this.addControlAndResetForm(nuevoProblema);
-									}
-								})
+									this.addControlAndResetForm(nuevoProblema);
+								}
 							})
 						}
 						else {
@@ -256,6 +258,15 @@ export class AmbulatoryConsultationProblemsService {
 		this.addControl(nuevoProblema);
 		this.errorSource.next();
 		this.resetForm();
+	}
+
+	private findManualClassificationDescription(report: EpidemiologicalReport, snvsEventManualClassificationsList: SnvsEventManualClassificationsDto[]): string {
+		const eventManualClassification = snvsEventManualClassificationsList.find( EMC => {
+			if ((EMC.snvsEvent.eventId === report.eventId) && (EMC.snvsEvent.groupEventId === report.groupEventId))
+				return EMC;
+		});
+		const manualClassification = eventManualClassification.manualClassifications.find( MC => MC.id === report.manualClassificationId );
+		return manualClassification.description;
 	}
 }
 
