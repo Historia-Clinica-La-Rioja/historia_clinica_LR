@@ -16,9 +16,11 @@ public class DashboardStorageImpl implements DashboardStorage {
     private final Logger logger;
 
     public DashboardStorageImpl(
-            CubejsAutoConfiguration cubejsAutoConfiguration) throws Exception {
+            CubejsAutoConfiguration cubejsAutoConfiguration
+    ) throws Exception {
         this.reverseProxy = new RestTemplateReverseProxy(cubejsAutoConfiguration.getApiUrl(), cubejsAutoConfiguration.getHeaders());
         this.logger = LoggerFactory.getLogger(getClass());
+        logger.info("DashboardStorage cubejs enabled in URL '{}'", cubejsAutoConfiguration.getApiUrl());
     }
 
     @Override

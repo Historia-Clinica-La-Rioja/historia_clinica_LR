@@ -16,14 +16,7 @@ import net.pladema.hl7.supporting.conformance.exceptions.FhirClientEnumException
 import net.pladema.hl7.supporting.conformance.exceptions.FhirClientException;
 import net.pladema.hl7.supporting.security.ClientAuthInterceptor;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
+
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DocumentReference;
 import org.hl7.fhir.r4.model.IdType;
@@ -40,7 +33,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 
 @Component
 @Conditional(InteroperabilityCondition.class)

@@ -2,22 +2,10 @@ package ar.lamansys.sgx.shared.restclient.configuration.resttemplate;
 
 import ar.lamansys.sgx.shared.restclient.configuration.RestUtils;
 import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
+
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 
 public class RestTemplateSSL extends RestTemplate {
 	
