@@ -24,9 +24,9 @@
 					"NUEVA_CONSULTA": "Nueva consulta"
 				}
 			},
-			"new-nursing-consultation":{
+			"new-nursing-consultation": {
 				"TITLE": "Nueva consulta de enfermería",
-				"ASSOCIATED_PROBLEM":"Problema asociado",
+				"ASSOCIATED_PROBLEM": "Problema asociado",
 				"SPECIALTY": "Especialidad",
 				"messages": {
 					"ERROR": "Error al guardar el documento nueva consulta de enfermería",
@@ -177,7 +177,7 @@
 				"previous-data": {
 					"ADD": "SI, INCLUIRLOS",
 					"DISCARD": "NO, DESCARTARLOS",
-					"ASK":"¿Desea incluirlos en la consulta?",
+					"ASK": "¿Desea incluirlos en la consulta?",
 					"CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
 					"CONTENT_VITAL_SIGNS": "Hay signos vitales cargados previamente.",
 					"CONTENT": "Hay datos antropométricos y signos vitales cargados previamente."
@@ -215,7 +215,7 @@
 					"TITLE": "Solicitud de referencia",
 					"ADD_REQUEST": "+ Agregar solicitud",
 					"REQUESTED_REFERENCE": "Referencias solicitadas",
-					"table":{
+					"table": {
 						"columns": {
 							"REFERENCES": "Referencias agregadas"
 						},

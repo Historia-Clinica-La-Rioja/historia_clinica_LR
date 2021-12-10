@@ -22,7 +22,7 @@ export class EpidemiologicalReportComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.formArray = this.formBuilder.array([], this.requiredAtLeastOneSelected());
-		this.data.snvsEventManualClassificationsList.forEach( _ => this.formArray.push(new FormControl(null)));
+		this.data.snvsEventManualClassificationsList.forEach(_ => this.formArray.push(new FormControl(null)));
 		this.form = this.formBuilder.group({
 			classifications: this.formArray
 		});

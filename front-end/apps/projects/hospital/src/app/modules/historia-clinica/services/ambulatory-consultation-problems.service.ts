@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {ManualClassificationDto, SnomedDto, SnomedECL, SnvsEventManualClassificationsDto} from '@api-rest/api-model';
+import { SnomedDto, SnomedECL, SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -133,9 +133,9 @@ export class AmbulatoryConsultationProblemsService {
 							});
 							dialogRef.afterClosed().subscribe((result: EpidemiologicalManualClassificationResult) => {
 								if (result) {
-									if (result.reportProblem && result.reports?.length){
+									if (result.reportProblem && result.reports?.length) {
 										nuevoProblema.epidemiologicalManualClassifications = [];
-										result.reports.forEach( report => {
+										result.reports.forEach(report => {
 											nuevoProblema.epidemiologicalManualClassifications.push(this.findManualClassificationDescription(report, snvsEventManualClassificationsList));
 										});
 										nuevoProblema.snvsReports = result.reports;
@@ -263,11 +263,11 @@ export class AmbulatoryConsultationProblemsService {
 	}
 
 	private findManualClassificationDescription(report: EpidemiologicalReport, snvsEventManualClassificationsList: SnvsEventManualClassificationsDto[]): string {
-		const eventManualClassification = snvsEventManualClassificationsList.find( EMC => {
+		const eventManualClassification = snvsEventManualClassificationsList.find(EMC => {
 			if ((EMC.snvsEvent.eventId === report.eventId) && (EMC.snvsEvent.groupEventId === report.groupEventId))
 				return EMC;
 		});
-		const manualClassification = eventManualClassification.manualClassifications.find( MC => MC.id === report.manualClassificationId );
+		const manualClassification = eventManualClassification.manualClassifications.find(MC => MC.id === report.manualClassificationId);
 		return manualClassification.description;
 	}
 }

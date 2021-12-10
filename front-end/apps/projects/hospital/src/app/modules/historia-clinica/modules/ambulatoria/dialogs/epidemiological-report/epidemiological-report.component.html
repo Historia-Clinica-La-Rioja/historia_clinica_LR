@@ -6,7 +6,7 @@
 		</button>
 	</div>
 
-    <div fxLayout="row" fxLayoutAlign="center">
+	<div fxLayout="row" fxLayoutAlign="center">
 		<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center" fxFlex="80">
 			<div class="image">
 				<img src='assets/images/error_outline.png'>
@@ -21,21 +21,26 @@
 	<form [formGroup]="form" (submit)="reportProblem()">
 
 		<ng-container fxLayout="column" fxLayoutGap="15px">
-			<div formArrayName="classifications" *ngFor="let eventClassification of data.snvsEventManualClassificationsList; let i=index">
+			<div formArrayName="classifications"
+				*ngFor="let eventClassification of data.snvsEventManualClassificationsList; let i=index">
 				<div fxLayout="row" fxLayoutAlign="center">
 					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="80">
-						<span class="mat-h4 margin-0">{{ data.snvsEventManualClassificationsList[i].snvsEvent.description }}</span>
+						<span class="mat-h4 margin-0">
+							{{ data.snvsEventManualClassificationsList[i].snvsEvent.description }}
+						</span>
 					</div>
 				</div>
 				<div fxLayout="row" fxLayoutAlign="center">
 					<div fxLayout="row" fxLayoutAlign="center center" fxFlex="80">
 						<mat-form-field appearance="outline" fxFlex="100">
 							<mat-label>
-								{{ 'ambulatoria.paciente.problemas.epidemiological_report.CASE_CLASSIFICATION' | translate}}
+								{{ 'ambulatoria.paciente.problemas.epidemiological_report.CASE_CLASSIFICATION' |
+								translate }}
 							</mat-label>
 							<mat-select formControlName="{{i}}">
-								<mat-option *ngFor="let classification of data.snvsEventManualClassificationsList[i].manualClassifications" [value]="classification.id"
-									matTooltip="{{ classification.description }}">
+								<mat-option
+									*ngFor="let classification of data.snvsEventManualClassificationsList[i].manualClassifications"
+									[value]="classification.id" matTooltip="{{ classification.description }}">
 									{{classification.description}}
 								</mat-option>
 							</mat-select>
@@ -48,15 +53,16 @@
 			</span>
 		</ng-container>
 
-
 		<div fxLayout="row" fxLayoutAlign="center">
 			<div fxLayout="row" fxLayoutAlign="center center" fxFlex="80">
 				<mat-dialog-actions fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
 					<button type="button" mat-stroked-button color="warn" (click)="doNotReportProblem()">
-						<span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
+						<span
+							[translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
 					</button>
 					<button mat-raised-button color="primary" type="submit">
-						<span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
+						<span
+							[translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
 					</button>
 				</mat-dialog-actions>
 			</div>
