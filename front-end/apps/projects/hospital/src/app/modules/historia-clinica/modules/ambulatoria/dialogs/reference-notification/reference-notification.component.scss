@@ -51,3 +51,13 @@
 .mat-dialog-content {
     max-height: 320px;
 }
+
+.span-clickable {
+
+	span:hover {
+		text-decoration: underline;
+	}
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}

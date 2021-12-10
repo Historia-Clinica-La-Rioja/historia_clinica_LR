@@ -33,6 +33,13 @@
 
             <span *ngIf="reference.note.description">“{{reference.note.description}}”</span>
 
+            <div class="primary" *ngFor="let file of reference.files" fxLayout="row">
+                <mat-icon>attachment_icon</mat-icon>
+                <span class="span-clickable" (click)="downloadReferenceFile(file)">
+                    {{file.fileName}}
+                </span>
+            </div>
+
             <div class="grayText" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="50px">
                 <span>{{reference.professional.firstName}} {{reference.professional.lastName}}</span>
                 <span>{{reference.referenceDate.day}}/{{reference.referenceDate.month}}/{{reference.referenceDate.year}}</span>
