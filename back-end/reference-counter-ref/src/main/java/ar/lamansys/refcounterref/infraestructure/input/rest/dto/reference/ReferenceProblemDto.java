@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.infraestructure.input.rest.dto;
+package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import lombok.Getter;

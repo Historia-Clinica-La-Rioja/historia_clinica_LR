@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.infraestructure.input.rest.dto;
+package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.CareLineDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;

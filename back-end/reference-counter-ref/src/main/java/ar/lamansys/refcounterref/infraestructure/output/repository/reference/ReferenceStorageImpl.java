@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.infraestructure.output.repository;
+package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;

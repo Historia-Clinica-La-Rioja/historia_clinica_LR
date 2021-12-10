@@ -1,7 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
 import ar.lamansys.refcounterref.application.getreference.GetReference;
-import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceDto;
+import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.ReferenceMapper;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
