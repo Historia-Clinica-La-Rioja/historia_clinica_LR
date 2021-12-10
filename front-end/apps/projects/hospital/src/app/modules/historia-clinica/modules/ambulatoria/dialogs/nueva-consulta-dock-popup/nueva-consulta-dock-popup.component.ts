@@ -15,7 +15,7 @@ import {
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, SnvsReportDto, SnvsToReportDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -28,7 +28,7 @@ import { hasError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
+import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationReferenceService, Reference } from '../../services/ambulatory-consultation-reference.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -40,6 +40,7 @@ import { Observable, of } from 'rxjs';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
+import { SnvsService } from '@api-rest/services/snvs.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -91,6 +92,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly careLineService: CareLineService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
+		private readonly snvsService: SnvsService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -304,6 +306,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
+				if (this.thereAreProblemsToSnvsReport()) {
+					const toReport = this.createSnvsToReportList();
+					this.snvsService.reportSnvs(this.data.idPaciente, toReport).subscribe((reportsResult: SnvsReportDto[]) => {
+						// TODO open SNVS reports result dialog
+					});
+				}
 				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 			},
 			response => {
@@ -462,6 +470,41 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		nuevaConsulta.references = this.ambulatoryConsultationReferenceService.getOutpatientReferences();
 		this.createConsultation(nuevaConsulta);
 		this.disableConfirmButton = true;
+	}
+
+	private thereAreProblemsToSnvsReport(): boolean {
+		const problems = this.ambulatoryConsultationProblemsService.getProblemas();
+		const firstProblemToReport = problems.find((problem: AmbulatoryConsultationProblem) =>
+			(problem.isReportable && problem.epidemiologicalManualClassifications?.length)
+		);
+		if (firstProblemToReport)
+			return true;
+		return false;
+	}
+
+	private createSnvsToReportList(): SnvsToReportDto[] {
+		const reportableProblems = this.ambulatoryConsultationProblemsService.getProblemas().filter((problem: AmbulatoryConsultationProblem) =>
+			(problem.isReportable && problem.epidemiologicalManualClassifications?.length)
+		);
+
+		const result: SnvsToReportDto[] = [];
+
+		reportableProblems.forEach((problem: AmbulatoryConsultationProblem) => {
+			problem.snvsReports.forEach(report => {
+				const toReport: SnvsToReportDto = {
+					eventId: report.eventId,
+					groupEventId: report.groupEventId,
+					manualClassificationId: report.manualClassificationId,
+					problem: {
+						pt: problem.snomed.pt,
+						sctid: problem.snomed.sctid
+					}
+				};
+				result.push(toReport);
+			});
+		});
+
+		return result;
 	}
 }
 

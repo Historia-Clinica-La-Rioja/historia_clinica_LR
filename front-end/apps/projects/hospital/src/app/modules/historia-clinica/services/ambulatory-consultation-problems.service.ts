@@ -22,6 +22,7 @@ export interface AmbulatoryConsultationProblem {
 	fechaFin?: Moment;
 	isReportable?: boolean;
 	epidemiologicalManualClassifications?: string[];
+	snvsReports?: EpidemiologicalReport[];
 }
 
 export class AmbulatoryConsultationProblemsService {
@@ -137,6 +138,7 @@ export class AmbulatoryConsultationProblemsService {
 										result.reports.forEach( report => {
 											nuevoProblema.epidemiologicalManualClassifications.push(this.findManualClassificationDescription(report, snvsEventManualClassificationsList));
 										});
+										nuevoProblema.snvsReports = result.reports;
 									}
 									this.addControlAndResetForm(nuevoProblema);
 								}
