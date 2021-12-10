@@ -73,6 +73,11 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
         return result;
     }
 
+    public void deleteFiles(List<Integer> filesIds) {
+        log.debug("Input parameters -> filesIds {}", filesIds);
+        filesIds.stream().forEach(fileId ->  referenceCounterReferenceFileRepository.deleteById(fileId));
+    }
+
     private String buildPartialPath(Integer patientId, String relativeFilePath) {
         log.debug("Input parameters -> patientId {}, relativeFilePath {}", patientId, relativeFilePath);
         String result = RELATIVE_DIRECTORY
