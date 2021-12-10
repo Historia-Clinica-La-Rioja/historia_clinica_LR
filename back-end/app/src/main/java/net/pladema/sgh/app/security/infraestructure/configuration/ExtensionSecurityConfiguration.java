@@ -17,8 +17,7 @@ public class ExtensionSecurityConfiguration {
 			LoggedUserService loggedUser
 	)  {
 		return buildExtensionAuthorization()
-				.systemMenu("tableros", loggedUser.hasAnySystemRole(ERole.ADMINISTRADOR, ERole.ADMINISTRATIVO))
-				.isInstitutionMenuAllowed("informacion", loggedUser.hasAnyInstitutionRole(ERole.PROFESIONAL_DE_SALUD))
+				.isInstitutionMenuAllowed("tableros", loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRATIVO))
 				.build();
 	}
 

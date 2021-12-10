@@ -18,8 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.hsi.extensions.configuration.plugins.SystemMenuExtensionPlugin;
-import net.pladema.hsi.extensions.configuration.plugins.SystemMenuExtensionPluginBuilder;
+import net.pladema.hsi.extensions.configuration.plugins.InstitutionMenuExtensionPlugin;
+import net.pladema.hsi.extensions.configuration.plugins.InstitutionMenuExtensionPluginBuilder;
 
 @Slf4j
 @Getter
@@ -34,9 +34,13 @@ public class CubejsAutoConfiguration {
     private String apiUrl;
     private Map<String, String> headers = new HashMap<>();
 
+    public boolean isEnabled() {
+        return apiUrl != null && !apiUrl.isBlank();
+    }
+
     @Bean
     public DashboardStorage dashboardStorageImpl() throws Exception {
-        if (apiUrl == null || apiUrl.isBlank()) {
+        if (!isEnabled()) {
             log.warn("Cubejs dashboards are disabled");
             return new DashboardStorageUnavailableImpl();
         }
@@ -44,12 +48,12 @@ public class CubejsAutoConfiguration {
     }
 
     @Bean
-    public SystemMenuExtensionPlugin dashboardsExtensionPlugin() {
-        var result = SystemMenuExtensionPluginBuilder.fromResources("tableros");
+    public InstitutionMenuExtensionPlugin dashboardsExtensionPlugin() {
+        var result = isEnabled() ? InstitutionMenuExtensionPluginBuilder.fromResources("tableros") : null;
         if (result != null) {
-            log.info("Cubejs SystemMenuExtensionPluginBuilder {}", result.menu());
+            log.info("Cubejs InstitutionMenuExtensionPlugin {}", result.menu());
         } else {
-            log.warn("Cubejs SystemMenuExtensionPluginBuilder not defined");
+            log.warn("Cubejs InstitutionMenuExtensionPlugin not defined");
         }
         return result;
     }

@@ -1,5 +1,6 @@
 package net.pladema.hsi.extensions.configuration.features;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
  *
  */
 public class FeatureStatusService {
+	public static final Supplier<Map<String, Object>> FEATURE_DISABLED = () -> Collections.emptyMap();
 	private final String prefix;
 	private final Supplier<Map<String, Object>> statusData;
 	private final Supplier<List<FeatureProperty>> properties;

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // deps
+import { ExtensionsModule } from '@extensions/extensions.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
@@ -30,6 +31,7 @@ import { SearchPatientComponent } from '../pacientes/component/search-patient/se
 		// routing
 		InstitucionRoutingModule,
 		// deps
+		ExtensionsModule,
 		LazyMaterialModule,
 		PresentationModule,
 	],
