@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Injectable({
 	providedIn: 'root'
@@ -29,5 +30,12 @@ export class ReferenceFileService {
 			}
 		});
 
+	}
+
+	downloadReferenceFiles(fileId: number, fileName: string): void {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference-file/download/${fileId}`;
+		this.http.get(url,
+			{ responseType: 'blob' }
+		).subscribe(blob => saveAs(blob, fileName));
 	}
 }
