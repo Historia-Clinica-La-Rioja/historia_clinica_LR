@@ -170,6 +170,7 @@ export interface ApiErrorDto {
 }
 
 export interface ApiErrorMessageDto {
+    args: { [index: string]: any };
     code: string;
     text: string;
 }
