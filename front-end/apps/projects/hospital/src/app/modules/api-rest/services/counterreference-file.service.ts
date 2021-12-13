@@ -21,12 +21,9 @@ export class CounterreferenceFileService {
 		return this.http.post<number>(url, fileFormdata);
 	}
 
-	deleteCounterreferenceFiles(patientId: number, filesIds: number[]): Observable<any> {
-		const url =  `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/counterreference-file/delete`;
-		return this.http.delete(url, {
-			params: {
-				fileIds: filesIds
-			}
-		});
+	deleteCounterreferenceFiles(filesIds: number[]): Observable<any> {
+		const params = { fileIds: filesIds };
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/counterreference-file/delete`;
+		return this.http.delete(url, { params });
 	}
 }

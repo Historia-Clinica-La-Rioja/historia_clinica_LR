@@ -17,7 +17,14 @@
                 </div>
     
                 <span *ngIf="data.data.reference.note.description">“{{data.data.reference.note.description}}”</span>
-    
+				
+				<div class="primary" *ngFor="let file of data.data.reference.files" fxLayout="row">
+					<mat-icon>attachment_icon</mat-icon>
+					<span class="span-clickable" (click)="downloadReferenceFile(file)">
+						{{file.fileName}}
+					</span>
+				</div>
+
                 <div class="grayText" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" fxFlex="50px">
                     <span>{{data.data.reference.professional.firstName}} {{data.data.reference.professional.lastName}}</span>
                     <span>{{data.data.reference.referenceDate.day}}/{{data.data.reference.referenceDate.month}}/{{data.data.reference.referenceDate.year}}</span>
@@ -188,6 +195,26 @@
 					<mat-error translate="forms.REQUIRED"></mat-error>
 				</mat-form-field>
 			</form>
+		</div>
+
+		<div id="attach_files" fxLayout="column">
+			<div class="span-clickable primary" fxLayout="row">
+				<mat-icon>attachment_icon</mat-icon>
+				<span [translate]= "'ambulatoria.paciente.nueva-consulta.reference-dialog.UPLOAD_FILES'"(click)="fileInput.click()">
+				</span>
+				<span [hidden]="true">
+					<input type="file" #fileInput multiple (change)="onSelectFileFormData($event)"/>
+				</span>
+			</div>
+
+			<div *ngIf="selectedFilesShow" class="selected-files">
+				<div *ngFor="let fileName of selectedFilesShow; let index = index">
+					<span>
+						{{fileName}}
+					</span>
+					<button mat-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div actions id="buttons">

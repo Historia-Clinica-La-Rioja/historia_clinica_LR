@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CounterReferenceDto, DateDto } from '@api-rest/api-model';
+import { CounterReferenceDto, DateDto, ReferenceFileDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MIN_DATE } from '@core/utils/date.utils';
@@ -13,6 +13,8 @@ import { hasError } from '@core/utils/form.utils';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { CounterreferenceService } from '@api-rest/services/counterreference.service';
+import { ReferenceFileService } from '@api-rest/services/reference-file.service';
+import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 
 @Component({
 	selector: 'app-counterreference-dock-popup',
@@ -29,6 +31,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	public criticalityTypes: any[];
 	public formDescription: FormGroup;
 	public hasError = hasError;
+	selectedFiles: File[] = [];
+	selectedFilesShow: any[] = [];
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -38,6 +42,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly counterreferenceService: CounterreferenceService,
+		private readonly referenceFileService: ReferenceFileService,
+		private readonly counterreferenceFileService: CounterreferenceFileService,
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
@@ -58,15 +64,37 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 	save(): void {
 		if (this.formDescription.valid) {
-			const counterreference: CounterReferenceDto = this.buildCounterReferenceDto();
-			this.createCounterreference(counterreference);
+			let fileIds: number[] = [];
+			let longFiles = 0;
+			if (!this.selectedFiles.length) {
+				const counterreference: CounterReferenceDto = this.buildCounterReferenceDto(fileIds);
+				this.createCounterreference(counterreference);
+				return;
+			}
+			for (let file of this.selectedFiles) {
+				this.counterreferenceFileService.uploadCounterreferenceFiles(this.data.data.patientId, file).subscribe(
+					fileId => {
+						longFiles = longFiles + 1;
+						fileIds.push(fileId);
+						if (this.selectedFiles.length === longFiles) {
+							const counterreference: CounterReferenceDto = this.buildCounterReferenceDto(fileIds);
+							this.createCounterreference(counterreference);
+						}
+					},
+					() => {
+						this.snackBarService.showError('ambulatoria.paciente.counterreference.messages.ERROR');
+						this.counterreferenceFileService.deleteCounterreferenceFiles(fileIds);
+					}
+				)
+			}
 		}
+
 		else {
 			this.formDescription.controls['description'].markAsTouched();
 		}
 	}
 
-	private buildCounterReferenceDto(): CounterReferenceDto {
+	private buildCounterReferenceDto(fileIds): CounterReferenceDto {
 
 		return {
 			referenceId: this.data.data.reference.id,
@@ -96,7 +124,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 					snomed: procedure.snomed
 				};
 			}),
-			fileIds: [],
+			fileIds: fileIds,
 		};
 	}
 
@@ -132,6 +160,22 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				procedures: !!counterreference.procedures?.length,
 			};
 		}
+	}
+
+	downloadReferenceFile(file: ReferenceFileDto) {
+		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
+	}
+
+	onSelectFileFormData($event): void {
+		Array.from($event.target.files).forEach((file: File) => {
+			this.selectedFiles.push(file);
+			this.selectedFilesShow.push(file.name);
+		});
+	}
+
+	removeSelectedFile(index): void {
+		this.selectedFiles.splice(index, 1);
+		this.selectedFilesShow.splice(index, 1);
 	}
 
 }

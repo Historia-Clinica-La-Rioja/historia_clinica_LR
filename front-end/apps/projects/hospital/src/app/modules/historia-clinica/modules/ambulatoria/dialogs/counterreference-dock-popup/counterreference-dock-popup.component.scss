@@ -41,4 +41,23 @@ mat-form-field {
 	padding: 20px 0px 20px 10px;
 }
 
+.span-clickable {
+
+	span:hover {
+		text-decoration: underline;
+	}
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.element-light-color {
+	color: rgba(0, 0, 0, 0.54);
+}
+
+span {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+}
+
 
