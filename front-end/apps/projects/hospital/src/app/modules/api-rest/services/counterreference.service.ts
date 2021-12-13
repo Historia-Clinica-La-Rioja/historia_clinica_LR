@@ -22,7 +22,8 @@ export class CounterreferenceService {
 			clinicalSpecialtyId: counterreference.clinicalSpecialtyId,
 			counterReferenceNote: counterreference.counterReferenceNote,
 			medications: counterreference.medications,
-			procedures: counterreference.procedures	
+			procedures: counterreference.procedures,
+			fileIds: counterreference.fileIds
 		};
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/counterreference`;
 		return this.http.post(url, body);
