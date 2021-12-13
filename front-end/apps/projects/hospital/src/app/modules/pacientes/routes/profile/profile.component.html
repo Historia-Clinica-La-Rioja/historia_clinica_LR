@@ -109,10 +109,43 @@
 							</ng-container>
 						</div>
 						<mat-divider inset></mat-divider>
-						<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
-							<div class="tooth-dialog" fxLayout="row" fxLayoutGap="7px">
-								<button class="edit-professions" mat-raised-button (click)="editProfessions()"
-									translate="pacientes.user_data.buttons.EDIT_PROFESSIONS">
+						<div fxLayout="column" fxLayoutGap="10px">
+							<div content>
+								<ng-container *ngIf="hasAssignedProfessions else noInfo">
+									<div fxLayout="column" fxLayoutGap="10px">
+										<div fxLayout="column" fxLayoutGap="5px">
+											<strong [translate]="'pacientes.user_data.LICENCE'"></strong>
+											<div>{{license}}</div>
+										</div>
+										<div content>
+											<div fxLayout="row">
+												<div fxFlex="50%">
+													<div>
+														<strong [translate]="'pacientes.user_data.PROFESSION'"></strong>
+														<div id="profession" class="data" fxLayout="row" fxLayoutGap="16px"
+															*ngFor="let profession of showProfessions">
+															<mat-icon color="primary" fontSet="material-icons-outlined">
+																medical_services</mat-icon>
+															<span>{{profession}} </span>
+														</div>
+													</div>
+												</div>
+												<div fxFlex="50%">
+													<strong [translate]="'pacientes.user_data.SPECIALTY'"></strong>
+													<div id="specialty" class="data" fxLayout="row" fxLayoutGap="16px"
+														*ngFor="let specialty of showSpecialties">
+														<span>{{specialty}}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</ng-container>
+							</div>
+							<div content>
+								<button id="button-edit-professions" mat-raised-button class="edit-professions" (click)="editProfessions()">
+									<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'"
+										class="uppercase"></span>
 								</button>
 							</div>
 						</div>
@@ -122,3 +155,7 @@
 		</div>
 	</div>
 </app-content>
+
+<ng-template #noInfo>
+	<span class="no-professions" [translate]="'pacientes.user_data.WITHOUT_PROFESSIONS'"></span>
+ </ng-template>

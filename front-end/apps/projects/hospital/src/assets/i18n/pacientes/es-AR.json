@@ -137,6 +137,10 @@
             "PENDING_DATA": "Nombre de usuario y contraseña pendientes",
             "WITHOUT_USER": "Sin usuario",
             "NO_INFO": "Sin información",
+			"WITHOUT_PROFESSIONS":"Sin profesiones asignadas.",
+			"LICENCE": "Matrícula:",
+			"PROFESSION": "Profesión:",
+			"SPECIALTY": "Especialidad:",
             "buttons": {
                 "CREATE_USER": "CREAR USUARIO",
 				"SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",

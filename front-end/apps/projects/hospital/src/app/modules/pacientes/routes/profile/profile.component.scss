@@ -34,6 +34,17 @@ user-data {
 	font-size: 14px;
 }
 
+.no-professions {
+	color: #a8a8a8;
+	line-height: 20px;
+	font-family: 15px, Roboto;
+	margin-top: 15px;
+}
+
+.data {
+	margin-top: 15px;
+}
+
 mat-card {
 	mat-card-header {
 		flex-direction: row;
@@ -46,24 +57,14 @@ mat-card {
 	}
 
 	.edit-professions {
-		border: 1px  solid #1a73e8;
+		align-items: left;
+		border: 1px solid #1a73e8;
 		box-sizing: content-box;
 		border-radius: 5px;
-		margin-top: 15px;
 		font-family: 15px, Roboto;
 		color: #1a73e8;
 		margin-bottom: auto;
 		min-height: auto;
-		white-space: normal
+		white-space: normal;
 	}
-}
-
-.tooth-dialog{
-	position: relative;
-}
-
-.mat-dialog-actions{
-	margin-top: 15px;
-	margin-bottom: auto;
-	min-height: auto;
 }
