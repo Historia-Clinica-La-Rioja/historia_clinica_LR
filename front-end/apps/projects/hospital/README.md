@@ -61,3 +61,10 @@ En la carpeta `styles` se encuentran los archivos *.scss* correspondientes a los
 5. `theme`: Configura propiedades del theme como la paleta de colores general y para distintos componentes en particular.
 
 
+### Estructura
+
+En el `body` se definen las clases [mat-typography](https://material.angular.io/guide/typography) [mat-app-background](https://material.angular.io/guide/theming) que afectan a toda la aplicación.
+
+La etiqueta [`noscript`](https://uniwebsidad.com/libros/javascript/capitulo-1/etiqueta-noscript) contiene el mensaje sugerido.
+
+
