@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL, SnvsEventManualClassificationsDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL, SnvsEventDto, SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -34,6 +34,7 @@ export class AmbulatoryConsultationProblemsService {
 	private errorSource = new Subject<string>();
 	private _error$: Observable<string>;
 	private severityTypes: any[];
+	private snvsEvents: SnvsEventDto[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -122,6 +123,7 @@ export class AmbulatoryConsultationProblemsService {
 				this.snvsMasterDataService.fetchManualClassification({ sctid: nuevoProblema.snomed.sctid, pt: nuevoProblema.snomed.pt }).subscribe(
 					(snvsEventManualClassificationsList: SnvsEventManualClassificationsDto[]) => {
 						if (snvsEventManualClassificationsList?.length > 0) {
+							this.saveGroupEventInformation(snvsEventManualClassificationsList);
 							nuevoProblema.isReportable = true;
 							const dialogRef = this.dialog.open(EpidemiologicalReportComponent, {
 								disableClose: true,
@@ -256,6 +258,10 @@ export class AmbulatoryConsultationProblemsService {
 		return false;
 	}
 
+	getSnvsEventsInformation(): SnvsEventDto[] {
+		return this.snvsEvents;
+	}
+
 	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem) {
 		this.addControl(nuevoProblema);
 		this.errorSource.next();
@@ -269,6 +275,10 @@ export class AmbulatoryConsultationProblemsService {
 		});
 		const manualClassification = eventManualClassification.manualClassifications.find(MC => MC.id === report.manualClassificationId);
 		return manualClassification.description;
+	}
+
+	private saveGroupEventInformation(snvsClassificationsList: SnvsEventManualClassificationsDto[]): void {
+		snvsClassificationsList.forEach((snvsClassification: SnvsEventManualClassificationsDto) => this.snvsEvents.push(snvsClassification.snvsEvent))
 	}
 }
 

@@ -15,7 +15,7 @@ import {
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, SnvsReportDto, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, SnvsToReportDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -40,7 +40,9 @@ import { Observable, of } from 'rxjs';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
-import { SnvsService } from '@api-rest/services/snvs.service';
+import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
+
+const TIME_OUT = 5000;
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -92,7 +94,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly careLineService: CareLineService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
-		private readonly snvsService: SnvsService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -305,14 +306,22 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 			_ => {
-				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS');
+				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
+				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 				if (this.thereAreProblemsToSnvsReport()) {
 					const toReport = this.createSnvsToReportList();
-					this.snvsService.reportSnvs(this.data.idPaciente, toReport).subscribe((reportsResult: SnvsReportDto[]) => {
-						// TODO open SNVS reports result dialog
-					});
+					setTimeout(() => {
+						this.dialog.open(SnvsReportsResultComponent, {
+							disableClose: true,
+							autoFocus: false,
+							data: {
+								toReportList: toReport,
+								patientId: this.data.idPaciente,
+								snvsEvent: this.ambulatoryConsultationProblemsService.getSnvsEventsInformation()
+							}
+						});
+					}, TIME_OUT);
 				}
-				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 			},
 			response => {
 				this.disableConfirmButton = false;

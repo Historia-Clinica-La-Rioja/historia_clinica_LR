@@ -327,6 +327,15 @@
 						"CONFIRM_REPORT": "REPORTAR CASO",
 						"CANCEL_REPORT": "OMITIR"
 					}
+				},
+				"snvs-reports-result": {
+					"ERROR_FAIL_TO_REPORT": "Fallo al reportar el/los problema/s",
+					"REPORTING": "Reportando casos al S.N.V.S.",
+					"SNVS": "(Sistema Nacional de Vigilancia de la Salud - Argentina)",
+					"SUCCESSFULLY_REPORTED": "El caso <b>{{ problemName }}</b> fue reportado con éxito",
+					"CASE_COULD_NOT_BE_REPORTED": "El caso <b>{{ problemName }}</b> no pudo ser reportado",
+					"ID": "ID",
+					"FAILED_REPORT_ERROR": "Fallo al reportar el problema"
 				}
 			},
 			"ordenes_prescripciones": {

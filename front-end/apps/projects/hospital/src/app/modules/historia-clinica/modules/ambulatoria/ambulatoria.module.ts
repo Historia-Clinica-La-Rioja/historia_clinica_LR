@@ -45,7 +45,8 @@ import { PreviousDataComponent } from './dialogs/previous-data/previous-data.com
 import { ReferenceComponent } from './dialogs/reference/reference.component';
 import { ReferenceNotificationComponent } from './dialogs/reference-notification/reference-notification.component';
 import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
-
+import { SnvsReportsResultComponent } from './dialogs/snvs-reports-result/snvs-reports-result.component';
+import { ClipboardModule } from "@angular/cdk/clipboard";
 
 @NgModule({
 	declarations: [
@@ -80,8 +81,9 @@ import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-d
 		PreviousDataComponent,
 		EpidemiologicalReportComponent,
 		ReferenceComponent,
-  		ReferenceNotificationComponent,
-    	CounterreferenceDockPopupComponent,
+		ReferenceNotificationComponent,
+		CounterreferenceDockPopupComponent,
+		SnvsReportsResultComponent,
 	],
 	imports: [
 		CommonModule,
@@ -94,6 +96,7 @@ import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-d
 		AmbulatoriaRoutingModule,
 		PacientesModule,
 		OdontologiaModule,
+		ClipboardModule,
 	]
 })
 export class AmbulatoriaModule {
