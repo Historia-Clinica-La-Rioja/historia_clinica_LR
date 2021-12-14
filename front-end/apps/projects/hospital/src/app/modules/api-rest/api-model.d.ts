@@ -1930,8 +1930,8 @@ export interface SnvsEventManualClassificationsDto {
 }
 
 export interface SnvsReportDto {
-    eventId?: number;
-    groupEventId?: number;
+    eventId: number;
+    groupEventId: number;
     lastUpdate?: DateDto;
     manualClassificationId?: number;
     problem: SnvsSnomedDto;

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -16,10 +17,10 @@ public class SnvsReportDto {
 
 	private SnvsSnomedDto problem;
 
-	@Nullable
+	@NotNull
 	private Integer groupEventId;
 
-	@Nullable
+	@NotNull
 	private Integer eventId;
 
 	@Nullable
