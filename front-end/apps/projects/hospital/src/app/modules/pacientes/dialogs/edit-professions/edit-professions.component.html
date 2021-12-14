@@ -44,10 +44,11 @@
 								(selectionChange)="setSpeciality($event, formChild)">
 							</app-typeahead>
 						</div>
-
-						<button (click)="deleteSpecialtiesAndProfessions(formChild)">
-							<mat-icon color="warn">delete_outline</mat-icon>
-						</button>
+						<div class="divider">
+							<button (click)="deleteSpecialtiesAndProfessions(formChild)">
+								<mat-icon color="warn">delete_outline</mat-icon>
+							</button>
+						</div>
 						<div class="divider" *ngIf="isDividerNewSpecialtiesAndProfessions()">
 							<mat-divider inset class="divider" layout-align="center"></mat-divider>
 						</div>
@@ -56,12 +57,10 @@
 			</div>
 		</form>
 
-		<div class="divider">
-			<a [ngClass]="{'activate-button': (!isDisabledAddProfessionAndSpecialty()), 'disable-button':(isDisabledAddProfessionAndSpecialty())}"
-				(click)="addSpecialtiesAndProfessions()" style="font-size: 14px;"
-				translate="pacientes.edit_professions.ADD_ANOTHER_PROFESSION_AND_SPECIALTY">
-			</a>
-		</div>
+		<button [disabled]="isDisabledAddProfessionAndSpecialty()" mat-button type="button"
+			(click)="addSpecialtiesAndProfessions()" color="primary" id="add-button" onclick="this.blur()">
+			+ {{ 'pacientes.edit_professions.ADD_ANOTHER_PROFESSION_AND_SPECIALTY' | translate }}
+		</button>
 
 	</div>
 	<div actions id="buttons" fxLayoutAlign="end">
