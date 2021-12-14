@@ -36,7 +36,7 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
     @Override
     public List<ClinicalSpecialtyBo> getAll(){
         List<ClinicalSpecialtyBo> result = new ArrayList<>();
-        clinicalSpecialtyRepository.findAll()
+        clinicalSpecialtyRepository.findAllSpecialties()
                 .forEach(clinicalSpecialty -> result.add(mapToBo(clinicalSpecialty)));
         return result;
     }

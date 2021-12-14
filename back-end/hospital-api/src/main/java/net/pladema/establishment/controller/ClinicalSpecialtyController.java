@@ -116,7 +116,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping("/clinicalSpecialty")
-    public ResponseEntity<List<ClinicalSpecialtyDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
+    public ResponseEntity<List<ClinicalSpecialtyDto>> getAll() {
         LOG.debug("No input parameters");
         List<ClinicalSpecialtyDto> result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialtyService.getAll());
         LOG.debug("Output -> {}", result);

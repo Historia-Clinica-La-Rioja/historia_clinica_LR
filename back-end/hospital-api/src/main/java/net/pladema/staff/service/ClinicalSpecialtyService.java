@@ -12,4 +12,5 @@ public interface ClinicalSpecialtyService {
     List<ClinicalSpecialtyBo> getSpecialtiesByProfessional(Integer professionalId);
 
     List<ClinicalSpecialtyBo> getAll();
+
 }
