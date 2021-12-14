@@ -11,7 +11,6 @@ import InstitutionEdit from './institutions/InstitutionEdit';
 import addresses from './addresses';
 import sectors from './sectors';
 import clinicalspecialties from './clinicalspecialties';
-import ClinicalSpecialtyShow from './clinicalspecialties/ClinicalSpecialtyShow';
 import clinicalspecialtysectors from './clinicalspecialtysectors';
 import rooms from './rooms';
 import beds from './beds';
@@ -31,58 +30,32 @@ import documenttypes from "./documenttypes";
 import documentfiles from "./documentfiles";
 import restClientMeasures from "./rest-client-measures";
 
-// Ampliación
+import { ROOT, ADMINISTRADOR } from './roles';
 
+// Ampliación
 //
 
 const resourcesAdminInstitucional = [
-    <Resource name="sectortypes" />,
-    <Resource name="agegroups" />,
-    <Resource name="caretypes" />,
-    <Resource name="sectororganizations" />,
-    <Resource name="hospitalizationtypes" />,
-    <Resource name="provinces" />,
-    <Resource name="identificationTypes" />,
-    <Resource name="cities" />,
-    <Resource name="departments" />,
-    <Resource name="educationtypes" />,
-    <Resource name="internmentepisodes" />,
-    <Resource name="bedcategories" />,
     <Resource name="healthcareprofessionals" />,
     <Resource name="professionalspecialties" show={ProfessionalSpecialtyShow} />,
     <Resource name="institutions" show={InstitutionShow} list={InstitutionList} edit={InstitutionEdit} />,
-    <Resource name="addresses" {...addresses} />,
     <Resource name="sectors" {...sectors} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
     <Resource name="rooms" {...rooms} />,
     <Resource name="beds" {...beds} />,
-    <Resource name="clinicalspecialties" show={ClinicalSpecialtyShow} />,
+    <Resource name="cities" />,
+    <Resource name="departments" />,
 ];
 
 const resourcesAdminRoot = [
-    <Resource name="identificationTypes" />,
-    <Resource name="genders" />,
-    <Resource name="sectortypes" />,
-    <Resource name="agegroups" />,
-    <Resource name="caretypes" />,
-    <Resource name="sectororganizations" />,
-    <Resource name="hospitalizationtypes" />,
-    <Resource name="provinces" />,
-    <Resource name="cities" {...cities} />,
-    <Resource name="departments" {...departments} />,
-    <Resource name="addresses" {...addresses} />,
-    <Resource name="bedcategories" />,
-    <Resource name="clinicalspecialties" {...clinicalspecialties} />,
+    
     <Resource name="professionalspecialties" {...professionalspecialties} />,
     <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
     <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties} />,
-    <Resource name="educationtypes" />,
     <Resource name="password-reset" {...passwordReset} />,
     <Resource name="roles" />,
-    <Resource name="internmentepisodes" />,
     <Resource name="institutions" {...institutions} />,
-    <Resource name="addresses" {...addresses} />,
     <Resource name="sectors" {...sectors} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
@@ -95,21 +68,36 @@ const resourcesAdminRoot = [
     <Resource name="documentfiles" {...documentfiles} />,
     <Resource name="documenttypes" {...documenttypes} />,
     <Resource name="rest-client-measures" {...restClientMeasures} />,
+    <Resource name="cities" {...cities} />,
+    <Resource name="departments" {...departments} />,
 
     // Ampliación
-
+    // 
 ];
 
 const resourcesFor = (permissions: SGXPermissions) =>
     permissions.hasAnyAssignment(
-        { role: 'ROOT', institutionId: -1 }, { role: 'ADMINISTRADOR', institutionId: -1 }
+        ROOT, ADMINISTRADOR
     ) ? resourcesAdminRoot : resourcesAdminInstitucional;
 
 const resources = (permissions: SGXPermissions) => [
     <Resource name="person" {...person(permissions)} />,
+    <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     ...resourcesFor(permissions),
+    <Resource name="addresses" {...addresses} />,
+    <Resource name="identificationTypes" />,
     <Resource name="dependencies" />,
     <Resource name="personextended" />,
+    <Resource name="genders" />,
+    <Resource name="sectortypes" />,
+    <Resource name="agegroups" />,
+    <Resource name="caretypes" />,
+    <Resource name="sectororganizations" />,
+    <Resource name="hospitalizationtypes" />,
+    <Resource name="provinces" />,
+    <Resource name="bedcategories" />,
+    <Resource name="educationtypes" />,
+    <Resource name="internmentepisodes" />,
 ];
 
 export default resources;

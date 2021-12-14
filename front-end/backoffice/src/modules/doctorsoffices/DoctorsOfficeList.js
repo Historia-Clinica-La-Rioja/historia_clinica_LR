@@ -1,9 +1,9 @@
 import React from 'react';
-import {Datagrid, Filter, List, ReferenceField, TextField, TextInput} from 'react-admin';
+import { Datagrid, Filter, List, ReferenceField, TextField, TextInput, usePermissions } from 'react-admin';
 
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
-const DoctorsOfficeFilter = props =>(
+const DoctorsOfficeFilter = props => (
     <Filter {...props}>
         <TextInput source="description" />
         <SgxSelectInput source="institutionId" element="institutions" optionText="name" allowEmpty={false} />
@@ -11,24 +11,27 @@ const DoctorsOfficeFilter = props =>(
     </Filter>
 );
 
-const DoctorsOfficeList = ({ permissions, ...props }) => (
-    <List {...props} hasCreate={false} filters={<DoctorsOfficeFilter />} >
-        <Datagrid rowClick="show">
+const DoctorsOfficeList = (props) => {
+    const { permissions } = usePermissions();
+    return (
+        <List {...props} hasCreate={false} filters={<DoctorsOfficeFilter />} >
+            <Datagrid rowClick="show">
 
-            <TextField source="description" />
+                <TextField source="description" />
 
-            <ReferenceField source="institutionId" reference="institutions">
-                <TextField source="name" />
-            </ReferenceField>
+                <ReferenceField source="institutionId" reference="institutions">
+                    <TextField source="name" />
+                </ReferenceField>
 
-            <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
-                <TextField source="description"/>
-            </ReferenceField>
+                <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
+                    <TextField source="description" />
+                </ReferenceField>
 
-            { permissions && permissions.isOn("HABILITAR_LLAMADO") && <TextField source="topic"/> }
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextField source="topic" />}
 
-        </Datagrid>
-    </List>
-);
+            </Datagrid>
+        </List>
+    )
+};
 
 export default DoctorsOfficeList;

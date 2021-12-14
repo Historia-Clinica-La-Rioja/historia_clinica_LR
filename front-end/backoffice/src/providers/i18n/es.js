@@ -2,6 +2,13 @@ import spanishMessages from '@blackbox-vision/ra-language-spanish';
 
 const messages = {
     ...spanishMessages,
+    bo: {
+        login: {
+            redirect: {
+                message: "Parece que su sesión ha finalizado."
+            }
+        }
+    },
     sgh: {
         dashboard: {
             title: 'Historia de salud integrada',
