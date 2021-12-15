@@ -9,7 +9,7 @@ public interface ExternalPatientStorage {
 
     Optional<ExternalPatientBo> findByExternalId(String externalId);
 
-    Integer save(ExternalPatientBo externalPatientBo);
+    String save(ExternalPatientBo externalPatientBo);
 
     Optional<Integer> getPatientId(Short identificationTypeId, String identificationNumber, Short genderId);
 

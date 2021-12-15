@@ -4,7 +4,6 @@ import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientBo;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientCoverageBo;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientExtendedBo;
-import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.RequiredPatientDataDto;
@@ -30,28 +29,18 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
     public Optional<ExternalPatientBo> findByExternalId(String externalId) {
         log.debug("Input parameters -> externalId {}", externalId);
         Optional<ExternalPatientBo> result = externalPatientRepository.findByExternalId(externalId)
-                .map(externalPatient -> {
-                    try {
-                        return new ExternalPatientBo(
-                                externalPatient.getId(),
-                                externalPatient.getPatientId(),
-                                externalPatient.getExternalId(),
-                                externalPatient.getExternalEncounterId(),
-                                externalPatient.getExternalEncounterDate(),
-                                externalPatient.getExternalEncounterType());
-                    } catch (ExternalPatientBoException e) {
-                        return null;
-                    }
-                });
+                .map(externalPatient -> new ExternalPatientBo(
+                        externalPatient.getExternalPatientPK().getPatientId(),
+                        externalPatient.getExternalPatientPK().getExternalId()));
         log.debug("Output -> {}", result);
         return result;
     }
 
     @Override
-    public Integer save(ExternalPatientBo externalPatientBo) {
+    public String save(ExternalPatientBo externalPatientBo) {
         log.debug("Input parameters -> externalPatientBo {}", externalPatientBo);
         ExternalPatient saved = externalPatientRepository.save(mapToEntity(externalPatientBo));
-        Integer result = saved.getId();
+        String result = saved.getExternalPatientPK().getExternalId();
         log.debug("Output -> {}", result);
         return result;
     }
@@ -110,10 +99,6 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
 
     private ExternalPatient mapToEntity(ExternalPatientBo epBo) {
         return new ExternalPatient(
-                epBo.getPatientId(),
-                epBo.getExternalId(),
-                epBo.getExternalEncounterId(),
-                epBo.getExternalEncounterDate(),
-                epBo.getEExternalEncounterType().toString());
+                new ExternalPatientPK(epBo.getExternalId(),epBo.getPatientId()));
     }
 }

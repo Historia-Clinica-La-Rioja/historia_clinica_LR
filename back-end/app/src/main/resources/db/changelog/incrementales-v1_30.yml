@@ -54,42 +54,43 @@ databaseChangeLog:
                       defaultValueDate: ${date.now}
 
     - changeSet:
-          id: external_patient-createTable
-          comment: Create table external_patient
-          author: mvenere
-          changes:
-              - createTable:
-                    tableName: external_patient
-                    columns:
-                        - column:
-                              autoIncrement: true
-                              constraints:
-                                  primaryKey: true
-                                  primaryKeyName: PK_external_patient
-                              name: id
-                              type: int
-                        - column:
-                              constraints:
-                                  nullable: false
-                              name: patient_id
-                              type: int
-                        - column:
-                              constraints:
-                                  nullable: false
-                              name: external_id
-                              type: varchar(20)
-                        - column:
-                              constraints:
-                                  nullable: false
-                              name: external_encounter_id
-                              type: varchar(20)
-                        - column:
-                              constraints:
-                                  nullable: false
-                              name: external_encounter_date
-                              type: datetime
-                        - column:
-                              constraints:
-                                  nullable: false
-                              name: external_encounter_type
-                              type: varchar(100)
+        id: external_patient-createTable
+        comment: Create table external_patient
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: external_patient
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: external_id
+                    type: varchar(20)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: external_id, patient_id
+              constraintName: pk_external_patient
+              tableName: external_patient
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: patient_id
+              baseTableName: external_patient
+              constraintName: FK_external_patient_patient_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: patient
+              validate: true
+          - addUniqueConstraint:
+              tableName: external_patient
+              columnNames: patient_id
+              constraintName: UQ_patient_id
+          - addUniqueConstraint:
+              tableName: external_patient
+              columnNames: external_id
+              constraintName: UQ_external_id

@@ -43,12 +43,8 @@ public class ExternalPatientController {
 
     private ExternalPatientExtendedBo toExternalPatientExtendedBo(ExternalPatientExtendedDto externalPatientDto) throws ExternalPatientBoException, ExternalPatientExtendedBoException {
         return new ExternalPatientExtendedBo(
-                externalPatientDto.getId(),
                 externalPatientDto.getPatientId(),
                 externalPatientDto.getExternalId(),
-                externalPatientDto.getExternalEncounterId(),
-                externalPatientDto.getExternalEncounterDate(),
-                externalPatientDto.getEExternalEncounterType().toString(),
                 externalPatientDto.getBirthDate(),
                 externalPatientDto.getFirstName(),
                 externalPatientDto.getGenderId(),

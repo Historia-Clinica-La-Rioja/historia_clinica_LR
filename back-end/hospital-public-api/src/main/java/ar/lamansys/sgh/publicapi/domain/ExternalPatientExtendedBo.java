@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.publicapi.domain;
 
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoException;
-import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoEnumException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -36,12 +35,8 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
 
     private List<ExternalPatientCoverageBo> medicalCoverages;
 
-    public ExternalPatientExtendedBo(@Nullable Integer id,
-                                     @Nullable Integer patientId,
-                                     String externalId,
-                                     String externalEncounterId,
-                                     LocalDateTime externalEncounterDate,
-                                     String EExternalEncounterType,
+    public ExternalPatientExtendedBo(@Nullable Integer patientId,
+                                     @Nullable String externalId,
                                      LocalDateTime birthDate,
                                      String firstName,
                                      Short genderId,
@@ -50,8 +45,8 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
                                      String lastName,
                                      String phoneNumber,
                                      String email,
-                                     List<ExternalPatientCoverageBo> medicalCoverages) throws ExternalPatientBoException, ExternalPatientExtendedBoException {
-        super(id, patientId, externalId, externalEncounterId, externalEncounterDate, EExternalEncounterType);
+                                     List<ExternalPatientCoverageBo> medicalCoverages) throws ExternalPatientExtendedBoException {
+        super(patientId, externalId);
         if(birthDate==null)
             throw new ExternalPatientExtendedBoException(ExternalPatientExtendedBoEnumException.NULL_BIRTHDATE,"La fecha de nacimiento es obligatoria");
         this.birthDate = birthDate;

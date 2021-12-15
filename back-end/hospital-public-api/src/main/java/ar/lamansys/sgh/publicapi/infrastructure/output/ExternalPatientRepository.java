@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ExternalPatientRepository extends JpaRepository<ExternalPatient, Integer> {
+public interface ExternalPatientRepository extends JpaRepository<ExternalPatient, ExternalPatientPK> {
 
     @Query(value = "SELECT * FROM external_patient ep WHERE ep.external_id = :externalId ORDER BY ep.id DESC LIMIT 1",nativeQuery = true)
     Optional<ExternalPatient> findByExternalId(@Param("externalId") String externalId);
