@@ -235,6 +235,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 										reference.referenceIds.push(fileId);
 										this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
 
+										if (longFiles === reference.referenceFiles.length) {
+											longReferences = longReferences + 1;
+										}
+
 										if ((longFiles === reference.referenceFiles.length) && (longReferences === references.length)) {
 											this.goToCreateConsultation(nuevaConsulta);
 										}
@@ -244,7 +248,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 									}
 								)
 							}
-							longReferences = longReferences + 1;
 						}
 					}
 					else {
@@ -280,14 +283,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					}
 					let longFiles = 0;
 					for (let file of reference.referenceFiles) {
-
 						this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
 							fileId => {
 								longFiles = longFiles + 1;
 
 								reference.referenceIds.push(fileId);
 								this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
-
+								if (longFiles === reference.referenceFiles.length) {
+									longReferences = longReferences + 1;
+								}
 								if ((longFiles === reference.referenceFiles.length) && (longReferences === references.length)) {
 									this.goToCreateConsultation(nuevaConsulta);
 								}
@@ -297,7 +301,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 							}
 						)
 					}
-					longReferences = longReferences + 1;
 				}
 			}
 		});
