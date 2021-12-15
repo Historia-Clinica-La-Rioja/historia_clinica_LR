@@ -11,7 +11,7 @@ public interface ExternalPatientStorage {
 
     String save(ExternalPatientBo externalPatientBo);
 
-    Optional<Integer> getPatientId(Short identificationTypeId, String identificationNumber, Short genderId);
+    Optional<Integer> getPatientId(ExternalPatientExtendedBo epeBo);
 
     Integer createPatient(ExternalPatientExtendedBo externalPatientExtendedBo);
 

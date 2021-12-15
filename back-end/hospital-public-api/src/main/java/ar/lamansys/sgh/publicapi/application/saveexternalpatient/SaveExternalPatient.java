@@ -18,12 +18,8 @@ public class SaveExternalPatient {
         log.debug("Input parameters -> externalPatientExtendedBo {}", epeBo);
         Integer patientId = externalPatientStorage.findByExternalId(epeBo.getExternalId())
                 .map(ExternalPatientBo::getPatientId)
-                .orElseGet(() ->
-                        externalPatientStorage.getPatientId(
-                                        epeBo.getIdentificationTypeId(),
-                                        epeBo.getIdentificationNumber(),
-                                        epeBo.getGenderId())
-                                .orElse(externalPatientStorage.createPatient(epeBo)));
+                .orElseGet(() -> externalPatientStorage.getPatientId(epeBo)
+                                .orElseGet(() ->externalPatientStorage.createPatient(epeBo)));
         epeBo.setPatientId(patientId);
         externalPatientStorage.saveMedicalCoverages(epeBo);
         externalPatientStorage.save(epeBo);

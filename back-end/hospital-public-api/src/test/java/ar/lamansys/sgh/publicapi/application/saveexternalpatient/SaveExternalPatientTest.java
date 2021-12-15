@@ -40,7 +40,7 @@ public class SaveExternalPatientTest {
 
         Integer patientId = saveExternalPatient.run(validExternalPatientExtended());
 
-        verify(externalPatientStorage, times(0)).getPatientId(any(), any(), any());
+        verify(externalPatientStorage, times(0)).getPatientId(any());
         verify(externalPatientStorage, times(0)).createPatient(any());
 
         ArgumentCaptor<ExternalPatientExtendedBo> externalPatientExtendedArgumentCaptor = ArgumentCaptor.forClass(ExternalPatientExtendedBo.class);
@@ -58,17 +58,15 @@ public class SaveExternalPatientTest {
     @Test
     void saveExtistedPatient() throws ExternalPatientBoException, ExternalPatientExtendedBoException {
         when(externalPatientStorage.findByExternalId(any())).thenReturn(Optional.empty());
-        when(externalPatientStorage.getPatientId(any(),any(),any())).thenReturn(Optional.of(8));
+        when(externalPatientStorage.getPatientId(any())).thenReturn(Optional.of(8));
         Integer patientId = saveExternalPatient.run(validExternalPatientExtended());
 
-        ArgumentCaptor<Short> identificationTypeIdCaptor = ArgumentCaptor.forClass(Short.class);
-        ArgumentCaptor<String> identificationNumberCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Short> genderIdCaptor = ArgumentCaptor.forClass(Short.class);
+        ArgumentCaptor<ExternalPatientExtendedBo> epeBoCaptor = ArgumentCaptor.forClass(ExternalPatientExtendedBo.class);
 
-        verify(externalPatientStorage,times(1)).getPatientId(identificationTypeIdCaptor.capture(),identificationNumberCaptor.capture(),genderIdCaptor.capture());
-        Assertions.assertEquals((short)1,identificationTypeIdCaptor.getValue());
-        Assertions.assertEquals("35565855",identificationNumberCaptor.getValue());
-        Assertions.assertEquals((short)1,genderIdCaptor.getValue());
+        verify(externalPatientStorage,times(1)).getPatientId(epeBoCaptor.capture());
+        Assertions.assertEquals((short)1,epeBoCaptor.getValue().getGenderId());
+        Assertions.assertEquals("35565855",epeBoCaptor.getValue().getIdentificationNumber());
+        Assertions.assertEquals((short)1,epeBoCaptor.getValue().getIdentificationTypeId());
         Assertions.assertEquals(8,patientId);
 
     }

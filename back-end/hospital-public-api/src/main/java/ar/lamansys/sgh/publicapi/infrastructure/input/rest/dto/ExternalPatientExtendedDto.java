@@ -37,12 +37,8 @@ public class ExternalPatientExtendedDto extends ExternalPatientDto {
 
     private List<ExternalPatientCoverageDto> medicalCoverages;
 
-    public ExternalPatientExtendedDto(@Nullable Integer id,
-                                      @Nullable Integer patientId,
+    public ExternalPatientExtendedDto(@Nullable Integer patientId,
                                       String externalId,
-                                      String externalEncounterId,
-                                      LocalDateTime externalEncounterDate,
-                                      String EExternalEncounterType,
                                       LocalDateTime birthDate,
                                       String firstName,
                                       Short genderId,
@@ -52,7 +48,7 @@ public class ExternalPatientExtendedDto extends ExternalPatientDto {
                                       String phoneNumber,
                                       String email,
                                       List<ExternalPatientCoverageDto> medicalCoverages) {
-        super(id, patientId, externalId, externalEncounterId, externalEncounterDate, EExternalEncounterType);
+        super(patientId, externalId);
         this.birthDate = birthDate;
         this.firstName = firstName;
         this.genderId = genderId;

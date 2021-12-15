@@ -46,11 +46,14 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
     }
 
     @Override
-    public Optional<Integer> getPatientId(Short identificationTypeId, String identificationNumber, Short genderId) {
-        log.debug("Input parameters -> identificationTypeId {}, identificationNumber {}, genderId {}",
-                identificationTypeId, identificationNumber, genderId);
-        List<Integer> idsPatient = sharedPatientPort.getPatientId(identificationTypeId, identificationNumber, genderId);
+    public Optional<Integer> getPatientId(ExternalPatientExtendedBo epeBo) {
+        log.debug("Input parameters -> ExternalPatientExtendedBo {}", epeBo);
+        List<Integer> idsPatient = sharedPatientPort.getPatientId(epeBo.getIdentificationTypeId(), epeBo.getIdentificationNumber(), epeBo.getGenderId());
         Optional<Integer> result = idsPatient.stream().findFirst();
+        result.ifPresent(patientId -> {
+            if(epeBo.getExternalId()!=null)
+                externalPatientRepository.save(new ExternalPatient(new ExternalPatientPK(epeBo.getExternalId(), patientId)));
+        });
         log.debug("Output -> {}", result);
         return result;
     }
@@ -59,6 +62,8 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
     public Integer createPatient(ExternalPatientExtendedBo epeBo) {
         log.debug("Input parameter externalPatientExtended -> {}", epeBo);
         Integer result = sharedPatientPort.createPatient(mapToRequiredPatientDataDto(epeBo));
+        if(epeBo.getExternalId()!=null)
+            externalPatientRepository.save(new ExternalPatient(new ExternalPatientPK(epeBo.getExternalId(), result)));
         log.debug("Output -> {}", result);
         return result;
     }
