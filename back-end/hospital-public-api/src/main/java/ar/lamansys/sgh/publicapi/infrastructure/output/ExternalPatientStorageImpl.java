@@ -51,9 +51,8 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
         List<Integer> idsPatient = sharedPatientPort.getPatientId(epeBo.getIdentificationTypeId(), epeBo.getIdentificationNumber(), epeBo.getGenderId());
         Optional<Integer> result = idsPatient.stream().findFirst();
         result.ifPresent(patientId -> {
-            if(epeBo.getExternalId()!=null)
-                externalPatientRepository.save(new ExternalPatient(new ExternalPatientPK(epeBo.getExternalId(), patientId)));
-        });
+            if(epeBo.getExternalId()!=null&&externalPatientRepository.findByPatientId(patientId).isEmpty())
+                externalPatientRepository.save(new ExternalPatient(new ExternalPatientPK(epeBo.getExternalId(), patientId)));});
         log.debug("Output -> {}", result);
         return result;
     }

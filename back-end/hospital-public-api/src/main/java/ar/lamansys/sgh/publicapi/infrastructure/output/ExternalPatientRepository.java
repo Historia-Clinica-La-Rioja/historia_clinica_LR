@@ -10,6 +10,9 @@ import java.util.Optional;
 @Repository
 public interface ExternalPatientRepository extends JpaRepository<ExternalPatient, ExternalPatientPK> {
 
-    @Query(value = "SELECT * FROM external_patient ep WHERE ep.external_id = :externalId ORDER BY ep.id DESC LIMIT 1",nativeQuery = true)
+    @Query(value = "SELECT ep FROM ExternalPatient ep WHERE ep.externalPatientPK.externalId = :externalId ")
     Optional<ExternalPatient> findByExternalId(@Param("externalId") String externalId);
+
+    @Query(value = "SELECT ep FROM ExternalPatient ep WHERE ep.externalPatientPK.patientId = :patientId ")
+    Optional<ExternalPatient> findByPatientId(@Param("patientId") Integer patientId);
 }

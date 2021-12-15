@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
+import ar.lamansys.sgh.publicapi.application.saveexternalencounter.exceptions.SaveExternalEncounterException;
+import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
@@ -43,6 +45,20 @@ public class HospitalPublicApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ApiErrorMessageDto handleExternalPatienExtendedtBoException(ExternalPatientExtendedBoException ex) {
         logger.error("ExternalPatienExtendedtBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
+
+    @ExceptionHandler({ ExternalEncounterBoException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ApiErrorMessageDto handleExternalEncounterBoException(ExternalEncounterBoException ex) {
+        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
+
+    @ExceptionHandler({ SaveExternalEncounterException.class })
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    protected ApiErrorMessageDto handleSaveExternalEncounterException(SaveExternalEncounterException ex) {
+        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }
 }
