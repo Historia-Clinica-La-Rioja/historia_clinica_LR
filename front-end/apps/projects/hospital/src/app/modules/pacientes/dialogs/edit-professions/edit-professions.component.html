@@ -16,7 +16,7 @@
 				<mat-form-field appearance="outline">
 					<mat-label translate="pacientes.edit_professions.ENTER_LICENCE"></mat-label>
 					<input formControlName="license" type="text" matInput>
-					<mat-error *ngIf="hasError('required', 'license')">
+					<mat-error *ngIf="hasError('required', 'pattern', 'license')">
 						<span translate="pacientes.edit_professions.LICENCE_REQUIRED"></span>
 					</mat-error>
 				</mat-form-field>

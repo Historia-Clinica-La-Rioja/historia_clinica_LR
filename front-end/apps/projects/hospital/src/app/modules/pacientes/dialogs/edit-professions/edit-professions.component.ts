@@ -86,8 +86,8 @@ export class EditProfessionsComponent implements OnInit {
 
 	initFormParent(): void {
 		this.formParent = new FormGroup({
-			license: new FormControl(this.data?.ownLicense ? this.data.ownLicense : null, [Validators.required]),
-			specialtiesAndProfessions: new FormArray([], [Validators.required]),
+			license: new FormControl(this.data?.ownLicense ? this.data.ownLicense : null, [Validators.required, Validators.pattern(/^([a-zA-Z1-9])+$/)]),
+			specialtiesAndProfessions: new FormArray([], [Validators.required])
 		});
 	}
 
@@ -223,7 +223,7 @@ export class EditProfessionsComponent implements OnInit {
 	}
 
 	isDisableConfirmButton(): boolean {
-		if (this.hasError('required', 'license') || this.isDisabledAddProfessionAndSpecialty())
+		if (this.hasError('required', 'pattern', 'license') || this.isDisabledAddProfessionAndSpecialty())
 			return true
 		return false;
 	}
@@ -251,8 +251,8 @@ export class EditProfessionsComponent implements OnInit {
 		};
 	}
 
-	hasError(type: string, control: string): boolean {
-		return this.formParent.get(control).hasError(type);
+	hasError(type: string, type_two: string, control: string): boolean {
+		return (this.formParent.get(control).hasError(type) || this.formParent.get(control).hasError(type_two));
 	}
 
 	public save(): void {
