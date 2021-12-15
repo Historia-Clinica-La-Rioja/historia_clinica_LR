@@ -27,6 +27,8 @@ import users from './users';
 import passwordReset from './password-reset';
 import careLines from "./carelines";
 import clinicalspecialtycarelines from "./clinicalspecialtycarelines";
+import documenttypes from "./documenttypes";
+import documentfiles from "./documentfiles";
 import restClientMeasures from "./rest-client-measures";
 
 const resourcesAdminInstitucional = [
@@ -86,6 +88,8 @@ const resourcesAdminRoot = [
     <Resource name="users" {...users} />,
     <Resource name="carelines" {...careLines} />,
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
+    <Resource name="documentfiles" {...documentfiles} />,
+    <Resource name="documenttypes" {...documenttypes} />,
     <Resource name="rest-client-measures" {...restClientMeasures} />,
 ];
 

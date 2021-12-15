@@ -299,6 +299,30 @@ const messages = {
             },
             addRelated: 'Agregar especialidad',
         },
+        "documentfiles": {
+            name: 'Documentos |||| Documentos',
+            fields: {
+                sourceTypeId: 'Tipo de atención',
+                typeId: 'Tipo de documento',
+                filename: 'Nombre de archivo',
+                createdOn: 'Fecha de creación',
+            },
+            downloadFile: 'Descargar pdf'
+        },
+        "sourcetypes": {
+            name: 'Tipos de atención |||| Tipos de atención',
+            fields: {
+                id: 'Identificador',
+                description: 'Descripción',
+            }
+        },
+        "documenttypes": {
+            name: 'Tipos de documentos |||| Tipos de documentos',
+            fields: {
+                id: 'Identificador',
+                description: 'Descripción',
+            }
+        }
     },
 };
 
