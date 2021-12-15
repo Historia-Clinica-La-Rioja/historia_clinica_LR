@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 // deps
 import { CoreMaterialModule } from './core.material.module';
+import { AppMaterialModule } from '../material/app.material.module';
 // components
 import { ContentComponent } from './components/content/content.component';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
@@ -36,6 +37,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		FlexModule,
 		// deps
 		CoreMaterialModule,
+		AppMaterialModule,
 	],
 	exports: [
 		CommonModule,
@@ -48,6 +50,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		TranslateModule,
 		// deps
 		CoreMaterialModule,
+		AppMaterialModule,
 		// components
 		ContentComponent,
 		ExchangeableThemeComponent,
