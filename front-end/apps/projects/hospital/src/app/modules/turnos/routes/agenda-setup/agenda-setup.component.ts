@@ -1,18 +1,19 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
-import {SectorService} from '@api-rest/services/sector.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {processErrors, scrollIntoError} from '@core/utils/form.utils';
-import {ConfirmDialogComponent} from '@core/dialogs/confirm-dialog/confirm-dialog.component';
-import {TranslateService} from '@ngx-translate/core';
-import {MatDialog} from '@angular/material/dialog';
-import {DoctorsOfficeService} from '@api-rest/services/doctors-office.service';
-import {HealthcareProfessionalByInstitutionService} from '@api-rest/services/healthcare-professional-by-institution.service';
-import {ContextService} from '@core/services/context.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {APPOINTMENT_DURATIONS, MINUTES_IN_HOUR} from '../../constants/appointment';
-import {AgendaHorarioService} from '../../services/agenda-horario.service';
-import {currentWeek, DateFormat, momentFormat, momentParseDate, momentParseTime} from '@core/utils/moment.utils';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
+import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { DAYS_OF_WEEK } from 'angular-calendar';
+import { Observable } from 'rxjs';
+
+import { processErrors, scrollIntoError } from '@core/utils/form.utils';
+import { ContextService } from '@core/services/context.service';
+import { currentWeek, DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { SectorService } from '@api-rest/services/sector.service';
+import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
 	CompleteDiaryDto,
 	DiaryADto,
@@ -21,10 +22,10 @@ import {
 	OccupationDto,
 	ProfessionalDto
 } from '@api-rest/api-model';
-import {DAYS_OF_WEEK} from 'angular-calendar';
-import {DiaryOpeningHoursService} from '@api-rest/services/diary-opening-hours.service';
-import {DiaryService} from '@api-rest/services/diary.service';
-import {Observable} from 'rxjs';
+import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
+import { DiaryService } from '@api-rest/services/diary.service';
+import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
+import { AgendaHorarioService } from '../../services/agenda-horario.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -171,7 +172,7 @@ export class AgendaSetupComponent implements OnInit {
 
 	private setDoctorOfficeRangeTime() {
 		this.openingTime = getHours(this.form.getRawValue().doctorOffice.openingTime);
-		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime) - 1 ;
+		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime) - 1;
 		function getHours(time: string): number {
 			const hours = momentParseTime(time);
 			return Number(hours.hours());

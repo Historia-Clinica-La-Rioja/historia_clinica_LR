@@ -28,7 +28,7 @@ import { PersonService } from '@api-rest/services/person.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { MatDialog } from '@angular/material/dialog';
-import { MedicalCoverageComponent, PatientMedicalCoverage, } from '@core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage, } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
 import { map } from 'rxjs/operators';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';

@@ -11,6 +11,7 @@ import {
 	ResponseEpicrisisDto,
 	SnomedDto,
 } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
@@ -23,10 +24,9 @@ import { TableCheckbox } from '@material/model/table.model';
 import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SnomedSemanticSearch, SnomedService } from '../../../../services/snomed.service';
-import { SEMANTICS_CONFIG } from '../../../../constants/snomed-semantics';
 import { DiagnosisEpicrisisService } from '../../services/diagnosis-epicrisis.service';
 import { hasError } from '@core/utils/form.utils';
-import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 
 @Component({
 	selector: 'app-epicrisis-form',
@@ -34,8 +34,6 @@ import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 	styleUrls: ['./epicrisis-form.component.scss']
 })
 export class EpicrisisFormComponent implements OnInit {
-
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 
 	private internmentEpisodeId: number;
 	private patientId: number;
@@ -211,7 +209,7 @@ export class EpicrisisFormComponent implements OnInit {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.diagnosis
+				eclFilter: SnomedECL.DIAGNOSIS
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

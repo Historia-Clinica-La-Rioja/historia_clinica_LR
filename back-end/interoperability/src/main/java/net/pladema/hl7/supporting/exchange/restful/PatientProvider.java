@@ -9,6 +9,7 @@ import net.pladema.hl7.dataexchange.model.domain.dto.OrganizationDto;
 import net.pladema.hl7.dataexchange.model.domain.dto.PatientSummaryDto;
 import net.pladema.hl7.supporting.conformance.FhirClientR4;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
+import net.pladema.hl7.supporting.conformance.exceptions.FhirClientException;
 import net.pladema.hl7.supporting.exchange.documents.BundleResource;
 import net.pladema.hl7.supporting.exchange.documents.profile.FhirDocument;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
@@ -58,7 +59,7 @@ public class PatientProvider {
      */
     @GetMapping(value = "/patient-location")
     public ResponseEntity<List<OrganizationDto>> getPatientLocation(
-            @RequestParam(name = Patient.SP_IDENTIFIER) String id) {
+            @RequestParam(name = Patient.SP_IDENTIFIER) String id) throws FhirClientException {
         String domainIdentifier = wsIss + "|" + id;
         List<OrganizationDto> result = new ArrayList<>();
         Bundle data = client.operationPatientLocation(new StringType(domainIdentifier));

@@ -12,8 +12,8 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 public class ThymeleafConfig {
 
-	@Bean
-	public SpringTemplateEngine springTemplateEngine() {
+	@Bean("templateEngine")
+	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.addTemplateResolver(htmlTemplateResolver());
 		templateEngine.addDialect(new Java8TimeDialect());

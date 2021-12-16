@@ -1,0 +1,23 @@
+div {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 16px;
+}
+
+.message {
+    margin: 10px 7px;
+}
+
+.report-message {
+    font-weight: 600;
+}
+
+.epidemiological-report{
+	position: relative;
+}
+
+.close{
+	transform: scale(1.0);
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}

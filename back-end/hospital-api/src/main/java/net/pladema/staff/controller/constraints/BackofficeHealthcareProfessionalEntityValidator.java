@@ -1,6 +1,5 @@
 package net.pladema.staff.controller.constraints;
 
-import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.dto.RoleAssignment;

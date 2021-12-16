@@ -1,7 +1,9 @@
-import AddressShow from './show';
-import AddressEdit from './edit';
+import AddressShow from './AddressShow';
+import AddressEdit from './AddressEdit';
 
-export default {
+const addresses =  {
     show: AddressShow,
     edit: AddressEdit,
 };
+
+export default addresses;

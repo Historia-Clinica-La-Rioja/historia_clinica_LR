@@ -23,5 +23,5 @@ public class PrescriptionDto implements Serializable {
     private Integer medicalCoverageId;
 
     @NotEmpty
-    private List<@Valid PrescriptionItemDto> items = new ArrayList();
+    private List<@Valid PrescriptionItemDto> items = new ArrayList<>();
 }

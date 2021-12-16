@@ -4,7 +4,7 @@ import { DateFormat, momentParse } from "@core/utils/moment.utils";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { Medicacion } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { AntecedentePersonal } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
-import { Problema } from "@historia-clinica/services/problemas-nueva-consulta.service";
+import { Problema } from "@historia-clinica/services/problemas.service";
 import { Procedimiento } from "@historia-clinica/services/procedimientos.service";
 import { ActionType, ToothAction } from "../services/actions.service";
 import { ActionedTooth } from "../services/odontogram.service";

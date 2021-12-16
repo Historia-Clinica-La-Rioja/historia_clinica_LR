@@ -1,126 +1,152 @@
 {
-	"pacientes": {
-		"form": {
-			"ADDRESS": "Domicilio",
-			"ADDRESS_APARTMENT": "Departamento",
-			"ADDRESS_CITY": "Ciudad",
-			"ADDRESS_COUNTRY": "Pais",
-			"ADDRESS_DEPARTMENT": "Partido",
-			"ADDRESS_FLOOR": "Piso",
-			"ADDRESS_NUMBER": "Número",
-			"ADDRESS_POSTCODE": "Código  postal",
-			"ADDRESS_PROVINCE": "Provincia",
-			"ADDRESS_QUARTER": "Barrio",
-			"ADDRESS_STREET": "Calle",
-			"BIRTH_DATE": "Fecha de nacimiento",
-			"CUIT_CUIL": "CUIT / CUIL",
-			"EMAIL": "Email",
-			"ETHNIC": "Etnia",
-			"OCCUPATION": "Ocupación",
-			"EDUCATION_LEVEL": "Nivel educativo",
-			"FIRST_NAME": "Primer nombre",
-			"FIRST_NAMES_TITLE": "Nombres",
-			"FULL_NAME": "Nombre completo",
-			"GENDER": "Sexo",
-			"GENDER_SELF_DETERMINATION": "Identidad de género",
-			"OTHER_SELF_PERCEIVED_GENDER_LABEL": "Especifique cuál",
-			"GENERAL_PRACTITIONER": "Médico de cabecera",
-			"IDENTIFICATION_TYPE": "Tipo de documento",
-			"IDENTIFICATION_NUMBER": "Nº de documento",
-			"INVALID": "El campo es invalido.",
-			"LAST_NAME": "Primer apellido",
-			"LAST_NAME_TITLE": "Apellidos",
-			"MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
-			"MEDICAL_COVERAGE": "Cobertura médica",
-			"MIDDLE_NAMES": "Otros nombres",
-			"MOTHERS_LAST_NAME": "Apellido materno",
-			"NAME_SELF_DETERMINATION": "Nombre autopercibido",
-			"ONLY_NUMBERS": "Solo números",
-			"OTHER_LAST_NAMES": "Otros apellidos",
-			"PAMI_DOCTOR": "Médico de PAMI",
-			"PHONE_NUMBER": "Teléfono",
-			"RELIGION": "Religion",
-			"REQUIRED": "El campo es requerido",
-			"REQUIRED_GENDER": "Género requerido",
-			"SELECT": "Seleccionar",
-			"UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura"
-		},
-		"home": {
-			"TITLE": "Pacientes",
-			"TITLE_SEARCH": "Búsqueda de pacientes internados",
-			"SUBTITLE": "Ingresá un nuevo paciente",
-			"find_add_section": {
-				"BUTTON_ADD": "Crear paciente temporal",
-				"BUTTON_SEARCH": "Buscar",
-				"NO_IDENTITY": "No acredita identidad",
-				"TITLE": "Búsqueda",
-				"scan": {
-					"BUTTON_SCAN": "Escanear código",
-					"messages": {
-						"ERROR": "El escaneo no pudo completarse correctamente. Intente de nuevo o proceda a una búsqueda manual.",
-						"SUCCESS": "Resultados encontrados."
-					}
-				}
+    "pacientes": {
+        "form": {
+            "ADDRESS": "Domicilio",
+            "ADDRESS_APARTMENT": "Departamento",
+            "ADDRESS_CITY": "Ciudad",
+            "ADDRESS_COUNTRY": "Pais",
+            "ADDRESS_DEPARTMENT": "Partido",
+            "ADDRESS_FLOOR": "Piso",
+            "ADDRESS_NUMBER": "Número",
+            "ADDRESS_POSTCODE": "Código  postal",
+            "ADDRESS_PROVINCE": "Provincia",
+            "ADDRESS_QUARTER": "Barrio",
+            "ADDRESS_STREET": "Calle",
+            "BIRTH_DATE": "Fecha de nacimiento",
+            "CUIT_CUIL": "CUIT / CUIL",
+            "EMAIL": "Email",
+            "ETHNIC": "Etnia",
+            "OCCUPATION": "Ocupación",
+            "EDUCATION_LEVEL": "Nivel educativo",
+            "FIRST_NAME": "Primer nombre",
+            "FIRST_NAMES_TITLE": "Nombres",
+            "FULL_NAME": "Nombre completo",
+            "GENDER": "Sexo",
+            "GENDER_SELF_DETERMINATION": "Identidad de género",
+            "OTHER_SELF_PERCEIVED_GENDER_LABEL": "Especifique cuál",
+            "GENERAL_PRACTITIONER": "Médico de cabecera",
+            "IDENTIFICATION_TYPE": "Tipo de documento",
+            "IDENTIFICATION_NUMBER": "Nº de documento",
+            "INVALID": "El campo es invalido.",
+            "LAST_NAME": "Primer apellido",
+            "LAST_NAME_TITLE": "Apellidos",
+            "MAX_CHARACTER": "Introduzca como máximo 11 caracteres",
+            "MEDICAL_COVERAGE": "Cobertura médica",
+            "MIDDLE_NAMES": "Otros nombres",
+            "MOTHERS_LAST_NAME": "Apellido materno",
+            "NAME_SELF_DETERMINATION": "Nombre autopercibido",
+            "ONLY_NUMBERS": "Solo números",
+            "OTHER_LAST_NAMES": "Otros apellidos",
+            "PAMI_DOCTOR": "Médico de PAMI",
+            "PHONE_NUMBER": "Teléfono",
+            "RELIGION": "Religion",
+            "REQUIRED": "El campo es requerido",
+            "REQUIRED_GENDER": "Género requerido",
+            "SELECT": "Seleccionar",
+            "UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura",
+			"IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres"
+        },
+        "home": {
+            "TITLE": "Pacientes",
+            "TITLE_SEARCH": "Búsqueda de pacientes internados",
+            "SUBTITLE": "Ingresá un nuevo paciente",
+            "find_add_section": {
+                "BUTTON_ADD": "Crear paciente temporal",
+                "BUTTON_SEARCH": "Buscar",
+                "NO_IDENTITY": "No acredita identidad",
+                "TITLE": "Búsqueda",
+                "scan": {
+                    "BUTTON_SCAN": "Escanear código",
+                    "messages": {
+                        "ERROR": "El escaneo no pudo completarse correctamente. Intente de nuevo o proceda a una búsqueda manual.",
+                        "SUCCESS": "Resultados encontrados."
+                    }
+                },
+				"IDENTIFY_TYPE_LABEL": "Tipo",
+				"IDENTIFY_NUMBER_LABEL": "Nro. de documento",
+				"GENDER_LABEL": "Sexo",
+				"SELECT_REASON_LABEL": "Seleccione motivo",
+				"COMMENTS_LABEL": "Comentarios"
+            }
+        },
+        "new": {
+            "TITLE": "Nuevo Paciente",
+            "SUBTITLE": "Ingresá los siguientes datos.",
+            "TITLE_TEMPORARY": "Nuevo Paciente Temporal",
+            "messages": {
+                "ERROR": "Error al crear un paciente",
+                "SUCCESS": "El paciente se creó exitosamente"
+            }
+        },
+        "search": {
+            "TITLE": "Búsqueda de pacientes",
+            "SUBTITLE": "No se ha encontrado un paciente registrado con ese tipo y número de documento.",
+            "SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
+            "NEW_PATIENT": "Crear nuevo paciente",
+            "RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
+            "ROW_TABLE": "ID Paciente"
+        },
+        "edit": {
+            "TITLE": "Editar paciente",
+            "SUBTITLE": "Se editara el paciente seleccionado",
+            "messages": {
+                "ERROR": "Error al editar un paciente",
+                "SUCCESS": "El paciente se editó exitosamente"
+            }
+        },
+        "search_patient": {
+            "SEARCH_PATIENT": "Buscar Paciente",
+            "SELECT_PATIENT": "Seleccione un paciente",
+            "forms": {
+                "IDENTIF_TYPE": "Tipo",
+                "IDENTIFICATION_NUMBER": "Nro de documento",
+                "GENDER": "Sexo",
+                "PATIENT_ID": "ID Paciente"
+            },
+            "PATIENT_NOT_FOUND": "Paciente no encontrado",
+            "PROVES_IDENTITY": "Acredita identidad",
+            "PATIENT_ID": "ID Paciente",
+            "scan": {
+                "TITLE": "Buscar paciente por escaneo de código de DNI",
+                "ITEM_1": "Disponga de una Lectora de código.",
+                "ITEM_2": "Escanee el código del DNI ubicado en la parte inferior derecha del frente mismo.",
+                "ITEM_3": "La búsqueda se realizará de forma automática al detectar el código."
+            }
+        },
+        "reports": {
+            "TITLE": "Informes",
+            "SELECT_CONSULTATIONS": "Seleccione consultas",
+            "table": {
+                "columns": {
+                    "DATE": "Fecha",
+                    "SPECIALTY": "Especialidad",
+                    "PROFESSIONAL": "Profesional"
+                }
+            },
+            "SELECT_REPORT_TYPE": "Seleccione tipo de informe",
+            "buttons": {
+                "DOWNLOAD_REPORTS": "Descargar informes"
+            }
+        },
+        "user_data": {
+            "TITLE": "Datos de usuario",
+            "USER_ID": "ID Usuario:",
+            "USERNAME": "Nombre de usuario:",
+            "LAST_ACCESS": "Último acceso:",
+            "ENABLE": "Habilitado",
+            "PENDING_DATA": "Nombre de usuario y contraseña pendientes",
+            "WITHOUT_USER": "Sin usuario",
+            "NO_INFO": "Sin información",
+            "buttons": {
+                "CREATE_USER": "CREAR USUARIO",
+				"SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
+				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO"
+            },
+            "messages": {
+                "SUCCESS": "El usuario se creó exitosamente",
+                "ERROR": "Error al crear el usuario",
+				"UPDATE_SUCCESS": "El usuario se actualizó exitosamente"
 			}
-		},
-		"new": {
-			"TITLE": "Nuevo Paciente",
-			"SUBTITLE": "Ingresá los siguientes datos.",
-			"TITLE_TEMPORARY": "Nuevo Paciente Temporal",
-			"messages": {
-				"ERROR": "Error al crear un paciente",
-				"SUCCESS": "El paciente se creó exitosamente"
-			}
-		},
-		"search": {
-			"TITLE": "Búsqueda de pacientes",
-			"SUBTITLE": "No se ha encontrado un paciente registrado con ese tipo y número de documento.",
-			"SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
-			"NEW_PATIENT": "Crear nuevo paciente",
-			"RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
-			"ROW_TABLE": "ID Paciente"
-		},
-		"edit": {
-			"TITLE": "Editar paciente",
-			"SUBTITLE": "Se editara el paciente seleccionado",
-			"messages": {
-				"ERROR": "Error al editar un paciente",
-				"SUCCESS": "El paciente se editó exitosamente"
-			}
-		},
-		"search_patient": {
-			"SEARCH_PATIENT": "Buscar Paciente",
-			"SELECT_PATIENT": "Seleccione un paciente",
-			"forms": {
-				"IDENTIF_TYPE": "Tipo",
-				"IDENTIFICATION_NUMBER": "Nro de documento",
-				"GENDER": "Sexo",
-				"PATIENT_ID": "ID Paciente"
-			},
-			"PATIENT_NOT_FOUND": "Paciente no encontrado",
-			"PROVES_IDENTITY": "Acredita identidad",
-			"PATIENT_ID": "ID Paciente",
-			"scan": {
-				"TITLE": "Buscar paciente por escaneo de código de DNI",
-				"ITEM_1": "Disponga de una Lectora de código.",
-				"ITEM_2": "Escanee el código del DNI ubicado en la parte inferior derecha del frente mismo.",
-				"ITEM_3": "La búsqueda se realizará de forma automática al detectar el código."
-			}
-		},
-		"reports": {
-			"TITLE": "Informes",
-			"SELECT_CONSULTATIONS": "Seleccione consultas",
-			"table": {
-				"columns": {
-					"DATE": "Fecha",
-					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Profesional"
-				}
-			},
-			"SELECT_REPORT_TYPE": "Seleccione tipo de informe",
-			"buttons": {
-				"DOWNLOAD_REPORTS": "Descargar informes"
-			}
-		}
-	}
+        }
+    }
 }

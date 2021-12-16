@@ -41,7 +41,7 @@ ng generate directive|pipe|service|class|guard|interface|enum|module
 ng build my-lib
 
 #Buildear la app principal
-npm run build:prod
+npm run build
 ```
 
 > Los artefactos generados se almacenarán en el directorio `dist/`. Ver el archivo [build-pack.sh](../../scripts/build-pack.sh) para más detalle sobre cómo se realiza el proceso en producción.
@@ -68,8 +68,10 @@ Ejecutar **Unit Tests** vía [Karma](https://karma-runner.github.io).
 ng test
 ```
 
-Ejecutar **End-to-end Tests** via [Protractor](http://www.protractortest.org/).
+Ejecutar **End-to-end Tests** via una plataforma de tu elección.
 
 ```shell
 ng e2e
 ```
+
+> Para usar este comando, primero debe agregar un paquete que implemente capacidades de testing end-to-end. 

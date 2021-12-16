@@ -1,0 +1,140 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_26 
+
+    - changeSet:
+        id: nursing_consultation-createTable
+        comment: Create table nursing_consultation
+        author: bchacon
+        changes:
+            - createTable:
+                tableName: nursing_consultation
+                columns:
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_nursing_consultation
+                        name: id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: patient_id
+                        type: int
+                    - column:
+                        name: clinical_specialty_id
+                        type: int
+                    - column:
+                        name: institution_id
+                        type: int
+                    - column:
+                        name: performed_date
+                        type: date
+                    - column:
+                        name: doctor_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: billable
+                        type: boolean
+                        defaultValue: ${boolean.false}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: deleted
+                        type: BOOLEAN
+                        defaultValue: ${boolean.false}
+                    - column:
+                        name: deleted_by
+                        type: int
+                    - column:
+                        name: deleted_on
+                        type: datetime
+                    - column:
+                        name: patient_medical_coverage_id
+                        type: int
+           
+            - addForeignKeyConstraint:
+                baseColumnNames: patient_id
+                baseTableName: nursing_consultation
+                constraintName: FK_nursing_consultation_patient_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: patient
+                validate: true
+            
+            - addForeignKeyConstraint:
+                baseColumnNames: clinical_specialty_id
+                baseTableName: nursing_consultation
+                constraintName: FK_nursing_consultation_clinical_specialty_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: clinical_specialty
+                validate: true
+            
+            - addForeignKeyConstraint:
+                baseColumnNames: institution_id
+                baseTableName: nursing_consultation
+                constraintName: FK_nursing_consultation_institution_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: institution
+                validate: true
+
+            - addForeignKeyConstraint:
+                baseColumnNames: doctor_id
+                baseTableName: nursing_consultation
+                constraintName: FK_nursing_consultation_healthcare_professional_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: healthcare_professional
+                validate: true
+                    
+    - changeSet:
+        id: source_type-nursing-data
+        comment: Actualizar datos source_type
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO source_type VALUES (7, 'Enfermería');
+
+    - changeSet:
+        id: document_type-nursing-data
+        comment: Actualizar datos document_type
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (10, 'Enfermería');

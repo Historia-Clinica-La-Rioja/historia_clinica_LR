@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Moment } from 'moment';
+
+import { dateToMoment, newMoment } from '@core/utils/moment.utils';
+import { hasError } from '@core/utils/form.utils';
+import { MIN_DATE } from '@core/utils/date.utils';
+
+import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
-import { map } from 'rxjs/operators';
-import { TypeaheadOption } from '@core/components/typeahead/typeahead.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { Observable } from 'rxjs';
-import { REPORT_TYPES } from '../../constants/report-types';
-import { dateToMoment, newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
 import { ReportsService } from '@api-rest/services/reports.service';
-import { hasError } from '@core/utils/form.utils';
-import { MIN_DATE } from "@core/utils/date.utils";
+
+import { REPORT_TYPES } from '../../constants/report-types';
 
 @Component({
 	selector: 'app-home',

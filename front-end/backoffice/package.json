@@ -5,28 +5,36 @@
   "homepage": "/backoffice",
   "proxy": "http://localhost:8080",
   "dependencies": {
-    "@blackbox-vision/ra-language-spanish": "^3.2.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "date-fns": "^2.21.3",
+    "@blackbox-vision/ra-language-spanish": "^3.16.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^12.20.33",
+    "@types/react": "^17.0.30",
+    "@types/react-dom": "^17.0.10",
+    "date-fns": "^2.25.0",
     "prop-types": "^15.7.2",
-    "ra-data-json-server": "^3.5.0",
-    "react": "^16.13.1",
-    "react-admin": "^3.5.0",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.2",
+    "react-admin": "^3.19.0",
+    "react-dom": "^17.0.2",
     "react-google-recaptcha": "^2.1.0",
-    "react-scripts": "3.4.1",
-    "refresh-fetch": "^0.7.0"
+    "react-scripts": "4.0.3",
+    "refresh-fetch": "^0.8.0",
+    "typescript": "^4.4.4",
+    "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "cross-env PUBLIC_URL=./ react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -41,6 +49,6 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^5.2.0"
+    "@types/refresh-fetch": "^0.6.1"
   }
 }

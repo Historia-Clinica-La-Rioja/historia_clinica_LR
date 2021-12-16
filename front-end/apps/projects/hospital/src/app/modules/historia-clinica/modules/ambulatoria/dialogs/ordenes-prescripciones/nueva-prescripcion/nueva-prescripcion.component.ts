@@ -1,20 +1,24 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@core/dialogs/medical-coverage/medical-coverage.component';
-import { MapperService } from '@core/services/mapper.service';
 import { map } from 'rxjs/operators';
-import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
-import {ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto} from '@api-rest/api-model';
-import {PrescripcionesService, PrescriptionTypes} from '../../../services/prescripciones.service';
+
+import { MapperService } from '@core/services/mapper.service';
+
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+
+import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 
+import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
+
 @Component({
-  selector: 'app-nueva-prescripcion',
-  templateUrl: './nueva-prescripcion.component.html',
-  styleUrls: ['./nueva-prescripcion.component.scss']
+	selector: 'app-nueva-prescripcion',
+	templateUrl: './nueva-prescripcion.component.html',
+	styleUrls: ['./nueva-prescripcion.component.scss']
 })
 export class NuevaPrescripcionComponent implements OnInit {
 
@@ -116,7 +120,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 
 	deletePrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
-		this.prescriptionItems.splice(this.prescriptionItems.findIndex(item => item.id === prescriptionItem.id) , 1);
+		this.prescriptionItems.splice(this.prescriptionItems.findIndex(item => item.id === prescriptionItem.id), 1);
 	}
 
 	getDosage(prescriptionItem: NewPrescriptionItem): string {

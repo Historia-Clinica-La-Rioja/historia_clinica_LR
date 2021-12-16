@@ -71,27 +71,27 @@
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.problemas.TITLE"
 									sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 				<div concept-form *ngIf="!this.readOnlyProblema else problemaForm">
-					<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
+					<app-concepts-search *ngIf="!ambulatoryConsultationProblemsService.getSnomedConcept() else problemaForm"
 										 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
-										 (search)="problemasService.openSearchDialog($event)">
+										 (search)="ambulatoryConsultationProblemsService.openSearchDialog($event)">
 					</app-concepts-search>
 				</div>
 
 				<ng-template #problemaForm>
-					<form [formGroup]="problemasService.getForm()"
-						  (ngSubmit)="this.readOnlyProblema ? this.editProblema(): problemasService.addToList()">
+					<form [formGroup]="ambulatoryConsultationProblemsService.getForm()"
+						  (ngSubmit)="this.readOnlyProblema ? this.editProblema(): ambulatoryConsultationProblemsService.addToList(ffIsOn)">
 
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'">
 							</mat-label>
 							<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
-								   matTooltip="{{ problemasService.getSnomedConcept().pt }}"
+								   matTooltip="{{ ambulatoryConsultationProblemsService.getSnomedConcept().pt }}"
 								   *ngIf="!this.readOnlyProblema">
 							<input id="snomed-input-new-consultation" matInput type="text" formControlName="snomed"
 								   name="snomed" readonly
 								   *ngIf="this.readOnlyProblema">
 							<button id="clear" mat-button matSuffix color="warn" mat-icon-button
-									(click)="problemasService.resetForm()" *ngIf="!this.readOnlyProblema">
+									(click)="ambulatoryConsultationProblemsService.resetForm()" *ngIf="!this.readOnlyProblema">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
@@ -116,8 +116,8 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'">
 							</mat-label>
 							<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker"
-								   formControlName="fechaInicio" [min]="minDate" [max]="problemasService.getFechaInicioMax()"
-								   (dateChange)="problemasService.checkValidFechaFin()">
+								   formControlName="fechaInicio" [min]="minDate" [max]="ambulatoryConsultationProblemsService.getFechaInicioMax()"
+								   (dateChange)="ambulatoryConsultationProblemsService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #inicioDatePicker></mat-datepicker>
 						</mat-form-field>
@@ -126,16 +126,16 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
 							</mat-label>
 							<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-								   [min]="minDate" [max]="today" (dateChange)="problemasService.checkValidFechaFin()">
+								   [min]="minDate" [max]="today" (dateChange)="ambulatoryConsultationProblemsService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #finDatePicker></mat-datepicker>
-							<mat-error *ngIf="problemasService.hasError('min', 'fechaFin')"
+							<mat-error *ngIf="ambulatoryConsultationProblemsService.hasError('min', 'fechaFin')"
 									   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
 							</mat-error>
-							<mat-error *ngIf="problemasService.hasError('matDatepickerMax', 'fechaFin')"
+							<mat-error *ngIf="ambulatoryConsultationProblemsService.hasError('matDatepickerMax', 'fechaFin')"
 									   [translate]="'forms.MAX_DATE_TODAY'">
 							</mat-error>
-							<mat-error *ngIf="problemasService.hasError('required_init_date', 'fechaFin')"
+							<mat-error *ngIf="ambulatoryConsultationProblemsService.hasError('required_init_date', 'fechaFin')"
 									   [translate]="'forms.REQUIRED_INIT_DATE'">
 							</mat-error>
 						</mat-form-field>
@@ -156,8 +156,8 @@
 				</ng-template>
 
 				<app-document-section-table data-display tableTitle="ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE"
-											[columns]="problemasService.getColumns()"
-											[data]="problemasService.getProblemas()">
+											[columns]="ambulatoryConsultationProblemsService.getColumns()"
+											[data]="ambulatoryConsultationProblemsService.getProblemas()">
 				</app-document-section-table>
 
 			</app-new-document-section>

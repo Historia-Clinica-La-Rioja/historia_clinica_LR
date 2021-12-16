@@ -9,7 +9,7 @@ import {
 } from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { MedicalCoverageComponent } from '@core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { MapperService as PatientMapperService } from '@presentation/services/mapper.service';
 import { hasError, TIME_PATTERN } from '@core/utils/form.utils';

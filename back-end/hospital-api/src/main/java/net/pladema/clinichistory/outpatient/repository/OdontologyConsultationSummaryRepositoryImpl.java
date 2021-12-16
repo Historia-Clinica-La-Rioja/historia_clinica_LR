@@ -9,7 +9,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitaliz
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.outpatient.repository.domain.OdontologyEvolutionSummaryVo;
-import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.repository.entity.HealthcareProfessional;

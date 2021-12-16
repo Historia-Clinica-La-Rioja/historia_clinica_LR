@@ -31,6 +31,7 @@
 		<module>hospital-shared</module>
 		<module>immunization</module>
         <module>hospital-public-api</module>
+        <module>nursing</module>
     </modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

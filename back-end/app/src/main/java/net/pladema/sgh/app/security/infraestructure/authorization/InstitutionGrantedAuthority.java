@@ -4,8 +4,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.permissions.service.RoleAssignmentAuthority;
 import net.pladema.permissions.service.dto.RoleAssignment;
-import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @Setter
@@ -17,21 +17,12 @@ import org.springframework.security.core.GrantedAuthority;
  * lista de las autoridades asociadas al usuario logeado.
  *
  */
-public class InstitutionGrantedAuthority implements GrantedAuthority {
+public class InstitutionGrantedAuthority extends RoleAssignmentAuthority {
 
 	private static final long serialVersionUID = 8208223394015158547L;
 
-	@EqualsAndHashCode.Include 
-	private RoleAssignment roleAssignment;
-
 	public InstitutionGrantedAuthority(RoleAssignment roleAssignment) {
-		super();
-		this.roleAssignment = roleAssignment;
-	}
-
-	@Override
-	public String getAuthority() {
-		return this.roleAssignment.getRole().getValue();
+		super(roleAssignment);
 	}
 	
 }

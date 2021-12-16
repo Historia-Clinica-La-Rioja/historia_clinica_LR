@@ -3,6 +3,8 @@ import { Route } from 'react-router-dom';
 
 import Home from './Home';
 
-export default [
+const Routes =  [
     <Route exact path="/home" component={Home} />,
 ];
+
+export default Routes;

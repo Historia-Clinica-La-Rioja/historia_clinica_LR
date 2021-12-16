@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.*;
 
@@ -33,13 +34,10 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 	private Collection<Short> statesWithReason;
 
 	private final DiaryService diaryService;
-
     private final HealthcareProfessionalService healthcareProfessionalService;
-	
 	private final AppointmentService appointmentService;
-
-	private final LoggedUserExternalService loggedUserExternalService;
-
+	private final Function<Integer, Boolean> hasAdministrativeRole;
+	private final Function<Integer, Boolean> hasProfessionalRole;
 
 	public AppointmentValidatorServiceImpl(DiaryService diaryService,
 			HealthcareProfessionalService healthcareProfessionalService, AppointmentService appointmentService,
@@ -47,7 +45,13 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		this.diaryService = diaryService;
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.appointmentService = appointmentService;
-		this.loggedUserExternalService = loggedUserExternalService;
+		this.hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
+				ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO
+		);
+		this.hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(
+				ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO
+		);
+
 		validStates = new HashMap<>();
 		validStates.put(ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED));
 		validStates.put(CONFIRMED, Arrays.asList(ABSENT, CANCELLED));
@@ -75,16 +79,12 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 	}
 
 	private void validateRole(Integer institutionId, Optional<AppointmentBo> apmtOpt) {
-		boolean hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-                List.of(ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO));
 
-        if (apmtOpt.isPresent() && !hasAdministrativeRole) {
+        if (apmtOpt.isPresent() && !hasAdministrativeRole.apply(institutionId)) {
         	DiaryBo diary = diaryService.getDiaryById(apmtOpt.get().getDiaryId());
-            boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-                    List.of(ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO));
 
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-            if (hasProfessionalRole && !diary.getHealthcareProfessionalId().equals(professionalId)) {
+            if (hasProfessionalRole.apply(institutionId) && !diary.getHealthcareProfessionalId().equals(professionalId)) {
             	throw new ValidationException("appointment.new.professional.id.invalid}");
             }
         }

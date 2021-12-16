@@ -16,7 +16,7 @@ import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { ProblemasService } from '../../../../services/problemas-nueva-consulta.service';
+import { ProblemasService } from '../../../../services/problemas.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 import { MIN_DATE } from "@core/utils/date.utils";

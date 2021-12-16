@@ -1,9 +1,8 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
-import { SnomedDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SEMANTICS_CONFIG } from '../../../constants/snomed-semantics';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
@@ -20,7 +19,6 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	private form: FormGroup;
 	private data: AntecedenteFamiliar[];
 	private snomedConcept: SnomedDto;
-	readonly SEMANTICS_CONFIG = SEMANTICS_CONFIG;
 	private readonly tableColumnConfig: TableColumnConfig[];
 
 	constructor(
@@ -113,7 +111,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: this.SEMANTICS_CONFIG.familyRecord
+				eclFilter: SnomedECL.FAMILY_RECORD
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

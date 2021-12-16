@@ -17,6 +17,10 @@
 <ng-template #snomedProblemTemplate let-rowData="data" appCtrlTemplate="snomedProblemTemplate">
 	{{rowData.snomed.pt}}
 	<div *ngIf="rowData.cronico" class="mat-small grayText" translate="ambulatoria.paciente.nueva-consulta.problemas.ACLARACION_CRONICO"></div>
+	<div *ngIf="rowData.reportProblem != null">
+		<span class="blue-text" *ngIf="rowData.reportProblem"  translate="ambulatoria.paciente.nueva-consulta.problemas.REPORT_PROBLEM"></span>
+		<span class="red-text" *ngIf="!rowData.reportProblem"  translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>
+	</div>
 </ng-template>
 
 <ng-template #problemSeverityTemplate let-rowData="data" let-text="text" appCtrlTemplate="problemSeverityTemplate">

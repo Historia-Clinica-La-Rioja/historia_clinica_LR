@@ -19,9 +19,9 @@ import {
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '../../../core/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
 import { map } from 'rxjs/operators';
-import { MapperService } from '../../../core/services/mapper.service';
+import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 const ROUTE_SEARCH = 'pacientes/search';

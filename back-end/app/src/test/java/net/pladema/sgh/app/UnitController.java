@@ -4,7 +4,6 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
 import ar.lamansys.sgx.shared.i18n.CustomMessageSourceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;

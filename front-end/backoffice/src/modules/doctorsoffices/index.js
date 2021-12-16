@@ -1,11 +1,13 @@
-import DoctorsOfficeShow from "./show";
-import DoctorsOfficeList from "./list";
-import DoctorsOfficeCreate from "./create";
-import DoctorsOfficeEdit from "./edit";
+import DoctorsOfficeShow from "./DoctorsOfficeShow";
+import DoctorsOfficeList from "./DoctorsOfficeList";
+import DoctorsOfficeCreate from "./DoctorsOfficeCreate";
+import DoctorsOfficeEdit from "./DoctorsOfficeEdit";
 
-export default {
+const doctorsoffices = {
     show: DoctorsOfficeShow,
     list: DoctorsOfficeList,
     create: DoctorsOfficeCreate,
     edit: DoctorsOfficeEdit,
 };
+
+export default doctorsoffices;

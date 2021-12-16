@@ -13,7 +13,7 @@ import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modul
 import { newMoment } from "@core/utils/moment.utils";
 import { ClinicalSpecialtyDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { ProblemasService } from '@historia-clinica/services/problemas-nueva-consulta.service';
+import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ActionsNewConsultationService } from '../../services/actions-new-consultation.service';
 import { ActionedTooth, OdontogramService } from '../../services/odontogram.service';
 import { ConceptsFacadeService } from '../../services/concepts-facade.service';
@@ -171,13 +171,25 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente');
-				this.dockPopupRef.close(true);
+				this.dockPopupRef.close({
+					confirmed: true,
+					fieldsToUpdate: this.mapFieldsToUpdate(odontologyDto)
+				});
 			},
 			_ => {
 				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
 			}
 		);
 
+	}
+
+	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {
+		return {
+			allergies: !!odontologyDto.allergies?.length,
+			personalHistories: !!odontologyDto.personalHistories?.length,
+			medications: !!odontologyDto.medications?.length,
+			problems: !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions?.length
+		};
 	}
 
 	private buildConsultationDto(allConcepts: OdontologyConceptDto[]): OdontologyConsultationDto {
@@ -200,6 +212,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		};
 	}
 
+}
+
+export interface FieldsToUpdate {
+	allergies: boolean,
+	personalHistories: boolean,
+	medications: boolean,
+	problems: boolean
 }
 
 export interface OdontologyConsultationData {

@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CoreModule } from '@core/core.module';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+
+import { CoreModule } from '@core/core.module';
+import { AppMaterialModule } from '@material/app.material.module';
 
 import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
@@ -25,31 +27,31 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { LogoComponent } from './components/logo/logo.component';
-import { DockPopupComponent } from '@presentation/components/dock-popup/dock-popup.component';
+import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 import { SignoVitalComponent } from './components/signo-vital-current/signo-vital.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
-import { PageComponent } from './components/page/page.component';
-import { PageComponentsComponent } from './components/page-components/page-components.component';
-import { UiComponentComponent } from './components/ui-component/ui-component.component';
-import { NewDocumentSectionComponent } from '@presentation/components/new-document-section/new-document-section-component.component';
-import { DocumentSectionTableComponent } from '@presentation/components/document-section-table/document-section-table.component';
-import { CtrlTemplateDirective } from '@presentation/directives/ctrl-template.directive';
-import { CellTemplatesComponent } from '@presentation/components/cell-templates/cell-templates.component';
+import { NewDocumentSectionComponent } from './components/new-document-section/new-document-section-component.component';
+import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
+import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
+import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
+import { TypeaheadComponent } from './components/typeahead/typeahead.component';
+
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 
 @NgModule({
 	declarations: [
 		BarComponent,
+		DetailBoxComponent,
 		InternmentEpisodeSummaryComponent,
 		NoDataComponent,
 		PatientCardComponent,
 		SignoVitalCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
-		DetailBoxComponent,
-		InternmentEpisodeSummaryComponent,
 		FullHouseAddressPipe,
 		PersonalInformationComponent,
 		PatientTypeLogoComponent,
@@ -69,39 +71,42 @@ import { CellTemplatesComponent } from '@presentation/components/cell-templates/
 		ViewDateDtoPipe,
 		ImgUploaderComponent,
 		SignoVitalComponent,
-		ContentTitleComponent,
-		PageComponent,
-		PageComponentsComponent,
-		UiComponentComponent,
-		NewDocumentSectionComponent,
-		DocumentSectionTableComponent,
-		CtrlTemplateDirective,
 		CellTemplatesComponent,
+		ContentTitleComponent,
+		CtrlTemplateDirective,
+		DocumentSectionTableComponent,
+		NewDocumentSectionComponent,
+		TypeaheadComponent,
+		// dialogs
+		ConfirmDialogComponent,
+		DatePickerComponent,
 	],
 	imports: [
 		CommonModule,
-		CoreModule,
 		FlexModule,
 		FlexLayoutModule,
+		CoreModule,
+		AppMaterialModule,
 	],
 	exports: [
+		FlexModule,
+		FlexLayoutModule,
+		AppMaterialModule,
+
 		BarComponent,
+		DetailBoxComponent,
 		InternmentEpisodeSummaryComponent,
 		NoDataComponent,
 		PatientCardComponent,
 		SignoVitalCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
-		DetailBoxComponent,
-		InternmentEpisodeSummaryComponent,
 		FullHouseAddressPipe,
 		PersonalInformationComponent,
 		PatientTypeLogoComponent,
 		MainLayoutComponent,
 		MenuComponent,
 		LabelComponent,
-		FlexModule,
-		FlexLayoutModule,
 		DayTimeRangePipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
@@ -112,12 +117,12 @@ import { CellTemplatesComponent } from '@presentation/components/cell-templates/
 		ViewDateDtoPipe,
 		ImgUploaderComponent,
 		SignoVitalComponent,
-		ContentTitleComponent,
-		PageComponent,
-		NewDocumentSectionComponent,
-		DocumentSectionTableComponent,
-		CtrlTemplateDirective,
 		CellTemplatesComponent,
+		ContentTitleComponent,
+		CtrlTemplateDirective,
+		DocumentSectionTableComponent,
+		NewDocumentSectionComponent,
+		TypeaheadComponent,
 	],
 	entryComponents: [
 		DockPopupComponent

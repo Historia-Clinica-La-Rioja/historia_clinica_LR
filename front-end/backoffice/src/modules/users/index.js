@@ -1,10 +1,12 @@
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
-import UserCreate from './create';
-import UserEdit from './edit';
+import UserCreate from './UserCreate';
+import UserEdit from './UserEdit';
 
-export default {
+const users = {
     icon: AccountBoxIcon,
     create: UserCreate,
     edit: UserEdit,
 };
+
+export default users;

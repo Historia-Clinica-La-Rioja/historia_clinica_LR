@@ -29,7 +29,7 @@ public class OutpatientEvolutionSummaryDto implements Serializable {
 
     private List<OutpatientReasonDto> reasons;
 
-    private HealthcareProfessionalDto medic;
+    private HealthcareProfessionalDto professional;
 
     private List<@Valid OutpatientProcedureDto> procedures = new ArrayList<>();
 

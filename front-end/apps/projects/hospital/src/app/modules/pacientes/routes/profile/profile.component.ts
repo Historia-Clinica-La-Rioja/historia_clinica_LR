@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { PersonalInformationDto, CompletePatientDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
+import {
+	PersonalInformationDto,
+	CompletePatientDto,
+	PatientMedicalCoverageDto,
+	PersonPhotoDto,
+	UserDataDto
+} from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
@@ -15,11 +22,20 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ReportsComponent } from "@pacientes/dialogs/reports/reports.component";
 import { patientCompleteName } from '@core/utils/patient.utils';
+import { UserService } from "@api-rest/services/user.service";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { processErrors } from "@core/utils/form.utils";
+import { take } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { PermissionsService } from "@core/services/permissions.service";
+import {UserPasswordResetService} from "@api-rest/services/user-password-reset.service";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
+const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
 
 @Component({
 	selector: 'app-profile',
@@ -38,8 +54,12 @@ export class ProfileComponent implements OnInit {
 	private patientId: number;
 	private readonly routePrefix;
 	public internmentEpisode;
+	public userData: UserDataDto;
+	private personId: number;
+	public form: FormGroup;
 
 	public downloadReportIsEnabled: boolean;
+	public createUsersIsEnable: boolean;
 
 	constructor(
 		private patientService: PatientService,
@@ -48,13 +68,19 @@ export class ProfileComponent implements OnInit {
 		private router: Router,
 		private personService: PersonService,
 		private contextService: ContextService,
+		private userPasswordResetService : UserPasswordResetService,
 		private internmentPatientService: InternmentPatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly featureFlagService: FeatureFlagService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private readonly userService: UserService,
+		private readonly snackBarService: SnackBarService,
+		private readonly formBuilder: FormBuilder,
+		private readonly permissionService: PermissionsService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_CREACION_USUARIOS).subscribe(isOn => this.createUsersIsEnable = isOn);
 	}
 
 	ngOnInit(): void {
@@ -66,12 +92,23 @@ export class ProfileComponent implements OnInit {
 					.subscribe(completeData => {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
+						this.personId = completeData.person.id;
 						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
 						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
+
+						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe( hasRoleToViewUserData => {
+							if (this.createUsersIsEnable && hasRoleToViewUserData) {
+								this.userService.getUserData(this.personId)
+									.subscribe(userDataDto => {
+										this.userData = userDataDto
+										this.form.controls.enable.setValue(this.userData.enable);
+									});
+							}
+						})
 					});
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
@@ -84,6 +121,10 @@ export class ProfileComponent implements OnInit {
 				this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 			});
+
+		this.form = this.formBuilder.group({
+			enable: [null]
+		});
 
 	}
 
@@ -114,4 +155,30 @@ export class ProfileComponent implements OnInit {
 		});
 	}
 
+	addUser() {
+		this.userService.addUser(this.personId)
+			.subscribe(userId => {
+				this.userService.getUserData(this.personId).subscribe(userDataDto => this.userData = userDataDto);
+				this.snackBarService.showSuccess('pacientes.user_data.messages.SUCCESS');
+		}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
+	}
+
+	enableUser() {
+		this.userService.enableUser(this.userData.id, this.form.value.enable)
+			.subscribe(userId => {
+				this.snackBarService.showSuccess('pacientes.user_data.messages.UPDATE_SUCCESS');
+			}, error => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
+				this.form.controls.enable.setValue(this.userData.enable);
+			});
+	}
+
+	goResetAccessData() {
+		this.userPasswordResetService.createTokenPasswordReset(this.userData.id)
+			.subscribe(token => {
+				window.open("/auth/access-data-reset/" + token, "_blank")
+			}, (error) => {
+				processErrors(JSON.parse(error), (msg) => this.snackBarService.showError(msg));
+			});
+	}
 }

@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { MenuItem } from '@presentation/components/menu/menu.component';
 
-import { ExtensionsService } from '@api-rest/services/extensions.service';
+import { ExtensionsService } from './extensions.service';
 import { mapMenuItem, mapMenuItems } from '../mappers.utils';
 
 @Injectable({

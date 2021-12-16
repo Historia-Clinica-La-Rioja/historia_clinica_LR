@@ -47,9 +47,6 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si está habilitado el módulo de Reportes")
     HABILITAR_REPORTES,
-
-    @Label("Indica si está habilitado la nueva versión de aplicación de vacunas")
-    HABILITAR_VACUNAS_V2,
     
     @Label("Indica si está habilitada la funcionalidad para descargar informes desde turnos y desde el perfil del paciente")
     HABILITAR_INFORMES,
@@ -67,7 +64,13 @@ public enum AppFeature implements Feature {
     RESTRINGIR_DATOS_EDITAR_PACIENTE,
     
     @Label("Indica si está habilitado la opción de cambiar el tema de la aplicación")
-    HABILITAR_INTERCAMBIO_TEMAS
+    HABILITAR_INTERCAMBIO_TEMAS,
+
+    @Label("Indica si está habilitada la funcionalidad para crear usuarios")
+    HABILITAR_CREACION_USUARIOS,
+    
+    @Label("Indica si esta habilitado la opcion de reportar epidemiológicamente un problema")
+    HABILITAR_REPORTE_EPIDEMIOLOGICO,
     ;
 
     public boolean isActive() {
