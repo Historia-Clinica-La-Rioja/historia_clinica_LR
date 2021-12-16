@@ -40,4 +40,8 @@ public class HealthcareProfessionalSpecialtyBo {
                                              Integer clinicalSpecialtyId) {
         this(null, healthcareProfessionalId, professionalSpecialtyId, clinicalSpecialtyId);
     }
+
+    public boolean hasToBeDeleted(Integer id){
+        return (this.id!=null&&this.id!=id);
+    }
 }

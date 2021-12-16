@@ -9,8 +9,6 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
 import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
-import net.pladema.staff.service.exceptions.HealthcareProfessionalSpecialtyEnumException;
-import net.pladema.staff.service.exceptions.HealthcareProfessionalSpecialtyException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,48 +51,36 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
         return result;
     }
 
+    // Create a new professional specialty or activate an existent one
     @Override
-    public Integer saveProfessionalSpeciality(HealthcareProfessionalSpecialtyBo healthcareProfessionalSpecialtyBo){
-        return (healthcareProfessionalSpecialtyBo.getId()==null)? createProfessionalSpecialty(healthcareProfessionalSpecialtyBo)
-                : changeProfessionalSpecialty(healthcareProfessionalSpecialtyBo);
-    }
-
-    private Integer createProfessionalSpecialty(HealthcareProfessionalSpecialtyBo healthcareProfessionalSpecialtyBo){
-        if(healthcareProfessionalSpecialtyRepository
-                .existsValues(
-                        healthcareProfessionalSpecialtyBo.getHealthcareProfessionalId(),
-                        healthcareProfessionalSpecialtyBo.getClinicalSpecialtyId(),
-                        healthcareProfessionalSpecialtyBo.getProfessionalSpecialtyId()))
-            throw new HealthcareProfessionalSpecialtyException(HealthcareProfessionalSpecialtyEnumException.DUPLICATE_PROFESSIONAL_SPECIALTY, "La profesión y especialidad ya se encuentra asignada");
-        HealthcareProfessionalSpecialty saved = healthcareProfessionalSpecialtyRepository.save(new HealthcareProfessionalSpecialty(
-                healthcareProfessionalSpecialtyBo.getHealthcareProfessionalId(),
-                healthcareProfessionalSpecialtyBo.getProfessionalSpecialtyId(),
-                healthcareProfessionalSpecialtyBo.getClinicalSpecialtyId()
-        ));
-        return saved.getId();
-    }
-
-    private Integer changeProfessionalSpecialty(HealthcareProfessionalSpecialtyBo professionalSpecialtyBo) {
-        Optional<HealthcareProfessionalSpecialtyBo> duplicate = Optional.ofNullable(findHealthcareProfessionalSpecialtyRepository
-                .getHealthcareProfessionalSpecialty(professionalSpecialtyBo.getHealthcareProfessionalId(),
-                        professionalSpecialtyBo.getClinicalSpecialtyId(),
-                        professionalSpecialtyBo.getProfessionalSpecialtyId()));
-        return duplicate.map(hpsBo -> {
+    public Integer saveProfessionalSpeciality(HealthcareProfessionalSpecialtyBo professionalSpecialtyBo) {
+        return getProfessionalSpeciality(professionalSpecialtyBo).map(hpsBo -> {
+            //The professional Specialty already exists
             if (hpsBo.getDeleted()) {
+                // The professional Specialty is deleted
                 healthcareProfessionalSpecialtyRepository.setDeletedFalse(hpsBo.getId());
-                if(!Objects.equals(hpsBo.getId(), professionalSpecialtyBo.getId()))
+                if (professionalSpecialtyBo.hasToBeDeleted(hpsBo.getId()))
                     healthcareProfessionalSpecialtyRepository.deleteById(professionalSpecialtyBo.getId());
-                return hpsBo.getId();
-            } else
-                throw new HealthcareProfessionalSpecialtyException(HealthcareProfessionalSpecialtyEnumException.DUPLICATE_PROFESSIONAL_SPECIALTY, "La profesión y especialidad ya se encuentra asignada");
+            }
+            return hpsBo.getId();
         }).orElseGet(() -> {
+            //The professional Specialty has to be created
             HealthcareProfessionalSpecialty entity = healthcareProfessionalSpecialtyRepository.save(new HealthcareProfessionalSpecialty(
                     professionalSpecialtyBo.getHealthcareProfessionalId(),
                     professionalSpecialtyBo.getProfessionalSpecialtyId(),
                     professionalSpecialtyBo.getClinicalSpecialtyId()));
-            healthcareProfessionalSpecialtyRepository.deleteById(professionalSpecialtyBo.getId());
+            if (professionalSpecialtyBo.getId() != null)
+                //The old professional specialty must be deleted
+                healthcareProfessionalSpecialtyRepository.deleteById(professionalSpecialtyBo.getId());
             return entity.getId();
         });
+    }
+
+    private Optional<HealthcareProfessionalSpecialtyBo> getProfessionalSpeciality(HealthcareProfessionalSpecialtyBo professionalSpecialtyBo){
+        return Optional.ofNullable(findHealthcareProfessionalSpecialtyRepository
+                .getHealthcareProfessionalSpecialty(professionalSpecialtyBo.getHealthcareProfessionalId(),
+                        professionalSpecialtyBo.getClinicalSpecialtyId(),
+                        professionalSpecialtyBo.getProfessionalSpecialtyId()));
     }
 
     @Override
