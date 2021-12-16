@@ -82,7 +82,7 @@ export class EditProfessionsComponent implements OnInit {
 		if ((this.allSpecialties) && (this.allProfessions)) {
 			this.setOwnSpecialtiesAndProfessions()
 		}
-	};
+	}
 
 	initFormParent(): void {
 		this.formParent = new FormGroup({
@@ -114,6 +114,7 @@ export class EditProfessionsComponent implements OnInit {
 		const refprofessionsAndProfessionss = this.formParent.get('specialtiesAndProfessions') as FormArray;
 		const refArray = refprofessionsAndProfessionss.controls;
 		const refPosArray = refArray[pointIndex].value;
+
 		if ($event != null) {
 			refprofessionsAndProfessionss.at(pointIndex).setValue({
 				clinicalSpecialtyId: (refPosArray?.clinicalSpecialtyId) ? (refPosArray.clinicalSpecialtyId) : null,
@@ -122,7 +123,7 @@ export class EditProfessionsComponent implements OnInit {
 				professionalSpecialtyId: $event.id
 			});
 		}
-		else {
+		else if (refPosArray.clinicalSpecialtyId != null) {
 			refprofessionsAndProfessionss.at(pointIndex).setValue({
 				clinicalSpecialtyId: refPosArray.clinicalSpecialtyId,
 				healthcareProfessionalId: (this.data?.professionalId) ? (this.data?.professionalId) : null,
@@ -130,6 +131,8 @@ export class EditProfessionsComponent implements OnInit {
 				professionalSpecialtyId: null,
 			});
 		}
+		else
+			this.deleteSpecialtiesAndProfessions(pointIndex);
 	}
 
 	setSpeciality($event: SpecialtyDto, pointIndex: number): void {
@@ -144,7 +147,7 @@ export class EditProfessionsComponent implements OnInit {
 				professionalSpecialtyId: (refPosArray?.professionalSpecialtyId) ? (refPosArray.professionalSpecialtyId) : null
 			});
 		}
-		else {
+		else if (refPosArray.professionalSpecialtyId != null) {
 			refprofessionsAndProfessionss.at(pointIndex).setValue({
 				clinicalSpecialtyId: null,
 				healthcareProfessionalId: (this.data?.professionalId) ? (this.data?.professionalId) : null,
@@ -152,6 +155,8 @@ export class EditProfessionsComponent implements OnInit {
 				professionalSpecialtyId: refPosArray.professionalSpecialtyId,
 			});
 		}
+		else
+			this.deleteSpecialtiesAndProfessions(pointIndex);
 	}
 
 	isDividerNewSpecialtiesAndProfessions(): boolean {
@@ -223,9 +228,17 @@ export class EditProfessionsComponent implements OnInit {
 	}
 
 	isDisableConfirmButton(): boolean {
-		if (this.hasError('required', 'pattern', 'license') || this.isDisabledAddProfessionAndSpecialty())
+		if (this.hasError('required', 'pattern', 'license') || this.isDisabledAddProfessionAndSpecialty() || this.prueba())
 			return true
 		return false;
+	}
+
+	prueba(): boolean {
+		const refprofessionsAndProfessionss = this.formParent.get('specialtiesAndProfessions') as FormArray;
+		const refArray = refprofessionsAndProfessionss.controls;
+		return (refArray.find(elem =>
+			((elem.value.professionalSpecialtyId === null) || (elem.value.clinicalSpecialtyId === null))
+		) ? true : false);
 	}
 
 	isDisabledAddProfessionAndSpecialty(): boolean {

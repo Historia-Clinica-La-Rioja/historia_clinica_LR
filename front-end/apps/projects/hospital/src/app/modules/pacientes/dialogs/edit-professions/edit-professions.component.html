@@ -44,11 +44,6 @@
 								(selectionChange)="setSpeciality($event, formChild)">
 							</app-typeahead>
 						</div>
-						<div class="divider">
-							<button (click)="deleteSpecialtiesAndProfessions(formChild)">
-								<mat-icon color="warn">delete_outline</mat-icon>
-							</button>
-						</div>
 						<div class="divider" *ngIf="isDividerNewSpecialtiesAndProfessions()">
 							<mat-divider inset class="divider" layout-align="center"></mat-divider>
 						</div>
