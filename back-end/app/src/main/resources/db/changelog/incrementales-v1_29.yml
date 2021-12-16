@@ -248,3 +248,21 @@ databaseChangeLog:
                     nullable: false
                 name: name
                 type: varchar
+                
+    - changeSet: 
+        id: snomed-metadata_update
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    call safeInsertSnomed('840544004', 'sospecha de COVID-19', '900000000000207008', 'sospecha de enfermedad causada por coronavirus 2 del síndrome respiratorio agudo severo (situación)');
+                    call safeInsertSnomed('840546002', 'exposición a SARS-CoV-2', '900000000000207008', 'exposición a coronavirus 2 del síndrome respiratorio agudo severo (evento)');
+                    
+    - changeSet: 
+        id: snomed_related_group-metadata_update
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '840544004' AND pt = 'sospecha de COVID-19'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '840546002' AND pt = 'exposición a SARS-CoV-2'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;

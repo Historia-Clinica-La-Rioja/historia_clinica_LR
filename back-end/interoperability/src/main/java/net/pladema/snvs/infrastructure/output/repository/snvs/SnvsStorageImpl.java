@@ -56,7 +56,7 @@ public class SnvsStorageImpl implements SnvsStorage {
         query.setParameter("manualClassificationId", manualClassificationId);
         query.setParameter("eventId", eventId);
         query.setParameter("groupEventId", groupEventId);
-        query.setParameter("environment", EEnvironment.valueOf(environment).getId().intValue());
+        query.setParameter("environment", EEnvironment.map(environment).getId().intValue());
         List<Object[]> queryResult = query.getResultList();
         Object[] row = queryResult.get(0);
         log.debug("SnvsStorageImpl fetchSnvsEventInfo from -> problemBo {}, manualClassificationId {}, groupEventId {}, eventId {}", problemBo, manualClassificationId, groupEventId, eventId);
@@ -80,7 +80,7 @@ public class SnvsStorageImpl implements SnvsStorage {
                         "AND ng.environment = :environment " );
         query.setParameter("sctid", problemBo.getSctid());
         query.setParameter("pt", problemBo.getPt());
-        query.setParameter("environment", EEnvironment.valueOf(environment).getId().intValue());
+        query.setParameter("environment", EEnvironment.map(environment).getId().intValue());
 
 
         List<Object[]> queryResult = query.getResultList();
