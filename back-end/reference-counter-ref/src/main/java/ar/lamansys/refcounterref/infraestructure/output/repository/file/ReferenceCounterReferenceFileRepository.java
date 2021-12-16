@@ -29,4 +29,12 @@ public interface ReferenceCounterReferenceFileRepository extends JpaRepository<R
     List<ReferenceCounterReferenceFileBo> findByReferenceCounterReferenceIdsAndType(@Param("referenceCounterReferenceIds") List<Integer> referenceCounterReferenceIds,
                                                                     @Param("type") Integer type);
 
+    @Transactional(readOnly = true)
+    @Query(value = " SELECT new ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo(rcrf.referenceCounterReferenceId, " +
+            "rcrf.id, rcrf.name) " +
+            "FROM ReferenceCounterReferenceFile rcrf " +
+            "WHERE rcrf.referenceCounterReferenceId = :referenceCounterReferenceId " +
+            "AND rcrf.type = :type")
+    List<ReferenceCounterReferenceFileBo> findByReferenceCounterReferenceIdAndType(@Param("referenceCounterReferenceId") Integer referenceCounterReferenceId, @Param("type") Integer type);
+
 }
