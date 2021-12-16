@@ -7,4 +7,6 @@ public interface ExternalEncounterStorge {
     void save(ExternalEncounterBo externalEncounterBo);
 
     boolean existsExternalEncounter(String externalEncounterId);
+
+    void delete(String externalEncounterId);
 }
