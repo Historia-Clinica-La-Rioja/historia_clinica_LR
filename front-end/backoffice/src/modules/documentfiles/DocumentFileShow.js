@@ -16,6 +16,9 @@ const DocumentFileShow = props => (
                 <TextField source="description" />
             </ReferenceField>
             <SgxDateField source="createdOn" showTime/>
+            <CreateRelatedButton
+                label="resources.documentfiles.downloadFile"
+            />
         </SimpleShowLayout>
     </Show>
 );
