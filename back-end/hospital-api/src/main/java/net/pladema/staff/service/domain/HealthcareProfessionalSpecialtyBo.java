@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -42,6 +43,6 @@ public class HealthcareProfessionalSpecialtyBo {
     }
 
     public boolean hasToBeDeleted(Integer id){
-        return (this.id!=null&&this.id!=id);
+        return (this.id!=null&&!Objects.equals(id, this.id));
     }
 }
