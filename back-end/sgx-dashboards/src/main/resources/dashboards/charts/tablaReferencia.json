@@ -1,7 +1,6 @@
 {
   "cubeQuery": {
     "measures": [
-      "Referencias.cant_referencia"
     ],
     "timeDimensions": [
       {

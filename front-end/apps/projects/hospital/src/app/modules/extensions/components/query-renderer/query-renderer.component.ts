@@ -8,6 +8,14 @@ import { Label } from 'ng2-charts';
 import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
 
+const formatColumnDate = (tableData: any[], column): any[] => {
+	const dateFormatter = ({x}) => moment(x).format('DD/MM/YYYY');
+	return tableData.map(row => {
+		return {
+		...row,
+		[column]: dateFormatter(row[column]),
+	}});
+};
 
 @Component({
 	selector: 'app-query-renderer',
@@ -166,7 +174,11 @@ export class QueryRendererComponent {
 	}
 
 	updateTableData(resultSet, pivotConfig) {
-		this.tableData = resultSet.tablePivot(pivotConfig);
+		this.tableData = formatColumnDate(
+			resultSet.tablePivot(pivotConfig),
+			'Referencias.fecha_consulta'
+		);
+
 		this.displayedColumns = getDisplayedColumns(
 			resultSet.tableColumns(pivotConfig)
 		);

@@ -11,7 +11,7 @@ cube(`Referencias`, {
   cs.id as id_especialidad_clinica,
   cs.name as especialidad_clinica,
 
-  case when cr.id  is null then 0 else 1 end as tiene_contra,
+  case when cr.id  is null then 'Referencia pendiente' else 'Contrarreferencia' end as tiene_contra,
   
   oc.doctor_id,
   p.first_name as nombre_doctor_solicitante,
@@ -45,10 +45,12 @@ LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)`,
     nombre_paciente: {
       sql: `nombre_paciente`,
       type: `string`,
+      title: 'Nombre del paciente',
     },
     apellido_paciente: {
       sql: `apellido_paciente`,
       type: `string`,
+      title: 'Apellido del paciente',
     },
     // Línea de cuidado
     id_linea_cuidado: {
@@ -58,6 +60,7 @@ LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)`,
     linea_cuidado: {
       sql: `linea_cuidado`,
       type: `string`,
+      title: 'Línea de cuidado',
     },
     // Especialidad
     id_especialidad_clinica: {
@@ -67,6 +70,7 @@ LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)`,
     especialidad_clinica: {
       sql: `especialidad_clinica`,
       type: `string`,
+      title: 'Especialidad',
     },
     // Nombre y apellido del profesional solicitante
     doctor_id: {
@@ -76,15 +80,18 @@ LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)`,
     nombre_doctor_solicitante: {
       sql: `nombre_doctor_solicitante`,
       type: `string`,
+      title: `Nombre del profesional solicitante`,
     },
     apellido_doctor_solicitante: {
       sql: `apellido_doctor_solicitante`,
       type: `string`,
+      title: `Apellido del profesional solicitante`,
     },
     // Estado referencia
     tiene_contra: {
       sql: `tiene_contra`,
       type: `number`,
+      title: 'Estado referencia',
     },
     // Institución origen
     institucion_origen_id: {
