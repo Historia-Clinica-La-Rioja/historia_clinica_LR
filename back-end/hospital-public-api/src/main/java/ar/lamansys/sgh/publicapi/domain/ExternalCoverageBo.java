@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.publicapi.domain;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.EMedicalCoverageTypeDto;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

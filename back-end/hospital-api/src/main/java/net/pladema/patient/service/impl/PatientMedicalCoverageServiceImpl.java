@@ -102,7 +102,25 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 
 	@Override
 	public List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId) {
-		return saveCoverages(coverages.stream().filter(c -> c.getMedicalCoverage().getId() == null || medicalCoverageRepository.existsById(c.getMedicalCoverage().getId()))
-				.collect(Collectors.toList()), patientId);
+		List<Integer> result = new ArrayList<>();
+		coverages.forEach((coverage) -> {
+			MedicalCoverageBo medicalCoverage = coverage.getMedicalCoverage();
+			Integer medicalCoverageId = medicalCoverageRepository.getByName(medicalCoverage.getName())
+					.stream().findFirst()
+					.map(MedicalCoverage::getId)
+					.orElseGet(()->{
+						if (coverage.getPrivateHealthInsuranceDetails() != null) {
+							PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
+							coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
+						}
+						return medicalCoverageRepository.save(medicalCoverage.mapToEntity()).getId();
+					});
+			coverage.getMedicalCoverage().setId(medicalCoverageId);
+			Integer pmcId = patientMedicalCoverageRepository.getByPatientAndMedicalCoverage(patientId,medicalCoverageId)
+					.map(PatientMedicalCoverageAssn::getId)
+					.orElseGet(()->patientMedicalCoverageRepository.save(new PatientMedicalCoverageAssn(coverage, patientId)).getId());
+			result.add(pmcId);
+		});
+		return result;
 	}
 }
