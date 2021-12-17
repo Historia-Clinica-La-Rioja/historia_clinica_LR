@@ -20,7 +20,7 @@
 
 	<form [formGroup]="form" (submit)="reportProblem()">
 
-		<ng-container fxLayout="column" fxLayoutGap="15px">
+		<div fxLayout="column" fxLayoutGap="15px">
 			<div formArrayName="classifications"
 				*ngFor="let eventClassification of data.snvsEventManualClassificationsList; let i=index">
 				<div fxLayout="row" fxLayoutAlign="center">
@@ -51,7 +51,7 @@
 			<span *ngIf="tryToSubmit" class="color-warn mat-h5 margin-0">
 				{{ 'ambulatoria.paciente.problemas.epidemiological_report.MIN_ONE_REQUIRED_ERROR' | translate }}
 			</span>
-		</ng-container>
+		</div>
 
 		<div fxLayout="row" fxLayoutAlign="center">
 			<div fxLayout="row" fxLayoutAlign="center center" fxFlex="80">
