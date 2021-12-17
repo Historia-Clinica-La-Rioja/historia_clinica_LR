@@ -58,8 +58,12 @@
 		"YES": "Si",
 		"NO": "No"
 	},
-	"messages": {
-		"NO_DATA": "No hay información para mostrar"
+	"logos": {
+		"footer_right": "Logo inferior derecho",
+		"footer_center": "Logo inferior central",
+		"footer_left": "Logo inferior izquierdo",
+		"app_logo": "Logo de la aplicación",
+		"sponsor_logo": "Sponsor logo"
 	},
 	"medical-coverage": {
 		"ACTIVES_HEALTH_INSURANCES": "Obras sociales activas",
@@ -69,14 +73,10 @@
 		"NEW_HEALTH_INSURANCES": "Agregar nueva obra social",
 		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga"
 	},
+	"messages": {
+		"NO_DATA": "No hay información para mostrar"
+	},
 	"version": {
 		"SHORTENED": "V. {{versionNumber}}"
-	},
-	"logos": {
-		"footer_right": "Logo inferior derecho",
-		"footer_center": "Logo inferior central",
-		"footer_left": "Logo inferior izquierdo",
-		"app_logo": "Logo de la aplicación",
-		"sponsor_logo": "Sponsor logo"
 	}
 }

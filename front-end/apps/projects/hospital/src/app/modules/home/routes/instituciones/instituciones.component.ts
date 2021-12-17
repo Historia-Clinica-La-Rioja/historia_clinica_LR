@@ -62,7 +62,7 @@ export class InstitucionesComponent {
 	}
 
 	ingresarPortalPaciente(): void {
-		this.router.navigate(['/paciente']);
+		this.router.navigate([AppRoutes.PortalPaciente]);
 	}
 
 	hasAccessToBackoffice(allRoles: RoleAssignment[]) {
