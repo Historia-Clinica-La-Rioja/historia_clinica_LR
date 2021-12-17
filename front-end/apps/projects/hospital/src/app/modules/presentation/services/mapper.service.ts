@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
 import {
-		BasicPatientDto,
-		CompletePatientDto,
-		InternmentSummaryDto,
-		PatientType,
-		PersonalInformationDto,
-		BedSummaryDto,
-		OutpatientEvolutionSummaryDto,
-		InternmentPatientDto,
+	BasicPatientDto,
+	CompletePatientDto,
+	InternmentSummaryDto,
+	PatientType,
+	PersonalInformationDto,
+	BedSummaryDto,
+	OutpatientEvolutionSummaryDto,
+	InternmentPatientDto,
 } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
@@ -155,18 +155,20 @@ export class MapperService {
 
 		return outpatientEvolutionSummary.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
 			currentOutpatientEvolutionSummary.healthConditions.length ?
-			historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
+				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-				consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.personId,
-				problemId: problem.snomed.sctid,
+					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.personId,
+					problemId: problem.snomed.sctid,
 					problemPt: problem.snomed.pt,
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
 					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons?.map(r => ({reasonId: r.snomed.sctid, reasonPt: r.snomed.pt})),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt}))
+					consultationReasons: currentOutpatientEvolutionSummary.reasons?.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
+					reference: problem.reference.careLine ? problem.reference : null
+
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
@@ -177,8 +179,9 @@ export class MapperService {
 					problemPt: 'Problema no informado',
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
 					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.sctid, reasonPt: r.snomed.pt})),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt}))
+					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
+					reference: null,
 				}];
 			return historicalProblemsList;
 		}, []);

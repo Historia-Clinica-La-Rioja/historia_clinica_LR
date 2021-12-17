@@ -4,7 +4,7 @@ import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { momentParseDate } from '@core/utils/moment.utils';
-import { ClinicalSpecialtyDto, OutpatientEvolutionSummaryDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, OutpatientEvolutionSummaryDto, OutpatientSummaryReferenceDto } from '@api-rest/api-model';
 import { OutpatientConsultationService } from './../../../../api-rest/services/outpatient-consultation.service';
 import { MapperService } from './../../../../presentation/services/mapper.service';
 
@@ -159,5 +159,6 @@ export class HistoricalProblems {
 			procedureId: string;
 			procedurePt: string;
 		}[];
+	reference: OutpatientSummaryReferenceDto;
 }
 
