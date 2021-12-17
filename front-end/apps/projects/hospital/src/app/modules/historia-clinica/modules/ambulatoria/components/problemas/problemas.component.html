@@ -314,9 +314,8 @@
 															{{historicalProblem.consultationProfessionalName}}
 														</div>
 													</div>
-
 												</div>
-
+											
 												<div *ngIf="historicalProblem.consultationEvolutionNote">
 													<h3 class="mat-h2 primary"
 														[translate]="'ambulatoria.paciente.problemas.historical-problems.EVOLUTION_NOTE'">
@@ -324,6 +323,43 @@
 													<p class="mat-body capitalize-first-letter">
 														{{historicalProblem.consultationEvolutionNote}}</p>
 												</div>
+
+												<div id="reference-information" fxLayout="row" *ngIf="historicalProblem.reference">
+
+													<div fxLayout="column" fxLayoutGap="10px">
+														
+														<ng-container>
+															<strong class="dose reference-request uppercase"
+																[translate]="'ambulatoria.paciente.problemas.historical-problems.REFERENCE_REQUEST'"></strong>
+														</ng-container>
+														
+	
+														<div fxLayout="row" fxLayoutGap="10px">
+															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.CARE_LINE'"></strong>
+															<span>{{historicalProblem.reference.careLine}}</span>
+														</div>
+	
+														<div fxLayout="row" fxLayoutGap="10px">
+															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>
+															<span>{{historicalProblem.reference.clinicalSpecialty}}</span>
+														</div>
+	
+														<div *ngIf="historicalProblem.reference.note" fxLayout="column" fxLayoutGap="10px">
+															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SUMMARY_REFERENCE'"></strong>
+															<span>{{historicalProblem.reference.note}}</span>
+														</div>
+
+														<div class="primary" *ngFor="let file of historicalProblem.reference.files" fxLayout="row">
+															<mat-icon>attachment_icon</mat-icon>
+															<span class="span-clickable" (click)="downloadReferenceFile(file)">
+																{{file.name}}
+															</span>
+														</div>
+
+													</div>
+													
+												</div>
+
 											</div>
 										</div>
 									</div>

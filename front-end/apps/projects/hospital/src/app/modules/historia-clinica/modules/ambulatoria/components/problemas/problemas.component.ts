@@ -5,7 +5,7 @@ import {
 	PROBLEMAS_INTERNACION,
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
-import { ExternalClinicalHistoryDto, HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { ExternalClinicalHistoryDto, HCEHospitalizationHistoryDto, HCEPersonalHistoryDto, ReferenceCounterReferenceFileDto, ReferenceFileDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,6 +26,7 @@ import { ExternalClinicalHistoryFacadeService } from '../../services/external-cl
 import { Moment } from 'moment';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -89,7 +90,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private readonly router: Router,
 		public dialog: MatDialog,
-		private injector: Injector
+		private injector: Injector,
+		private readonly referenceFileService: ReferenceFileService,
 	) {
 		this.contextService = this.injector.get<ContextService>(ContextService);
 		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
@@ -277,5 +279,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		if (moment1.isSame(moment2)) return 0;
 		else if (moment1.isBefore(moment2)) return 1;
 		return -1;
+	}
+
+	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {
+		this.referenceFileService.downloadReferenceFiles(file.id, file.name);
 	}
 }
