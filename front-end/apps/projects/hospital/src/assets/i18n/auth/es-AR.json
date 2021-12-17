@@ -2,9 +2,9 @@
 	"auth": {
 		"login": {
 			"form": {
-				"TITLE": "Ingrese",
-				"USERNAME_LABEL": "Correo electrónico",
-				"USERNAME_PLACEHOLDER": "admin@example.com",
+				"TITLE": "Iniciar sesión",
+				"USERNAME_LABEL": "Nombre de usuario",
+				"USERNAME_PLACEHOLDER": "Ingrese nombre de usuario",
 				"USERNAME_REQUIRED": "Debe ingresar su usuario",
 				"PASSWORD_LABEL": "Clave",
 				"PASSWORD_PLACEHOLDER": "*****",
