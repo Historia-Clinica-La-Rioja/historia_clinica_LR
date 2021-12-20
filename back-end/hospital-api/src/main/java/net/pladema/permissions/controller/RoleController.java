@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.permissions.application.getinstitutionalroles.GetInstitutionalRoles;
+import net.pladema.permissions.application.getprofessionalroles.GetProfessionalRoles;
 import net.pladema.permissions.controller.dto.RoleDto;
 import net.pladema.permissions.controller.mappers.RoleDtoMapper;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ public class RoleController {
 
     private final GetInstitutionalRoles getInstitutionalRoles;
 
+    private final GetProfessionalRoles getProfessionalRoles;
+
     private final RoleDtoMapper roleDtoMapper;
 
     @GetMapping
@@ -31,4 +34,13 @@ public class RoleController {
         log.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/professionals")
+    public ResponseEntity<List<RoleDto>> getAllProfessionalRoles() {
+        log.debug("No input parameters");
+        List<RoleDto> result = roleDtoMapper.toListRoleDto(getProfessionalRoles.execute());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
+
 }

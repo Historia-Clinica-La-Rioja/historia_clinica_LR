@@ -2,6 +2,7 @@ package net.pladema.user.application.getrolesbyuser;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.user.application.port.UserRoleStorage;
 import net.pladema.user.domain.UserRoleBo;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class GetRolesByUserImpl implements GetRolesByUser {
         log.debug("Input parameter -> userId {}, institutionId {}", userId, institutionId);
         List<UserRoleBo> result = userRoleStorage.getRolesByUser(userId)
                 .stream().filter(userRoleBo -> userRoleBo.getInstitutionId().equals(institutionId))
+                .filter(userRoleBo -> userRoleBo.getRoleId()!= ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getId())
                 .collect(Collectors.toList());
         log.debug("Output ->{}", result);
         return result;

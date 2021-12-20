@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user-role/institution/{institutionId}")
+@RequestMapping("/user-role/institution/{institutionId}/user/{userId}")
 @Api(value = "userRole", tags = {"User Role"})
 @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 public class UserRoleController {
@@ -32,7 +32,7 @@ public class UserRoleController {
 
     private final UpdateUserRole updateUserRole;
 
-    @GetMapping("/user/{userId}")
+    @GetMapping()
     public ResponseEntity<List<UserRoleDto>> getRolesByUser(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "userId") Integer userId){
@@ -42,7 +42,7 @@ public class UserRoleController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PutMapping("/user/{userId}")
+    @PutMapping()
     public void updateRoles(@PathVariable(name = "institutionId") Integer institutionId,
                             @PathVariable(name = "userId") Integer userId,
                             @RequestBody List<UserRoleDto> userRoleDtos) {
