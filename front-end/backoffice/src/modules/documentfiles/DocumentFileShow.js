@@ -6,7 +6,10 @@ import {
     ReferenceField,
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
-import CreateRelatedButton from "../components/CreateRelatedButton";
+import DownloadButton from '../../libs/sgx/components/DownloadButton';
+
+const filenameSupplier = (record) => record.filename;
+const urlSupplier = (record) => `documents/${record.id}/downloadFile`;
 
 const DocumentFileShow = props => (
     <Show {...props}>
@@ -16,9 +19,7 @@ const DocumentFileShow = props => (
                 <TextField source="description" />
             </ReferenceField>
             <SgxDateField source="createdOn" showTime/>
-            <CreateRelatedButton
-                label="resources.documentfiles.downloadFile"
-            />
+            <DownloadButton filename={filenameSupplier} url={urlSupplier}/>
         </SimpleShowLayout>
     </Show>
 );

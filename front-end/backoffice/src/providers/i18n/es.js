@@ -57,6 +57,9 @@ const messages = {
             "clinical-specialty-exists": "La especialidad clínica ya se encuentra asociada a la línea de cuidado"
         }
     },
+    files: {
+        cant_download: 'No se pudo descargar el archivo'
+    },
     resources: {
         beds: {
             name: 'Cama |||| Camas',
