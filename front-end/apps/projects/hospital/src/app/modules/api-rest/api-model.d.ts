@@ -1553,7 +1553,16 @@ export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
     inactivationDate: string;
     main: boolean;
     problemId: string;
+    reference: OutpatientSummaryReferenceDto;
     startDate: string;
+}
+
+export interface OutpatientSummaryReferenceDto {
+    careLine: string;
+    clinicalSpecialty: string;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    note: string;
 }
 
 export interface OutpatientUpdateImmunizationDto {
@@ -1813,6 +1822,11 @@ export interface RecaptchaPublicConfigDto {
 export interface ReducedPatientDto {
     patientTypeId: number;
     personalDataDto: BasicPersonalDataDto;
+}
+
+export interface ReferenceCounterReferenceFileDto extends Serializable {
+    id: number;
+    name: string;
 }
 
 export interface ReferenceDto extends Serializable {

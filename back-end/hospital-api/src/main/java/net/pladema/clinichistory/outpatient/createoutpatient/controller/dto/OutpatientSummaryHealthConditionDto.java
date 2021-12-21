@@ -23,4 +23,6 @@ public class OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
     private boolean main;
 
     private String problemId;
+
+    private OutpatientSummaryReferenceDto reference;
 }

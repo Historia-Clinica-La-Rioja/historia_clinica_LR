@@ -1,12 +1,16 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
+import ar.lamansys.refcounterref.infraestructure.input.service.ReferenceCounterReferenceService;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReferenceCounterReferenceFileBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReferenceSummaryBo;
 import net.pladema.clinichistory.outpatient.repository.NursingConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.OdontologyConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
@@ -35,12 +39,16 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
 
     private final NursingConsultationSummaryRepository nursingConsultationSummaryRepository;
 
+    private final ReferenceCounterReferenceService referenceCounterReferenceService;
+
     public OutpatientSummaryServiceImpl(OutpatientConsultationSummaryRepository outpatientConsultationSummaryRepository,
                                         OdontologyConsultationSummaryRepository odontologyConsultationSummaryRepository,
-                                        NursingConsultationSummaryRepository nursingConsultationSummaryRepository) {
+                                        NursingConsultationSummaryRepository nursingConsultationSummaryRepository,
+                                        ReferenceCounterReferenceService referenceCounterReferenceService) {
         this.outpatientConsultationSummaryRepository = outpatientConsultationSummaryRepository;
         this.odontologyConsultationSummaryRepository = odontologyConsultationSummaryRepository;
         this.nursingConsultationSummaryRepository = nursingConsultationSummaryRepository;
+        this.referenceCounterReferenceService = referenceCounterReferenceService;
     }
 
     @Override
@@ -65,7 +73,15 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OutpatientEvolutionSummaryVo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
-            oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationID().equals(oes.getConsultationID())).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
+            oesBo.setHealthConditions(healthConditions
+                    .stream()
+                    .filter(h -> h.getConsultationID().equals(oes.getConsultationID()))
+                    .map(hcv -> {
+                        ReferenceSummaryBo referenceSummaryBo = mapToReferenceSummaryBo(outpatientConsultationSummaryRepository.getReferenceByHealthCondition(hcv.getId(), oes.getConsultationID()).orElse(new ReferenceSummaryVo()));
+                        HealthConditionSummaryBo healthConditionSummaryBo = new HealthConditionSummaryBo(hcv);
+                        healthConditionSummaryBo.setReference(getReferenceData(referenceSummaryBo));
+                        return healthConditionSummaryBo;
+                    }).collect(Collectors.toList()));
             oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationID())).map(ReasonBo::new).collect(Collectors.toList()));
             oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(oes.getConsultationID())).map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);
@@ -111,6 +127,27 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         LOG.debug("Output size -> {}", result.size());
         LOG.trace(OUTPUT, result);
         return result;
+    }
+
+    public ReferenceSummaryBo mapToReferenceSummaryBo(ReferenceSummaryVo referenceSummaryVo) {
+        return new ReferenceSummaryBo(referenceSummaryVo.getId(), referenceSummaryVo.getCareLine(), referenceSummaryVo.getClinicalSpecialty(),
+                referenceSummaryVo.getNote());
+    }
+
+    private ReferenceSummaryBo getReferenceData(ReferenceSummaryBo referenceSummaryBo) {
+        LOG.debug("Input parameter -> referenceSummaryBo {}", referenceSummaryBo);
+        if(referenceSummaryBo.getId() != null) {
+            referenceSummaryBo.setFiles(getReferenceFiles(referenceSummaryBo.getId()));
+        }
+        return referenceSummaryBo;
+    }
+
+    public List<ReferenceCounterReferenceFileBo> getReferenceFiles(Integer referenceId) {
+        LOG.debug("Input parameter -> referenceId {}", referenceId);;
+        return referenceCounterReferenceService.getReferenceFiles(referenceId)
+                .stream()
+                .map(rf -> new ReferenceCounterReferenceFileBo(rf.getId(), rf.getName()))
+                .collect(Collectors.toList());
     }
 
 }

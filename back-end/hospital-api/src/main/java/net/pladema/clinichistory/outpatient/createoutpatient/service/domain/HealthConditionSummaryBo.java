@@ -22,6 +22,8 @@ public class HealthConditionSummaryBo extends ClinicalTerm {
 
     private String problemId;
 
+    private ReferenceSummaryBo reference;
+
     public HealthConditionSummaryBo(HealthConditionSummaryVo healthConditionSummaryVo){
         this.setId(healthConditionSummaryVo.getId());
         this.setSnomed(new SnomedBo(healthConditionSummaryVo.getSnomed()));

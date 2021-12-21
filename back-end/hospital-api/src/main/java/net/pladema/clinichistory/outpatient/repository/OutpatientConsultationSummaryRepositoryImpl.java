@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.outpatient.repository.domain.*;
@@ -20,6 +21,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientConsultationSummaryRepository {
@@ -150,6 +152,27 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                         (Integer) a[3]))
         );
         return result;
+    }
+
+    @Override
+    public Optional<ReferenceSummaryVo> getReferenceByHealthCondition(Integer healthConditionId, Integer outpatientId) {
+        String sqlString = "SELECT new ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo("
+                +"  r.id, cl.description , cs.name, rn.description)"
+                +"  FROM Reference r"
+                +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
+                +"  JOIN CareLine cl ON (r.careLineId = cl.id)"
+                +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
+                +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
+                +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
+                +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
+                +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
+                +"  AND oc.id = :outpatientId ";
+
+        return entityManager.createQuery(sqlString)
+                .setParameter("healthConditionId", healthConditionId)
+                .setParameter("outpatientId", outpatientId)
+                .getResultList()
+                .stream().findFirst();
     }
 
 }
