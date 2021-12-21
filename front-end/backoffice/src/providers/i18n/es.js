@@ -309,6 +309,7 @@ const messages = {
                 typeId: 'Tipo de documento',
                 filename: 'Nombre de archivo',
                 createdOn: 'Fecha de creación',
+                "creationable.createdOn": 'Fecha de creación'
             },
             downloadFile: 'Descargar pdf'
         },
