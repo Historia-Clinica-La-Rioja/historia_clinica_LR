@@ -14,7 +14,7 @@ export class MainLayoutComponent implements OnDestroy {
 	mobileQuery: MediaQueryList;
 	private _mobileQueryListener: () => void;
 	private _menuItems: MenuItem[];
-	@Input() menuFooterItems: MenuFooter;
+	@Input() userInfo: UserInfo;
 
 	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, ) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
@@ -40,21 +40,7 @@ export class MainLayoutComponent implements OnDestroy {
 	}
 }
 
-export class MenuFooter {
-	institution?: {
-		name: string;
-		address?: Address;
-	};
-	user: {
-		fullName?: string;
-		userName?: string;
-	};
-}
-
-export class Address {
-	street?: string;
-	number?: string;
-	apartment?: string;
-	floor?: string;
-	cityName?: string;
+export class UserInfo {
+	fullName?: string;
+	userName?: string;
 }
