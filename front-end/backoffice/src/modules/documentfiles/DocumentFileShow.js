@@ -11,7 +11,7 @@ import DownloadButton from '../../libs/sgx/components/DownloadButton';
 const filenameSupplier = (record) => record.filename;
 const urlSupplier = (record) => `documents/${record.id}/downloadFile`;
 
-const DocumentFileShow = props => (
+const DocumentFileShow = ({ permissions, ...props }) => (
     <Show {...props}>
         <SimpleShowLayout>
             <TextField source="filename" />
@@ -19,7 +19,7 @@ const DocumentFileShow = props => (
                 <TextField source="description" />
             </ReferenceField>
             <SgxDateField source="createdOn" showTime/>
-            <DownloadButton filename={filenameSupplier} url={urlSupplier}/>
+            { permissions && permissions.isOn("HABILITAR_DESCARGA_DOCUMENTOS_PDF") && <DownloadButton filename={filenameSupplier} url={urlSupplier}/> }
         </SimpleShowLayout>
     </Show>
 );

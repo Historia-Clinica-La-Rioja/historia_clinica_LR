@@ -74,6 +74,9 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si esta habilitado la opcion de agregar médicos de responsables/cabecera")
     AGREGAR_MEDICOS_ADICIONALES,
+
+    @Label("Indica si esta habilitado la opcion para descargar los documentos pdfs generados en la historia clinica desde el backoffice")
+    HABILITAR_DESCARGA_DOCUMENTOS_PDF,
     ;
 
     public boolean isActive() {

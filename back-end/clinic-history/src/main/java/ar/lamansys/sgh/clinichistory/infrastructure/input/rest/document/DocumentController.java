@@ -1,12 +1,15 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,14 +33,20 @@ public class DocumentController {
 
     private final PdfService pdfService;
 
-    public DocumentController(FetchDocumentFileById fetchDocumentFileById, PdfService pdfService){
+    private final FeatureFlagsService featureFlagsService;
+
+    public DocumentController(FetchDocumentFileById fetchDocumentFileById, PdfService pdfService,
+                              FeatureFlagsService featureFlagsService){
         this.fetchDocumentFileById = fetchDocumentFileById;
         this.pdfService = pdfService;
+        this.featureFlagsService = featureFlagsService;
     }
 
     @GetMapping(value = "/{id}/downloadFile")
     @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
     public ResponseEntity<InputStreamResource> downloadPdf(@PathVariable Long id) {
+        if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
+            return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
         var documentFile = fetchDocumentFileById.run(id);
         ByteArrayInputStream pdfFile;
         long sizeFile;
