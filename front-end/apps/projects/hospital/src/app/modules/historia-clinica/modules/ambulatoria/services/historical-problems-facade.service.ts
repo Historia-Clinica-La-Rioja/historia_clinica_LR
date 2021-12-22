@@ -7,6 +7,7 @@ import { momentParseDate } from '@core/utils/moment.utils';
 import { ClinicalSpecialtyDto, OutpatientEvolutionSummaryDto, OutpatientSummaryReferenceDto } from '@api-rest/api-model';
 import { OutpatientConsultationService } from './../../../../api-rest/services/outpatient-consultation.service';
 import { MapperService } from './../../../../presentation/services/mapper.service';
+import { REFERENCE_STATES } from '../constants/reference-masterdata';
 
 @Injectable()
 export class HistoricalProblemsFacadeService {
@@ -63,7 +64,8 @@ export class HistoricalProblemsFacadeService {
 			const result = historichalProblemsCopy.filter(historicalProblem => (this.filterBySpecialty(newFilter, historicalProblem)
 				&& this.filterByProfessional(newFilter, historicalProblem)
 				&& this.filterByProblem(newFilter, historicalProblem)
-				&& this.filterByConsultationDate(newFilter, historicalProblem)));
+				&& this.filterByConsultationDate(newFilter, historicalProblem)
+				&& this.filterByReference(newFilter, historicalProblem)));
 			this.historicalProblemsSubject.next(result);
 			this.historicalProblemsFilterSubject.next(newFilter);
 		}
@@ -83,6 +85,16 @@ export class HistoricalProblemsFacadeService {
 
 	private filterByConsultationDate(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
 		return (filter.consultationDate ? problem.consultationDate ? momentParseDate(problem.consultationDate).isSame(momentParseDate(filter.consultationDate)) : false : true);
+	}
+
+	private filterByReference(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
+		if (filter.referenceStateId === REFERENCE_STATES.WITH_REFERENCES) {
+			return problem.reference !== null;
+		}
+		if (filter.referenceStateId === REFERENCE_STATES.WITHOUT_REFERENCES) {
+			return problem.reference === null;
+		}
+		return true;
 	}
 
 	public getFilterOptions() {

@@ -240,7 +240,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			specialty: null,
 			professional: null,
 			problem: problem.snomed.sctid,
-			consultationDate: null
+			consultationDate: null,
+			referenceStateId: null,
 		});
 		this.selectedTab = 0;
 	}

@@ -301,7 +301,8 @@
 					"SPECIALTY": "Especialidad",
 					"PROFESSIONAL": "Profesional",
 					"PROBLEM": "Problema",
-					"CONSULTATION_DATE": "Fecha de consulta"
+					"CONSULTATION_DATE": "Fecha de consulta",
+					"REFERENCE_STATE": "Estado de referencia"
 				},
 				"external-clinical-history": {
 					"SPECIALTY": "Especialidad",
