@@ -73,3 +73,11 @@
         color: mat-color($palette-primary);
     }
 }
+
+@mixin font-weight-regular {
+	font-weight: 400;
+}
+
+@mixin font-weight-bold {
+	font-weight: 500;
+}
