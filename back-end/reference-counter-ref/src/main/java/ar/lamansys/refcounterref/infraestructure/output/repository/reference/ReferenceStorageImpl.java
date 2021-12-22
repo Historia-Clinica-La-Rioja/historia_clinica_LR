@@ -51,8 +51,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     }
 
     @Override
-    public List<ReferenceGetBo> getReferences(Integer institutionId, Integer patientId, List<Integer> clinicalSpecialtyIds) {
-        List<ReferenceGetBo> queryResult = referenceRepository.getReferences(institutionId, patientId, clinicalSpecialtyIds);
+    public List<ReferenceGetBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds) {
+        List<ReferenceGetBo> queryResult = referenceRepository.getReferences(patientId, clinicalSpecialtyIds);
         List<Integer> referenceIds = queryResult.stream().map(ReferenceGetBo::getId).collect(Collectors.toList());
 
         Map<Integer, List<ReferenceProblemBo>> problems = referenceHealthConditionRepository.getReferencesProblems(referenceIds)

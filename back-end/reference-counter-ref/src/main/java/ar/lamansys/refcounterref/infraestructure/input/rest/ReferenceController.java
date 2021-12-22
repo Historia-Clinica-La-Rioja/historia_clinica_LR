@@ -36,8 +36,8 @@ public class ReferenceController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestParam List<Integer> clinicalSpecialtyIds) {
-        log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyIds {}", institutionId, patientId, clinicalSpecialtyIds);
-        List<ReferenceDto> result = referenceMapper.fromListReferenceBo(getReference.run(institutionId, patientId, clinicalSpecialtyIds));
+        log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}", patientId, clinicalSpecialtyIds);
+        List<ReferenceDto> result = referenceMapper.fromListReferenceBo(getReference.run(patientId, clinicalSpecialtyIds));
         log.debug("Output -> result {}", result);
         return result;
     }
