@@ -878,6 +878,14 @@ export interface HCEAnthropometricDataDto extends Serializable {
     weight?: HCEEffectiveClinicalObservationDto;
 }
 
+export interface HCEBasicPersonDataDto extends Serializable {
+    birthDate: string;
+    firstName: string;
+    id: number;
+    identificationNumber: string;
+    lastName: string;
+}
+
 export interface HCEClinicalObservationDto extends Serializable {
     id?: number;
     value: string;
@@ -895,6 +903,28 @@ export interface HCEDiagnoseDto extends ClinicalTermDto {
 
 export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservationDto {
     effectiveTime: string;
+}
+
+export interface HCEEvolutionSummaryDto extends Serializable {
+    clinicalSpecialty: ClinicalSpecialtyDto;
+    consultationId: number;
+    evolutionNote: string;
+    healthConditions: HCEHealthConditionDto[];
+    procedures: HCEProcedureDto[];
+    professional: HCEHealthcareProfessionalDto;
+    reasons: HCEReasonDto[];
+    startDate: string;
+}
+
+export interface HCEHealthConditionDto extends HCEPersonalHistoryDto {
+    main: boolean;
+    problemId: string;
+}
+
+export interface HCEHealthcareProfessionalDto {
+    id: number;
+    licenseNumber: string;
+    person: HCEBasicPersonDataDto;
 }
 
 export interface HCEHospitalizationHistoryDto {
@@ -932,6 +962,14 @@ export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
     inactivationDate: string;
     severity: string;
     startDate: string;
+}
+
+export interface HCEProcedureDto extends HCEClinicalTermDto {
+    performedDate?: string;
+}
+
+export interface HCEReasonDto {
+    snomed: SnomedDto;
 }
 
 export interface HCEToothRecordDto extends Serializable {

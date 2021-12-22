@@ -26,6 +26,8 @@ public class HealthConditionSummaryBo extends ClinicalTerm {
 
     private List<ReferenceSummaryBo> references;
 
+    private Integer consultationID;
+
     public HealthConditionSummaryBo(HealthConditionSummaryVo healthConditionSummaryVo){
         this.setId(healthConditionSummaryVo.getId());
         this.setSnomed(new SnomedBo(healthConditionSummaryVo.getSnomed()));

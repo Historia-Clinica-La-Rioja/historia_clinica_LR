@@ -1,7 +1,21 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper;
 
-import ar.lamansys.sgh.clinichistory.domain.hce.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.*;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEToothRecordBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDiagnoseDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEEvolutionSummaryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
@@ -51,4 +65,11 @@ public interface HCEGeneralStateMapper {
     @Named("toHCEToothRecordDto")
     @Mapping(target = "date", source = "performedDate")
     HCEToothRecordDto toHCEToothRecordDto(HCEToothRecordBo source);
+
+    @Named("fromOutpatientEvolutionSummaryBo")
+    HCEEvolutionSummaryDto fromOutpatientEvolutionSummaryBo(EvolutionSummaryBo evolutionSummaryBo);
+
+    @Named("fromListOutpatientEvolutionSummaryBo")
+    @IterableMapping(qualifiedByName = "fromOutpatientEvolutionSummaryBo")
+    List<HCEEvolutionSummaryDto> fromListOutpatientEvolutionSummaryBo(List<EvolutionSummaryBo> evolutionSummaryBos);
 }

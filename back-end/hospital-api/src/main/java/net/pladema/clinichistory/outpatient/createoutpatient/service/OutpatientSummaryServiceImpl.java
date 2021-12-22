@@ -3,8 +3,8 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
@@ -69,11 +69,14 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         List<OutpatientEvolutionSummaryVo> queryResult = outpatientConsultationSummaryRepository.getAllOutpatientEvolutionSummary(patientId);
         List<Integer> outpatientConsultationIds = queryResult.stream().map(OutpatientEvolutionSummaryVo::getConsultationID).collect(Collectors.toList());
         List<HealthConditionSummaryVo> healthConditions = outpatientConsultationSummaryRepository.getHealthConditionsByPatient(patientId, outpatientConsultationIds);
-        List<ReasonSummaryVo> reasons = outpatientConsultationSummaryRepository.getReasonsByPatient(patientId, outpatientConsultationIds);
-        List<ProcedureSummaryVo> procedures = outpatientConsultationSummaryRepository.getProceduresByPatient(patientId, outpatientConsultationIds);
+        List<ReasonSummaryBo> reasons = outpatientConsultationSummaryRepository.getReasonsByPatient(patientId, outpatientConsultationIds);
+        List<ProcedureSummaryBo> procedures = outpatientConsultationSummaryRepository.getProceduresByPatient(patientId, outpatientConsultationIds);
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OutpatientEvolutionSummaryVo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
+            oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationID().equals(oes.getConsultationID())).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
+            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationId().equals(oes.getConsultationID())).map(ReasonBo::new).collect(Collectors.toList()));
+            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationID())).map(ProcedureBo::new).collect(Collectors.toList()));
             oesBo.setHealthConditions(healthConditions
                     .stream()
                     .filter(h -> h.getConsultationID().equals(oes.getConsultationID()))
@@ -83,8 +86,8 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
                         healthConditionSummaryBo.setReferences(getReferencesData(referenceSummaryBoList));
                         return healthConditionSummaryBo;
                     }).collect(Collectors.toList()));
-            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationID())).map(ReasonBo::new).collect(Collectors.toList()));
-            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(oes.getConsultationID())).map(ProcedureBo::new).collect(Collectors.toList()));
+            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationId().equals(oes.getConsultationID())).map(ReasonBo::new).collect(Collectors.toList()));
+            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationID())).map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);
         }
         LOG.debug("Output size -> {}", result.size());
@@ -97,8 +100,8 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         List<OdontologyEvolutionSummaryVo> queryResult = odontologyConsultationSummaryRepository.getAllOdontologyEvolutionSummary(patientId);
         List<Integer> odontologyConsultationIds = queryResult.stream().map(OdontologyEvolutionSummaryVo::getConsultationId).collect(Collectors.toList());
         List<HealthConditionSummaryVo> healthConditions = odontologyConsultationSummaryRepository.getHealthConditionsByPatient(patientId, odontologyConsultationIds);
-        List<ReasonSummaryVo> reasons = odontologyConsultationSummaryRepository.getReasonsByPatient(patientId, odontologyConsultationIds);
-        List<ProcedureSummaryVo> procedures = odontologyConsultationSummaryRepository.getProceduresByPatient(patientId, odontologyConsultationIds);
+        List<ReasonSummaryBo> reasons = odontologyConsultationSummaryRepository.getReasonsByPatient(patientId, odontologyConsultationIds);
+        List<ProcedureSummaryBo> procedures = odontologyConsultationSummaryRepository.getProceduresByPatient(patientId, odontologyConsultationIds);
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OdontologyEvolutionSummaryVo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
@@ -111,8 +114,8 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
                         healthConditionSummaryBo.setReferences(getReferencesData(referenceSummaryBoList));
                         return healthConditionSummaryBo;
                     }).collect(Collectors.toList()));
-            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationId())).map(ReasonBo::new).collect(Collectors.toList()));
-            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(oes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
+            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationId().equals(oes.getConsultationId())).map(ReasonBo::new).collect(Collectors.toList()));
+            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);
         }
         LOG.debug("Output size -> {}", result.size());
@@ -125,12 +128,12 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         List<NursingEvolutionSummaryVo> queryResult = nursingConsultationSummaryRepository.getAllNursingEvolutionSummary(patientId);
         List<Integer> nursingConsultationIds = queryResult.stream().map(NursingEvolutionSummaryVo::getConsultationId).collect(Collectors.toList());
         List<HealthConditionSummaryVo> healthConditions = nursingConsultationSummaryRepository.getHealthConditionsByPatient(patientId, nursingConsultationIds);
-        List<ProcedureSummaryVo> procedures = nursingConsultationSummaryRepository.getProceduresByPatient(patientId, nursingConsultationIds);
+        List<ProcedureSummaryBo> procedures = nursingConsultationSummaryRepository.getProceduresByPatient(patientId, nursingConsultationIds);
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (NursingEvolutionSummaryVo nes : queryResult) {
             EvolutionSummaryBo nesBo = new EvolutionSummaryBo(nes);
             nesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationID().equals(nes.getConsultationId())).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
-            nesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(nes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
+            nesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(nes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(nesBo);
         }
         LOG.debug("Output size -> {}", result.size());

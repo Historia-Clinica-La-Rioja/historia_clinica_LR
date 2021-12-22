@@ -1,16 +1,16 @@
-package net.pladema.clinichistory.outpatient.repository;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summary;
 
+import ar.lamansys.sgh.clinichistory.application.ports.NursingConsultationSummaryStorage;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthcareProfessionalBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.NursingEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
-import net.pladema.clinichistory.outpatient.repository.domain.NursingEvolutionSummaryVo;
-import net.pladema.person.repository.entity.Person;
-import net.pladema.staff.repository.entity.ClinicalSpecialty;
-import net.pladema.staff.repository.entity.HealthcareProfessional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,18 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class NursingConsultationSummaryRepositoryImpl implements NursingConsultationSummaryRepository {
-
+public class NursingConsultationSummaryStorageImpl implements NursingConsultationSummaryStorage {
     private final EntityManager entityManager;
 
-    public NursingConsultationSummaryRepositoryImpl(EntityManager entityManager) {
+    public NursingConsultationSummaryStorageImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<NursingEvolutionSummaryVo> getAllNursingEvolutionSummary(Integer patientId) {
-        String sqlString = " SELECT nc.id, nc.performedDate, cs, hp, p, n.description"
+    public List<NursingEvolutionSummaryBo> getAllNursingEvolutionSummary(Integer patientId) {
+        String sqlString = " SELECT nc.id, nc.performedDate, "
+                + "hp.id AS healthcarProfessionalId, hp.licenseNumber, hp.personId, "
+                + "p.firstName, p.lastName, p.identificationNumber, "
+                + "cs.id AS clinicalSpecialtyId, cs.name AS clinicalSpecialtyName, cs.clinicalSpecialtyTypeId, "
+                + "n.description "
                 + " FROM NursingConsultation nc"
                 + " LEFT JOIN ClinicalSpecialty cs ON (nc.clinicalSpecialtyId = cs.id)"
                 + " JOIN Document doc ON (doc.sourceId = nc.id)"
@@ -45,22 +48,25 @@ public class NursingConsultationSummaryRepositoryImpl implements NursingConsulta
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .getResultList();
-        List<NursingEvolutionSummaryVo> result = new ArrayList<>();
+        List<NursingEvolutionSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                result.add(new NursingEvolutionSummaryVo(
-                        (Integer) a[0],
-                        a[1] != null ? (LocalDate) a[1] : null,
-                        (ClinicalSpecialty) a[2],
-                        (HealthcareProfessional) a[3],
-                        (Person) a[4],
-                        (String) a[5]))
+                result.add(new NursingEvolutionSummaryBo(
+                        (Integer)a[0],
+                        a[1] != null ? (LocalDate)a[1] : null,
+                        new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7]),
+                        a[8] != null ? new ClinicalSpecialtyBo((Integer)a[8], (String)a[9], (Short) a[10]) : null,
+                        (String)a[11]))
         );
         return result;
     }
 
     @Override
-    public List<HealthConditionSummaryVo> getHealthConditionsByPatient(Integer patientId, List<Integer> nursingConsultationIds) {
-        String sqlString = "SELECT hc.id, s.sctid, s.pt, d.statusId, hc.startDate, hc.inactivationDate, hc.main, hc.problemId, nc.id"
+    public List<HealthConditionSummaryBo> getHealthConditionsByPatient(Integer patientId, List<Integer> nursingConsultationIds) {
+        String sqlString = "SELECT hc.id, hc.patientId, "
+                + "  s.sctid, s.pt, "
+                + "  d.statusId, "
+                + "  hc.startDate, hc.inactivationDate, "
+                + "  hc.main, hc.problemId, nc.id "
                 + "  FROM NursingConsultation nc"
                 + "  JOIN Document d ON (d.sourceId = nc.id)"
                 + "  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId)"
@@ -77,18 +83,18 @@ public class NursingConsultationSummaryRepositoryImpl implements NursingConsulta
                 .setParameter("patientId", patientId)
                 .setParameter("nursingConsultationIds", nursingConsultationIds)
                 .getResultList();
-        List<HealthConditionSummaryVo> result = new ArrayList<>();
+        List<HealthConditionSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                result.add(new HealthConditionSummaryVo(
-                        (Integer) a[0],
-                        (String) a[1],
-                        (String) a[2],
-                        (String) a[3],
-                        a[4] != null ? (LocalDate) a[4] : null,
-                        a[5] != null ? (LocalDate) a[5] : null,
-                        (boolean) a[6],
-                        (String) a[7],
-                        (Integer) a[8]))
+                result.add(new HealthConditionSummaryBo(
+                        (Integer)a[0],
+                        (Integer)a[1],
+                        new SnomedBo((String) a[2], (String) a[3]),
+                        (String)a[4], null, null,
+                        a[5] != null ? (LocalDate)a[5] : null,
+                        a[6] != null ? (LocalDate)a[6] : null,
+                        (boolean)a[7],
+                        (String)a[8],
+                        (Integer) a[9]))
         );
         return result;
     }
