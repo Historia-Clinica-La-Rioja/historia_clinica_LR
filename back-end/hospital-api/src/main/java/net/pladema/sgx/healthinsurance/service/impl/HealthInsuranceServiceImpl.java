@@ -3,7 +3,7 @@ package net.pladema.sgx.healthinsurance.service.impl;
 import net.pladema.patient.repository.domain.HealthInsuranceVo;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.person.repository.HealthInsuranceRepository;
-import net.pladema.person.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.HealthInsurance;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;

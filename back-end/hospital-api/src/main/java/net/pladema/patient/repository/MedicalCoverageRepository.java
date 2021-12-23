@@ -1,4 +1,4 @@
-package net.pladema.person.repository;
+package net.pladema.patient.repository;
 
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import org.springframework.data.jpa.repository.JpaRepository;

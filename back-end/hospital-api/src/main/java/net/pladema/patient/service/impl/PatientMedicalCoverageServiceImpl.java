@@ -9,7 +9,7 @@ import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.domain.MedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.person.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.MedicalCoverageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
