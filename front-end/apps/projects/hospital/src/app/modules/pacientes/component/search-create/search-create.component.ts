@@ -1,5 +1,5 @@
-import {Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { VALIDATIONS, hasError, updateForm } from '@core/utils/form.utils';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -9,7 +9,7 @@ import { ContextService } from '@core/services/context.service';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
 import { MatDialog } from '@angular/material/dialog';
-import {NavigationService} from "@pacientes/services/navigation.service";
+import { NavigationService } from "@pacientes/services/navigation.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -71,7 +71,7 @@ export class SearchCreateComponent implements OnInit {
 	search(formDirectiveSearchForm: FormGroupDirective): void {
 		this.formSearchSubmitted = true;
 		this.validatorsOffInDialog(false, formDirectiveSearchForm);
-		if (this.formSearch.valid)  {
+		if (this.formSearch.valid) {
 			this.disableButtonScan = true;
 			this.disableButtonConfirm = true;
 			const searchRequest = {
@@ -120,7 +120,7 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.IdentityVerificationStatus.setValidators(Validators.required);
 			updateForm(this.formSearch);
 		} else {
-			if (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.NO_POSEE){
+			if (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.NO_POSEE) {
 				this.disableButtonScan = true;
 			}
 			else {
@@ -144,7 +144,7 @@ export class SearchCreateComponent implements OnInit {
 			this.formSearch.controls.identifNumber.clearValidators();
 			updateForm(this.formSearch);
 		} else {
-			if (this.noIdentity){
+			if (this.noIdentity) {
 				this.disableButtonScan = true;
 			}
 			else {
@@ -155,12 +155,12 @@ export class SearchCreateComponent implements OnInit {
 		}
 	}
 
-	public openScanPatientDialog(formGroupeDirective : FormGroupDirective): void {
+	public openScanPatientDialog(formGroupDirective: FormGroupDirective): void {
 		this.patientInformationError = -1;
 		const identifType = this.formSearch.controls.identifType.value;
 		const identifNumber = this.formSearch.controls.identifNumber.value;
 		const gender = this.formSearch.controls.gender.value;
-		this.validatorsOffInDialog(true, formGroupeDirective);
+		this.validatorsOffInDialog(true, formGroupDirective);
 		this.formSearch.controls.identifType.setValue(identifType);
 		this.formSearch.controls.identifNumber?.setValue(identifNumber);
 		this.formSearch.controls.gender?.setValue(gender);
@@ -173,15 +173,15 @@ export class SearchCreateComponent implements OnInit {
 			}
 		});
 		dialogRef.afterClosed().subscribe((patientInformationScan) => {
-			if((patientInformationScan !== undefined) && (patientInformationScan !== INVALID_INPUT)){
+			if ((patientInformationScan !== undefined) && (patientInformationScan !== INVALID_INPUT)) {
 				this.formSearch.controls.identifType.setValue(patientInformationScan.identifType);
 				this.formSearch.controls.identifNumber?.setValue(patientInformationScan.identifNumber);
 				this.formSearch.controls.gender?.setValue(patientInformationScan.gender);
-				if (this.formSearch.valid){
+				if (this.formSearch.valid) {
 					this.patientInformationError = 0;
-					this.search(formGroupeDirective);
+					this.search(formGroupDirective);
 				}
-				else{
+				else {
 					this.patientInformationError = 1;
 				}
 			}

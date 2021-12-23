@@ -82,7 +82,8 @@
 			</div>
 			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
 				<div class="search" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-					<button mat-stroked-button color="primary" type="button" (click)="openScanPatientDialog(formDirectiveSearchForm)" [disabled]="disableButtonScan">
+					<button mat-stroked-button color="primary" type="button"
+						(click)="openScanPatientDialog(formDirectiveSearchForm)" [disabled]="disableButtonScan">
 						<span class="material-icons" color="primary">crop_free</span>
 						<span [translate]="'pacientes.home.find_add_section.scan.BUTTON_SCAN'"></span>
 					</button>
@@ -92,8 +93,9 @@
 				</div>
 			</div>
 			<div id="messagesScan" fxLayout="column" fxLayoutGap="20px">
-				<span *ngIf="(patientInformationError == 0)" [translate]="'pacientes.home.find_add_section.scan.messages.SUCCESS'"></span>
-				<mat-error class = "errorScan" *ngIf="(patientInformationError == 1)">
+				<span *ngIf="(patientInformationError == 0)"
+					[translate]="'pacientes.home.find_add_section.scan.messages.SUCCESS'"></span>
+				<mat-error class="errorScan" *ngIf="(patientInformationError == 1)">
 					<span [translate]="'pacientes.home.find_add_section.scan.messages.ERROR'"></span>
 				</mat-error>
 			</div>
