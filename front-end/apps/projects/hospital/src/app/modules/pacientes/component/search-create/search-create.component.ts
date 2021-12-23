@@ -10,6 +10,7 @@ import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationService } from "@pacientes/services/navigation.service";
+import { PatientInformationScan } from '@pacientes/pacientes.model';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -34,6 +35,7 @@ export class SearchCreateComponent implements OnInit {
 	public patientInformationError = -1;
 	public messageOff = false;
 	private readonly routePrefix;
+	private additionalInfoScanned: AdditionalInformationScanned;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -105,7 +107,12 @@ export class SearchCreateComponent implements OnInit {
 					genderId: this.formSearch.controls.gender.value,
 					IdentityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
 					comments: this.formSearch.controls.comments.value,
-					noIdentity: this.noIdentity
+					noIdentity: this.noIdentity,
+					firstName: this.additionalInfoScanned.firstName,
+					middleNames: this.additionalInfoScanned.middleNames,
+					lastName: this.additionalInfoScanned.lastName,
+					otherLastNames: this.additionalInfoScanned.otherLastNames,
+					birthDate: this.additionalInfoScanned.birthDate
 				}
 			});
 	}
@@ -174,6 +181,7 @@ export class SearchCreateComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe((patientInformationScan) => {
 			if ((patientInformationScan !== undefined) && (patientInformationScan !== INVALID_INPUT)) {
+				this.loadAdditionalInformation(patientInformationScan);
 				this.formSearch.controls.identifType.setValue(patientInformationScan.identifType);
 				this.formSearch.controls.identifNumber?.setValue(patientInformationScan.identifNumber);
 				this.formSearch.controls.gender?.setValue(patientInformationScan.gender);
@@ -207,4 +215,26 @@ export class SearchCreateComponent implements OnInit {
 			this.messageOff = false;
 		}
 	}
+
+	private loadAdditionalInformation(patientInformationScan: PatientInformationScan): void {
+
+		let dateArray = patientInformationScan.birthDate.split('-', 3);
+		let dateStr = dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0];
+
+		this.additionalInfoScanned = {
+			birthDate: dateStr,
+			firstName: patientInformationScan.firstName,
+			lastName: patientInformationScan.lastName,
+			middleNames: patientInformationScan.middleNames,
+			otherLastNames: patientInformationScan.otherLastNames
+		}
+	}
+}
+
+interface AdditionalInformationScanned {
+	firstName: string,
+	middleNames: string,
+	lastName: string,
+	otherLastNames: string,
+	birthDate: string
 }
