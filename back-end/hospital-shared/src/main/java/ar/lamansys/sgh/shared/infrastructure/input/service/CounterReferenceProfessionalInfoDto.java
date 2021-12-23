@@ -11,14 +11,16 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class ReferenceCounterReferenceFileDto implements Serializable {
+@AllArgsConstructor
+public class CounterReferenceProfessionalInfoDto implements Serializable {
 
-    private static final long serialVersionUID = 3267240547638036540L;
+    private static final long serialVersionUID = 5383370005741451245L;
 
-    private Integer fileId;
+    private Integer id;
 
-    private String fileName;
+    private String firstName;
+
+    private String lastName;
 
 }

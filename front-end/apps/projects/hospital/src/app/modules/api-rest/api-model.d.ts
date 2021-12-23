@@ -444,6 +444,16 @@ export interface CounterReferenceProcedureDto extends Serializable {
     snomed: SnomedDto;
 }
 
+export interface CounterReferenceProfessionalInfoDto extends Serializable {
+    firstName: string;
+    id: number;
+    lastName: string;
+}
+
+export interface CounterReferenceSummaryProcedureDto extends Serializable {
+    snomed: SharedSnomedDto;
+}
+
 export interface CoverageDto extends Serializable {
     id: number;
     name: string;
@@ -1839,8 +1849,8 @@ export interface ReducedPatientDto {
 }
 
 export interface ReferenceCounterReferenceFileDto extends Serializable {
-    id: number;
-    name: string;
+    fileId: number;
+    fileName: string;
 }
 
 export interface ReferenceDto extends Serializable {
@@ -1946,6 +1956,11 @@ export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
 }
 
 export interface Serializable {
+}
+
+export interface SharedSnomedDto extends Serializable {
+    pt: string;
+    sctid: string;
 }
 
 export interface SnomedDto extends Serializable {

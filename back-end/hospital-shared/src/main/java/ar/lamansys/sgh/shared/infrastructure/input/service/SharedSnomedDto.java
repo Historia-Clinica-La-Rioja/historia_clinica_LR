@@ -13,12 +13,12 @@ import java.io.Serializable;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReferenceCounterReferenceFileDto implements Serializable {
+public class SharedSnomedDto implements Serializable {
 
-    private static final long serialVersionUID = 3267240547638036540L;
+    private static final long serialVersionUID = -198432836028268437L;
 
-    private Integer fileId;
+    private String sctid;
 
-    private String fileName;
+    private String pt;
 
 }

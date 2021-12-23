@@ -7,18 +7,17 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class ReferenceCounterReferenceFileDto implements Serializable {
+@AllArgsConstructor
+public class CounterReferenceSummaryProcedureDto implements Serializable {
 
-    private static final long serialVersionUID = 3267240547638036540L;
+    private static final long serialVersionUID = 2806473937158573659L;
 
-    private Integer fileId;
-
-    private String fileName;
+    private SharedSnomedDto snomed;
 
 }

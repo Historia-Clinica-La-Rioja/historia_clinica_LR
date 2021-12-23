@@ -3,9 +3,14 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.counterrefer
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
+import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo;
+import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,5 +29,18 @@ public class CounterReferenceStorageImpl implements CounterReferenceStorage {
         log.debug("Output -> {}", counterReferenceId);
         return counterReferenceId;
     }
+
+    @Override
+    public Optional<CounterReferenceSummaryBo> getCounterReference(Integer referenceId) {
+        log.debug("Input parameter -> referenceId {}", referenceId);
+        return counterReferenceRepository.findByReferenceId(referenceId);
+    }
+
+    @Override
+    public List<CounterReferenceProcedureBo> getProceduresByCounterReference(Integer counterReferenceId) {
+        log.debug("Input parameter -> counterReferenceId {}", counterReferenceId);
+        return counterReferenceRepository.getProcedures(counterReferenceId);
+    }
+
 
 }
