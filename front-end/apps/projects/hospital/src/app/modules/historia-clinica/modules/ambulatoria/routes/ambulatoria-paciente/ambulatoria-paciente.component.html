@@ -13,7 +13,7 @@
 							[matMenuTriggerFor]="menu">
 							{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}</button>
 						<mat-menu #menu="matMenu">
-							<button mat-menu-item (click)="openNuevaConsulta()">Ambulatoria</button>
+							<button mat-menu-item (click)="hasReferenceNotification()">Ambulatoria</button>
 							<button mat-menu-item (click)="openNuevaConsultaEnfermeria()">Enfermeria</button>
 						</mat-menu>
 					</ng-container>
