@@ -47,7 +47,8 @@ public abstract class AuthInterceptor<R extends LoginResponse, S extends AuthSer
 	protected abstract void addAuthHeaders(HttpHeaders headers);
 
 	private boolean loginRequired(ClientHttpResponse response) throws IOException {
-		return response.getStatusCode() == HttpStatus.FORBIDDEN;
+		return response.getStatusCode() == HttpStatus.FORBIDDEN
+				|| response.getStatusCode() == HttpStatus.UNAUTHORIZED;
 	}
 
 	private void callLogin() throws IOException {
