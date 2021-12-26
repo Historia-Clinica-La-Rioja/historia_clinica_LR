@@ -108,11 +108,11 @@ export class SearchCreateComponent implements OnInit {
 					IdentityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
 					comments: this.formSearch.controls.comments.value,
 					noIdentity: this.noIdentity,
-					firstName: this.additionalInfoScanned.firstName,
-					middleNames: this.additionalInfoScanned.middleNames,
-					lastName: this.additionalInfoScanned.lastName,
-					otherLastNames: this.additionalInfoScanned.otherLastNames,
-					birthDate: this.additionalInfoScanned.birthDate
+					firstName: this.additionalInfoScanned?.firstName,
+					middleNames: this.additionalInfoScanned?.middleNames,
+					lastName: this.additionalInfoScanned?.lastName,
+					otherLastNames: this.additionalInfoScanned?.otherLastNames,
+					birthDate: this.additionalInfoScanned?.birthDate
 				}
 			});
 	}
