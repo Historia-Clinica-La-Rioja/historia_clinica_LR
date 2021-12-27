@@ -134,3 +134,47 @@ databaseChangeLog:
               tableName: external_encounter
               columnNames: external_encounter_id
               constraintName: UQ_external_encounter_id
+
+    - changeSet:
+        id: add-auditable-columns-medical_coverage
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: medical_coverage
+              columns:
+                - column:
+                    constraints:
+                      nullable: false          
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                        nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                        nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                        nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                     constraints:
+                        nullable: false
+                     name: deleted
+                     type: BOOLEAN
+                     defaultValue: ${boolean.false}
+                - column:
+                     name: deleted_by
+                     type: int
+                - column:
+                     name: deleted_on
+                     type: datetime

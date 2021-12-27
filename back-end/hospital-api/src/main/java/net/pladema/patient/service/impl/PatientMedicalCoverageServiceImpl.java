@@ -86,8 +86,10 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 									   Integer patientId) {
 		List<Integer> result = new ArrayList<>();
 		coverages.forEach((coverage) -> {
-			MedicalCoverageBo medicalCoverage = coverage.getMedicalCoverage();
-			MedicalCoverage MedicalCoverageSaved = medicalCoverageRepository.save(medicalCoverage.mapToEntity());
+			MedicalCoverage medicalCoverage = (coverage.getMedicalCoverage().getId() != null)
+					? medicalCoverageRepository.findById(coverage.getMedicalCoverage().getId()).get()
+					: coverage.getMedicalCoverage().mapToEntity();
+			MedicalCoverage MedicalCoverageSaved = medicalCoverageRepository.save(medicalCoverage);
 			coverage.getMedicalCoverage().setId(MedicalCoverageSaved.getId());
 			if (coverage.getPrivateHealthInsuranceDetails() != null) {
 				PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));

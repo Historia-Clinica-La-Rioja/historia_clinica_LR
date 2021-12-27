@@ -1,5 +1,7 @@
 package net.pladema.patient.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +15,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public class MedicalCoverage implements Serializable {
+@EntityListeners(SGXAuditListener.class)
+public class MedicalCoverage extends SGXAuditableEntity<Integer> implements Serializable {
     /*
      */
     private static final long serialVersionUID = 2873716268832417941L;
