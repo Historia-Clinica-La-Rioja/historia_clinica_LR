@@ -475,6 +475,10 @@ export interface CreateOutpatientDto {
     vitalSigns?: OutpatientVitalSignDto;
 }
 
+export interface CreationableDto extends Serializable {
+    createdOn: Date;
+}
+
 export interface DateDto {
     day: number;
     month: number;
@@ -607,6 +611,16 @@ export interface DocumentDto {
     procedures: ProcedureDto[];
     reasons: ReasonDto[];
     vitalSigns: VitalSignDto;
+}
+
+export interface DocumentFileDto {
+    createdOn: Date;
+    creationable: CreationableDto;
+    filename: string;
+    id: number;
+    sourceId: number;
+    sourceTypeId: number;
+    typeId: number;
 }
 
 export interface DocumentHistoricDto {

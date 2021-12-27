@@ -18,7 +18,7 @@ const DocumentFileShow = ({ permissions, ...props }) => (
             <ReferenceField source="typeId" reference="documenttypes" link={false}>
                 <TextField source="description" />
             </ReferenceField>
-            <SgxDateField source="createdOn" showTime/>
+            <SgxDateField source="creationable.createdOn" showTime/>
             { permissions && permissions.isOn("HABILITAR_DESCARGA_DOCUMENTOS_PDF") && <DownloadButton filename={filenameSupplier} url={urlSupplier}/> }
         </SimpleShowLayout>
     </Show>
