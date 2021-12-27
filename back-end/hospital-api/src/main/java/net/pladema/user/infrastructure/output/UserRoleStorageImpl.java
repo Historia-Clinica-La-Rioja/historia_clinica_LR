@@ -66,9 +66,8 @@ public class UserRoleStorageImpl implements UserRoleStorage {
     private void checkValidRoles(List<UserRoleBo> userRolesBo) {
         userRolesBo.stream().filter(role -> !isValidRole(role)).findAny()
                 .ifPresent(userRoleDto -> {
-                    String role = ERole.map(userRoleDto.getRoleId()).getValue();
                     throw new UserRoleStorageException(UserRoleStorageEnumException.PROFESSIONAL_REQUIRED,
-                            String.format("El rol %s asignado requiere que el usuario sea un profesional", role));
+                            String.format("El rol %s asignado requiere que el usuario sea un profesional", roleService.getRoleDescription(ERole.map(userRoleDto.getRoleId()))));
                 });
     }
 
