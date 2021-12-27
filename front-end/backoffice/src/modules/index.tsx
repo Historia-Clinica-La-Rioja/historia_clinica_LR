@@ -8,6 +8,8 @@ import institutions from './institutions';
 import InstitutionShow from './institutions/InstitutionShow';
 import InstitutionList from './institutions/InstitutionList';
 import InstitutionEdit from './institutions/InstitutionEdit';
+import SnvsShow from './snvs/SnvsShow';
+import SnvsList from './snvs/SnvsList';
 import addresses from './addresses';
 import sectors from './sectors';
 import clinicalspecialties from './clinicalspecialties';
@@ -56,6 +58,8 @@ const resourcesAdminRoot = [
     <Resource name="password-reset" {...passwordReset} />,
     <Resource name="roles" />,
     <Resource name="institutions" {...institutions} />,
+    <Resource name="snvs" show={SnvsShow} list={SnvsList} />,
+    <Resource name="addresses" {...addresses} />,
     <Resource name="sectors" {...sectors} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
