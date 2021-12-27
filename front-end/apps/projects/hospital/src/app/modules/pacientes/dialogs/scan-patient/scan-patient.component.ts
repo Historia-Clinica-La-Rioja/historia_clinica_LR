@@ -19,6 +19,7 @@ export class ScanPatientComponent implements OnInit {
 
 	public formScanPatient: FormGroup;
 	patientInformationScan: PatientInformationScan;
+	private englishScan = false;
 
 	constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef<ScanPatientComponent>, @Inject(MAT_DIALOG_DATA) public data: {
 		genderOptions: any,
@@ -54,6 +55,7 @@ export class ScanPatientComponent implements OnInit {
 		else {
 			if (valueForm.target.value.includes(DATA_SPLIT_ENGLISH)) {
 				valueFormArray = valueForm.target.value.split(DATA_SPLIT_ENGLISH);
+				this.englishScan = true;
 			}
 		}
 
@@ -127,7 +129,8 @@ export class ScanPatientComponent implements OnInit {
 	}
 
 	private isDate(value: string): boolean {
-		return isValid(parse(value, 'dd-MM-yyyy', new Date()));
+		let valueDate = this.englishScan ? value.split('/').join('-') : value;
+		return isValid(parse(valueDate, 'dd-MM-yyyy', new Date()));
 	}
 
 	private canBeAName(value: string): boolean {
