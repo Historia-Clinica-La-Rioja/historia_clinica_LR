@@ -31,6 +31,7 @@ import clinicalspecialtycarelines from "./clinicalspecialtycarelines";
 import documenttypes from "./documenttypes";
 import documentfiles from "./documentfiles";
 import restClientMeasures from "./rest-client-measures";
+import medicalCoverage from "./medicalcoverage";
 
 import { ROOT, ADMINISTRADOR } from './roles';
 
@@ -74,6 +75,7 @@ const resourcesAdminRoot = [
     <Resource name="rest-client-measures" {...restClientMeasures} />,
     <Resource name="cities" {...cities} />,
     <Resource name="departments" {...departments} />,
+    <Resource name="medicalcoverages" {...medicalCoverage} />,
 
     // Ampliación
     // 

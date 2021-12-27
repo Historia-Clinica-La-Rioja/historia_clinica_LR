@@ -333,7 +333,13 @@ const messages = {
                 id: 'Identificador',
                 description: 'Descripción',
             }
-        }
+        },
+        medicalcoverages: {
+            name: 'Coberturas médicas |||| Coberturas médicas',
+            fields: {
+                name: 'Nombre',
+            }
+        },
     },
 };
 
