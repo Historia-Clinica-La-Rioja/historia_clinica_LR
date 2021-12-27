@@ -77,9 +77,9 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
                     .stream()
                     .filter(h -> h.getConsultationID().equals(oes.getConsultationID()))
                     .map(hcv -> {
-                        ReferenceSummaryBo referenceSummaryBo = mapToReferenceSummaryBo(outpatientConsultationSummaryRepository.getReferenceByHealthCondition(hcv.getId(), oes.getConsultationID()).orElse(new ReferenceSummaryVo()));
+                        List<ReferenceSummaryBo> referenceSummaryBoList = mapToReferenceSummaryBoList(outpatientConsultationSummaryRepository.getReferencesByHealthCondition(hcv.getId(), oes.getConsultationID()));
                         HealthConditionSummaryBo healthConditionSummaryBo = new HealthConditionSummaryBo(hcv);
-                        healthConditionSummaryBo.setReference(getReferenceData(referenceSummaryBo));
+                        healthConditionSummaryBo.setReferences(getReferencesData(referenceSummaryBoList));
                         return healthConditionSummaryBo;
                     }).collect(Collectors.toList()));
             oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationID())).map(ReasonBo::new).collect(Collectors.toList()));
@@ -129,21 +129,27 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         return result;
     }
 
-    public ReferenceSummaryBo mapToReferenceSummaryBo(ReferenceSummaryVo referenceSummaryVo) {
-        return new ReferenceSummaryBo(referenceSummaryVo.getId(), referenceSummaryVo.getCareLine(), referenceSummaryVo.getClinicalSpecialty(),
-                referenceSummaryVo.getNote());
+    public List<ReferenceSummaryBo> mapToReferenceSummaryBoList(List<ReferenceSummaryVo> referenceSummaryVoList) {
+        List<ReferenceSummaryBo> referenceSummaryBoList = new ArrayList<>();
+        referenceSummaryVoList.stream().forEach(referenceSummaryVo ->
+                referenceSummaryBoList.add(new ReferenceSummaryBo(referenceSummaryVo.getId(), referenceSummaryVo.getCareLine(), referenceSummaryVo.getClinicalSpecialty(),
+                        referenceSummaryVo.getNote()))
+        );
+        return referenceSummaryBoList;
     }
 
-    private ReferenceSummaryBo getReferenceData(ReferenceSummaryBo referenceSummaryBo) {
-        LOG.debug("Input parameter -> referenceSummaryBo {}", referenceSummaryBo);
-        if(referenceSummaryBo.getId() != null) {
-            referenceSummaryBo.setFiles(getReferenceFiles(referenceSummaryBo.getId()));
+    private List<ReferenceSummaryBo> getReferencesData(List<ReferenceSummaryBo> referenceSummaryBoList) {
+        LOG.debug("Input parameter -> referenceSummaryBoList {}", referenceSummaryBoList);
+        if (!referenceSummaryBoList.isEmpty()) {
+            referenceSummaryBoList
+                    .stream()
+                    .forEach(referenceSummaryBo -> referenceSummaryBo.setFiles(getReferenceFiles(referenceSummaryBo.getId())));
         }
-        return referenceSummaryBo;
+        return referenceSummaryBoList;
     }
 
     public List<ReferenceCounterReferenceFileBo> getReferenceFiles(Integer referenceId) {
-        LOG.debug("Input parameter -> referenceId {}", referenceId);;
+        LOG.debug("Input parameter -> referenceId {}", referenceId);
         return referenceCounterReferenceService.getReferenceFiles(referenceId)
                 .stream()
                 .map(rf -> new ReferenceCounterReferenceFileBo(rf.getId(), rf.getName()))

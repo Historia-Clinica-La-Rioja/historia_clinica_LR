@@ -155,9 +155,8 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
     }
 
     @Override
-    public Optional<ReferenceSummaryVo> getReferenceByHealthCondition(Integer healthConditionId, Integer outpatientId) {
-        String sqlString = "SELECT new ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo("
-                +"  r.id, cl.description , cs.name, rn.description)"
+    public List<ReferenceSummaryVo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId) {
+        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description"
                 +"  FROM Reference r"
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
                 +"  JOIN CareLine cl ON (r.careLineId = cl.id)"
@@ -168,11 +167,19 @@ public class OutpatientConsultationSummaryRepositoryImpl implements OutpatientCo
                 +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
                 +"  AND oc.id = :outpatientId ";
 
-        return entityManager.createQuery(sqlString)
+        List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("outpatientId", outpatientId)
-                .getResultList()
-                .stream().findFirst();
+                .getResultList();
+        List<ReferenceSummaryVo> result = new ArrayList<>();
+        queryResult.forEach(a ->
+                result.add(new ReferenceSummaryVo(
+                        (Integer)a[0],
+                        (String) a[1],
+                        (String) a[2],
+                        a[3] != null ? (String) a[3] : null))
+        );
+        return result;
     }
 
 }

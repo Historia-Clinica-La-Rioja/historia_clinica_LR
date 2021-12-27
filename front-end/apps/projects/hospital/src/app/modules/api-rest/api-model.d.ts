@@ -1567,7 +1567,7 @@ export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
     inactivationDate: string;
     main: boolean;
     problemId: string;
-    reference: OutpatientSummaryReferenceDto;
+    references: OutpatientSummaryReferenceDto[];
     startDate: string;
 }
 

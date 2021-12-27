@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class HealthConditionSummaryBo extends ClinicalTerm {
 
     private String problemId;
 
-    private ReferenceSummaryBo reference;
+    private List<ReferenceSummaryBo> references;
 
     public HealthConditionSummaryBo(HealthConditionSummaryVo healthConditionSummaryVo){
         this.setId(healthConditionSummaryVo.getId());

@@ -19,6 +19,6 @@ public interface OutpatientConsultationSummaryRepository {
 
     List<ProcedureSummaryVo> getProceduresByPatient(Integer patientId, List<Integer> outpatientIds);
 
-    Optional<ReferenceSummaryVo> getReferenceByHealthCondition(Integer healthConditionId, Integer outpatientId);
+    List<ReferenceSummaryVo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId);
 
 }

@@ -8,6 +8,8 @@ import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ClinicalTermDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,5 +26,5 @@ public class OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
 
     private String problemId;
 
-    private OutpatientSummaryReferenceDto reference;
+    private List<OutpatientSummaryReferenceDto> references;
 }
