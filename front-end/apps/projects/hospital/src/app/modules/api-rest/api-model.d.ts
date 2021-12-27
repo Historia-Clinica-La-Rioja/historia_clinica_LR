@@ -253,6 +253,15 @@ export interface BMPersonDto extends APersonDto {
     province: ProvinceDto;
 }
 
+export interface BackofficeCoverageDto extends Serializable {
+    acronym?: string;
+    id: number;
+    name: string;
+    plan?: string;
+    rnos?: number;
+    type: number;
+}
+
 export interface BackofficeHealthcareProfessionalCompleteDto {
     clinicalSpecialtyId: number;
     deleted: boolean;
@@ -1283,6 +1292,11 @@ export interface MedicalCoverageDto {
     name: string;
     rnos: string;
     service: string;
+}
+
+export interface MedicalCoverageTypeDto extends Serializable {
+    id: number;
+    value: string;
 }
 
 export interface MedicalDischargeDto {
