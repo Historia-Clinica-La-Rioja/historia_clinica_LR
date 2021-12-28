@@ -9,7 +9,7 @@ import SgxDateField from "../../dateComponents/sgxDateField";
 import DownloadButton from '../../libs/sgx/components/DownloadButton';
 
 const filenameSupplier = (record) => record.filename;
-const urlSupplier = (record) => `documents/${record.id}/downloadFile`;
+const urlSupplier = (record) => `backoffice/documentfiles/${record.id}/downloadFile`;
 
 const DocumentFileShow = ({ permissions, ...props }) => (
     <Show {...props}>

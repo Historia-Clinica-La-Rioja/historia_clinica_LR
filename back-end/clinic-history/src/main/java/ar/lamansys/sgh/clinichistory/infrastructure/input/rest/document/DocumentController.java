@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
@@ -24,7 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @RestController
-@RequestMapping("/documents")
+@RequestMapping("/institutions/{institutionId}/documents")
 @Slf4j
 @Api(value = "Documents", tags = {"Documents"})
 public class DocumentController {
@@ -43,10 +42,9 @@ public class DocumentController {
     }
 
     @GetMapping(value = "/{id}/downloadFile")
-    @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-    public ResponseEntity<InputStreamResource> downloadPdf(@PathVariable Long id) {
-        if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
-            return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    public ResponseEntity<InputStreamResource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
+                                                           @PathVariable(name = "id") Long id) {
         var documentFile = fetchDocumentFileById.run(id);
         ByteArrayInputStream pdfFile;
         long sizeFile;
