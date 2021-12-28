@@ -901,6 +901,11 @@ export interface HCEDiagnoseDto extends ClinicalTermDto {
     main: boolean;
 }
 
+export interface HCEDocumentDataDto {
+    filename: string;
+    id: number;
+}
+
 export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservationDto {
     effectiveTime: string;
 }
@@ -908,6 +913,7 @@ export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservati
 export interface HCEEvolutionSummaryDto extends Serializable {
     clinicalSpecialty: ClinicalSpecialtyDto;
     consultationId: number;
+    document: HCEDocumentDataDto;
     evolutionNote: string;
     healthConditions: HCEHealthConditionDto[];
     procedures: HCEProcedureDto[];

@@ -17,6 +17,8 @@ public class EvolutionSummaryBo {
 
     private Integer consultationID;
 
+    private DocumentDataBo document;
+
     private ClinicalSpecialtyBo clinicalSpecialty;
 
     private List<HealthConditionSummaryBo> healthConditions;
@@ -40,6 +42,7 @@ public class EvolutionSummaryBo {
 
     public EvolutionSummaryBo(OutpatientEvolutionSummaryBo outpatientEvolutionSummaryBo){
         this.consultationID = outpatientEvolutionSummaryBo.getConsultationId();
+        this.document = outpatientEvolutionSummaryBo.getDocument();
         this.clinicalSpecialty = outpatientEvolutionSummaryBo.getClinicalSpecialty();
         this.startDate = outpatientEvolutionSummaryBo.getStartDate();
         this.professional = outpatientEvolutionSummaryBo.getProfessional();
@@ -48,6 +51,7 @@ public class EvolutionSummaryBo {
 
     public EvolutionSummaryBo(OdontologyEvolutionSummaryBo odontologyEvolutionSummaryBo){
         this.consultationID = odontologyEvolutionSummaryBo.getConsultationId();
+        this.document = odontologyEvolutionSummaryBo.getDocument();
         this.clinicalSpecialty = odontologyEvolutionSummaryBo.getClinicalSpecialty();
         this.startDate = odontologyEvolutionSummaryBo.getStartDate();
         this.professional = odontologyEvolutionSummaryBo.getProfessional();
@@ -56,6 +60,7 @@ public class EvolutionSummaryBo {
 
     public EvolutionSummaryBo(NursingEvolutionSummaryBo nursingEvolutionSummaryBo){
         this.consultationID = nursingEvolutionSummaryBo.getConsultationId();
+        this.document = nursingEvolutionSummaryBo.getDocument();
         this.clinicalSpecialty = nursingEvolutionSummaryBo.getClinicalSpecialty();
         this.startDate = nursingEvolutionSummaryBo.getStartDate();
         this.professional = nursingEvolutionSummaryBo.getProfessional();

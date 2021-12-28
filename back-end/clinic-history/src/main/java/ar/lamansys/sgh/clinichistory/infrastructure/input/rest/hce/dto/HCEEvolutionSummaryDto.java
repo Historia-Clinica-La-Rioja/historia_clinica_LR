@@ -19,6 +19,8 @@ public class HCEEvolutionSummaryDto implements Serializable {
 
     private Integer consultationId;
 
+    private HCEDocumentDataDto document;
+
     private ClinicalSpecialtyDto clinicalSpecialty;
 
     private List<HCEHealthConditionDto> healthConditions;

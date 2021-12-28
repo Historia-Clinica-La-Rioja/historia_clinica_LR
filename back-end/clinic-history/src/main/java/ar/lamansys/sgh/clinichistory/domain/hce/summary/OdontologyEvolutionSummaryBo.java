@@ -16,6 +16,8 @@ public class OdontologyEvolutionSummaryBo implements Serializable {
 
     private Integer consultationId;
 
+    private DocumentDataBo document;
+
     private HealthcareProfessionalBo professional;
 
     private ClinicalSpecialtyBo clinicalSpecialty;
@@ -33,11 +35,12 @@ public class OdontologyEvolutionSummaryBo implements Serializable {
     public OdontologyEvolutionSummaryBo(Integer id, LocalDate startDate,
                                         HealthcareProfessionalBo professional,
                                         ClinicalSpecialtyBo clinicalSpecialty,
-                                        String evolutionNote){
+                                        String evolutionNote, DocumentDataBo document){
         this.consultationId = id;
         this.clinicalSpecialty = clinicalSpecialty;
         this.startDate = startDate;
         this.professional = professional;
         this.evolutionNote = evolutionNote;
+        this.document = document;
     }
 }

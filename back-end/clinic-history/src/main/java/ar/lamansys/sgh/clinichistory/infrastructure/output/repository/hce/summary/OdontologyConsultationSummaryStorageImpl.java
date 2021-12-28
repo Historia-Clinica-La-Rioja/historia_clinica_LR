@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summa
 
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.OdontologyEvolutionSummaryBo;
@@ -37,13 +38,14 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                 + "hp.id AS healthcarProfessionalId, hp.licenseNumber, hp.personId, "
                 + "p.firstName, p.lastName, p.identificationNumber, "
                 + "cs.id AS clinicalSpecialtyId, cs.name AS clinicalSpecialtyName, cs.clinicalSpecialtyTypeId, "
-                + "n.description "
+                + "n.description,  docFile.id, docFile.filename "
                 + " FROM OdontologyConsultation oc"
                 + " LEFT JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id)"
                 + " JOIN Document doc ON (doc.sourceId = oc.id)"
                 + " LEFT JOIN Note n ON (n.id = doc.otherNoteId)"
                 + " JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId)"
                 + " JOIN Person p ON (p.id = hp.personId)"
+                + " LEFT JOIN DocumentFile docFile ON (doc.id = docFile.id)"
                 + " WHERE oc.billable = TRUE "
                 + " AND oc.patientId = :patientId"
                 + " AND doc.sourceTypeId = " + SourceType.ODONTOLOGY
@@ -59,7 +61,8 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                         a[1] != null ? (LocalDate)a[1] : null,
                         new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7]),
                         a[8] != null ? new ClinicalSpecialtyBo((Integer)a[8], (String)a[9], (Short) a[10]) : null,
-                        (String)a[11]))
+                        (String)a[11],
+                        a[12] != null ? new DocumentDataBo((Long)a[12], (String)a[13]) : null))
         );
         return result;
     }

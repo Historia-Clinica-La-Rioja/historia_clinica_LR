@@ -170,6 +170,10 @@ export class HistoricalProblems {
 	consultationProfessionalId: number;
 	consultationProfessionalPersonId: number;
 	consultationProfessionalName: string;
+	document:{
+		id: number;
+		filename: string;
+	};
 	problemId: string;
 	problemPt: string;
 	specialtyId: number;

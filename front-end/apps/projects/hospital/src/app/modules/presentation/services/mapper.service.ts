@@ -7,8 +7,7 @@ import {
 	PatientType,
 	PersonalInformationDto,
 	BedSummaryDto,
-	OutpatientEvolutionSummaryDto,
-	InternmentPatientDto,
+	InternmentPatientDto, HCEEvolutionSummaryDto,
 } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
@@ -29,7 +28,7 @@ export class MapperService {
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
 	toPatientTableData: (patient: InternmentPatientDto) => PatientTableData = MapperService._toPatientTableData;
 	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
-	toHistoricalProblems: (outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
+	toHistoricalProblems: (hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
 
 	constructor() {
 	}
@@ -151,16 +150,17 @@ export class MapperService {
 		return bedManagement;
 	}
 
-	private static _toHistoricalProblems(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): HistoricalProblems[] {
+	private static _toHistoricalProblems(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): HistoricalProblems[] {
 
-		return outpatientEvolutionSummary.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
+		return hceEvolutionSummaryDto.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
 			currentOutpatientEvolutionSummary.healthConditions.length ?
 				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.personId,
+					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
+					document: currentOutpatientEvolutionSummary.document,
 					problemId: problem.snomed.sctid,
 					problemPt: problem.snomed.pt,
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
@@ -174,7 +174,8 @@ export class MapperService {
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.personId,
+					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
+					document: currentOutpatientEvolutionSummary.document,
 					problemId: 'Problema no informado',
 					problemPt: 'Problema no informado',
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,

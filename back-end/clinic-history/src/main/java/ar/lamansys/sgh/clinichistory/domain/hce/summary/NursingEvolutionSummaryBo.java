@@ -16,6 +16,8 @@ public class NursingEvolutionSummaryBo implements Serializable {
 
     private Integer consultationId;
 
+    private DocumentDataBo document;
+
     private HealthcareProfessionalBo professional;
 
     private ClinicalSpecialtyBo clinicalSpecialty;
@@ -33,11 +35,12 @@ public class NursingEvolutionSummaryBo implements Serializable {
     public NursingEvolutionSummaryBo(Integer id, LocalDate startDate,
                                      HealthcareProfessionalBo professional,
                                      ClinicalSpecialtyBo clinicalSpecialty,
-                                     String evolutionNote){
+                                     String evolutionNote, DocumentDataBo document){
         this.consultationId = id;
         this.startDate = startDate;
         this.clinicalSpecialty = clinicalSpecialty;
         this.professional = professional;
         this.evolutionNote = evolutionNote;
+        this.document = document;
     }
 }
