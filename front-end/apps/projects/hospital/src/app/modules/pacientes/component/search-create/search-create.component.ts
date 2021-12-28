@@ -7,14 +7,13 @@ import { PatientMasterDataService } from '@api-rest/services/patient-master-data
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
-import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
+import { INVALID_INPUT, ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationService } from "@pacientes/services/navigation.service";
 import { PatientInformationScan } from '@pacientes/pacientes.model';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
-const INVALID_INPUT = 'invalid_input';
 
 @Component({
 	selector: 'app-search-create',
@@ -179,7 +178,7 @@ export class SearchCreateComponent implements OnInit {
 				identifyTypeArray: this.identifyTypeArray,
 			}
 		});
-		dialogRef.afterClosed().subscribe((patientInformationScan) => {
+		dialogRef.afterClosed().subscribe(patientInformationScan => {
 			if ((patientInformationScan !== undefined) && (patientInformationScan !== INVALID_INPUT)) {
 				this.loadAdditionalInformation(patientInformationScan);
 				this.formSearch.controls.identifType.setValue(patientInformationScan.identifType);
@@ -193,40 +192,37 @@ export class SearchCreateComponent implements OnInit {
 					this.patientInformationError = 1;
 				}
 			}
-			else {
-				if (patientInformationScan === undefined) {
-					this.patientInformationError = -1
-				}
-				else {
-					this.patientInformationError = 1
-				}
-			}
+			else if (patientInformationScan === undefined)
+				this.patientInformationError = -1;
+
+			else
+				this.patientInformationError = 1;
+
+
 		});
 
 	}
 
 	private validatorsOffInDialog(messageOff: boolean, formDirectiveSearchForm: FormGroupDirective): void {
+		this.messageOff = messageOff;
 		if (messageOff) {
-			this.messageOff = true;
 			formDirectiveSearchForm.resetForm();
 			this.formSearch.reset();
-		}
-		else {
-			this.messageOff = false;
 		}
 	}
 
 	private loadAdditionalInformation(patientInformationScan: PatientInformationScan): void {
-
-		let dateArray = patientInformationScan.birthDate.split('-', 3);
-		let dateStr = dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0];
+		const dateArray = patientInformationScan.birthDate.split('-', 3);
+		let dateStr: string;
+		if (dateArray.length === 3)
+			dateStr = dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0];
 
 		this.additionalInfoScanned = {
-			birthDate: dateStr,
 			firstName: patientInformationScan.firstName,
 			lastName: patientInformationScan.lastName,
 			middleNames: patientInformationScan.middleNames,
-			otherLastNames: patientInformationScan.otherLastNames
+			otherLastNames: patientInformationScan.otherLastNames,
+			birthDate: dateStr
 		}
 	}
 }

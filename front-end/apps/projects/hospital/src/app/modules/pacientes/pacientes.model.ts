@@ -41,12 +41,12 @@ export interface AdditionalInfo {
 }
 
 export interface PatientInformationScan {
-	identifType: any;
-	identifNumber: any;
-	gender: any;
+	identifType: number;
+	identifNumber: string;
+	gender: number;
 	firstName: string;
 	middleNames: string;
 	lastName: string;
 	otherLastNames: string;
-	birthDate: any;
+	birthDate: string;
 }
