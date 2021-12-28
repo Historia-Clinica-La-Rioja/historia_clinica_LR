@@ -324,32 +324,31 @@
 														{{historicalProblem.consultationEvolutionNote}}</p>
 												</div>
 
-												<div id="reference-information" fxLayout="row" *ngIf="historicalProblem.reference">
+												<div id="reference_information" *ngIf="historicalProblem.reference?.length">
 
-													<div fxLayout="column" fxLayoutGap="10px">
+													<div class="reference-description" *ngFor="let reference of historicalProblem.reference" fxLayout="column" fxLayoutGap="10px" > 
 														
 														<ng-container>
 															<strong class="dose reference-request uppercase"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.REFERENCE_REQUEST'"></strong>
 														</ng-container>
 														
-	
 														<div fxLayout="row" fxLayoutGap="10px">
 															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.CARE_LINE'"></strong>
-															<span>{{historicalProblem.reference.careLine}}</span>
+															<span>{{reference.careLine}}</span>
 														</div>
 	
 														<div fxLayout="row" fxLayoutGap="10px">
 															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>
-															<span>{{historicalProblem.reference.clinicalSpecialty}}</span>
+															<span>{{reference.clinicalSpecialty}}</span>
 														</div>
 	
-														<div *ngIf="historicalProblem.reference.note" fxLayout="column" fxLayoutGap="10px">
+														<div *ngIf="reference.note" fxLayout="column" fxLayoutGap="10px">
 															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SUMMARY_REFERENCE'"></strong>
-															<span>{{historicalProblem.reference.note}}</span>
+															<span>{{reference.note}}</span>
 														</div>
 
-														<div class="primary" *ngFor="let file of historicalProblem.reference.files" fxLayout="row">
+														<div class="primary" *ngFor="let file of reference.files" fxLayout="row">
 															<mat-icon>attachment_icon</mat-icon>
 															<span class="span-clickable" (click)="downloadReferenceFile(file)">
 																{{file.name}}
