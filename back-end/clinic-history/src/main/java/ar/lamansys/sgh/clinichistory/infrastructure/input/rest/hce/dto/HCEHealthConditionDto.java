@@ -14,4 +14,6 @@ public class HCEHealthConditionDto extends HCEPersonalHistoryDto {
     private boolean main;
 
     private String problemId;
+
+    private HCEReferenceDto reference;
 }
