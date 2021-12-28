@@ -3,6 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest.exceptions;
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
 import ar.lamansys.refcounterref.application.createcounterreferencefile.exceptions.CreateCounterReferenceFileException;
 import ar.lamansys.refcounterref.application.createreferencefile.exceptions.CreateReferenceFileException;
+import ar.lamansys.refcounterref.application.getcounterreferencefile.exceptions.GetCounterReferenceFileException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.refcounterref.application.getreferencefile.exceptions.GetReferenceFileException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
@@ -56,6 +57,13 @@ public class ReferenceCounterReferenceExceptionHandler {
     @ExceptionHandler({CreateCounterReferenceFileException.class})
     protected ApiErrorMessageDto handleCreateCounterReferenceFileException(CreateCounterReferenceFileException ex, Locale locale) {
         log.debug("CreateCounterReferenceFileException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({GetCounterReferenceFileException.class})
+    protected ApiErrorMessageDto handleGetCounterReferenceFileException(GetCounterReferenceFileException ex, Locale locale) {
+        log.debug("GetCounterReferenceFileException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
     }
 }
