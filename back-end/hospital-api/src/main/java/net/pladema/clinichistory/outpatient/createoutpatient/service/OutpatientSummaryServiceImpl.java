@@ -13,8 +13,8 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.refe
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.CounterReferenceSummaryBo;
 import net.pladema.clinichistory.outpatient.repository.NursingConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.OdontologyConsultationSummaryRepository;
-import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.ReferenceCounterReferenceStorage;
+import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryStorage;
 import net.pladema.clinichistory.outpatient.repository.domain.NursingEvolutionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OdontologyEvolutionSummaryVo;
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
@@ -34,7 +34,7 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final OutpatientConsultationSummaryRepository outpatientConsultationSummaryRepository;
+    private final OutpatientConsultationSummaryStorage outpatientConsultationSummaryStorage;
 
     private final OdontologyConsultationSummaryRepository odontologyConsultationSummaryRepository;
 
@@ -42,11 +42,11 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
 
     private final ReferenceCounterReferenceStorage referenceCounterReferenceStorage;
 
-    public OutpatientSummaryServiceImpl(OutpatientConsultationSummaryRepository outpatientConsultationSummaryRepository,
+    public OutpatientSummaryServiceImpl(OutpatientConsultationSummaryStorage outpatientConsultationSummaryStorage,
                                         OdontologyConsultationSummaryRepository odontologyConsultationSummaryRepository,
                                         NursingConsultationSummaryRepository nursingConsultationSummaryRepository,
                                         ReferenceCounterReferenceStorage referenceCounterReferenceStorage) {
-        this.outpatientConsultationSummaryRepository = outpatientConsultationSummaryRepository;
+        this.outpatientConsultationSummaryStorage = outpatientConsultationSummaryStorage;
         this.odontologyConsultationSummaryRepository = odontologyConsultationSummaryRepository;
         this.nursingConsultationSummaryRepository = nursingConsultationSummaryRepository;
         this.referenceCounterReferenceStorage = referenceCounterReferenceStorage;
@@ -66,11 +66,11 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
 
     private List<EvolutionSummaryBo> getOutpatientEvolutionSummaries(Integer patientId) {
         LOG.debug("Input parameter -> patientId {}", patientId);
-        List<OutpatientEvolutionSummaryVo> queryResult = outpatientConsultationSummaryRepository.getAllOutpatientEvolutionSummary(patientId);
+        List<OutpatientEvolutionSummaryVo> queryResult = outpatientConsultationSummaryStorage.getAllOutpatientEvolutionSummary(patientId);
         List<Integer> outpatientConsultationIds = queryResult.stream().map(OutpatientEvolutionSummaryVo::getConsultationID).collect(Collectors.toList());
-        List<HealthConditionSummaryVo> healthConditions = outpatientConsultationSummaryRepository.getHealthConditionsByPatient(patientId, outpatientConsultationIds);
-        List<ReasonSummaryBo> reasons = outpatientConsultationSummaryRepository.getReasonsByPatient(patientId, outpatientConsultationIds);
-        List<ProcedureSummaryBo> procedures = outpatientConsultationSummaryRepository.getProceduresByPatient(patientId, outpatientConsultationIds);
+        List<HealthConditionSummaryVo> healthConditions = outpatientConsultationSummaryStorage.getHealthConditionsByPatient(patientId, outpatientConsultationIds);
+        List<ReasonSummaryBo> reasons = outpatientConsultationSummaryStorage.getReasonsByPatient(patientId, outpatientConsultationIds);
+        List<ProcedureSummaryBo> procedures = outpatientConsultationSummaryStorage.getProceduresByPatient(patientId, outpatientConsultationIds);
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OutpatientEvolutionSummaryVo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
@@ -81,7 +81,7 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
                     .stream()
                     .filter(h -> h.getConsultationID().equals(oes.getConsultationID()))
                     .map(hcv -> {
-                        List<ReferenceSummaryBo> referenceSummaryBoList = mapToReferenceSummaryBoList(outpatientConsultationSummaryRepository.getReferencesByHealthCondition(hcv.getId(), oes.getConsultationID()));
+                        List<ReferenceSummaryBo> referenceSummaryBoList = mapToReferenceSummaryBoList(outpatientConsultationSummaryStorage.getReferencesByHealthCondition(hcv.getId(), oes.getConsultationID()));
                         HealthConditionSummaryBo healthConditionSummaryBo = new HealthConditionSummaryBo(hcv);
                         healthConditionSummaryBo.setReferences(getReferencesData(referenceSummaryBoList));
                         return healthConditionSummaryBo;

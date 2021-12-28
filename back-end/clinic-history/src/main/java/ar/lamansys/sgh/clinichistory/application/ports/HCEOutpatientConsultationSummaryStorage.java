@@ -7,7 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
 
 import java.util.List;
 
-public interface OutpatientConsultationSummaryStorage {
+public interface HCEOutpatientConsultationSummaryStorage {
 
     List<OutpatientEvolutionSummaryBo> getAllOutpatientEvolutionSummary(Integer patientId);
 

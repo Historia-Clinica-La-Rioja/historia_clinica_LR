@@ -1,18 +1,18 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summary;
+package net.pladema.clinichistory.outpatient.repository;
 
-import ar.lamansys.sgh.clinichistory.application.ports.OutpatientConsultationSummaryStorage;
-import ar.lamansys.sgh.clinichistory.domain.hce.summary.ClinicalSpecialtyBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthcareProfessionalBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.summary.OutpatientEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import net.pladema.staff.repository.entity.HealthcareProfessional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsultationSummaryStorage {
@@ -33,19 +34,14 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     @Override
-    public List<OutpatientEvolutionSummaryBo> getAllOutpatientEvolutionSummary(Integer patientId) {
-        String sqlString =" SELECT oc.id, oc.startDate, "
-                + "hp.id AS healthcarProfessionalId, hp.licenseNumber, hp.personId, "
-                + "p.firstName, p.lastName, p.identificationNumber, "
-                + "cs.id AS clinicalSpecialtyId, cs.name AS clinicalSpecialtyName, cs.clinicalSpecialtyTypeId, "
-                + "n.description, docFile.id, docFile.filename "
+    public List<OutpatientEvolutionSummaryVo> getAllOutpatientEvolutionSummary(Integer patientId) {
+        String sqlString =" SELECT oc.id, oc.startDate, cs, hp, p, n.description"
                 + " FROM OutpatientConsultation oc"
                 + " LEFT JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id)"
                 + " JOIN Document doc ON (doc.sourceId = oc.id)"
                 + " LEFT JOIN Note n ON (n.id = doc.otherNoteId)"
                 + " JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId)"
                 + " JOIN Person p ON (p.id = hp.personId)"
-                + " LEFT JOIN DocumentFile docFile ON (doc.id = docFile.id)"
                 + " WHERE oc.billable = TRUE "
                 + " AND oc.patientId = :patientId"
                 + " AND doc.sourceTypeId = " + SourceType.OUTPATIENT
@@ -54,31 +50,27 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .getResultList();
-        List<OutpatientEvolutionSummaryBo> result = new ArrayList<>();
+        List<OutpatientEvolutionSummaryVo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                 result.add(new OutpatientEvolutionSummaryBo(
+                result.add(new OutpatientEvolutionSummaryVo(
                         (Integer)a[0],
                         a[1] != null ? (LocalDate)a[1] : null,
-                        new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7]),
-                         a[8] != null ? new ClinicalSpecialtyBo((Integer)a[8], (String)a[9], (Short) a[10]) : null,
-                        (String)a[11],
-                         a[12] != null ? new DocumentDataBo((Long)a[12], (String)a[13]) : null))
+                        (ClinicalSpecialty) a[2],
+                        (HealthcareProfessional) a[3],
+                        (Person) a[4],
+                        (String)a[5]))
         );
         return result;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<HealthConditionSummaryBo> getHealthConditionsByPatient(Integer patientId, List<Integer> outpatientIds) {
-        String sqlString ="SELECT hc.id, hc.patientId, "
-                +"  s.sctid, s.pt, "
-                +"  d.statusId, "
-                +"  hc.startDate, hc.inactivationDate, "
-                +"  hc.main, hc.problemId, oc.id "
-                +"  FROM OutpatientConsultation oc "
-                +"  JOIN Document d ON (d.sourceId = oc.id) "
-                +"  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId) "
-                +"  JOIN HealthCondition hc ON (dhc.pk.healthConditionId = hc.id) "
+    public List<HealthConditionSummaryVo> getHealthConditionsByPatient(Integer patientId, List<Integer> outpatientIds) {
+        String sqlString ="SELECT hc.id, s.sctid, s.pt, d.statusId, hc.startDate, hc.inactivationDate, hc.main, hc.problemId, oc.id"
+                +"  FROM OutpatientConsultation oc"
+                +"  JOIN Document d ON (d.sourceId = oc.id)"
+                +"  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId)"
+                +"  JOIN HealthCondition hc ON (dhc.pk.healthConditionId = hc.id)"
                 +"  JOIN Snomed s ON (s.id = hc.snomedId)"
                 +"  WHERE d.statusId = '" + DocumentStatus.FINAL + "'"
                 +"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
@@ -91,18 +83,18 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
                 .setParameter("patientId", patientId)
                 .setParameter("outpatientIds", outpatientIds)
                 .getResultList();
-        List<HealthConditionSummaryBo> result = new ArrayList<>();
+        List<HealthConditionSummaryVo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                result.add(new HealthConditionSummaryBo(
+                result.add(new HealthConditionSummaryVo(
                         (Integer)a[0],
-                        (Integer)a[1],
-                        new SnomedBo((String) a[2], (String) a[3]),
-                        (String)a[4], null, null,
+                        (String) a[1],
+                        (String) a[2],
+                        (String)a[3],
+                        a[4] != null ? (LocalDate)a[4] : null,
                         a[5] != null ? (LocalDate)a[5] : null,
-                        a[6] != null ? (LocalDate)a[6] : null,
-                        (boolean)a[7],
-                        (String)a[8],
-                        (Integer) a[9]))
+                        (boolean)a[6],
+                        (String)a[7],
+                        (Integer) a[8]))
         );
         return result;
     }
@@ -144,7 +136,7 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
                 +"  AND d.typeId = "+ DocumentType.OUTPATIENT
                 +"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
                 +"  AND oc.id IN (:outpatientIds) ";
-
+        
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .setParameter("outpatientIds", outpatientIds)
@@ -159,4 +151,33 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
         );
         return result;
     }
+
+    @Override
+    public List<ReferenceSummaryVo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId) {
+        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description"
+                +"  FROM Reference r"
+                +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
+                +"  JOIN CareLine cl ON (r.careLineId = cl.id)"
+                +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
+                +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
+                +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
+                +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
+                +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
+                +"  AND oc.id = :outpatientId ";
+
+        List<Object[]> queryResult = entityManager.createQuery(sqlString)
+                .setParameter("healthConditionId", healthConditionId)
+                .setParameter("outpatientId", outpatientId)
+                .getResultList();
+        List<ReferenceSummaryVo> result = new ArrayList<>();
+        queryResult.forEach(a ->
+                result.add(new ReferenceSummaryVo(
+                        (Integer)a[0],
+                        (String) a[1],
+                        (String) a[2],
+                        a[3] != null ? (String) a[3] : null))
+        );
+        return result;
+    }
+
 }

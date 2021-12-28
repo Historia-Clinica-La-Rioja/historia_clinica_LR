@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory;
 
 import ar.lamansys.sgh.clinichistory.application.ports.NursingConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
-import ar.lamansys.sgh.clinichistory.application.ports.OutpatientConsultationSummaryStorage;
+import ar.lamansys.sgh.clinichistory.application.ports.HCEOutpatientConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.NursingEvolutionSummaryBo;
@@ -26,16 +26,16 @@ public class FetchSummaryClinicHistory {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final OutpatientConsultationSummaryStorage outpatientConsultationSummaryStorage;
+    private final HCEOutpatientConsultationSummaryStorage HCEOutpatientConsultationSummaryStorage;
 
     private final OdontologyConsultationSummaryStorage odontologyConsultationSummaryStorage;
 
     private final NursingConsultationSummaryStorage nursingConsultationSummaryStorage;
 
-    public FetchSummaryClinicHistory(OutpatientConsultationSummaryStorage outpatientConsultationSummaryStorage,
+    public FetchSummaryClinicHistory(HCEOutpatientConsultationSummaryStorage HCEOutpatientConsultationSummaryStorage,
                                      OdontologyConsultationSummaryStorage odontologyConsultationSummaryStorage,
                                      NursingConsultationSummaryStorage nursingConsultationSummaryStorage) {
-        this.outpatientConsultationSummaryStorage = outpatientConsultationSummaryStorage;
+        this.HCEOutpatientConsultationSummaryStorage = HCEOutpatientConsultationSummaryStorage;
         this.odontologyConsultationSummaryStorage = odontologyConsultationSummaryStorage;
         this.nursingConsultationSummaryStorage = nursingConsultationSummaryStorage;
     }
@@ -52,11 +52,11 @@ public class FetchSummaryClinicHistory {
     }
 
     private List<EvolutionSummaryBo> getOutpatientEvolutionSummaries(Integer patientId) {
-        List<OutpatientEvolutionSummaryBo> queryResult = outpatientConsultationSummaryStorage.getAllOutpatientEvolutionSummary(patientId);
+        List<OutpatientEvolutionSummaryBo> queryResult = HCEOutpatientConsultationSummaryStorage.getAllOutpatientEvolutionSummary(patientId);
         List<Integer> outpatientConsultationIds = queryResult.stream().map(OutpatientEvolutionSummaryBo::getConsultationId).collect(Collectors.toList());
-        List<HealthConditionSummaryBo> healthConditions = outpatientConsultationSummaryStorage.getHealthConditionsByPatient(patientId, outpatientConsultationIds);
-        List<ReasonSummaryBo> reasons = outpatientConsultationSummaryStorage.getReasonsByPatient(patientId, outpatientConsultationIds);
-        List<ProcedureSummaryBo> procedures = outpatientConsultationSummaryStorage.getProceduresByPatient(patientId, outpatientConsultationIds);
+        List<HealthConditionSummaryBo> healthConditions = HCEOutpatientConsultationSummaryStorage.getHealthConditionsByPatient(patientId, outpatientConsultationIds);
+        List<ReasonSummaryBo> reasons = HCEOutpatientConsultationSummaryStorage.getReasonsByPatient(patientId, outpatientConsultationIds);
+        List<ProcedureSummaryBo> procedures = HCEOutpatientConsultationSummaryStorage.getProceduresByPatient(patientId, outpatientConsultationIds);
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OutpatientEvolutionSummaryBo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
