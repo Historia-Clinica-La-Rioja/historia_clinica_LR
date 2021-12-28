@@ -114,7 +114,7 @@ export class ScanPatientComponent implements OnInit {
 	}
 
 	private canBeAName(value: string): boolean {
-		const REGULAR_EXPRESSION = /^[a-zA-Z ]+$/;
+		const REGULAR_EXPRESSION = /^[a-zA-Z '´]+$/;
 		return REGULAR_EXPRESSION.test(value);
 	}
 
