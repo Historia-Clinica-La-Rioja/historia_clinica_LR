@@ -6,4 +6,6 @@ public interface OAuthUserManagementStorage {
 
     void createUser(OAuthUserBo oAuthUserBo);
 
+    void updateUser(String currentUsername, OAuthUserBo newUserData);
+
 }

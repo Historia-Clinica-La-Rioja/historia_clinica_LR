@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
-public class OAuthUserCreationPayload implements Serializable {
+public class OAuthUserRepresentationPayload implements Serializable {
 
     private String username;
 
@@ -24,6 +24,6 @@ public class OAuthUserCreationPayload implements Serializable {
 
     private String enabled;
 
-    private List<OAuthUserCreationCredentials> credentials;
+    private List<OAuthUserRepresentationCredentials> credentials;
 
 }

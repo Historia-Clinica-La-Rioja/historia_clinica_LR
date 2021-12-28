@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @ToString
-public class OAuthUserCreationCredentials implements Serializable {
+public class OAuthUserRepresentationCredentials implements Serializable {
 
     private String type;
 
