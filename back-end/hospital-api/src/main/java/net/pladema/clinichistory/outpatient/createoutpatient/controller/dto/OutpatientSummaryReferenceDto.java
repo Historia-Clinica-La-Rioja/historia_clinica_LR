@@ -24,4 +24,6 @@ public class OutpatientSummaryReferenceDto {
     
     private List<ReferenceCounterReferenceFileDto> files;
 
+    private OutpatientSummaryCounterReferenceDto counterReference;
+
 }

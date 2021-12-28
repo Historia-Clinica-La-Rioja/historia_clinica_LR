@@ -7,10 +7,14 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitaliz
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.CounterReferenceSummaryDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.HealthConditionSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReferenceCounterReferenceFileBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.ReferenceSummaryBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.ReferenceSummaryBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.ProfessionalInfoBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.ReferenceCounterReferenceFileBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.CounterReferenceProcedureBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.CounterReferenceSummaryBo;
 import net.pladema.clinichistory.outpatient.repository.NursingConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.OdontologyConsultationSummaryRepository;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryRepository;
@@ -143,16 +147,38 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         if (!referenceSummaryBoList.isEmpty()) {
             referenceSummaryBoList
                     .stream()
-                    .forEach(referenceSummaryBo -> referenceSummaryBo.setFiles(getReferenceFiles(referenceSummaryBo.getId())));
+                    .forEach(referenceSummaryBo -> {
+                        referenceSummaryBo.setFiles(getReferenceFiles(referenceSummaryBo.getId()));
+                        CounterReferenceSummaryBo counterReferenceSummaryBo = mapToCounterReferenceSummaryBo(referenceCounterReferenceService.getCounterReference(referenceSummaryBo.getId()));
+                        referenceSummaryBo.setCounterReference(counterReferenceSummaryBo);
+                    });
         }
         return referenceSummaryBoList;
+    }
+
+    public CounterReferenceSummaryBo mapToCounterReferenceSummaryBo(CounterReferenceSummaryDto counterReferenceSummaryDto) {
+        return new CounterReferenceSummaryBo(counterReferenceSummaryDto.getId(),
+                counterReferenceSummaryDto.getClinicalSpecialty(),
+                counterReferenceSummaryDto.getNote(),
+                counterReferenceSummaryDto.getPerformedDate(),
+                counterReferenceSummaryDto.getProfessional() != null ? new ProfessionalInfoBo(counterReferenceSummaryDto.getProfessional().getId(),
+                        counterReferenceSummaryDto.getProfessional().getFirstName(),
+                        counterReferenceSummaryDto.getProfessional().getLastName()) : null,
+                counterReferenceSummaryDto.getFiles() != null ? counterReferenceSummaryDto.getFiles()
+                        .stream()
+                        .map(crf -> new ReferenceCounterReferenceFileBo(crf.getFileId(), crf.getFileName()))
+                        .collect(Collectors.toList()) : null,
+                counterReferenceSummaryDto.getProcedures() != null ? counterReferenceSummaryDto.getProcedures()
+                        .stream()
+                        .map(crp -> new CounterReferenceProcedureBo(crp.getSnomed().getSctid(), crp.getSnomed().getPt()))
+                        .collect(Collectors.toList()) : null);
     }
 
     public List<ReferenceCounterReferenceFileBo> getReferenceFiles(Integer referenceId) {
         LOG.debug("Input parameter -> referenceId {}", referenceId);
         return referenceCounterReferenceService.getReferenceFiles(referenceId)
                 .stream()
-                .map(rf -> new ReferenceCounterReferenceFileBo(rf.getId(), rf.getName()))
+                .map(rf -> new ReferenceCounterReferenceFileBo(rf.getFileId(), rf.getFileName()))
                 .collect(Collectors.toList());
     }
 

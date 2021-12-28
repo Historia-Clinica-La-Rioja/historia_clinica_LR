@@ -283,6 +283,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {
-		this.referenceFileService.downloadReferenceFiles(file.id, file.name);
+		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
 	}
 }

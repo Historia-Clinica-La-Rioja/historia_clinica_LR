@@ -1,6 +1,6 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
+package net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,10 +8,12 @@ import lombok.ToString;
 
 import java.util.List;
 
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReferenceSummaryBo {
 
     private Integer id;
@@ -21,8 +23,10 @@ public class ReferenceSummaryBo {
     private String clinicalSpecialty;
 
     private String note;
-    
+
     private List<ReferenceCounterReferenceFileBo> files;
+
+    private CounterReferenceSummaryBo counterReference;
 
     public ReferenceSummaryBo(Integer id, String careLine, String clinicalSpecialty, String note) {
         this.id = id;

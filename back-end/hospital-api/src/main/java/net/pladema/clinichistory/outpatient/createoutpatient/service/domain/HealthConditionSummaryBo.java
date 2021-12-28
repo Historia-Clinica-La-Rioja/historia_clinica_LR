@@ -6,6 +6,7 @@ import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.ReferenceSummaryBo;
 
 import java.time.LocalDate;
 import java.util.List;

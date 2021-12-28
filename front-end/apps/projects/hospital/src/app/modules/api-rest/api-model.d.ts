@@ -1573,6 +1573,16 @@ export interface OutpatientReferenceProblemDto {
     snomed: SnomedDto;
 }
 
+export interface OutpatientSummaryCounterReferenceDto {
+    clinicalSpecialtyId: string;
+    counterReferenceNote: string;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    performedDate: DateDto;
+    procedures: CounterReferenceSummaryProcedureDto[];
+    professional: CounterReferenceProfessionalInfoDto;
+}
+
 export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
     inactivationDate: string;
     main: boolean;
@@ -1584,6 +1594,7 @@ export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
 export interface OutpatientSummaryReferenceDto {
     careLine: string;
     clinicalSpecialty: string;
+    counterReference: OutpatientSummaryCounterReferenceDto;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
     note: string;
