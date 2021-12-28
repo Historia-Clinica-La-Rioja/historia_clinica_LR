@@ -1,6 +1,7 @@
 package ar.lamansys.sgx.auth.user.application.registeruser;
 
 import ar.lamansys.sgx.auth.user.application.registeruser.exceptions.RegisterUserException;
+import ar.lamansys.sgx.auth.user.domain.user.service.OAuthUserManagementStorage;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
 import ar.lamansys.sgx.auth.user.domain.userpassword.PasswordEncryptor;
 import org.junit.jupiter.api.Assertions;
@@ -22,11 +23,15 @@ class RegisterUserImplTest {
     private UserStorage userStorage;
 
     @Mock
+    private OAuthUserManagementStorage oAuthUserManagementStorage;
+
+    @Mock
     private  PasswordEncryptor passwordEncryptor;
 
     @BeforeEach
     public void setUp() {
         registerUser = new RegisterUserImpl(userStorage,
+                oAuthUserManagementStorage,
                 "^[A-Za-z]\\\\w{5,29}$}",
                 passwordEncryptor,
                 "PRUEBA");
