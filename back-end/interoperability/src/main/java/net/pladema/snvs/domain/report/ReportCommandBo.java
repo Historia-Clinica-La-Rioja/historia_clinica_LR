@@ -42,4 +42,13 @@ public class ReportCommandBo {
 			throw new ReportCommandBoException(ReportCommandBoEnumException.NULL_EVENT_ID,"El id de evento es obligatorio");
 		this.eventId = eventId;
 	}
+
+	public ReportCommandBo(SnvsReportBo snvsReportBo){
+		this.patientId = snvsReportBo.getPatientId();
+		this.institutionId = snvsReportBo.getInstitutionId();
+		this.groupEventId = snvsReportBo.getGroupEventId();
+		this.eventId = snvsReportBo.getEventId();
+		this.manualClassificationId = snvsReportBo.getManualClassificationId();
+		this.problemBo = snvsReportBo.getProblemBo();
+	}
 }

@@ -4,7 +4,6 @@ import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.Re
 import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsEventRegisterResponse;
 import net.pladema.snvs.application.ports.report.ReportPort;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortEnumException;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortException;
@@ -15,6 +14,7 @@ import net.pladema.snvs.domain.report.SnvsToReportBo;
 import net.pladema.snvs.infrastructure.configuration.SnvsCondition;
 import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsAddressDto;
 import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsCitizenDto;
+import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsEventRegisterResponse;
 import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsNominalCaseEventDto;
 import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsReportDto;
 import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsTutorDto;
