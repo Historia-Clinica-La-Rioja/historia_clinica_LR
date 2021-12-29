@@ -25,12 +25,12 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 	public minDate = MIN_DATE;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
-	public medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
-	public procedimientoNuevaConsultaService: ProcedimientosService;
-	public alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
-	public criticalityTypes: any[];
-	public formDescription: FormGroup;
-	public hasError = hasError;
+	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
+	procedimientoNuevaConsultaService: ProcedimientosService;
+	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
+	criticalityTypes: any[];
+	formDescription: FormGroup;
+	hasError = hasError;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
 
@@ -72,7 +72,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				return;
 			}
 			for (let file of this.selectedFiles) {
-				this.counterreferenceFileService.uploadCounterreferenceFiles(this.data.data.patientId, file).subscribe(
+				this.counterreferenceFileService.uploadCounterreferenceFiles(this.data.patientId, file).subscribe(
 					fileId => {
 						longFiles = longFiles + 1;
 						fileIds.push(fileId);
@@ -97,7 +97,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	private buildCounterReferenceDto(fileIds): CounterReferenceDto {
 
 		return {
-			referenceId: this.data.data.reference.id,
+			referenceId: this.data.reference.id,
 			allergies: this.alergiasNuevaConsultaService.getAlergias().map((allergy: Alergia) => {
 				return {
 					categoryId: null,
@@ -108,7 +108,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 					verificationId: null,
 				};
 			}),
-			clinicalSpecialtyId: this.data.data.reference.clinicalSpecialty.id,
+			clinicalSpecialtyId: this.data.reference.clinicalSpecialty.id,
 			counterReferenceNote: this.formDescription.value.description,
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {
@@ -143,7 +143,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	}
 
 	private createCounterreference(counterreference: CounterReferenceDto): void {
-		this.counterreferenceService.createCounterReference(this.data.data.patientId, counterreference).subscribe(
+		const hasProblems = this.data.reference.problems.length;
+		this.counterreferenceService.createCounterReference(this.data.patientId, counterreference).subscribe(
 			success => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.counterreference.messages.SUCCESS');
 				this.dockPopupRef.close(mapToFieldsToUpdate());
@@ -158,6 +159,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				allergies: !!counterreference.allergies?.length,
 				medications: !!counterreference.medications?.length,
 				procedures: !!counterreference.procedures?.length,
+				problems: !!hasProblems,
 			};
 		}
 	}
