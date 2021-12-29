@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
-import ar.lamansys.refcounterref.infraestructure.input.service.ReferenceCounterReferenceService;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
@@ -103,7 +102,15 @@ public class OutpatientSummaryServiceImpl implements OutpatientSummaryService {
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OdontologyEvolutionSummaryVo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
-            oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationID().equals(oes.getConsultationId())).map(HealthConditionSummaryBo::new).collect(Collectors.toList()));
+            oesBo.setHealthConditions(healthConditions
+                    .stream()
+                    .filter(h -> h.getConsultationID().equals(oes.getConsultationId()))
+                    .map(hcv -> {
+                        List<ReferenceSummaryBo> referenceSummaryBoList = mapToReferenceSummaryBoList(odontologyConsultationSummaryRepository.getReferenceByHealthCondition(hcv.getId(), oes.getConsultationId()));
+                        HealthConditionSummaryBo healthConditionSummaryBo = new HealthConditionSummaryBo(hcv);
+                        healthConditionSummaryBo.setReferences(getReferencesData(referenceSummaryBoList));
+                        return healthConditionSummaryBo;
+                    }).collect(Collectors.toList()));
             oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationID().equals(oes.getConsultationId())).map(ReasonBo::new).collect(Collectors.toList()));
             oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationID().equals(oes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);

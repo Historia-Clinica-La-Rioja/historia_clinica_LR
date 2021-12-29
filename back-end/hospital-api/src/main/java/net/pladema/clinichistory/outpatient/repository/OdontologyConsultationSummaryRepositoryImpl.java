@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.outpatient.repository.domain.OdontologyEvolutionSummaryVo;
@@ -19,6 +20,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OdontologyConsultationSummaryRepositoryImpl implements OdontologyConsultationSummaryRepository {
@@ -147,6 +149,34 @@ public class OdontologyConsultationSummaryRepositoryImpl implements OdontologyCo
                         (Snomed) a[1],
                         a[2] != null ? (LocalDate)a[2] : null,
                         (Integer) a[3]))
+        );
+        return result;
+    }
+
+    @Override
+    public List<ReferenceSummaryVo> getReferenceByHealthCondition(Integer healthConditionId, Integer consultationId) {
+        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description"
+                +"  FROM Reference r"
+                +"  JOIN OdontologyConsultation oc ON (r.encounterId = oc.id)"
+                +"  JOIN CareLine cl ON (r.careLineId = cl.id)"
+                +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
+                +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
+                +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
+                +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
+                +"  AND r.sourceTypeId= " + SourceType.ODONTOLOGY
+                +"  AND oc.id = :consultationId ";
+
+        List<Object[]> queryResult = entityManager.createQuery(sqlString)
+                .setParameter("healthConditionId", healthConditionId)
+                .setParameter("consultationId", consultationId)
+                .getResultList();
+        List<ReferenceSummaryVo> result = new ArrayList<>();
+        queryResult.forEach(a ->
+                result.add(new ReferenceSummaryVo(
+                        (Integer)a[0],
+                        (String) a[1],
+                        (String) a[2],
+                        a[3] != null ? (String) a[3] : null))
         );
         return result;
     }
