@@ -18,7 +18,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 	public specialties: ClinicalSpecialtyDto[] = [];
 	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
-	public referenceStates = [REFERENCE_STATES.WITHOUT_REFERENCES, REFERENCE_STATES.WITH_REFERENCES, REFERENCE_STATES.ALL  ];
+	public referenceStates = [];
 
 	private historicalProblemsFilter$: Subscription;
 
@@ -36,10 +36,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 			referenceState: [null],
 		});
 
-		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
-		this.specialties = filterOptions.specialties;
-		this.professionals = filterOptions.professionals;
-		this.problems = filterOptions.problems;
+		this.setFilterOptions();
 
 		this.historicalProblemsFilter$ = this.historicalProblemsFacadeService.getHistoricalProblemsFilter().subscribe(
 			data => {
@@ -47,6 +44,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 				this.form.controls.professional.setValue(data.professional);
 				this.form.controls.problem.setValue(data.problem);
 				this.form.controls.consultationDate.setValue(data.consultationDate ? momentParseDate(data.consultationDate) : null);
+				this.form.controls.referenceState.setValue(data.referenceStateId);
 			});
 	}
 
@@ -71,6 +69,14 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.historicalProblemsFilter$.unsubscribe();
+	}
+
+	private setFilterOptions(): void{
+		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
+		this.specialties = filterOptions.specialties;
+		this.professionals = filterOptions.professionals;
+		this.problems = filterOptions.problems;
+		this.referenceStates = filterOptions.referenceStates;
 	}
 
 }

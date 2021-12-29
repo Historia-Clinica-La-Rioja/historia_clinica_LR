@@ -15,6 +15,7 @@ export class HistoricalProblemsFacadeService {
 	public specialties: ClinicalSpecialtyDto[] = [];
 	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
+	private readonly referenceStates = [REFERENCE_STATES.WITHOUT_REFERENCES, REFERENCE_STATES.WITH_REFERENCES, REFERENCE_STATES.WITH_COUNTERREFERENCE, REFERENCE_STATES.ALL];
 
 	private historicalProblemsSubject = new ReplaySubject<HistoricalProblems[]>(1);
 	private historicalProblems$: Observable<HistoricalProblems[]>;
@@ -88,20 +89,33 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	private filterByReference(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
-		if (filter.referenceStateId === REFERENCE_STATES.WITH_REFERENCES) {
-			return problem.reference !== null;
+		switch (filter.referenceStateId) {
+			case REFERENCE_STATES.WITH_REFERENCES:
+				return problem.reference !== null;
+
+			case REFERENCE_STATES.WITHOUT_REFERENCES:
+				return problem.reference === null;
+
+			case REFERENCE_STATES.WITH_COUNTERREFERENCE:
+				let result;
+				problem.reference?.forEach(problemReference => {
+					if (problemReference.counterReference?.counterReferenceNote !== undefined) {
+						result = true;
+					}
+				})
+				return result;
+
+			default:
+				return true;
 		}
-		if (filter.referenceStateId === REFERENCE_STATES.WITHOUT_REFERENCES) {
-			return problem.reference === null;
-		}
-		return true;
 	}
 
 	public getFilterOptions() {
 		return {
 			specialties: this.specialties,
 			professionals: this.professionals,
-			problems: this.problems
+			problems: this.problems,
+			referenceStates: this.referenceStates,
 		};
 	}
 
@@ -171,6 +185,6 @@ export class HistoricalProblems {
 			procedureId: string;
 			procedurePt: string;
 		}[];
-	reference: OutpatientSummaryReferenceDto;
+	reference: OutpatientSummaryReferenceDto[];
 }
 
