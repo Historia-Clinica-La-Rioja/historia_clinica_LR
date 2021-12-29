@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
+package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

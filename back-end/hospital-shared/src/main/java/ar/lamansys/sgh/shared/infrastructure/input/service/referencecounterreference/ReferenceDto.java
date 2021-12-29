@@ -1,31 +1,32 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
+package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class OutpatientReferenceDto {
+@NoArgsConstructor
+public class ReferenceDto implements Serializable {
+
+    private static final long serialVersionUID = -3184712067120494370L;
 
     @Nullable
-    private Boolean procedure;
+    private String note;
 
     @Nullable
     private Boolean consultation;
 
     @Nullable
-    private String note;
-
-    @Valid
-    @NotNull(message = "{value.mandatory}")
-    private Integer clinicalSpecialtyId;
+    private Boolean procedure;
 
     @Valid
     @NotNull(message = "{value.mandatory}")
@@ -33,9 +34,12 @@ public class OutpatientReferenceDto {
 
     @Valid
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid OutpatientReferenceProblemDto> problems;
+    private Integer clinicalSpecialtyId;
 
-    @Nullable
+    @Valid
+    @NotNull(message = "{value.mandatory}")
+    private List<ReferenceProblemDto> problems;
+
     private List<Integer> fileIds;
 
 }

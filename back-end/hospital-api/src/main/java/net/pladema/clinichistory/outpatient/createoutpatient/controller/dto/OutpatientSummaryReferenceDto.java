@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.ReferenceCounterReferenceFileDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

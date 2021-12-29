@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.CounterReferenceSummaryProcedureDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.CounterReferenceProfessionalInfoDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ReferenceCounterReferenceFileDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class OutpatientSummaryCounterReferenceDto {
 
     private DateDto performedDate;
 
-    private CounterReferenceProfessionalInfoDto professional;
+    private ProfessionalPersonDto professional;
 
     private List<ReferenceCounterReferenceFileDto> files;
 

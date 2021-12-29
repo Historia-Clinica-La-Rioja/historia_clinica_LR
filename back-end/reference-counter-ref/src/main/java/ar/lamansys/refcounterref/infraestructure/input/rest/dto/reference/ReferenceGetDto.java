@@ -2,6 +2,10 @@ package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.CareLineDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceSummaryNoteDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,15 +19,15 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ReferenceDto implements Serializable {
+public class ReferenceGetDto implements Serializable {
 
-    private static final long serialVersionUID = -3184712067120494370L;
+    private static final long serialVersionUID = 6514576451162248752L;
 
     private Integer id;
 
     private DateDto referenceDate;
 
-    private ReferenceNoteDto note;
+    private ReferenceSummaryNoteDto note;
 
     private CareLineDto careLine;
 
@@ -33,6 +37,6 @@ public class ReferenceDto implements Serializable {
 
     private List<ReferenceProblemDto> problems;
 
-    private List<ReferenceFileDto> files;
+    private List<ReferenceCounterReferenceFileDto> files;
 
 }

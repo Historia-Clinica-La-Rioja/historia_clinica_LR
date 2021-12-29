@@ -1,8 +1,8 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
 import ar.lamansys.refcounterref.application.getreference.GetReference;
-import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceDto;
-import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.ReferenceMapper;
+import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceGetDto;
+import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +27,17 @@ import java.util.List;
 public class ReferenceController {
 
     private final GetReference getReference;
-    private final ReferenceMapper referenceMapper;
+    private final GetReferenceMapper getReferenceMapper;
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-    public List<ReferenceDto> getReference(
+    public List<ReferenceGetDto> getReference(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestParam List<Integer> clinicalSpecialtyIds) {
         log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}", patientId, clinicalSpecialtyIds);
-        List<ReferenceDto> result = referenceMapper.fromListReferenceBo(getReference.run(patientId, clinicalSpecialtyIds));
+        List<ReferenceGetDto> result = getReferenceMapper.fromListReferenceGetBo(getReference.run(patientId, clinicalSpecialtyIds));
         log.debug("Output -> result {}", result);
         return result;
     }

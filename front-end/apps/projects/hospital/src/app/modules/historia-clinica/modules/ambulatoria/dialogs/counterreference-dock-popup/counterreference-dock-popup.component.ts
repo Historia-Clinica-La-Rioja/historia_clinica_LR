@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CounterReferenceDto, DateDto, ReferenceFileDto } from '@api-rest/api-model';
+import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MIN_DATE } from '@core/utils/date.utils';
@@ -164,7 +164,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		}
 	}
 
-	downloadReferenceFile(file: ReferenceFileDto) {
+	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {
 		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
 	}
 

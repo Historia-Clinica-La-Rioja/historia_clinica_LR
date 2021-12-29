@@ -1,5 +1,6 @@
-package ar.lamansys.sgh.shared.infrastructure.input.service;
+package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class CounterReferenceSummaryDto implements Serializable {
 
     private LocalDate performedDate;
 
-    private CounterReferenceProfessionalInfoDto professional;
+    private ProfessionalPersonDto professional;
 
     private String clinicalSpecialty;
 

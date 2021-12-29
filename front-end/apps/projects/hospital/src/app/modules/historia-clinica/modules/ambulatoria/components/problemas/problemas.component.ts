@@ -5,7 +5,7 @@ import {
 	PROBLEMAS_INTERNACION,
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
-import { ExternalClinicalHistoryDto, HCEHospitalizationHistoryDto, HCEPersonalHistoryDto, ReferenceCounterReferenceFileDto, ReferenceFileDto } from '@api-rest/api-model';
+import { ExternalClinicalHistoryDto, HCEHospitalizationHistoryDto, HCEPersonalHistoryDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';

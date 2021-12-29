@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, OutpatientReferenceDto } from '@api-rest/api-model';
+import {CareLineDto, ClinicalSpecialtyDto, ReferenceDto} from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
@@ -20,7 +20,7 @@ export class AmbulatoryConsultationReferenceService {
 	specialties: ClinicalSpecialtyDto[];
 	careLines: CareLineDto[];
 	private readonly columns: TableColumnConfig[];
-	outpatientReferences: OutpatientReferenceDto[];
+	outpatientReferences: ReferenceDto[];
 	references: Reference[];
 
 	constructor(
@@ -79,7 +79,7 @@ export class AmbulatoryConsultationReferenceService {
 	}
 
 	remove(index: number): void {
-		this.outpatientReferences = removeFrom<OutpatientReferenceDto>(this.outpatientReferences, index);
+		this.outpatientReferences = removeFrom<ReferenceDto>(this.outpatientReferences, index);
 	}
 
 	getColumns(): TableColumnConfig[] {
@@ -88,7 +88,7 @@ export class AmbulatoryConsultationReferenceService {
 
 	getData(): any[] {
 		return (this.outpatientReferences.map(
-			(reference: OutpatientReferenceDto) => ({
+			(reference: ReferenceDto) => ({
 				problems: reference.problems,
 				consultation: reference.consultation,
 				procedure: reference.procedure,
@@ -99,7 +99,7 @@ export class AmbulatoryConsultationReferenceService {
 		));
 	}
 
-	getOutpatientReferences(): OutpatientReferenceDto[] {
+	getOutpatientReferences(): ReferenceDto[] {
 		return this.outpatientReferences;
 	}
 

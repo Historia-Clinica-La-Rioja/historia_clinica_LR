@@ -1,5 +1,6 @@
-package ar.lamansys.sgh.shared.infrastructure.input.service;
+package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Getter
 @Setter

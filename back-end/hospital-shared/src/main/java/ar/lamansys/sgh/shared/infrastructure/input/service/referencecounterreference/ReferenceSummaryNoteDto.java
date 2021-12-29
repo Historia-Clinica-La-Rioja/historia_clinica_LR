@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
+package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,17 +11,12 @@ import java.io.Serializable;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ReferenceNoteDto implements Serializable {
+public class ReferenceSummaryNoteDto implements Serializable {
 
     private static final long serialVersionUID = 2393695582042238076L;
 
     private Integer id;
 
     private String description;
-
-    public ReferenceNoteDto(Integer id, String description) {
-        this.id = id;
-        this.description = description;
-    }
 
 }

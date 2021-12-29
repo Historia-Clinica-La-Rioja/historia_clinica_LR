@@ -4,6 +4,7 @@ import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo;
+import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,15 @@ public class CounterReferenceStorageImpl implements CounterReferenceStorage {
     }
 
     @Override
-    public Optional<CounterReferenceSummaryBo> getCounterReference(Integer referenceId) {
+    public CounterReferenceSummaryBo getCounterReference(Integer referenceId) {
         log.debug("Input parameter -> referenceId {}", referenceId);
-        return counterReferenceRepository.findByReferenceId(referenceId);
+        CounterReferenceSummaryBo counterReferenceSummaryBo = counterReferenceRepository.findByReferenceId(referenceId).orElse(new CounterReferenceSummaryBo());
+        if(counterReferenceSummaryBo.getId() != null) {
+            counterReferenceSummaryBo.setProcedures(this.getProceduresByCounterReference(counterReferenceSummaryBo.getId()));
+            counterReferenceSummaryBo.setFiles(referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdAndType(counterReferenceSummaryBo.getId(),
+                    EReferenceCounterReferenceType.CONTRARREFERENCIA.getId().intValue()));
+        }
+        return counterReferenceSummaryBo;
     }
 
     @Override

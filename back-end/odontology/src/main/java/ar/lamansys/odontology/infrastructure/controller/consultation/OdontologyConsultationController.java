@@ -66,7 +66,9 @@ public class OdontologyConsultationController {
         consultationBo.setInstitutionId(institutionId);
         consultationBo.setPatientId(patientId);
 
-        createOdontologyConsultation.run(consultationBo);
+        Integer encounterId = createOdontologyConsultation.run(consultationBo);
+        sharedReferenceCounterReference.saveReferences(encounterId, (int)SourceType.ODONTOLOGY, consultationDto.getReferences());
+
         return true;
     }
 

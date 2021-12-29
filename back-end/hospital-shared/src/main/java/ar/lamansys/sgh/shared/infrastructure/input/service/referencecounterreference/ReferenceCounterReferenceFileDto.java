@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.shared.infrastructure.input.service;
+package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

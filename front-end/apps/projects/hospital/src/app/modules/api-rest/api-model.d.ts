@@ -444,12 +444,6 @@ export interface CounterReferenceProcedureDto extends Serializable {
     snomed: SnomedDto;
 }
 
-export interface CounterReferenceProfessionalInfoDto extends Serializable {
-    firstName: string;
-    id: number;
-    lastName: string;
-}
-
 export interface CounterReferenceSummaryProcedureDto extends Serializable {
     snomed: SharedSnomedDto;
 }
@@ -481,7 +475,7 @@ export interface CreateOutpatientDto {
     problems: OutpatientProblemDto[];
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
-    references: OutpatientReferenceDto[];
+    references: ReferenceDto[];
     vitalSigns?: OutpatientVitalSignDto;
 }
 
@@ -1558,21 +1552,6 @@ export interface OutpatientReasonDto {
     snomed: SnomedDto;
 }
 
-export interface OutpatientReferenceDto {
-    careLineId: number;
-    clinicalSpecialtyId: number;
-    consultation?: boolean;
-    fileIds?: number[];
-    note?: string;
-    problems: OutpatientReferenceProblemDto[];
-    procedure?: boolean;
-}
-
-export interface OutpatientReferenceProblemDto {
-    id?: string;
-    snomed: SnomedDto;
-}
-
 export interface OutpatientSummaryCounterReferenceDto {
     clinicalSpecialtyId: string;
     counterReferenceNote: string;
@@ -1580,7 +1559,7 @@ export interface OutpatientSummaryCounterReferenceDto {
     id: number;
     performedDate: DateDto;
     procedures: CounterReferenceSummaryProcedureDto[];
-    professional: CounterReferenceProfessionalInfoDto;
+    professional: ProfessionalPersonDto;
 }
 
 export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
@@ -1865,29 +1844,34 @@ export interface ReferenceCounterReferenceFileDto extends Serializable {
 }
 
 export interface ReferenceDto extends Serializable {
+    careLineId: number;
+    clinicalSpecialtyId: number;
+    consultation?: boolean;
+    fileIds: number[];
+    note?: string;
+    problems: ReferenceProblemDto[];
+    procedure?: boolean;
+}
+
+export interface ReferenceGetDto extends Serializable {
     careLine: CareLineDto;
     clinicalSpecialty: ClinicalSpecialtyDto;
-    files: ReferenceFileDto[];
+    files: ReferenceCounterReferenceFileDto[];
     id: number;
-    note: ReferenceNoteDto;
+    note: ReferenceSummaryNoteDto;
     problems: ReferenceProblemDto[];
     professional: ProfessionalPersonDto;
     referenceDate: DateDto;
 }
 
-export interface ReferenceFileDto extends Serializable {
-    fileId: number;
-    fileName: string;
-}
-
-export interface ReferenceNoteDto extends Serializable {
-    description: string;
-    id: number;
-}
-
 export interface ReferenceProblemDto extends Serializable {
     id?: number;
-    snomed: SnomedDto;
+    snomed: SharedSnomedDto;
+}
+
+export interface ReferenceSummaryNoteDto extends Serializable {
+    description: string;
+    id: number;
 }
 
 export interface RefreshTokenDto {

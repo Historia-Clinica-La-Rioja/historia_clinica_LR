@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, OutpatientReferenceDto, OutpatientReferenceProblemDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -21,7 +21,7 @@ export class ReferenceComponent implements OnInit {
 	careLines$: Observable<CareLineDto[]>;
 	careLineId: number;
 	specialtyId: number;
-	problemsReference: OutpatientReferenceProblemDto[];
+	problemsReference: ReferenceProblemDto[];
 	institutions$: Observable<InstitutionBasicInfoDto[]>;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
@@ -72,7 +72,7 @@ export class ReferenceComponent implements OnInit {
 		});
 	}
 
-	private mapProblems(problems: any[]): OutpatientReferenceProblemDto[] {
+	private mapProblems(problems: any[]): ReferenceProblemDto[] {
 		return problems.map(problem => ({
 			id: problem.id,
 			snomed: problem.snomed,
@@ -117,7 +117,7 @@ export class ReferenceComponent implements OnInit {
 		}
 	}
 
-	private buildReference(): OutpatientReferenceDto {
+	private buildReference(): ReferenceDto {
 		return {
 			careLineId: this.careLineId,
 			clinicalSpecialtyId: this.specialtyId,

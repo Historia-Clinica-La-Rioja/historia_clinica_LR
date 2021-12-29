@@ -1,6 +1,6 @@
-package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
+package ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +24,6 @@ public class ReferenceProblemDto implements Serializable {
 
     @Valid
     @NotNull(message = "{value.mandatory}")
-    private SnomedDto snomed;
+    private SharedSnomedDto snomed;
 
 }

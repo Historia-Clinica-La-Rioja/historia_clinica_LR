@@ -11,7 +11,7 @@ public interface CounterReferenceStorage {
 
     Integer save(CounterReferenceInfoBo counterReferenceInfoBo);
 
-    Optional<CounterReferenceSummaryBo> getCounterReference(Integer referenceId);
+    CounterReferenceSummaryBo getCounterReference(Integer referenceId);
 
     List<CounterReferenceProcedureBo> getProceduresByCounterReference(Integer counterReferenceId);
 
