@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Locale;
 
@@ -19,6 +21,14 @@ public class IntegrationTest {
 
 	@Autowired
 	protected MessageSource messageSource;
+
+	@Autowired
+	protected WebApplicationContext webApplicationContext;
+
+	protected void buildMockMvc() {
+		//Init MockMvc Object and build
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	}
 
 	protected String buildMessage(String keyMessage){
 		return messageSource.getMessage(keyMessage, null, Locale.getDefault());

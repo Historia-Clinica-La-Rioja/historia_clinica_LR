@@ -14,33 +14,28 @@ import ar.lamansys.sgh.clinichistory.mocks.ClinicalObservationTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
+class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	private HCHClinicalObservationRepositoryImpl clinicalObservationRepository;
 
 	@Autowired
 	private EntityManager entityManager;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		this.clinicalObservationRepository = new HCHClinicalObservationRepositoryImpl(entityManager);
 	}
 
 	@Test
-	public void saveCreateTest() {
+	void saveCreateTest() {
 		Integer internmentEpisodeId = 1;
 		String date = "2020-05-04 16:00";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

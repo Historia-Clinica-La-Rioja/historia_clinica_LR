@@ -1,6 +1,9 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.application.ips;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
+import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
@@ -11,25 +14,19 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionVerificationStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest(showSql = false)
-public class HealthConditionServiceTest extends UnitRepository {
+class HealthConditionServiceTest extends UnitRepository {
 
     HealthConditionService healthConditionService;
 
@@ -61,8 +58,8 @@ public class HealthConditionServiceTest extends UnitRepository {
     @Autowired
     private EntityManager entityManager;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    void setUp(){
 
         GetLastHealthConditionRepository getLastHealthConditionRepository;
 
@@ -81,7 +78,7 @@ public class HealthConditionServiceTest extends UnitRepository {
     }
 
     @Test
-    public void test_getLastHealthCondition_success(){
+    void test_getLastHealthCondition_success(){
 
         HealthCondition hc1 = new HealthCondition();
         hc1.setPatientId(1);

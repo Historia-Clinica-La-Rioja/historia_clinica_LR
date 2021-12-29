@@ -8,18 +8,19 @@ import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginException;
 import ar.lamansys.sgx.auth.jwt.application.refreshtoken.RefreshToken;
 import ar.lamansys.sgx.auth.jwt.application.refreshtoken.exceptions.BadRefreshTokenException;
 import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.emails.service.impl.EmailServiceImpl;
 import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
 import ar.lamansys.sgx.shared.recaptcha.service.impl.RecaptchaInvalid;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
@@ -34,23 +35,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest(classes = {AuthAutoConfiguration.class})
 @TestPropertySource("classpath:integration-test.properties")
+@Import({DateTimeProvider.class, EmailServiceImpl.class})
 @Disabled
 class AuthenticationControllerIntegrationTest extends IntegrationTest {
 
 	@Value("/auth")
 	protected String authURL;
 
-	@Mock
+	@MockBean
 	private Login login;
 
-	@Mock
+	@MockBean
 	private RefreshToken refreshToken;
 
-	@Mock
+	@MockBean
 	private ICaptchaService iCaptchaService;
 	
 	@Test

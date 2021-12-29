@@ -2,34 +2,38 @@ package net.pladema.establishment.repository;
 
 import net.pladema.UnitRepository;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
-import net.pladema.establishment.repository.entity.*;
+import net.pladema.establishment.repository.entity.AgeGroup;
+import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.BedCategory;
+import net.pladema.establishment.repository.entity.CareType;
+import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.repository.entity.Room;
+import net.pladema.establishment.repository.entity.Sector;
+import net.pladema.establishment.repository.entity.SectorOrganization;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-public class BedSummaryRepositoryTest extends UnitRepository {
+class BedSummaryRepositoryTest extends UnitRepository {
 
     @Autowired
     private EntityManager entityManager;
 
     private BedSummaryRepositoryImpl bedSummaryRepository;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    void setUp(){
         this.bedSummaryRepository = new BedSummaryRepositoryImpl(entityManager);
     }
 
     @Test
-    public void test_getBedSummaries_success(){
+    void test_getBedSummaries_success(){
         Integer institutionId = 1;
 
         CareType ct = new CareType();

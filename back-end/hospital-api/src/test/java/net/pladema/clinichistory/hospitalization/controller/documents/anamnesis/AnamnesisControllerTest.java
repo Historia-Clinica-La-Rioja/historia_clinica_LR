@@ -15,14 +15,11 @@ import net.pladema.clinichistory.hospitalization.service.documents.validation.Ef
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
 import net.pladema.patient.controller.service.PatientExternalService;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
@@ -31,10 +28,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(AnamnesisController.class)
-@Ignore
-public class AnamnesisControllerTest extends UnitController {
+class AnamnesisControllerTest extends UnitController {
 
 	private static final Long DOCUMENT_ID = 1L;
 	private static final String POST = "/institutions/1/internments/1/anamnesis";
@@ -74,20 +69,21 @@ public class AnamnesisControllerTest extends UnitController {
 	@MockBean
 	private SGHNotNullValidator sghNotNullValidator;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
+		buildMockMvc();
 	}
 
 	@Test
-	@WithMockUser
-	public void test_createAnamnesisFailed() throws Exception {
+	@WithUserDetails(value="user-24-ESPECIALISTA_MEDICO", userDetailsServiceBeanName="UserDetailsServiceWithRole")
+	void test_createAnamnesisFailed() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.post(POST))
 				.andExpect(status().isBadRequest());
 	}
 
 	@Test
-	@WithMockUser
-	public void test_getAnamnesisSuccess() throws Exception {
+	@WithUserDetails(value="user-24-ESPECIALISTA_MEDICO", userDetailsServiceBeanName="UserDetailsServiceWithRole")
+	void test_getAnamnesisSuccess() throws Exception {
 		configContextDocumentValid();
 		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
 				.andExpect(status().isOk());

@@ -14,42 +14,39 @@ import net.pladema.patient.service.impl.PatientServiceImpl;
 import net.pladema.patient.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.Person;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 
-@RunWith(SpringRunner.class)
-public class PatientServiceImplTest extends UnitRepository {
+class PatientServiceImplTest extends UnitRepository {
 
     @Autowired
     private PatientRepository patientRepository;
 
-    @MockBean
+    @Mock
     private FederarService federarService;
 
-    @MockBean
+    @Mock
     private PatientMedicalCoverageRepository patientMedicalCoverageRepository;
 
-    @MockBean
+    @Mock
     private MedicalCoverageRepository medicalCoverageRepository;
 
-    @MockBean
+    @Mock
     private PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
 
-    @MockBean
+    @Mock
     private HospitalAuditRepository hospitalAuditRepository;
 
-    @MockBean
+    @Mock
     private PatientAuditRepository patientAuditRepository;
 
     private PatientService patientService;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    void setUp(){
         patientService = new PatientServiceImpl(
                 patientRepository,
                 patientMedicalCoverageRepository,
@@ -62,7 +59,7 @@ public class PatientServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void test_searchPatientOptionalFilters_limitedResultSize(){
+    void test_searchPatientOptionalFilters_limitedResultSize(){
         populatePacientRepository(1534);
 
         PatientSearchFilter patientSearchFilter = new PatientSearchFilter();
@@ -75,7 +72,7 @@ public class PatientServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void test_searchPatientOptionalFilters_resultSizeLowerThanMax(){
+    void test_searchPatientOptionalFilters_resultSizeLowerThanMax(){
         populatePacientRepository(49);
 
         PatientSearchFilter patientSearchFilter = new PatientSearchFilter();

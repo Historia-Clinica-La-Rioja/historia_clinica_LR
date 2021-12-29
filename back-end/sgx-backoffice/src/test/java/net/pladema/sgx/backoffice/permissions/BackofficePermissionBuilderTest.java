@@ -4,19 +4,22 @@ import static net.pladema.sgx.backoffice.permissions.BackofficePermissionBuilder
 import static net.pladema.sgx.backoffice.permissions.BackofficePermissionBuilder.permitOnly;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import net.pladema.sgx.backoffice.BOMethod;
 import net.pladema.sgx.backoffice.exceptions.PermissionDeniedException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-public class BackofficePermissionBuilderTest {
+@ExtendWith(MockitoExtension.class)
+class BackofficePermissionBuilderTest {
 	private static final String ENTITY = "some data";
 	private static final Number ID = 1;
 
 	@Test
-	public void permitAll_doesPermitAll() {
+	void permitAll_doesPermitAll() {
 		BackofficePermissionValidator<String, Number> validator = permitAll();
 		assertThatCode(() -> {
 			validator.assertGetList(ENTITY);
@@ -28,7 +31,7 @@ public class BackofficePermissionBuilderTest {
 	}
 
 	@Test
-	public void permitOnly_permitOnlyNothing() {
+	void permitOnly_permitOnlyNothing() {
 		BackofficePermissionValidator<String, Number> validator = permitOnly();
 		assertThatThrownBy(() -> {
 			validator.assertGetList(ENTITY);
@@ -48,7 +51,7 @@ public class BackofficePermissionBuilderTest {
 	}
 
 	@Test
-	public void permitOnly_permitOnlyGetOne() {
+	void permitOnly_permitOnlyGetOne() {
 		BackofficePermissionValidator<String, Number> validator = permitOnly(BOMethod.GET_ONE);
 		assertThatThrownBy(() -> {
 			validator.assertGetList(ENTITY);

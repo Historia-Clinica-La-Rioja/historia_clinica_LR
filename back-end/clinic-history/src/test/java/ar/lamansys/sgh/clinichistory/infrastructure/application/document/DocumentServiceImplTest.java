@@ -1,17 +1,27 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.application.document;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentServiceImpl;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAllergyIntoleranceRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentImmunizationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentLabRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentMedicamentionStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentVitalSignRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
-public class DocumentServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class DocumentServiceImplTest {
 
 	private static final String TOKEN = "TOKEN";
 
@@ -50,8 +60,8 @@ public class DocumentServiceImplTest {
 	@MockBean
 	private DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
                 documentImmunizationRepository, documentProcedureRepository, documentVitalSignRepository, documentLabRepository,
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
@@ -59,7 +69,7 @@ public class DocumentServiceImplTest {
 	}
 
 	@Test
-	public void test() {
+	void test() {
 		assertTrue(true);
 	}
 }

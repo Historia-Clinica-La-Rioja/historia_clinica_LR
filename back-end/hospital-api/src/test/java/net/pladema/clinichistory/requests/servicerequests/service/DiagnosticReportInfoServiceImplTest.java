@@ -1,34 +1,31 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
-import net.pladema.UnitRepository;
 import ar.lamansys.sgh.clinichistory.mocks.DiagnosticReportTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepositoryImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.DiagnosticReportInfoServiceImpl;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 
-@RunWith(SpringRunner.class)
-public class DiagnosticReportInfoServiceImplTest extends UnitRepository {
+class DiagnosticReportInfoServiceImplTest extends UnitRepository {
 
     private DiagnosticReportInfoService diagnosticReportInfoService;
     private GetDiagnosticReportInfoRepository getDiagnosticReportInfoRepository;
@@ -39,8 +36,8 @@ public class DiagnosticReportInfoServiceImplTest extends UnitRepository {
     @Autowired
     private EntityManager entityManager;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    void setUp(){
         getDiagnosticReportInfoRepository = new GetDiagnosticReportInfoRepositoryImpl(entityManager);
         diagnosticReportInfoService = new DiagnosticReportInfoServiceImpl(getDiagnosticReportInfoRepository, diagnosticReportFileRepository);
 
@@ -49,7 +46,7 @@ public class DiagnosticReportInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_success(){
+    void execute_success(){
 
         Integer patientId = 1;
         Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();

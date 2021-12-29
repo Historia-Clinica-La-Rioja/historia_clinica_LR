@@ -13,21 +13,16 @@ import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class HCEHealthConditionRepositoryTest extends UnitRepository {
+class HCEHealthConditionRepositoryTest extends UnitRepository {
 
 	private final Short AMBULATORIA = 4;
 
@@ -36,13 +31,13 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	@Autowired
 	private EntityManager entityManager;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		hCEHealthConditionRepository = new HCEHealthConditionRepositoryImpl(entityManager);
 	}
 
 	@Test
-	public void test_hce_health_condition_success() {
+	void test_hce_health_condition_success() {
 		Integer patientId = 1;
 
 		Snomed personalSnomed1 = mockSnomed("personal1");
@@ -79,7 +74,7 @@ public class HCEHealthConditionRepositoryTest extends UnitRepository {
 	}
 
 	@Test
-	public void test_hce_family_history_success() {
+	void test_hce_family_history_success() {
 		Integer patientId = 1;
 
 		Snomed personalSnomed1 = mockSnomed("personal1");

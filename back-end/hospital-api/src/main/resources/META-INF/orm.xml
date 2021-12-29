@@ -33,25 +33,10 @@
             ORDER BY t.updated_on
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="HCE.findAllMedicationsResult">
-        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationVo">
-            <column name="id" class="java.lang.Integer"/>
-            <column name="sctidCode" class="java.lang.String"/>
-            <column name="sctidTerm" class="java.lang.String"/>
-            <column name="status" class="java.lang.String"/>
-            <column name="sequence" class="java.lang.Integer"/>
-            <column name="count" class="java.lang.Integer"/>
-            <column name="duration" class="java.lang.Double"/>
-            <column name="duration_unit" class="java.lang.String"/>
-            <column name="frequency" class="java.lang.Integer"/>
-            <column name="period_unit" class="java.lang.String"/>
-            <column name="effectiveTime" class="java.sql.Date"/>
-            <column name="end_date" class="java.sql.Date"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <named-native-query name="HCE.getDocumentReference" result-set-mapping="HCE.getDocumentReferenceResult">
-        <query>select pat.id, first_name, middle_names, last_name, bool_and(op.id is not null) as hasDocuments
+        <query>
+            select pat.id, first_name, middle_names, last_name, bool_and(op.id is not null) as hasDocuments
             from patient pat
             join person per on ( pat.person_id = per.id )
             left join outpatient_consultation op on ( pat.id = op.patient_id )
@@ -59,15 +44,6 @@
             group by pat.id, first_name, middle_names, last_name
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="HCE.getDocumentReferenceResult">
-        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.BundleVo">
-            <column name="id" class="java.lang.Integer"/>
-            <column name="first_name" class="java.lang.String"/>
-            <column name="middle_names" class="java.lang.String"/>
-            <column name="last_name" class="java.lang.String"/>
-            <column name="hasDocuments" class="java.lang.Boolean"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <named-native-query name="HCE.getPatient" result-set-mapping="HCE.getPatientResult">
         <query>
@@ -79,20 +55,6 @@
             where pat.id = :patientId
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="HCE.getPatientResult">
-        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.PatientVo">
-            <column name="first_name" class="java.lang.String"/>
-            <column name="middle_names" class="java.lang.String"/>
-            <column name="last_name" class="java.lang.String"/>
-            <column name="other_last_names" class="java.lang.String"/>
-            <column name="mothers_last_name" class="java.lang.String"/>
-            <column name="identification_number" class="java.lang.String"/>
-            <column name="gender_id" class="java.lang.Short"/>
-            <column name="birth_date" class="java.lang.String"/>
-            <column name="phone_number" class="java.lang.String"/>
-            <column name="address_id" class="java.lang.Integer"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <named-native-query name="HCE.getAddress">
         <query>
@@ -129,18 +91,6 @@
             AND NOT verification_status_id = :statusId
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="HCE.findAllConditionResult">
-        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ConditionVo">
-            <column name="id" class="java.lang.Integer"/>
-            <column name="code" class="java.lang.String"/>
-            <column name="term" class="java.lang.String"/>
-            <column name="clinical_status" class="java.lang.String"/>
-            <column name="verification_status_id" class="java.lang.String"/>
-            <column name="start_date" class="java.sql.Date"/>
-            <column name="severity" class="java.lang.String"/>
-            <column name="created_on" class="java.sql.Date"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <named-native-query name="HCE.findAllImmunizations" result-set-mapping="HCE.findAllImmunizationsResult">
         <query>
@@ -161,17 +111,6 @@
             ORDER BY t.updated_on DESC
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="HCE.findAllImmunizationsResult">
-        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ImmunizationVo">
-            <column name="id" class="java.lang.Integer"/>
-            <column name="code" class="java.lang.String"/>
-            <column name="term" class="java.lang.String"/>
-            <column name="status_id" class="java.lang.String"/>
-            <column name="administration_date" class="java.sql.Date"/>
-            <column name="created_on" class="java.sql.Date"/>
-            <column name="expiration_date" class="java.sql.Date"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <named-native-query name="HCE.findAllAllergies" result-set-mapping="HCE.findAllAllergiesResult">
         <query>
@@ -194,18 +133,6 @@
             ORDER BY t.updated_on desc
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="HCE.findAllAllergiesResult">
-        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo">
-            <column name="id" class="java.lang.Integer"/>
-            <column name="code" class="java.lang.String"/>
-            <column name="term" class="java.lang.String"/>
-            <column name="status_id" class="java.lang.String"/>
-            <column name="verification_status_id" class="java.lang.String"/>
-            <column name="category_id" class="java.lang.Short"/>
-            <column name="criticality" class="java.lang.Short"/>
-            <column name="start_date" class="java.sql.Date"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <named-native-query name="HCE.getOrganization" result-set-mapping="HCE.getOrganizationResult">
         <query>
@@ -221,14 +148,6 @@
             limit 1)
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="HCE.getOrganizationResult" >
-        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.OrganizationVo">
-            <column name="sisa_code" class="java.lang.String"/>
-            <column name="name" class="java.lang.String"/>
-            <column name="phone_number" class="java.lang.String"/>
-            <column name="address_id" class="java.lang.Integer"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <!-- ========================================== -->
     <!-- ================ Reports ================= -->
@@ -260,17 +179,6 @@
             AND vc.billable
         </query>
     </named-native-query>
-    <sql-result-set-mapping name="Reports.OutpatientSummaryResult">
-        <constructor-result target-class="net.pladema.reports.repository.ConsultationSummary">
-            <column name="professional_id" class="java.lang.Integer"/>
-            <column name="specialty_id" class="java.lang.Integer"/>
-            <column name="specialty" class="java.lang.String"/>
-            <column name="specialtyType" class="java.lang.Short"/>
-            <column name="age" class="java.lang.Integer"/>
-            <column name="gender_id" class="java.lang.Short"/>
-            <column name="OS" class="java.lang.Boolean"/>
-        </constructor-result>
-    </sql-result-set-mapping>
 
     <named-native-query name="Reports.ConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
         <query>WITH consultation AS (
@@ -357,6 +265,125 @@
             JOIN person p2 ON (hp.person_id = p2.id)
         </query>
     </named-native-query>
+
+
+    <!-- ========================================== -->
+    <!-- ============== Appointment =============== -->
+    <!-- ========================================== -->
+
+    <named-native-query name="Appointment.medicalCoverage">
+        <query>select ap.patient_medical_coverage_id
+            from appointment ap
+            join appointment_assn apassn on (ap.id = apassn.appointment_id)
+            join diary d on (apassn.diary_id = d.id)
+            where ap.patient_id = :patientId and
+            ap.date_type_id = :currentDate and
+            ap.patient_medical_coverage_id is not null and
+            ap.appointment_state_id = :appointmentState and
+            d.healthcare_professional_id = :professionalId
+            order by hour asc
+            limit 1
+        </query>
+    </named-native-query>
+
+
+    <!-- ========================================== -->
+    <!-- ============== Results-mapping =============== -->
+    <!-- ========================================== -->
+
+    <sql-result-set-mapping name="HCE.findAllMedicationsResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="sctidCode" class="java.lang.String"/>
+            <column name="sctidTerm" class="java.lang.String"/>
+            <column name="status" class="java.lang.String"/>
+            <column name="sequence" class="java.lang.Integer"/>
+            <column name="count" class="java.lang.Integer"/>
+            <column name="duration" class="java.lang.Double"/>
+            <column name="duration_unit" class="java.lang.String"/>
+            <column name="frequency" class="java.lang.Integer"/>
+            <column name="period_unit" class="java.lang.String"/>
+            <column name="effectiveTime" class="java.sql.Date"/>
+            <column name="end_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="HCE.getDocumentReferenceResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.BundleVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="first_name" class="java.lang.String"/>
+            <column name="middle_names" class="java.lang.String"/>
+            <column name="last_name" class="java.lang.String"/>
+            <column name="hasDocuments" class="java.lang.Boolean"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="HCE.getPatientResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.PatientVo">
+            <column name="first_name" class="java.lang.String"/>
+            <column name="middle_names" class="java.lang.String"/>
+            <column name="last_name" class="java.lang.String"/>
+            <column name="other_last_names" class="java.lang.String"/>
+            <column name="mothers_last_name" class="java.lang.String"/>
+            <column name="identification_number" class="java.lang.String"/>
+            <column name="gender_id" class="java.lang.Short"/>
+            <column name="birth_date" class="java.lang.String"/>
+            <column name="phone_number" class="java.lang.String"/>
+            <column name="address_id" class="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="HCE.findAllConditionResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ConditionVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="clinical_status" class="java.lang.String"/>
+            <column name="verification_status_id" class="java.lang.String"/>
+            <column name="start_date" class="java.sql.Date"/>
+            <column name="severity" class="java.lang.String"/>
+            <column name="created_on" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="HCE.findAllImmunizationsResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ImmunizationVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="status_id" class="java.lang.String"/>
+            <column name="administration_date" class="java.sql.Date"/>
+            <column name="created_on" class="java.sql.Date"/>
+            <column name="expiration_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="HCE.findAllAllergiesResult">
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo">
+            <column name="id" class="java.lang.Integer"/>
+            <column name="code" class="java.lang.String"/>
+            <column name="term" class="java.lang.String"/>
+            <column name="status_id" class="java.lang.String"/>
+            <column name="verification_status_id" class="java.lang.String"/>
+            <column name="category_id" class="java.lang.Short"/>
+            <column name="criticality" class="java.lang.Short"/>
+            <column name="start_date" class="java.sql.Date"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="HCE.getOrganizationResult" >
+        <constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.OrganizationVo">
+            <column name="sisa_code" class="java.lang.String"/>
+            <column name="name" class="java.lang.String"/>
+            <column name="phone_number" class="java.lang.String"/>
+            <column name="address_id" class="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="Reports.OutpatientSummaryResult">
+        <constructor-result target-class="net.pladema.reports.repository.ConsultationSummary">
+            <column name="professional_id" class="java.lang.Integer"/>
+            <column name="specialty_id" class="java.lang.Integer"/>
+            <column name="specialty" class="java.lang.String"/>
+            <column name="specialtyType" class="java.lang.Short"/>
+            <column name="age" class="java.lang.Integer"/>
+            <column name="gender_id" class="java.lang.Short"/>
+            <column name="OS" class="java.lang.Boolean"/>
+        </constructor-result>
+    </sql-result-set-mapping>
     <sql-result-set-mapping name="Reports.ConsultationDetailResult">
         <constructor-result target-class="net.pladema.reports.repository.ConsultationDetail">
             <column name="province" class="java.lang.String"/>
@@ -388,25 +415,5 @@
         </constructor-result>
 
     </sql-result-set-mapping>
-
-
-    <!-- ========================================== -->
-    <!-- ============== Appointment =============== -->
-    <!-- ========================================== -->
-
-    <named-native-query name="Appointment.medicalCoverage">
-        <query>select ap.patient_medical_coverage_id
-            from appointment ap
-            join appointment_assn apassn on (ap.id = apassn.appointment_id)
-            join diary d on (apassn.diary_id = d.id)
-            where ap.patient_id = :patientId and
-            ap.date_type_id = :currentDate and
-            ap.patient_medical_coverage_id is not null and
-            ap.appointment_state_id = :appointmentState and
-            d.healthcare_professional_id = :professionalId
-            order by hour asc
-            limit 1
-        </query>
-    </named-native-query>
 
 </entity-mappings>

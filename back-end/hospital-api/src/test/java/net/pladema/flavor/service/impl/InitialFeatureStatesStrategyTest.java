@@ -1,17 +1,16 @@
 package net.pladema.flavor.service.impl;
 
-import java.util.Arrays;
-
+import ar.lamansys.sgx.shared.flavor.FlavorBo;
 import ar.lamansys.sgx.shared.flavor.InitialFeatureStatesStrategy;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import ar.lamansys.sgx.shared.flavor.FlavorBo;
+import java.util.Arrays;
 
-public class InitialFeatureStatesStrategyTest {
+class InitialFeatureStatesStrategyTest {
 
 	@Test
-	public void forFlavor_checkAllFlavors() {
+	void forFlavor_checkAllFlavors() {
 		// Aseguramos que para todos los flavors hay una estrategia de FF
 		Assertions.assertThatCode(
 				() -> Arrays.stream(FlavorBo.values()).forEach(InitialFeatureStatesStrategy::forFlavor)

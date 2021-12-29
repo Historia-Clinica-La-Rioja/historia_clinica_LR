@@ -4,12 +4,10 @@ import net.pladema.UnitController;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.dto.RoleAssignment;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,16 +19,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(LoggedUserController.class)
-public class LoggedUserControllerTest extends UnitController {
+class LoggedUserControllerTest extends UnitController {
 
 	@MockBean
 	private LoggedUserService loggedUserService;
 
 	@Test
 	@WithMockUser
-	public void getPermissions_admin() throws Exception {
+	void getPermissions_admin() throws Exception {
 
 		List<RoleAssignment> permissionAssignment = Arrays.asList(
 				new RoleAssignment(ERole.ADMINISTRADOR, null)
@@ -47,7 +44,7 @@ public class LoggedUserControllerTest extends UnitController {
 
 	@Test
 	@WithMockUser
-	public void getPermissions_hospital() throws Exception {
+	void getPermissions_hospital() throws Exception {
 
 		List<RoleAssignment> permissionAssignment = Arrays.asList(
 				new RoleAssignment(ERole.PROFESIONAL_DE_SALUD, 99)
@@ -64,7 +61,7 @@ public class LoggedUserControllerTest extends UnitController {
 	}
 
 	@Test
-	public void getAccount_noUser() throws Exception {
+	void getAccount_noUser() throws Exception {
 		mockMvc.perform(get("/account/permissions"))
 				.andDo(log())
 				.andExpect(status().isUnauthorized());

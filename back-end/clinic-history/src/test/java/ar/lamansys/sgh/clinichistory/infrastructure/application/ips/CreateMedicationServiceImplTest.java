@@ -1,6 +1,15 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.application.ips;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
+import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
@@ -9,22 +18,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -33,8 +31,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-public class CreateMedicationServiceImplTest extends UnitRepository {
+class CreateMedicationServiceImplTest extends UnitRepository {
 
     private LoadMedications medicationServiceImpl;
 
@@ -59,8 +56,8 @@ public class CreateMedicationServiceImplTest extends UnitRepository {
     @MockBean
     private NoteService noteService;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         medicationServiceImpl = new LoadMedications(
                 medicationStatementRepository,
                 dosageRepository,
@@ -73,14 +70,14 @@ public class CreateMedicationServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void createDocument_withEmptyList() {
+    void createDocument_withEmptyList() {
         var result = medicationServiceImpl.run(new PatientInfoBo(1, (short)2, (short)2), 1l, Collections.emptyList());
         Assertions.assertThat(result.isEmpty())
                     .isTrue();
     }
 
     @Test
-    public void createDocument_complete_success() {
+    void createDocument_complete_success() {
         PatientInfoBo patientInfo =new PatientInfoBo(1, (short)2, (short)2);
 
         Integer snomedId = 1;
@@ -140,7 +137,7 @@ public class CreateMedicationServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void createDocument_chronicMedication_success() {
+    void createDocument_chronicMedication_success() {
         PatientInfoBo patientInfo = new PatientInfoBo(1, (short)2, (short)2);
 
         Integer snomedId = 1;
@@ -199,7 +196,7 @@ public class CreateMedicationServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void createDocument_usual_medication_success() {
+    void createDocument_usual_medication_success() {
         PatientInfoBo patientInfo = new PatientInfoBo(1, (short)2, (short)2);
 
         Integer snomedId = 1;

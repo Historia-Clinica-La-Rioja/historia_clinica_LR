@@ -11,24 +11,19 @@ import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicat
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(MedicationRequestController.class)
-@Ignore
-public class MedicationRequestControllerTest extends UnitController {
+class MedicationRequestControllerTest extends UnitController {
 
     private String BASE_PATH = "/institutions/{institutionId}/patient/{patientId}/medication-requests";
 
@@ -62,14 +57,14 @@ public class MedicationRequestControllerTest extends UnitController {
     @MockBean
     private PdfService pdfService;
 
-    @Before
-    public void setup() {
-
+    @BeforeEach
+    void setup() {
+        this.buildMockMvc();
     }
 
     @Test
-    @WithMockUser(authorities = {"ROOT"})
-    public void test_createWithoutSnomed_fail() throws Exception {
+    @WithUserDetails(value="user-24-ESPECIALISTA_MEDICO", userDetailsServiceBeanName="UserDetailsServiceWithRole")
+    void test_createWithoutSnomed_fail() throws Exception {
         String URL = BASE_PATH
                     .replace("{institutionId}","1")
                     .replace("{patientId}", "1");
@@ -102,8 +97,8 @@ public class MedicationRequestControllerTest extends UnitController {
     }
 
     @Test
-    @WithMockUser(authorities = {"ROOT"})
-    public void test_createWithoutItems_fail() throws Exception {
+    @WithUserDetails(value="user-24-ESPECIALISTA_MEDICO", userDetailsServiceBeanName="UserDetailsServiceWithRole")
+    void test_createWithoutItems_fail() throws Exception {
         String URL = BASE_PATH
                 .replace("{institutionId}","1")
                 .replace("{patientId}", "1");

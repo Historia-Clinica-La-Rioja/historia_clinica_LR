@@ -1,31 +1,27 @@
 package net.pladema.permissions.repository;
 
+import net.pladema.UnitRepository;
+import net.pladema.permissions.repository.entity.RolePermission;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import static net.pladema.TestUtils.assertCreateAuditableEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import net.pladema.UnitRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import net.pladema.permissions.repository.entity.RolePermission;
-
-@RunWith(SpringRunner.class)
-public class RolePermissionRepositoryTest extends UnitRepository {
+class RolePermissionRepositoryTest extends UnitRepository {
 	private final static Short ROLE_ID = (short) 8;
 	private final static Short PERMISSION_ID = (short) 108;
 
 	@Autowired
 	private RolePermissionRepository rolePermissionRepository;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() {
 	}
 	
 	@Test
-	public void saveCreateTest() {
+	void saveCreateTest() {
 		RolePermission rolePermission = new RolePermission(ROLE_ID, PERMISSION_ID);
 		RolePermission createdRolePermission = rolePermissionRepository.saveAndFlush(rolePermission);
 		

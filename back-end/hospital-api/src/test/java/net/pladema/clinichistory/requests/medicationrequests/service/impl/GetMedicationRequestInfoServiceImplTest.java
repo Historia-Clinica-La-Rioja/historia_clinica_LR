@@ -1,52 +1,49 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import net.pladema.UnitRepository;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.MedicationTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.GetMedicationRequestInfoRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.GetMedicationRequestInfoRepositoryImpl;
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
 
 
-@RunWith(SpringRunner.class)
-public class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
+class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
 
     private GetMedicationRequestInfoService getMedicationRequestInfoService;
 
     @Autowired
     private EntityManager entityManager;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    void setUp(){
         GetMedicationRequestInfoRepository getMedicationRequestInfoRepository = new GetMedicationRequestInfoRepositoryImpl(entityManager);
         getMedicationRequestInfoService = new GetMedicationRequestInfoServiceImpl(getMedicationRequestInfoRepository);
         save(new MedicationStatementStatus(MedicationStatementStatus.ACTIVE, "Activo"));
     }
 
     @Test
-    public void execute_success(){
+    void execute_success(){
 
         Integer patientId = 1;
         Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
@@ -119,7 +116,7 @@ public class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
                 .isTrue();
     }
 
-    public boolean contains(List<MedicationBo> sources, MedicationBo target) {
+    private boolean contains(List<MedicationBo> sources, MedicationBo target) {
         for (var source: sources) {
             if (isEqualTo(source, target))
                 return true;
@@ -127,14 +124,14 @@ public class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
         return false;
     }
 
-    public boolean isEqualTo(MedicationBo source, MedicationBo target){
+    private boolean isEqualTo(MedicationBo source, MedicationBo target){
         if (source == null && target == null)
             return true;
         return source.getSnomed().equals(target.getSnomed()) &&
                 isEqualTo(source.getHealthCondition(), target.getHealthCondition());
     }
 
-    public boolean isEqualTo(HealthConditionBo source, HealthConditionBo target){
+    private boolean isEqualTo(HealthConditionBo source, HealthConditionBo target){
         if (source == null && target == null)
             return true;
         return source.getId().equals(target.getId()) &&

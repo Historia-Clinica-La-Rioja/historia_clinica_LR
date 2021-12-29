@@ -5,15 +5,15 @@ import ar.lamansys.sgx.cubejs.infrastructure.configuration.CubejsAutoConfigurati
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
 import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,25 +23,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-public class DashboardInfoServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class DashboardInfoServiceImplTest {
     private DashboardInfoService dashboardInfoService;
 
-    @MockBean
+    @Mock
     private ReverseProxy reverseProxy;
 
-    @MockBean
+    @Mock
     private CubejsAutoConfiguration cubejsAutoConfiguration;
 
-    @Before
+    @BeforeEach
     public void setUp() {
     }
 
 
     @Test
     @DisplayName("Dashboardinfo success with enable storage")
-    @Ignore
-    public void dashboardinfo_enable_storage_success() throws Exception {
+    @Disabled
+    void dashboardinfo_enable_storage_success() throws Exception {
         when(reverseProxy.getAsString(any(), any())).thenReturn(ResponseEntity.of(Optional.empty()));
         when(cubejsAutoConfiguration.getApiUrl()).thenReturn("http://localhost:4000/cubejs-api");
         when(cubejsAutoConfiguration.getHeaders()).thenReturn(new HashMap<>());
@@ -55,7 +55,7 @@ public class DashboardInfoServiceImplTest {
 
     @Test
     @DisplayName("Dashboardinfo faild with disable storage")
-    public void dashboardinfo_disable_storage_exception() {
+    void dashboardinfo_disable_storage_exception() {
 
         dashboardInfoService = new DashboardInfoServiceImpl(new DashboardStorageUnavailableImpl());
         Map<String, String[]> parameterMap = new HashMap<>();
