@@ -27,6 +27,7 @@ import { Moment } from 'moment';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
+import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -92,6 +93,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		public dialog: MatDialog,
 		private injector: Injector,
 		private readonly referenceFileService: ReferenceFileService,
+		private readonly counterreferenceFileService: CounterreferenceFileService,
 	) {
 		this.contextService = this.injector.get<ContextService>(ContextService);
 		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
@@ -285,4 +287,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {
 		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
 	}
+
+	downloadCounterreferenceFile(file: ReferenceCounterReferenceFileDto) {
+		this.counterreferenceFileService.downloadCounterreferenceFiles(file.fileId, file.fileName);
+	}
+
 }

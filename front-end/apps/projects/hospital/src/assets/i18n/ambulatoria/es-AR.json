@@ -295,7 +295,9 @@
 					"REFERENCE_REQUEST": "referencia solicitada",
 					"CARE_LINE": "Línea de cuidado:",
 					"SPECIALTY": "Especialidad:",
-					"SUMMARY_REFERENCE": "Resumen de referencia"
+					"SUMMARY_REFERENCE": "Resumen de referencia",
+					"COUNTERREFERENCE": "Contrarreferencia",
+					"PROCEDURE": "Procedimientos:"
 				},
 				"historical-problems-filters": {
 					"SPECIALTY": "Especialidad",
