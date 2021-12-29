@@ -19,6 +19,7 @@ import { ViewPatientDetailComponent } from './component/view-patient-detail/view
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { EditProfessionsComponent } from './dialogs/edit-professions/edit-professions.component';
+import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
 
 @NgModule({
 	declarations: [
@@ -38,6 +39,7 @@ import { EditProfessionsComponent } from './dialogs/edit-professions/edit-profes
 		ScanPatientComponent,
 		EditProfessionsComponent,
 		ReportsComponent,
+		EditRolesComponent,
 		ScanPatientComponent,
 	],
 	imports: [

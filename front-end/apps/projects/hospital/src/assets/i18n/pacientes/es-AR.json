@@ -145,6 +145,7 @@
                 "CREATE_USER": "CREAR USUARIO",
 				"SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
 				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO",
+				"EDIT_ROLES": "EDITAR ROLES",
 				"EDIT_PROFESSIONS": "EDITAR PROFESIONES"
             },
             "messages": {
@@ -166,6 +167,15 @@
                 "SUCCESS": "Se guardaron correctamente los cambios en profesiones",
                 "ERROR": "Error al guardaron los cambios en profesiones"
 			}
-        }
+        },
+		"edit_roles": {
+			"TITLE": "Editar roles",
+			"ADD_ANOTHER_ROLES": "Agregar otro rol",
+			"PROFESSION_REQUIRED": "Este rol requiere definir una profesión",
+			"messages": {
+                "SUCCESS": "Se guardaron correctamente los cambios",
+                "ERROR": "Error al guardaron los cambios de roles"
+			}
+		}
     }
 }
