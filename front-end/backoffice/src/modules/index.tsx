@@ -31,6 +31,10 @@ import documenttypes from "./documenttypes";
 import documentfiles from "./documentfiles";
 import restClientMeasures from "./rest-client-measures";
 
+// Ampliación
+
+//
+
 const resourcesAdminInstitucional = [
     <Resource name="sectortypes" />,
     <Resource name="agegroups" />,
@@ -91,6 +95,9 @@ const resourcesAdminRoot = [
     <Resource name="documentfiles" {...documentfiles} />,
     <Resource name="documenttypes" {...documenttypes} />,
     <Resource name="rest-client-measures" {...restClientMeasures} />,
+
+    // Ampliación
+
 ];
 
 const resourcesFor = (permissions: SGXPermissions) =>

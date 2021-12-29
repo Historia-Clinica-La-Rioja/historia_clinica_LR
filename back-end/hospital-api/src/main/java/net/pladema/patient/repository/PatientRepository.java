@@ -17,25 +17,25 @@ import java.util.stream.Stream;
 public interface PatientRepository extends JpaRepository<Patient, Integer>, PatientRepositoryCustom, PatientRepositorySearch {
 
 	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientSearch(person, patient.id, patientType.active, 0) " +
-			"	FROM Patient patient JOIN Person person ON patient.personId = person.id "
-			+ " JOIN PatientType patientType ON patient.typeId = patientType.id" +
+			" FROM Patient patient JOIN Person person ON patient.personId = person.id " +
+			" JOIN PatientType patientType ON patient.typeId = patientType.id" +
 			" WHERE person.firstName = :name " +
 			" OR person.lastName = :lastName " +
 			" OR person.identificationNumber = :identificationNumber " +
 			" OR person.birthDate = :birthDate ")
-	public Stream<PatientSearch> getAllByFilter(@Param("name") String name, @Param("lastName") String lastName,
-												@Param("identificationNumber") String identificationNumber, @Param("birthDate") LocalDate birthDate);
+	Stream<PatientSearch> getAllByFilter(@Param("name") String name, @Param("lastName") String lastName,
+										 @Param("identificationNumber") String identificationNumber, @Param("birthDate") LocalDate birthDate);
 
 	@Query(value = " SELECT p.id " +
 			"FROM UserPerson up " +
 			"LEFT JOIN Patient p ON (p.personId = up.pk.personId) " +
 			"WHERE up.pk.userId = :userId")
-	public Optional<Integer> getPatientIdByUser(@Param("userId") Integer userId);
+	Optional<Integer> getPatientIdByUser(@Param("userId") Integer userId);
 
 	@Query(value = " SELECT up.pk.personId " +
 			"FROM UserPerson up " +
 			"WHERE up.pk.userId = :userId")
-	public Optional<Integer> getPersonIdByUser(@Param("userId") Integer userId);
+	Optional<Integer> getPersonIdByUser(@Param("userId") Integer userId);
 
 	@Query(value = "SELECT new net.pladema.patient.repository.domain.PatientPersonVo(patient, person) " +
 			"FROM Patient patient " +

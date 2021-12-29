@@ -26,6 +26,7 @@ public class AppointmentState implements Serializable {
     public static final short ABSENT = 3;
     public static final short CANCELLED = 4;
     public static final short SERVED = 5;
+    public static final short BOOKED = 6;
     
     public static final String CANCELLED_STR = "4";
 
