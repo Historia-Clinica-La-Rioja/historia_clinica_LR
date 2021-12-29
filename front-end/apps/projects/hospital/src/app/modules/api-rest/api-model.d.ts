@@ -1408,6 +1408,7 @@ export interface OdontologyConsultationDto extends Serializable {
     personalHistories?: OdontologyPersonalHistoryDto[];
     procedures?: OdontologyProcedureDto[];
     reasons?: OdontologyReasonDto[];
+    references?: ReferenceDto[];
     temporaryTeethPresent?: number;
 }
 
