@@ -26,6 +26,21 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "WHERE oc.patientId = :patientId " +
             "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds)" +
             "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
-    List<ReferenceGetBo> getReferences(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
+    List<ReferenceGetBo> getReferencesFromOutpatientConsultation(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceGetBo(r.id, oc.performedDate, " +
+            "rn.id, rn.description, cl.id, cl.description, cs.id, cs.name, oc.doctorId, " +
+            "p.firstName, p.lastName) " +
+            "FROM Reference r " +
+            "JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
+            "JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id) " +
+            "JOIN CareLine cl ON (cl.id = r.careLineId) " +
+            "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
+            "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
+            "JOIN Person p ON (p.id = hp.personId) " +
+            "WHERE oc.patientId = :patientId " +
+            "AND r.clinicalSpecialtyId IN (:clinicalSpecialtyIds)" +
+            "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)")
+    List<ReferenceGetBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 }
