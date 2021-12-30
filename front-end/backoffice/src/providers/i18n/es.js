@@ -335,10 +335,16 @@ const messages = {
             }
         },
         medicalcoverages: {
-            name: 'Coberturas médicas |||| Coberturas médicas',
+            name: 'Cobertura médica |||| Coberturas médicas',
             fields: {
                 name: 'Nombre',
-            }
+                type: 'Tipo',
+                plan: 'Plan',
+                rnos: 'Rnos',
+                acronym: 'Acrónimo'
+            },
+            createRelated: 'Crear Cobertura médica'
+
         },
     },
 };

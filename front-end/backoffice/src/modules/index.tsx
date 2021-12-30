@@ -76,6 +76,7 @@ const resourcesAdminRoot = [
     <Resource name="cities" {...cities} />,
     <Resource name="departments" {...departments} />,
     <Resource name="medicalcoverages" {...medicalCoverage} />,
+    <Resource name="medicalcoveragetypes" />,
 
     // Ampliación
     // 
