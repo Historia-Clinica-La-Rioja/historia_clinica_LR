@@ -36,11 +36,11 @@ public class LoginJWTImpl implements Login {
     public JWTokenBo execute(LoginBo login) throws BadLoginException {
         UserInfoBo user = userInfoStorage.getUser(login.username);
         if (user == null)
-            throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario invalido");
+            throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario inválido");
         if (!user.isEnable())
-            throw new BadLoginException(BadLoginEnumException.DISABLED_USER, "Usuario invalido");
+            throw new BadLoginException(BadLoginEnumException.DISABLED_USER, "Usuario inválido");
         if (!passwordEncryptor.matches(login.password, user.getPassword()))
-            throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario/contraseña invalida");
+            throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario/contraseña inválida");
         logger.debug("User {} authenticated", login.username);
         JWTokenBo result = generateToken.generateTokens(user.getId(), user.getUsername());
         userInfoStorage.updateLoginDate(user.getUsername());
