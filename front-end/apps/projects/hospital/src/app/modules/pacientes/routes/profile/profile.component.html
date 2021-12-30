@@ -107,6 +107,19 @@
 								</button>
 								</div>
 							</ng-container>
+							<mat-divider inset></mat-divider>
+							<div content>
+								<ng-container *ngIf="personId">
+									<app-card-roles [userRoles]="userRoles" [institutionName]="institutionName">
+									</app-card-roles>
+								</ng-container>
+							</div>
+							<div content>
+								<button id="button-edit-roles" mat-stroked-button color="primary" (click)="editRoles()">
+									<span [translate]="'pacientes.user_data.buttons.EDIT_ROLES'"
+										class="uppercase"></span>
+								</button>
+							</div>
 						</div>
 						<mat-divider inset></mat-divider>
 						<div fxLayout="column" fxLayoutGap="10px">

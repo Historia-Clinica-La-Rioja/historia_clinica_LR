@@ -7,7 +7,10 @@ import {
 	ProfessionalDto,
 	HealthcareProfessionalSpecialtyDto,
 	ClinicalSpecialtyDto,
-	UserDataDto
+	UserDataDto,
+	UserRoleDto,
+	RoleDto,
+	InstitutionDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -36,6 +39,9 @@ import { UserPasswordResetService } from "@api-rest/services/user-password-reset
 import { EditProfessionsComponent, ProfessionDto } from '@pacientes/dialogs/edit-professions/edit-professions.component';
 import { ProfessionalService } from '@api-rest/services/professional.service';
 import { SpecialtyService } from '@api-rest/services/specialty.service';
+import { EditRolesComponent } from '@pacientes/dialogs/edit-roles/edit-roles.component';
+import { RolesService } from '@api-rest/services/roles.service';
+import { InstitutionService } from '@api-rest/services/institution.service';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -49,7 +55,12 @@ const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACK
 	styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-
+	userRoles: string[] = [];
+	roles: RoleDto[] = [];
+	userId: number = null;
+	rolesByUser: UserRoleDto[] = [];
+	public institutionName: string;
+	private institution: number[] = [];
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientMedicalCoverage: PatientMedicalCoverageDto[];
@@ -61,7 +72,7 @@ export class ProfileComponent implements OnInit {
 	private readonly routePrefix;
 	public internmentEpisode;
 	public userData: UserDataDto;
-	private personId: number;
+	public personId: number;
 	private professionalId: number;
 	license: string = '';
 	private specialties: number[] = [];
@@ -92,6 +103,8 @@ export class ProfileComponent implements OnInit {
 		private readonly professionalService: ProfessionalService,
 		private readonly specialtyService: SpecialtyService,
 		private readonly formBuilder: FormBuilder,
+		private readonly rolesService: RolesService,
+		private readonly institutionService: InstitutionService,
 		private readonly permissionService: PermissionsService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -126,6 +139,23 @@ export class ProfileComponent implements OnInit {
 									});
 							}
 						})
+
+						this.userService.getUserData(completeData.person.id).subscribe((userData: UserDataDto) => {
+							if (userData?.id)
+								this.rolesService.getRolesByUser(userData?.id).subscribe((roles: UserRoleDto[]) => {
+									roles.forEach(e => this.userRoles.push(e.roleDescription));
+								})
+						});
+
+						this.rolesService.getAllInstitutionalRoles().subscribe((roles: RoleDto[]) => {
+							this.roles = roles;
+						});
+
+						this.institution.push(this.contextService.institutionId);
+						this.institutionService.getInstitutions(this.institution).subscribe((institutions: InstitutionDto[]) => {
+							this.institutionName = institutions[0].name;
+						});
+
 					});
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
@@ -137,11 +167,13 @@ export class ProfileComponent implements OnInit {
 
 				this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
+
 			});
 
 		this.form = this.formBuilder.group({
 			enable: [null]
 		});
+
 	}
 
 	checkIfProfessional(): void {
@@ -208,7 +240,48 @@ export class ProfileComponent implements OnInit {
 			queryParams: person
 		});
 	}
+	roleAccordingToId(roleId: number): string {
 
+		return this.roles.find(rol => rol.id === roleId)?.description;
+	}
+
+	editRoles(): void {
+		const dialog = this.dialog.open(EditRolesComponent, {
+			width: '25%',
+			disableClose: true,
+			data: {
+				personId: this.personId,
+				professionalId: this.professionalId,
+				roles: this.roles,
+				userId: this.userId,
+				rolesByUser: this.rolesByUser
+			}
+		});
+		dialog.afterClosed().subscribe((userRoles: UserRoleDto[]) => {
+			if (userRoles) {
+
+				this.rolesService.updateRoles(this.userId, userRoles).subscribe(_ => {
+					this.snackBarService.showSuccess('pacientes.edit_roles.messages.SUCCESS');
+					this.userRoles = [];
+					this.rolesByUser = [];
+
+					userRoles.forEach(e => {
+						if (!this.userRoles.includes(this.roleAccordingToId(e.roleId))) {
+							this.userRoles.push(this.roles.find(rol => rol.id === e.roleId)?.description);
+							this.rolesByUser.push(e);
+						}
+					});
+				},
+					error => {
+						error?.text ?
+							this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_roles.messages.ERROR');
+					});
+
+
+
+			}
+		});
+	}
 	editProfessions(): void {
 		const dialog = this.dialog.open(EditProfessionsComponent, {
 			width: '350px',
@@ -241,6 +314,10 @@ export class ProfileComponent implements OnInit {
 			.subscribe(userId => {
 				this.userService.getUserData(this.personId).subscribe(userDataDto => this.userData = userDataDto);
 				this.snackBarService.showSuccess('pacientes.user_data.messages.SUCCESS');
+				this.userId = userId;
+				this.rolesService.getRolesByUser(userId).subscribe((roles: UserRoleDto[]) => {
+					this.rolesByUser = roles;
+				});
 			}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
 	}
 
