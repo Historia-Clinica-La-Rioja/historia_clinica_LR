@@ -176,6 +176,11 @@
                 "SUCCESS": "Se guardaron correctamente los cambios",
                 "ERROR": "Error al guardaron los cambios de roles"
 			}
+		},
+		"card_roles": {
+			"ROL_COLUMN": "Rol:",
+			"CLINIC_COLUMN": "Clínica:",
+			"WITHOUT_ROLES": "Sin roles asignados."
 		}
     }
 }

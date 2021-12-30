@@ -20,6 +20,7 @@ import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { EditProfessionsComponent } from './dialogs/edit-professions/edit-professions.component';
 import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
+import { CardRolesComponent } from './component/card-roles/card-roles.component';
 
 @NgModule({
 	declarations: [
@@ -40,6 +41,7 @@ import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
 		EditProfessionsComponent,
 		ReportsComponent,
 		EditRolesComponent,
+		CardRolesComponent,
 		ScanPatientComponent,
 	],
 	imports: [

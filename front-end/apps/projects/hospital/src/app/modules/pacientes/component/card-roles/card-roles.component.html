@@ -1,0 +1,35 @@
+<ng-container *ngIf="hasAssignedRoles() else noInfo">
+
+	<div fxLayout="column" class="flex-container">
+
+		<mat-list class="sub-title">
+			<div>
+				<strong fxFlex="60%" [translate]="'pacientes.card_roles.ROL_COLUMN'"></strong>
+				<strong fxFlex="40%" [translate]="'pacientes.card_roles.CLINIC_COLUMN'"></strong>
+			</div>
+			<mat-list>
+
+				<div id="data" fxLayout="row" *ngFor="let role of userRoles">
+					<div fxFlex="10%">
+						<mat-icon class="icon" fxFlex="10%" color="primary" fontSet="material-icons-outlined">
+							medical_services</mat-icon>
+					</div>
+					<div fxFlex="50%">
+						<div id="role">
+							<span id="rol" fxFlex="90%">{{role}} </span>
+						</div>
+					</div>
+
+					<div id="clinic" fxFlex="40%">
+						<span>{{institutionName}}</span>
+					</div>
+
+				</div>
+			</mat-list>
+		</mat-list>
+	</div>
+</ng-container>
+
+<ng-template #noInfo>
+	<span class="no-info" [translate]="'pacientes.card_roles.WITHOUT_ROLES'"></span>
+</ng-template>
