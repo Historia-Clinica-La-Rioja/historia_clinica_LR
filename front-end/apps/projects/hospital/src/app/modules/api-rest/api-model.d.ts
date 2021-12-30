@@ -925,7 +925,7 @@ export interface HCEEvolutionSummaryDto extends Serializable {
 export interface HCEHealthConditionDto extends HCEPersonalHistoryDto {
     main: boolean;
     problemId: string;
-    reference: HCEReferenceDto;
+    references: HCEReferenceDto[];
 }
 
 export interface HCEHealthcareProfessionalDto {
@@ -979,12 +979,28 @@ export interface HCEReasonDto {
     snomed: SnomedDto;
 }
 
+export interface HCEReferenceCounterReferenceFileDto extends Serializable {
+    fileId: number;
+    fileName: string;
+}
+
 export interface HCEReferenceDto {
     careLine: string;
     clinicalSpecialty: string;
+    counterReference: HCESummaryCounterReferenceDto;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
     note: string;
+}
+
+export interface HCESummaryCounterReferenceDto {
+    clinicalSpecialtyId: string;
+    counterReferenceNote: string;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    performedDate: DateDto;
+    procedures: CounterReferenceSummaryProcedureDto[];
+    professional: ProfessionalPersonDto;
 }
 
 export interface HCEToothRecordDto extends Serializable {

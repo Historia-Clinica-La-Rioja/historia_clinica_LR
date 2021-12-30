@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.OutpatientEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceSummaryBo;
 
 import java.util.List;
 
@@ -16,5 +17,7 @@ public interface HCEOutpatientConsultationSummaryStorage {
     List<ReasonSummaryBo> getReasonsByPatient(Integer patientId, List<Integer> outpatientIds);
 
     List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> outpatientIds);
+
+    List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId);
 
 }

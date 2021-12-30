@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +23,8 @@ public class HealthConditionSummaryBo extends ClinicalTerm {
     private String problemId;
 
     private Integer consultationId;
+
+    private List<ReferenceSummaryBo> references;
 
     public HealthConditionSummaryBo(Integer id, Integer patientId, SnomedBo snomed, String statusId,
                                     String status, String cie10codes, LocalDate startDate,

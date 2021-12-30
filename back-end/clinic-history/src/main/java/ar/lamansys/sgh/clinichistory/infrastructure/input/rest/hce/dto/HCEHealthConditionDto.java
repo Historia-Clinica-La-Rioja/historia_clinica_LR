@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,5 +17,5 @@ public class HCEHealthConditionDto extends HCEPersonalHistoryDto {
 
     private String problemId;
 
-    private HCEReferenceDto reference;
+    private List<HCEReferenceDto> references;
 }

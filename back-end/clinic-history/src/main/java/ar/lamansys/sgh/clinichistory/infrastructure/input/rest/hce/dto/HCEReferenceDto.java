@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.ReferenceCounterReferenceFileDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +23,7 @@ public class HCEReferenceDto {
     private String note;
     
     private List<ReferenceCounterReferenceFileDto> files;
+
+    private HCESummaryCounterReferenceDto counterReference;
 
 }

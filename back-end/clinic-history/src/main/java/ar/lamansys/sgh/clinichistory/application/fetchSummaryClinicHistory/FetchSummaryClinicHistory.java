@@ -1,8 +1,10 @@
 package ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory;
 
+import ar.lamansys.sgh.clinichistory.application.ports.HCEOutpatientConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.NursingConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
-import ar.lamansys.sgh.clinichistory.application.ports.HCEOutpatientConsultationSummaryStorage;
+import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.NursingEvolutionSummaryBo;
@@ -10,6 +12,8 @@ import ar.lamansys.sgh.clinichistory.domain.hce.summary.OdontologyEvolutionSumma
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.OutpatientEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceCounterReferenceFileBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import lombok.extern.slf4j.Slf4j;
@@ -32,12 +36,15 @@ public class FetchSummaryClinicHistory {
 
     private final NursingConsultationSummaryStorage nursingConsultationSummaryStorage;
 
+    private final HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage;
+
     public FetchSummaryClinicHistory(HCEOutpatientConsultationSummaryStorage HCEOutpatientConsultationSummaryStorage,
                                      OdontologyConsultationSummaryStorage odontologyConsultationSummaryStorage,
-                                     NursingConsultationSummaryStorage nursingConsultationSummaryStorage) {
+                                     NursingConsultationSummaryStorage nursingConsultationSummaryStorage, HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage) {
         this.HCEOutpatientConsultationSummaryStorage = HCEOutpatientConsultationSummaryStorage;
         this.odontologyConsultationSummaryStorage = odontologyConsultationSummaryStorage;
         this.nursingConsultationSummaryStorage = nursingConsultationSummaryStorage;
+        this.hceReferenceCounterReferenceStorage = hceReferenceCounterReferenceStorage;
     }
 
     public List<EvolutionSummaryBo> run(Integer patientId) {
@@ -60,9 +67,13 @@ public class FetchSummaryClinicHistory {
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OutpatientEvolutionSummaryBo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
-            oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationId().equals(oes.getConsultationId())).collect(Collectors.toList()));
-            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationId().equals(oes.getConsultationId())).map(ReasonBo::new).collect(Collectors.toList()));
-            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
+            oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationId().equals(oes.getConsultationId()))
+                    .peek(hs -> hs.setReferences(getReferencesData(HCEOutpatientConsultationSummaryStorage
+                            .getReferencesByHealthCondition(hs.getId(), oes.getConsultationId())))).collect(Collectors.toList()));
+            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationId().equals(oes.getConsultationId()))
+                    .map(ReasonBo::new).collect(Collectors.toList()));
+            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId()))
+                    .map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);
         }
         log.trace(OUTPUT, result);
@@ -78,9 +89,13 @@ public class FetchSummaryClinicHistory {
         List<EvolutionSummaryBo> result = new ArrayList<>();
         for (OdontologyEvolutionSummaryBo oes : queryResult) {
             EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
-            oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationId().equals(oes.getConsultationId())).collect(Collectors.toList()));
-            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationId().equals(oes.getConsultationId())).map(ReasonBo::new).collect(Collectors.toList()));
-            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
+            oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationId().equals(oes.getConsultationId()))
+                    .peek(hs -> hs.setReferences(getReferencesData(odontologyConsultationSummaryStorage
+                            .getReferencesByHealthCondition(hs.getId(), oes.getConsultationId())))).collect(Collectors.toList()));
+            oesBo.setReasons(reasons.stream().filter(r -> r.getConsultationId().equals(oes.getConsultationId()))
+                    .map(ReasonBo::new).collect(Collectors.toList()));
+            oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId()))
+                    .map(ProcedureBo::new).collect(Collectors.toList()));
             result.add(oesBo);
         }
         log.trace(OUTPUT, result);
@@ -103,4 +118,17 @@ public class FetchSummaryClinicHistory {
         return result;
     }
 
+    private List<ReferenceSummaryBo> getReferencesData(List<ReferenceSummaryBo> referenceSummaryBos) {
+        return referenceSummaryBos.stream().peek(referenceSummaryBo -> {
+                        referenceSummaryBo.setFiles(getReferenceFiles(referenceSummaryBo.getId()));
+                        CounterReferenceSummaryBo counterReferenceSummaryBo = hceReferenceCounterReferenceStorage.getCounterReference(referenceSummaryBo.getId());
+                        referenceSummaryBo.setCounterReference(counterReferenceSummaryBo);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<ReferenceCounterReferenceFileBo> getReferenceFiles(Integer referenceId) {
+        log.debug("Input parameter -> referenceId {}", referenceId);;
+        return hceReferenceCounterReferenceStorage.getReferenceFilesData(referenceId);
+    }
 }
