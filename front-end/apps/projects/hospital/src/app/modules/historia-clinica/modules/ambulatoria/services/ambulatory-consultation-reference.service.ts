@@ -62,8 +62,8 @@ export class AmbulatoryConsultationReferenceService {
 		const dialogRef = this.dialog.open(ReferenceComponent, {
 			autoFocus: false,
 			data: {
-				newConsultationProblems: this.ambulatoryConsultationProblemsService.getProblemas(),
-				idPatient: this.informationData.idPaciente,
+				consultationProblems: this.ambulatoryConsultationProblemsService.getProblemas(),
+				patientId: this.informationData.idPaciente,
 			}
 		});
 		dialogRef.afterClosed().subscribe(reference => {

@@ -59,13 +59,13 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	setProblems() {
-		this.hceGeneralStateService.getActiveProblems(this.data.idPatient).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
 			const activeProblemsList = this.mapProblems(activeProblems);
 
-			this.hceGeneralStateService.getChronicConditions(this.data.idPatient).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
 				const chronicProblemsList = this.mapProblems(chronicProblems);
 
-				const newConsultationProblems = this.mapProblems(this.data.newConsultationProblems);
+				const newConsultationProblems = this.mapProblems(this.data.consultationProblems);
 				this.problemsList = activeProblemsList.concat(newConsultationProblems, chronicProblemsList);
 				this.problemsList$ = of(this.problemsList);
 			});
