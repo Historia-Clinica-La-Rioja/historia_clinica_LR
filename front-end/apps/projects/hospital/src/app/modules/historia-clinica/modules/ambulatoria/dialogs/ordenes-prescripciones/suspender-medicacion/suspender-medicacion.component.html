@@ -66,10 +66,8 @@
                     formControlName="dayQuantity"
                     placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_DAY_QUANTITY' | translate }}"
                     type="number"
+				   matTooltip="{{'ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_DAY_QUANTITY_HINT' | translate }}"
                     matInput>
-            <mat-hint>
-                <span translate="ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_DAY_QUANTITY_HINT"></span>
-            </mat-hint>
             <mat-error *ngIf="hasError(suspendMedicationForm, 'required', 'dayQuantity')">
                 <span translate="ambulatoria.paciente.ordenes_prescripciones.suspend_medication_dialog.INPUT_DAY_QUANTITY_REQUIRED"></span>
             </mat-error>
