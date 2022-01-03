@@ -1,7 +1,9 @@
 <app-content width="narrow">
 
-	<app-hospital-login></app-hospital-login>
+	<app-external-oauth-login *ngIf="isOAuthEnabled else hospitalLogin"></app-external-oauth-login>
 
-	<app-external-oauth-login></app-external-oauth-login>
+	<ng-template #hospitalLogin>
+		<app-hospital-login></app-hospital-login>
+	</ng-template>
 
 </app-content>

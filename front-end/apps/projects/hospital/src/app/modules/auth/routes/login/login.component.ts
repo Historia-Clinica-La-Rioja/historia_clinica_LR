@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { AuthService } from "@api-rest/services/auth.service";
 
 @Component({
 	selector: 'app-login',
@@ -7,5 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent {
 
+	isOAuthEnabled = false;
+
+	constructor(private readonly authService: AuthService) {
+		authService.getOauthConfig().subscribe(config => this.isOAuthEnabled = config.enabled);
+	}
 
 }
