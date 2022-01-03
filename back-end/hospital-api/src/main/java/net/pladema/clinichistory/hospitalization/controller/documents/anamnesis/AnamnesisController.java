@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto.AnamnesisDto;
@@ -34,7 +34,7 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis")
-@Api(value = "Anamnesis", tags = { "Anamnesis" })
+@Tag(name = "Anamnesis", description = "Anamnesis")
 @Validated
 public class AnamnesisController {
 

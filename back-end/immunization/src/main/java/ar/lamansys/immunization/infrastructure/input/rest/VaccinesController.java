@@ -2,7 +2,7 @@ package ar.lamansys.immunization.infrastructure.input.rest;
 
 import ar.lamansys.immunization.application.fetchVaccines.FetchVaccineById;
 import ar.lamansys.immunization.infrastructure.input.rest.dto.VaccineInformationDto;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/vaccines")
-@Api(value="Vaccines", tags= { "Vaccines" } )
+@Tag(name = "Vaccines", description = "Vaccines")
 @Validated
 public class VaccinesController {
 

@@ -1,6 +1,6 @@
 package net.pladema.establishment.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.establishment.controller.dto.InstitutionAddressDto;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@Api(value = "Institution", tags = { "Institution" })
+@Tag(name = "Institution", description = "Institution")
 @RequestMapping("institution")
 public class InstitutionController {
 

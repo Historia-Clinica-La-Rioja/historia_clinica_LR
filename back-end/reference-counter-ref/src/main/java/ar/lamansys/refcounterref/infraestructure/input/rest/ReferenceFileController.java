@@ -4,7 +4,6 @@ import ar.lamansys.refcounterref.application.createreferencefile.CreateReference
 import ar.lamansys.refcounterref.application.deletefiles.DeleteFiles;
 import ar.lamansys.refcounterref.application.getreferencefile.GetReferenceFile;
 import ar.lamansys.refcounterref.domain.file.StoredFileBo;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/institutions/{institutionId}/reference-file")
-@Api(value = "Reference File", tags = {"Reference File"})
+//@Api(value = "Reference File", tags = {"Reference File"})
 public class ReferenceFileController {
 
     private static final String OUTPUT = "Output -> {}";

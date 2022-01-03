@@ -1,7 +1,7 @@
 package ar.lamansys.sgx.shared.recaptcha.controller;
 
-import io.swagger.annotations.Api;
 import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/recaptcha")
-@Api(value = "Recaptcha", tags = { "Recaptcha" })
+@Tag(name = "Recaptcha", description = "Recaptcha")
 public class RecaptchaController {
 
     private static final Logger LOG = LoggerFactory.getLogger(RecaptchaController.class);

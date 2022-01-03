@@ -5,7 +5,6 @@ import ar.lamansys.sgh.publicapi.application.saveexternalencounter.SaveExternalE
 import ar.lamansys.sgh.publicapi.domain.ExternalEncounterBo;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ExternalEncounterDto;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/public-api/patient/{externalId}/external-encounters")
-@Api(value = "External Encounter", tags = {"External Encounter"})
+//@Api(value = "External Encounter", tags = {"External Encounter"})
 public class ExternalEncounterController {
 
     private final SaveExternalEncounter saveExternalEncounter;

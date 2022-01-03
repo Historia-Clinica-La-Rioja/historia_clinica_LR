@@ -1,6 +1,6 @@
 package net.pladema.medicalconsultation.doctorsoffice.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.mapper.DoctorsOfficeMapper;
 import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/doctorsOffice")
-@Api(value = "Doctor's office", tags = { "Doctor's office" })
+@Tag(name = "Doctor's office", description = "Doctor's office")
 public class DoctorsOfficeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DoctorsOfficeController.class);

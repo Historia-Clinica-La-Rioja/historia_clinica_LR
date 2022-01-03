@@ -1,10 +1,20 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
-import io.swagger.annotations.Api;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
-import net.pladema.clinichistory.hospitalization.controller.dto.*;
+import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;
+import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.InternmentSummaryDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.PatientDischargeDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.ProbableDischargeDateDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
@@ -17,12 +27,6 @@ import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummar
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +34,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -39,7 +49,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
-@Api(value = "Internment Episode", tags = { "Internment Episode" })
+@Tag(name = "Internment Episode", description = "Internment Episode")
 @Validated
 public class InternmentEpisodeController {
 

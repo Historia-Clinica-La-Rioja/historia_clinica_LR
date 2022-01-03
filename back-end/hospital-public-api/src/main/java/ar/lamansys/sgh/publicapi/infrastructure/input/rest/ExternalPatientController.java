@@ -8,7 +8,6 @@ import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoExce
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ExternalPatientExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/public-api/patient")
-@Api(value = "External Patient", tags = {"External Patient"})
+//@Api(value = "External Patient", tags = {"External Patient"})
 public class ExternalPatientController {
 
     private static final String OUTPUT = "Output -> {}";

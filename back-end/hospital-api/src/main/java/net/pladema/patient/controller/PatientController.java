@@ -1,14 +1,23 @@
 package net.pladema.patient.controller;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.federar.controller.FederarExternalService;
 import net.pladema.federar.services.domain.FederarResourceAttributes;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
-import net.pladema.patient.controller.dto.*;
+import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
+import net.pladema.patient.controller.dto.APatientDto;
+import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.patient.controller.dto.CompletePatientDto;
+import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
+import net.pladema.patient.controller.dto.PatientPhotoDto;
+import net.pladema.patient.controller.dto.PatientSearchDto;
+import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.controller.dto.ReducedPatientDto;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.repository.PatientTypeRepository;
 import net.pladema.patient.repository.entity.Patient;
@@ -25,26 +34,36 @@ import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patient")
-@Api(value = "Patient", tags = {"Patient"})
+@Tag(name = "Patient", description = "Patient")
 @Validated
 public class PatientController {
 

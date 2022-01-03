@@ -1,6 +1,6 @@
 package net.pladema.settings.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.assets.controller.service.AssetsExternalService;
 import net.pladema.settings.service.SettingsService;
 import org.apache.http.MethodNotSupportedException;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/settings")
-@Api(value = "Settings", tags = { "Settings" })
+@Tag(name = "Settings", description = "Settings")
 public class SettingsController {
 
     private final Logger logger;

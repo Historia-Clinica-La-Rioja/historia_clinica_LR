@@ -1,6 +1,6 @@
 package net.pladema.establishment.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.establishment.controller.dto.RoomDto;
 import net.pladema.establishment.controller.mapper.RoomMapper;
 import net.pladema.establishment.repository.RoomRepository;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@Api(value = "Sector", tags = { "Sector" })
+@Tag(name = "Sector", description = "Sector")
 @RequestMapping("/institution/{institutionId}/sector")
 public class SectorController  {
 

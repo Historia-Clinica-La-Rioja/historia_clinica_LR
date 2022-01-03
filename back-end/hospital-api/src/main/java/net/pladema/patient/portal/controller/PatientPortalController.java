@@ -1,6 +1,5 @@
 package net.pladema.patient.portal.controller;
 
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
@@ -10,7 +9,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEAl
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEClinicalObservationExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEHealthConditionsExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEMedicationExternalService;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
@@ -27,7 +28,6 @@ import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.service.PersonExternalService;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/patientportal")
-@Api(value = "Patient Portal", tags = { "Patient Portal" })
+@Tag(name = "Patient Portal", description = "Patient Portal")
 @Validated
 public class PatientPortalController {
 

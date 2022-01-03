@@ -10,7 +10,7 @@ import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.BedRelocationInfo
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ProcedureInformationDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SupplyInformationDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.ActivitiesMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/public-api/institution/refset/{refsetCode}/province-code/{provinceCode}/activities/{activityId}")
-@Api(value = "Public Api", tags = {"Public Api"})
+@Tag(name = "Public Api", description = "Public Api activity info")
 public class ActivityInfoController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityInfoController.class);

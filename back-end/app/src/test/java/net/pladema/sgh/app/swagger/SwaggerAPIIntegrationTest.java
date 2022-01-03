@@ -3,7 +3,6 @@ package net.pladema.sgh.app.swagger;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestPropertySource("classpath:integration-test.properties")
-@Disabled
 class SwaggerAPIIntegrationTest {
 
 	@Autowired
@@ -45,7 +43,7 @@ class SwaggerAPIIntegrationTest {
 		// @formatter:off
 		String swaggerJson = mockMvc
 				.perform(
-						get("/v2/api-docs")
+						get("/v3/api-docs")
 						.accept(MediaType.APPLICATION_JSON)
 				)
 				.andExpect(status().isOk())

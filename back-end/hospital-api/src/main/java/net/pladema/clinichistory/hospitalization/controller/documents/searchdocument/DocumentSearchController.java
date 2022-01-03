@@ -2,7 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller.documents.searchdoc
 
 import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.dto.DocumentHistoricDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.searchDocument.dto.DocumentSearchFilterDto;
@@ -23,7 +23,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/documentSearch")
-@Api(value = "documentSearch", tags = { "documentSearch" })
+@Tag(name = "Document search", description = "Document search")
 @Validated
 public class DocumentSearchController {
 

@@ -1,11 +1,11 @@
 package net.pladema.emergencycare.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternalService;
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.VitalSignExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
@@ -39,7 +39,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes")
-@Api(value = "Emergency care Episodes", tags = {"Emergency care Episodes"})
+@Tag(name = "Emergency care episodes", description = "Emergency care episodes")
 @Validated
 public class EmergencyCareEpisodeController {
 

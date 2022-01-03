@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.*;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.emergencycare.controller.DischargeTypeMasterDataExternalService;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/internments/masterdata")
-@Api(value = "Internments Master Data", tags = { "Internments Master Data" })
+@Tag(name = "Internments master data", description = "Internments master data")
 public class InternmentMasterdataController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentMasterdataController.class);

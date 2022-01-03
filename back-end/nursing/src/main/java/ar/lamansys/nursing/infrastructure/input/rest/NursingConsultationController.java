@@ -3,7 +3,7 @@ package ar.lamansys.nursing.infrastructure.input.rest;
 import ar.lamansys.nursing.application.CreateNursingConsultation;
 import ar.lamansys.nursing.infrastructure.input.rest.dto.NursingConsultationDto;
 import ar.lamansys.nursing.infrastructure.input.rest.mapper.NursingConsultationMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ import javax.validation.Valid;
 @RestController
 @Validated
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/nursing/consultation")
-@Api(value = "Nursing consultation", tags = {"Nursing consultation"})
+@Tag(name = "Nursing consultation", description = "Nursing consultation")
 public class NursingConsultationController {
 
     private static final Logger LOG = LoggerFactory.getLogger(NursingConsultationController.class);

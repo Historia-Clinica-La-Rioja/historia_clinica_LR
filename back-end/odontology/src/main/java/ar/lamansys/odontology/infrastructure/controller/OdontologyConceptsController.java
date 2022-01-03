@@ -4,7 +4,7 @@ import ar.lamansys.odontology.application.diagnostic.GetDiagnosticsService;
 import ar.lamansys.odontology.application.procedure.GetProceduresService;
 import ar.lamansys.odontology.infrastructure.controller.dto.OdontologyConceptDto;
 import ar.lamansys.odontology.infrastructure.controller.mapper.OdontologyConceptMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/odontology/concepts")
-@Api(value="Odontology concepts", tags= { "Odontology concepts" } )
+@Tag(name = "Odontology concepts", description = "Odontology concepts")
 public class OdontologyConceptsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(OdontologyConceptsController.class);

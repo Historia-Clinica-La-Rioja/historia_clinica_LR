@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.triage.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.triage.controller.dto.TriageCategoryDto;
 import net.pladema.emergencycare.triage.controller.mapper.TriageMasterDataMapper;
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/emergency-care/triage/masterdata")
-@Api(value = "Emergency care Triage Master Data", tags = { "Triage Master Data" })
+@Tag(name = "Triage master data", description = "Triage master data")
 public class TriageMasterDataController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TriageMasterDataController.class);

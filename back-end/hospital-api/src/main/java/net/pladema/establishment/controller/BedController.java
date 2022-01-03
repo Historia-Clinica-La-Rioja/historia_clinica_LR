@@ -3,6 +3,7 @@ package net.pladema.establishment.controller;
 import java.util.List;
 import java.util.Optional;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.establishment.controller.dto.*;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import org.slf4j.Logger;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
 import net.pladema.establishment.controller.mapper.BedMapper;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.domain.BedInfoVo;
@@ -22,7 +22,7 @@ import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.service.BedService;
 
 @RestController
-@Api(value = "Bed", tags = { "Bed" })
+@Tag(name = "Bed", description = "Bed")
 @RequestMapping("/institution/{institutionId}/bed")
 public class BedController {
 

@@ -1,6 +1,6 @@
 package net.pladema.staff.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/healthcareprofessional")
-@Api(value = "Healthcare professionals by institution", tags = { "Healthcare professionals by institution" })
+@Tag(name = "Healthcare professionals by institution", description = "Healthcare professionals by institution")
 public class HealthcareProfessionalByInstitutionController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalByInstitutionController.class);

@@ -1,30 +1,28 @@
 package net.pladema.hsi.extensions.infrastructure.controller;
 
-import static net.pladema.hsi.extensions.infrastructure.controller.dto.UILabelDto.fromKey;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.annotations.Api;
 import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatus;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UILabelDto;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIPageDto;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static net.pladema.hsi.extensions.infrastructure.controller.dto.UILabelDto.fromKey;
 
 
 @RestController
 @RequestMapping("/extensions/features")
-@Api(value = "Dashboards", tags = { "Dashboards" })
+//@Tag(name = "Dashboards", description = "Dashboards")
 public class FeaturesStatusController {
 	private final static UIComponentDto DIVIDER = new UIComponentDto("divider", Collections.emptyMap());
 	private final List<FeatureStatusService> featureStatusService;

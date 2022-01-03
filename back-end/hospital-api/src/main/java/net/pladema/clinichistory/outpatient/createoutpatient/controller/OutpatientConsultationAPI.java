@@ -1,12 +1,12 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
 
-import io.swagger.annotations.Api;
 import java.io.IOException;
 
 import javax.validation.Valid;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
@@ -20,7 +20,7 @@ import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 
 import java.util.List;
 
-@Api(value = "Outpatient consultations", tags = { "Outpatient consultations" })
+@Tag(name = "Outpatient consultation", description = "Outpatient consultation")
 public interface OutpatientConsultationAPI {
 
     @PostMapping("/billable")

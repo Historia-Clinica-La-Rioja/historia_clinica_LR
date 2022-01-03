@@ -1,6 +1,5 @@
 package net.pladema.staff.infrastructure.input.rest;
 
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.application.getprofessionsbyprofessional.GetProfessionsByProfessional;
 import net.pladema.staff.controller.dto.HealthcareProfessionalSpecialtyDto;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequestMapping("/healthcareprofessionalspecialties/institution/{institutionId}/professional/{professionalId}")
 @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 @RestController
-@Api(value = "Healthcare professional specialties", tags = {"Healthcare professional specialties"})
+//@Api(value = "Healthcare professional specialties", tags = {"Healthcare professional specialties"})
 public class HealthcareProfessionalSpecialtyController {
 
     private final GetProfessionsByProfessional getProfessionsByProfessional;

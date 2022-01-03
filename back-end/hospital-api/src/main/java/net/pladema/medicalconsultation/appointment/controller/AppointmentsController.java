@@ -1,6 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/appointments")
-@Api(value = "Appointments ", tags = { "Appointments" })
+@Tag(name = "Appointments", description = "Appointments")
 @Validated
 public class AppointmentsController {
 

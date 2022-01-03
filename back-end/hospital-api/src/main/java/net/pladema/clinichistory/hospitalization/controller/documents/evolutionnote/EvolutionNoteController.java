@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.constraints.EvolutionNoteValid;
@@ -32,7 +32,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/evolutionNote")
-@Api(value = "Evolution Note", tags = { "Evolution note" })
+@Tag(name = "Evolution notes", description = "Evolution notes")
 @Validated
 @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
 public class EvolutionNoteController {
