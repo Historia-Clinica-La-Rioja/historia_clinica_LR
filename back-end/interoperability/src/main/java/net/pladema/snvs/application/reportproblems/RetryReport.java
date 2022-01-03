@@ -37,6 +37,7 @@ public class RetryReport {
 				() -> new NotFoundException("Report-not-found", "Report not found"));
 		ReportCommandBo toRun = new ReportCommandBo(queryResult);
 		SnvsReportBo response = reportPort.run(reportBuilder.buildReport(toRun));
+		response.setProblemBo(toRun.getProblemBo());
 		response = reportStorage.save(response);
 		return response;
 	}

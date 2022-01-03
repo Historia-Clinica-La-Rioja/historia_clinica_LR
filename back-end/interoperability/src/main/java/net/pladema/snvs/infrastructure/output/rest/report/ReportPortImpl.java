@@ -80,6 +80,7 @@ public class ReportPortImpl implements ReportPort {
         result.setPatientId(toReportBo.getPatientId());
         result.setResponseCode(responseCode.shortValue());
         result.setStatus(buildStatus(response));
+        result.setProfessionalId(toReportBo.getProfessionalId());
         result.setSisaRegisteredId(response == null ? null : response.getIdCaso());
         return result;
     }

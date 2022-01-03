@@ -98,7 +98,7 @@ public class SnvsController {
         List<ReportCommandBo> result = new ArrayList<>();
         for (SnvsToReportDto reportDto: toReportList)
             result.add(new ReportCommandBo(patientId, institutionId, reportDto.getManualClassificationId(),
-                    reportDto.getGroupEventId(), reportDto.getEventId(), buildProblem(reportDto.getProblem())));
+                    reportDto.getGroupEventId(), reportDto.getEventId() , buildProblem(reportDto.getProblem())));
         return result;
     }
 

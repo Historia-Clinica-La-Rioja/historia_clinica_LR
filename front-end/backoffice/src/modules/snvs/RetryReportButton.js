@@ -14,7 +14,7 @@ const RetryReportButton = ({ record }) => {
         dispatch(fetchStart());
         sgxFetchApiWithToken(`backoffice/snvs/${record.id}/retry-report`, { method: 'PUT' })
             .then((response) => {
-                notify('Reporte exitoso', { type: 'success' })
+                notify('El reporte se ejecutó exitosamente', { type: 'success' })
                 redirect('/snvs');
             })
             .catch((e) => {

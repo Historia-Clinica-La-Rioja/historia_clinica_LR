@@ -20,6 +20,8 @@ public class ReportCommandBo {
 
 	private final Integer manualClassificationId;
 
+	private Integer professionalId;
+
 	private final SnvsProblemBo problemBo;
 
 	public ReportCommandBo(Integer patientId, Integer institutionId, Integer manualClassificationId, Integer groupEventId, Integer eventId, SnvsProblemBo problemBo) throws ReportCommandBoException {
@@ -48,6 +50,7 @@ public class ReportCommandBo {
 		this.institutionId = snvsReportBo.getInstitutionId();
 		this.groupEventId = snvsReportBo.getGroupEventId();
 		this.eventId = snvsReportBo.getEventId();
+		this.professionalId = snvsReportBo.getProfessionalId();
 		this.manualClassificationId = snvsReportBo.getManualClassificationId();
 		this.problemBo = snvsReportBo.getProblemBo();
 	}

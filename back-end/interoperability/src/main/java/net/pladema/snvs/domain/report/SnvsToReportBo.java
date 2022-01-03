@@ -28,11 +28,14 @@ public class SnvsToReportBo {
 
 	private PatientDataBo patient;
 
-	public SnvsToReportBo(SnvsEventInfoBo snvsEventInfo, LocalDate date, PatientDataBo patientDataBo, InstitutionDataBo institution){
+	private Integer professionalId;
+
+	public SnvsToReportBo(SnvsEventInfoBo snvsEventInfo, LocalDate date, PatientDataBo patientDataBo, InstitutionDataBo institution, Integer professionalId){
 		this.groupEventId = snvsEventInfo.getGroupEventId();
 		this.eventId = snvsEventInfo.getEventId();
 		this.manualClassificationId = snvsEventInfo.getManualClassificationId();
 		this.date = date;
+		this.professionalId = professionalId;
 		this.patient = patientDataBo;
 		this.institution = institution;
 	}

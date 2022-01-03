@@ -13,10 +13,12 @@ import net.pladema.snvs.domain.event.exceptions.SnvsEventInfoBoException;
 import net.pladema.snvs.domain.problem.SnvsProblemBo;
 import net.pladema.snvs.domain.problem.exceptions.SnvsProblemBoException;
 import net.pladema.snvs.domain.report.SnvsReportBo;
+import net.pladema.snvs.infrastructure.configuration.SnvsCondition;
 import net.pladema.snvs.infrastructure.input.rest.dto.SnvsReportDto;
 import net.pladema.snvs.infrastructure.input.rest.dto.SnvsSnomedDto;
 import net.pladema.snvs.infrastructure.output.repository.report.SnvsReport;
 import net.pladema.snvs.infrastructure.output.repository.report.SnvsReportRepository;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -30,13 +32,14 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("backoffice/snvs")
+@Conditional(SnvsCondition.class)
 public class BackofficeSnvsController extends AbstractBackofficeController<SnvsReport, Integer> {
 
 	public static final String OUTPUT = "Output -> {}";
 
-	RetryReport retryReport;
+	private RetryReport retryReport;
 
-	public BackofficeSnvsController(SnvsReportRepository repository, BackofficeSnvsValidator backofficeSnvsValidator) {
+	public BackofficeSnvsController(SnvsReportRepository repository, BackofficeSnvsValidator backofficeSnvsValidator, RetryReport retryReport) {
 		super(
 				new BackofficeRepository<>(
 						repository,
@@ -58,6 +61,7 @@ public class BackofficeSnvsController extends AbstractBackofficeController<SnvsR
 								return Example.of(entity, matcher);
 							}
 						}), backofficeSnvsValidator);
+		this.retryReport = retryReport;
 	}
 
 

@@ -42,6 +42,6 @@ public class ReportBuilder {
 				.orElseThrow(() -> new ReportProblemException(ReportProblemEnumException.UNKNOWN_EVENT,
 						String.format("No existe datos del evento=%s, grupo=%s para el problema=%s con la clasificación manual=%s",
 								reportCommandBo.getEventId(), reportCommandBo.getGroupEventId(), reportCommandBo.getProblemBo(), reportCommandBo.getManualClassificationId())));
-		return new SnvsToReportBo(snvsEventInfo, dateTimeProvider.nowDate(), patient, institution);
+		return new SnvsToReportBo(snvsEventInfo, dateTimeProvider.nowDate(), patient, institution, reportCommandBo.getProfessionalId());
 	}
 }
