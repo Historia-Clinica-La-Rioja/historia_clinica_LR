@@ -42,6 +42,7 @@ const resourcesAdminInstitucional = [
     <Resource name="healthcareprofessionals" />,
     <Resource name="professionalspecialties" show={ProfessionalSpecialtyShow} />,
     <Resource name="institutions" show={InstitutionShow} list={InstitutionList} edit={InstitutionEdit} />,
+    <Resource name="snvs" show={SnvsShow} list={SnvsList} />,
     <Resource name="sectors" {...sectors} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
