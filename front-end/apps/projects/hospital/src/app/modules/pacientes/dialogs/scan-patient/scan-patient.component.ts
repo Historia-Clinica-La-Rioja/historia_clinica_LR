@@ -55,7 +55,7 @@ export class ScanPatientComponent implements OnInit {
 			valueFormArray = valueForm.target.value.split(DATA_SPLIT_ENGLISH);
 
 		if (valueFormArray?.length >= MIN_AMOUNT_DATA_FROM_VALID_SCAN) {
-			let identifType = this.data.identifyTypeArray[0].id;
+			let identifType = this.getIdentifTypeID('DNI');
 			let identifNumber: string;
 			let gender: number;
 			let birthDate: string;
@@ -132,6 +132,11 @@ export class ScanPatientComponent implements OnInit {
 			}
 		}
 		return { first, second }
+	}
+
+	private getIdentifTypeID(typeDesc: string): number | undefined {
+		const IDENTIF_TYPE = this.data.identifyTypeArray.find(identifType => identifType.description.toUpperCase() === typeDesc.toUpperCase());
+		return IDENTIF_TYPE ? IDENTIF_TYPE.id : undefined;
 	}
 }
 
