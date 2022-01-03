@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AuthConfig, OAuthService } from "angular-oauth2-oidc";
 import { Observable, ReplaySubject } from "rxjs";
+import { AppRoutes } from "../../../app-routing.module";
+import { AuthService } from "@api-rest/services/auth.service";
 
 @Injectable({
   	providedIn: 'root'
@@ -10,16 +12,9 @@ export class OauthAuthenticationService {
 	private userAuthenticatedEmitter = new ReplaySubject<boolean>();
 	private userAuthenticated$: Observable<boolean>;
 
-	authConfig: AuthConfig = {
-		issuer: 'http://localhost:8180/auth/realms/hsi',
-		redirectUri: 'http://localhost:4200/oauth/login',
-		clientId: 'hsi-fe',
-		scope: 'openid profile',
-		responseType: 'code',
-	}
-
   	constructor(
   		private readonly oauthService: OAuthService,
+		private readonly authService: AuthService
 	) {
 		this.configureOauthService();
 		this.subscribeToTokenUpdates();
@@ -36,8 +31,18 @@ export class OauthAuthenticationService {
 	}
 
 	private configureOauthService() {
-		this.oauthService.configure(this.authConfig);
-		this.oauthService.loadDiscoveryDocumentAndTryLogin();
+
+		this.authService.getOauthConfig().subscribe(config => {
+			let oAuthConfig: AuthConfig = {
+				issuer: config.issuerUrl,
+				redirectUri: location.origin + '/' + AppRoutes.Auth + '/oauth/login',
+				clientId: config.clientId,
+				scope: 'openid profile',
+				responseType: 'code',
+			}
+			this.oauthService.configure(oAuthConfig);
+			this.oauthService.loadDiscoveryDocumentAndTryLogin();
+		})
 	}
 
 	private storeTokens(): void {
