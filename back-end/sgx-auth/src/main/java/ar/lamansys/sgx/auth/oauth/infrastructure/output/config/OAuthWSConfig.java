@@ -13,17 +13,20 @@ public class OAuthWSConfig extends WSConfig {
 
     private long tokenExpiration = 1800L;
 
+    @Value("${ws.oauth.enabled:false}")
+    private boolean enabled;
+
     @Value("${ws.oauth.realm:}")
     private String realmName;
+
+    @Value("${ws.oauth.client-id:}")
+    private String clientId;
 
     @Value("${ws.oauth.user-admin.username:}")
     private String userAdminUsername;
 
     @Value("${ws.oauth.user-admin.password:}")
     private String userAdminPassword;
-
-    @Value("${ws.oauth.client-id:}")
-    private String clientId;
 
     //URLS
     @Value("${ws.oauth.url.userinfo:/auth/realms/REALM_NAME/protocol/openid-connect/userinfo}")
@@ -34,6 +37,9 @@ public class OAuthWSConfig extends WSConfig {
 
     @Value("${ws.oauth.url.createuser:/auth/admin/realms/REALM_NAME/users}")
     private String createUser;
+
+    @Value("${ws.oauth.url.issuer:}")
+    private String issuer;
 
     public String getUserInfo() {
         String userInfoUrl = userInfo;

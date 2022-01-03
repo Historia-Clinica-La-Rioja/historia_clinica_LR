@@ -1469,8 +1469,9 @@ export interface OAuthUserInfoDto {
 }
 
 export interface OauthConfigDto {
+    clientId: string;
     enabled: boolean;
-    loginUrl: string;
+    issuerUrl: string;
 }
 
 export interface OccupationDto {
