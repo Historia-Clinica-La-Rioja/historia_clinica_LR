@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 // deps
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { InstitucionModule } from '../../../institucion/institucion.module';
+import { LazyMaterialModule } from '../../../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { GuardiaRoutingModule } from './guardia-routing.module';
@@ -65,6 +66,7 @@ import { NewEpisodeService } from './services/new-episode.service';
 		// deps
 		HistoriaClinicaModule,
 		InstitucionModule,
+		LazyMaterialModule,
 		PresentationModule,
 	],
 	providers: [
