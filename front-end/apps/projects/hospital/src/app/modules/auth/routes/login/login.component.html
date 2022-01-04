@@ -1,9 +1,11 @@
-<app-content width="narrow">
-
-	<app-external-oauth-login *ngIf="isOAuthEnabled else hospitalLogin"></app-external-oauth-login>
-
-	<ng-template #hospitalLogin>
-		<app-hospital-login></app-hospital-login>
-	</ng-template>
-
+<app-content width="narrow" style="max-width: 500px">
+	<div class="spinner" *ngIf="isLoading">
+		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
+	</div>
+	<div *ngIf="!isLoading">
+		<app-external-oauth-login *ngIf="isOAuthEnabled else hospitalLogin"></app-external-oauth-login>
+		<ng-template #hospitalLogin>
+			<app-hospital-login></app-hospital-login>
+		</ng-template>
+	</div>
 </app-content>

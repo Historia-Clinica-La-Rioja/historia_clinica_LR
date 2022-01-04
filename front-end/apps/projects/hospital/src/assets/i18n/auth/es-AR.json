@@ -10,6 +10,10 @@
 				"PASSWORD_PLACEHOLDER": "*****",
 				"PASSWORD_REQUIRED": "Debe ingresar su clave",
 				"SUBMIT": "INGRESAR"
+			},
+			"external": {
+				"TITLE": "Iniciar sesión",
+				"GO_TO_EXTERNAL_LOGIN": "Ingresar con OAuth"
 			}
 		},
 		"LOGOUT": "Cerrar Sesión",
