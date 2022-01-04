@@ -15,7 +15,7 @@ const SnvsShowActions = ({ data }) => {
         (
             <TopToolbar>
                 <ListButton basePath="/snvs" label="Listar reportes"/>
-                <RetryReportButton record={data}/>
+                { (data.responseCode !== 200) ? <RetryReportButton record={data}/> : null }
             </TopToolbar>
         )
 };
