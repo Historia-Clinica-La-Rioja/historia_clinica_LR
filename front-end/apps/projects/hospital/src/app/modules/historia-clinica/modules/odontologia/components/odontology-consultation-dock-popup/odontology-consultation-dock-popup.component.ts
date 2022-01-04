@@ -233,34 +233,38 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		let numberOfFiles = 0;
 		references.forEach((reference: Reference) => {
 
-			if (!reference.referenceFiles.length) {
-				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
-				this.createConsultation(odontologyDto);
-				return;
-			}
+			if (reference.referenceFiles.length) {
 
-			reference.referenceFiles.forEach(referenceFile => {
-				this.referenceFileService.uploadReferenceFiles(this.data.patientId, referenceFile).subscribe(fileId => {
-					numberOfFiles++;
-					reference.referenceIds.push(fileId);
-					this.odontologyReferenceService.addFileIdAt(reference.referenceNumber, fileId);
-					if (numberOfFiles === reference.referenceFiles.length) {
-						numberOfReferences++;
-						numberOfFiles = 0;
-						
-						if (numberOfReferences === references.length) {
-							odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
-							this.createConsultation(odontologyDto);
+				reference.referenceFiles.forEach(referenceFile => {
+					this.referenceFileService.uploadReferenceFiles(this.data.patientId, referenceFile).subscribe(fileId => {
+						numberOfFiles++;
+						reference.referenceIds.push(fileId);
+						this.odontologyReferenceService.addFileIdAt(reference.referenceNumber, fileId);
+						if (numberOfFiles === reference.referenceFiles.length) {
+							numberOfReferences++;
+							numberOfFiles = 0;
+
+							if (numberOfReferences === references.length) {
+								odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
+								this.createConsultation(odontologyDto);
+							}
 						}
-					}
-				},
-				error => {
-					this.errorToUpdateReferenceFiles(references);
+					},
+						error => {
+							this.errorToUpdateReferenceFiles(references);
+						});
 				});
-			});
+			}
+			else {
+				numberOfReferences++;
+				if (numberOfReferences === references.length) {
+					odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
+					this.createConsultation(odontologyDto);
+				}
+			}
 		});
 	}
-	
+
 	private errorToUpdateReferenceFiles(references: Reference[]) {
 		this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
 		references.forEach(reference => {

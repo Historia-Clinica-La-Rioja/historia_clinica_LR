@@ -43,9 +43,9 @@ export class OdontologyReferenceService {
 			careLines => {
 				this.careLines = careLines;
 				this.careLines.forEach(careLine => {
-					this.clinicalSpecialtyCareLine.getSpecialtyCareLine(careLine.id).subscribe((specialties: ClinicalSpecialtyDto[]) =>
-						this.specialties = specialties
-					);
+					this.clinicalSpecialtyCareLine.getSpecialtyCareLine(careLine.id).subscribe((specialties: ClinicalSpecialtyDto[]) => {
+						specialties.forEach((specialty: ClinicalSpecialtyDto) => this.specialties.push(specialty));
+					});
 				});
 			});
 
@@ -62,11 +62,12 @@ export class OdontologyReferenceService {
 		});
 		dialogRef.afterClosed().subscribe(reference => {
 			if (reference.data) {
+				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [] }
 				if (reference.files.length) {
 					let referenceIds: number[] = [];
-					const ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
-					this.references.push(ref);
+					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
 				}
+				this.references.push(ref);
 				this.odontologyReferences.push(reference.data);
 			}
 		});
@@ -104,6 +105,7 @@ export class OdontologyReferenceService {
 
 	addFileIdAt(index: number, fileId: number): void {
 		this.odontologyReferences[index].fileIds.push(fileId);
+		this.references[index].referenceIds.push(fileId);
 	}
 }
 

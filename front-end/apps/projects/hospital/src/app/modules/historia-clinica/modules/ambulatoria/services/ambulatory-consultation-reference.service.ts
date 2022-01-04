@@ -68,11 +68,12 @@ export class AmbulatoryConsultationReferenceService {
 		});
 		dialogRef.afterClosed().subscribe(reference => {
 			if (reference.data) {
+				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [] }
 				if (reference.files.length) {
 					let referenceIds: number[] = [];
-					const ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
-					this.references.push(ref);
+					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
 				}
+				this.references.push(ref);
 				this.outpatientReferences.push(reference.data);
 			}
 		});
@@ -110,6 +111,7 @@ export class AmbulatoryConsultationReferenceService {
 
 	addReferenceId(index: number, fileId: number): void {
 		this.outpatientReferences[index].fileIds.push(fileId);
+		this.references[index].referenceIds.push(fileId);
 	}
 }
 
