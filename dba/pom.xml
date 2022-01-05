@@ -2,21 +2,17 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>net.pladema.hospital</groupId>
-    <artifactId>hospital-parent</artifactId>
-    <version>${revision}</version>
-    <relativePath>../pom-parent.xml</relativePath>
-  </parent>
-
   <groupId>net.pladema.hospital</groupId>
   <artifactId>hospital-db</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>11</java.version>
+		<mssql-jdbc.version>7.4.1.jre8</mssql-jdbc.version>
+		<postgresql.version>42.2.8</postgresql.version>
+	</properties>
 
   <dependencies>
     <dependency>
