@@ -10,6 +10,7 @@ import {
 const MedicalCoverageFilter = (props) => (
     <Filter {...props}>
         <TextInput source="name"/>
+        <TextInput source="cuit"/>
     </Filter>
 );
 
@@ -17,6 +18,7 @@ const MedicalCoverageList = props => (
     <List {...props} filters={<MedicalCoverageFilter/>}>
         <Datagrid rowClick="show">
             <TextField source="name"/>
+            <TextField source="cuit"/>
         </Datagrid>
     </List>
 );

@@ -20,7 +20,7 @@ const MedicalCoveragePlanField = ({formData}) => {
 
 const MedicalCoverageRnosField = ({formData}) => {
     return formData.type !== 2 ? null : (
-            <TextInput source="rnos" options={{ disabled: true }} validate={[
+            <TextInput source="rnos" validate={[
                 maxLength(10), number()]}/>
     )
 }
@@ -36,6 +36,7 @@ const MedicalCoverageEdit = props => (
     <Edit {...props}>
         <SimpleForm toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="name" validate={[required()]}/>
+            <TextInput source="cuit" validate={[required(), number()]}/>
             {/*Medical Coverage Type*/}
             <ReferenceInput
                 reference="medicalcoveragetypes"

@@ -36,6 +36,7 @@ const MedicalCoverageCreate = props => (
     <Create {...props}>
         <SimpleForm redirect="show"  toolbar={<CustomToolbar/>}>
             <TextInput source="name" validate={[required()]}/>
+            <TextInput source="cuit" validate={[required(), number()]}/>
             {/*Medical Coverage Type*/}
             <ReferenceInput
                 reference="medicalcoveragetypes"

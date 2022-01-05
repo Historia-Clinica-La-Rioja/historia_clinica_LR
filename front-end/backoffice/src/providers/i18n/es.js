@@ -65,7 +65,8 @@ const messages = {
         },
         "medical-coverage":{
             "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica",
-            "cuit-duplicated": "El CUIT ya se encuentra asociado a otra cobertura médica"
+            "cuit-duplicated": "El CUIT ya se encuentra asociado a otra cobertura médica",
+            "invalid-cuit": "El CUIT debe ser numérico",
         }
     },
     files: {
