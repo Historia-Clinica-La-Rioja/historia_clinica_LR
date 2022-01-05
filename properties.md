@@ -168,7 +168,19 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.sisa.snvs.environment  | - | QA | **Obligatorio** | Define el set de datos a utilizar para el evento, grupoevento, clasificación manual. Los valores posibles son (QA, PROD) | v1.28.0  |
 | ws.sisa.snvs.rest-client.config.trust-invalid-certificate  | - | false | **Opcional** | Define si valida certificado https | v1.29.0  |
 
-
+### OAuth2
+| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripción | Desde |
+| ---------- | ------ | -------- | -------- | ------------ | ---- |
+| ws.oauth.enabled | | false | Opcional | Determina si se utiliza la autenticación en un servidor de OAuth externo (se necesita completar la configuración) | v1.32.0  |
+| ws.oauth.url.base | | - | Opcional | URL base del servidor de OAuth  | v1.32.0 |
+| ws.oauth.url.issuer |	| - | Opcional |	URL del issuer para obtener los *access tokens* de OAuth | v1.32.0 |
+| ws.oauth.realm  |  | - | Opcional | Nombre del *realm* donde se van a estar almacenando los usuarios del sistema | v1.32.0  |
+| ws.oauth.client-id  |  | - | Opcional | *Client-id* del cliente público en el *realm* | v1.32.0  |
+| ws.oauth.user-admin.username  |  | - | Opcional | Username del usuario con rol **realm-admin** en el *realm* | v1.32.0  |
+| ws.oauth.user-admin.password  |  | - | Opcional | Contraseña del usuario con rol **realm-admin** en el *realm* | v1.32.0  |
+| ws.oauth.url.userinfo  |  | /auth/realms/REALM_NAME/protocol/openid-connect/userinfo | Opcional | Ruta relativa de obtención de datos del usuario. No debería cambiar | v1.32.0  |
+| ws.oauth.url.accesstoken  |  | /auth/realms/REALM_NAME/protocol/openid-connect/token | Opcional | Ruta relativa de obtención de *access tokens*. No debería cambiar | v1.32.0  |
+| ws.oauth.url.createuser  |  | /auth/admin/realms/REALM_NAME/users | Opcional | Ruta relativa de obtención/creación/modificación de datos de usuario. No debería cambiar | v1.32.0  |
 
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |
