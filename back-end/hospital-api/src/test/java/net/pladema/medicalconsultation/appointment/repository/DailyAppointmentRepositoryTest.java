@@ -59,9 +59,9 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(), 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
         merge(hi);
 
         // programmed appointments
@@ -123,9 +123,9 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(), 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
         merge(hi);
 
         // programmed appointments

@@ -16,13 +16,13 @@ import java.util.Optional;
 public interface HealthInsuranceRepository extends JpaRepository<HealthInsurance, Integer> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT new net.pladema.patient.repository.domain.HealthInsuranceVo(mc.id, mc.name, hi.rnos, hi.acronym) " +
+    @Query("SELECT new net.pladema.patient.repository.domain.HealthInsuranceVo(mc.id, mc.name, mc.cuit, hi.rnos, hi.acronym) " +
             "FROM MedicalCoverage as mc " +
             "JOIN HealthInsurance as hi ON (hi.id = mc.id) ")
     public List<HealthInsuranceVo> getAllWithNames(Sort sort);
 
     @Transactional(readOnly = true)
-    @Query("SELECT new net.pladema.patient.repository.domain.HealthInsuranceVo(mc.id, mc.name, hi.rnos, hi.acronym) " +
+    @Query("SELECT new net.pladema.patient.repository.domain.HealthInsuranceVo(mc.id, mc.name, mc.cuit, hi.rnos, hi.acronym) " +
             "FROM MedicalCoverage as mc " +
             "JOIN HealthInsurance as hi ON (hi.id = mc.id) " +
             "WHERE hi.rnos = :rnos")

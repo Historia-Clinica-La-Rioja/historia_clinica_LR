@@ -14,19 +14,20 @@ public class PrivateHealthInsuranceBo extends MedicalCoverageBo {
 
     private String plan;
 
-    public PrivateHealthInsuranceBo(Integer id, String name, String plan){
+    public PrivateHealthInsuranceBo(Integer id, String name, String cuit, String plan){
         setId(id);
         setName(name);
+        setCuit(cuit);
         this.plan= plan;
     }
 
     @Override
     public CoverageDto newInstance() {
-        return new PrivateHealthInsuranceDto(getId(), getName(), getPlan());
+        return new PrivateHealthInsuranceDto(getId(), getName(), getCuit(), getPlan());
     }
 
     @Override
     public PrivateHealthInsurance mapToEntity() {
-        return new PrivateHealthInsurance(getId(), getName(), getPlan());
+        return new PrivateHealthInsurance(getId(), getName(), getCuit(), getPlan());
     }
 }

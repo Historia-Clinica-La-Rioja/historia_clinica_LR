@@ -83,9 +83,9 @@ public class SharedPatientImpl implements SharedPatientPort {
         pmc.setActive(externalPatientCoverageDto.isActive());
         ExternalCoverageDto ecDto = externalPatientCoverageDto.getMedicalCoverage();
         if (ecDto.getType().equals(EMedicalCoverageTypeDto.PREPAGA))
-            pmc.setMedicalCoverage(new PrivateHealthInsuranceBo(null, ecDto.getName(), ecDto.getPlan()));
+            pmc.setMedicalCoverage(new PrivateHealthInsuranceBo(null, ecDto.getName(), ecDto.getCuit(),ecDto.getPlan()));
         else
-            pmc.setMedicalCoverage(new HealthInsuranceBo(ecDto.getId(),ecDto.getName(),null,null));
+            pmc.setMedicalCoverage(new HealthInsuranceBo(ecDto.getId(),ecDto.getName(), ecDto.getCuit(), null,null));
         return pmc;
     }
 

@@ -18,9 +18,10 @@ public class PrivateHealthInsurance extends MedicalCoverage {
     @Column(name = "plan", length = 10)
     private String plan;
 
-    public PrivateHealthInsurance(Integer id, String name, String plan){
+    public PrivateHealthInsurance(Integer id, String name, String cuit, String plan){
         setId(id);
         setName(name);
+        setCuit(cuit);
         this.plan=plan;
     }
 

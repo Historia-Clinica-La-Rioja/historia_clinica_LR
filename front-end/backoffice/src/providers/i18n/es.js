@@ -64,7 +64,8 @@ const messages = {
             "clinical-specialty-exists": "La especialidad clínica ya se encuentra asociada a la línea de cuidado"
         },
         "medical-coverage":{
-            "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica"
+            "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica",
+            "cuit-duplicated": "El CUIT ya se encuentra asociado a otra cobertura médica"
         }
     },
     files: {

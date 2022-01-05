@@ -255,6 +255,7 @@ export interface BMPersonDto extends APersonDto {
 
 export interface BackofficeCoverageDto extends Serializable {
     acronym?: string;
+    cuit: string;
     id: number;
     name: string;
     plan?: string;
@@ -458,6 +459,7 @@ export interface CounterReferenceSummaryProcedureDto extends Serializable {
 }
 
 export interface CoverageDto extends Serializable {
+    cuit: string;
     id: number;
     name: string;
     type: "HealthInsuranceDto" | "PrivateHealthInsuranceDto";

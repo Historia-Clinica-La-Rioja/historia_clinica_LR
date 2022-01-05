@@ -27,9 +27,10 @@ public class HealthInsurance extends MedicalCoverage {
     @Column(name = "acronym", length = 18)
     private String acronym;
 
-    public HealthInsurance(Integer id, String name, Integer rnos, String acronym){
+    public HealthInsurance(Integer id, String name, String cuit, Integer rnos, String acronym){
         setId(id);
         setName(name);
+        setCuit(cuit);
         this.rnos = rnos;
         this.acronym = acronym;
     }
