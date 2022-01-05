@@ -86,9 +86,7 @@ export class EditRolesComponent implements OnInit {
 		return form.get(key);
 	}
 	isDisableConfirmButton(): boolean {
-		const refRoles = this.formParent.get('roles') as FormArray;
-		const refArray = refRoles.controls;
-		return (this.isDisabledAddRole() || refArray.length < 1);
+		return this.isDisabledAddRole();
 	}
 	isDisabledAddRole(): boolean {
 		const refRoles = this.formParent.get('roles') as FormArray;
