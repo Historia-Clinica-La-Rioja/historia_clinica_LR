@@ -98,3 +98,18 @@ databaseChangeLog:
                     referencedColumnNames: id
                     referencedTableName: institution
                     validate: true
+    - changeSet:
+          id: add-cuit-column-medical_coverage
+          author: mvenere
+          changes:
+              - addColumn:
+                    tableName: medical_coverage
+                    columns:
+                        - column:
+                              name: cuit
+                              type: varchar(20)
+              - addUniqueConstraint:
+                    tableName: medical_coverage
+                    columnNames: cuit
+                    constraintName: UQ_cuit
+
