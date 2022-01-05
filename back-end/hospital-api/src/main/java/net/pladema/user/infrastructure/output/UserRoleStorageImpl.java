@@ -45,9 +45,10 @@ public class UserRoleStorageImpl implements UserRoleStorage {
     }
 
     @Override
-    public void updateUserRole(List<UserRoleBo> userRolesBo, Integer userId) {
+    public void updateUserRole(List<UserRoleBo> userRolesBo, Integer userId, Integer institutionId) {
         checkValidRoles(userRolesBo);
-        List<UserRole> userRoles = userRoleRepository.findByUserId(userId);
+        List<UserRole> userRoles = userRoleRepository.findByUserId(userId).stream()
+                .filter(userRole -> userRole.getInstitutionId().equals(institutionId)).collect(Collectors.toList());
         List<UserRole> newUserRoles = new ArrayList<>();
         userRolesBo.forEach(userRoleBo -> newUserRoles.add(new UserRole(userId, userRoleBo.getRoleId(), userRoleBo.getInstitutionId())));
         userRoleRepository.deleteAll(roleToDelete(userRoles, newUserRoles));

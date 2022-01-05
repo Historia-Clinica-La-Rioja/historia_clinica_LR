@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface UpdateUserRole {
 
-    void execute(List<UserRoleBo> userRoleBos, Integer userId);
+    void execute(List<UserRoleBo> userRoleBos, Integer userId, Integer institutionId);
 }

@@ -16,8 +16,8 @@ public class UpdateUserRoleImpl implements UpdateUserRole {
     private final UserRoleStorage userRoleStorage;
 
     @Override
-    public void execute(List<UserRoleBo> userRoleBos, Integer userId) {
+    public void execute(List<UserRoleBo> userRoleBos, Integer userId, Integer institutionId) {
         log.debug("Input parameters -> {}", userRoleBos);
-        userRoleStorage.updateUserRole(userRoleBos, userId);
+        userRoleStorage.updateUserRole(userRoleBos, userId,institutionId);
     }
 }
