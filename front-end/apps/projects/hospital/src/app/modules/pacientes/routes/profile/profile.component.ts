@@ -141,8 +141,10 @@ export class ProfileComponent implements OnInit {
 						})
 
 						this.userService.getUserData(completeData.person.id).subscribe((userData: UserDataDto) => {
+							this.userData = userData;
 							if (userData?.id)
 								this.rolesService.getRolesByUser(userData?.id).subscribe((roles: UserRoleDto[]) => {
+									this.rolesByUser = roles;
 									roles.forEach(e => this.userRoles.push(e.roleDescription));
 								})
 						});
@@ -253,14 +255,14 @@ export class ProfileComponent implements OnInit {
 				personId: this.personId,
 				professionalId: this.professionalId,
 				roles: this.roles,
-				userId: this.userId,
+				userId: this.userData.id,
 				rolesByUser: this.rolesByUser
 			}
 		});
 		dialog.afterClosed().subscribe((userRoles: UserRoleDto[]) => {
 			if (userRoles) {
 
-				this.rolesService.updateRoles(this.userId, userRoles).subscribe(_ => {
+				this.rolesService.updateRoles(this.userData.id, userRoles).subscribe(_ => {
 					this.snackBarService.showSuccess('pacientes.edit_roles.messages.SUCCESS');
 					this.userRoles = [];
 					this.rolesByUser = [];

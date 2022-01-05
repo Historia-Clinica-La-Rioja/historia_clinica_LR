@@ -19,7 +19,7 @@ export class RolesService {
 
 
 	getRolesByUser(userId: number): Observable<UserRoleDto[]> {
-		const url = `${environment.apiBase}//user-role/institution/${this.contextService.institutionId}/user/${userId}`;
+		const url = `${environment.apiBase}/user-role/institution/${this.contextService.institutionId}/user/${userId}`;
 		return this.http.get<UserRoleDto[]>(url);
 	}
 
