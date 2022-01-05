@@ -2231,7 +2231,7 @@ export interface UserPersonDto extends Serializable {
 
 export interface UserRoleDto {
     institutionId: number;
-    roleDescription: string;
+    roleDescription?: string;
     roleId: number;
     userId: number;
 }

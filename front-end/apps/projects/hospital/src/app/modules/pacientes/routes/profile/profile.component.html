@@ -109,16 +109,16 @@
 							</ng-container>
 							<mat-divider inset></mat-divider>
 							<div content>
-								<ng-container *ngIf="personId">
+								<ng-container *ngIf="!isInstitutionalAdministrator() else doesNotHavePermissions">
 									<app-card-roles [userRoles]="userRoles" [institutionName]="institutionName">
 									</app-card-roles>
 								</ng-container>
 							</div>
 							<div content>
-								<button id="button-edit-roles" mat-stroked-button color="primary" (click)="editRoles()">
-									<span [translate]="'pacientes.user_data.buttons.EDIT_ROLES'"
-										class="uppercase"></span>
-								</button>
+									<button  [disabled]="isInstitutionalAdministrator()" id="button-edit-roles" mat-stroked-button color="primary" (click)="editRoles()">
+										<span [translate]="'pacientes.user_data.buttons.EDIT_ROLES'"
+											class="uppercase"></span>
+									</button>
 							</div>
 						</div>
 						<mat-divider inset></mat-divider>
@@ -171,4 +171,8 @@
 
 <ng-template #noInfo>
 	<span class="no-professions" [translate]="'pacientes.user_data.WITHOUT_PROFESSIONS'"></span>
+ </ng-template>
+
+ <ng-template #doesNotHavePermissions >
+	<span class="no-professions" [translate]="'pacientes.user_data.NOT_HAVE_PERMISSIONS'"></span>
  </ng-template>

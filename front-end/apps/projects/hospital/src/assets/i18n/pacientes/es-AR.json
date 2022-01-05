@@ -138,6 +138,7 @@
             "WITHOUT_USER": "Sin usuario",
             "NO_INFO": "Sin información",
 			"WITHOUT_PROFESSIONS":"Sin profesiones asignadas.",
+			"NOT_HAVE_PERMISSIONS":"No posee permisos suficientes para editar a este usuario. Consulte con su Administrador.",
 			"LICENCE": "Matrícula:",
 			"PROFESSION": "Profesión:",
 			"SPECIALTY": "Especialidad:",

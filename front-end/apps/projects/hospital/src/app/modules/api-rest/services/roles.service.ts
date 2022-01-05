@@ -23,6 +23,10 @@ export class RolesService {
 		return this.http.get<UserRoleDto[]>(url);
 	}
 
+	hasBackofficeRole(userId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/user-role/institution/${this.contextService.institutionId}/user/${userId}/has-backoffice-role`;
+		return this.http.get<boolean>(url);
+	}
 	updateRoles(userId: number, userRole: UserRoleDto []): Observable<boolean> {
 		const url = `${environment.apiBase}/user-role/institution/${this.contextService.institutionId}/user/${userId}`;
 		return this.http.put<boolean>(url, userRole);

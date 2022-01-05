@@ -61,6 +61,7 @@ export class ProfileComponent implements OnInit {
 	rolesByUser: UserRoleDto[] = [];
 	public institutionName: string;
 	private institution: number[] = [];
+	private rolesAdmin = false;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientMedicalCoverage: PatientMedicalCoverageDto[];
@@ -142,11 +143,15 @@ export class ProfileComponent implements OnInit {
 
 						this.userService.getUserData(completeData.person.id).subscribe((userData: UserDataDto) => {
 							this.userData = userData;
-							if (userData?.id)
+							if (userData?.id) {
 								this.rolesService.getRolesByUser(userData?.id).subscribe((roles: UserRoleDto[]) => {
 									this.rolesByUser = roles;
 									roles.forEach(e => this.userRoles.push(e.roleDescription));
 								})
+								this.rolesService.hasBackofficeRole(userData?.id).subscribe((hasRolesAdmin: boolean) => {
+									this.rolesAdmin = hasRolesAdmin;
+								});
+							}
 						});
 
 						this.rolesService.getAllInstitutionalRoles().subscribe((roles: RoleDto[]) => {
@@ -176,6 +181,10 @@ export class ProfileComponent implements OnInit {
 			enable: [null]
 		});
 
+	}
+
+	isInstitutionalAdministrator(): boolean {
+		return this.rolesAdmin;
 	}
 
 	checkIfProfessional(): void {
