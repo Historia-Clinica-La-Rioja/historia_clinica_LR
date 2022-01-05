@@ -13,6 +13,5 @@ import java.util.List;
 public interface AllergyConditionServiceMapper {
 
     @Named("toListAllergyConditionBo")
-    @IterableMapping(qualifiedByName = "toAllergyConditionBo")
     List<AllergyConditionBo> toListAllergyConditionBo(List<AllergyConditionVo> allergyConditionVoList);
 }

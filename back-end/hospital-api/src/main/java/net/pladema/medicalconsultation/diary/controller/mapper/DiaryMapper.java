@@ -29,7 +29,7 @@ public interface DiaryMapper {
     List<OccupationDto> toListOccupationDto(List<OccupationBo> occupationBos);
 
     @Named("toDiaryBo")
-    @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours", qualifiedByName = "toListDiaryOpeningHoursBo")
+    @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours")
     DiaryBo toDiaryBo(DiaryADto diaryADto);
 
     @Named("toDiaryListDto")
@@ -43,9 +43,7 @@ public interface DiaryMapper {
     Collection<DiaryOpeningHoursDto> toListDiaryOpeningHoursDto(Collection<DiaryOpeningHoursBo> resultService);
     
     @Named("toCompleteDiaryDto")
-    @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours", qualifiedByName = "toListDiaryOpeningHoursBo")
+    @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours")
     CompleteDiaryDto toCompleteDiaryDto(CompleteDiaryBo completeDiaryBo);
 
-    @Named("toDiaryOpeningHoursBo")
-    DiaryOpeningHoursBo toDiaryOpeningHoursBo(DiaryOpeningHoursDto last);
 }

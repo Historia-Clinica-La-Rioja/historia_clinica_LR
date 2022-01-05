@@ -19,13 +19,13 @@ import org.mapstruct.Named;
 public interface DocumentMapper {
 
     @Named("fromDocumentDto")
-    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromAnthropometricDataDto")
-    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromListAnthropometricDataDto")
-    @Mapping(target = "medications", source = "medications", qualifiedByName = "toMedicationBo")
-    @Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toImmunizationBo")
-    @Mapping(target = "allergies", source = "allergies", qualifiedByName = "toAllergyConditionBo")
-    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toHealthHistoryConditionBo")
-    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toHealthHistoryConditionBo")
+    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromVitalSignDto")
+    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataDto")
+    @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationBo")
+    @Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationBo")
+    @Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionBo")
+    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionBo")
+    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionBo")
     DocumentBo from(DocumentDto documentDto);
 
 }

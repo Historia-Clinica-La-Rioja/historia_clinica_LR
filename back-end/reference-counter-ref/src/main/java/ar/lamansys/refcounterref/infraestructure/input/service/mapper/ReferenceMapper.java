@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface ReferenceMapper {
 
-        @Named("fromReferenceBo")
+        @Named("fromReferenceDto")
         ReferenceBo fromReferenceDto(ReferenceDto referenceDto);
 
         @Named("fromReferenceDtoList")
