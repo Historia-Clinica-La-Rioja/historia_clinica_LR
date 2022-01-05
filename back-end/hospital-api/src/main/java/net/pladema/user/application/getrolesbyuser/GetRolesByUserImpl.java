@@ -22,7 +22,6 @@ public class GetRolesByUserImpl implements GetRolesByUser {
         log.debug("Input parameter -> userId {}, institutionId {}", userId, institutionId);
         List<UserRoleBo> result = userRoleStorage.getRolesByUser(userId)
                 .stream().filter(userRoleBo -> userRoleBo.getInstitutionId().equals(institutionId))
-                .filter(userRoleBo -> userRoleBo.getRoleId()!= ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getId())
                 .collect(Collectors.toList());
         log.debug("Output ->{}", result);
         return result;
