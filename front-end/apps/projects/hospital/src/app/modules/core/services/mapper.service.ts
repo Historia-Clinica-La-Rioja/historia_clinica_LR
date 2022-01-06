@@ -50,7 +50,7 @@ export class MapperService {
 		// TODO ver la posibilidad de quitar ese if
 		function toMedicalCoverage(dto: CoverageDtoUnion): HealthInsurance | PrivateHealthInsurance {
 			return dto.type === 'HealthInsuranceDto' ? new HealthInsurance(dto.rnos.toString(), dto.acronym, dto.id, dto.name, dto.type)
-				: new PrivateHealthInsurance(dto.plan, dto.id, dto.name, dto.type);
+				: new PrivateHealthInsurance(dto.plan, dto.id, dto.name, dto.type,dto.cuit);
 		}
 
 		function mapDetails() {

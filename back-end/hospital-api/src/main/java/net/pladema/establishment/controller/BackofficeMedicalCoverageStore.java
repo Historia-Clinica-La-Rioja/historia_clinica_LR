@@ -134,7 +134,7 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     }
 
     private BackofficeCoverageDto mapToDto(MedicalCoverage entity) {
-        return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null, null, insurance.getPlan()))
+        return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.PREPAGA.getId(), null, null, insurance.getPlan()))
                 .orElseGet(() -> healthInsuranceRepository.findById(entity.getId())
                         .map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), healthInsurance.getRnos(), healthInsurance.getAcronym(), null))
                         .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null,null)));

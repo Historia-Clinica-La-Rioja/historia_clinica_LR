@@ -15,8 +15,8 @@
 							<span
 								class="medical-coverage-name">{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}</span>
 							<app-editable-field [fieldName]="'Nro de afiliado'"
-								[value]="patientMedicalCoverage.affiliateNumber"
-								(newValueEmitted)="patientMedicalCoverage.affiliateNumber = $event">
+												[value]="patientMedicalCoverage.affiliateNumber"
+												(newValueEmitted)="patientMedicalCoverage.affiliateNumber = $event">
 							</app-editable-field>
 						</div>
 						<div>Vig. {{patientMedicalCoverage.validDate | date: 'dd/MM/yyyy'}}</div>
@@ -31,14 +31,14 @@
 		<div>
 			<strong translate="medical-coverage.NEW_HEALTH_INSURANCES"></strong>
 			<form [formGroup]="healthInsuranceForm" fxLayoutGap="5px" class="form" #formDirectiveHealthInsuranceForm="ngForm"
-				(ngSubmit)="addHealthInsurance(formDirectiveHealthInsuranceForm)">
+				  (ngSubmit)="addHealthInsurance(formDirectiveHealthInsuranceForm)">
 				<mat-form-field appearance="outline">
 					<input type="text" placeholder="{{ 'Buscar obra social' | translate }}" aria-label="Number"
-						formControlName="healthInsurance" matInput [matAutocomplete]="auto">
+						   formControlName="healthInsurance" matInput [matAutocomplete]="auto">
 					<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
 						<mat-option *ngFor="let healthInsurance of healthInsuranceFilteredMasterData"
-							(onSelectionChange)="selectHealthInsurance($event, healthInsurance)"
-							[value]="getFullHealthInsuranceText(healthInsurance)">
+									(onSelectionChange)="selectHealthInsurance($event, healthInsurance)"
+									[value]="getFullHealthInsuranceText(healthInsurance)">
 							<span class="mat-body">{{getFullHealthInsuranceText(healthInsurance)}}</span>
 						</mat-option>
 					</mat-autocomplete>
@@ -46,11 +46,11 @@
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<input id="healthInsuranceAffiliateNumber" name="healthInsuranceAffiliateNumber"
-						formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}" matInput>
+						   formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}" matInput>
 				</mat-form-field>
 				<button mat-stroked-button color="primary" class="uppercase margin" id="add-health-insurance"
-					type="submit" name="add-health-insurance"
-					translate="medical-coverage.ADD_HEALTH_INSURANCES"></button>
+						type="submit" name="add-health-insurance"
+						translate="medical-coverage.ADD_HEALTH_INSURANCES"></button>
 			</form>
 		</div>
 	</mat-card>
@@ -60,21 +60,21 @@
 		<strong translate="medical-coverage.ACTIVES_PRIVATE_HEALTH_INSURANCES"></strong>
 		<div fxLayout="column">
 			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column"
-				fxLayoutGap="25px">
+				 fxLayoutGap="25px">
 				<mat-spinner color="primary"></mat-spinner>
 				<span class="color-primary" class="color-primary">Consultando cobertura</span>
 			</div>
 			<ng-template #viewPatientPrivateHealthInsurances>
 				<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()"
-					class="coverages">
+						  class="coverages">
 					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
 
 						<div fxLayout="column">
 							<span
 								class="medical-coverage-name">{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>
 							<app-editable-field [fieldName]="'Nro de credencial'"
-								[value]="patientPrivateHealthInsurance.affiliateNumber"
-								(newValueEmitted)="patientPrivateHealthInsurance.affiliateNumber = $event">
+												[value]="patientPrivateHealthInsurance.affiliateNumber"
+												(newValueEmitted)="patientPrivateHealthInsurance.affiliateNumber = $event">
 							</app-editable-field>
 						</div>
 						<div fxLayout="row">
@@ -96,11 +96,18 @@
 		<div>
 			<strong translate="medical-coverage.NEW_PRIVATE_HEALTH_INSURANCES"></strong>
 			<form [formGroup]="prepagaForm" class="form" fxLayoutGap="5px" #formDirectivePrepagaForm='ngForm'
-				(ngSubmit)="addPrivateHealthInsurance(formDirectivePrepagaForm)">
+				  (ngSubmit)="addPrivateHealthInsurance(formDirectivePrepagaForm)">
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
-						<input type="text" placeholder="{{ 'Ingresar Prepaga' | translate }}" aria-label="Number"
-							formControlName="name" matInput>
+						<input type="text" placeholder="{{ 'Buscar prepaga' | translate }}" aria-label="Number"
+							   formControlName="name" matInput [matAutocomplete]="autoPrivate">
+						<mat-autocomplete autoActiveFirstOption #autoPrivate="matAutocomplete">
+							<mat-option *ngFor="let privateHealthInsurance of privateHealthInsuranceFilteredMasterData"
+										(onSelectionChange)="selectPrivateHealthInsurance($event, privateHealthInsurance)"
+										[value]="privateHealthInsurance.name">
+								<span class="mat-body">{{privateHealthInsurance.name}}</span>
+							</mat-option>
+						</mat-autocomplete>
 						<mat-error translate="forms.REQUIRED"></mat-error>
 					</mat-form-field>
 					<mat-form-field appearance="outline">
@@ -112,13 +119,14 @@
 				</div>
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
-						<input id="prepagaAffiliateNumber" name="prepagaAffiliateNumber"
-							formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}" matInput>
+						<mat-label [translate]="'medical-coverage.CUIT_LABEL'"></mat-label>
+						<input  id="prepagaCuit" name="prepagaCuit"
+							   formControlName="cuit" placeholder="{{'CUIT' | translate}}" matInput>
 					</mat-form-field>
 					<mat-form-field appearance="outline">
 						<mat-label>Fecha de fin</mat-label>
 						<input formControlName="endDate" id="end-date" matInput [matDatepicker]="picker3"
-							[min]="prepagaForm.value?.startDate">
+							   [min]="prepagaForm.value?.startDate">
 						<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
 						<mat-datepicker #picker3></mat-datepicker>
 						<mat-error translate="forms.INVALID_DATE"></mat-error>
@@ -126,12 +134,23 @@
 				</div>
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
+						<mat-label [translate]="'medical-coverage.PLAN_LABEL'"></mat-label>
 						<input type="text" placeholder="{{ 'Ingresar Plan' | translate }}" aria-label="Number"
-							formControlName="plan" matInput>
+							   formControlName="plan" matInput>
 					</mat-form-field>
+				</div>
+					<div fxLayout="column">
+					<mat-form-field appearance="outline">
+						<mat-label [translate]="'medical-coverage.AFFILIATE_NUMBER_LABEL'"></mat-label>
+						<input id="prepagaAffiliateNumber" name="prepagaAffiliateNumber"
+							   formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}"
+							   matInput>
+					</mat-form-field>
+				</div>
+				<div fxLayout="column">
 					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage"
-						type="submit" name="add-medical-coverage"
-						translate="medical-coverage.ADD_PRIVATE_HEALTH_INSURANCES"> </button>
+							type="submit" name="add-medical-coverage"
+							translate="medical-coverage.ADD_PRIVATE_HEALTH_INSURANCES"> </button>
 				</div>
 
 			</form>
@@ -142,9 +161,9 @@
 </div>
 <div mat-dialog-actions align="end">
 	<button mat-stroked-button color="primary" [mat-dialog-close]=true class="uppercase" id="cancel-button"
-		name="cancel-button" (click)="close()">
+			name="cancel-button" (click)="close()">
 		Cancelar</button>
 	<button mat-flat-button color="primary" [mat-dialog-close]=true cdkFocusInitial class="uppercase"
-		id="okButton-button" name="okButton-button" (click)="save()">
+			id="okButton-button" name="okButton-button" (click)="save()">
 		Guardar</button>
 </div>
