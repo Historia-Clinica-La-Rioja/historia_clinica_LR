@@ -343,7 +343,8 @@
 					"CASE_COULD_NOT_BE_REPORTED": "El caso <b>{{ problemName }}</b> no pudo ser reportado",
 					"ID": "ID",
 					"FAILED_REPORT_ERROR": "Fallo al reportar el problema"
-				}
+				},
+				"PENDING_REFERENCE" : "Referencia pendiente"
 			},
 			"ordenes_prescripciones": {
 				"TAB_LABEL": "Órdenes y prescripciones",
