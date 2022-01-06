@@ -23,7 +23,7 @@ import { SuggestedFieldsPopupComponent } from '@presentation/components/suggeste
 import { OdontologyConsultationService } from '../../api-rest/odontology-consultation.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConsultationSuggestedFieldsService } from '../../services/consultation-suggested-fields.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto, toOdontologyProcedureDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { take } from 'rxjs/operators';
@@ -186,6 +186,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			},
 			_ => {
 				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
+				const filesToDelete = odontologyDto.references.filter(reference => reference.fileIds.length > 0);
+				if (filesToDelete.length){
+					this.errorToUploadReferenceFiles();
+				}
 			}
 		);
 
@@ -222,57 +226,51 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	private uploadRefFilesAndCreateConsultation(odontologyDto: OdontologyConsultationDto) {
-		const references: Reference[] = this.odontologyReferenceService.getReferences();
 
+		let references: Reference[] = this.odontologyReferenceService.getReferences();
 		if (!references.length) {
 			this.createConsultation(odontologyDto);
 			return;
 		}
 
-		let numberOfReferences = 0;
-		let numberOfFiles = 0;
-		references.forEach((reference: Reference) => {
+		const filesToUpdate: Observable<number>[] = [];
 
-			if (reference.referenceFiles.length) {
-
-				reference.referenceFiles.forEach(referenceFile => {
-					this.referenceFileService.uploadReferenceFiles(this.data.patientId, referenceFile).subscribe(fileId => {
-						numberOfFiles++;
-						reference.referenceIds.push(fileId);
-						this.odontologyReferenceService.addFileIdAt(reference.referenceNumber, fileId);
-						if (numberOfFiles === reference.referenceFiles.length) {
-							numberOfReferences++;
-							numberOfFiles = 0;
-
-							if (numberOfReferences === references.length) {
-								odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
-								this.createConsultation(odontologyDto);
-							}
-						}
-					},
-						error => {
-							this.errorToUpdateReferenceFiles(references);
-						});
-				});
-			}
-			else {
-				numberOfReferences++;
-				if (numberOfReferences === references.length) {
-					odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
-					this.createConsultation(odontologyDto);
-				}
-			}
+		references.forEach(reference => {
+			reference.referenceFiles.forEach(file => {
+				const obs = this.referenceFileService.uploadReferenceFiles(this.data.patientId, file);
+				filesToUpdate.push(obs);
+			})
 		});
+
+		if (filesToUpdate.length) {
+
+			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
+				let indiceRefFilesIds = 0;
+				references.forEach(reference => {
+
+					const filesLength = reference.referenceFiles.length;
+					for (let a = indiceRefFilesIds; a < indiceRefFilesIds + filesLength; a++)
+						this.odontologyReferenceService.addFileIdAt(reference.referenceNumber, referenceFileId[a]);
+					indiceRefFilesIds += filesLength;
+				});
+				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
+				this.createConsultation(odontologyDto);
+			}, _ => {
+				this.snackBarService.showError('Error al guardar la solicitud de referencia');
+				this.errorToUploadReferenceFiles();
+				}
+			);
+		}
+		else {
+			odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
+			this.createConsultation(odontologyDto);
+		}
 	}
 
-	private errorToUpdateReferenceFiles(references: Reference[]) {
-		this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
-		references.forEach(reference => {
-			this.referenceFileService.deleteReferenceFiles(reference.referenceIds).subscribe(
-				() => {
-					reference.referenceIds = [];
-				});
-		});
+	private errorToUploadReferenceFiles() {
+		const filesToDelete = this.odontologyReferenceService.getReferenceFilesIds();
+		this.referenceFileService.deleteReferenceFiles(filesToDelete);
+		this.odontologyReferenceService.setReferenceFilesIds([]);
 	}
 }
 

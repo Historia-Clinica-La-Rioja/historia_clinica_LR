@@ -36,7 +36,7 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipe } from '@angular/common';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
@@ -104,7 +104,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService, this.referenceFileService, this.snackBarService);
+		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
 	}
 
 	setProfessionalSpecialties() {
@@ -250,41 +250,34 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			return;
 		}
 
-		let longReferences = 0;
+		const filesToUpdate: Observable<number>[] = [];
+
 		references.forEach(reference => {
-			if (reference.referenceFiles.length) {
-				let longFiles = 0;
-				reference.referenceFiles.forEach(file => {
-					this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
-						fileId => {
-							longFiles++;
-							reference.referenceIds.push(fileId);
-							this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
+			reference.referenceFiles.forEach(file => {
+				const obs = this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file);
+				filesToUpdate.push(obs);
+			})
+		});
 
-							if (longFiles === reference.referenceFiles.length) {
-								longFiles = 0;
-								longReferences++;
+		if (filesToUpdate.length) {
 
-								if (longReferences === references.length) {
-									this.goToCreateConsultation(nuevaConsulta);
-								}
-							}
-						},
-						() => {
-							this.errorToUpdateReferenceFiles(references);
-						}
-					)
-				})
+			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
+				let indiceRefFilesIds = 0;
+				references.forEach(reference => {
 
-			}
-			else {
-				longReferences++;
-				if (longReferences === references.length) {
-					this.goToCreateConsultation(nuevaConsulta);
-				}
-			}
-		})
-
+					const filesLength = reference.referenceFiles.length;
+					for (let a = indiceRefFilesIds; a < indiceRefFilesIds + filesLength; a++)
+						this.ambulatoryConsultationReferenceService.addFileIdAt(reference.referenceNumber, referenceFileId[a]);
+					indiceRefFilesIds += filesLength;
+				});
+				this.goToCreateConsultation(nuevaConsulta);
+			}, _ => {
+				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPLOAD_FILES');
+				this.errorToUploadReferenceFiles();
+			});
+		}
+		else
+			this.goToCreateConsultation(nuevaConsulta);
 	}
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
@@ -314,8 +307,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 						this.apiErrors.push(val);
 					});
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
-				let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
-				this.errorToUpdateReferenceFiles(references);
+				const filesToDelete = nuevaConsulta.references.filter(reference => reference.fileIds.length > 0);
+				if (filesToDelete.length){
+					this.errorToUploadReferenceFiles();
+				}
 			}
 		);
 
@@ -449,14 +444,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 
-	errorToUpdateReferenceFiles(references: Reference[]) {
-		this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPDATE_FILES');
-		for (let reference of references) {
-			this.referenceFileService.deleteReferenceFiles(reference.referenceIds).subscribe(
-				() => {
-					reference.referenceIds = [];
-				});
-		}
+	errorToUploadReferenceFiles() {
+		const filesToDelete = this.ambulatoryConsultationReferenceService.getReferenceFilesIds();
+		this.referenceFileService.deleteReferenceFiles(filesToDelete);
+		this.ambulatoryConsultationReferenceService.setReferenceFilesIds([]);
 	}
 
 	goToCreateConsultation(nuevaConsulta: CreateOutpatientDto) {

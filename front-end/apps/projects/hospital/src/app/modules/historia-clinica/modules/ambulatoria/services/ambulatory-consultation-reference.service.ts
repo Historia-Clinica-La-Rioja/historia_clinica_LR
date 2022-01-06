@@ -1,15 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {CareLineDto, ClinicalSpecialtyDto, ReferenceDto} from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, ReferenceDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
-import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { removeFrom } from '@core/utils/array.utils';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ReferenceComponent } from '../dialogs/reference/reference.component';
 
 @Injectable({
@@ -29,9 +27,6 @@ export class AmbulatoryConsultationReferenceService {
 		private readonly ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly careLineService: CareLineService,
-		private readonly referenceFileService: ReferenceFileService,
-		private readonly snackBarService: SnackBarService,
-
 	) {
 		this.columns = [
 			{
@@ -109,9 +104,24 @@ export class AmbulatoryConsultationReferenceService {
 
 	}
 
-	addReferenceId(index: number, fileId: number): void {
+	addFileIdAt(index: number, fileId: number): void {
 		this.outpatientReferences[index].fileIds.push(fileId);
 		this.references[index].referenceIds.push(fileId);
+	}
+
+	getReferenceFilesIds(): number[] {
+		let referencesFilesIds: number[] = []
+		this.references.forEach(reference => {
+			referencesFilesIds = [...referencesFilesIds, ...reference.referenceIds]
+		});
+
+		return referencesFilesIds;
+	}
+
+	setReferenceFilesIds(referenceFilesIds: number[]) {
+		this.references.forEach(reference => {
+			reference.referenceIds = referenceFilesIds;
+		});
 	}
 }
 

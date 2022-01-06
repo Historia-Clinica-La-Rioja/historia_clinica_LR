@@ -22,11 +22,11 @@ export class ReferenceFileService {
 		return this.http.post<number>(url, fileFormdata);
 	}
 
-	deleteReferenceFiles(referenceFilesId: number[]): Observable<any> {
+	deleteReferenceFiles(fileIds: number[]): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference-file/delete`;
 		return this.http.delete(url, {
 			params: {
-				fileIds: referenceFilesId
+				fileIds
 			}
 		});
 

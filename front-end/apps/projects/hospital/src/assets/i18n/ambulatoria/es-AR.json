@@ -93,7 +93,7 @@
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
 					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente",
-					"ERROR_TO_UPDATE_FILES": "Error al guardar la solicitud de referencia"
+					"ERROR_TO_UPLOAD_FILES": "Error al guardar la solicitud de referencia"
 				},
 				"problemas": {
 					"buttons": {

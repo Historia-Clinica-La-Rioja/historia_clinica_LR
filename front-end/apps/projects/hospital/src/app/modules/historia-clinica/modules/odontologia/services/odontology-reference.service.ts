@@ -107,6 +107,21 @@ export class OdontologyReferenceService {
 		this.odontologyReferences[index].fileIds.push(fileId);
 		this.references[index].referenceIds.push(fileId);
 	}
+
+	getReferenceFilesIds(): number[] {
+		let referencesFilesIds: number[] = []
+		this.references.forEach(reference => {
+			referencesFilesIds = [...referencesFilesIds, ...reference.referenceIds]
+		});
+
+		return referencesFilesIds;
+	}
+
+	setReferenceFilesIds(referenceFilesIds: number[]) {
+		this.references.forEach(reference => {
+			reference.referenceIds = referenceFilesIds;
+		});
+	}
 }
 
 export interface Reference {
