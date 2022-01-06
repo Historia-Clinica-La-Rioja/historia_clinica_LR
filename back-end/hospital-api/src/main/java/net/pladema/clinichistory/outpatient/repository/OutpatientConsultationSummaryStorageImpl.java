@@ -20,7 +20,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsultationSummaryStorage {

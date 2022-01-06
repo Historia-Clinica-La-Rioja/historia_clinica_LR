@@ -1,8 +1,6 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
 import net.pladema.patient.controller.dto.BackofficeCoverageDto;
-import net.pladema.patient.controller.dto.CoverageDto;
-import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import org.springframework.security.access.prepost.PreAuthorize;

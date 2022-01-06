@@ -7,7 +7,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitaliz
 import net.pladema.clinichistory.outpatient.repository.domain.OutpatientEvolutionSummaryVo;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OutpatientConsultationSummaryStorage {
 

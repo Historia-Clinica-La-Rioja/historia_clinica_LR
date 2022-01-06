@@ -5,7 +5,6 @@ import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummary
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CounterReferenceStorage {
 
