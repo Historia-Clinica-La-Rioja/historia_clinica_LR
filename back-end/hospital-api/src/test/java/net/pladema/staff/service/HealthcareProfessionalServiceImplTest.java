@@ -38,7 +38,7 @@ class HealthcareProfessionalServiceImplTest {
 	void existProfessional() {
 
 		when(healthcareProfessionalRepository.findProfessionalById(any()))
-				.thenReturn(Optional.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234")));
+				.thenReturn(Optional.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234",1)));
 
 		HealthcareProfessionalBo resultService = healthcareProfessionalService.findProfessionalById(1);
 
@@ -65,7 +65,7 @@ class HealthcareProfessionalServiceImplTest {
 	void successFetchAllProfessional() {
 
 		when(healthcareProfessionalRepository.getAllProfessional())
-				.thenReturn(List.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234")));
+				.thenReturn(List.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234",1)));
 
 		var result = healthcareProfessionalService.getAllProfessional();
 

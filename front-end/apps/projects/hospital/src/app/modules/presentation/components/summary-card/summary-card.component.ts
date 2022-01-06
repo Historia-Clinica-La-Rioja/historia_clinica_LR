@@ -13,9 +13,7 @@ export class SummaryCardComponent {
 	@Input() tooltip: string;
 	@Input() canEdit: ERole[] = [];
 	@Input() editable = false;
-	@Input() hasCovidAlert = false;
 	@Output() openInNew = new EventEmitter();
-	@Output() covidAlertEvent = new EventEmitter();
 
 	constructor(
 		public dialog: MatDialog

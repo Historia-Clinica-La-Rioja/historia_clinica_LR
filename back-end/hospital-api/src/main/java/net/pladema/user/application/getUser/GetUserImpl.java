@@ -1,6 +1,5 @@
 package net.pladema.user.application.getUser;
 
-import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import net.pladema.user.domain.UserDataBo;
 import net.pladema.user.application.port.HospitalUserStorage;
 import org.slf4j.Logger;

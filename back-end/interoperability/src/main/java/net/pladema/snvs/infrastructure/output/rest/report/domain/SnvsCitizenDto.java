@@ -19,6 +19,8 @@ public class SnvsCitizenDto {
 
     private String sexo;
 
+    private String fechaNacimiento;
+
     private Short paisEmisionTipoDocumento;
 
     private String seDeclaraPuebloIndigena;

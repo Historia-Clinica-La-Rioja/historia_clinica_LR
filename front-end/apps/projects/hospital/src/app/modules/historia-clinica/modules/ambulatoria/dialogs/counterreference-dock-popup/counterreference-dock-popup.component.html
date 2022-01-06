@@ -1,0 +1,227 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'ambulatoria.paciente.counterreference.TITLE'">
+	<div body class="counterreference" fxLayout="column" fxLayoutGap="20px">
+
+        <div id="reference">
+            <mat-card fxLayout="column">
+				
+                <ng-container>
+                    <strong class="dose" [translate]="'ambulatoria.paciente.reference-notification.REFERENCE_REQUEST'"></strong>
+                </ng-container>
+                <div class="primary" *ngFor="let problem of data.data.reference.problems" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
+                    <mat-icon  color="primary">assignment</mat-icon>
+                    <span> {{problem.snomed.pt}} </span> 
+                </div>
+                <div class="reference-description" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
+                    <span>{{data.data.reference.careLine.description}}</span>
+                    <span>{{data.data.reference.clinicalSpecialty.name}}</span>
+                </div>
+    
+                <span *ngIf="data.data.reference.note.description">“{{data.data.reference.note.description}}”</span>
+				
+				<div class="primary" *ngFor="let file of data.data.reference.files" fxLayout="row">
+					<mat-icon>attachment_icon</mat-icon>
+					<span class="span-clickable" (click)="downloadReferenceFile(file)">
+						{{file.fileName}}
+					</span>
+				</div>
+
+                <div class="grayText" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" fxFlex="50px">
+                    <span>{{data.data.reference.professional.firstName}} {{data.data.reference.professional.lastName}}</span>
+                    <span>{{data.data.reference.referenceDate.day}}/{{data.data.reference.referenceDate.month}}/{{data.data.reference.referenceDate.year}}</span>
+                </div>
+            </mat-card>
+        </div>
+
+		<div id="procedures">
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.procedimientos.TITLE">
+						  <ng-container concept-form>
+					<app-concepts-search
+						*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
+						[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
+						(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
+					</app-concepts-search>
+
+					<ng-template #procedimientoForm>
+						<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
+							  (ngSubmit)="procedimientoNuevaConsultaService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
+								</mat-label>
+								<input id="procedimiento-input" matInput type="text" formControlName="snomed" name="snomed"
+									   readonly matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
+										(click)="procedimientoNuevaConsultaService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
+								</mat-label>
+								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
+									   formControlName="performedDate"
+									   [min]="minDate" [max]="procedimientoNuevaConsultaService.getFechaMax()">
+								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+								<mat-datepicker #datePicker></mat-datepicker>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary" type="submit">
+										<span [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+								</button>
+							</div>
+
+						</form>
+					</ng-template>
+				</ng-container>
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
+											[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
+											[data]="procedimientoNuevaConsultaService.getProcedimientos()">
+				</app-document-section-table>
+
+			</app-new-document-section>
+		</div>
+
+		<div id="medications">
+			<app-new-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE'">
+				<div concept-form>
+					<app-concepts-search
+					    *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm"
+
+						label="ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL"
+						(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
+					</app-concepts-search>
+				</div>
+				<ng-template #medicationForm>
+					<form [formGroup]="medicacionesNuevaConsultaService.getForm()"
+						  (ngSubmit)="medicacionesNuevaConsultaService.addToList()">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION'"></mat-label>
+							<input matInput type="text" formControlName="snomed" name="snomed" readonly
+								   matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
+							<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
+									(click)="medicacionesNuevaConsultaService.resetForm()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
+							<textarea matInput type="text" id="observations" name="Estado" formControlName="observaciones" placeholder="Descripción"></textarea>
+							<mat-error *ngIf="hasError(medicacionesNuevaConsultaService.getForm(), 'maxlength', 'observaciones')" translate="forms.MAX_LENGTH_ERROR"
+									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+							</mat-error>
+						</mat-form-field>
+
+						<div class="margin-checkbox">
+							<mat-checkbox formControlName="suspendido">
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDO'">  </span>
+							</mat-checkbox>
+						</div>
+
+						<div align="end">
+							<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary" type="submit">
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.ADD'"> </span>
+							</button>
+						</div>
+					</form>
+				</ng-template>
+
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
+											[columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
+											[data]="medicacionesNuevaConsultaService.getMedicaciones()">
+				</app-document-section-table>
+
+			</app-new-document-section>
+		</div>
+ 
+        <div id="allergies">
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.alergias.TITLE">
+				<ng-container concept-form>
+					<app-concepts-search
+						*ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
+						[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
+						(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
+					</app-concepts-search>
+					<ng-template #alergiasForm>
+						<form [formGroup]="alergiasNuevaConsultaService.getForm()"
+							  (ngSubmit)="alergiasNuevaConsultaService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'">
+								</mat-label>
+								<input id="alergias-input" matInput type="text" formControlName="snomed" name="snomed"
+									   readonly matTooltip="{{alergiasNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear-alergias" mat-button matSuffix color="warn" mat-icon-button
+										(click)="alergiasNuevaConsultaService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.CRITICALITY'">
+								</mat-label>
+								<mat-select id="criticality-select" formControlName="criticality">
+									<mat-option *ngFor="let criticalityType of criticalityTypes" [value]="criticalityType.id">
+										{{criticalityType.display}}
+									</mat-option>
+								</mat-select>
+								<mat-error translate="forms.REQUIRED"></mat-error>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
+										type="submit">
+									<span class="uppercase"[translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
+								</button>
+							</div>
+						</form>
+					</ng-template>
+				</ng-container>
+
+				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
+					[columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
+					[data]="alergiasNuevaConsultaService.getAlergias()">
+				</app-document-section-table>
+
+			</app-new-document-section>
+		</div>
+
+		<div id="counterreference" fxLayout="column">
+			<h2 class="mat-h2" [translate]="'ambulatoria.paciente.counterreference.COUNTERREFERENCE'"></h2>
+			<form [formGroup]="formDescription">
+				<mat-form-field appearance="outline" fxFlex="100%">
+					<mat-label [translate]="'ambulatoria.paciente.counterreference.PLACEHOLDER_DESCRIPTION'"></mat-label>
+					<textarea matInput type="text" name="description" formControlName="description"></textarea>
+					<mat-error translate="forms.REQUIRED"></mat-error>
+				</mat-form-field>
+			</form>
+		</div>
+
+		<div id="attach_files" fxLayout="column">
+			<div class="span-clickable primary" fxLayout="row">
+				<mat-icon>attachment_icon</mat-icon>
+				<span [translate]= "'ambulatoria.paciente.nueva-consulta.reference-dialog.UPLOAD_FILES'"(click)="fileInput.click()">
+				</span>
+				<span [hidden]="true">
+					<input type="file" #fileInput multiple (change)="onSelectFileFormData($event)"/>
+				</span>
+			</div>
+
+			<div *ngIf="selectedFilesShow" class="selected-files">
+				<div *ngFor="let fileName of selectedFilesShow; let index = index">
+					<span>
+						{{fileName}}
+					</span>
+					<button mat-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div actions id="buttons">
+		<div align="end">
+			<button class="uppercase" mat-raised-button color="primary" (click)="save()">
+				<span [translate]="'ambulatoria.paciente.counterreference.CONFIRM_COUNTERREFERENCE'"></span>
+			</button>
+		</div>
+	</div>
+</app-dock-popup>

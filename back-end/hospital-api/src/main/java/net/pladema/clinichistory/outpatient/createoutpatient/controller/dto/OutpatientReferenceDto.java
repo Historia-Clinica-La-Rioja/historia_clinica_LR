@@ -35,4 +35,7 @@ public class OutpatientReferenceDto {
     @NotNull(message = "{value.mandatory}")
     private List<@Valid OutpatientReferenceProblemDto> problems;
 
+    @Nullable
+    private List<Integer> fileIds;
+
 }

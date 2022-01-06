@@ -1,7 +1,5 @@
 package ar.lamansys.sgx.shared.flavor;
 
-import java.util.Optional;
-
 public enum FlavorBo {
 
     HOSPITALES("minsal");

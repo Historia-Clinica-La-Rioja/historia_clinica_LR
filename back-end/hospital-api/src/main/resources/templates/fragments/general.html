@@ -315,7 +315,7 @@
             <dl th:each="medication,iter: ${medications}">
                 <dd><p  th:text="${'- ' + medication.snomed.pt}"></p></dd>
                 <dl>
-                    <dd><strong>Observaciones: </strong><label  th:text="${medication.note}"></label></dd>
+                    <dd><strong th:if="${medication.note != null}">Observaciones: </strong><label  th:text="${medication.note}"></label></dd>
                 </dl>
             </dl>
         </div>
@@ -469,6 +469,19 @@
         </div>
     </div>
 
+    <div th:fragment="counterReference">
+        <h3>Contrarreferencia</h3>
+        <div th:if="${notes == null}">
+            <dl>
+                <dd><p>Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${notes != null}">
+            <div class="col-12" th:if="${notes.evolutionNote}">
+                <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+            </div>
+        </div>
+    </div>
 
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">

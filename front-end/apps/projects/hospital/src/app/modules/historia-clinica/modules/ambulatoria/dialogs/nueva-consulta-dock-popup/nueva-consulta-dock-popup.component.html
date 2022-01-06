@@ -317,8 +317,8 @@
 
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
-							<textarea matInput type="text" id="observations" name="Estado"
-									  formControlName="suspended"
+							<textarea matInput type="text" id="observations" name="observaciones"
+									  formControlName="observaciones"
 									  placeholder="Descripción"
 							>
 							</textarea>
@@ -626,7 +626,7 @@
 		<div id="solicitud-referencia" class="referencia" fxLayout="column" fxLayoutGap="10px">
 			<h2 [translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE'"></h2>
 			<span class="primary" [translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST'" (click)="ambulatoryConsultationReferenceService.openReferenceDialog()"></span>
-				<app-document-section-table data-display 
+				<app-document-section-table data-display
 												[columns]="ambulatoryConsultationReferenceService.getColumns()"
 												[data]="ambulatoryConsultationReferenceService.getData()">
 				</app-document-section-table>

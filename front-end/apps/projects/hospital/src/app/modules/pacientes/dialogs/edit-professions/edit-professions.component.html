@@ -1,0 +1,67 @@
+<div class="dialog">
+	<div fxLayout="row" fxLayoutAlign="end end">
+		<button matSuffix mat-icon-button [mat-dialog-close]>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<div mat-dialog-title fxLayout="row">
+		<div class="title" class="capitalize-first-letter" translate="pacientes.edit_professions.TITLE"></div>
+	</div>
+	<div mat-dialog-content>
+
+		<form [formGroup]="formParent">
+			<span class="sub-title" translate="pacientes.edit_professions.LICENCE"></span>
+
+			<div class="form-input">
+				<mat-form-field appearance="outline">
+					<mat-label translate="pacientes.edit_professions.ENTER_LICENCE"></mat-label>
+					<input formControlName="license" type="text" matInput>
+					<mat-error *ngIf="hasError('required', 'pattern', 'license')">
+						<span translate="pacientes.edit_professions.LICENCE_REQUIRED"></span>
+					</mat-error>
+				</mat-form-field>
+			</div>
+
+			<div formArrayName="specialtiesAndProfessions">
+				<span class="sub-title" translate="pacientes.edit_professions.PROFESSION_SPECIALTY"></span>
+
+				<div *ngFor="let p of getCtrl('specialtiesAndProfessions',formParent).controls;index as formChild">
+
+					<div class="form-block" [formGroupName]="formChild">
+						<div class="form-input">
+							<app-typeahead id="select-profession"
+								[externalSetValue]="initValueTypeaheadProfessions[formChild]"
+								[options]="professionsTypeahead"
+								[placeholder]="'pacientes.edit_professions.SELECT_PROFESSION' | translate "
+								(selectionChange)="setProfession($event, formChild)">
+							</app-typeahead>
+						</div>
+
+						<div class="form-input">
+							<app-typeahead id="select-specialty" [options]="specialtiesTypeahead"
+								[externalSetValue]="initValueTypeaheadSpecialties[formChild]"
+								[placeholder]="'pacientes.edit_professions.SELECT_SPECIALTY' | translate "
+								(selectionChange)="setSpeciality($event, formChild)">
+							</app-typeahead>
+						</div>
+						<div class="divider" *ngIf="isDividerNewSpecialtiesAndProfessions()">
+							<mat-divider inset class="divider" layout-align="center"></mat-divider>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<button [disabled]="isDisabledAddProfessionAndSpecialty()" mat-button type="button"
+			(click)="addSpecialtiesAndProfessions()" color="primary" id="add-button" onclick="this.blur()">
+			+ {{ 'pacientes.edit_professions.ADD_ANOTHER_PROFESSION_AND_SPECIALTY' | translate }}
+		</button>
+
+	</div>
+	<div actions id="buttons" fxLayoutAlign="end">
+		<button class="uppercase" mat-raised-button color="primary" (click)="save()"
+			[disabled]="isDisableConfirmButton()">
+			<span [translate]="'buttons.CONFIRM'"></span>
+		</button>
+	</div>
+</div>

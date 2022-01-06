@@ -36,4 +36,6 @@ public class ReferenceBo {
     @NotNull(message = "{value.mandatory}")
     private Integer clinicalSpecialtyId;
 
+    private List<Integer> fileIds;
+
 }

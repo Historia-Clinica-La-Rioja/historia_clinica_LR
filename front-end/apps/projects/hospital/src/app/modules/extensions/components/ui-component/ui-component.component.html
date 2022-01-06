@@ -15,6 +15,19 @@
 			</ng-container>
 		</a>
 	</div>
+	<div *ngSwitchCase="'cubejs-dashboard'">
+		<app-cubejs-dashboard
+			[content]="uiComponent.args.content"
+		>
+		</app-cubejs-dashboard>
+	</div>
+	<div *ngSwitchCase="'cubejs-chart'">
+		<app-cubejs-chart
+			[query]="uiComponent.args.query"
+			[dateFormat]="uiComponent.args.dateFormat"
+		>
+		</app-cubejs-chart>
+	</div>
 	<div *ngSwitchCase="'tabs'">
 		<app-tabs [tabs]="uiComponent.args.tabs"></app-tabs>
 	</div>
@@ -23,6 +36,21 @@
 	<div *ngSwitchCase="'code'">
 		<code>{{uiComponent.args.value | json}}</code>
 	</div>
+
+	<div *ngSwitchCase="'card'">
+		<app-card
+			[title]="uiComponent.args.title"
+			[content]="uiComponent.args.content"
+		></app-card>
+	</div>
+
+	<div *ngSwitchCase="'json'">
+		<app-json
+			[content]="uiComponent.args.content"
+		></app-json>
+	</div>
+
+	<mat-divider *ngSwitchCase="'divider'" inset></mat-divider>
 
 	<div *ngSwitchDefault>
 		<span class="mat-title">

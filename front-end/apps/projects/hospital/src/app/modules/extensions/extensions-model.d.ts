@@ -1,6 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export interface ChartDefinitionDto {
+    chartType: string;
+    cubeQuery: any;
+    pivotConfig: any;
+}
+
 export interface UIComponentDto {
     args: { [index: string]: any };
     type: string;

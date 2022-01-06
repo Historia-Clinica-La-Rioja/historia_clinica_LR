@@ -2,7 +2,6 @@ package net.pladema.snvs.domain.report;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.snvs.domain.event.SnvsEventInfoBo;
 import net.pladema.snvs.domain.institution.InstitutionDataBo;

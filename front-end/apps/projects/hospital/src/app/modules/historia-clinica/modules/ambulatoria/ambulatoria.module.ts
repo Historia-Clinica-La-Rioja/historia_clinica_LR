@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 
-import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { ExtensionsModule } from '@extensions/extensions.module';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
@@ -44,7 +43,10 @@ import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consu
 import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report/epidemiological-report.component';
 import { PreviousDataComponent } from './dialogs/previous-data/previous-data.component';
 import { ReferenceComponent } from './dialogs/reference/reference.component';
-
+import { ReferenceNotificationComponent } from './dialogs/reference-notification/reference-notification.component';
+import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
+import { SnvsReportsResultComponent } from './dialogs/snvs-reports-result/snvs-reports-result.component';
+import { ClipboardModule } from "@angular/cdk/clipboard";
 
 @NgModule({
 	declarations: [
@@ -78,20 +80,23 @@ import { ReferenceComponent } from './dialogs/reference/reference.component';
 		ExternalClinicalHistoryComponent,
 		PreviousDataComponent,
 		EpidemiologicalReportComponent,
-		ReferenceComponent
+		ReferenceComponent,
+		ReferenceNotificationComponent,
+		CounterreferenceDockPopupComponent,
+		SnvsReportsResultComponent,
 	],
 	imports: [
 		CommonModule,
 		FormsModule,
 		OverlayModule,
 		PortalModule,
-		CoreModule,
 		PresentationModule,
 		ExtensionsModule,
 		HistoriaClinicaModule,
 		AmbulatoriaRoutingModule,
 		PacientesModule,
 		OdontologiaModule,
+		ClipboardModule,
 	]
 })
 export class AmbulatoriaModule {

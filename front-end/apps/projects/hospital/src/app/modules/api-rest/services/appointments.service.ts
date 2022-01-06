@@ -96,7 +96,6 @@ export class AppointmentsService {
 
 	mqttCall(appointmentId: number): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/notifyPatient`;
-		console.log(url);
 		return this.http.post(url, {});
 	}
 

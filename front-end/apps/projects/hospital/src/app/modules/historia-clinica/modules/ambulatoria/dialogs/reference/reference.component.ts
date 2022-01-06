@@ -23,6 +23,8 @@ export class ReferenceComponent implements OnInit {
 	specialtyId: number;
 	problemsReference: OutpatientReferenceProblemDto[];
 	institutions$: Observable<InstitutionBasicInfoDto[]>;
+	selectedFiles: File[] = [];
+	selectedFilesShow: any[] = [];
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -110,7 +112,7 @@ export class ReferenceComponent implements OnInit {
 
 	save(): void {
 		if (this.formReference.valid) {
-			const reference = this.buildReference();
+			const reference = { data: this.buildReference(), files: this.selectedFiles };
 			this.dialogRef.close(reference);
 		}
 	}
@@ -123,6 +125,19 @@ export class ReferenceComponent implements OnInit {
 			note: this.formReference.value.summary,
 			problems: this.problemsReference,
 			procedure: false,
+			fileIds: []
 		}
+	}
+
+	onSelectFileFormData($event): void {
+		Array.from($event.target.files).forEach((file: File) => {
+			this.selectedFiles.push(file);
+			this.selectedFilesShow.push(file.name);
+		});
+	}
+
+	removeSelectedFile(index): void {
+		this.selectedFiles.splice(index, 1);
+		this.selectedFilesShow.splice(index, 1);
 	}
 }

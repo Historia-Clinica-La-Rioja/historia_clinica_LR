@@ -19,6 +19,21 @@ corresponde una ruta particular.
 2. `components`: depende del reuso y/o modularización dentro del propio módulo, son utilizados por los componentes de *routes*.
 3. `services`: Estaran presentes dependiendo si es requerido algun servicio propio del modulo.
 
+### Dependencia de módulos
+
+1. [AppModule](./src/app/app.module.ts)
+	a. ==carga lazy=> *Feature Modules*[^1]
+
+2. *Feature Modules* ==depende de=> PresentationModule, LazyMaterialModule (opcional)
+
+3. [PresentationModule](./src/app/modules/presentation/presentation.module.ts) ==depende de=> AppMaterialModule, CoreModule
+
+4. CoreModule ==depende de=> MinMaterialModule
+
+5. AppModule ➡ ==depende de=> CoreModule, ApiRestModule
+
+[^1]: Feature Modules: Auth, Home, Institucion, Camas, Guardia, Turnos, etc
+
 ### Assets
 
 ##### Traducciones
@@ -46,8 +61,10 @@ En la carpeta `styles` se encuentran los archivos *.scss* correspondientes a los
 5. `theme`: Configura propiedades del theme como la paleta de colores general y para distintos componentes en particular.
 
 
-##### Flavors
+### Estructura
 
-Dentro de la carpeta `flavors` tenemos la configuracion de cada flavor separado en carpetas. En cada una de ellas se guardan las 
-imagenes, que contienen principalmente los logos, de la aplicación y los cambios en traducciones que sean requeridos (archivo *es-AR
-.json*).
+En el `body` se definen las clases [mat-typography](https://material.angular.io/guide/typography) [mat-app-background](https://material.angular.io/guide/theming) que afectan a toda la aplicación.
+
+La etiqueta [`noscript`](https://uniwebsidad.com/libros/javascript/capitulo-1/etiqueta-noscript) contiene el mensaje sugerido.
+
+

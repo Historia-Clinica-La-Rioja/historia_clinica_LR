@@ -15,4 +15,8 @@ public class SnvsToReportDto {
 
 	private Integer manualClassificationId;
 
+	private Integer groupEventId;
+
+	private Integer eventId;
+
 }

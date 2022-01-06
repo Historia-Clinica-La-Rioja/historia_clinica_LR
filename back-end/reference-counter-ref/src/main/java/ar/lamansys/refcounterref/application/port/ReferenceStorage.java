@@ -9,6 +9,6 @@ public interface ReferenceStorage {
 
     void save(List<ReferenceBo> referenceBoList);
 
-    List<ReferenceGetBo> getReferences(Integer institutionId, Integer patientId, List<Integer> clinicalSpecialtyIds);
+    List<ReferenceGetBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds);
 
 }

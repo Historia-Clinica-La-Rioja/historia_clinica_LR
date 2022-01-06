@@ -137,15 +137,34 @@
             "PENDING_DATA": "Nombre de usuario y contraseña pendientes",
             "WITHOUT_USER": "Sin usuario",
             "NO_INFO": "Sin información",
+			"WITHOUT_PROFESSIONS":"Sin profesiones asignadas.",
+			"LICENCE": "Matrícula:",
+			"PROFESSION": "Profesión:",
+			"SPECIALTY": "Especialidad:",
             "buttons": {
                 "CREATE_USER": "CREAR USUARIO",
 				"SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
-				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO"
+				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO",
+				"EDIT_PROFESSIONS": "EDITAR PROFESIONES"
             },
             "messages": {
                 "SUCCESS": "El usuario se creó exitosamente",
                 "ERROR": "Error al crear el usuario",
 				"UPDATE_SUCCESS": "El usuario se actualizó exitosamente"
+			}
+        },
+		"edit_professions": {
+            "TITLE": "Editar profesión",
+            "LICENCE": "Matrícula",
+			"ENTER_LICENCE": "Ingrese matrícula",
+			"LICENCE_REQUIRED":"El campo es requerido",
+			"SELECT_PROFESSION": "Seleccione profesión",
+			"SELECT_SPECIALTY": "Seleccione especialidad",
+            "PROFESSION_SPECIALTY": "Profesión | Especialidad",
+			"ADD_ANOTHER_PROFESSION_AND_SPECIALTY": "Agregar otra profesión/especialidad",
+			"messages": {
+                "SUCCESS": "Se guardaron correctamente los cambios en profesiones",
+                "ERROR": "Error al guardaron los cambios en profesiones"
 			}
         }
     }

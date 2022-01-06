@@ -1,7 +1,6 @@
 package ar.lamansys.sgx.shared.proxy.reverse.resttemplate;
 
 import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
-import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +22,7 @@ public class RestTemplateReverseProxy implements ReverseProxy {
 			String baseUrl,
 			Map<String, String> defaultHeaders
 	) throws Exception {
-		this.restTemplate = new RestTemplateSSL(
-				new LoggingRequestInterceptor()
-		);
+		this.restTemplate = new RestTemplateSSL();
 		this.restTemplate.setErrorHandler(new ReverseProxyResponseErrorHandler());
 		this.baseUrl = baseUrl;
 		this.defaultHeaders = defaultHeaders;

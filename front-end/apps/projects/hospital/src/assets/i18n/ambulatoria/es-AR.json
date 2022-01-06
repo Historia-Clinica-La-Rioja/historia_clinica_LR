@@ -24,9 +24,9 @@
 					"NUEVA_CONSULTA": "Nueva consulta"
 				}
 			},
-			"new-nursing-consultation":{
+			"new-nursing-consultation": {
 				"TITLE": "Nueva consulta de enfermería",
-				"ASSOCIATED_PROBLEM":"Problema asociado",
+				"ASSOCIATED_PROBLEM": "Problema asociado",
 				"SPECIALTY": "Especialidad",
 				"messages": {
 					"ERROR": "Error al guardar el documento nueva consulta de enfermería",
@@ -92,7 +92,8 @@
 				},
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
-					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente"
+					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente",
+					"ERROR_TO_UPDATE_FILES": "Error al guardar la solicitud de referencia"
 				},
 				"problemas": {
 					"buttons": {
@@ -176,7 +177,7 @@
 				"previous-data": {
 					"ADD": "SI, INCLUIRLOS",
 					"DISCARD": "NO, DESCARTARLOS",
-					"ASK":"¿Desea incluirlos en la consulta?",
+					"ASK": "¿Desea incluirlos en la consulta?",
 					"CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
 					"CONTENT_VITAL_SIGNS": "Hay signos vitales cargados previamente.",
 					"CONTENT": "Hay datos antropométricos y signos vitales cargados previamente."
@@ -214,7 +215,7 @@
 					"TITLE": "Solicitud de referencia",
 					"ADD_REQUEST": "+ Agregar solicitud",
 					"REQUESTED_REFERENCE": "Referencias solicitadas",
-					"table":{
+					"table": {
 						"columns": {
 							"REFERENCES": "Referencias agregadas"
 						},
@@ -236,8 +237,26 @@
 					"PLACEHOLDER_SPECIALITY": "Especialidad",
 					"PLACEHOLDER_INSTITUTION": "Institución",
 					"PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
-					"ATTACH_FILE": "Adjuntar archivos",
+					"UPLOAD_FILES": "Adjuntar archivos",
 					"ADD_REFERENCE": "AGREGAR SOLICITUD"
+				}
+			},
+			"reference-notification": {
+				"TITLE": "Hay al menos una solicitud de referencia en relación a la línea de cuidado a la que usted pertenece: ",
+				"REFERENCE_REQUEST": "REFERENCIA SOLICITADA",
+				"OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
+				"DESCRIPTION": "Si no desea responder a la referencia y realizar una consulta independiente seleccione “Consulta clásica”.",
+				"NEW_CONSULTATION": "CONSULTA CLÁSICA",
+				"COUNTERREFERENCE": "CONTRARREFERENCIA"
+			},
+			"counterreference": {
+				"TITLE": "Responder referencia",
+				"COUNTERREFERENCE": "Contrarreferencia",
+				"PLACEHOLDER_DESCRIPTION": "Descripción",
+				"CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
+				"messages": {
+					"ERROR": "Error al guardar documento de contrarreferencia",
+					"SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
 				}
 			},
 			"problemas": {
@@ -303,10 +322,20 @@
 				"epidemiological_report": {
 					"PROBLEM_DESCRIPTION": "El problema <b>{{ problemName }}</b> es reportable a nivel epidemiológico.",
 					"CASE_CLASSIFICATION": "Clasificación del caso",
+					"MIN_ONE_REQUIRED_ERROR": "Se debe seleccionar alguna clasificación manual",
 					"buttons": {
 						"CONFIRM_REPORT": "REPORTAR CASO",
 						"CANCEL_REPORT": "OMITIR"
 					}
+				},
+				"snvs-reports-result": {
+					"ERROR_FAIL_TO_REPORT": "Fallo al reportar el/los problema/s",
+					"REPORTING": "Reportando casos al S.N.V.S.",
+					"SNVS": "(Sistema Nacional de Vigilancia de la Salud - Argentina)",
+					"SUCCESSFULLY_REPORTED": "El caso <b>{{ problemName }}</b> fue reportado con éxito",
+					"CASE_COULD_NOT_BE_REPORTED": "El caso <b>{{ problemName }}</b> no pudo ser reportado",
+					"ID": "ID",
+					"FAILED_REPORT_ERROR": "Fallo al reportar el problema"
 				}
 			},
 			"ordenes_prescripciones": {

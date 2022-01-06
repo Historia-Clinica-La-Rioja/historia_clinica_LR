@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -15,6 +16,15 @@ import javax.annotation.Nullable;
 public class SnvsReportDto {
 
 	private SnvsSnomedDto problem;
+
+	@NotNull
+	private Integer groupEventId;
+
+	@NotNull
+	private Integer eventId;
+
+	@Nullable
+	private Integer manualClassificationId;
 
 	@Nullable
 	private String status;
@@ -28,3 +38,5 @@ public class SnvsReportDto {
 	@Nullable
 	private DateDto lastUpdate;
 }
+
+

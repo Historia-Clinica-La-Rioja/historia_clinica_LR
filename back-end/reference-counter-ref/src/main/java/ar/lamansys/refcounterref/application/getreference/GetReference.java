@@ -19,16 +19,14 @@ public class GetReference {
     private final ReferenceStorage referenceStorage;
 
     @Transactional
-    public List<ReferenceGetBo> run(Integer institutionId, Integer patientId, List<Integer> clinicalSpecialtyIds) {
-        log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyIds {} ", institutionId, patientId, clinicalSpecialtyIds);
-        assertContextValid(institutionId, patientId, clinicalSpecialtyIds);
-        List<ReferenceGetBo> result = referenceStorage.getReferences(institutionId, patientId, clinicalSpecialtyIds);
+    public List<ReferenceGetBo> run(Integer patientId, List<Integer> clinicalSpecialtyIds) {
+        log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {} ", patientId, clinicalSpecialtyIds);
+        assertContextValid(patientId, clinicalSpecialtyIds);
+        List<ReferenceGetBo> result = referenceStorage.getReferences(patientId, clinicalSpecialtyIds);
         return result;
     }
 
-    private void assertContextValid(Integer institutionId, Integer patientId, List<Integer> clinicalSpecialtyIds) {
-        if (institutionId == null)
-            throw new ReferenceException(ReferenceExceptionEnum.NULL_INSTITUTION_ID, "El id de la institución es obligatorio");
+    private void assertContextValid(Integer patientId, List<Integer> clinicalSpecialtyIds) {
         if (patientId == null)
             throw new ReferenceException(ReferenceExceptionEnum.NULL_PATIENT_ID, "El id del paciente es obligatorio");
         if (clinicalSpecialtyIds.isEmpty())

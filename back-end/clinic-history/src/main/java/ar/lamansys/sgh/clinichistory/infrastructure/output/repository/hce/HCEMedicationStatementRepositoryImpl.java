@@ -35,7 +35,7 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
                 "JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
                 "WHERE ms.patient_id = :patientId  " +
-                "AND d.type_id IN (:documentType) "+
+                "AND d.type_id IN (:documentTypes) "+
                 "AND d.status_id = :documentStatusId " +
                 ") " +
                 "SELECT t.id AS id, s.sctid AS sctid, s.pt, status_id,  " +
@@ -50,7 +50,7 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 .setParameter("documentStatusId", DocumentStatus.FINAL)
                 .setParameter("medicationStatusId", List.of(MedicationStatementStatus.ACTIVE))
                 .setParameter("patientId", patientId)
-                .setParameter("documentType", List.of(DocumentType.OUTPATIENT, DocumentType.RECIPE))
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.RECIPE, DocumentType.COUNTER_REFERENCE))
                 .getResultList();
         List<HCEMedicationVo> result = new ArrayList<>();
         queryResult.forEach(m ->

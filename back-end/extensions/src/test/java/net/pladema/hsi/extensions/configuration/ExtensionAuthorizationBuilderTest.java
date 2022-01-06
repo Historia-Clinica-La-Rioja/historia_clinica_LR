@@ -17,7 +17,7 @@ class ExtensionAuthorizationBuilderTest {
 
 		assertTrue(auth.isSystemMenuAllowed("tablerito"));
 		assertFalse(auth.isSystemMenuAllowed("secret"));
-		assertTrue(auth.isSystemMenuAllowed("89889980"));
+		assertFalse(auth.isSystemMenuAllowed("89889980"));
 	}
 
 	enum ExtRole {

@@ -11,7 +11,7 @@ import { AccessDataResetComponent } from "./routes/access-data-reset/access-data
 
 const routes: Routes = [
 	{
-		path: 'auth',
+		path: '',
 		component: AuthComponent,
 		children: [
 			{

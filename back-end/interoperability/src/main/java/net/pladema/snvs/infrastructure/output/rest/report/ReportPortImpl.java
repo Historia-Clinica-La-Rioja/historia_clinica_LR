@@ -110,7 +110,7 @@ public class ReportPortImpl implements ReportPort {
     }
 
     private String parseDate(LocalDate date) {
-        return date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return date == null ? null : date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
 
     private SnvsCitizenDto buildCitizen(PatientDataBo patient) {
@@ -121,6 +121,7 @@ public class ReportPortImpl implements ReportPort {
         result.setMail(patient.getEmail());
         result.setNumeroDocumento(patient.getIdentificationNumber());
         result.setTipoDocumento(patient.getIdentificationTypeId()); // TODO hay que chequear si el mapeo funciona
+        result.setFechaNacimiento(parseDate(patient.getBirthDate()));
         result.setTelefono(patient.getPhoneNumber());
         result.setSeDeclaraPuebloIndigena(patient.getEthnicityId() != null ? "Si" : "No");
         result.setPersonaACargo(new SnvsTutorDto());

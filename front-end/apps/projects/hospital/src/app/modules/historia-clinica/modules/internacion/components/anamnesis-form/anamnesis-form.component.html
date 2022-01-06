@@ -5,12 +5,11 @@
 			<h3 [translate]="'internaciones.anamnesis.SUBTITLE'"></h3>
 		</section>
 
-		<ng-container *appFeatureFlag="'mainDiagnosisRequired'">
-			<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
-				<section id="diagnostico-principal">
-					<app-diagnostico-principal [diagnosis]="mainDiagnosis" (changeMainDiagnosis)="setMainDiagnosis($event)"></app-diagnostico-principal>
-				</section>
-			</ng-container>
+
+		<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
+			<section id="diagnostico-principal">
+				<app-diagnostico-principal [diagnosis]="mainDiagnosis" (changeMainDiagnosis)="setMainDiagnosis($event)"></app-diagnostico-principal>
+			</section>
 		</ng-container>
 		<section id="diagnosticos">
 			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>

@@ -34,6 +34,8 @@ public class ReportStorageImpl implements ReportStorage {
         result.setProfessionalId(snvsReportBo.getProfessionalId());
         result.setSisaRegisteredId(snvsReportBo.getSisaRegisteredId());
         result.setStatus(snvsReportBo.getStatus());
+        result.setSnomedSctid(snvsReportBo.getProblemBo().getSctid());
+        result.setSnomedPt(snvsReportBo.getProblemBo().getPt());
         result.setId(snvsReportBo.getId());
         return result;
     }

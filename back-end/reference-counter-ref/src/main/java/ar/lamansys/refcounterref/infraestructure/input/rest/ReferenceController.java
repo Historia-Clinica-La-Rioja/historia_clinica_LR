@@ -1,8 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
 import ar.lamansys.refcounterref.application.getreference.GetReference;
-import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
-import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceDto;
+import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.ReferenceMapper;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,8 +36,8 @@ public class ReferenceController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestParam List<Integer> clinicalSpecialtyIds) {
-        log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyIds {}", institutionId, patientId, clinicalSpecialtyIds);
-        List<ReferenceDto> result = referenceMapper.fromListReferenceBo(getReference.run(institutionId, patientId, clinicalSpecialtyIds));
+        log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}", patientId, clinicalSpecialtyIds);
+        List<ReferenceDto> result = referenceMapper.fromListReferenceBo(getReference.run(patientId, clinicalSpecialtyIds));
         log.debug("Output -> result {}", result);
         return result;
     }

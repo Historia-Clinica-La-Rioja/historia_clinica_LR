@@ -1,0 +1,63 @@
+.reference-notification {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+    position: relative;    
+    margin-left: 20px;
+	margin-right: 20px;
+    width: 30vw;
+}
+
+@media (max-width: 959px) {
+    .reference-notification {
+        width: 65vw;
+    }
+}
+.title {
+    font-size: 18px;
+    margin-left: 10px;
+    line-height: 24px;
+    margin-top: 30px;
+}
+
+.dose {
+	border-radius: 6px;
+    padding: 4px 17px;
+    background-color: #ffcece;
+    color: #EB5757;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19px;
+    width: 163px;
+    margin-top: 10px;
+}
+
+.close{
+	transform: scale(1.0);
+	position: absolute;
+	top: 0px;
+}
+
+.grayText {
+	color: #979797;
+}
+
+.icon {
+    margin-top: 30px;
+}
+
+.reference-description {
+    margin-top: 10px;
+}
+
+.mat-dialog-content {
+    max-height: 320px;
+}
+
+.span-clickable {
+
+	span:hover {
+		text-decoration: underline;
+	}
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}

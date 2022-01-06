@@ -26,6 +26,21 @@
 			"confirm_dialog": {
 				"TITLE": "Restablecer"
 			}
+		},
+		"features": {
+			"TITLE": "Funcionalidad"
+		}
+	},
+	"app": {
+		"gateway": {
+			"cubejs": {
+				"TITLE": "Tableros"
+			}
+		}
+	},
+	"ws": {
+		"snowstorm": {
+			"TITLE": "Snowstorm"
 		}
 	}
 }

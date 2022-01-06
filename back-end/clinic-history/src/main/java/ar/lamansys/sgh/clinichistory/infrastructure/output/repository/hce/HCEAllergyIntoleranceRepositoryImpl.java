@@ -41,7 +41,7 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
                 "FROM document d " +
                 "JOIN document_allergy_intolerance dai ON d.id = dai.document_id " +
                 "JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
-                "WHERE d.type_id = :documentType "+
+                "WHERE d.type_id IN (:documentTypes) "+
                 "AND d.status_id = :documentStatusId " +
                 "AND ai.patient_id = :patientId " +
                 ") " +
@@ -54,7 +54,7 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .setParameter("documentStatusId", DocumentStatus.FINAL)
-                .setParameter("documentType", DocumentType.OUTPATIENT)
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.COUNTER_REFERENCE))
                 .setParameter("allergyIntoleranceStatus", AllergyIntoleranceVerificationStatus.ERROR)
                 .getResultList();
         List<HCEAllergyVo> result = new ArrayList<>();

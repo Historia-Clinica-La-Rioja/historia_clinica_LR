@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CoreModule } from '@core/core.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { InstitucionModule } from '../../../institucion/institucion.module';
 import { HistoriaClinicaModule } from '../../historia-clinica.module';
@@ -55,7 +54,6 @@ import { EditEmergencyCareEpisodeComponent } from './routes/edit-emergency-care-
 	],
 	imports: [
 		CommonModule,
-		CoreModule,
 		PresentationModule,
 		InstitucionModule,
 		HistoriaClinicaModule,

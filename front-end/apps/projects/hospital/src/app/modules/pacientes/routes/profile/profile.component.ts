@@ -4,6 +4,9 @@ import {
 	CompletePatientDto,
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
+	ProfessionalDto,
+	HealthcareProfessionalSpecialtyDto,
+	ClinicalSpecialtyDto,
 	UserDataDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
@@ -29,7 +32,10 @@ import { processErrors } from "@core/utils/form.utils";
 import { take } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { PermissionsService } from "@core/services/permissions.service";
-import {UserPasswordResetService} from "@api-rest/services/user-password-reset.service";
+import { UserPasswordResetService } from "@api-rest/services/user-password-reset.service";
+import { EditProfessionsComponent, ProfessionDto } from '@pacientes/dialogs/edit-professions/edit-professions.component';
+import { ProfessionalService } from '@api-rest/services/professional.service';
+import { SpecialtyService } from '@api-rest/services/specialty.service';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -56,6 +62,14 @@ export class ProfileComponent implements OnInit {
 	public internmentEpisode;
 	public userData: UserDataDto;
 	private personId: number;
+	private professionalId: number;
+	license: string = '';
+	private specialties: number[] = [];
+	private professions: number[] = [];
+	private professionalSpecialtyId: number[] = [];
+	showProfessions: string[] = [];
+	showSpecialties: string[] = [];
+	public hasAssignedProfessions = false;
 	public form: FormGroup;
 
 	public downloadReportIsEnabled: boolean;
@@ -68,13 +82,15 @@ export class ProfileComponent implements OnInit {
 		private router: Router,
 		private personService: PersonService,
 		private contextService: ContextService,
-		private userPasswordResetService : UserPasswordResetService,
+		private userPasswordResetService: UserPasswordResetService,
 		private internmentPatientService: InternmentPatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly featureFlagService: FeatureFlagService,
 		public dialog: MatDialog,
 		private readonly userService: UserService,
 		private readonly snackBarService: SnackBarService,
+		private readonly professionalService: ProfessionalService,
+		private readonly specialtyService: SpecialtyService,
 		private readonly formBuilder: FormBuilder,
 		private readonly permissionService: PermissionsService
 	) {
@@ -93,6 +109,7 @@ export class ProfileComponent implements OnInit {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
 						this.personId = completeData.person.id;
+						this.checkIfProfessional();
 						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
@@ -100,7 +117,7 @@ export class ProfileComponent implements OnInit {
 						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 
-						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe( hasRoleToViewUserData => {
+						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe(hasRoleToViewUserData => {
 							if (this.createUsersIsEnable && hasRoleToViewUserData) {
 								this.userService.getUserData(this.personId)
 									.subscribe(userDataDto => {
@@ -125,7 +142,51 @@ export class ProfileComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			enable: [null]
 		});
+	}
 
+	checkIfProfessional(): void {
+		this.professionalService.get(this.personId).subscribe((profession: ProfessionalDto) => {
+			if (profession) {
+				this.license = profession.licenceNumber;
+				this.professionalId = profession.id;
+				this.setProfessionsAndSpecialties();
+				this.hasAssignedProfessions = true;
+			}
+		})
+	}
+
+	setProfessionsAndSpecialties(): void {
+		this.professionalService.getProfessionsByProfessional(this.professionalId).subscribe(
+			(professionalsByClinicalSpecialty: HealthcareProfessionalSpecialtyDto[]) => {
+				professionalsByClinicalSpecialty.forEach((index: HealthcareProfessionalSpecialtyDto) => {
+					this.specialties.push(index.clinicalSpecialtyId);
+					this.professions.push(index.professionalSpecialtyId);
+					this.professionalSpecialtyId.push(index.id);
+				})
+				this.setProfessions();
+				this.setSpecialties();
+			})
+
+	}
+
+	setProfessions(): void {
+		this.professionalService.getList().subscribe((allProfessions: ProfessionDto[]) => {
+			this.professions.forEach(profession => {
+				allProfessions.find(element => {
+					(element.id === profession) ? (this.showProfessions.push(element.description)) : null;
+				});
+			})
+		});
+	}
+
+	setSpecialties(): void {
+		this.specialtyService.getAll().subscribe((allSpecialties: ClinicalSpecialtyDto[]) => {
+			this.specialties.forEach(specialty => {
+				allSpecialties.find(element => {
+					(element.id === specialty) ? (this.showSpecialties.push(element.name)) : null
+				});
+			})
+		});
 	}
 
 	goNewInternment(): void {
@@ -148,6 +209,26 @@ export class ProfileComponent implements OnInit {
 		});
 	}
 
+	editProfessions(): void {
+		const dialog = this.dialog.open(EditProfessionsComponent, {
+			width: '350px',
+			data: {
+				personId: this.personId, professionalId: this.professionalId, ownLicense: this.license,
+				ownSpecialties: this.specialties, ownProfessions: this.professions, id: this.professionalSpecialtyId
+			}
+		});
+		dialog.afterClosed().subscribe(closed => {
+			if (closed) {
+				this.specialties = [];
+				this.professions = [];
+				this.professionalSpecialtyId = [];
+				this.showProfessions = [];
+				this.showSpecialties = [];
+				this.checkIfProfessional();
+			}
+		})
+	}
+
 	reports(): void {
 		this.dialog.open(ReportsComponent, {
 			width: '700px',
@@ -160,7 +241,7 @@ export class ProfileComponent implements OnInit {
 			.subscribe(userId => {
 				this.userService.getUserData(this.personId).subscribe(userDataDto => this.userData = userDataDto);
 				this.snackBarService.showSuccess('pacientes.user_data.messages.SUCCESS');
-		}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
+			}, _ => this.snackBarService.showError('pacientes.user_data.messages.ERROR'));
 	}
 
 	enableUser() {

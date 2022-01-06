@@ -1,7 +1,7 @@
 {
   "label": {
-    "text": "Tableros"
+    "text": "Referencias"
   },
-  "icon": "insights",
-  "id": "tableros"
+  "icon": "summarize",
+  "id": "references"
 }

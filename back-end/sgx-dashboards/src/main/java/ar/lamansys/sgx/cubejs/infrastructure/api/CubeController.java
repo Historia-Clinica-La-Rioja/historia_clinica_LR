@@ -20,7 +20,8 @@ public class CubeController {
 	private final DashboardInfoService dashboardInfoService;
 
 	public CubeController(
-			DashboardInfoService dashboardInfoService){
+			DashboardInfoService dashboardInfoService
+	){
 		this.dashboardInfoService = dashboardInfoService;
 		this.logger = LoggerFactory.getLogger(getClass());
 	}

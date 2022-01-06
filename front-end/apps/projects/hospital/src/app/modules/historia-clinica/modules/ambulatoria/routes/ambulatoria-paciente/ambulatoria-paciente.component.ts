@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, ERole } from '@api-rest/api-model';
 
-import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
+import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, ClinicalSpecialtyDto, ReferenceDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -27,8 +27,11 @@ import { OdontogramService } from '@historia-clinica/modules/odontologia/service
 import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
-
-
+import { ReferenceService } from '@api-rest/services/reference.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ReferenceNotificationComponent } from '../../dialogs/reference-notification/reference-notification.component';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { CounterreferenceDockPopupComponent } from '../../dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
 
 const RESUMEN_INDEX = 0;
 
@@ -58,6 +61,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public spinner = false;
 	private timeOut = 15000;
 	public CurrentUserIsAllowedToMakeBothQueries = false;
+	specialtiesId: number[] = [];
+	reference: ReferenceDto;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -71,7 +76,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly extensionPatientService: ExtensionPatientService,
 		private readonly odontogramService: OdontogramService,
-		private readonly permissionsService: PermissionsService
+		private readonly permissionsService: PermissionsService,
+		private readonly referenceService: ReferenceService,
+		private readonly dialog: MatDialog,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 
 	) { }
 	ngOnInit(): void {
@@ -208,8 +216,64 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.CurrentUserIsAllowedToMakeBothQueries = false
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.CurrentUserIsAllowedToMakeBothQueries = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
-			(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO ])))
+				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
 		});
 	}
 
+	hasReferenceNotification() {
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe((specialties: ClinicalSpecialtyDto[]) => {
+			specialties.forEach((specialty: ClinicalSpecialtyDto) => {
+				this.specialtiesId.push(specialty.id);
+			});
+			this.referenceService.getReferences(this.patientId, this.specialtiesId).subscribe((references: ReferenceDto[]) => {
+				if (references.length > 0) {
+					this.openReferenceNotification(references);
+				}
+				else {
+					this.openNuevaConsulta();
+				}
+			});
+		});
+	}
+
+	openReferenceNotification(references: ReferenceDto[]) {
+		const dialogRef = this.dialog.open(ReferenceNotificationComponent, {
+			data: references,
+			autoFocus: false
+		})
+		dialogRef.afterClosed().subscribe(counterreference => {
+			if (counterreference === false) {
+				this.openNuevaConsulta();
+			}
+			if (counterreference === null) {
+				return;
+			}
+			if (counterreference.isACountisACounterrefer === true) {
+				this.openCounterreference(counterreference.reference);
+			}
+		});
+	}
+
+	openCounterreference(reference: ReferenceDto) {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent, {
+				data: {
+					reference: reference,
+					patientId: this.patientId
+				}
+			});
+			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+				delete this.dialogRef;
+				this.medicacionesService.updateMedication();
+				if (fieldsToUpdate) {
+					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
+		}
+		else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
+	}
 }

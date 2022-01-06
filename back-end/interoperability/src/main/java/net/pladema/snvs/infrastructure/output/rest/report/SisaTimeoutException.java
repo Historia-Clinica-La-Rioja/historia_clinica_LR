@@ -1,5 +1,8 @@
 package net.pladema.snvs.infrastructure.output.rest.report;
 
+import lombok.Getter;
+
+@Getter
 public class SisaTimeoutException extends RuntimeException {
 
 	private SisaEnumException code;

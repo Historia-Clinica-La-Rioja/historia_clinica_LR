@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { CoreModule } from '@core/core.module';
 import { RoleGuard } from '@core/guards/RoleGuard';
 
 import { ERole } from '@api-rest/api-model';
@@ -50,7 +49,6 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [
-		CoreModule,
 		ReactiveFormsModule,
 		FormsModule,
 		RouterModule.forChild(routes)

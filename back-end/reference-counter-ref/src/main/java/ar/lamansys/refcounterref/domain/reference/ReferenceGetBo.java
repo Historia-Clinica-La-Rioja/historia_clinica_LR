@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.domain.reference;
 
 import ar.lamansys.refcounterref.domain.careline.CareLineBo;
 import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
+import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.professionalperson.ProfessionalPersonBo;
 import ar.lamansys.refcounterref.domain.referencenote.ReferenceNoteBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
@@ -33,6 +34,8 @@ public class ReferenceGetBo implements Serializable {
     private ProfessionalPersonBo professional;
 
     private List<ReferenceProblemBo> problems;
+
+    private List<ReferenceCounterReferenceFileBo> files;
 
     public ReferenceGetBo(Integer id, LocalDate referenceDate, Integer referenceNoteId,
                           String referenceDescription, Integer careLineId, String careLineDescription,

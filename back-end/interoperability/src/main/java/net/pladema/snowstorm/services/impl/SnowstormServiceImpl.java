@@ -5,10 +5,7 @@ import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
 import net.pladema.snowstorm.configuration.SnowstormRestTemplateAuth;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
-import net.pladema.snowstorm.repository.ManualClassificationRepository;
-import net.pladema.snowstorm.repository.entity.ManualClassification;
 import net.pladema.snowstorm.services.SnowstormService;
-import net.pladema.snowstorm.services.domain.ManualClassificationBo;
 import net.pladema.snowstorm.services.domain.SnowstormConcept;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
@@ -16,14 +13,13 @@ import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import net.pladema.snowstorm.services.exceptions.SnowstormEnumException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.pladema.snowstorm.services.exceptions.SnowstormStatusException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -31,28 +27,20 @@ public class SnowstormServiceImpl implements SnowstormService {
 
     private static final String RESPUESTA_NULA = "Respuesta nula";
 
-    private static final String OUTPUT = "Output -> {}";
-
-    private final Logger logger;
-
     private final SnowstormWSConfig snowstormWSConfig;
 
     private final SnomedSemantics snomedSemantics;
 
     private final RestClientInterface restClientInterface;
 
-    private final ManualClassificationRepository manualClassificationRepository;
 
     public SnowstormServiceImpl(SnowstormRestTemplateAuth restTemplateSSL,
                                 SnowstormWSConfig wsConfig,
-                                SnomedSemantics snomedSemantics,
-                                ManualClassificationRepository manualClassificationRepository) {
+                                SnomedSemantics snomedSemantics) {
         super();
         this.snowstormWSConfig = wsConfig;
         this.snomedSemantics = snomedSemantics;
         this.restClientInterface = new RestClient(restTemplateSSL, wsConfig);
-        this.logger = LoggerFactory.getLogger(this.getClass());
-        this.manualClassificationRepository = manualClassificationRepository;
     }
 
     @Override
@@ -147,12 +135,13 @@ public class SnowstormServiceImpl implements SnowstormService {
     }
 
     @Override
-    public List<ManualClassificationBo> isSnvsReportable(String sctid, String pt) {
-        logger.debug("Input parameters -> sctid {}, pt {}", sctid, pt);
-        List<ManualClassification> resultQuery = manualClassificationRepository.isSnvsReportable(sctid, pt);
-        List<ManualClassificationBo> result = resultQuery.stream().map(ManualClassificationBo::new).collect(Collectors.toList());
-        logger.debug(OUTPUT, result);
-        return result;
+    public ResponseEntity<SnowstormSearchResponse> status() {
+
+        try {
+            return restClientInterface.exchangeGet(snowstormWSConfig.getConceptsUrl(), SnowstormSearchResponse.class);
+        } catch (Exception e) {
+            throw new SnowstormStatusException(e);
+        }
     }
 
     private SnowstormApiException mapException(RestTemplateApiException apiException) {
