@@ -27,7 +27,7 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientMedicalCoverageVo> getActivePatientCoverages(Integer patientId) {
-		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id as mcid, mc.name, hi.rnos, hi.acronym, phi.plan, phid " +
+		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id as mcid, mc.name, mc.cuit, hi.rnos, hi.acronym, phi.plan, phid " +
 				"FROM PatientMedicalCoverageAssn pmc " +
 				"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
 				"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
@@ -49,11 +49,11 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 								(Boolean) h[3],
 								(Integer) h[4],
 								(String) h[5],
-								(String) h[10],
-								(Integer) h[6],
-								(String) h[7],
+								(String) h[6],
+								(Integer) h[7],
 								(String) h[8],
-								(PrivateHealthInsuranceDetails) h[9]))
+								(String) h[9],
+								(PrivateHealthInsuranceDetails) h[10]))
 		);
 		return result;
 	}
