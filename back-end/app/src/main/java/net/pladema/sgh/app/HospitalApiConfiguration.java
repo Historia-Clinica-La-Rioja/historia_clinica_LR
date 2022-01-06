@@ -3,6 +3,7 @@ package net.pladema.sgh.app;
 
 import ar.lamansys.immunization.EnableImmunization;
 import ar.lamansys.mqtt.EnableMqttCall;
+import ar.lamansys.refcounterref.EnableReferenceCounterReference;
 import ar.lamansys.sgh.publicapi.EnableHospitalPublicApi;
 import ar.lamansys.nursing.EnableNursing;
 import ar.lamansys.sgx.auth.EnableAuth;
@@ -27,6 +28,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableHospitalLib
 @EnableSharedLibrary
 @EnableHospitalPublicApi
+@EnableReferenceCounterReference
 @ServletComponentScan(basePackages = "net.pladema")
 @ComponentScan(basePackages = {"net.pladema.sgh.app"})
 @EnableJpaRepositories(basePackages = {"net.pladema.sgh.app"})

@@ -6,6 +6,7 @@ import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.Cie10RuleFeature;
 import net.pladema.snowstorm.services.domain.SnowstormCie10ItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormCie10RefsetMembersResponse;
+import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class CalculateCie10CodesServiceImpl implements CalculateCie10CodesServic
     }
 
     @Override
-    public String execute(String sctid, Cie10RuleFeature features) {
+    public String execute(String sctid, Cie10RuleFeature features) throws SnowstormApiException {
         LOG.debug("Input parameters -> sctid {}, patient {}", sctid, features);
         SnowstormCie10RefsetMembersResponse cie10RefsetMembers =
                 snowstormService.getRefsetMembers(sctid, CIE10_REFERENCE_SET_ID, CIE10_LIMIT, SnowstormCie10RefsetMembersResponse.class);

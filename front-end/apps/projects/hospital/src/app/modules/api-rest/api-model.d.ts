@@ -438,6 +438,7 @@ export interface CreateOutpatientDto {
     problems: OutpatientProblemDto[];
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
+    references: OutpatientReferenceDto[];
     vitalSigns?: OutpatientVitalSignDto;
 }
 
@@ -1485,6 +1486,20 @@ export interface OutpatientReasonDto {
     snomed: SnomedDto;
 }
 
+export interface OutpatientReferenceDto {
+    careLineId: number;
+    clinicalSpecialtyId: number;
+    consultation?: boolean;
+    note?: string;
+    problems: OutpatientReferenceProblemDto[];
+    procedure?: boolean;
+}
+
+export interface OutpatientReferenceProblemDto {
+    id?: string;
+    snomed: SnomedDto;
+}
+
 export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
     inactivationDate: string;
     main: boolean;
@@ -1712,6 +1727,12 @@ export interface ProfessionalInfoDto {
     phoneNumber: string;
 }
 
+export interface ProfessionalPersonDto extends Serializable {
+    firstName: string;
+    id: number;
+    lastName: string;
+}
+
 export interface ProfessionalsByClinicalSpecialtyDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     professionalsIds: number[];
@@ -1738,6 +1759,26 @@ export interface RecaptchaPublicConfigDto {
 export interface ReducedPatientDto {
     patientTypeId: number;
     personalDataDto: BasicPersonalDataDto;
+}
+
+export interface ReferenceDto extends Serializable {
+    careLine: CareLineDto;
+    clinicalSpecialty: ClinicalSpecialtyDto;
+    id: number;
+    note: ReferenceNoteDto;
+    problems: ReferenceProblemDto[];
+    professional: ProfessionalPersonDto;
+    referenceDate: DateDto;
+}
+
+export interface ReferenceNoteDto extends Serializable {
+    description: string;
+    id: number;
+}
+
+export interface ReferenceProblemDto extends Serializable {
+    id?: number;
+    snomed: SnomedDto;
 }
 
 export interface RefreshTokenDto {
@@ -1835,6 +1876,24 @@ export interface SnomedEclDto {
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
+}
+
+export interface SnvsReportDto {
+    lastUpdate?: DateDto;
+    problem: SnvsSnomedDto;
+    responseCode?: number;
+    sisaRegisteredId?: number;
+    status?: string;
+}
+
+export interface SnvsSnomedDto extends Serializable {
+    pt: string;
+    sctid: string;
+}
+
+export interface SnvsToReportDto {
+    manualClassificationId: number;
+    problem: SnvsSnomedDto;
 }
 
 export interface StudyDto extends Serializable {

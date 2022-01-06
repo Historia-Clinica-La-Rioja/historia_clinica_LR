@@ -62,7 +62,6 @@ La tabla siguiente expone el conjunto de variables que deben configurarse de man
 
 | variable     | descripción | Efecto |
 | ------------ | ----------- | ------- |
-| app_flavor   | Configuración del sabor. Opciones `minsal`; `chaco`; `tandil`; `pba`  | Configura la aplicación por defecto en flavor `minsal`  |
 | token_secret | Palabra utilizada para encriptar el token de seguridad | No inicia la aplicación |
 | recaptcha_secret_key | Clave secreta para el sitio otorgada por [Google reCaptcha](https://www.google.com/recaptcha/admin/create) | Login no habilitado |
 | recaptcha_site_key | Clave pública para el sitio otorgada por [Google reCaptcha](https://www.google.com/recaptcha/admin/create) | Login no habilitado |

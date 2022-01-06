@@ -17,6 +17,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-picker.component';
 
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
+import { isAfter, parseISO, startOfToday } from 'date-fns';
+import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -29,9 +31,11 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	agendaSelected: DiaryListDto;
 	agendas: DiaryListDto[];
+	activeAgendas: DiaryListDto[] = [];
+	expiredAgendas: DiaryListDto[] = [];
 	agendaFiltersSubscription: Subscription;
 	agendaIdSubscription: Subscription;
-
+	readonly dateFormats = DatePipeFormat;
 	filters: AgendaFilters;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
@@ -70,16 +74,26 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	loadAgendas(diaries, idAgendaSelected?): void {
+	private loadAgendas(diaries, idAgendaSelected?): void {
 		delete this.agendas;
 		delete this.agendaSelected;
 		this.agendas = diaries;
+		this.categorizeAgendas(diaries);
 		if (idAgendaSelected) {
 			this.agendaSelected = this.agendas.find(agenda => agenda.id === idAgendaSelected);
 			if (!this.agendaSelected) {
 				this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
 			}
 		}
+	}
+
+	private categorizeAgendas(diaries: DiaryListDto[]): void {
+		this.expiredAgendas = [];
+		this.activeAgendas = [];
+		if (diaries?.length)
+			diaries.forEach(diary =>
+				isAfter(startOfToday(),parseISO(diary.endDate)) ? this.expiredAgendas.push(diary) : this.activeAgendas.push(diary)
+			);
 	}
 
 	goToEditAgenda(): void {
@@ -106,6 +120,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 						if (deleted) {
 							this.snackBarService.showSuccess('turnos.delete-agenda.messages.SUCCESS');
 							this.agendas = this.agendas.filter(agenda => agenda.id !== this.agendaSelected.id);
+							this.categorizeAgendas(this.agendas);
 							this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 						}
 					}, error => processErrors(error, (msg) => {

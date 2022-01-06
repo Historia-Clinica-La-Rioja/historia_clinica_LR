@@ -40,3 +40,10 @@ services:
       - "50000:50000"
     privileged: true
     restart: always
+  cube:
+    image: cubejs/cube:v0.26.44
+    ports:
+        - 4000:4000
+    env_file: ../cubejs/.env
+    volumes:
+        - ../cubejs/schema:/cube/conf/schema

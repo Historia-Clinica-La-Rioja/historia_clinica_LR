@@ -49,6 +49,7 @@ public class BusAuthorizationService extends RestTemplate {
     }
 
     public ResponseEntity<FederarLoginResponse> validate(String accessToken) throws RestClientException {
+        accessToken = accessToken.replace("Bearer", "").trim();
         ResponseEntity<FederarLoginResponse> result;
         try {
             result = exchangePost(configuration.getAuthorizationPath(), new AuthorizationPayload(accessToken));

@@ -1,29 +1,54 @@
-<div class="epidemiological-report" fxLayout="column" fxLayoutGap="7px" fxLayoutAlign="center center">
+<div fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center stretch">
 
-    <div fxLayout="row" class="image" fxLayout="row" fxLayoutAlign="center">
-        <img src='assets/images/error_outline.png'>
-    </div>
+	<div fxLayout="row" fxLayoutAlign="end">
+		<button class="close" type="button" mat-icon-button (click)="goBack()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
 
-    <div fxLayout="column" class="message" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <span *ngIf="isDengueProblem"
-            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.DESCRIPTION_DENGUE'"></span>
-        <span *ngIf="!isDengueProblem"
-            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.DESCRIPTION_COVID'"></span>
-        <span class="report-message"
-            [translate]="'ambulatoria.paciente.problemas.epidemiological_report.REPORT'"></span>
-    </div>
+    <div fxLayout="row" fxLayoutAlign="center">
+		<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center" fxFlex="80">
+			<div class="image">
+				<img src='assets/images/error_outline.png'>
+			</div>
 
-    <mat-dialog-actions>
-        <button mat-raised-button color="primary" type="button" (click)="reportProblem()">
-            <span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
-        </button>
-        <button mat-stroked-button color="warn" (click)="doNotReportProblem()">
-            <span
-                [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
-        </button>
-        <button class="close" type="button" mat-icon-button matSuffix fxLayout="column" (click)="goBack()">
-            <mat-icon>close</mat-icon>
-        </button>
-    </mat-dialog-actions>
+			<span class="mat-h3 margin-0"
+				[innerHTML]="'ambulatoria.paciente.problemas.epidemiological_report.PROBLEM_DESCRIPTION' | translate: { problemName: data.problemName }">
+			</span>
+		</div>
+	</div>
+	<form [formGroup]="form" (submit)="reportProblem(form.value.manualClassification)">
+		<div fxLayout="row" fxLayoutAlign="center">
+			<div fxLayout="row" fxLayoutAlign="center center" fxFlex="80">
+				<mat-form-field appearance="outline" fxFlex="100">
+					<mat-label>
+						{{ 'ambulatoria.paciente.problemas.epidemiological_report.CASE_CLASSIFICATION' | translate}}
+					</mat-label>
+					<mat-select formControlName="manualClassification">
+						<mat-option *ngFor="let classification of data.manualClassificationList" [value]="classification.id"
+							matTooltip="{{ classification.description }}">
+							{{classification.description}}
+						</mat-option>
+					</mat-select>
+					<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+				</mat-form-field>
+			</div>
+		</div>
+
+
+		<div fxLayout="row" fxLayoutAlign="center">
+			<div fxLayout="row" fxLayoutAlign="center center" fxFlex="80">
+				<mat-dialog-actions fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+					<button mat-stroked-button color="warn" (click)="doNotReportProblem()">
+						<span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CANCEL_REPORT'"></span>
+					</button>
+					<button mat-raised-button color="primary" type="submit">
+						<span [translate]="'ambulatoria.paciente.problemas.epidemiological_report.buttons.CONFIRM_REPORT'"></span>
+					</button>
+				</mat-dialog-actions>
+			</div>
+		</div>
+		<br>
+	</form>
 
 </div>

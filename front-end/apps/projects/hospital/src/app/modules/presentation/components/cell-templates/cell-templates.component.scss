@@ -2,10 +2,12 @@
 	color: #979797;
 }
 
-.blue-text {
-	color: #2687C5;
-}
+.reference {
+	.bold-text {
+		font-weight: 500;
+	}
 
-.red-text {
-	color: #D34444;
+	div {
+		padding-bottom: 20px;
+	}
 }

@@ -5,15 +5,30 @@
 	<mat-form-field fxFlex.gt-xs="30%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select [(value)]="agendaSelected">
-			<mat-option *ngFor="let agenda of agendas" [value]="agenda"
-			            (onSelectionChange)="changeAgendaSelected($event, agenda)">
-				<span class="mat-body-strong">
-					{{agenda.doctorsOfficeDescription}}
-				</span>
-				<span class="mat-body">
-					{{agenda.startDate | viewDate }} - {{agenda.endDate | viewDate}}
-				</span>
-			</mat-option>
+			<mat-optgroup *ngIf="activeAgendas?.length">
+				<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
+				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda"
+							(onSelectionChange)="changeAgendaSelected($event, agenda)">
+					<span class="mat-body-strong">
+						{{agenda.doctorsOfficeDescription}}
+					</span>
+					<span class="mat-body">
+						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}
+					</span>
+				</mat-option>
+			</mat-optgroup>
+			<mat-optgroup id="expired-agendas" *ngIf="expiredAgendas?.length">
+				<mat-label><strong>{{ 'turnos.home.EXPIRED_AGENDAS_LABEL' | translate }}</strong></mat-label>
+				<mat-option *ngFor="let agenda of expiredAgendas" [value]="agenda"
+							(onSelectionChange)="changeAgendaSelected($event, agenda)">
+					<span class="mat-body-strong">
+						{{agenda.doctorsOfficeDescription}}
+					</span>
+					<span class="mat-body">
+						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}
+					</span>
+				</mat-option>
+			</mat-optgroup>
 		</mat-select>
 	</mat-form-field>
 

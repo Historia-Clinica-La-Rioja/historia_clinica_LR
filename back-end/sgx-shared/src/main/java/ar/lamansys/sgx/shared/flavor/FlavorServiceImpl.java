@@ -10,9 +10,8 @@ public class FlavorServiceImpl implements FlavorService {
 	private final FlavorBo flavor;
 
 	public FlavorServiceImpl(
-			@Value("${app.flavor:minsal}") String flavor
 	) {
-		this.flavor = FlavorBo.getEnum(flavor);
+		this.flavor = FlavorBo.HOSPITALES;
 	}
 
 	@Override

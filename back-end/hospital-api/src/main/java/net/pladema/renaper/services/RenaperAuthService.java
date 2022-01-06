@@ -1,13 +1,13 @@
 package net.pladema.renaper.services;
 
-import net.pladema.renaper.configuration.RenaperCondition;
-import net.pladema.renaper.configuration.RenaperWSConfig;
-import net.pladema.renaper.services.domain.RenaperLoginPayload;
-import net.pladema.renaper.services.domain.RenaperLoginResponse;
 import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.AuthService;
 import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
+import net.pladema.renaper.configuration.RenaperCondition;
+import net.pladema.renaper.configuration.RenaperWSConfig;
+import net.pladema.renaper.services.domain.RenaperLoginPayload;
+import net.pladema.renaper.services.domain.RenaperLoginResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Conditional;
