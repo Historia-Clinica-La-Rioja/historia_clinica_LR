@@ -264,6 +264,16 @@ $default-color: 50;
 	}
 }
 
+@mixin mat-theme-color-warn($theme) {
+
+	$warn-palette: map-get($theme, warn);
+
+	.color-warn{
+		color: mat-color($warn-palette);
+	}
+
+}
+
 @mixin material-mixins($theme) {
 	@include general($theme);
 	@include mat-nav-list($theme);
@@ -275,4 +285,5 @@ $default-color: 50;
 	@include header($theme);
 	@include mat-theme-color($theme);
 	@include mat-tab-label($theme);
+	@include mat-theme-color-warn($theme);
 }

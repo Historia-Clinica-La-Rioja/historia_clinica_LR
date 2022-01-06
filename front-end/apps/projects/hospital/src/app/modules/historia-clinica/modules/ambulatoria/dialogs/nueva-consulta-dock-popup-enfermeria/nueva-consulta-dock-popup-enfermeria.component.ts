@@ -86,7 +86,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService);
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
 	}
 

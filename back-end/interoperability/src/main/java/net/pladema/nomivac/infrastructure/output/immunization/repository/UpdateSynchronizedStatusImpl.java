@@ -5,9 +5,12 @@ import ar.lamansys.sgx.shared.scheduling.infrastructure.output.service.ESyncErro
 import ar.lamansys.sgx.shared.scheduling.infrastructure.output.service.SyncErrorService;
 import net.pladema.nomivac.domain.immunization.ImmunizationSynchronizedInfoBo;
 import net.pladema.nomivac.domain.immunization.UpdateSynchronizedStatus;
+import net.pladema.nomivac.infrastructure.configuration.NomivacCondition;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 @Service
+@Conditional(NomivacCondition.class)
 public class UpdateSynchronizedStatusImpl implements UpdateSynchronizedStatus {
 
     private final NomivacImmunizationSyncRepository nomivacImmunizationSyncRepository;

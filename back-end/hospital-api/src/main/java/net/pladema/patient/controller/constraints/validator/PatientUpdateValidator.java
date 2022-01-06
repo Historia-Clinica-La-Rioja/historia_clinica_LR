@@ -1,6 +1,6 @@
 package net.pladema.patient.controller.constraints.validator;
 
-import net.pladema.featureflags.service.FeatureFlagsService;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.repository.entity.Patient;

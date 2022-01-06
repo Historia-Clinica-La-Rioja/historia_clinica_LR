@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>net.pladema</groupId>
 		<artifactId>hospital-managment</artifactId>
 		<version>${revision}</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-
+	<groupId>ar.lamansys.hsi</groupId>
 	<artifactId>hospital-api</artifactId>
 	<description>Api para administración</description>
 	<packaging>${packaging.type}</packaging>
@@ -20,19 +19,18 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
-		<lombok.version>1.18.10</lombok.version>
 	</properties>
 
 	<dependencies>
 
 		<dependency>
-			<groupId>ar.lamansys.sgh</groupId>
+			<groupId>ar.lamansys.hsi</groupId>
 			<artifactId>hospital-shared</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>ar.lamansys</groupId>
+			<groupId>ar.lamansys.hsi</groupId>
 			<artifactId>sgx-dashboards</artifactId>
 			<version>${revision}</version>
 		</dependency>
@@ -44,19 +42,19 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ar.lamansys</groupId>
+			<groupId>ar.lamansys.hsi</groupId>
 			<artifactId>extensions</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>net.pladema</groupId>
+			<groupId>ar.lamansys.hsi</groupId>
 			<artifactId>interoperability</artifactId>
 			<version>${revision}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>ar.lamansys.sgh</groupId>
+			<groupId>ar.lamansys.hsi</groupId>
 			<artifactId>clinic-history</artifactId>
 			<version>${revision}</version>
 		</dependency>
@@ -66,6 +64,12 @@
 			<artifactId>sgx-auth</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
+	   <dependency>
+            <groupId>ar.lamansys.hsi</groupId>
+            <artifactId>reference-counter-ref</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -112,7 +116,7 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<version>1.3.1.Final</version>
+			<version>${mapstruct.version}</version>
 		</dependency>
 
 		<dependency>
@@ -166,13 +170,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -188,7 +186,7 @@
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
-							<version>1.3.0.Beta2</version>
+							<version>${mapstruct.version}</version>
 						</path>
 						<path>
 							<groupId>org.projectlombok</groupId>

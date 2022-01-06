@@ -9,8 +9,7 @@
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <groupId>ar.lamansys</groupId>
+    <groupId>ar.lamansys.hsi</groupId>
     <artifactId>sgx-dashboards</artifactId>
     <description>SGX Dashboards</description>
     <packaging>${packaging.type}</packaging>
@@ -22,7 +21,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>ar.lamansys</groupId>
+            <groupId>ar.lamansys.hsi</groupId>
             <artifactId>extensions</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>

@@ -38,9 +38,6 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 		
 		if (healthcareProfessionalSpecialtyRepository.hasOnlyOneSpecialty(professionalId))
 			throw new BackofficeValidationException("healthcare-professional.only-one-specialty");
-
-		if(healthcareProfessionalSpecialtyRepository.hasHealthcareProfessionalSpecialtyAffected(professionalId, specialty.getClinicalSpecialtyId()))
-			throw new BackofficeValidationException("healthcare-professional.affected-to-diary-agenda");
 	}
 
 }

@@ -1,8 +1,11 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
-import { EffectiveClinicalObservationDto } from '@api-rest/api-model';
+import { EffectiveClinicalObservationDto, HCELast2VitalSignsDto } from '@api-rest/api-model';
 import { Subject, Observable } from 'rxjs';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipe } from '@angular/common';
 
 export interface SignosVitales {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
@@ -30,9 +33,14 @@ export class SignosVitalesNuevaConsultaService {
 	private diastolicBloodPressureErrorSource = new Subject<string>();
 	private _diastolicBloodPressureError$: Observable<string>;
 	private form: FormGroup;
+	private notShowPreloadedVitalSignsData = true;
+	private dateList: string[] = [];
 
 	constructor(
-		private readonly formBuilder: FormBuilder
+		private readonly formBuilder: FormBuilder,
+		private readonly hceGeneralStateService?: HceGeneralStateService,
+		private readonly patientId?: number,
+		private readonly datePipe?: DatePipe,
 	) {
 		this.form = this.formBuilder.group({
 			heartRate: this.formBuilder.group({
@@ -188,5 +196,44 @@ export class SignosVitalesNuevaConsultaService {
 
 	setDiastolicBloodPressureError(errorMsg: string): void {
 		this.diastolicBloodPressureErrorSource.next(errorMsg);
+	}
+
+	setPreviousVitalSignsData(): void {
+		this.hceGeneralStateService.getVitalSigns(this.patientId).subscribe(
+			(vitalSignsData: HCELast2VitalSignsDto) => {
+				if (vitalSignsData.current === undefined)
+					this.notShowPreloadedVitalSignsData = false;
+				else {
+					Object.keys(vitalSignsData.current).forEach((key: string) => {
+						if (vitalSignsData.current[key].value != undefined) {
+							this.form.patchValue({ [key]: { value: vitalSignsData.current[key].value } });
+							this.dateList.push(vitalSignsData.current[key].effectiveTime);
+						}
+					});
+					this.form.disable();
+				}
+			});
+	}
+
+	discardPreloadedVitalSignsData() {
+		this.notShowPreloadedVitalSignsData = false;
+		const defaultValue = { value: null, effectiveTime: newMoment() };
+		Object.keys(this.form.controls).forEach((key: string) => {
+			this.form.patchValue({ [key]:defaultValue});
+		});
+		this.form.enable();
+	}
+
+	getShowPreloadedVitalSignsData(): boolean {
+		return this.notShowPreloadedVitalSignsData;
+	}
+
+	savePreloadedVitalSignsData() {
+		this.notShowPreloadedVitalSignsData = false;
+		this.form.enable();
+	}
+
+	getDate(): string {
+		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
 	}
 }

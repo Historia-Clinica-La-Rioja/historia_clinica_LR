@@ -1,9 +1,6 @@
 package ar.lamansys.sgx.shared.proxy.reverse.resttemplate;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
-import java.util.Map;
-
+import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
 import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import org.springframework.http.HttpEntity;
@@ -13,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
+import java.util.Map;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public class RestTemplateReverseProxy implements ReverseProxy {
 	private final RestTemplate restTemplate;

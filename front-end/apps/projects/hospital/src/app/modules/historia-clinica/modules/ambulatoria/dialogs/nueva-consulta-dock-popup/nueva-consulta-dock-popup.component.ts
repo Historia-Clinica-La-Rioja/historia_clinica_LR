@@ -5,7 +5,7 @@ import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
-import { Problema, ProblemasService } from '../../../../services/problemas.service';
+import { Problema } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
@@ -31,6 +31,14 @@ import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { AmbulatoryConsultationReferenceService } from '../../services/ambulatory-consultation-reference.service';
+import { CareLineService } from '@api-rest/services/care-line.service';
+
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { DatePipe } from '@angular/common';
+import { PreviousDataComponent } from '../previous-data/previous-data.component';
+import { Observable, of } from 'rxjs';
+import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -61,6 +69,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	criticalityTypes: any[];
 	minDate = MIN_DATE;
 	public ffIsOn: boolean;
+	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -73,19 +82,24 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly healthConditionService: HealthConditionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
+		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly translateService: TranslateService,
 		private readonly snowstormService: SnowstormService,
+		private readonly datePipe: DatePipe,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly careLineService: CareLineService,
+		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snowstormService, this.dialog);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, this.internacionMasterDataService);
-		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.datePipe);
+		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
+		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
 	}
 
 	setProfessionalSpecialties() {
@@ -117,6 +131,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			clinicalSpecialty: [null, [Validators.required]],
 		});
+
+		this.datosAntropometricosNuevaConsultaService.setPreviousAnthropometricData();
+
+		this.signosVitalesNuevaConsultaService.setPreviousVitalSignsData();
+
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
 		});
@@ -161,24 +180,48 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe( isOn => this.ffIsOn = isOn);
 	}
 
-	save(): void {
-		const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
-		const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
 
-		this.apiErrors = [];
-		this.addErrorMessage(nuevaConsulta);
-		if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
-			if (!fieldsService.nonCompletedFields .length) {
-				this.createConsultation(nuevaConsulta);
-				this.disableConfirmButton = true;
-			}
-			else {
-				this.openDialog(fieldsService.nonCompletedFields , fieldsService.presentFields, nuevaConsulta);
-			}
-		} else {
-			this.disableConfirmButton = false;
-			this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
+	previousDataIsConfirmed(): Observable<boolean> {
+		if ((this.signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()) ||
+			(this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData())) {
+			const dialogRef = this.dialog.open(PreviousDataComponent,
+				 {
+					data: {
+						signosVitalesNuevaConsultaService: this.signosVitalesNuevaConsultaService,
+						datosAntropometricosNuevaConsultaService: this.datosAntropometricosNuevaConsultaService
+					},
+					disableClose: true,
+					autoFocus: false
+				});
+			return	dialogRef.afterClosed();
 		}
+		else return of(true);
+	}
+
+	save(): void {
+		this.previousDataIsConfirmed().subscribe((answerPreviousData: boolean) => {
+
+			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+			const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
+
+			this.apiErrors = [];
+			this.addErrorMessage(nuevaConsulta);
+
+			if (answerPreviousData) {
+				if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
+					if (!fieldsService.nonCompletedFields.length) {
+						this.createConsultation(nuevaConsulta);
+						this.disableConfirmButton = true;
+					}
+					else {
+						this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta);
+					}
+				} else {
+					this.disableConfirmButton = false;
+				}
+			}
+
+		});
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], nuevaConsulta: CreateOutpatientDto): void {
@@ -327,8 +370,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
-			clinicalSpecialtyId: this.defaultSpecialty?.id
-
+			clinicalSpecialtyId: this.defaultSpecialty?.id,
+			references: this.ambulatoryConsultationReferenceService.getReferences(),
 		};
 	}
 
@@ -341,7 +384,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	setDefaultSpecialty() {
 		this.defaultSpecialty = this.formEvolucion.controls.clinicalSpecialty.value;
 	}
-
 }
 
 export interface NuevaConsultaData {

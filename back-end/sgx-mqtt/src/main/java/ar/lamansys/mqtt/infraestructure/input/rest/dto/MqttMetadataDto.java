@@ -1,8 +1,7 @@
 package ar.lamansys.mqtt.infraestructure.input.rest.dto;
 
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
-
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter

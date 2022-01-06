@@ -8,7 +8,7 @@
 
 <ng-template #removeButtonTemplate let-action="action" let-rowIndex="rowIndex" appCtrlTemplate="removeButtonTemplate">
 	<div align="end">
-		<button  type="button" mat-icon-button color="warn" (click)="action(rowIndex)">
+		<button type="button" mat-icon-button color="warn" (click)="action(rowIndex)">
 			<mat-icon>delete_outline</mat-icon>
 		</button>
 	</div>
@@ -16,10 +16,11 @@
 
 <ng-template #snomedProblemTemplate let-rowData="data" appCtrlTemplate="snomedProblemTemplate">
 	{{rowData.snomed.pt}}
-	<div *ngIf="rowData.cronico" class="mat-small grayText" translate="ambulatoria.paciente.nueva-consulta.problemas.ACLARACION_CRONICO"></div>
-	<div *ngIf="rowData.reportProblem != null">
-		<span class="blue-text" *ngIf="rowData.reportProblem"  translate="ambulatoria.paciente.nueva-consulta.problemas.REPORT_PROBLEM"></span>
-		<span class="red-text" *ngIf="!rowData.reportProblem"  translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>
+	<div *ngIf="rowData.cronico" class="mat-small grayText"
+		translate="ambulatoria.paciente.nueva-consulta.problemas.ACLARACION_CRONICO"></div>
+	<div>
+		<span class="color-primary" *ngIf="rowData?.isReportable">{{ rowData.epidemiologicalManualClassification?.description }}</span>
+		<span class="color-warn" *ngIf="rowData?.isReportable === false"  translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>
 	</div>
 </ng-template>
 
@@ -41,7 +42,8 @@
 	</ng-container>
 </ng-template>
 
-<ng-template #allergyCriticalityTemplate let-rowData="data" let-text="text" appCtrlTemplate="allergyCriticalityTemplate">
+<ng-template #allergyCriticalityTemplate let-rowData="data" let-text="text"
+	appCtrlTemplate="allergyCriticalityTemplate">
 	<ng-container *ngIf="rowData.criticalityId === 1">
 		<mat-label class="grayText">
 			{{text}}
@@ -61,11 +63,35 @@
 
 <ng-template #startAndEndDateTemplate let-rowData="data" appCtrlTemplate="startAndEndDateTemplate">
 	<div class="mat-small grayText">
-		<span *ngIf="rowData.fechaInicio" translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
+		<span *ngIf="rowData.fechaInicio"
+			translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
 		{{formatDate(rowData.fechaInicio)}}
 	</div>
 	<div class="mat-small grayText" *ngIf="rowData.fechaFin">
 		<span translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN_PREFIJO"></span>
 		{{formatDate(rowData.fechaFin)}}
+	</div>
+</ng-template>
+
+<ng-template #referenceTemplate let-rowData="data" appCtrlTemplate="referenceTemplate">
+	<div class="reference">
+		<div fxLayout="column">
+			<span class="bold-text"
+				translate="ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.row.PROBLEMS"></span>
+			<span *ngFor="let problem of rowData.problems">
+				{{problem?.snomed.pt}}
+			</span>
+		</div>
+		<div fxLayout="column">
+			<span class="bold-text"
+				translate="ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.row.CARE_LINE"></span>
+			{{rowData.careLine?.description}}
+		</div>
+		<div fxLayout="column">
+			<span class="bold-text"
+				translate="ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.row.SPECIALTY"></span>
+			{{rowData.clinicalSpecialty?.name}}
+		</div>
+		<span class="mat-small grayText">{{rowData.note}}</span>
 	</div>
 </ng-template>

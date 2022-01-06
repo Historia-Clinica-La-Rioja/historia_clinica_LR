@@ -2,15 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>hospital-managment</artifactId>
         <groupId>net.pladema</groupId>
+        <artifactId>hospital-managment</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>ar.lamansys.sgh</groupId>
+    <groupId>ar.lamansys.hsi</groupId>
     <artifactId>hospital-shared</artifactId>
 
     <properties>
@@ -20,7 +19,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <m2e.apt.activation>jdt_apt</m2e.apt.activation>
-        <lombok.version>1.18.10</lombok.version>
     </properties>
 
     <dependencies>
@@ -49,12 +47,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.3.1.Final</version>
+            <version>${mapstruct.version}</version>
         </dependency>
 
         <dependency>

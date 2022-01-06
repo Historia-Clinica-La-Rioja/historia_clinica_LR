@@ -30,4 +30,11 @@ public enum EEnvironment {
 		}
 		throw new NotFoundException("environment-not-exists", String.format("El ambiente %s no existe", id));
 	}
+
+	public static EEnvironment map(String value) {
+		for(EEnvironment e : values()) {
+			if(e.value.equals(value)) return e;
+		}
+		throw new NotFoundException("environment-not-exists", String.format("El ambiente %s no existe", value));
+	}
 }

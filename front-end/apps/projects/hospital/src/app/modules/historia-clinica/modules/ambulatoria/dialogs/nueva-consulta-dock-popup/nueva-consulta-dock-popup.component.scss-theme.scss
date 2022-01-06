@@ -1,0 +1,8 @@
+@mixin app-nueva-consulta-dock-popup($theme) {
+	$palette-primary: map-get($theme, primary);
+	app-nueva-consulta-dock-popup {
+		.dialog {
+			background: mat-color($palette-primary, 50);
+		}
+	}
+}

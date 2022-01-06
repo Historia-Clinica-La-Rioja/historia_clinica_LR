@@ -17,6 +17,12 @@ docker-compose up -d postgresql
 
 La creación o actualización de las estructuras y metadatos requeridos en el sistema lo realiza el backend al iniciar.
 
+Además, se podrá levantar Cube con el siguiente comando:
+
+```shell
+docker-compose up -d cube
+```
+
 ## Popular DDBB con datos de ambiente
 
 Tras ejecutar los pasos descriptos en el apartado **Puesta en Marcha**, la base de datos dispondrá de todas las estructuras básicas — *tablas, vistas, claves primarias, claves extranjeras, índices, etc.*— y todos los metadatos. Sin embargo, al momento de desarrollar una nueva funcionalidad en el sistema o resolver un error, podría ser necesario contar con una base completa de datos. Para ello, se recomienda ***copiar*** una DDBB de un ambiente de testing a la base de datos local en Docker. 

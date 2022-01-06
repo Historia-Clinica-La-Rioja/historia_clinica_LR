@@ -11,7 +11,9 @@
 			"SELECT_AGENDA": "Seleccione una agenda",
 			"NO_AGENDA_MSG_TITLE": "El profesional no posee una agenda activa.",
 			"NO_AGENDA_MSG_SUBTITLE": "Creá una agenda para gestionar turnos.",
-			"AGENDA_NOT_FOUND": "Agenda no encontrada"
+			"AGENDA_NOT_FOUND": "Agenda no encontrada",
+			"ACTIVES_AGENDAS_LABEL": "ACTIVAS",
+			"EXPIRED_AGENDAS_LABEL": "VENCIDAS"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
