@@ -16,7 +16,6 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad               | Variable de ambiente       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| admin.mail | ADMIN_MAIL | admin@example.com | Opcional | Nombre de usuario del usuario Administrador |  v0.2.0  |
 | admin.password | ADMIN_PASS | admin123 | **Obligatorio** | Contraseña del usuario Administrador |  v0.2.0  |
 | internment.document.directory |DOCUMENT_ROOT_DIRECTORY | /temp | **Obligatorio** | Directorio donde se almacenan documentos clínicos y fotos de pacientes | v0.2.0 |
 | frontend.loginpage |  LOGIN_PAGE  | / | Opcional  |   | v0.2.0   |
