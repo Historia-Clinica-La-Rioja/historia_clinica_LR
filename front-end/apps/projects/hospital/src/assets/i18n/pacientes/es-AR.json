@@ -179,8 +179,8 @@
 			}
 		},
 		"card_roles": {
-			"ROL_COLUMN": "Rol:",
-			"CLINIC_COLUMN": "Clínica:",
+			"ROL_COLUMN": "Rol",
+			"CLINIC_COLUMN": "Clínica",
 			"WITHOUT_ROLES": "Sin roles asignados."
 		}
     }

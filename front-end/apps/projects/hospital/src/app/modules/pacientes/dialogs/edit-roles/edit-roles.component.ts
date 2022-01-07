@@ -3,24 +3,24 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RoleDto, UserRoleDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
+import { hasError } from '@core/utils/form.utils';
 
-const ID_ROLES_DO_NOT_REQUIRE_PROFESSIONS
-	= [
-		5, 9
-	];
+const ROLES_ADMINISTRATIVE_AND_AGENDA_ADMINISTRATOR_ID = '5|9';
+
 @Component({
 	selector: 'app-edit-roles',
 	templateUrl: './edit-roles.component.html',
 	styleUrls: ['./edit-roles.component.scss']
 })
 export class EditRolesComponent implements OnInit {
-	public formParent: FormGroup = new FormGroup({});
-	public roles: RoleDto[] = [];
+	formParent: FormGroup = new FormGroup({});
+	roles: RoleDto[] = [];
+	hasError = hasError;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { personId: number; professionalId: number; roles: RoleDto[]; userId: number; rolesByUser: UserRoleDto[] },
+		@Inject(MAT_DIALOG_DATA) public data: { professionalId: number; roles: RoleDto[]; userId: number; rolesByUser: UserRoleDto[] },
 		private contextService: ContextService,
-		public dialog: MatDialogRef<EditRolesComponent>
+		private dialog: MatDialogRef<EditRolesComponent>
 
 	) {
 
@@ -33,11 +33,11 @@ export class EditRolesComponent implements OnInit {
 		this.addOwnRoles(this.data.rolesByUser);
 	}
 
-	initOwnFormRoles(elem: UserRoleDto): FormGroup {
+	private initOwnFormRoles(elem: UserRoleDto): FormGroup {
 		return new FormGroup({
 			institutionId: new FormControl(elem.institutionId),
 			roleDescription: new FormControl(elem.roleDescription),
-			roleId: new FormControl(elem.roleId),
+			roleId: new FormControl(elem.roleId, [Validators.pattern(ROLES_ADMINISTRATIVE_AND_AGENDA_ADMINISTRATOR_ID)]),
 			userId: new FormControl(elem.userId)
 		});
 	}
@@ -50,11 +50,9 @@ export class EditRolesComponent implements OnInit {
 			userRoles.forEach((elem: UserRoleDto) => {
 				refRoles.push(this.initOwnFormRoles(elem));
 			});
-
-
 	}
 
-	initFormParent(): void {
+	private initFormParent(): void {
 		this.formParent = new FormGroup({
 			roles: new FormArray([], [Validators.required])
 		});
@@ -64,18 +62,15 @@ export class EditRolesComponent implements OnInit {
 		refRoles.push(this.initFormRole());
 	}
 
-	initFormRole(): FormGroup {
+	private initFormRole(): FormGroup {
 		return new FormGroup({
 			institutionId: new FormControl(this.contextService.institutionId),
 			roleDescription: new FormControl(null),
-			roleId: new FormControl(null, [Validators.pattern(/^([5|9])+$/)]),
+			roleId: new FormControl(null, [Validators.pattern(ROLES_ADMINISTRATIVE_AND_AGENDA_ADMINISTRATOR_ID)]),
 			userId: new FormControl(this.data.userId)
 		});
-
 	}
-
-
-	removeValidation(key: string, index: number,): void {
+	private removeValidation(key: string, index: number,): void {
 		const refRoles = this.formParent.get('roles') as FormArray;
 		const refSingle = refRoles.at(index).get(key) as FormGroup;
 
@@ -92,27 +87,23 @@ export class EditRolesComponent implements OnInit {
 		const refRoles = this.formParent.get('roles') as FormArray;
 		const refArray = refRoles.controls;
 		const i = refArray.length - 1;
-		return (refArray[i]) ? !(refArray[i].value.roleId) : false;
+		return refArray[i]?.value?.roleId <= 0;
 	}
 	clear(i: number): void {
 		const refRoles = this.formParent.get('roles') as FormArray;
 		refRoles.removeAt(i);
 	}
-	hadValue(i: number): boolean {
+	hasValue(i: number): boolean {
 		const refRoles = this.formParent.get('roles') as FormArray;
-		return (refRoles.at(i).value.roleId != null) ? true : false;
+		return refRoles.at(i).value.roleId > 0;
 	}
-	hasError(type: string, control: string, index: number): boolean {
-		const refRoles = this.formParent.get('roles') as FormArray;
-		const refSingle = refRoles.at(index).get(control) as FormGroup;
-		return (refSingle.hasError(type));
-	}
-	isProfessional(control: string, index: number): boolean {
-		if (this.data.professionalId != undefined) {
+
+	needsValidation(control: string, index: number): boolean {
+		if (this.data.professionalId) {
 			this.removeValidation(control, index);
 			return true;
-		} else
-			return false;
+		}
+		return false;
 	}
 	save(): void {
 		const refRoles = this.formParent.get('roles') as FormArray;

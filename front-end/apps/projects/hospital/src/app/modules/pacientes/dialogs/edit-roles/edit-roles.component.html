@@ -11,12 +11,12 @@
 	<div mat-dialog-content>
 		<form [formGroup]="formParent">
 			<div formArrayName="roles">
-				<div *ngFor="let p of getCtrl('roles',formParent).controls;index as formChild">
+					<div *ngFor="let p of getCtrl('roles',formParent).controls;index as formChild">
 					<div class="form-input" [formGroupName]="formChild">
 						<div class="form-input">
 							<mat-form-field appearance="outline">
 								<button type="button" mat-button matSuffix color="warn" mat-icon-button
-									*ngIf="hadValue(formChild)" (click)="clear(formChild); $event.stopPropagation()">
+									*ngIf="hasValue(formChild)" (click)="clear(formChild); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
 								<mat-select id="identificationTypeId" [attr.disabled]="true"
@@ -25,10 +25,10 @@
 										{{role.description}}
 									</mat-option>
 								</mat-select>
-
-									<mat-error *ngIf="!isProfessional('roleId',formChild) && hasError('pattern','roleId',formChild)">
-										<span translate="pacientes.edit_roles.PROFESSION_REQUIRED"></span>
-									</mat-error>
+								<mat-error
+									*ngIf="!needsValidation('roleId',formChild) && hasError(getCtrl('roles',formParent).controls.at(formChild),'pattern','roleId');">
+									<span translate="pacientes.edit_roles.PROFESSION_REQUIRED"></span>
+								</mat-error>
 
 							</mat-form-field>
 						</div>
