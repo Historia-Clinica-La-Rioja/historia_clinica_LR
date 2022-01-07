@@ -46,6 +46,8 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
         List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit()), customExampleMatcher)).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
+        if(coverage.getType()!=null)
+            result = result.stream().filter(backofficeCoverage -> backofficeCoverage.getType().equals(coverage.getType())).collect(Collectors.toList());
         int minIndex = pageable.getPageNumber() * pageable.getPageSize();
         int maxIndex = minIndex + pageable.getPageSize();
         return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
