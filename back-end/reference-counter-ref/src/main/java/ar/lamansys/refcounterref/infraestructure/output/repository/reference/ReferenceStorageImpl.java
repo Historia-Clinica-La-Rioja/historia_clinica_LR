@@ -76,6 +76,12 @@ public class ReferenceStorageImpl implements ReferenceStorage {
         return result;
     }
 
+    @Override
+    public List<ReferenceProblemBo> getReferencesProblems(Integer patientId) {
+        log.debug("Input parameters -> patientId {} ", patientId);
+        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId);
+    }
+
     public List<ReferenceHealthCondition> saveProblems(Integer referenceId, ReferenceBo referenceBo) {
         return referenceBo.getProblems().stream().map(problem -> {
             ReferenceHealthConditionPk refPk = new ReferenceHealthConditionPk();

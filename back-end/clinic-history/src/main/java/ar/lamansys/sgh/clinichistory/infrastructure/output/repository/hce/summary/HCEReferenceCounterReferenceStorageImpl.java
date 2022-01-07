@@ -1,15 +1,19 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summary;
 
 import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEReferenceProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CHPersonBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceCounterReferenceFileBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +42,12 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<HCEReferenceProblemBo> getProblemsWithReferences(Integer patientId) {
+        log.debug("Input parameters -> patientId {} ", patientId);
+        return mapToHCEReferenceProblemBoList(sharedReferenceCounterReference.getReferencesProblemsByPatient(patientId));
+    }
+
     private CounterReferenceSummaryBo mapToCounterReferenceSummaryBo(CounterReferenceSummaryDto counterReferenceSummaryDto) {
         return new CounterReferenceSummaryBo(counterReferenceSummaryDto.getId(),
                 counterReferenceSummaryDto.getClinicalSpecialty(),
@@ -54,6 +64,15 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
                         .stream()
                         .map(crp -> new CounterReferenceProcedureBo(crp.getSnomed().getSctid(), crp.getSnomed().getPt()))
                         .collect(Collectors.toList()) : null);
+    }
+
+    private List<HCEReferenceProblemBo> mapToHCEReferenceProblemBoList(List<ReferenceProblemDto> referenceProblemDtoList) {
+        List<HCEReferenceProblemBo> hceReferenceProblemBoList = new ArrayList<>();
+        referenceProblemDtoList.stream().forEach(referenceProblemDto -> {
+            hceReferenceProblemBoList.add(new HCEReferenceProblemBo(referenceProblemDto.getId(),
+                    new SnomedBo(referenceProblemDto.getSnomed().getSctid(), referenceProblemDto.getSnomed().getPt())));
+        });
+        return hceReferenceProblemBoList;
     }
 
 }
