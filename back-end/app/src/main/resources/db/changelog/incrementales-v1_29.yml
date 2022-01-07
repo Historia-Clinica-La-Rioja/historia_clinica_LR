@@ -1,0 +1,268 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_29
+
+    - changeSet:
+        id: fill_date_dimension-createProcedure-29
+        author: etrapani
+        changes:
+            - createProcedure:
+                  dbms: postgresql
+                  encoding: UTF-8
+                  procedureBody: |-
+                      DROP PROCEDURE IF EXISTS fill_date_dimension;
+                      CREATE PROCEDURE fill_date_dimension(IN startdate DATE,IN stopdate DATE)
+                      LANGUAGE plpgsql
+                      AS $$
+                      DECLARE
+                          currentdate DATE;
+                      BEGIN
+                          currentdate := startdate;
+                          WHILE currentdate <= stopdate LOOP
+                              BEGIN
+                                  INSERT INTO date_type VALUES (
+                                      currentdate,
+                                      EXTRACT(DAY FROM currentdate),
+                                      EXTRACT(MONTH FROM currentdate),
+                                      EXTRACT(YEAR FROM currentdate),
+                                      EXTRACT(DOW FROM currentdate)
+                                      );
+                              EXCEPTION WHEN OTHERS THEN
+                                  RAISE NOTICE '% % %', SQLERRM, SQLSTATE, currentdate;
+                              END;
+                              currentdate := currentdate + '1 day'::INTERVAL ;
+                          END LOOP;
+                      END; $$;
+                  procedureName: fill_date_dimension
+                  relativeToChangelogFile: true
+
+    - changeSet:
+        id: load_dates_to_2050-29
+        author: etrapani
+        changes:
+            - sql:
+                dbms: postgresql
+                sql: |-
+                  CALL fill_date_dimension('01-01-2021','01-01-2050');
+
+
+    - changeSet:
+        id: counter_reference-createTable
+        comment: Create table counter_reference
+        author: bchacon
+        changes:
+            - createTable:
+                tableName: counter_reference
+                columns:
+                    - column:
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            primaryKeyName: PK_counter_reference
+                        name: id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: patient_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: reference_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: clinical_specialty_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: institution_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: performed_date
+                        type: date
+                    - column:
+                        name: doctor_id
+                        type: int
+                    - column:
+                        name: patient_medical_coverage_id
+                        type: int
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: billable
+                        type: boolean
+                        defaultValue: ${boolean.false}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: created_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_by
+                        type: int
+                        defaultValue: -1
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: updated_on
+                        type: datetime
+                        defaultValueDate: ${date.now}
+                    - column:
+                        constraints:
+                            nullable: false
+                        name: deleted
+                        type: boolean
+                        defaultValue: ${boolean.false}
+                    - column:
+                        name: deleted_by
+                        type: int
+                    - column:
+                        name: deleted_on
+                        type: datetime
+                        
+            - addForeignKeyConstraint:
+                baseColumnNames: reference_id
+                baseTableName: counter_reference
+                constraintName: FK_counter_reference_reference_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: reference
+                validate: true
+           
+            - addForeignKeyConstraint:
+                baseColumnNames: patient_id
+                baseTableName: counter_reference
+                constraintName: FK_counter_reference_patient_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: patient
+                validate: true
+            
+            - addForeignKeyConstraint:
+                baseColumnNames: clinical_specialty_id
+                baseTableName: counter_reference
+                constraintName: FK_counter_reference_clinical_specialty_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: clinical_specialty
+                validate: true
+            
+            - addForeignKeyConstraint:
+                baseColumnNames: institution_id
+                baseTableName: counter_reference
+                constraintName: FK_counter_reference_institution_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: institution
+                validate: true
+
+            - addForeignKeyConstraint:
+                baseColumnNames: doctor_id
+                baseTableName: counter_reference
+                constraintName: FK_counter_reference_doctor_id
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: healthcare_professional
+                validate: true
+
+
+    - changeSet:
+        id: source_type-counter_reference-data
+        comment: Actualizar datos source_type
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO source_type VALUES (8, 'Contrarreferencia');
+
+    
+    - changeSet:
+        id: document_type-counter_reference-data
+        comment: Actualizar datos document_type
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (11, 'Contrarreferencia');
+    
+    - changeSet:  
+        id:  reference_counter_reference_file-createTable
+        author: bchacon  
+        changes:  
+        - createTable: 
+            tableName: reference_counter_reference_file  
+            columns:  
+            - column: 
+                autoIncrement: true
+                constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_reference_counter_reference_file
+                name:  id  
+                type:  int 
+            - column:
+                constraints:
+                    nullable: false
+                name: path
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: content_type
+                type: varchar
+            - column:
+                constraints:
+                    nullable: false
+                name: size
+                type: int8
+            - column:
+                constraints:
+                    nullable: false
+                name: type
+                type: int
+            - column:
+                name: reference_counter_reference_id
+                type: int
+            - column:
+                constraints:
+                    nullable: false
+                name: name
+                type: varchar
+                
+    - changeSet: 
+        id: snomed-metadata_update
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    call safeInsertSnomed('840544004', 'sospecha de COVID-19', '900000000000207008', 'sospecha de enfermedad causada por coronavirus 2 del síndrome respiratorio agudo severo (situación)');
+                    call safeInsertSnomed('840546002', 'exposición a SARS-CoV-2', '900000000000207008', 'exposición a coronavirus 2 del síndrome respiratorio agudo severo (evento)');
+                    
+    - changeSet: 
+        id: snomed_related_group-metadata_update
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '840544004' AND pt = 'sospecha de COVID-19'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<840544004 |sospecha de enfermedad causada por coronavirus del síndrome respiratorio agudo severo 2 (situación)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        WITH t1 AS (SELECT id FROM snomed WHERE sctid = '840546002' AND pt = 'exposición a SARS-CoV-2'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;

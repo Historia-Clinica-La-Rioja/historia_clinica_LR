@@ -35,4 +35,9 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
             "FROM ClinicalSpecialty cs " +
             "WHERE cs.id = :clinicalSpecialtyId")
     ClinicalSpecialtyBo findClinicalSpecialtyBoById(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
+    @Transactional(readOnly = true)
+    @Query(value = " SELECT cs FROM ClinicalSpecialty cs where cs.clinicalSpecialtyTypeId = 2")
+    List<ClinicalSpecialty> findAllSpecialties();
+
 }

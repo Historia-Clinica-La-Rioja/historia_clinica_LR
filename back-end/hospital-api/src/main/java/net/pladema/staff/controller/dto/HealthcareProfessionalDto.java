@@ -10,6 +10,8 @@ public class HealthcareProfessionalDto {
 
 	private Integer id;
 	private String licenseNumber;
+	// Se utiliza para filtro de historico de evoluciones
+	private Integer personId;
 	private PersonBasicDataResponseDto person;
 	
 }

@@ -5,14 +5,20 @@
 			[newFinding]="newHallazgoId" [setFirstProcedure]="firstProcedureId" [setSecondProcedure]="secondProcedureId"
 			[setThirdProcedure]="thirdProcedureId">
 		</app-tooth>
-		<div fxLayout="column">
+		<div fxLayout="column" fxLayoutGap="5px">
 			<span class="title">Pieza {{data.quadrantCode}}{{data.tooth.code}}</span>
-			<span class="subtitle subtitle-font-size">{{selectedSurfacesText}}</span>
+			<span *ngIf="selectedSurfaces.length else selectSurfaces"
+				class="subtitle subtitle-font-size">{{selectedSurfacesText}}</span>
+			<ng-template #selectSurfaces>
+				<span class="select-surfaces">Presione sobre una o más caras para realizar accciones sobre la/s misma/s.
+				</span>
+			</ng-template>
 		</div>
 	</div>
 
 	<div id="records" style="font-size: 13.5px;" *ngIf="historicalRecords$ | async as historicalRecords">
-		<span *ngIf="!historicalRecords.length; else displayRecords" style="color: #A8A8A8;">Sin registros previos.</span>
+		<span *ngIf="!historicalRecords.length; else displayRecords" style="color: #A8A8A8;">Sin registros
+			previos.</span>
 		<ng-template #displayRecords>
 			<div fxLayout="column" fxLayoutGap="10px">
 				<div fxLayout="row" fxLayoutGap="5px">
@@ -34,23 +40,15 @@
 			[options]="filteredDiagnosticsTypeaheadOptions" [externalSetValue]="initValueTypeaheadDiagnostics"
 			(selectionChange)="findingChanged($event)">
 		</app-typeahead>
-		<span class="subtitle subtitle-findings-procedures-font-size" >Nuevos procedimientos sobre la pieza:</span>
-		<app-typeahead
-			id="first_procedure"
-			[placeholder]="'Seleccione 1er procedimiento'"
-			[options]="filteredProceduresTypeahead"
-			[externalSetValue]="initValueTypeaheadFirstProcedure"
-			(selectionChange)="firstProcedureChanged($event)"
-		>
+		<span class="subtitle subtitle-findings-procedures-font-size">Nuevos procedimientos sobre la pieza:</span>
+		<app-typeahead id="first_procedure" [placeholder]="'Seleccione 1er procedimiento'"
+			[options]="filteredProceduresTypeahead" [externalSetValue]="initValueTypeaheadFirstProcedure"
+			(selectionChange)="firstProcedureChanged($event)">
 		</app-typeahead>
-		<div  *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
-			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()"
-						   id="second_procedure"
-						   [placeholder]="'Seleccione 2do procedimiento'"
-						   [externalSetValue]="initValueTypeaheadSecondProcedure"
-						   [options]="filteredProceduresTypeahead"
-						   (selectionChange)="secondProcedureChanged($event)"
-			>
+		<div *ngIf="!selectedSurfaces.length" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center">
+			<app-typeahead *ngIf="showActionsService?.getSecondProcedure()" id="second_procedure"
+				[placeholder]="'Seleccione 2do procedimiento'" [externalSetValue]="initValueTypeaheadSecondProcedure"
+				[options]="filteredProceduresTypeahead" (selectionChange)="secondProcedureChanged($event)">
 			</app-typeahead>
 			<app-typeahead *ngIf="showActionsService?.getThirdProcedure()" id="third_procedure"
 				[placeholder]="'Seleccione 3er procedimiento'" [externalSetValue]="initValueTypeaheadThirdProcedure"
@@ -65,9 +63,9 @@
 	<mat-dialog-actions fxLayoutAlign="end end">
 		<button *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']" mat-raised-button color="primary"
 			(click)="confirm()">Confirmar </button>
-			<button class="close" type="button" mat-dialog-close mat-icon-button matSuffix fxLayout="column">
-				<mat-icon>close</mat-icon>
-			</button>	
+		<button class="close" type="button" mat-dialog-close mat-icon-button matSuffix fxLayout="column">
+			<mat-icon>close</mat-icon>
+		</button>
 	</mat-dialog-actions>
 
 </div>

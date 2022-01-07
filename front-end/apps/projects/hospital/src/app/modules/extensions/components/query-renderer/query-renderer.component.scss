@@ -1,0 +1,13 @@
+.chart-container {
+	position: relative;
+	height: calc(100% - 10px);
+	width: calc(100% - 10px);
+}
+
+.numeric-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	height: 100%;
+}

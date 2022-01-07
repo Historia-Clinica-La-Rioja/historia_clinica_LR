@@ -1,46 +1,48 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { CoreModule } from '@core/core.module';
-import { PresentationModule } from '@presentation/presentation.module';
-
-import { TurnosRoutingModule } from './turnos-routing.module';
-
 import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { CustomDateFormatter } from './services/custom-date-formatter.service';
-
-import { HomeComponent } from './routes/home/home.component';
+// deps
+import { PresentationModule } from '@presentation/presentation.module';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
+// routing
+import { TurnosRoutingModule } from './turnos-routing.module';
+import { AgendaComponent } from './routes/agenda/agenda.component';
 import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
-import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
-import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
+import { HomeComponent } from './routes/home/home.component';
+// components
+import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
+// dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
-import { MedicalCoverageComponent } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
-import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
-import { AgendaComponent } from './routes/agenda/agenda.component';
-import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
+import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
+import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
+// services
+import { CustomDateFormatter } from './services/custom-date-formatter.service';
 
 
 @NgModule({
 	declarations: [
-		HomeComponent,
-		AgendaSetupComponent,
-		NewAttentionComponent,
-		SelectAgendaComponent,
+		// routing
 		AgendaComponent,
-		NewAppointmentComponent,
+		AgendaSetupComponent,
+		HomeComponent,
+		// components
+		SelectAgendaComponent,
+		// dialogs
 		AppointmentComponent,
 		CancelAppointmentComponent,
-		MedicalCoverageComponent
+		NewAppointmentComponent,
+		NewAttentionComponent,
 	],
 	imports: [
 		CommonModule,
-		CoreModule,
-		PresentationModule,
-		TurnosRoutingModule,
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
-		LazyMaterialModule
+		// routing
+		TurnosRoutingModule,
+		// deps
+		PresentationModule,
+		LazyMaterialModule,
 	],
 	providers: [
 		{

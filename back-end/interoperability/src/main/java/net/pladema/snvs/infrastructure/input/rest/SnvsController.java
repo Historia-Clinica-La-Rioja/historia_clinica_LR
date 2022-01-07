@@ -22,8 +22,8 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +54,7 @@ public class SnvsController {
     public List<SnvsReportDto> reportSnvs(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
-            @RequestParam(value = "toReportList") List<SnvsToReportDto> toReportList) throws ReportProblemException,
+            @RequestBody List<SnvsToReportDto> toReportList) throws ReportProblemException,
             SnvsProblemBoException, ReportCommandBoException, SnvsEventInfoBoException, SnvsStorageException, ReportPortException {
         List<SnvsReportBo> resultService = reportProblems.run(buildCommand(toReportList, institutionId, patientId));
         logger.debug(OUTPUT, resultService);
@@ -68,6 +68,9 @@ public class SnvsController {
     private SnvsReportDto buildSnvsReportDto(SnvsReportBo snvsReportBo) {
         var result = new SnvsReportDto();
         result.setSisaRegisteredId(snvsReportBo.getSisaRegisteredId());
+        result.setEventId(snvsReportBo.getEventId());
+        result.setGroupEventId(snvsReportBo.getGroupEventId());
+        result.setManualClassificationId(snvsReportBo.getManualClassificationId());
         result.setProblem(buildSnomedDto(snvsReportBo.getProblemBo()));
         result.setLastUpdate(buildDate(snvsReportBo.getLastUpdate()));
         result.setResponseCode(snvsReportBo.getResponseCode());
@@ -91,7 +94,8 @@ public class SnvsController {
     private List<ReportCommandBo> buildCommand(List<SnvsToReportDto> toReportList, Integer institutionId, Integer patientId) throws SnvsProblemBoException, ReportCommandBoException {
         List<ReportCommandBo> result = new ArrayList<>();
         for (SnvsToReportDto reportDto: toReportList)
-            result.add(new ReportCommandBo(patientId, institutionId, reportDto.getManualClassificationId(), buildProblem(reportDto.getProblem())));
+            result.add(new ReportCommandBo(patientId, institutionId, reportDto.getManualClassificationId(),
+                    reportDto.getGroupEventId(), reportDto.getEventId(), buildProblem(reportDto.getProblem())));
         return result;
     }
 

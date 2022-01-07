@@ -18,4 +18,11 @@ public class UIMenuItemDto {
 		this.id = id;
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("UIMenuItemDto{");
+		sb.append("id='").append(id).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

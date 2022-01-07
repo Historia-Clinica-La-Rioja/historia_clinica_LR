@@ -14,11 +14,15 @@ public class ReportCommandBo {
 
 	private final Integer institutionId;
 
+	private final Integer groupEventId;
+
+	private final Integer eventId;
+
 	private final Integer manualClassificationId;
 
 	private final SnvsProblemBo problemBo;
 
-	public ReportCommandBo(Integer patientId, Integer institutionId, Integer manualClassificationId, SnvsProblemBo problemBo) throws ReportCommandBoException {
+	public ReportCommandBo(Integer patientId, Integer institutionId, Integer manualClassificationId, Integer groupEventId, Integer eventId, SnvsProblemBo problemBo) throws ReportCommandBoException {
 		if (patientId == null)
 			throw new ReportCommandBoException(ReportCommandBoEnumException.NULL_PATIENT_ID,"El id del paciente es obligatorio");
 		this.patientId = patientId;
@@ -31,5 +35,11 @@ public class ReportCommandBo {
 		if (problemBo == null)
 			throw new ReportCommandBoException(ReportCommandBoEnumException.NULL_PROBLEM,"La información del problema es obligatoria");
 		this.problemBo = problemBo;
+		if (groupEventId == null)
+			throw new ReportCommandBoException(ReportCommandBoEnumException.NULL_GROUP_EVENT_ID,"El id de grupo evento es obligatorio");
+		this.groupEventId = groupEventId;
+		if (eventId == null)
+			throw new ReportCommandBoException(ReportCommandBoEnumException.NULL_EVENT_ID,"El id de evento es obligatorio");
+		this.eventId = eventId;
 	}
 }

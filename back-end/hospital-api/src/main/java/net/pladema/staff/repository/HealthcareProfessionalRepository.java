@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPARepository<HealthcareProfessional, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT new net.pladema.staff.service.domain.HealthcarePersonBo(hp.id, hp.licenseNumber, p)"
+	@Query(value = " SELECT new net.pladema.staff.service.domain.HealthcarePersonBo(hp.id, hp.licenseNumber,p.id, p)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
@@ -37,7 +37,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
@@ -49,7 +49,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON (hp.personId = p.id)"
 			+ " WHERE hp.id = :id"
@@ -63,7 +63,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
 			+ " AND hp.deleteable.deleted = false "

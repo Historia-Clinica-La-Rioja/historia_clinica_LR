@@ -1,9 +1,7 @@
 package net.pladema.snowstorm.configuration;
 
-import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.AuthService;
-import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
 import net.pladema.snowstorm.services.domain.SnowstormLoginResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +12,11 @@ public class SnowstormAuthService extends AuthService<SnowstormLoginResponse> {
 
     public SnowstormAuthService(@Value("${ws.snowstorm.url.login:/}") String relUrl,
                                 SnowstormWSConfig wsConfig) throws Exception {
-        super(relUrl, new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
+        super(relUrl, new RestTemplateSSL(), wsConfig);
     }
 
     @Override
-    protected ResponseEntity<SnowstormLoginResponse> callLogin() throws WSResponseException {
+    protected ResponseEntity<SnowstormLoginResponse> callLogin() {
         return ResponseEntity.ok().body(new SnowstormLoginResponse("Valido"));
     }
 }

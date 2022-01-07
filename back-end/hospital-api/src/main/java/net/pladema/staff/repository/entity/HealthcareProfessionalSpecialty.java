@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Where;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(SGXAuditListener.class)
 @Where(clause = "deleted=false")
@@ -37,5 +39,12 @@ public class HealthcareProfessionalSpecialty extends SGXAuditableEntity<Integer>
 
 	@Column(name = "clinical_specialty_id", nullable = false)
 	private Integer clinicalSpecialtyId;
-	
+
+	public HealthcareProfessionalSpecialty(Integer healthcareProfessionalId,
+										   Integer professionalSpecialtyId,
+										   Integer clinicalSpecialtyId){
+		this.healthcareProfessionalId = healthcareProfessionalId;
+		this.professionalSpecialtyId = professionalSpecialtyId;
+		this.clinicalSpecialtyId = clinicalSpecialtyId;
+	}
 }

@@ -1,0 +1,48 @@
+<section fxLayout="column" fxLayoutGap="20px">
+	<div fxLayout="column" fxLayoutGap="10px">
+		<h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_1'"></h2>
+		<span mat-line class="mat-body" [translate]="'configuracion.logos.logotipo.DESCRIPTION'"></span>
+		<span mat-line class="mat-body" [translate]="'configuracion.logos.logotipo.IMAGE_FORMAT'"></span>
+		<img [src]="BASE_PATH + sponsorLogo.path + timestamp" [alt]="sponsorLogo.name" [height]="sponsorLogo.height" [width]="sponsorLogo.width">
+		<div fxLayout="row" fxLayoutGap="15px">
+			<app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE"
+								[validations]="{acceptFormat: sponsorLogo.extension, width: sponsorLogo.width, height: sponsorLogo.height}"
+								icon="attach_file"
+								(selectFiles)="selectFile($event, sponsorLogo.path)"></app-img-uploader>
+			<button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(sponsorLogo.path, sponsorLogo.name)"></button>
+		</div>
+	</div>
+
+	<div fxLayout="column" fxLayoutGap="10px">
+		<h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_2'"></h2>
+		<span mat-line class="mat-body" [translate]="'configuracion.logos.icono_pagina.DESCRIPTION'"></span>
+		<span mat-line class="mat-body" [translate]="'configuracion.logos.icono_pagina.IMAGE_FORMAT'"></span>
+		<img [src]="BASE_PATH + favicon.path + timestamp" [alt]="favicon.name" [height]="favicon.height" [width]="favicon.width">
+		<div fxLayout="row" fxLayoutGap="15px">
+			<app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE"
+								[validations]="{acceptFormat: favicon.extension, width: favicon.width, height: favicon.height}"
+								icon="attach_file"
+								(selectFiles)="selectFile($event, favicon.path)"></app-img-uploader>
+			<button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(favicon.path, favicon.name)"></button>
+		</div>
+	</div>
+
+	<div fxLayout="column" fxLayoutGap="10px">
+		<h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_3'"></h2>
+		<span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.DESCRIPTION'"></span>
+
+		<div *ngFor="let icon of icons" fxLayout="column" fxLayoutGap="10px">
+			<span mat-line class="mat-body-strong capitalize-first-letter">{{icon.name}}</span>
+			<img [src]="BASE_PATH + icon.path + timestamp" [alt]="icon.name" [height]="icon.height" [width]="icon.width">
+			<div fxLayout="row" fxLayoutGap="15px">
+				<app-img-uploader buttonLabel="configuracion.logos.UPLOAD_FILE"
+									[validations]="{acceptFormat: icon.extension, width: icon.width, height: icon.height}"
+									icon="attach_file"
+									(selectFiles)="selectFile($event, icon.path)"></app-img-uploader>
+				<button mat-raised-button color="warn" translate="configuracion.logos.RESTORE" (click)="restore(icon.path, icon.name)"></button>
+			</div>
+		</div>
+
+	</div>
+
+</section>

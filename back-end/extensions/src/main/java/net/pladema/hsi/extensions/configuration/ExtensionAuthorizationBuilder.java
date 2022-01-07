@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ExtensionAuthorizationBuilder {
 	private final Supplier<Boolean> systemMenuDefault;
 	private final Function<Integer, Boolean> institutionMenuDefault;
@@ -22,7 +25,7 @@ public class ExtensionAuthorizationBuilder {
 	}
 
 	public static ExtensionAuthorizationBuilder buildExtensionAuthorization() {
-		return new ExtensionAuthorizationBuilder(() -> Boolean.TRUE, (Integer i) -> Boolean.TRUE);
+		return new ExtensionAuthorizationBuilder(() -> Boolean.FALSE, (Integer i) -> Boolean.FALSE);
 	}
 
 
@@ -36,7 +39,9 @@ public class ExtensionAuthorizationBuilder {
 
 			@Override
 			public boolean isInstitutionMenuAllowed(String menuId, Integer institutionId) {
-				return ruleByInstitutionMenu.getOrDefault(menuId, institutionMenuDefault).apply(institutionId);
+				var menuIsAllowed = ruleByInstitutionMenu.getOrDefault(menuId, institutionMenuDefault).apply(institutionId);
+				log.debug("ExtensionInstitutionMenu {} is allowed for user? {}", menuId, menuIsAllowed);
+				return menuIsAllowed;
 			}
 		};
 	}

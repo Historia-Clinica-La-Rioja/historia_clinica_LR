@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
+</head>
+<body>
+<div th:replace="fragments/general.html :: header(title='Nueva consulta', subtitle='Contrarreferencia')"></div>
+<div th:replace="fragments/general.html :: clinicalSpecialty(message='Especialidad clínica')"></div>
+<div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
+<div th:replace="fragments/general.html :: procedures(message='Procedimientos')"></div>
+<div th:replace="fragments/general.html :: medications(title='Medicaciones')"></div>
+<div th:replace="fragments/general.html :: allergies"></div>
+<div th:replace="fragments/general.html :: counterReference"></div>
+</body>
+<footer>
+    <div th:replace="fragments/general.html :: footer"></div>
+</footer>
+
+</html>

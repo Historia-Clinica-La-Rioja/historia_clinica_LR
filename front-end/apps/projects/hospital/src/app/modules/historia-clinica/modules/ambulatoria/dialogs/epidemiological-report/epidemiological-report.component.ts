@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ManualClassificationDto } from '@api-rest/api-model';
+import { SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-epidemiological-report',
@@ -10,51 +10,81 @@ import { ManualClassificationDto } from '@api-rest/api-model';
 })
 export class EpidemiologicalReportComponent implements OnInit {
 
-	form: FormGroup;
+	public form: FormGroup;
+	private formArray: FormArray;
+	public tryToSubmit = false;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { problemName: string, manualClassificationList: ManualClassificationDto[] },
+		@Inject(MAT_DIALOG_DATA) public data: { problemName: string, snvsEventManualClassificationsList: SnvsEventManualClassificationsDto[] },
 		private dialogRef: MatDialogRef<EpidemiologicalReportComponent>,
 		private readonly formBuilder: FormBuilder
 	) { }
 
 	ngOnInit(): void {
+		this.formArray = this.formBuilder.array([], this.requiredAtLeastOneSelected());
+		this.data.snvsEventManualClassificationsList.forEach(_ => this.formArray.push(new FormControl(null)));
 		this.form = this.formBuilder.group({
-			manualClassification: [null, Validators.required]
+			classifications: this.formArray
 		});
 	}
 
-	reportProblem(classificationId: number): void {
+	private requiredAtLeastOneSelected(): ValidatorFn {
+		const validator: ValidatorFn = (formArray: FormArray) => {
+			let result = { notSelected: true };
+			for (let i = 0; (i < formArray.length) && (result !== null); i++)
+				if (formArray.at(i).value !== null)
+					result = null;
+			return result;
+		};
+		return validator;
+	}
+
+	reportProblem(): void {
 		if (this.form.valid) {
+			this.tryToSubmit = false;
+			let reports = [];
+			let controlsArray = this.form.get('classifications') as FormArray;
+			for (let i = 0; i < controlsArray.length; i++) {
+				if (controlsArray.at(i).value !== null) {
+					const report: EpidemiologicalReport = {
+						eventId: this.data.snvsEventManualClassificationsList[i].snvsEvent.eventId,
+						groupEventId: this.data.snvsEventManualClassificationsList[i].snvsEvent.groupEventId,
+						manualClassificationId: controlsArray.at(i).value
+					}
+					reports.push(report);
+				}
+			}
+
 			const result: EpidemiologicalManualClassificationResult = {
-				isReportable: true,
-				manualClassification: this.findClassification(classificationId)
+				reportProblem: true,
+				reports: reports
 			}
 			this.dialogRef.close(result);
 		}
+		else
+			this.tryToSubmit = true;
 	}
 
 	doNotReportProblem(): void {
 		const result: EpidemiologicalManualClassificationResult = {
-			isReportable: false
+			reportProblem: false
 		}
 		this.dialogRef.close(result);
 	}
 
 	goBack(): void {
-		const result: EpidemiologicalManualClassificationResult = {
-			isReportable: null
-		}
-		this.dialogRef.close(result);
-	}
-
-	private findClassification(id: number): ManualClassificationDto {
-		return this.data.manualClassificationList.find(manualClassification => manualClassification.id === id);
+		this.dialogRef.close(null);
 	}
 
 }
 
 export interface EpidemiologicalManualClassificationResult {
-	isReportable: boolean | null;
-	manualClassification?: ManualClassificationDto;
+	reportProblem: boolean;
+	reports?: EpidemiologicalReport[];
+}
+
+export interface EpidemiologicalReport {
+	manualClassificationId: number,
+	groupEventId: number,
+	eventId: number
 }

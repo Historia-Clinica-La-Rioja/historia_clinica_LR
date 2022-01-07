@@ -170,6 +170,7 @@ export interface ApiErrorDto {
 }
 
 export interface ApiErrorMessageDto {
+    args: { [index: string]: any };
     code: string;
     text: string;
 }
@@ -409,6 +410,38 @@ export interface ConsultationsDto extends Serializable {
     documentId: number;
     id: number;
     specialty: string;
+}
+
+export interface CounterReferenceAllergyDto extends Serializable {
+    categoryId: string;
+    criticalityId: number;
+    snomed: SnomedDto;
+    startDate: DateDto;
+    statusId?: string;
+    verificationId?: string;
+}
+
+export interface CounterReferenceDto extends Serializable {
+    allergies: CounterReferenceAllergyDto[];
+    clinicalSpecialtyId: number;
+    counterReferenceNote: string;
+    fileIds: number[];
+    medications: CounterReferenceMedicationDto[];
+    procedures: CounterReferenceProcedureDto[];
+    referenceId: number;
+}
+
+export interface CounterReferenceMedicationDto extends Serializable {
+    id?: number;
+    note: string;
+    snomed: SnomedDto;
+    statusId?: string;
+    suspended: boolean;
+}
+
+export interface CounterReferenceProcedureDto extends Serializable {
+    performedDate?: DateDto;
+    snomed: SnomedDto;
 }
 
 export interface CoverageDto extends Serializable {
@@ -940,10 +973,25 @@ export interface HealthInsuranceDto extends CoverageDto {
     type: "HealthInsuranceDto";
 }
 
+export interface HealthcareProfessionalCompleteDto {
+    id?: number;
+    licenseNumber: string;
+    personId: number;
+    professionalSpecialtyDtos: HealthcareProfessionalSpecialtyDto[];
+}
+
 export interface HealthcareProfessionalDto {
     id: number;
     licenseNumber: string;
     person: PersonBasicDataResponseDto;
+    personId: number;
+}
+
+export interface HealthcareProfessionalSpecialtyDto {
+    clinicalSpecialtyId: number;
+    healthcareProfessionalId?: number;
+    id?: number;
+    professionalSpecialtyId: number;
 }
 
 export interface HospitalizationProcedureDto {
@@ -1490,6 +1538,7 @@ export interface OutpatientReferenceDto {
     careLineId: number;
     clinicalSpecialtyId: number;
     consultation?: boolean;
+    fileIds?: number[];
     note?: string;
     problems: OutpatientReferenceProblemDto[];
     procedure?: boolean;
@@ -1733,6 +1782,11 @@ export interface ProfessionalPersonDto extends Serializable {
     lastName: string;
 }
 
+export interface ProfessionalSpecialtyDto {
+    description: string;
+    id: number;
+}
+
 export interface ProfessionalsByClinicalSpecialtyDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     professionalsIds: number[];
@@ -1764,11 +1818,17 @@ export interface ReducedPatientDto {
 export interface ReferenceDto extends Serializable {
     careLine: CareLineDto;
     clinicalSpecialty: ClinicalSpecialtyDto;
+    files: ReferenceFileDto[];
     id: number;
     note: ReferenceNoteDto;
     problems: ReferenceProblemDto[];
     professional: ProfessionalPersonDto;
     referenceDate: DateDto;
+}
+
+export interface ReferenceFileDto extends Serializable {
+    fileId: number;
+    fileName: string;
 }
 
 export interface ReferenceNoteDto extends Serializable {
@@ -1878,8 +1938,22 @@ export interface SnomedResponseDto extends Serializable {
     total: number;
 }
 
+export interface SnvsEventDto {
+    description: string;
+    eventId: number;
+    groupEventId: number;
+}
+
+export interface SnvsEventManualClassificationsDto {
+    manualClassifications: ManualClassificationDto[];
+    snvsEvent: SnvsEventDto;
+}
+
 export interface SnvsReportDto {
+    eventId: number;
+    groupEventId: number;
     lastUpdate?: DateDto;
+    manualClassificationId?: number;
     problem: SnvsSnomedDto;
     responseCode?: number;
     sisaRegisteredId?: number;
@@ -1892,6 +1966,8 @@ export interface SnvsSnomedDto extends Serializable {
 }
 
 export interface SnvsToReportDto {
+    eventId: number;
+    groupEventId: number;
     manualClassificationId: number;
     problem: SnvsSnomedDto;
 }
@@ -2119,6 +2195,7 @@ export const enum AppFeature {
     HABILITAR_INTERCAMBIO_TEMAS = "HABILITAR_INTERCAMBIO_TEMAS",
     HABILITAR_CREACION_USUARIOS = "HABILITAR_CREACION_USUARIOS",
     HABILITAR_REPORTE_EPIDEMIOLOGICO = "HABILITAR_REPORTE_EPIDEMIOLOGICO",
+    AGREGAR_MEDICOS_ADICIONALES = "AGREGAR_MEDICOS_ADICIONALES",
 }
 
 export const enum EDocumentSearch {

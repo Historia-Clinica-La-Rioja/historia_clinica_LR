@@ -3,11 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { CareLineDto, ClinicalSpecialtyDto, OutpatientReferenceDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
+import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { removeFrom } from '@core/utils/array.utils';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ReferenceComponent } from '../dialogs/reference/reference.component';
 
 @Injectable({
@@ -18,7 +20,8 @@ export class AmbulatoryConsultationReferenceService {
 	specialties: ClinicalSpecialtyDto[];
 	careLines: CareLineDto[];
 	private readonly columns: TableColumnConfig[];
-	references: OutpatientReferenceDto[];
+	outpatientReferences: OutpatientReferenceDto[];
+	references: Reference[];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -26,6 +29,9 @@ export class AmbulatoryConsultationReferenceService {
 		private readonly ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly careLineService: CareLineService,
+		private readonly referenceFileService: ReferenceFileService,
+		private readonly snackBarService: SnackBarService,
+
 	) {
 		this.columns = [
 			{
@@ -34,6 +40,8 @@ export class AmbulatoryConsultationReferenceService {
 				template: CellTemplates.REFERENCE,
 			},
 		];
+
+		this.outpatientReferences = [];
 
 		this.references = [];
 
@@ -58,15 +66,20 @@ export class AmbulatoryConsultationReferenceService {
 				idPatient: this.informationData.idPaciente,
 			}
 		});
-		dialogRef.afterClosed().subscribe((reference: OutpatientReferenceDto) => {
-			if (reference){
-				this.references.push(reference);
-			}	
+		dialogRef.afterClosed().subscribe(reference => {
+			if (reference.data) {
+				if (reference.files.length) {
+					let referenceIds: number[] = [];
+					const ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
+					this.references.push(ref);
+				}
+				this.outpatientReferences.push(reference.data);
+			}
 		});
 	}
 
 	remove(index: number): void {
-		this.references = removeFrom<OutpatientReferenceDto>(this.references, index);
+		this.outpatientReferences = removeFrom<OutpatientReferenceDto>(this.outpatientReferences, index);
 	}
 
 	getColumns(): TableColumnConfig[] {
@@ -74,7 +87,7 @@ export class AmbulatoryConsultationReferenceService {
 	}
 
 	getData(): any[] {
-		return (this.references.map(
+		return (this.outpatientReferences.map(
 			(reference: OutpatientReferenceDto) => ({
 				problems: reference.problems,
 				consultation: reference.consultation,
@@ -86,7 +99,22 @@ export class AmbulatoryConsultationReferenceService {
 		));
 	}
 
-	getReferences(): OutpatientReferenceDto[]{
-		return this.references;
+	getOutpatientReferences(): OutpatientReferenceDto[] {
+		return this.outpatientReferences;
 	}
+
+	getReferences(): Reference[] {
+		return this.references;
+
+	}
+
+	addReferenceId(index: number, fileId: number): void {
+		this.outpatientReferences[index].fileIds.push(fileId);
+	}
+}
+
+export interface Reference {
+	referenceNumber: number;
+	referenceFiles: File[];
+	referenceIds: number[];
 }

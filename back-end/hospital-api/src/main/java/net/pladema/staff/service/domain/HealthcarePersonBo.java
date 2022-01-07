@@ -14,6 +14,7 @@ public class HealthcarePersonBo {
 
 	private Integer id;
 	private String licenceNumber;
+	private Integer personId;
 	private Person person;
 	
 }

@@ -1,17 +1,13 @@
 package net.pladema.snowstorm.controller;
 
 import io.swagger.annotations.Api;
-import net.pladema.snowstorm.controller.dto.ManualClassificationDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
-import net.pladema.snowstorm.controller.mapper.ManualClassificationMapper;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
-import net.pladema.snowstorm.services.domain.ManualClassificationBo;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,8 +23,6 @@ public class SnowstormController {
 
     private static final String CONCEPTS = "/concepts";
 
-    private static final String REPORTABLE = "/is-reportable";
-
     private static final Logger LOG = LoggerFactory.getLogger(SnowstormController.class);
 
     public static final String OUTPUT = "Output -> {}";
@@ -37,13 +31,9 @@ public class SnowstormController {
 
     private final FetchAllSnomedEcl fetchAllSnomedEcl;
 
-    private final ManualClassificationMapper manualClassificationMapper;
-
-    public SnowstormController(SnowstormService snowstormService, FetchAllSnomedEcl fetchAllSnomedEcl,
-                               ManualClassificationMapper manualClassificationMapper){
+    public SnowstormController(SnowstormService snowstormService, FetchAllSnomedEcl fetchAllSnomedEcl){
         this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
-        this.manualClassificationMapper = manualClassificationMapper;
     }
 
     @GetMapping(value = CONCEPTS)
@@ -53,19 +43,6 @@ public class SnowstormController {
         LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
         return snowstormService.getConcepts(term, eclKey);
     }
-
-    @GetMapping(value = REPORTABLE)
-    public ResponseEntity<List<ManualClassificationDto>> isSnvsReportable(
-            @RequestParam(value = "sctid") String sctid,
-            @RequestParam(value = "pt") String pt) {
-        LOG.debug("Input data -> sctid: {} , pt: {} ", sctid, pt);
-        List<ManualClassificationBo> resultService = snowstormService.isSnvsReportable(sctid, pt);
-        List<ManualClassificationDto> result = manualClassificationMapper.fromManualClassificationBoList(resultService);
-        LOG.debug(OUTPUT, result);
-        return ResponseEntity.ok().body(result);
-    }
-
-
 
     @GetMapping(value = "/ecl")
     public List<SnomedEclDto> getEcls() {

@@ -1,7 +1,6 @@
 package net.pladema.permissions.service.impl;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -10,11 +9,8 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.permissions.controller.external.LoggedUserExternalServiceImpl;
-import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.LoggedUserStorage;
-import net.pladema.permissions.service.RoleAssignmentAuthority;
-import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.permissions.service.domain.LoggedUserBo;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.permissions.service.exceptions.LoggedUserException;

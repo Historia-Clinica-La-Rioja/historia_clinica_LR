@@ -1,0 +1,70 @@
+<ng-container *ngIf="loading else reportResults">
+	<div fxLayout="column" fxLayoutAlign="center center" class="mat-h2 vertical-margin">
+		<div fxLayout="row" fxLayoutAlign="center center" class="centered">
+			<strong fxFlex="60">
+				{{ 'ambulatoria.paciente.problemas.snvs-reports-result.REPORTING' | translate }}
+			</strong>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="center center" class="centered">
+			<span fxFlex="60">
+				{{ 'ambulatoria.paciente.problemas.snvs-reports-result.SNVS' | translate }}
+			</span>
+		</div>
+		<br>
+		<div class="spinner">
+			<mat-spinner color="primary"></mat-spinner>
+		</div>
+	</div>
+</ng-container>
+
+<ng-template #reportResults>
+	<div fxLayout="row" fxLayoutAlign="end">
+		<button mat-icon-button mat-dialog-close>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<mat-dialog-content>
+		<div *ngFor="let reportResult of reportsResult; let i=index">
+			<div fxLayout="row" fxLayoutGap="10px">
+				<div fxFlex="15" fxLayout="column" fxLayoutAlign="start center">
+					<mat-icon class="big-icon" color="primary" *ngIf="successfullyReported(reportResult)">
+						check_circle_outlined
+					</mat-icon>
+					<mat-icon class="big-icon" color="warn" *ngIf="!successfullyReported(reportResult)"
+						fontSet="material-icons-outlined">
+						cancel
+					</mat-icon>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="15px">
+					<div class="mat-h2" *ngIf="successfullyReported(reportResult)"
+						[innerHTML]="'ambulatoria.paciente.problemas.snvs-reports-result.SUCCESSFULLY_REPORTED' | translate: { problemName: reportResult.problem.pt }">
+					</div>
+					<div class="mat-h2" *ngIf="!successfullyReported(reportResult)"
+						[innerHTML]="'ambulatoria.paciente.problemas.snvs-reports-result.CASE_COULD_NOT_BE_REPORTED' | translate: { problemName: reportResult.problem.pt }">
+					</div>
+					<div class="mat-h4">
+						{{ getGroupEventDescription(reportResult.groupEventId, reportResult.eventId) }}
+					</div>
+					<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center"
+						*ngIf="successfullyReported(reportResult)">
+						<div>
+							{{ 'ambulatoria.paciente.problemas.snvs-reports-result.ID' | translate }}:
+						</div>
+						<div class="mat-h1 margin-bottom-0 color-primary">
+							{{ reportResult.sisaRegisteredId }}
+						</div>
+						<button mat-icon-button color="primary" [cdkCopyToClipboard]="reportResult.sisaRegisteredId">
+							<mat-icon>content_copy_outlined</mat-icon>
+						</button>
+					</div>
+					<div *ngIf="!successfullyReported(reportResult)" class="mat-h2 color-warn">
+						{{ 'ambulatoria.paciente.problemas.snvs-reports-result.FAILED_REPORT_ERROR' | translate }}
+					</div>
+				</div>
+			</div>
+			<mat-divider *ngIf="!isTheLast(i)" class="separation"></mat-divider>
+		</div>
+
+	</mat-dialog-content>
+</ng-template>

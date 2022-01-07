@@ -5,6 +5,7 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,5 +31,17 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
                 .filter(ClinicalSpecialty::isSpecialty)
                 .map(clinicalSpecialty -> new ClinicalSpecialtyBo(clinicalSpecialty.getId(), clinicalSpecialty.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClinicalSpecialtyBo> getAll(){
+        List<ClinicalSpecialtyBo> result = new ArrayList<>();
+        clinicalSpecialtyRepository.findAllSpecialties()
+                .forEach(clinicalSpecialty -> result.add(mapToBo(clinicalSpecialty)));
+        return result;
+    }
+
+    private ClinicalSpecialtyBo mapToBo(ClinicalSpecialty entiy){
+        return new ClinicalSpecialtyBo(entiy.getId(), entiy.getName());
     }
 }

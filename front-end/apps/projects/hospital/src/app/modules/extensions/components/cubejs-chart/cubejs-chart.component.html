@@ -1,0 +1,13 @@
+<div
+	*ngIf="!error; else errorChart"
+>
+	<app-query-renderer
+		[chartType]="chartType.asObservable()"
+		[cubeQuery]="cubeQuery.asObservable()"
+		[pivotConfig]="pivotConfig.asObservable()"
+		[dateFormat]="dateFormat"
+	></app-query-renderer>
+</div>
+<ng-template #errorChart>
+	<app-ui-component [uiComponent]="error" ></app-ui-component>
+</ng-template>

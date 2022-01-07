@@ -1,3 +1,7 @@
+import {
+	formatISO,
+} from 'date-fns'
+
 const MIN_YEAR = 1900;
 const MIN_MONTH = 0;
 const MIN_DAY = 1;
@@ -21,4 +25,8 @@ export enum DatePipeFormat {
 	MEDIUM_TIME = 'mediumTime',// es-AR format: 03:24:19
 	LONG_TIME = 'longTime',// es-AR format: 03:24:19 GMT-3
 	FULL_TIME = 'fullTime',// es-AR format: 03:24:19 GMT-03:00
+}
+
+export function formatDateOnlyISO(date: Date) {
+	return formatISO(date, { representation: 'date' });
 }

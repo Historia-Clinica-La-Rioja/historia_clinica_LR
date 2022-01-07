@@ -1,8 +1,10 @@
 package net.pladema.staff.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -36,7 +38,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
             "JOIN ClinicalSpecialtySector css ON doff.clinicalSpecialtySectorId = css.id "+
             "WHERE d.healthcareProfessionalId = :healthcareProfessionalId AND css.clinicalSpecialtyId = :clinicalSpecialtyId")
     boolean hasHealthcareProfessionalSpecialtyAffected(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
-                                                    @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+                                                       @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT NEW net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo" +
@@ -47,4 +49,18 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
             + "AND hps.deleteable.deleted = false")
     List<ProfessionalClinicalSpecialtyVo> getAllByProfessionals(@Param("professionalsIds") List<Integer> professionalsIds);
 
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT NEW net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo" +
+            "(hps.id,hps.healthcareProfessionalId, hps.professionalSpecialtyId, hps.clinicalSpecialtyId) " +
+            "FROM HealthcareProfessionalSpecialty hps "
+            + "WHERE hps.healthcareProfessionalId =:professionalId "
+            + "AND hps.deleteable.deleted = false")
+    List<HealthcareProfessionalSpecialtyVo> getAllByProfessional(@Param("professionalId") Integer professionalId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE healthcare_professional_specialty " +
+            "SET deleted = false " +
+            "WHERE id = :healthcareProfessionalSpecialtyId",  nativeQuery=true)
+    void setDeletedFalse(@Param("healthcareProfessionalSpecialtyId") Integer healthcareProfessionalSpecialtyId);
 }

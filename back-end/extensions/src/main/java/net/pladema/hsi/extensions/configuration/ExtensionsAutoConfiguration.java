@@ -1,7 +1,7 @@
 package net.pladema.hsi.extensions.configuration;
 
-import ar.lamansys.sgx.shared.restclient.configuration.interceptors.LoggingRequestInterceptor;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
+import net.pladema.hsi.extensions.configuration.plugins.InstitutionMenuExtensionPlugin;
 import net.pladema.hsi.extensions.configuration.plugins.SystemMenuExtensionPlugin;
 import net.pladema.hsi.extensions.domain.ExtensionService;
 import net.pladema.hsi.extensions.infrastructure.repository.DefaultExtensionService;
@@ -25,12 +25,14 @@ public class ExtensionsAutoConfiguration {
 	public ExtensionService implExtensionService(
 			ExtensionAuthorization extensionAuthorization,
 			RestExtensionWsConfig wsConfig,
-			List<SystemMenuExtensionPlugin> systemMenuExtensionPlugins
+			List<SystemMenuExtensionPlugin> systemMenuExtensionPlugins,
+			List<InstitutionMenuExtensionPlugin> institutionPlugins
 	) throws Exception {
 		return new WrapperExtensionService(
 				extensionAuthorization,
 				fromConfig(wsConfig),
-				systemMenuExtensionPlugins
+				systemMenuExtensionPlugins,
+				institutionPlugins
 		);
 	}
 
@@ -39,6 +41,6 @@ public class ExtensionsAutoConfiguration {
 			return new DefaultExtensionService();
 		if ("demo".equals(wsConfig.getBaseUrl()))
 			return new DemoExtensionService();
-		return new RestExtensionService(new RestTemplateSSL(new LoggingRequestInterceptor()), wsConfig);
+		return new RestExtensionService(new RestTemplateSSL(), wsConfig);
 	}
 }

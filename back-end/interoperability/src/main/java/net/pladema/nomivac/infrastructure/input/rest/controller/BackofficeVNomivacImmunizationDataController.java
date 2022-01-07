@@ -17,7 +17,7 @@ public class BackofficeVNomivacImmunizationDataController extends AbstractBackof
 
     public BackofficeVNomivacImmunizationDataController(VNomivacImmunizationDataRepository repository) {
         super(new BackofficeRepository<>(repository),
-                new BackofficePermissionValidatorAdapter(HttpMethod.GET, HttpMethod.PUT),
+                new BackofficePermissionValidatorAdapter<>(HttpMethod.GET, HttpMethod.PUT),
                 new BackofficeEntityValidatorAdapter<>());
     }
 }

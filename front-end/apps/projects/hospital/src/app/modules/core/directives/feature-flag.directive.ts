@@ -1,4 +1,5 @@
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { getElementViewFunction } from '@core/utils/directive.utils';
 
@@ -25,9 +26,10 @@ export class FeatureFlagDirective {
 
 
 	@Input()
-	set appFeatureFlag(featureFlag: string) {
-		this.featureFlagService.isOn(featureFlag).subscribe(isOn => {
-			this.showElement(isOn);
+	set appFeatureFlag(featureFlagName: string) {
+		const feature: AppFeature = <AppFeature> featureFlagName;
+		this.featureFlagService.isActive(feature).subscribe(isActive => {
+			this.showElement(isActive);
 		});
 	}
 }

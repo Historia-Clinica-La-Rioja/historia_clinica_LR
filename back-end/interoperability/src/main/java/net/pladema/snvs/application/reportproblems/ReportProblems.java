@@ -80,19 +80,18 @@ public class ReportProblems {
             throw new ReportProblemException(ReportProblemEnumException.NULL_REPORT,"No se pueden enviar reportes nulos");
     }
 
-
     private SnvsToReportBo buildReport(ReportCommandBo reportCommandBo) throws ReportProblemException, SnvsEventInfoBoException, SnvsStorageException {
         var patient = patientStorage.getPatientInfo(reportCommandBo.getPatientId())
                 .orElseThrow(() -> new ReportProblemException(ReportProblemEnumException.UNKNOWN_PATIENT,
                         String.format("El paciente %s no existe", reportCommandBo.getPatientId())));
         var institution = institutionStorage.getInstitutionInfo(reportCommandBo.getInstitutionId())
                 .orElseThrow(() -> new ReportProblemException(ReportProblemEnumException.UNKNOWN_INSTITUTION,
-                        String.format("La institución %s no existe", reportCommandBo.getPatientId())));
+                        String.format("La institución %s no existe", reportCommandBo.getInstitutionId())));
         var snvsEventInfo = snvsStorage.fetchSnvsEventInfo(reportCommandBo.getProblemBo(),
-                        reportCommandBo.getManualClassificationId())
+                reportCommandBo.getManualClassificationId(), reportCommandBo.getGroupEventId(), reportCommandBo.getEventId())
                 .orElseThrow(() -> new ReportProblemException(ReportProblemEnumException.UNKNOWN_EVENT,
-                        String.format("No existe datos de evento para el problema=%s con la clasificación manual=%s",
-                                reportCommandBo.getProblemBo(), reportCommandBo.getManualClassificationId())));
+                        String.format("No existe datos del evento=%s, grupo=%s para el problema=%s con la clasificación manual=%s",
+                                reportCommandBo.getEventId(), reportCommandBo.getGroupEventId(), reportCommandBo.getProblemBo(), reportCommandBo.getManualClassificationId())));
         return new SnvsToReportBo(snvsEventInfo, dateTimeProvider.nowDate(), patient, institution);
     }
 }

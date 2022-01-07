@@ -158,6 +158,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.nomivac.synchronization.url.base  | - | localhost | **Obligatorio** | URL del dominio donde se sincroniza las vacunas | v1.22.0  |
 | ws.nomivac.synchronization.cron.config  | - | - | **Obligatorio** | Cron que determina la periodicidad con la que se envia los datos a nomivac | v1.22.0  |
 | app.feature.HABILITAR_BUS_INTEROPERABILIDAD  | - | false | **Obligatorio** | Define si se va a realizar una comunicación con el bus de interoperabilidad | v1.22.0  |
+| ws.nomivac.rest-client.config.trust-invalid-certificate  | - | false | **Opcional** | Propiedad para ignorar certificados https vencidos | v1.29.0  |
 
 
 ### Sisa reporte epimediológico (snvs)
@@ -171,6 +172,7 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.sisa.snvs.appId.value  | - | PruebasWSQA_SNVS_ID | **Obligatorio** | Id de identificación para consulta de servicio | v1.28.0  |
 | ws.sisa.snvs.appKey.value  | - | PruebasWSQA_SNVS_KEY | **Obligatorio** | Key para la consulta del servicio | v1.28.0  |
 | ws.sisa.snvs.environment  | - | QA | **Obligatorio** | Define el set de datos a utilizar para el evento, grupoevento, clasificación manual. Los valores posibles son (QA, PROD) | v1.28.0  |
+| ws.sisa.snvs.rest-client.config.trust-invalid-certificate  | - | false | **Opcional** | Define si valida certificado https | v1.29.0  |
 
 
 

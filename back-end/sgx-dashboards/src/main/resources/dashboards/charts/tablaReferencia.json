@@ -1,0 +1,52 @@
+{
+  "cubeQuery": {
+    "measures": [
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "Referencias.fecha_consulta"
+      }
+    ],
+    "order": {
+      "Referencias.fecha_consulta": "desc"
+    },
+    "dimensions": [
+      "Referencias.nombre_paciente",
+      "Referencias.apellido_paciente",
+      "Referencias.nombre_doctor_solicitante",
+      "Referencias.apellido_doctor_solicitante",
+      "Referencias.linea_cuidado",
+      "Referencias.especialidad_clinica",
+      "Referencias.fecha_consulta",
+      "Referencias.tiene_contra"
+    ],
+    "filters": [
+      {
+        "member": "Referencias.institucion_origen_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ]
+  },
+  "chartType": "table",
+  "pivotConfig": {
+    "x": [
+      "Referencias.nombre_paciente",
+      "Referencias.apellido_paciente",
+      "Referencias.nombre_doctor_solicitante",
+      "Referencias.apellido_doctor_solicitante",
+      "Referencias.linea_cuidado",
+      "Referencias.especialidad_clinica",
+      "Referencias.fecha_consulta",
+      "Referencias.tiene_contra"
+    ],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+
+}
