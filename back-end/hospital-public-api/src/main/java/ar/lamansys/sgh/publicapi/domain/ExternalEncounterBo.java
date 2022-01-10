@@ -28,7 +28,9 @@ public class ExternalEncounterBo {
 
     private EExternalEncounterType eExternalEncounterType;
 
-    public ExternalEncounterBo(@Nullable Integer id, String externalId, String externalEncounterId, LocalDateTime externalEncounterDate, EExternalEncounterType externalEncounterType) throws ExternalEncounterBoException {
+    private Integer institutionId;
+
+    public ExternalEncounterBo(@Nullable Integer id, String externalId, String externalEncounterId, LocalDateTime externalEncounterDate, EExternalEncounterType externalEncounterType, Integer institutionId) throws ExternalEncounterBoException {
         this.id = id;
         if (externalId == null)
             throw new ExternalEncounterBoException(ExternalEncounterBoEnumException.NULL_EXTERNAL_ID, "El id externo es obligatorio");
@@ -42,6 +44,7 @@ public class ExternalEncounterBo {
         if (externalEncounterType == null)
             throw new ExternalEncounterBoException(ExternalEncounterBoEnumException.NULL_EXTERNAL_ENCOUNTER_TYPE, "El tipo de encuentro externo es obligatorio");
         this.eExternalEncounterType = externalEncounterType;
+        this.institutionId = institutionId;
     }
 
 }

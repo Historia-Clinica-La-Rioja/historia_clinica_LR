@@ -53,6 +53,8 @@ class SaveExternalEncounterTest {
         Assertions.assertEquals("1", externalEncounterArgumentCaptor.getValue().getExternalEncounterId());
         Assertions.assertEquals(LocalDateTime.of(2021, 12, 13, 0, 0, 0), externalEncounterArgumentCaptor.getValue().getExternalEncounterDate());
         Assertions.assertEquals(EExternalEncounterType.INTERNACION, externalEncounterArgumentCaptor.getValue().getEExternalEncounterType());
+        Assertions.assertEquals(1, externalEncounterArgumentCaptor.getValue().getInstitutionId());
+
     }
 
     @Test
@@ -81,23 +83,23 @@ class SaveExternalEncounterTest {
     @Test
     public void invalidExternalEncounterData() {
         Exception exception = Assertions.assertThrows(ExternalEncounterBoException.class, () ->
-                saveExternalEncounter.run(new ExternalEncounterBo(null, null, "1", LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.INTERNACION)));
+                saveExternalEncounter.run(new ExternalEncounterBo(null, null, "1", LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.INTERNACION,1)));
         assertEquals("El id externo es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalEncounterBoException.class, () ->
-                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", null, LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.INTERNACION)));
+                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", null, LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.INTERNACION,1)));
         assertEquals("El id de encuentro externo es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalEncounterBoException.class, () ->
-                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", "1", null, EExternalEncounterType.INTERNACION)));
+                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", "1", null, EExternalEncounterType.INTERNACION,1)));
         assertEquals("La fecha del encuentro externo es obligatoria", exception.getMessage());
         exception = Assertions.assertThrows(ExternalEncounterBoException.class, () ->
-                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", "2", LocalDateTime.of(2021, 12, 13, 0, 0, 0), null)));
+                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", "2", LocalDateTime.of(2021, 12, 13, 0, 0, 0), null,1)));
         assertEquals("El tipo de encuentro externo es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(NotFoundException.class, () ->
-                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", "1", LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.map("CONSULTA"))));
+                saveExternalEncounter.run(new ExternalEncounterBo(null, "2", "1", LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.map("CONSULTA"),1)));
         assertEquals("El tipo de encuentro CONSULTA no existe", exception.getMessage());
     }
 
     private ExternalEncounterBo getValidExternalEncounter() throws ExternalEncounterBoException {
-        return new ExternalEncounterBo(null, "2", "1", LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.INTERNACION);
+        return new ExternalEncounterBo(null, "2", "1", LocalDateTime.of(2021, 12, 13, 0, 0, 0), EExternalEncounterType.INTERNACION,1);
     }
 }

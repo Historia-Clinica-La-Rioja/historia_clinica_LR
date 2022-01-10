@@ -101,7 +101,4 @@ public class SaveExternalPatientTest {
         assertEquals("La institución es obligatoria", exception.getMessage());
     }
 
-    private ExternalPatientExtendedBo invalidExternalPatientExtended() throws ExternalPatientBoException, ExternalPatientExtendedBoException {
-        return new ExternalPatientExtendedBo(null, null,  LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null,1);
-    }
 }
