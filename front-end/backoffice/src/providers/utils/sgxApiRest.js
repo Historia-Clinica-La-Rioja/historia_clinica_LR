@@ -1,6 +1,6 @@
 import { setHeader, sgxFetchApi } from '../../libs/sgx/utils/sgxFetch';
-import { retrieveToken } from '../../libs/sgx/api/tokenStorage';
-import { configureRefreshFetch, retrieveRefreshToken, saveTokens, clearTokens } from 'refresh-fetch';
+import { retrieveToken, retrieveRefreshToken, saveTokens, clearTokens } from '../../libs/sgx/api/tokenStorage';
+import { configureRefreshFetch } from 'refresh-fetch';
 
 
 const buildPostOptions = body => ({ method: 'POST', body: JSON.stringify(body) });
