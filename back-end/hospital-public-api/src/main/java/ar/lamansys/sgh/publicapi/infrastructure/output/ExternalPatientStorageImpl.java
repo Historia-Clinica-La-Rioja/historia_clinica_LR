@@ -98,7 +98,8 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
                 epeBo.getIdentificationTypeId(),
                 epeBo.getLastName(),
                 epeBo.getPhoneNumber(),
-                epeBo.getEmail());
+                epeBo.getEmail(),
+                epeBo.getInstitutionId());
     }
 
     private ExternalPatient mapToEntity(ExternalPatientBo epBo) {

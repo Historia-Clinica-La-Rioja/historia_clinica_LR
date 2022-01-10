@@ -52,7 +52,8 @@ public class ExternalPatientController {
                 externalPatientDto.getLastName(),
                 externalPatientDto.getPhoneNumber(),
                 externalPatientDto.getEmail(),
-                toExternalPatientCoverageListBo(externalPatientDto.getMedicalCoverages())
+                toExternalPatientCoverageListBo(externalPatientDto.getMedicalCoverages()),
+                externalPatientDto.getInstitutionId()
         );
     }
 

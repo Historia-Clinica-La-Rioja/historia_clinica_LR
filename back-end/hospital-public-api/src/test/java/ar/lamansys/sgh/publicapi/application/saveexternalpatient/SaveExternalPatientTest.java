@@ -51,7 +51,7 @@ public class SaveExternalPatientTest {
     }
 
     private ExternalPatientExtendedBo validExternalPatientExtended() throws ExternalPatientBoException, ExternalPatientExtendedBoException {
-        return new ExternalPatientExtendedBo(null, "2", LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null);
+        return new ExternalPatientExtendedBo(null, "2", LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null,1);
     }
 
     @Test
@@ -73,32 +73,35 @@ public class SaveExternalPatientTest {
     @Test
     void invalidExternalPatientData(){
         Exception exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null,  null, "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null,  null, "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null,1)));
         assertEquals("La fecha de nacimiento es obligatoria", exception.getMessage());
         exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), null, (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), null, (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null,1)));
         assertEquals("El nombre es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", null, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", null, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null,1)));
         assertEquals("El id del genero es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, null, (short) 1, "GARCIA", "011252545", "juan@example.com", null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, null, (short) 1, "GARCIA", "011252545", "juan@example.com", null,1)));
         assertEquals("El número de documento es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", null, "GARCIA", "011252545", "juan@example.com", null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", null, "GARCIA", "011252545", "juan@example.com", null,1)));
         assertEquals("El id de tipo de documento es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, null, "011252545", "juan@example.com", null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, null, "011252545", "juan@example.com", null,1)));
         assertEquals("El apellido es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", null, "juan@example.com", null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", null, "juan@example.com", null,1)));
         assertEquals("El número telefónico es obligatorio", exception.getMessage());
         exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
-                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", null, null)));
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", null, null,1)));
         assertEquals("El email es obligatorio", exception.getMessage());
+        exception = Assertions.assertThrows(ExternalPatientExtendedBoException.class, () ->
+                saveExternalPatient.run(new ExternalPatientExtendedBo(null, null, LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null,null)));
+        assertEquals("La institución es obligatoria", exception.getMessage());
     }
 
     private ExternalPatientExtendedBo invalidExternalPatientExtended() throws ExternalPatientBoException, ExternalPatientExtendedBoException {
-        return new ExternalPatientExtendedBo(null, null,  LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null);
+        return new ExternalPatientExtendedBo(null, null,  LocalDateTime.of(2020, 12, 13, 0, 0, 0), "JUAN", (short) 1, "35565855", (short) 1, "GARCIA", "011252545", "juan@example.com", null,1);
     }
 }

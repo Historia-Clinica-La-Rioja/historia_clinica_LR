@@ -66,7 +66,7 @@ public class SharedPatientImpl implements SharedPatientPort {
         personExternalService.addPersonExtended(patientDto, createdPerson.getId(), null);
         Patient createdPatient = persistPatientData(patientDto, createdPerson, patient -> {
         });
-        patientService.auditActionPatient(1, createdPatient.getId(), EActionType.CREATE);
+        patientService.auditActionPatient(requiredPatientDataDto.getInstitutionId(), createdPatient.getId(), EActionType.CREATE);
         return createdPatient.getId();
     }
 
