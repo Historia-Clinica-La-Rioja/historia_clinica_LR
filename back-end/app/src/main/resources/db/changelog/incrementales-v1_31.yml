@@ -78,3 +78,23 @@ databaseChangeLog:
                     WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 10 from t1;
                     WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 11 from t1;
                     
+    - changeSet:
+          id: add-institution_id-column-external_encounter
+          comment: Add column institution_id
+          author: mvenere
+          changes:
+              - addColumn:
+                    tableName: external_encounter
+                    columns:
+                        - column:
+                              name: institution_id
+                              type: int
+              - addForeignKeyConstraint:
+                    baseColumnNames: institution_id
+                    baseTableName: external_encounter
+                    constraintName: FK_external_encounter_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: institution
+                    validate: true
