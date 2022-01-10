@@ -41,8 +41,8 @@ public class SettingsController {
     public boolean uploadFile(HttpServletRequest request,
                               @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
         //TODO: en service crear paquete exception con un exception handler en el controller o en otro paquete dentro de la capa de controler. Parserar a apierrordto
-        logger.debug("Input parameters ->  {} fileName {}",
-                request.getRequestURL().toString());
+        logger.debug("Input parameters -> fileName={}",
+                request.getRequestURL());
 
         return settingsService.uploadFile(this.assetsExternalService.findByName(getFileName(request)), file);
     }
@@ -51,8 +51,8 @@ public class SettingsController {
     @PreAuthorize("hasAnyAuthority('ROOT')")
     @Transactional
     public boolean deleteFile(HttpServletRequest request) throws MethodNotSupportedException {
-        logger.debug("Input parameters ->  {} fileName {}",
-                request.getRequestURL().toString());
+        logger.debug("Input parameters -> fileName={}",
+                request.getRequestURL());
 
         return settingsService.deleteFile(this.assetsExternalService.findByName(getFileName(request)));
     }

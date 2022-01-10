@@ -22,7 +22,7 @@ public class DocumentAuthorFinder {
     }
 
     public AuthorBo getAuthor(Long documentId) {
-        logger.debug("Get author from document {} -> documentId {}", documentId);
+        logger.debug("Get author from document -> documentId={}", documentId);
 
         String sqlString = "" +
                 "SELECT hp.id, p.first_name, p.last_name, hp.license_number " +
