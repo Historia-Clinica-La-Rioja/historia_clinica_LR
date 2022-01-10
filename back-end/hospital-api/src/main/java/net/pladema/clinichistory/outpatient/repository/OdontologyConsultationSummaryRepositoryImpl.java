@@ -124,7 +124,7 @@ public class OdontologyConsultationSummaryRepositoryImpl implements OdontologyCo
     @SuppressWarnings("unchecked")
     @Override
     public List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> odontologyConsultationIds) {
-        String sqlString = "SELECT p.id, s.id, s.pt, s.sctid, p.performedDate, oc.id"
+        String sqlString = "SELECT p.id, s.id, s.sctid, s.pt, p.performedDate, oc.id"
                 +"  FROM OdontologyConsultation oc"
                 +"  JOIN Document d ON (d.sourceId = oc.id)"
                 +"  JOIN DocumentProcedure dp ON (d.id = dp.pk.documentId)"
