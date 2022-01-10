@@ -104,7 +104,7 @@ public class NursingConsultationSummaryStorageImpl implements NursingConsultatio
 
     @Override
     public List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> nursingConsultationIds) {
-        String sqlString = "SELECT p.id, s.id, s.pt, s.sctid, p.performedDate, nc.id"
+        String sqlString = "SELECT p.id, s.id, s.sctid, s.pt, p.performedDate, nc.id"
                 + "  FROM NursingConsultation nc"
                 + "  JOIN Document d ON (d.sourceId = nc.id)"
                 + "  JOIN DocumentProcedure dp ON (d.id = dp.pk.documentId)"
