@@ -3,7 +3,7 @@ package ar.lamansys.sgh.publicapi.application.port.out;
 import ar.lamansys.sgh.publicapi.domain.ExternalEncounterBo;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
 
-public interface ExternalEncounterStorge {
+public interface ExternalEncounterStorage {
 
     void save(ExternalEncounterBo externalEncounterBo);
 

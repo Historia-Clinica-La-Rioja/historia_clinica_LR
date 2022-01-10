@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.publicapi.infrastructure.output;
 
-import ar.lamansys.sgh.publicapi.application.port.out.ExternalEncounterStorge;
+import ar.lamansys.sgh.publicapi.application.port.out.ExternalEncounterStorage;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalEncounterStorageException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalEncounterStorageExceptionEnum;
 import ar.lamansys.sgh.publicapi.domain.EExternalEncounterType;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ExternalEncounterStorageImpl implements ExternalEncounterStorge {
+public class ExternalEncounterStorageImpl implements ExternalEncounterStorage {
 
     private final ExternalEncounterRepository externalEncounterRepository;
 

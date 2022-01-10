@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.publicapi.application.saveexternalencounter;
 
-import ar.lamansys.sgh.publicapi.application.port.out.ExternalEncounterStorge;
+import ar.lamansys.sgh.publicapi.application.port.out.ExternalEncounterStorage;
 import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
 import ar.lamansys.sgh.publicapi.application.saveexternalencounter.exceptions.SaveExternalEncounterException;
 import ar.lamansys.sgh.publicapi.domain.EExternalEncounterType;
@@ -28,27 +28,27 @@ class SaveExternalEncounterTest {
     private SaveExternalEncounter saveExternalEncounter;
 
     @Mock
-    private ExternalEncounterStorge externalEncounterStorge;
+    private ExternalEncounterStorage externalEncounterStorage;
 
     @Mock
     private ExternalPatientStorage externalPatientStorage;
 
     @BeforeEach
     public void setUp() {
-        saveExternalEncounter = new SaveExternalEncounter(externalPatientStorage, externalEncounterStorge);
+        saveExternalEncounter = new SaveExternalEncounter(externalPatientStorage, externalEncounterStorage);
     }
 
     @Test
     public void saveSuccessExternalEncounter() throws ExternalEncounterBoException {
         when(externalPatientStorage.findByExternalId(any()))
                 .thenReturn(Optional.of(new ExternalPatientBo(23, "2")));
-        when(externalEncounterStorge.existsExternalEncounter(any()))
+        when(externalEncounterStorage.existsExternalEncounter(any()))
                 .thenReturn(false);
 
         saveExternalEncounter.run(getValidExternalEncounter());
 
         ArgumentCaptor<ExternalEncounterBo> externalEncounterArgumentCaptor = ArgumentCaptor.forClass(ExternalEncounterBo.class);
-        verify(externalEncounterStorge, times(1)).save(externalEncounterArgumentCaptor.capture());
+        verify(externalEncounterStorage, times(1)).save(externalEncounterArgumentCaptor.capture());
         Assertions.assertEquals("2", externalEncounterArgumentCaptor.getValue().getExternalId());
         Assertions.assertEquals("1", externalEncounterArgumentCaptor.getValue().getExternalEncounterId());
         Assertions.assertEquals(LocalDateTime.of(2021, 12, 13, 0, 0, 0), externalEncounterArgumentCaptor.getValue().getExternalEncounterDate());
@@ -61,12 +61,12 @@ class SaveExternalEncounterTest {
     public void saveDuplicatedExternalEncounter() {
         when(externalPatientStorage.findByExternalId(any()))
                 .thenReturn(java.util.Optional.of(new ExternalPatientBo(23, "2")));
-        when(externalEncounterStorge.existsExternalEncounter(any()))
+        when(externalEncounterStorage.existsExternalEncounter(any()))
                 .thenReturn(true);
         Exception exception = Assertions.assertThrows(SaveExternalEncounterException.class, () ->
                 saveExternalEncounter.run(getValidExternalEncounter()));
         assertEquals("El id de encuentro externo 1 ya existe", exception.getMessage());
-        verify(externalEncounterStorge, times(0)).save(any());
+        verify(externalEncounterStorage, times(0)).save(any());
     }
 
     @Test
@@ -76,8 +76,8 @@ class SaveExternalEncounterTest {
         Exception exception = Assertions.assertThrows(SaveExternalEncounterException.class, () ->
                 saveExternalEncounter.run(getValidExternalEncounter()));
         assertEquals("El id externo 2 no existe", exception.getMessage());
-        verify(externalEncounterStorge, times(0)).existsExternalEncounter(any());
-        verify(externalEncounterStorge, times(0)).save(any());
+        verify(externalEncounterStorage, times(0)).existsExternalEncounter(any());
+        verify(externalEncounterStorage, times(0)).save(any());
     }
 
     @Test
