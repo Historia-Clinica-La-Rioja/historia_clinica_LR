@@ -22,8 +22,6 @@
     </properties>
 
     <dependencies>
-
-
         <dependency>
             <groupId>ar.lamansys.hsi</groupId>
             <artifactId>hospital-shared</artifactId>
