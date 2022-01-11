@@ -62,13 +62,15 @@ public class PatientSearchQuery {
                 " person.identificationTypeId, \n" +
                 " person.identificationNumber, \n" +
                 " person.birthDate, \n" +
+                " personExtended.nameSelfDetermination, \n" +
                 " type.active \n");
     }
 
     public QueryPart from() {
         return new QueryPart("Patient as patient \n" +
                 "join Person as person on (patient.personId = person.id) \n" +
-                "join PatientType as type on (patient.typeId = type.id) \n"
+                "join PatientType as type on (patient.typeId = type.id) \n" +
+                "join PersonExtended as personExtended on (person.id = personExtended.id) \n"
         );
     }
 
@@ -146,6 +148,13 @@ public class PatientSearchQuery {
         return new QueryPart(String.join(joiningOperatorString, whereString));
     }
 
+    public QueryPart whereWithNameSelfDeterminationAttribute(Integer clauseComparator) {
+        String clauseFormat = getClauseFormat(clauseComparator);
+        firstName = (QueryStringHelper.escapeSql(firstName)).toUpperCase();
+        String clause = String.format(clauseFormat, "personExtended.nameSelfDetermination", firstName);
+        return new QueryPart(clause);
+    }
+
     private String getClauseFormat(Integer clauseComparator) {
         String clauseFormat;
         if (clauseComparator.equals(EQUAL_COMPARATOR))
@@ -178,7 +187,7 @@ public class PatientSearchQuery {
                 );
         diagnosisByDocuments.forEach((id,v) -> {
             Object[] tuple = v.get(0);
-            result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], 0)); //rating no se usa, seteo 0
+            result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[11], 0, (String) tuple[10])); //rating no se usa, seteo 0
         });
         return result;
     }

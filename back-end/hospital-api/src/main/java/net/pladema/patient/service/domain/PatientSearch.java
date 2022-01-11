@@ -16,6 +16,7 @@ public class PatientSearch {
 	private Integer idPatient;
 	private Boolean activo;
 	private float ranking;
+	private String nameSelfDetermination;
 	
 	public PatientSearch(Person person, int idPatient, boolean activo, int ranking) {
 		this.person = person;

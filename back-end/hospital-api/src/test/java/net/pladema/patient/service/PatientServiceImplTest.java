@@ -1,5 +1,6 @@
 package net.pladema.patient.service;
 
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.audit.repository.HospitalAuditRepository;
 import net.pladema.federar.services.FederarService;
@@ -13,6 +14,7 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.impl.PatientServiceImpl;
 import net.pladema.patient.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.Person;
+import net.pladema.person.repository.entity.PersonExtended;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,8 @@ class PatientServiceImplTest extends UnitRepository {
 
     private PatientService patientService;
 
+    private FeatureFlagsService featureFlagsService;
+
     @BeforeEach
     void setUp(){
         patientService = new PatientServiceImpl(
@@ -54,7 +58,8 @@ class PatientServiceImplTest extends UnitRepository {
                 privateHealthInsuranceDetailsRepository,
                 federarService,
                 hospitalAuditRepository,
-                patientAuditRepository
+                patientAuditRepository,
+                featureFlagsService
                 );
     }
 
@@ -103,6 +108,10 @@ class PatientServiceImplTest extends UnitRepository {
             mockedPatient.setPersonId(mockedPersonId);
             mockedPatient.setTypeId(patientTypeId);
             save(mockedPatient);
+
+            PersonExtended mockedPersonExtended = new PersonExtended();
+            mockedPersonExtended.setId(mockedPersonId);
+            save(mockedPersonExtended);
         }
     }
 }
