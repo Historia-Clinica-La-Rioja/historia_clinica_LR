@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, ReferenceDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { removeFrom } from '@core/utils/array.utils';
-import { ReferenceComponent } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
+import { HCEPersonalHistory, ReferenceComponent } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
@@ -62,10 +62,10 @@ export class OdontologyReferenceService {
 		});
 		dialogRef.afterClosed().subscribe(reference => {
 			if (reference.data) {
-				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [] }
+				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [], referenceProblems: reference.problems }
 				if (reference.files.length) {
 					let referenceIds: number[] = [];
-					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
+					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds, referenceProblems: reference.problems }
 				}
 				this.references.push(ref);
 				this.odontologyReferences.push(reference.data);
@@ -122,10 +122,15 @@ export class OdontologyReferenceService {
 			reference.referenceIds = referenceFilesIds;
 		});
 	}
+	
+	getReferenceProblems(referenceId: number): HCEPersonalHistory[] {
+		return this.references[referenceId].referenceProblems
+	}
 }
 
 export interface Reference {
 	referenceNumber: number;
 	referenceFiles: File[];
 	referenceIds: number[];
+	referenceProblems: HCEPersonalHistory[];
 }

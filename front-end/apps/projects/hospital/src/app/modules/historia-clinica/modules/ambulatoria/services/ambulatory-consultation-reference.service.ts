@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, ReferenceDto } from '@api-rest/api-model';
+import {CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceDto} from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { removeFrom } from '@core/utils/array.utils';
@@ -8,18 +8,20 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { ReferenceComponent } from '../dialogs/reference/reference.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { HCEPersonalHistory, ReferenceComponent } from '../dialogs/reference/reference.component';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AmbulatoryConsultationReferenceService {
 
-	specialties: ClinicalSpecialtyDto[];
+	specialties: ClinicalSpecialtyDto[] = [];
 	careLines: CareLineDto[];
 	private readonly columns: TableColumnConfig[];
-	outpatientReferences: ReferenceDto[];
-	references: Reference[];
+	outpatientReferences: ReferenceDto[] = [];
+	references: Reference[] = [];
+	referenceProblems: HCEPersonalHistoryDto[] = [];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -36,15 +38,9 @@ export class AmbulatoryConsultationReferenceService {
 			},
 		];
 
-		this.outpatientReferences = [];
-
-		this.references = [];
-
-		this.specialties = [];
-
 		this.careLineService.getCareLines().subscribe(
-			lineCare => {
-				this.careLines = lineCare;
+			careLines => {
+				this.careLines = careLines;
 				this.careLines.forEach(careLine => {
 					this.clinicalSpecialtyCareLine.getSpecialtyCareLine(careLine.id).subscribe((specialty: ClinicalSpecialtyDto[]) => {
 						specialty.forEach((specialty: ClinicalSpecialtyDto) => this.specialties.push(specialty));
@@ -63,10 +59,10 @@ export class AmbulatoryConsultationReferenceService {
 		});
 		dialogRef.afterClosed().subscribe(reference => {
 			if (reference.data) {
-				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [] }
+				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [], referenceProblems:  reference.problems}
 				if (reference.files.length) {
 					let referenceIds: number[] = [];
-					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
+					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds, referenceProblems:  reference.problems}
 				}
 				this.references.push(ref);
 				this.outpatientReferences.push(reference.data);
@@ -101,7 +97,6 @@ export class AmbulatoryConsultationReferenceService {
 
 	getReferences(): Reference[] {
 		return this.references;
-
 	}
 
 	addFileIdAt(index: number, fileId: number): void {
@@ -123,10 +118,15 @@ export class AmbulatoryConsultationReferenceService {
 			reference.referenceIds = referenceFilesIds;
 		});
 	}
+	
+	getReferenceProblems(referenceId: number): HCEPersonalHistory[]{
+		return this.references[referenceId].referenceProblems
+	}
 }
 
 export interface Reference {
 	referenceNumber: number;
 	referenceFiles: File[];
 	referenceIds: number[];
+	referenceProblems: HCEPersonalHistory[];
 }
