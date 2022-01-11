@@ -238,7 +238,7 @@ const messages = {
             createRelated: 'Crear Profesión | Especialidad',
         }, 
         users: {
-            name: 'Admin |||| Admins',
+            name: 'Usuario |||| Usuarios',
             fields: {
                 username: 'Nombre de usuario',
                 personId: 'Persona',
