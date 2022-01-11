@@ -67,6 +67,7 @@ const messages = {
             "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica",
             "cuit-duplicated": "El CUIT ya se encuentra asociado a otra cobertura médica",
             "invalid-cuit": "El CUIT debe ser numérico",
+            "plan-exists": "El plan ya se encuentra asociado a la cobertura médica",
         }
     },
     files: {
@@ -362,10 +363,19 @@ const messages = {
                 type: 'Tipo',
                 plan: 'Plan',
                 rnos: 'Rnos',
-                acronym: 'Acrónimo'
+                acronym: 'Acrónimo',
+                plans: 'Planes'
             },
             createRelated: 'Crear Cobertura médica'
 
+        },
+        privatehealthinsuranceplans: {
+            name: 'Plan |||| Planes',
+            fields: {
+                privateHealthInsuranceId: 'Prepaga',
+                plan: 'Plan',
+            },
+            addRelated: 'Agregar plan',
         },
     },
 };

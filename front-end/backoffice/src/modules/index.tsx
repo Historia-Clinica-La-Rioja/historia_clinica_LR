@@ -32,6 +32,8 @@ import documenttypes from "./documenttypes";
 import documentfiles from "./documentfiles";
 import restClientMeasures from "./rest-client-measures";
 import medicalCoverage from "./medicalcoverage";
+import privatehealthinsuranceplans from "./privatehealthinsuranceplans";
+
 
 import { ROOT, ADMINISTRADOR } from './roles';
 
@@ -78,6 +80,8 @@ const resourcesAdminRoot = [
     <Resource name="departments" {...departments} />,
     <Resource name="medicalcoverages" {...medicalCoverage} />,
     <Resource name="medicalcoveragetypes" />,
+    <Resource name="privatehealthinsuranceplans" {...privatehealthinsuranceplans} />,
+
 
     // Ampliación
     // 
