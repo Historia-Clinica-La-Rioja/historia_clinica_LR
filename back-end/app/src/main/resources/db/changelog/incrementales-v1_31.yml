@@ -113,3 +113,51 @@ databaseChangeLog:
                     columnNames: cuit
                     constraintName: UQ_cuit
 
+    - changeSet:
+        id: private_health_insurance_plan-createTable
+        comment: Create table private_health_insurance_plan
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: private_health_insurance_plan
+              columns:
+                - column:
+                      autoIncrement: true
+                      constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_private_health_insurance_plan
+                      name: id
+                      type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: private_health_insurance_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: plan
+                    type: varchar(10)
+          - addUniqueConstraint:
+              tableName: private_health_insurance_plan
+              columnNames: private_health_insurance_id, plan
+              constraintName: UQ_private_health_insurance_plan
+          - addForeignKeyConstraint:
+              baseColumnNames: private_health_insurance_id
+              baseTableName: private_health_insurance_plan
+              constraintName: FK_private_health_insurance_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: private_health_insurance
+              validate: true
+
+    - changeSet:
+        id: private_health_insurance_plan-data
+        comment: Actualizar datos private_health_insurance_plan
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO private_health_insurance_plan(private_health_insurance_id,plan) SELECT * FROM private_health_insurance WHERE plan NOTNULL;
