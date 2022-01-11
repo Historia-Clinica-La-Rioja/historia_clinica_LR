@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Create,
     FormDataConsumer,
-    maxLength,
+    maxLength, number,
     ReferenceInput,
     required,
     SelectInput,
@@ -21,7 +21,7 @@ const MedicalCoveragePlanField = ({formData}) => {
 const MedicalCoverageRnosField = ({formData}) => {
     return formData.type !== 2 ? null : (
             <TextInput source="rnos" validate={[
-                maxLength(10)]}/>
+                maxLength(10), number()]}/>
     )
 }
 

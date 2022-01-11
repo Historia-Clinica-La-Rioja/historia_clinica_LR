@@ -62,6 +62,9 @@ const messages = {
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución",
         "care-line":{
             "clinical-specialty-exists": "La especialidad clínica ya se encuentra asociada a la línea de cuidado"
+        },
+        "medical-coverage":{
+            "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica"
         }
     },
     files: {

@@ -13,6 +13,7 @@ import net.pladema.patient.repository.entity.PrivateHealthInsurance;
 import net.pladema.person.repository.HealthInsuranceRepository;
 import net.pladema.person.repository.entity.HealthInsurance;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -93,8 +94,10 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     }
 
     private BackofficeCoverageDto create(BackofficeCoverageDto dto) {
+        if (dto.getRnos() != null && healthInsuranceRepository.existsByRnos(dto.getRnos()))
+            throw new BackofficeValidationException("medical-coverage.rnos-duplicated");
         MedicalCoverage entity = (dto.getType()==2)
-            ? new HealthInsurance(dto.getId(),dto.getName(),dto.getRnos(),dto.getAcronym())
+                ? new HealthInsurance(dto.getId(),dto.getName(),dto.getRnos(),dto.getAcronym())
                 : new PrivateHealthInsurance(dto.getId(),dto.getName(),dto.getPlan());
         entity = medicalCoverageRepository.save(entity);
         return mapToDto(entity);
