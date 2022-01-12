@@ -105,6 +105,7 @@ export class OdontogramComponent implements OnInit {
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
 		const dialogRef = this.dialog.open(ToothDialogComponent, {
 			width: '464px',
+			disableClose: true,
 			data: {
 				tooth,
 				quadrantCode,
