@@ -13,7 +13,7 @@
     <artifactId>sgx-mqtt</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>sgx-mqtt</name>
-    <description> Patient MQTT call</description>
+    <description>Patient MQTT call</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

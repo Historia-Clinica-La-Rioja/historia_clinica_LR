@@ -35,7 +35,7 @@ public class OdontologyConceptsController {
     }
 
     @GetMapping("/diagnostics")
-    List<OdontologyConceptDto> getDiagnostics() {
+    public List<OdontologyConceptDto> getDiagnostics() {
         LOG.debug("No input parameters");
         List<OdontologyConceptDto> result = odontologyConceptMapper.fromDiagnosticBoList(getDiagnosticsService.run());
         LOG.debug("Output size -> {}", result.size());
@@ -44,7 +44,7 @@ public class OdontologyConceptsController {
     }
 
     @GetMapping("/procedures")
-    List<OdontologyConceptDto> getProcedures() {
+    public List<OdontologyConceptDto> getProcedures() {
         LOG.debug("No input parameters");
         List<OdontologyConceptDto> result = odontologyConceptMapper.fromProcedureBoList(getProceduresService.run());
         LOG.debug("Output size -> {}", result.size());
