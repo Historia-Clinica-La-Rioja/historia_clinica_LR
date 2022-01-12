@@ -196,6 +196,10 @@
 											{{ bloodType.description }}
 										</mat-option>
 									</mat-select>
+									<button id="clear_blood_type" type="button" mat-button *ngIf="datosAntropometricosNuevaConsultaService.getForm().value.bloodType && !datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" matSuffix
+										color="warn" mat-icon-button (click)="clear(datosAntropometricosNuevaConsultaService.getForm().controls.bloodType); $event.stopPropagation()">
+										<mat-icon>close</mat-icon>
+									</button>
 								</mat-form-field>
 								<ng-container *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" >
 									<mat-icon  class="field-icon"  color="primary">error_outline</mat-icon>

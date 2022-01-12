@@ -18,6 +18,10 @@
 								{{identificationType.description}}
 							</mat-option>
 						</mat-select>
+						<button id="clear_identification_type" type="button" mat-button *ngIf="personalInformationForm.value.identificationTypeId" matSuffix
+							color="warn" mat-icon-button (click)="clear(personalInformationForm.controls.identificationTypeId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 				</div>
 				<div fxFlex="30" fxFlex.lt-md="100">

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnomedService } from '../../../../services/snomed.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { Problema } from '../../../../services/problemas.service';
@@ -525,6 +525,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 
 		return outpatientProblemDto;
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 }
 

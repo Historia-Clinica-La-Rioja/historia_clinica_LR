@@ -73,6 +73,10 @@
                                 {{institution.name | translate}}
                             </mat-option>
                         </mat-select>
+                        <button id="clear_institution" type="button" mat-button *ngIf="formReference.value.institution" matSuffix
+                            color="warn" mat-icon-button (click)="clear(formReference.controls.institution); $event.stopPropagation()">
+                            <mat-icon>close</mat-icon>
+                        </button>
                     </mat-form-field>
                 </div>
 

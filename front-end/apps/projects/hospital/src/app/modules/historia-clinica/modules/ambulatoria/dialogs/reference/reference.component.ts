@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CareLineDto, ClinicalSpecialtyDto, DateDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -189,6 +189,10 @@ export class ReferenceComponent implements OnInit {
 	private mapToString(date: DateDto): string {
 		return date.year.toString() + date.month.toString() + date.day.toString();
 
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 
 }

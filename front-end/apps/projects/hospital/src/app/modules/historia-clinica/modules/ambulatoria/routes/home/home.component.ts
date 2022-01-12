@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import {GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto} from '@api-rest/api-model';
+import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto } from '@api-rest/api-model';
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
@@ -13,47 +13,47 @@ import { PERSON } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+	selector: 'app-home',
+	templateUrl: './home.component.html',
+	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
 
-  public personalInformationForm: FormGroup;
-  public genders: GenderDto[];
-  public identificationTypeList: IdentificationTypeDto[];
-  public hasError = hasError;
-  public today: Moment = newMoment();
-  public tableModel: TableModel<PatientSearchDto>;
-  public formSubmitted: boolean;
-  public requiringValues: boolean;
-  public patientResultsLength: number;
-  public readonly validations = PERSON;
-  readonly MAX_RESULT_SIZE: number = 150;
+	public personalInformationForm: FormGroup;
+	public genders: GenderDto[];
+	public identificationTypeList: IdentificationTypeDto[];
+	public hasError = hasError;
+	public today: Moment = newMoment();
+	public tableModel: TableModel<PatientSearchDto>;
+	public formSubmitted: boolean;
+	public requiringValues: boolean;
+	public patientResultsLength: number;
+	public readonly validations = PERSON;
+	readonly MAX_RESULT_SIZE: number = 150;
 
-  private readonly routePrefix;
-  private genderTableView: string[] = [];
+	private readonly routePrefix;
+	private genderTableView: string[] = [];
 
-  minDate = MIN_DATE;
+	minDate = MIN_DATE;
 
-  constructor(
-	private readonly formBuilder: FormBuilder,
-	private readonly personMasterDataService: PersonMasterDataService,
-	private readonly patientService: PatientService,
-	private readonly router: Router,
-	private readonly contextService: ContextService,
-  ) {
-  	this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-  }
+	constructor(
+		private readonly formBuilder: FormBuilder,
+		private readonly personMasterDataService: PersonMasterDataService,
+		private readonly patientService: PatientService,
+		private readonly router: Router,
+		private readonly contextService: ContextService,
+	) {
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
+	}
 
-  ngOnInit(): void {
-	  this.initPersonalInformationForm();
-	  this.setMasterData();
-  }
+	ngOnInit(): void {
+		this.initPersonalInformationForm();
+		this.setMasterData();
+	}
 
-  private initPersonalInformationForm() {
-	this.personalInformationForm = this.formBuilder.group({
+	private initPersonalInformationForm() {
+		this.personalInformationForm = this.formBuilder.group({
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			middleNames: [null, Validators.maxLength(PERSON.MAX_LENGTH.middleNames)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
@@ -61,54 +61,55 @@ export class HomeComponent implements OnInit {
 			genderId: [],
 			identificationNumber: [null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)],
 			identificationTypeId: [],
-			birthDate: []});
-  }
-
-  private setMasterData(): void {
-
-	this.personMasterDataService.getGenders()
-		.subscribe(genders => {
-			this.genders = genders;
-	});
-
-	this.personMasterDataService.getIdentificationTypes()
-		.subscribe(identificationTypes => {
-			this.identificationTypeList = identificationTypes;
-	});
-
-	this.personMasterDataService.getGenders().subscribe(
-		genders => {
-			genders.forEach(gender => {
-				this.genderTableView[gender.id] = gender.description;
-			});
+			birthDate: []
 		});
-  }
-
-  save(): void {
-	const atLeastOneValueSet: boolean = atLeastOneValueInFormGroup(this.personalInformationForm);
-	if (!atLeastOneValueSet) {
-		this.formSubmitted = false;
-		this.requiringValues = true;
-		return;
 	}
 
-	if ((this.personalInformationForm.valid)) {
-		this.formSubmitted = true;
-		this.requiringValues = false;
-		const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
-		this.patientService.searchPatientOptionalFilters(personalInformationReq)
-			.subscribe( (data: LimitedPatientSearchDto) => {
-				this.tableModel = this.buildTable(data.patientList);
-				this.patientResultsLength = data.actualPatientSearchSize;
+	private setMasterData(): void {
+
+		this.personMasterDataService.getGenders()
+			.subscribe(genders => {
+				this.genders = genders;
+			});
+
+		this.personMasterDataService.getIdentificationTypes()
+			.subscribe(identificationTypes => {
+				this.identificationTypeList = identificationTypes;
+			});
+
+		this.personMasterDataService.getGenders().subscribe(
+			genders => {
+				genders.forEach(gender => {
+					this.genderTableView[gender.id] = gender.description;
+				});
 			});
 	}
 
-  }
+	save(): void {
+		const atLeastOneValueSet: boolean = atLeastOneValueInFormGroup(this.personalInformationForm);
+		if (!atLeastOneValueSet) {
+			this.formSubmitted = false;
+			this.requiringValues = true;
+			return;
+		}
 
-  private buildTable(data: PatientSearchDto[]): TableModel<any> {
-	return {
-		columns: [
-			{
+		if ((this.personalInformationForm.valid)) {
+			this.formSubmitted = true;
+			this.requiringValues = false;
+			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
+			this.patientService.searchPatientOptionalFilters(personalInformationReq)
+				.subscribe((data: LimitedPatientSearchDto) => {
+					this.tableModel = this.buildTable(data.patientList);
+					this.patientResultsLength = data.actualPatientSearchSize;
+				});
+		}
+
+	}
+
+	private buildTable(data: PatientSearchDto[]): TableModel<any> {
+		return {
+			columns: [
+				{
 					columnDef: 'patiendId',
 					header: 'pacientes.search.ROW_TABLE',
 					text: (row) => row.idPatient
@@ -134,9 +135,9 @@ export class HomeComponent implements OnInit {
 					text: (row) => (row.person.birthDate === undefined) ? '' : momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
 				},
 				{
-				 	columnDef: 'gender',
-				 	header: 'Sexo',
-				 	text: (row) => this.genderTableView[row.person.genderId]
+					columnDef: 'gender',
+					header: 'Sexo',
+					text: (row) => this.genderTableView[row.person.genderId]
 				},
 				{
 					columnDef: 'action',
@@ -150,10 +151,14 @@ export class HomeComponent implements OnInit {
 						}
 					}
 				},
-		],
-		data,
-		enablePagination: true
-	};
-  }
+			],
+			data,
+			enablePagination: true
+		};
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
+	}
 
 }
