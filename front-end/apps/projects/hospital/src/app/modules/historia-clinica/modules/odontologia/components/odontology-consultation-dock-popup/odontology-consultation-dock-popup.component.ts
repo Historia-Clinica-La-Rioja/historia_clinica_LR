@@ -11,7 +11,7 @@ import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
 import { newMoment } from "@core/utils/moment.utils";
-import { ClinicalSpecialtyDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, DateDto, HCEPersonalHistoryDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto, OdontologyDiagnosticDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ActionsNewConsultationService } from '../../services/actions-new-consultation.service';
@@ -33,6 +33,7 @@ import { OdontologyReferenceService, Reference } from '../../services/odontology
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
+import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -196,11 +197,18 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {
+
+		let problemsToUpdate = !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions.length;
+
+		if (odontologyDto.references.length) {
+			problemsToUpdate = !!this.problemsToUpdate(odontologyDto).length || !!odontologyDto.dentalActions.length;
+		}
+
 		return {
 			allergies: !!odontologyDto.allergies?.length,
 			personalHistories: !!odontologyDto.personalHistories?.length,
 			medications: !!odontologyDto.medications?.length,
-			problems: !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions?.length
+			problems: problemsToUpdate,
 		};
 	}
 
@@ -271,6 +279,50 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		const filesToDelete = this.odontologyReferenceService.getReferenceFilesIds();
 		this.referenceFileService.deleteReferenceFiles(filesToDelete);
 		this.odontologyReferenceService.setReferenceFilesIds([]);
+	}
+
+	private problemsToUpdate(odontologyDto: OdontologyConsultationDto): OdontologyDiagnosticDto[] {
+		const odontologyDiagnosticDto = [];
+
+		odontologyDto.diagnostics?.forEach( diagnostic => odontologyDiagnosticDto.push(diagnostic));
+
+		const references: Reference[] = this.odontologyReferenceService.getReferences();
+		
+		references.forEach(reference => {
+			const referenceProblems = this.odontologyReferenceService.getReferenceProblems(reference.referenceNumber);
+			referenceProblems.forEach(referenceProblem => {
+				const odontoDiagnosticDto = this.mapToOdontologyDiagnosticDto(referenceProblem);
+				const existProblem = odontologyDiagnosticDto.find(problem => problem.snomed.sctid === odontoDiagnosticDto.snomed.sctid);
+				if (!existProblem) {
+					odontologyDiagnosticDto.push(odontoDiagnosticDto);
+				}
+			});
+		});
+
+		return odontologyDiagnosticDto;
+	}
+	
+	private mapToOdontologyDiagnosticDto(problem: HCEPersonalHistory): OdontologyDiagnosticDto {
+		return {
+			chronic: problem.chronic,
+			severity: problem.hcePersonalHistoryDto.severity,
+			snomed: problem.hcePersonalHistoryDto.snomed,
+			startDate: this.buildDateDto(problem.hcePersonalHistoryDto.startDate),
+		}
+	}
+
+	private buildDateDto(date: string): DateDto {
+		if (date) {
+			const dateSplit = date.split("-");
+			return (
+				{
+					year: Number(dateSplit[0]),
+					month: Number(dateSplit[1]),
+					day: Number(dateSplit[2]),
+				}
+			)
+		}
+		return null;
 	}
 }
 

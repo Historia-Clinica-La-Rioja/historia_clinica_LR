@@ -15,7 +15,7 @@ import {
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HCEPersonalHistoryDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnvsToReportDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -41,6 +41,7 @@ import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-sp
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
+import { HCEPersonalHistory } from '../reference/reference.component';
 
 const TIME_OUT = 5000;
 
@@ -243,7 +244,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	private uploadReferencesFileAndCreateConsultation(nuevaConsulta: CreateOutpatientDto) {
-
 		let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
 		if (!references.length) {
 			this.goToCreateConsultation(nuevaConsulta);
@@ -281,6 +281,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
+		const problemsToUpdate = (!nuevaConsulta.references.length) ? nuevaConsulta.problems : this.problemsToUpdate(nuevaConsulta);
+		
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
@@ -322,7 +324,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				vitalSigns: !!nuevaConsultaDto.vitalSigns,
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
-				problems: !!nuevaConsultaDto.problems?.length
+				problems: !!problemsToUpdate.length,
 			};
 		}
 	}
@@ -489,6 +491,36 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 
 		return result;
+	}
+	private mapToOutpatientProblemDto(problem: HCEPersonalHistory): OutpatientProblemDto {
+		return {
+			chronic: problem.chronic,
+			severity: problem.hcePersonalHistoryDto.severity,
+			snomed: problem.hcePersonalHistoryDto.snomed,
+			startDate: problem.hcePersonalHistoryDto.startDate,
+			statusId: problem.hcePersonalHistoryDto.statusId,
+		}
+	}
+
+	private problemsToUpdate(nuevaConsultaDto: CreateOutpatientDto): OutpatientProblemDto[] {
+		const outpatientProblemDto: OutpatientProblemDto[] = [];
+
+		nuevaConsultaDto.problems?.forEach(problem => outpatientProblemDto.push(problem));
+
+		const references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+
+		references.forEach(reference => {
+			const referenceProblems = this.ambulatoryConsultationReferenceService.getReferenceProblems(reference.referenceNumber);
+			referenceProblems.forEach(referenceProblem => {
+				const outProblemDto = this.mapToOutpatientProblemDto(referenceProblem);
+				const existProblem = outpatientProblemDto.find(problem => problem.snomed.sctid === outProblemDto.snomed.sctid);
+				if (!existProblem) {
+					outpatientProblemDto.push(outProblemDto);
+				}
+			});
+		});
+
+		return outpatientProblemDto;
 	}
 }
 
