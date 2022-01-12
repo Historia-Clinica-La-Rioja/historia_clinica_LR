@@ -77,6 +77,9 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si esta habilitado la opcion para descargar los documentos pdfs generados en la historia clinica desde el backoffice")
     HABILITAR_DESCARGA_DOCUMENTOS_PDF,
+
+    @Label("Indica si esta habilitada la opción para visualizar el nombre autopercibido del paciente en lugar del nombre del documento")
+    HABILITAR_NOMBRE_AUTOPERCIBIDO,
     ;
 
     public boolean isActive() {
