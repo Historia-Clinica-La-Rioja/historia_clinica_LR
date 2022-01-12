@@ -15,7 +15,7 @@ import {
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HCEPersonalHistoryDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnvsToReportDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -282,7 +282,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
 		const problemsToUpdate = (!nuevaConsulta.references.length) ? nuevaConsulta.problems : this.problemsToUpdate(nuevaConsulta);
-		
+
+		if (nuevaConsulta.references.length) {
+			nuevaConsulta.problems = problemsToUpdate;
+		}
+
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
