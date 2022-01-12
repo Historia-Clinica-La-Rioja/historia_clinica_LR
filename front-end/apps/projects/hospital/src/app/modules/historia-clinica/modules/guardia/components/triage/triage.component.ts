@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { DoctorsOfficeDto } from '@api-rest/api-model';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
@@ -58,5 +58,9 @@ export class TriageComponent implements OnInit {
 		if (event.isUserInput) {
 			this.doctorsOfficeIdChange.emit(choosed);
 		}
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 }
