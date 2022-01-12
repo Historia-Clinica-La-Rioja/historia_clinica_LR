@@ -25,6 +25,7 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.DoctorsBo;
+import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicDataPersonDto;
@@ -130,8 +131,8 @@ public class PatientController {
 		} catch (IOException e) {
 			LOG.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
 		}
-		LimitedPatientSearchDto result = this.patientMapper.toLimitedPatientSearchDto(
-				patientService.searchPatientOptionalFilters(searchFilter));
+		LimitedPatientSearchBo limitedPatientSearchBo = patientService.searchPatientOptionalFilters(searchFilter);
+		LimitedPatientSearchDto result = mapToLimitedPatientSearchDto(limitedPatientSearchBo);
 
 		return ResponseEntity.ok(result);
 	}
@@ -333,5 +334,17 @@ public class PatientController {
 
 		LOG.debug("Output -> {}", optPhoto);
 		return optPhoto;
+	}
+
+	private LimitedPatientSearchDto mapToLimitedPatientSearchDto(LimitedPatientSearchBo limitedPatientSearchBo) {
+		LimitedPatientSearchDto result = this.patientMapper.toLimitedPatientSearchDto(limitedPatientSearchBo);
+		result.getPatientList().stream().forEach(p -> {
+			limitedPatientSearchBo.getPatientList().stream().forEach( pl -> {
+				if(pl.getIdPatient().equals(p.getIdPatient())) {
+					p.getPerson().setNameSelfDetermination(pl.getNameSelfDetermination());
+				}
+			});
+		});
+		return result;
 	}
 }

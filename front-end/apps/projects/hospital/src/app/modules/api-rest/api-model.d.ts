@@ -298,6 +298,7 @@ export interface BasicDataPersonDto extends Serializable {
     identificationTypeId: number;
     lastName: string;
     middleNames: string;
+    nameSelfDetermination: string;
     otherLastNames: string;
 }
 
@@ -309,6 +310,7 @@ export interface BasicPatientDto extends Serializable {
 
 export interface BasicPersonalDataDto extends IBasicPersonalData {
     genderId: number;
+    nameSelfDetermination: string;
 }
 
 export interface BedCategoriesDataDto {
@@ -762,6 +764,7 @@ export interface EmergencyCarePersonDto {
     firstName: string;
     identificationNumber: string;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface EmergencyCareUserDto {
@@ -1223,6 +1226,7 @@ export interface InternmentPatientDto {
     identificationTypeId: number;
     internmentId: number;
     lastName: string;
+    nameSelfDetermination: string;
     patientId: number;
 }
 
@@ -1711,6 +1715,7 @@ export interface PatientDto {
     fullName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface PatientInfoDto {

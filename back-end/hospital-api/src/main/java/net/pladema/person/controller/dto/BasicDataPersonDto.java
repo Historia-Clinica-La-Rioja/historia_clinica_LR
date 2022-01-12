@@ -46,6 +46,8 @@ public class BasicDataPersonDto implements Serializable {
 
     private LocalDate birthDate;
 
+    private String nameSelfDetermination;
+
     public String completeName(){
         if (lastName == null && firstName == null && middleNames == null && otherLastNames==null) {
             return null;

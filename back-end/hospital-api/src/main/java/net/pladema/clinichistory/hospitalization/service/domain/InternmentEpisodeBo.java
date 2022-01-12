@@ -26,10 +26,10 @@ public class InternmentEpisodeBo implements Serializable {
     private HospitalizationSpecialtyBo specialty;
 
     public InternmentEpisodeBo(Integer internmentEpisodeId, Integer patientId, String firstName, String lastName,
-                               Integer bedId, String bedNumber, Integer roomId, String roomNumber,
-                               ClinicalSpecialty clinicalSpecialty, Integer sectorId, String sector){
+                               String nameSelfDetermination,Integer bedId, String bedNumber, Integer roomId,
+                               String roomNumber, ClinicalSpecialty clinicalSpecialty, Integer sectorId, String sector){
         this.id = internmentEpisodeId;
-        this.patient = new PatientBo(patientId, firstName, lastName);
+        this.patient = new PatientBo(patientId, firstName, lastName, nameSelfDetermination);
         this.bed = new BedBo(bedId, bedNumber, new RoomBo(
                 roomId, roomNumber, new SectorBo(sectorId, sector)));
         clinicalSpecialty.fixSpecialtyType();

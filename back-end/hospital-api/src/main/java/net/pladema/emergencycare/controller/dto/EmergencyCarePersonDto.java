@@ -17,4 +17,6 @@ public class EmergencyCarePersonDto {
 
 	String identificationNumber;
 
+	String nameSelfDetermination;
+
 }

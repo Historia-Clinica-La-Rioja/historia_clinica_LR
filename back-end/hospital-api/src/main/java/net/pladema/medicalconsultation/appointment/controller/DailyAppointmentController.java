@@ -1,6 +1,8 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.medicalconsultation.appointment.controller.dto.AttentionTypeReportDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AttentionTypeReportItemDto;
 import net.pladema.medicalconsultation.appointment.service.DailyAppointmentReport;
@@ -60,16 +62,20 @@ public class DailyAppointmentController {
 
     private final PdfService pdfService;
 
+    private final FeatureFlagsService featureFlagsService;
+
     public DailyAppointmentController(DailyAppointmentReport dailyAppointmentReport,
                                       LocalDateMapper localDateMapper,
                                       PatientExternalService patientExternalService,
-                                      DiaryService diaryService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, PdfService pdfService){
+                                      DiaryService diaryService, HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+                                      PdfService pdfService, FeatureFlagsService featureFlagsService){
         this.dailyAppointmentReport = dailyAppointmentReport;
         this.localDateMapper = localDateMapper;
         this.patientExternalService = patientExternalService;
         this.diaryService = diaryService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.pdfService = pdfService;
+        this.featureFlagsService = featureFlagsService;
     }
 
     @GetMapping("/")
@@ -137,6 +143,10 @@ public class DailyAppointmentController {
     private AttentionTypeReportItemDto createPatientAssociatedReportItem(AttentionTypeReportItemBo attentionTypeReportItemBo){
         LOG.debug("Input parameters -> attentionTypeReportItemBo {}", attentionTypeReportItemBo);
         BasicDataPersonDto personData = patientExternalService.getBasicDataFromPatient(attentionTypeReportItemBo.getPatientId()).getPerson();
+
+        if(featureFlagsService.isOn(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO) && personData.getNameSelfDetermination() != null)
+            personData.setFirstName(personData.getNameSelfDetermination());
+
         AttentionTypeReportItemDto newReportItem = new AttentionTypeReportItemDto(attentionTypeReportItemBo, personData);
         if (attentionTypeReportItemBo.getPatientMedicalCoverageId() != null){
             PatientMedicalCoverageDto patientMedicalCoverageDto = patientExternalService.getCoverage(attentionTypeReportItemBo.getPatientMedicalCoverageId());
