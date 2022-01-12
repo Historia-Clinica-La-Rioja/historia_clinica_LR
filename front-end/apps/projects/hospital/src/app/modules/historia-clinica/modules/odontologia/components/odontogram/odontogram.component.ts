@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ClinicalSpecialtyDto, OdontologyConsultationIndicesDto, ReferenceDto, ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
+import { OdontologyConsultationIndicesDto, ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
 import { deepClone } from '@core/utils/core.utils';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
 import { ToothAction, Action, ActionType } from '../../services/actions.service';
@@ -15,10 +15,10 @@ import { OdontologyConsultationService } from '../../api-rest/odontology-consult
 import { Observable } from 'rxjs';
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { ReferenceNotificationComponent } from '@historia-clinica/modules/ambulatoria/dialogs/reference-notification/reference-notification.component';
-import { CounterreferenceDockPopupComponent } from '@historia-clinica/modules/ambulatoria/dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
 import { MedicacionesService } from '@historia-clinica/modules/ambulatoria/services/medicaciones.service';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+import { ReferenceNotificationInfo, ReferenceNotificationService } from '@historia-clinica/services/reference-notification.service';
+import { REFERENCE_CONSULTATION_TYPE } from '@historia-clinica/modules/ambulatoria/constants/reference-masterdata';
 
 
 @Component({
@@ -41,7 +41,25 @@ export class OdontogramComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly medicacionesService: MedicacionesService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
-	) { }
+	) { 
+		this.activatedRoute.paramMap.subscribe(
+			(params) => {
+				this.patientId = Number(params.get('idPaciente'));
+				this.odontogramRestService.getOdontogramDrawings(this.patientId).subscribe(
+					(records: ToothDrawingsDto[]) => {
+						records.forEach(record => {
+							this.currentDraws[record.toothSctid] = mapRecords(record.drawings);
+						})
+					}
+				);
+				this.refNotificationInfo = {
+					patientId: this.patientId,
+					consultationType: REFERENCE_CONSULTATION_TYPE.ODONTOLOGY
+				}
+				this.referenceNotificationService = new ReferenceNotificationService(this.refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
+		});
+
+	}
 
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
 
@@ -50,7 +68,8 @@ export class OdontogramComponent implements OnInit {
 	actionsFrom = {};
 	private patientId: number;
 	consultationsIndices$: Observable<OdontologyConsultationIndicesDto[]>;
-	specialtiesId: number[] = [];
+	referenceNotificationService: ReferenceNotificationService;
+	refNotificationInfo: ReferenceNotificationInfo;
 	ngOnInit(): void {
 
 		this.odontogramRestService.getOdontogram().subscribe(
@@ -72,19 +91,15 @@ export class OdontogramComponent implements OnInit {
 		this.odontogramService.actionedTeeth.forEach(actionedTooth => {
 			this.actionsFrom[actionedTooth.tooth.snomed.sctid] = actionedTooth.actions;
 		});
-		this.activatedRoute.paramMap.subscribe(
-			(params) => {
-				this.patientId = Number(params.get('idPaciente'));
-				this.odontogramRestService.getOdontogramDrawings(this.patientId).subscribe(
-					(records: ToothDrawingsDto[]) => {
-						records.forEach(record => {
-							this.currentDraws[record.toothSctid] = mapRecords(record.drawings);
-						})
-					}
-				)
-			});
 
 		this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
+		
+		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
+			if (type === REFERENCE_CONSULTATION_TYPE.ODONTOLOGY) {
+				this.openConsultationPopup();
+			}
+		});
+
 	}
 
 	openToothDialog(tooth: ToothDto, quadrantCode: number) {
@@ -131,55 +146,6 @@ export class OdontogramComponent implements OnInit {
 			this.currentDraws[actionedTooth.tooth.snomed.sctid] = actions;
 		});
 		this.odontogramService.resetOdontogram();
-	}
-
-	hasReferenceNotification() {
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe((specialties: ClinicalSpecialtyDto[]) => {
-			this.specialtiesId = specialties.map(specialty => specialty.id);
-			this.referenceService.getReferences(this.patientId, this.specialtiesId).subscribe((references: ReferenceDto[]) => {
-				if (references.length) {
-					this.openReferenceNotification(references);
-				}
-				else {
-					this.openConsultationPopup();
-				}
-			});
-		});
-
-	}
-
-	openReferenceNotification(references: ReferenceDto[]) {
-		const dialogRef = this.dialog.open(ReferenceNotificationComponent, {
-			data: references,
-			autoFocus: false,
-			disableClose: true,
-		})
-		dialogRef.afterClosed().subscribe(counterreference => {
-			if (counterreference === null) {
-				return;
-			}
-			if (counterreference === false) {
-				this.openConsultationPopup();
-			}
-			if (counterreference.isACountisACounterrefer === true) {
-				this.openCounterreference(counterreference.reference);
-			}
-		});
-	}
-
-	openCounterreference(reference: ReferenceDto) {
-		const dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent,
-			{
-				reference: reference,
-				patientId: this.patientId
-			}
-		);
-		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
-			this.medicacionesService.updateMedication();
-			if (fieldsToUpdate) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-			}
-		});
 	}
 }
 
