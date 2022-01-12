@@ -152,6 +152,22 @@ const messages = {
                 provinceCode: 'Código de provincia'
             },
         }, 
+        snvs: {
+            name: 'Institución |||| Instituciones',
+            fields: {
+                groupEventId: 'Grupo evento',
+                eventId: 'Evento',
+                manualClassificationId: 'Clasificación manual',
+                patientId: 'Paciente',
+                snomedSctid: 'Id Snomed',
+                snomedPt: 'Término Snomed',
+                status: 'Estado',
+                responseCode: 'Código de respuesta',
+                professionalId: 'Profesional',
+                sisaRegisteredId: 'Id Sisa',
+                lastUpdate: 'Última actualización'
+            },
+        }, 
         sectors: {
             name: 'Sector |||| Sectores',
             fields: {
