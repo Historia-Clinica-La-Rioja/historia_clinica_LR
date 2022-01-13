@@ -36,7 +36,6 @@ import { PERSON } from '@core/constants/validation-constants';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
-const ROUTE_HOME_PATIENT = 'pacientes';
 
 @Component({
 	selector: 'app-edit-patient',
@@ -364,7 +363,7 @@ export class EditPatientComponent implements OnInit {
 
 	goBack(): void {
 		this.formSubmitted = false;
-		this.router.navigate([this.routePrefix + ROUTE_HOME_PATIENT]);
+		this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
 	}
 
 	private disableFormField() {
