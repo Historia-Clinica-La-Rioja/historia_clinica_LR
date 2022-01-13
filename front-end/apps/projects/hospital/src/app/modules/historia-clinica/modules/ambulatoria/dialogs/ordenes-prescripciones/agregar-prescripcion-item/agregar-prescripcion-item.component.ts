@@ -9,6 +9,7 @@ import { ActionDisplays, TableModel } from '@presentation/components/table/table
 import { hasError } from '@core/utils/form.utils';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { intervalValidation} from "@core/utils/form.utils";
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -28,6 +29,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
 	hasError = hasError;
+	intervalValidation = intervalValidation;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
