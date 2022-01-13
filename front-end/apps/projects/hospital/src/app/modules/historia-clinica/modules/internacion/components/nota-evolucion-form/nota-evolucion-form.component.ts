@@ -6,7 +6,7 @@ import {
 	ImmunizationDto,
 	EvolutionNoteDto
 } from '@api-rest/api-model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
@@ -185,4 +185,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 		window.history.back();
 	}
 
+	clearBloodType(control): void {
+		control.controls.bloodType.reset();
+	}
 }
