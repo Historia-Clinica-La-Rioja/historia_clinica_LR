@@ -31,4 +31,9 @@ public interface HealthInsuranceRepository extends JpaRepository<HealthInsurance
     @Transactional(readOnly = true)
     @Query(value = "SELECT exists (select 1 from health_insurance where rnos = :rnos)", nativeQuery = true)
     boolean existsByRnos(@Param("rnos") Integer rnos);
+
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT exists (select 1 from health_insurance where rnos = :rnos and id != :id)", nativeQuery = true)
+    boolean existsByRnosAndDiferentId(@Param("rnos") Integer rnos,@Param("id") Integer id);
 }

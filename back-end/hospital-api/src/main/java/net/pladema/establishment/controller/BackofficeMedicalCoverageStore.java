@@ -82,7 +82,7 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     }
 
     private BackofficeCoverageDto update(BackofficeCoverageDto dto) {
-        if (dto.getRnos() != null && healthInsuranceRepository.existsByRnos(dto.getRnos()))
+        if (dto.getRnos() != null && healthInsuranceRepository.existsByRnosAndDiferentId(dto.getRnos(),dto.getId()))
             throw new BackofficeValidationException("medical-coverage.rnos-duplicated");
         if(medicalCoverageRepository.existsByCUITandDiferentId(dto.getCuit(),dto.getId()))
                 throw new BackofficeValidationException("medical-coverage.cuit-duplicated");
