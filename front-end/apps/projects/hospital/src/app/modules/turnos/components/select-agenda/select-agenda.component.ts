@@ -19,6 +19,7 @@ import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-pick
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
 import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -151,5 +152,10 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 						.subscribe();
 				}
 			});
+	}
+
+	clear(control: any): void {
+		this.agendaSelected = null;
+		this.router.navigate([`${this.routePrefix}/turnos`]);
 	}
 }
