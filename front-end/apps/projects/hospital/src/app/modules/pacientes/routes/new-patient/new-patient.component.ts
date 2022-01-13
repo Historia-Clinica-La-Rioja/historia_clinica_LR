@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -354,6 +354,10 @@ export class NewPatientComponent implements OnInit {
 	public clearGenderSelfDetermination(): void {
 		this.form.controls.genderSelfDeterminationId.reset();
 		this.showOtherSelfPerceivedGender();
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 
 }

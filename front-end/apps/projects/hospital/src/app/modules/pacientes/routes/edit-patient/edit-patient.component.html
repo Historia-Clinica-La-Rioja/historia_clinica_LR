@@ -185,6 +185,10 @@
 								{{country.description}}
 							</mat-option>
 						</mat-select>
+						<button id="clear_address_country" type="button" mat-button *ngIf="form.value.addressCountryId" matSuffix
+							color="warn" mat-icon-button (click)="clear(form.controls.addressCountryId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
@@ -195,6 +199,10 @@
 								{{province.description}}
 							</mat-option>
 						</mat-select>
+						<button id="clear_address_province" type="button" mat-button *ngIf="form.value.addressProvinceId" matSuffix
+							color="warn" mat-icon-button (click)="clear(form.controls.addressProvinceId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
@@ -206,6 +214,10 @@
 								{{department.description}}
 							</mat-option>
 						</mat-select>
+						<button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartmentId" matSuffix
+							color="warn" mat-icon-button (click)="clear(form.controls.addressDepartmentId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">
@@ -215,6 +227,10 @@
 								{{city.description}}
 							</mat-option>
 						</mat-select>
+						<button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId" matSuffix
+							color="warn" mat-icon-button (click)="clear(form.controls.addressCityId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 					<mat-form-field appearance="outline">
 						<input id="addressPostcode" name="addressPostcode" formControlName="addressPostcode"
@@ -345,6 +361,10 @@
 								{{ethnicity.pt | titlecase}}
 							</mat-option>
 						</mat-select>
+						<button id="clear_address_ethnicity" type="button" mat-button *ngIf="form.value.ethnicityId" matSuffix
+							color="warn" mat-icon-button (click)="clear(form.controls.ethnicityId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 					</mat-form-field>
 				</div>
 				<div>
