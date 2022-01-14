@@ -13,9 +13,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FetchUserInfo {
 
+    public static final String BEARER = "Bearer ";
     private final OAuthUserInfoStorage oAuthUserInfoStorage;
 
     public Optional<OAuthUserInfoBo> run(String accessToken) {
+        if (!accessToken.startsWith(BEARER))
+            accessToken = BEARER + accessToken;
         Optional<OAuthUserInfoBo> result = oAuthUserInfoStorage.getUserInfo(accessToken);
         log.debug("Output -> {}", result);
         return result;
