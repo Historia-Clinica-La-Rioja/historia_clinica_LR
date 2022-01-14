@@ -98,19 +98,20 @@ export class DatosAntropometricosNuevaConsultaService {
 				if (anthropometricData === null)
 					this.notShowPreloadedAnthropometricData = false;
 				else {
-					this.setAnthropometric(anthropometricData.weight?.value , anthropometricData.height?.value, anthropometricData.bloodType?.value);
+					this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value);
 					Object.keys(anthropometricData).forEach((key: string) => {
 						if (anthropometricData[key].effectiveTime != undefined) {
 							this.dateList.push(anthropometricData[key].effectiveTime);
 						}
-				})
-			}});
+					})
+				}
+			});
 	}
 
 	setAnthropometric(weight?: string, height?: string, bloodDescription?: string): void {
 		this.form.get('weight').setValue(weight);
 		this.form.get('height').setValue(height);
-		if(bloodDescription != null )
+		if (bloodDescription != null)
 			this.form.get('bloodType').setValue(this.bloodTypes.find(b => b.description === bloodDescription));
 		this.form.disable();
 	}

@@ -73,37 +73,37 @@ export class SignosVitalesNuevaConsultaService {
 				if (dat.value !== undefined) {
 					this.heartRateErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.respiratoryRate.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.respiratoryRateErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.temperature.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.temperatureErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.bloodOxygenSaturation.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.bloodOxygenSaturationErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.systolicBloodPressure.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.systolicBloodPressureErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.diastolicBloodPressure.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.diastolicBloodPressureErrorSource.next();
 				}
-		});
+			});
 
 	}
 
@@ -219,7 +219,7 @@ export class SignosVitalesNuevaConsultaService {
 		this.notShowPreloadedVitalSignsData = false;
 		const defaultValue = { value: null, effectiveTime: newMoment() };
 		Object.keys(this.form.controls).forEach((key: string) => {
-			this.form.patchValue({ [key]:defaultValue});
+			this.form.patchValue({ [key]: defaultValue });
 		});
 		this.form.enable();
 	}

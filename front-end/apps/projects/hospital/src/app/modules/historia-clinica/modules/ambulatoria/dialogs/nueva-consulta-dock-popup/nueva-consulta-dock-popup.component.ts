@@ -314,7 +314,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					});
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
 				const filesToDelete = nuevaConsulta.references.filter(reference => reference.fileIds.length > 0);
-				if (filesToDelete.length){
+				if (filesToDelete.length) {
 					this.errorToUploadReferenceFiles();
 				}
 			}
