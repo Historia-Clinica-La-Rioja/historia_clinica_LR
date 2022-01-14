@@ -1,7 +1,12 @@
 package net.pladema.sgx.healthinsurance.controller;
 
 import net.pladema.patient.controller.dto.PrivateHealthInsuranceDto;
+import net.pladema.patient.controller.dto.PrivateHealthInsurancePlanDto;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
+import net.pladema.patient.service.domain.PrivateHealthInsurancePlanBo;
+import net.pladema.renaper.controller.dto.MedicalCoverageDto;
+import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
+import net.pladema.sgx.healthinsurance.controller.mapper.HealthInsuranceMapper;
 import net.pladema.sgx.healthinsurance.controller.mapper.PrivateHealthInsuranceMapper;
 import net.pladema.sgx.healthinsurance.service.PrivateHealthInsuranceService;
 import org.slf4j.Logger;
@@ -39,6 +44,27 @@ public class PrivateHealthInsuranceController {
         LOG.debug("{}", "All health insurance");
         Collection<PrivateHealthInsuranceBo> data = privateHealthInsuranceService.getAll();
         Collection<PrivateHealthInsuranceDto> result = privateHealthInsuranceMapper.toPrivateHealthInsuranceDtoList(data);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{privateHealthInsuranceId}")
+    public ResponseEntity<Collection<PrivateHealthInsurancePlanDto>> getAllPlansById(
+            @PathVariable("privateHealthInsuranceId") Integer privateHealthInsuranceId){
+        LOG.debug("Input parameters -> privateHealthInsuranceId {}", privateHealthInsuranceId);
+        Collection<PrivateHealthInsurancePlanBo> data = privateHealthInsuranceService.getAllPlansById(privateHealthInsuranceId);
+        Collection<PrivateHealthInsurancePlanDto> result = privateHealthInsuranceMapper.toPrivateHealthInsurancePlanDtoList(data);
+        LOG.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{privateHealthInsuranceId}/private-health-insurance-plan/{privateHealthInsurancePlanId}")
+    public ResponseEntity<PrivateHealthInsurancePlanDto> getPlanById(
+            @PathVariable("privateHealthInsuranceId") Integer privateHealthInsuranceId,
+            @PathVariable("privateHealthInsurancePlanId") Integer privateHealthInsurancePlanId){
+        LOG.debug("Input parameters -> privateHealthInsuranceId {}, privateHealthInsurancePlanId {}",privateHealthInsuranceId, privateHealthInsurancePlanId);
+        PrivateHealthInsurancePlanBo data = privateHealthInsuranceService.getPlanById(privateHealthInsurancePlanId);
+        PrivateHealthInsurancePlanDto result = privateHealthInsuranceMapper.toPrivateHealthInsurancePlanDto(data);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

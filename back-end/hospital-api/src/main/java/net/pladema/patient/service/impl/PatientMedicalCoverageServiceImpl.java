@@ -1,6 +1,7 @@
 package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
@@ -35,10 +36,13 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 
 	private final PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
 
-	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository) {
+	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+
+	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository, PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
 		this.patientMedicalCoverageRepository = patientMedicalCoverageRepository;
 		this.medicalCoverageRepository = medicalCoverageRepository;
 		this.privateHealthInsuranceDetailsRepository = privateHealthInsuranceDetailsRepository;
+		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
 	}
 
 	@Override
@@ -46,6 +50,11 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 		LOG.debug(INPUT_DATA, patientId);
 		List<PatientMedicalCoverageVo> queryResult = patientMedicalCoverageRepository.getActivePatientCoverages(patientId);
 		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
+		result.forEach(mc ->{
+			if(mc.getPrivateHealthInsuranceDetails().getPlanId()!=null)
+				this.privateHealthInsurancePlanRepository.findById(mc.getPrivateHealthInsuranceDetails().getPlanId())
+					.ifPresent(plan -> mc.getPrivateHealthInsuranceDetails().setPlanName(plan.getPlan()));
+		});
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -76,6 +85,10 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 		LOG.debug(INPUT_DATA, patientId);
 		List<PatientMedicalCoverageVo> queryResult = patientMedicalCoverageRepository.getActivePatientPrivateHealthInsurances(patientId);
 		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
+		result.forEach(mc ->{
+			this.privateHealthInsurancePlanRepository.findById(mc.getPrivateHealthInsuranceDetails().getPlanId())
+					.ifPresent(plan -> mc.getPrivateHealthInsuranceDetails().setPlanName(plan.getPlan()));
+		});
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

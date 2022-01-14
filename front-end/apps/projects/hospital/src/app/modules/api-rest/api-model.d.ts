@@ -258,7 +258,6 @@ export interface BackofficeCoverageDto extends Serializable {
     cuit: string;
     id: number;
     name: string;
-    plan?: string;
     rnos?: number;
     type: number;
 }
@@ -1842,12 +1841,19 @@ export interface PrescriptionItemDto extends Serializable {
 export interface PrivateHealthInsuranceDetailsDto {
     endDate: string;
     id: number;
+    planId?: number;
+    planName?: string;
     startDate: string;
 }
 
 export interface PrivateHealthInsuranceDto extends CoverageDto {
-    plan: string;
     type: "PrivateHealthInsuranceDto";
+}
+
+export interface PrivateHealthInsurancePlanDto {
+    id: number;
+    plan: string;
+    privateHealthInsuranceId: number;
 }
 
 export interface ProbableDischargeDateDto {

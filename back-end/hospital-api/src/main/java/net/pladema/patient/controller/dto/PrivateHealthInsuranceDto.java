@@ -11,17 +11,14 @@ import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
 @NoArgsConstructor
 public class PrivateHealthInsuranceDto extends CoverageDto {
 
-    String plan;
-
-    public PrivateHealthInsuranceDto(Integer id, String name, String cuit, String plan){
+    public PrivateHealthInsuranceDto(Integer id, String name, String cuit){
         setId(id);
         setName(name);
         setCuit(cuit);
-        this.plan=plan;
     }
 
     @Override
     public MedicalCoverageBo newInstance() {
-        return new PrivateHealthInsuranceBo(getId(), getName(),getCuit(), getPlan());
+        return new PrivateHealthInsuranceBo(getId(), getName(),getCuit());
     }
 }

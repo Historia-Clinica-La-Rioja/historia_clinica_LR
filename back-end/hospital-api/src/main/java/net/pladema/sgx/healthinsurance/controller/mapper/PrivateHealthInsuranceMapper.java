@@ -1,7 +1,9 @@
 package net.pladema.sgx.healthinsurance.controller.mapper;
 
 import net.pladema.patient.controller.dto.PrivateHealthInsuranceDto;
+import net.pladema.patient.controller.dto.PrivateHealthInsurancePlanDto;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
+import net.pladema.patient.service.domain.PrivateHealthInsurancePlanBo;
 import net.pladema.renaper.controller.dto.MedicalCoverageDto;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import org.mapstruct.Mapper;
@@ -14,6 +16,13 @@ public interface PrivateHealthInsuranceMapper {
 
     @Named("toPrivateHealthInsuranceDtoList")
     Collection<PrivateHealthInsuranceDto> toPrivateHealthInsuranceDtoList(Collection<PrivateHealthInsuranceBo> data);
+
+    @Named("toPrivateHealthInsurancePlanDtoList")
+    Collection<PrivateHealthInsurancePlanDto> toPrivateHealthInsurancePlanDtoList(Collection<PrivateHealthInsurancePlanBo> data);
+
+    @Named("toPrivateHealthInsurancePlanDto")
+    PrivateHealthInsurancePlanDto toPrivateHealthInsurancePlanDto(PrivateHealthInsurancePlanBo data);
+
 
     PrivateHealthInsuranceDto toPrivateHealthInsuranceDto(PrivateHealthInsuranceBo data);
 }

@@ -24,18 +24,14 @@ public class BackofficeCoverageDto implements Serializable {
     @Nullable
     private String acronym;
 
-    @Nullable
-    private String plan;
-
     private Short type;
 
-    public BackofficeCoverageDto(Integer id, String name, String cuit, Short type, @Nullable Integer rnos, @Nullable String acronym, @Nullable String plan) {
+    public BackofficeCoverageDto(Integer id, String name, String cuit, Short type, @Nullable Integer rnos, @Nullable String acronym) {
         this.id = id;
         this.name = name;
         this.cuit = cuit;
         this.rnos = rnos;
         this.acronym = acronym;
-        this.plan = plan;
         this.type = type;
     }
 

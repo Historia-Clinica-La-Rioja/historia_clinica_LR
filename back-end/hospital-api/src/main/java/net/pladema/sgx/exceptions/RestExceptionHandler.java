@@ -5,6 +5,7 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgx.shared.strings.StringValidatorException;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
+import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,6 +169,13 @@ public class RestExceptionHandler {
 		LOG.info(ex.getMessage());
 		LOG.debug(ex.getMessage(), ex);
 		return new ApiErrorDto("String constraint violation", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(PrivateHealthInsuranceServiceException.class)
+	public ApiErrorMessageDto handlePrivateHealthInsuranceServiceException(PrivateHealthInsuranceServiceException ex) {
+		LOG.debug("RegisterUserException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
 

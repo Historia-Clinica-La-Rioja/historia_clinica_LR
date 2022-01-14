@@ -14,7 +14,7 @@ import java.util.List;
 public interface PrivateHealthInsuranceRepository extends JpaRepository<PrivateHealthInsurance, Integer> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT new net.pladema.patient.repository.domain.PrivateHealthInsuranceVo(mc.id, mc.name, mc.cuit, phi.plan) " +
+    @Query("SELECT new net.pladema.patient.repository.domain.PrivateHealthInsuranceVo(mc.id, mc.name, mc.cuit) " +
             "FROM MedicalCoverage as mc " +
             "JOIN PrivateHealthInsurance as phi ON (phi.id = mc.id) ")
     List<PrivateHealthInsuranceVo> getAllWithNames(Sort sort);
