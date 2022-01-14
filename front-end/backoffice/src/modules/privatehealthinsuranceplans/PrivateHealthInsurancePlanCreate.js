@@ -1,5 +1,5 @@
 import React from 'react';
-import { AutocompleteInput, Create, maxLength, ReferenceInput, SimpleForm, TextInput } from 'react-admin';
+import { AutocompleteInput, Create, maxLength, ReferenceInput, required, SimpleForm, TextInput } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
 
 const redirect = (basePath, id, data) => `/medicalcoverages/${data.privateHealthInsuranceId}/show`;
@@ -15,7 +15,7 @@ const PrivateHealthInsurancePlanCreate = props => (
                 <AutocompleteInput optionText="name" optionValue="id" options={{disabled: true}}/>
             </ReferenceInput>
             <TextInput source="plan" validate={[
-                maxLength(10)]}/>
+                maxLength(10), required()]}/>
 
         </SimpleForm>
     </Create>

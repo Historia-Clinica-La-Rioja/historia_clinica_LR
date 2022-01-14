@@ -71,7 +71,7 @@
 
 						<div fxLayout="column">
 							<span
-								class="medical-coverage-name">{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance.medicalCoverage)}}</span>
+								class="medical-coverage-name">{{getPrivateHealthInsuranceText(patientPrivateHealthInsurance)}}</span>
 							<app-editable-field [fieldName]="'Nro de credencial'"
 												[value]="patientPrivateHealthInsurance.affiliateNumber"
 												(newValueEmitted)="patientPrivateHealthInsurance.affiliateNumber = $event">
@@ -135,8 +135,15 @@
 				<div fxLayout="column">
 					<mat-form-field appearance="outline">
 						<mat-label [translate]="'medical-coverage.PLAN_LABEL'"></mat-label>
-						<input type="text" placeholder="{{ 'Ingresar Plan' | translate }}" aria-label="Number"
-							   formControlName="plan" matInput>
+						<mat-select
+							formControlName="plan">
+							<mat-option
+								id="plan"
+								name="plan"
+								*ngFor="let privateHealthInsurancePlan of plans" [value]="privateHealthInsurancePlan.id">
+								{{privateHealthInsurancePlan.plan}}
+							</mat-option>
+						</mat-select>
 					</mat-form-field>
 				</div>
 					<div fxLayout="column">
