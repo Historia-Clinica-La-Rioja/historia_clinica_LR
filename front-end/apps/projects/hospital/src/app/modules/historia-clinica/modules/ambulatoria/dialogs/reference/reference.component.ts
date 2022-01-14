@@ -57,7 +57,7 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	setProblems() {
-		
+
 		const consultationProblems = this.data.consultationProblems.map(consultationProblem => {
 			return {
 				hcePersonalHistoryDto: this.buildPersonalHistoryDto(consultationProblem),
@@ -88,7 +88,7 @@ export class ReferenceComponent implements OnInit {
 
 			const problems = [...activeProblemsHCEPersonalHistory, ...chronicProblemsHCEPersonalHistory];
 			problems.forEach((problem: HCEPersonalHistory) => {
-				const existProblem = this.problemsList.find(consultationProblem => consultationProblem.snomed?.sctid === problem.hcePersonalHistoryDto.snomed.sctid);
+				const existProblem = this.problemsList.find(consultationProblem => consultationProblem.hcePersonalHistoryDto.snomed.sctid === problem.hcePersonalHistoryDto.snomed.sctid);
 				if (!existProblem) {
 					this.problemsList.push(problem);
 				}
