@@ -18,18 +18,6 @@ export function hasError(form: AbstractControl, type: string, control: string): 
 	return form.get(control).hasError(type);
 }
 
-export function intervalValidation(form: AbstractControl, control: string): boolean | null {
-	const hours: string = form.get(control).value;
-	if (isValidInterval(hours)) {
-		return true;
-	}
-	return null;
-}
-
-function isValidInterval(hours: string):boolean {
-	return (hours) ? hours.toString().includes('-') || hours.toString().includes('.', 1) : false;
-}
-
 export function getError(form: AbstractControl, type: string, control: string): any {
 	return form.get(control).getError(type);
 }
