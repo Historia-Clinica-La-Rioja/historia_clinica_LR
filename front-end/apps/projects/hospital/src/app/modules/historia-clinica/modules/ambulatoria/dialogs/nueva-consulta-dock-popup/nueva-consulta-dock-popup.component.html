@@ -488,7 +488,8 @@
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
 											</mat-icon>
 										</ng-container>
 									</div>
@@ -508,7 +509,8 @@
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
 											</mat-icon>
 										</ng-container>
 									</div>
@@ -531,7 +533,8 @@
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
 											</mat-icon>
 										</ng-container>
 									</div>
@@ -551,7 +554,8 @@
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
 											</mat-icon>
 										</ng-container>
 									</div>
@@ -574,7 +578,8 @@
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
 											</mat-icon>
 										</ng-container>
 									</div>
@@ -596,7 +601,8 @@
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
 											</mat-icon>
 										</ng-container>
 									</div>
@@ -605,6 +611,75 @@
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
+									</app-effective-time>
+								</div>
+							</div>
+
+							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+								<div class="signos-vitales-field" formGroupName="bloodGlucose">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_GLUCOSE'">
+									</mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="blood_glucose" name="blood_glucose" formControlName="value"
+												placeholder="00" type="number" matInput>
+										</mat-form-field>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
+										</ng-container>
+									</div>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.bloodGlucose.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodGlucose')">
+									</app-effective-time>
+								</div>
+								<div class="signos-vitales-field" formGroupName="glycosylatedHemoglobin">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.GLYCOSYLATED_HEMOGLOBIN'">
+									</mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="glycosylated_hemoglobin" name="glycosylated_hemoglobin"
+												formControlName="value" placeholder="00.00" type="number" matInput>
+										</mat-form-field>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
+										</ng-container>
+									</div>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.glycosylatedHemoglobin.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'glycosylatedHemoglobin')">
+									</app-effective-time>
+								</div>
+							</div>
+
+							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+								<div class="signos-vitales-field" formGroupName="cardiovascularRisk">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.CARDIOVASCULAR_RISK'">
+									</mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="cardiovascular_risk" name="cardiovascular_risk"
+												formControlName="value" placeholder="00" type="number" matInput>
+										</mat-form-field>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
+										</ng-container>
+									</div>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.cardiovascularRisk.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'cardiovascularRisk')">
 									</app-effective-time>
 								</div>
 							</div>

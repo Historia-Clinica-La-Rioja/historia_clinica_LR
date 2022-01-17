@@ -66,7 +66,10 @@
 					"PESO_MAX": "El peso máximo debe ser 1000 kg",
 					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
 					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
-					"HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 0 y 100 cm"
+					"HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 0 y 100 cm",
+					"BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
+					"GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
+					"CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)"
 				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",
@@ -136,7 +139,10 @@
 					"TEMPERATURE": "Temperatura corporal",
 					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
 					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
-					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
+					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)",
+					"BLOOD_GLUCOSE": "Glucemia (mg/dl)",
+					"GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada (%)",
+					"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
 				},
 				"antecedentes-familiares": {
 					"buttons": {

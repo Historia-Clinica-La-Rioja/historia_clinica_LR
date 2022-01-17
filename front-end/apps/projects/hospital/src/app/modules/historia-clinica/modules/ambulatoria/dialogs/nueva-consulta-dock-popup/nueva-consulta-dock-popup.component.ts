@@ -175,6 +175,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[9] = presionDiastolicaError;
 		});
+		this.signosVitalesNuevaConsultaService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
+			this.errores[12] = bloodGlucoseError;
+		});
+		this.signosVitalesNuevaConsultaService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
+			this.errores[13] = glycosylatedHemoglobinError;
+		});
+		this.signosVitalesNuevaConsultaService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
+			this.errores[14] = cardiovascularRiskError;
+		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypes = healthConditionSeverities;
@@ -381,6 +390,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		if (parseInt(consulta.vitalSigns?.systolicBloodPressure?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
+		}
+
+		if ((parseInt(consulta.vitalSigns?.bloodGlucose?.value, 10) < 1) || (parseInt(consulta.vitalSigns?.bloodGlucose?.value, 10) > 500)) {
+			this.signosVitalesNuevaConsultaService.setBloodGlucoseError('ambulatoria.paciente.nueva-consulta.errors.BLOOD_GLUCOSE_RANGE');
+		}
+
+		if ((parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) < 1) || (parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) > 20)) {
+			this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
+		}
+
+		if ((parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) < 1) || (parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) > 100)) {
+			this.signosVitalesNuevaConsultaService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
 		}
 
 		hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
