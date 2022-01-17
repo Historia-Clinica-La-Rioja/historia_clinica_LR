@@ -8,7 +8,7 @@ import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/med
 import { Problema } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import { PATTERN_MAX_2_DECIMAL_DIGITS, SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
@@ -403,6 +403,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if ((parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) < 1) || (parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) > 20)) {
 			this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
 		}
+		else {
+			const glycosylatedHemoglobinValue = consulta.vitalSigns?.glycosylatedHemoglobin?.value;
+			if (glycosylatedHemoglobinValue && !this.hasMaxTwoDecimalDigits(glycosylatedHemoglobinValue)) {
+				this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
+			}
+		}
 
 		if ((parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) < 1) || (parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) > 100)) {
 			this.signosVitalesNuevaConsultaService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
@@ -561,6 +567,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	private hasMaxTwoDecimalDigits(numberValue: string): boolean {
+		return PATTERN_MAX_2_DECIMAL_DIGITS.test(numberValue);
 	}
 }
 

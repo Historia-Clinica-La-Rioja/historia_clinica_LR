@@ -19,7 +19,7 @@ export interface SignosVitales {
 	cardiovascularRisk?: EffectiveClinicalObservationDto;
 }
 
-
+export const PATTERN_MAX_2_DECIMAL_DIGITS = /^[0-9]+(\.[0-9]{1,2})?$/;
 
 export class SignosVitalesNuevaConsultaService {
 
@@ -81,7 +81,7 @@ export class SignosVitalesNuevaConsultaService {
 				effectiveTime: [newMoment()],
 			}),
 			glycosylatedHemoglobin: this.formBuilder.group({
-				value: [null, [Validators.min(1), Validators.max(20)]],
+				value: [null, [Validators.min(1), Validators.max(20), Validators.pattern(PATTERN_MAX_2_DECIMAL_DIGITS)]],
 				effectiveTime: [newMoment()],
 			}),
 			cardiovascularRisk: this.formBuilder.group({
