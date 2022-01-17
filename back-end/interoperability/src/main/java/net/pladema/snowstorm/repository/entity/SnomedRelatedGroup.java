@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -18,13 +18,23 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class SnomedRelatedGroup {
 
-	@Id
-	@Column(name = "snomed_id", nullable = false)
-	private Integer snomedId;
-
-	@Column(name = "group_id", nullable = false)
-	private Integer groupId;
+	@EmbeddedId
+	private SnomedRelatedGroupPK pk;
 
 	@Column(name = "orden", nullable = false)
 	private Integer orden;
+
+	public SnomedRelatedGroup(Integer snomedId, Integer groupId, Integer orden) {
+		pk = new SnomedRelatedGroupPK(snomedId, groupId);
+		this.orden = orden;
+	}
+
+	public Integer getSnomedId() {
+		return pk.getSnomedId();
+	}
+
+	public Integer getGroupId() {
+		return pk.getGroupId();
+	}
+
 }

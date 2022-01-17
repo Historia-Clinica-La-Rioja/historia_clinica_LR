@@ -36,6 +36,6 @@ public class SnomedGroup {
 	private Integer customId;
 
 	@Column(name = "last_update", nullable = false)
-	private LocalDate last_update;
+	private LocalDate lastUpdate;
 
 }
