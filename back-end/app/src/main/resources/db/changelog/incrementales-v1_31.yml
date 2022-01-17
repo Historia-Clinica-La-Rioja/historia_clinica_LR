@@ -98,6 +98,7 @@ databaseChangeLog:
                     referencedColumnNames: id
                     referencedTableName: institution
                     validate: true
+                    
     - changeSet:
           id: add-cuit-column-medical_coverage
           author: mvenere
@@ -196,3 +197,14 @@ databaseChangeLog:
                 JOIN patient_medical_coverage pmc
                 ON pmc.medical_coverage_id = phip.private_health_insurance_id
                 WHERE phid.id = pmc.private_health_insurance_details_id
+
+    - changeSet:
+        id: snomed-metadata_update_outpatient
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    call safeInsertSnomed('363812007', 'Circunferencia de la cabeza (entidad observable)', '363812007', 'Circunferencia de la cabeza (entidad observable)');
+                    call safeInsertSnomed('434912009', 'Concentración de glucosa en sangre (entidad observable)', '434912009', 'Concentración de glucosa en sangre (entidad observable)');
+                    call safeInsertSnomed('259689004', 'Hemoglobina glicosilada (sustancia)', '259689004', 'Hemoglobina glicosilada (sustancia)');
+                    call safeInsertSnomed('827181004', 'Riesgo de enfermedad cardiovascular (entidad observable)', '827181004', 'Riesgo de enfermedad cardiovascular (entidad observable)');
