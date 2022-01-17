@@ -369,7 +369,7 @@
 					"ADMINISTRATION_TIME": "Tiempo de administración",
 					"ADMINISTRATION_TIME_DEFAULT_OPTION": "Habitual",
 					"OBSERVATIONS": "Observaciones",
-					"INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas",
+					"INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas válidas",
 					"ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días"
 				},
 				"new_prescription_dialog": {
