@@ -13,7 +13,11 @@ public interface SnowstormService {
 
     SnowstormSearchResponse getConcepts(String term, String ecl) throws SnowstormApiException;
 
-    SnowstormSearchResponse getConcepts(String ecl) throws SnowstormApiException;
+    SnowstormSearchResponse getConceptsByEclKey(String eclKey, String searchAfter) throws SnowstormApiException;
+
+    SnowstormSearchResponse getConceptsByEcl(String ecl) throws SnowstormApiException;
+
+    List<SnowstormItemResponse> getConceptParents(String conceptId) throws SnowstormApiException;
 
     List<SnowstormItemResponse> getConceptAncestors(String conceptId) throws SnowstormApiException;
 
