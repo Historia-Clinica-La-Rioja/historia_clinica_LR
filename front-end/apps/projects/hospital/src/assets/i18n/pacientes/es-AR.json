@@ -64,7 +64,7 @@
                 },
 				"IDENTIFY_TYPE_LABEL": "Tipo",
 				"IDENTIFY_NUMBER_LABEL": "Nro. de documento",
-				"GENDER_LABEL": "Sexo",
+				"GENDER_LABEL": "Sexo documento",
 				"SELECT_REASON_LABEL": "Seleccione motivo",
 				"COMMENTS_LABEL": "Comentarios"
             }
