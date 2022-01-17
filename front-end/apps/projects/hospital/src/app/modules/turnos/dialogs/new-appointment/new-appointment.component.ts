@@ -23,6 +23,7 @@ import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/
 import { map } from 'rxjs/operators';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PatientNameService } from "@core/services/patient-name.service";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -66,7 +67,9 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly appointmentFacade: AppointmentsFacadeService,
 		public dialog: MatDialog,
 		private readonly mapperService: MapperService,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly patientNameService: PatientNameService,
+
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -150,7 +153,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	mapToPersonIdentification(personalDataDto: BasicPersonalDataDto): PersonIdentification {
 		return {
-			firstName: personalDataDto.firstName,
+			firstName: this.patientNameService.getPatientName(personalDataDto.firstName, personalDataDto.nameSelfDetermination),
 			lastName: personalDataDto.lastName,
 			identificationNumber: personalDataDto.identificationNumber
 		};

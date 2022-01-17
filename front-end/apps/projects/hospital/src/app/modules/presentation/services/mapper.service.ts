@@ -70,7 +70,8 @@ export class MapperService {
 			lastName: patient.person.lastName,
 			otherLastNames: patient.person.otherLastNames,
 			gender: patient.person.gender.description,
-			age: patient.person.age
+			age: patient.person.age,
+			nameSelfDetermination: patient.person.nameSelfDetermination
 		};
 	}
 
@@ -107,7 +108,8 @@ export class MapperService {
 			internmentId: patient.internmentId,
 			lastName: patient.lastName,
 			patientId: patient.patientId,
-			fullName: `${patient.firstName} ${patient.lastName}`
+			fullName: `${patient.firstName} ${patient.lastName}`,
+			nameSelfDetermination: patient.nameSelfDetermination
 		};
 	}
 

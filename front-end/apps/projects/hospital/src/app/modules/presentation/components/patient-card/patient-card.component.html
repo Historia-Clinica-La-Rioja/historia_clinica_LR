@@ -1,23 +1,23 @@
 <mat-card id="patient_card" [class]="size">
-	<ng-content select="[header]"></ng-content>
-	<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-sm="column">
-		<mat-card-header>
-			<img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
-			<mat-card-title class="card-style-1">
-				<span id="title" class="capitalize">
-					{{ patient?.firstName }} {{patient?.middleNames}} {{patient?.lastName}} {{patient?.otherLastNames}}
+    <ng-content select="[header]"></ng-content>
+    <div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-sm="column">
+        <mat-card-header>
+            <img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
+            <mat-card-title class="card-style-1">
+                <span id="title" class="capitalize">
+					{{viewPatientName()}} {{patient?.middleNames}} {{patient?.lastName}} {{patient?.otherLastNames}}
 				</span>
-			</mat-card-title>
-			<mat-card-title class="card-style-2">
-				<span id="patient_id">{{viewIDAndIdentificationTypeAndNumber()}}</span>
-			</mat-card-title>	
-			<mat-card-subtitle>
-				<span id="gender_age" [translate]=viewGenderAge()></span>
-			</mat-card-subtitle>
-		</mat-card-header>
-		<ng-content id="horizontal_content" select="[horizontal-content]"></ng-content>
-	</div>
-	<mat-card-content>
-		<ng-content id="vertical_content" select="[content]"></ng-content>
-	</mat-card-content>
+            </mat-card-title>
+            <mat-card-title class="card-style-2">
+                <span id="patient_id">{{viewIDAndIdentificationTypeAndNumber()}}</span>
+            </mat-card-title>
+            <mat-card-subtitle>
+                <span id="gender_age" [translate]=viewGenderAge()></span>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <ng-content id="horizontal_content" select="[horizontal-content]"></ng-content>
+    </div>
+    <mat-card-content>
+        <ng-content id="vertical_content" select="[content]"></ng-content>
+    </mat-card-content>
 </mat-card>
