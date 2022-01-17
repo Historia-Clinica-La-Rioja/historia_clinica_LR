@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnomedService } from '../../../../services/snomed.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -75,6 +75,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	minDate = MIN_DATE;
 	public ffIsOn: boolean;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
+	@ViewChild('errorsView') errorsView: ElementRef;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -235,6 +236,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					}
 				} else {
 					this.disableConfirmButton = false;
+					if (!this.isValidConsultation())
+						this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
 				}
 			}
 
