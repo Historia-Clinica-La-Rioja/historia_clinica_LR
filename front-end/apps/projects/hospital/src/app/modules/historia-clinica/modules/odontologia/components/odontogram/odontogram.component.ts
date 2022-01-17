@@ -131,7 +131,7 @@ export class OdontogramComponent implements OnInit {
 	openConsultationPopup() {
 		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
 		dialogRef.afterClosed().subscribe(consultationResult => {
-			if (consultationResult.confirmed) {
+			if (consultationResult && consultationResult.confirmed) {
 				this.setActionsAsRecords();
 				this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
 				this.consultationCompleted.emit(consultationResult.fieldsToUpdate);
