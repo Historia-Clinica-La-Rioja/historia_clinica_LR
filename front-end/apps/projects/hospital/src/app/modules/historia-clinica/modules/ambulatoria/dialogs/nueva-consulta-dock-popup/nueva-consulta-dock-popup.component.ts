@@ -154,6 +154,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
 			this.errores[3] = pesoError;
 		});
+		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
+			this.errores[11] = headCircumferenceError;
+		});
 		this.signosVitalesNuevaConsultaService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
 		});
@@ -350,6 +353,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MIN');
 		} else if (parseInt(consulta.anthropometricData?.weight?.value, 10) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
+		}
+
+		if ((parseInt(consulta.anthropometricData?.headCircumference?.value, 10) < 0) || (parseInt(consulta.anthropometricData?.headCircumference?.value, 10) > 100)) {
+			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
 		}
 
 		if (parseInt(consulta.vitalSigns.heartRate?.value, 10) < 0) {

@@ -236,7 +236,8 @@
 									</ng-container>
 								</div>
 								<h5 class="recomendado recomendado-antropo"
-									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'">
+								</h5>
 							</div>
 							<div>
 								<div fxLayout="row" fxLayoutAlign="space-between center">
@@ -252,9 +253,24 @@
 										<mat-icon class="field-icon" color="primary">error_outline</mat-icon>
 									</ng-container>
 								</div>
-
 								<h5 class="recomendado recomendado-antropo"
-									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'">
+								</h5>
+							</div>
+							<div>
+								<div fxLayout="row" fxLayoutAlign="space-between center">
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<mat-label
+											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEAD_CIRCUNFERENCE'">
+										</mat-label>
+										<input id="head-circumference" formControlName="headCircumference"
+											placeholder="Ej: 47" type="number" matInput>
+									</mat-form-field>
+									<ng-container
+										*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
+										<mat-icon class="field-icon" color="primary">error_outline</mat-icon>
+									</ng-container>
+								</div>
 							</div>
 						</form>
 					</ng-container>

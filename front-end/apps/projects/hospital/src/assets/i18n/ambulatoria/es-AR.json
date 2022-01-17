@@ -65,7 +65,8 @@
 					"PESO_MIN": "El peso mínimo debe ser 0 kg",
 					"PESO_MAX": "El peso máximo debe ser 1000 kg",
 					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
-					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres"
+					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
+					"HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 0 y 100 cm"
 				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",
@@ -171,6 +172,7 @@
 				"datos-antropometricos": {
 					"TITLE": "Datos antropométricos",
 					"BLOOD_TYPE": "Grupo y factor sanguíneo",
+					"HEAD_CIRCUNFERENCE": "Perímetro cefálico (cm)",
 					"HEIGHT": "Talla (cm)",
 					"WEIGHT": "Peso (kg)"
 				},
@@ -344,7 +346,7 @@
 					"ID": "ID",
 					"FAILED_REPORT_ERROR": "Fallo al reportar el problema"
 				},
-				"PENDING_REFERENCE" : "Referencia pendiente"
+				"PENDING_REFERENCE": "Referencia pendiente"
 			},
 			"ordenes_prescripciones": {
 				"TAB_LABEL": "Órdenes y prescripciones",
