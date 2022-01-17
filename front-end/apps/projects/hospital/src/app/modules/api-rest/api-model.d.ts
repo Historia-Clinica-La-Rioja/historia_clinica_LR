@@ -2156,6 +2156,8 @@ export interface Serializable {
 }
 
 export interface SharedSnomedDto extends Serializable {
+    parentFsn: string;
+    parentId: string;
     pt: string;
     sctid: string;
 }

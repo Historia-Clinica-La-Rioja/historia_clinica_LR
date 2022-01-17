@@ -21,4 +21,12 @@ public class SharedSnomedDto implements Serializable {
 
     private String pt;
 
+    private String parentId;
+
+    private String parentFsn;
+
+    public SharedSnomedDto(String sctid, String pt) {
+        this.sctid = sctid;
+        this.pt = pt;
+    }
 }
