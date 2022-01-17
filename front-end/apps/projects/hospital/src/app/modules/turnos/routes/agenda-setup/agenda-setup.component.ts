@@ -52,10 +52,10 @@ export class AgendaSetupComponent implements OnInit {
 	hourSegments: number;
 	minDate = new Date();
 	openingTime: number;
-	professionals;
+	professionals: ProfessionalDto[];
 	sectors;
 	agendaHorarioService: AgendaHorarioService;
-
+	professionalId: string;
 
 	private editingDiaryId = null;
 	private readonly routePrefix;
@@ -78,6 +78,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 
 	) {
+		this.route.paramMap.subscribe(params => this.professionalId = params.get("idProfessional"));
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY);
 	}
@@ -91,7 +92,7 @@ export class AgendaSetupComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			sectorId: [null, [Validators.required]],
 			doctorOffice: [null, [Validators.required]],
-			healthcareProfessionalId: [null, [Validators.required]],
+			healthcareProfessionalId: [Number(this.professionalId), [Validators.required]],
 			startDate: [null, [Validators.required]],
 			endDate: [null, [Validators.required]],
 			appointmentDuration: [null, [Validators.required]],
@@ -119,6 +120,7 @@ export class AgendaSetupComponent implements OnInit {
 		});
 
 		this.healthcareProfessionalService.getAll().subscribe(data => this.professionals = data);
+
 	}
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
@@ -284,4 +286,5 @@ export class AgendaSetupComponent implements OnInit {
 			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours()
 		};
 	}
+
 }

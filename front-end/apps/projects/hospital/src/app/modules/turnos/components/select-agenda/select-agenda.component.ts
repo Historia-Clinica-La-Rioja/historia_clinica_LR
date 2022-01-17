@@ -54,7 +54,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-
 		this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 			if (data) {
 				this.loadAgendas(data.agendas, data.idAgendaSelected);
@@ -131,7 +130,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	goToNewAgenda(): void {
-		this.router.navigate([`${this.routePrefix}/turnos/nueva-agenda/`]);
+		this.router.navigate([`${this.routePrefix}/turnos/nueva-agenda/`, this.filters.idProfesional]);
 	}
 
 	printAgenda(): void {
