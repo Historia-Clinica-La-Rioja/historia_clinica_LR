@@ -5,7 +5,7 @@
             <img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
             <mat-card-title class="card-style-1">
                 <span id="title" class="capitalize">
-					{{viewPatientName()}} {{patient?.middleNames}} {{patient?.lastName}} {{patient?.otherLastNames}}
+					{{viewPatientName()}} {{patient?.lastName}} {{patient?.otherLastNames}}
 				</span>
             </mat-card-title>
             <mat-card-title class="card-style-2">

@@ -66,7 +66,10 @@ export class PatientCardComponent {
 	}
 
 	public viewPatientName(): string {
-		return this.patientNameService.getPatientName(this.patient?.firstName, this.patient?.nameSelfDetermination);
+		let name = this.patientNameService.getPatientName(this.patient?.firstName, this.patient?.nameSelfDetermination)
+		if (name == this.patient?.firstName && (this.patient?.middleNames !== null && this.patient?.middleNames !== undefined))
+			name = this.patient?.firstName + " " + this.patient?.middleNames
+		return name;
 	}
 
 }
