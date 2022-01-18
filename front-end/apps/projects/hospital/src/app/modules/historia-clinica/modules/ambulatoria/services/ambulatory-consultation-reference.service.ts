@@ -52,6 +52,7 @@ export class AmbulatoryConsultationReferenceService {
 	openReferenceDialog(): void {
 		const dialogRef = this.dialog.open(ReferenceComponent, {
 			autoFocus: false,
+			disableClose: true,
 			data: {
 				consultationProblems: this.ambulatoryConsultationProblemsService.getProblemas(),
 				patientId: this.informationData.idPaciente,
