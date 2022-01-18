@@ -1,5 +1,6 @@
 package net.pladema.patient.service.impl;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
@@ -7,7 +8,6 @@ import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.patient.repository.entity.PatientMedicalCoverageAssn;
 import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 import net.pladema.patient.service.PatientMedicalCoverageService;
-import net.pladema.patient.service.domain.MedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.repository.MedicalCoverageRepository;
 import org.slf4j.Logger;
@@ -106,21 +106,19 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 	public List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId) {
 		List<Integer> result = new ArrayList<>();
 		coverages.forEach((coverage) -> {
-			MedicalCoverageBo medicalCoverage = coverage.getMedicalCoverage();
-			Integer medicalCoverageId = medicalCoverageRepository.getByName(medicalCoverage.getName())
-					.stream().findFirst()
-					.map(MedicalCoverage::getId)
-					.orElseGet(()->{
-						if (coverage.getPrivateHealthInsuranceDetails() != null) {
-							PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
-							coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
-						}
-						return medicalCoverageRepository.save(medicalCoverage.mapToEntity()).getId();
-					});
-			coverage.getMedicalCoverage().setId(medicalCoverageId);
-			Integer pmcId = patientMedicalCoverageRepository.getByPatientAndMedicalCoverage(patientId,medicalCoverageId)
+			MedicalCoverage medicalCoverageSaved = Optional.ofNullable(coverage.getMedicalCoverage().getId())
+					.map(medicalCoverageId -> medicalCoverageRepository.findById(medicalCoverageId)
+							.orElse(null))
+					.orElseGet(() -> medicalCoverageRepository.findByCUIT(coverage.getMedicalCoverage().getCuit())
+							.orElseThrow(() -> new NotFoundException("medical-coverage-not-exists", String.format("La cobertura médica con cuit %s no existe", coverage.getMedicalCoverage().getCuit()))));
+			if (coverage.getPrivateHealthInsuranceDetails() != null) {
+				PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
+				coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
+			}
+			coverage.getMedicalCoverage().setId(medicalCoverageSaved.getId());
+			Integer pmcId = patientMedicalCoverageRepository.getByPatientAndMedicalCoverage(patientId, coverage.getMedicalCoverage().getId())
 					.map(PatientMedicalCoverageAssn::getId)
-					.orElseGet(()->patientMedicalCoverageRepository.save(new PatientMedicalCoverageAssn(coverage, patientId)).getId());
+					.orElseGet(() -> patientMedicalCoverageRepository.save(new PatientMedicalCoverageAssn(coverage, patientId)).getId());
 			result.add(pmcId);
 		});
 		return result;

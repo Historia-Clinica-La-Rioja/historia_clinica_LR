@@ -30,4 +30,8 @@ public interface MedicalCoverageRepository extends SGXAuditableEntityJPAReposito
     @Transactional(readOnly = true)
     @Query(value = "SELECT exists (select 1 from medical_coverage where cuit = :cuit and id != :id)", nativeQuery = true)
     boolean existsByCUITandDiferentId(@Param("cuit") String cuit, @Param("id") Integer id);
+
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT mc FROM MedicalCoverage mc WHERE mc.cuit = :cuit")
+    Optional<MedicalCoverage> findByCUIT(@Param("cuit") String cuit);
 }
