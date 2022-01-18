@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.constraints.HeadCircumferenceDataValid;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,4 +32,8 @@ public class OutpatientAnthropometricDataDto implements Serializable {
     @Nullable
     private ClinicalObservationDto bmi;
 
+    @Valid
+    @Nullable
+    @HeadCircumferenceDataValid(message = "{diagnosis.anthropometric.headCircumference.invalid}")
+    private ClinicalObservationDto headCircumference;
 }

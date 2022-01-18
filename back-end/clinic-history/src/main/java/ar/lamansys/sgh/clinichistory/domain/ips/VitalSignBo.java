@@ -35,6 +35,15 @@ public class VitalSignBo extends SelfValidating<VitalSignBo> {
     @Valid
     private ClinicalObservationBo bloodOxygenSaturation;
 
+    @Valid
+    private ClinicalObservationBo bloodGlucose;
+
+    @Valid
+    private ClinicalObservationBo glycosylatedHemoglobin;
+
+    @Valid
+    private ClinicalObservationBo cardiovascularRisk;
+
     public boolean hasValues(){
         return (systolicBloodPressure != null ||
                 diastolicBloodPressure != null ||
@@ -42,6 +51,9 @@ public class VitalSignBo extends SelfValidating<VitalSignBo> {
                 temperature != null ||
                 heartRate != null ||
                 respiratoryRate != null ||
-                bloodOxygenSaturation != null);
+                bloodOxygenSaturation != null ||
+                bloodGlucose != null ||
+                glycosylatedHemoglobin != null ||
+                cardiovascularRisk != null);
     }
 }

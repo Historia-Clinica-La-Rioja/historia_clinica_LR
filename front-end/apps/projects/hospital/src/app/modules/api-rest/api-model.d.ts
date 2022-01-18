@@ -887,6 +887,7 @@ export interface HCEAllergyDto extends ClinicalTermDto {
 export interface HCEAnthropometricDataDto extends Serializable {
     bloodType?: HCEEffectiveClinicalObservationDto;
     bmi?: HCEClinicalObservationDto;
+    headCircumference?: HCEEffectiveClinicalObservationDto;
     height?: HCEEffectiveClinicalObservationDto;
     weight?: HCEEffectiveClinicalObservationDto;
 }
@@ -1024,8 +1025,11 @@ export interface HCEToothRecordDto extends Serializable {
 }
 
 export interface HCEVitalSignDto extends Serializable {
+    bloodGlucose?: HCEEffectiveClinicalObservationDto;
     bloodOxygenSaturation?: HCEEffectiveClinicalObservationDto;
+    cardiovascularRisk?: HCEEffectiveClinicalObservationDto;
     diastolicBloodPressure?: HCEEffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: HCEEffectiveClinicalObservationDto;
     heartRate?: HCEEffectiveClinicalObservationDto;
     respiratoryRate?: HCEEffectiveClinicalObservationDto;
     systolicBloodPressure?: HCEEffectiveClinicalObservationDto;
@@ -1586,6 +1590,7 @@ export interface OutpatientAllergyConditionDto {
 export interface OutpatientAnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;
+    headCircumference?: ClinicalObservationDto;
     height: ClinicalObservationDto;
     weight: ClinicalObservationDto;
 }
@@ -1675,8 +1680,11 @@ export interface OutpatientUpdateImmunizationDto {
 }
 
 export interface OutpatientVitalSignDto extends Serializable {
+    bloodGlucose?: EffectiveClinicalObservationDto;
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    cardiovascularRisk?: EffectiveClinicalObservationDto;
     diastolicBloodPressure: EffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
     heartRate?: EffectiveClinicalObservationDto;
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure: EffectiveClinicalObservationDto;

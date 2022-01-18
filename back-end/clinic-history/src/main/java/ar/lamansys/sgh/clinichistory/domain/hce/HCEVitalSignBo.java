@@ -27,6 +27,12 @@ public class HCEVitalSignBo implements Serializable {
 
     private HCEClinicalObservationBo bloodOxygenSaturation;
 
+    private HCEClinicalObservationBo bloodGlucose;
+
+    private HCEClinicalObservationBo glycosylatedHemoglobin;
+
+    private HCEClinicalObservationBo cardiovascularRisk;
+
     public boolean hasValues(){
         return (systolicBloodPressure != null ||
                 diastolicBloodPressure != null ||
@@ -34,6 +40,9 @@ public class HCEVitalSignBo implements Serializable {
                 temperature != null ||
                 heartRate != null ||
                 respiratoryRate != null ||
-                bloodOxygenSaturation != null);
+                bloodOxygenSaturation != null ||
+                bloodGlucose != null ||
+                glycosylatedHemoglobin != null ||
+                cardiovascularRisk != null);
     }
 }
