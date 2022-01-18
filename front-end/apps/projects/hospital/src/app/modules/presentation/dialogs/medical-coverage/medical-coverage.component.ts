@@ -174,6 +174,7 @@ export class MedicalCoverageComponent implements OnInit {
 			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
 			formDirective.resetForm();
 			this.prepagaForm.reset();
+			this.privateHealthInsuranceToAdd = null;
 		}
 	}
 
