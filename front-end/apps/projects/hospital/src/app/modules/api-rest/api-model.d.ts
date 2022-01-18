@@ -1472,6 +1472,7 @@ export interface OauthConfigDto {
     clientId: string;
     enabled: boolean;
     issuerUrl: string;
+    logoutUrl: string;
 }
 
 export interface OccupationDto {

@@ -17,7 +17,11 @@ public class OAuthConfigurationStorageImpl implements OAuthConfigurationStorage 
     @Override
     public OAuthConfigBo getConfiguration() {
         log.debug("No input parameters");
-        OAuthConfigBo result = new OAuthConfigBo(oAuthWSConfig.getIssuer(), oAuthWSConfig.getClientId(), oAuthWSConfig.isEnabled());
+        OAuthConfigBo result = new OAuthConfigBo(
+                oAuthWSConfig.getIssuer(),
+                oAuthWSConfig.getClientId(),
+                oAuthWSConfig.getBaseUrl() + oAuthWSConfig.getLogout(),
+                oAuthWSConfig.isEnabled());
         log.debug("Output -> {}", result);
         return result;
     }

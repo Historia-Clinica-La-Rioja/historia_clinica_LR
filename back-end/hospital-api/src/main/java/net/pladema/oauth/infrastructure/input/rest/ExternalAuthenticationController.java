@@ -37,7 +37,7 @@ public class ExternalAuthenticationController {
 	public ResponseEntity<OauthConfigDto> getPublicConfig() {
 		LOG.debug("OAuth get public config");
 		OAuthConfigBo oAuthConfigBo = getOAuthConfigInfo.run();
-		return ResponseEntity.ok().body(new OauthConfigDto(oAuthConfigBo.getIssuerUrl(), oAuthConfigBo.getClientId(), oAuthConfigBo.isEnabled()));
+		return ResponseEntity.ok().body(new OauthConfigDto(oAuthConfigBo.getIssuerUrl(), oAuthConfigBo.getClientId(), oAuthConfigBo.getLogoutUrl(), oAuthConfigBo.isEnabled()));
 	}
 	
 	@GetMapping(value = "/login")

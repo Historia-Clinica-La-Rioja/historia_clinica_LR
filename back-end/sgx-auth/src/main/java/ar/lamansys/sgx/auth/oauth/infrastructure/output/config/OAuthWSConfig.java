@@ -35,6 +35,9 @@ public class OAuthWSConfig extends WSConfig {
     @Value("${ws.oauth.url.accesstoken:/auth/realms/REALM_NAME/protocol/openid-connect/token}")
     private String fetchAccessToken;
 
+    @Value("${ws.oauth.url.logout:/auth/realms/REALM_NAME/protocol/openid-connect/logout}")
+    private String logout;
+
     @Value("${ws.oauth.url.createuser:/auth/admin/realms/REALM_NAME/users}")
     private String createUser;
 
@@ -54,6 +57,11 @@ public class OAuthWSConfig extends WSConfig {
     public String getCreateUser() {
         String createUserUrl = createUser;
         return createUserUrl.replaceFirst(REALM_NAME_PLACEHOLDER, realmName);
+    }
+
+    public String getLogout() {
+        String logoutUrl = logout;
+        return logoutUrl.replaceFirst(REALM_NAME_PLACEHOLDER, realmName);
     }
 
     public OAuthWSConfig(@Value("${ws.oauth.url.base:}") String baseUrl) {

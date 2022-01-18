@@ -19,3 +19,10 @@ export interface PermissionsDto {
 export interface PublicInfoDto {
     features: string[];
 }
+
+export interface OauthConfigDto {
+    clientId: string;
+    enabled: boolean;
+    issuerUrl: string;
+    logoutUrl: string;
+}

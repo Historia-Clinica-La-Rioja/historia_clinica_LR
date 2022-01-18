@@ -15,6 +15,8 @@ public class OAuthConfigBo {
 
     private String clientId;
 
+    private String logoutUrl;
+
     private boolean enabled;
 
 }
