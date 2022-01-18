@@ -41,12 +41,17 @@ export class AntropometricosSummaryComponent implements OnInit {
 			(anthropometricData: AnthropometricDataDto) => {
 				if (anthropometricData) {
 					this.details = [];
-					Object.keys(anthropometricData).forEach(key => this.details.push(
-						{
-							description: this.LABELS[key],
-							value: anthropometricData[key]?.value
+					Object.keys(anthropometricData).forEach(
+						key => {
+							if (Object.keys(this.LABELS).includes(key))
+								this.details.push(
+									{
+										description: this.LABELS[key],
+										value: anthropometricData[key]?.value
+									}
+								);
 						}
-					));
+					);
 				}
 			}
 		);
