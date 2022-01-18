@@ -54,7 +54,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private List<ReasonBo> reasons = new ArrayList<>();
 
-    private Integer getClinicalSpecialtyId;
+    private Integer clinicalSpecialtyId;
 
     private LocalDate performedDate;
 
