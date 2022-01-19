@@ -365,7 +365,8 @@ const messages = {
                 plan: 'Plan',
                 rnos: 'Rnos',
                 acronym: 'Acrónimo',
-                plans: 'Planes'
+                plans: 'Planes',
+                enabled: 'Habilitada'
             },
             createRelated: 'Crear Cobertura médica'
 
