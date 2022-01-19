@@ -25,7 +25,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners(SGXAuditListener.class)
-@Where(clause = "deleted=false")
 public class MedicalCoverage extends SGXAuditableEntity<Integer> implements Serializable {
     /*
      */
