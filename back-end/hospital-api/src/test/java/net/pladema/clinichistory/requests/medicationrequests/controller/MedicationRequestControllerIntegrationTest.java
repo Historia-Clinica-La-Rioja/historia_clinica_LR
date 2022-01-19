@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import ar.lamansys.sgx.shared.pdf.PdfService;
-import net.pladema.UnitController;
+import net.pladema.IntegrationController;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MedicationRequestController.class)
-class MedicationRequestControllerTest extends UnitController {
+class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
     private String BASE_PATH = "/institutions/{institutionId}/patient/{patientId}/medication-requests";
 

@@ -1,22 +1,17 @@
-package net.pladema.sgh.app;
+package ar.lamansys.sgx.auth;
 
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
 import ar.lamansys.sgx.shared.i18n.CustomMessageSourceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Locale;
 
 
-@Import({CustomMessageSourceConfiguration.class, JacksonDateFormatConfig.class, ActuatorConfiguration.class})
-public class UnitController {
+@Import({CustomMessageSourceConfiguration.class, JacksonDateFormatConfig.class})
+public class IntegrationController {
 	
-    @Autowired
-    protected MockMvc mockMvc;
-
 	@Autowired
 	private MessageSource messageSource;
 

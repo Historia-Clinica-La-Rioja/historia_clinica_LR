@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
-class SGXAuditableEntityJPARepositoryTest extends UnitRepository {
+class SGXAuditableEntityJPARepositoryIntegrationTest extends UnitRepository {
 
     @Autowired
     private AuditableRepository repository;

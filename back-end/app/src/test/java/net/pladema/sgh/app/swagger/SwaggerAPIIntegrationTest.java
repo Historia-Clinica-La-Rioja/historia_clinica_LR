@@ -1,5 +1,6 @@
 package net.pladema.sgh.app.swagger;
 
+import net.pladema.sgh.app.IntegrationTest;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestPropertySource("classpath:integration-test.properties")
-class SwaggerAPIIntegrationTest {
+class SwaggerAPIIntegrationTest extends IntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;

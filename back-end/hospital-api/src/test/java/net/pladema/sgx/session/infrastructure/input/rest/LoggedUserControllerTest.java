@@ -15,15 +15,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import net.pladema.UnitController;
-import net.pladema.permissions.service.dto.RoleAssignment;
+import net.pladema.IntegrationController;
 import net.pladema.authorization.infrastructure.input.rest.mapper.RoleNameMapper;
 import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.session.application.fetchloggeduserinfo.FetchLoggedUserInfo;
 import net.pladema.sgx.session.application.fetchloggeduserroles.FetchLoggedUserRoles;
 
 @WebMvcTest(LoggedUserController.class)
-class LoggedUserControllerTest extends UnitController {
+class LoggedUserControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private FetchLoggedUserRoles getLoggedUserRoles;

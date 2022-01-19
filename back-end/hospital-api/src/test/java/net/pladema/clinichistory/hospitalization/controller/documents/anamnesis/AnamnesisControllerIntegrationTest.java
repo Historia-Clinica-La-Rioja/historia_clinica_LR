@@ -5,7 +5,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.AuthorMapper;
-import net.pladema.UnitController;
+import net.pladema.IntegrationController;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AnamnesisController.class)
-class AnamnesisControllerTest extends UnitController {
+class AnamnesisControllerIntegrationTest extends IntegrationController {
 
 	private static final Long DOCUMENT_ID = 1L;
 	private static final String POST = "/institutions/1/internments/1/anamnesis";

@@ -1,6 +1,6 @@
 package net.pladema.person.controller;
 
-import net.pladema.UnitController;
+import net.pladema.IntegrationController;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.service.PersonService;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PersonController.class)
-class PersonControllerTest extends UnitController {
+class PersonControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private PersonService personService;

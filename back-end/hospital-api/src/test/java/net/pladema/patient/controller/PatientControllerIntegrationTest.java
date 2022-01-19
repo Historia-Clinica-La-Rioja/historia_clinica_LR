@@ -1,6 +1,6 @@
 package net.pladema.patient.controller;
 
-import net.pladema.UnitController;
+import net.pladema.IntegrationController;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.federar.controller.FederarExternalService;
 import net.pladema.patient.controller.mapper.PatientMapper;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PatientController.class)
-class PatientControllerTest extends UnitController {
+class PatientControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private PatientService patientService;

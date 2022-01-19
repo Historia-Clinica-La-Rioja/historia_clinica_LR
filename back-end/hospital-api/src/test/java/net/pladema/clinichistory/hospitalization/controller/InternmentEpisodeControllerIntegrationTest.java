@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import net.pladema.UnitController;
+import net.pladema.IntegrationController;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(InternmentEpisodeController.class)
-class InternmentEpisodeControllerTest extends UnitController {
+class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private InternmentEpisodeService internmentEpisodeService;

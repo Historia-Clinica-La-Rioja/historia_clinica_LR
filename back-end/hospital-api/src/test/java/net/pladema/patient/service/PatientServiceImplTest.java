@@ -22,7 +22,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-class PatientServiceImplTest extends UnitRepository {
+class PatientServiceImplIntegrationTest extends UnitRepository {
 
     @Autowired
     private PatientRepository patientRepository;

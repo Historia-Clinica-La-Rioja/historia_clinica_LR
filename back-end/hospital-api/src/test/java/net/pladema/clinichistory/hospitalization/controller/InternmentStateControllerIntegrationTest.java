@@ -7,7 +7,7 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationImmunizationState;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationMedicationState;
-import net.pladema.UnitController;
+import net.pladema.IntegrationController;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.establishment.repository.InstitutionRepository;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(InternmentStateController.class)
-class InternmentStateControllerTest extends UnitController {
+class InternmentStateControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private FetchHospitalizationGeneralState fetchHospitalizationGeneralState;

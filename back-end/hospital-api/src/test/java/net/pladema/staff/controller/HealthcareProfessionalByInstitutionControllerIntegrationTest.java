@@ -1,7 +1,7 @@
 package net.pladema.staff.controller;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.UnitController;
+import net.pladema.IntegrationController;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HealthcareProfessionalByInstitutionController.class)
-class HealthcareProfessionalByInstitutionControllerTest extends UnitController {
+class HealthcareProfessionalByInstitutionControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private HealthcareProfessionalService healthcareProfessionalService;
