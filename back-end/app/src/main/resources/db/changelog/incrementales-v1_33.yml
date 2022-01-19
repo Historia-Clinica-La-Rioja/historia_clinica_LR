@@ -106,3 +106,36 @@ databaseChangeLog:
                         DELETE FROM manual_classification WHERE id = 9;
                         DELETE FROM manual_classification WHERE id = 10;
                         DELETE FROM manual_classification WHERE id = 11;
+    
+    - changeSet:
+          id: addColumn-last_update-snomed_related_group
+          author: tmedina
+          changes:
+              - addColumn:
+                    tableName: snomed_related_group
+                    columns:
+                        - column:
+                              name: last_update
+                              type: date
+
+    - changeSet:
+          id: updateValues-last_update-snomed_related_group
+          author: tmedina
+          context: "!schema-only"
+          changes:
+              - sql:
+                    sql: |-
+                        UPDATE snomed_related_group
+                        SET last_update = snomed_group.last_update
+                        FROM snomed_group
+                        WHERE (snomed_related_group.group_id = snomed_group.id);
+
+    - changeSet:
+          id: addNotNullConstraint-last_update-snomed_related_group
+          author: tmedina
+          changes:
+              - addNotNullConstraint:
+                    columnDataType: date
+                    columnName: last_update
+                    tableName: snomed_related_group
+                    validate: true

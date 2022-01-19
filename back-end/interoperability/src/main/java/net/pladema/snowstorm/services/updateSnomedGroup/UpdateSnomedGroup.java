@@ -38,12 +38,14 @@ public class UpdateSnomedGroup {
         log.debug("Input parameter -> eclKey {}", eclKey);
         Integer conceptsProcessed = 1;
         String searchAfter = null;
-        Integer snomedGroupId = saveSnomedGroup(eclKey);
+        LocalDate today = dateTimeProvider.nowDate();
+
+        Integer snomedGroupId = saveSnomedGroup(eclKey, today);
         do {
             SnowstormSearchResponse response = snowstormService.getConceptsByEclKey(eclKey, searchAfter);
             searchAfter = response.getSearchAfter();
             List<Integer> conceptIds = sharedSnomedPort.addSnomedConcepts(associateWithParentAndMapToDto(response));
-            conceptsProcessed = associateConceptIdsWithSnomedGroup(snomedGroupId, conceptIds, conceptsProcessed);
+            conceptsProcessed = associateConceptIdsWithSnomedGroup(snomedGroupId, conceptIds, conceptsProcessed, today);
             log.trace("Concepts processed -> {}", conceptsProcessed);
         }
         while (searchAfter != null);
@@ -72,22 +74,21 @@ public class UpdateSnomedGroup {
         return null;
     }
 
-    private Integer associateConceptIdsWithSnomedGroup(Integer snomedGroupId, List<Integer> conceptIds, Integer orden) {
+    private Integer associateConceptIdsWithSnomedGroup(Integer snomedGroupId, List<Integer> conceptIds, Integer orden, LocalDate date) {
         for (Integer snomedId : conceptIds) {
-            SnomedRelatedGroup snomedRelatedGroup = new SnomedRelatedGroup(snomedId, snomedGroupId, orden);
+            SnomedRelatedGroup snomedRelatedGroup = new SnomedRelatedGroup(snomedId, snomedGroupId, orden, date);
             snomedRelatedGroupRepository.save(snomedRelatedGroup);
             orden = orden + 1;
         }
         return orden;
     }
 
-    private Integer saveSnomedGroup(String eclKey) {
-        LocalDate now = dateTimeProvider.nowDate();
+    private Integer saveSnomedGroup(String eclKey, LocalDate date) {
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
         Integer snomedGroupId = snomedGroupRepository.getIdByEcl(ecl);
         Integer customId = 1;
 
-        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, now);
+        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date);
         return snomedGroupRepository.save(toSave).getId();
     }
 
