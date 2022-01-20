@@ -26,12 +26,12 @@ public class PatientMedicalCoverageVo {
     private PrivateHealthInsuranceDetailsVo privateHealthInsuranceDetails;
 
     public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name,
-                                    String cuit, Integer rnos, String acronym, PrivateHealthInsuranceDetails privateHealthInsuranceDetails) {
+                                    String cuit, Integer rnos, String acronym, Integer privateHealthInsuranceId, PrivateHealthInsuranceDetails privateHealthInsuranceDetails) {
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
         this.active = active;
-        if (rnos != null)
+        if (privateHealthInsuranceId == null)
             this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name,cuit, rnos, acronym);
         else{
             this.medicalCoverage = new PrivateHealthInsuranceVo(medicalCoverageId, name,cuit);
