@@ -139,3 +139,12 @@ databaseChangeLog:
                     columnName: last_update
                     tableName: snomed_related_group
                     validate: true
+
+    - changeSet:
+          id: createIndex-snomed
+          author: tmedina
+          dbms: postgresql
+          changes:
+              - sql:
+                    sql: |-
+                        CREATE INDEX IDX_snomed_pt ON snomed USING GIN (to_tsvector('spanish', pt));
