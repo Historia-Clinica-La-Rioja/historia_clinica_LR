@@ -156,7 +156,7 @@ const messages = {
             },
         }, 
         snvs: {
-            name: 'Institución |||| Instituciones',
+            name: 'SNVS |||| SNVS',
             fields: {
                 groupEventId: 'Grupo evento',
                 eventId: 'Evento',
@@ -167,6 +167,7 @@ const messages = {
                 status: 'Estado',
                 responseCode: 'Código de respuesta',
                 professionalId: 'Profesional',
+                institutionId: 'Institución',
                 sisaRegisteredId: 'Id Sisa',
                 lastUpdate: 'Última actualización'
             },
