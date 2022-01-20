@@ -2,7 +2,6 @@ package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
-import net.pladema.patient.repository.MedicalCoverageRepositoryImpl;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
@@ -35,18 +34,15 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 
 	private final MedicalCoverageRepository medicalCoverageRepository;
 
-	private final MedicalCoverageRepositoryImpl medicalCoverageRepositoryImpl;
-
 	private final PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
 
 	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
 
-	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository, PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository, MedicalCoverageRepositoryImpl medicalCoverageRepositoryImpl) {
+	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository, PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
 		this.patientMedicalCoverageRepository = patientMedicalCoverageRepository;
 		this.medicalCoverageRepository = medicalCoverageRepository;
 		this.privateHealthInsuranceDetailsRepository = privateHealthInsuranceDetailsRepository;
 		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
-		this.medicalCoverageRepositoryImpl = medicalCoverageRepositoryImpl;
 	}
 
 	@Override
@@ -103,11 +99,7 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 									   Integer patientId) {
 		List<Integer> result = new ArrayList<>();
 		coverages.forEach((coverage) -> {
-			MedicalCoverage medicalCoverage = (coverage.getMedicalCoverage().getId() != null)
-					? medicalCoverageRepositoryImpl.findById(coverage.getMedicalCoverage().getId()).get()
-					: coverage.getMedicalCoverage().mapToEntity();
-			MedicalCoverage MedicalCoverageSaved = medicalCoverageRepository.save(medicalCoverage);
-			coverage.getMedicalCoverage().setId(MedicalCoverageSaved.getId());
+			coverage.getMedicalCoverage().setId(coverage.getMedicalCoverage().getId());
 			if (coverage.getPrivateHealthInsuranceDetails() != null) {
 				PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
 				coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
