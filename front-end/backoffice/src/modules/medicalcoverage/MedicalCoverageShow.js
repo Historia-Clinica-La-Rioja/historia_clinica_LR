@@ -11,7 +11,8 @@ import {
     TextField,
     TopToolbar,
     useRecordContext,
-    Labeled, BooleanField
+    BooleanField,
+    Labeled,
 } from 'react-admin';
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";

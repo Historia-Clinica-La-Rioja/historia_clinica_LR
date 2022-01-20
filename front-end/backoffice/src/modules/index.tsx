@@ -81,6 +81,7 @@ const resourcesAdminRoot = [
     <Resource name="medicalcoverages" {...medicalCoverage} />,
     <Resource name="medicalcoveragetypes" />,
     <Resource name="privatehealthinsuranceplans" {...privatehealthinsuranceplans} />,
+    <Resource name="medicalcoveragesmerge" />,
 
 
     // Ampliación
