@@ -1,6 +1,6 @@
-package net.pladema.sgx.repository.dialect;
+package ar.lamansys.sgx.shared.repositories.dialect;
 
-import net.pladema.sgx.repository.dialect.type.ObjectArrayUserType;
+import ar.lamansys.sgx.shared.repositories.dialect.type.ObjectArrayUserType;
 import org.hibernate.dialect.DB2Dialect;
 import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.type.CustomType;
