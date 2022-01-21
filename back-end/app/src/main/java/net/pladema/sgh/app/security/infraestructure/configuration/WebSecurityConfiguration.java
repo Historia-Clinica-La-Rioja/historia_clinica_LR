@@ -2,7 +2,7 @@ package net.pladema.sgh.app.security.infraestructure.configuration;
 
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter.AuthenticationTokenFilter;
 import ar.lamansys.sgx.auth.oauth.infrastructure.input.OAuth2AuthenticationFilter;
-import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.ActuatorConfiguration;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgh.app.security.infraestructure.filters.AuthorizationFilter;
 import net.pladema.sgh.app.security.infraestructure.filters.PublicApiAuthenticationFilter;

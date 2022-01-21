@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.configuration.domain;
+package ar.lamansys.sgx.shared.actuator.domain;
 
 import lombok.Getter;
 import lombok.ToString;

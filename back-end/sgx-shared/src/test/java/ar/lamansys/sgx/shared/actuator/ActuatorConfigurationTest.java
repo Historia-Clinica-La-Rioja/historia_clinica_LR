@@ -1,9 +1,10 @@
-package ar.lamansys.sgx.shared.configuration;
+package ar.lamansys.sgx.shared.actuator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.ActuatorConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.configuration.metrics;
+package ar.lamansys.sgx.shared.actuator.infrastructure.configuration;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.Getter;

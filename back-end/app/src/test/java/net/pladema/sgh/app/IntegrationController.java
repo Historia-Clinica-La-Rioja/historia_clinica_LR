@@ -1,7 +1,7 @@
 package net.pladema.sgh.app;
 
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.ActuatorConfiguration;
 import ar.lamansys.sgx.shared.i18n.CustomMessageSourceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

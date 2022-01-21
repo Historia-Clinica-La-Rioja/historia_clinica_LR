@@ -1,7 +1,7 @@
-package ar.lamansys.sgx.shared.configuration.infrastructure.input.rest;
+package ar.lamansys.sgx.shared.actuator.infrastructure.input.rest;
 
 
-import ar.lamansys.sgx.shared.configuration.domain.PropertyBo;
+import ar.lamansys.sgx.shared.actuator.domain.PropertyBo;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import org.springframework.boot.actuate.env.EnvironmentEndpoint;
 import org.springframework.data.domain.Example;
