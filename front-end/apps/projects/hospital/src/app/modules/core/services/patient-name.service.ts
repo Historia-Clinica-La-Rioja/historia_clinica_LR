@@ -20,8 +20,9 @@ export class PatientNameService {
 	}
 
 	getPatientName(patientName: string, patientNameSelfDetermination: string): string {
-		if (this.nameSelfDeterminationFFIsEnabled() && patientNameSelfDetermination != undefined)
-			return patientNameSelfDetermination;
+		const nameSelfDetermination = patientNameSelfDetermination ? patientNameSelfDetermination : null;
+		if (this.nameSelfDeterminationFFIsEnabled() && (patientNameSelfDetermination != undefined && nameSelfDetermination != null))
+			return nameSelfDetermination;
 		return patientName;
 	}
 }
