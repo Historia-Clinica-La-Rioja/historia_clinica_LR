@@ -385,6 +385,14 @@ const messages = {
             },
             addRelated: 'Agregar plan',
         },
+        "properties": {
+            name: 'Propiedades del sistema |||| Propiedades del sistema',
+            fields: {
+                id: 'Identificador',
+                value: 'Valor',
+                origin: 'Fuente de datos',
+            }
+        },
     },
 };
 

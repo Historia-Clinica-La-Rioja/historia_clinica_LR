@@ -82,9 +82,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, apiUser + "/activationlink/resend").permitAll()
 				.antMatchers(apiPassword + apiPasswordReset ).permitAll()
 				.antMatchers("/actuator/health").permitAll()
+				.antMatchers("/actuator/env/**").hasAnyAuthority(
+						ERole.ROOT.getValue(),
+						ERole.ADMINISTRADOR.getValue())
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
 				.antMatchers(apiAuth + "/**").permitAll()
 				.antMatchers(SWAGGER_RESOURCES).permitAll()
+				.antMatchers(BACKOFFICE + "/properties").hasAnyAuthority(
+						ERole.ROOT.getValue(),
+						ERole.ADMINISTRADOR.getValue())
 				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
 					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),

@@ -30,6 +30,7 @@ import careLines from "./carelines";
 import clinicalspecialtycarelines from "./clinicalspecialtycarelines";
 import documenttypes from "./documenttypes";
 import documentfiles from "./documentfiles";
+import properties from "./properties";
 import restClientMeasures from "./rest-client-measures";
 import medicalCoverage from "./medicalcoverage";
 import privatehealthinsuranceplans from "./privatehealthinsuranceplans";
@@ -82,7 +83,7 @@ const resourcesAdminRoot = [
     <Resource name="medicalcoveragetypes" />,
     <Resource name="privatehealthinsuranceplans" {...privatehealthinsuranceplans} />,
     <Resource name="medicalcoveragesmerge" />,
-
+    <Resource name="properties" {...properties} />,
 
     // Ampliación
     // 
