@@ -2,6 +2,8 @@ package ar.lamansys.sgx.shared.actuator.infrastructure.input.rest;
 
 
 import ar.lamansys.sgx.shared.actuator.domain.PropertyBo;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import org.springframework.boot.actuate.env.EnvironmentEndpoint;
 import org.springframework.data.domain.Example;
@@ -23,7 +25,10 @@ public class BackofficePropertyStore implements BackofficeStore<PropertyBo, Stri
 
 	private final Set<PropertyBo> properties;
 
-	public BackofficePropertyStore(Optional<EnvironmentEndpoint> environ) {
+	private final FeatureFlagsService featureFlagsService;
+
+	public BackofficePropertyStore(Optional<EnvironmentEndpoint> environ, FeatureFlagsService featureFlagsService) {
+		this.featureFlagsService = featureFlagsService;
 		String include = "(spring\\.*|email-*|ws\\.*|logging\\.*|ws\\.*|jobs\\.*|"
 				+ "app\\.*|api\\.*|admin\\.*|token\\.*|management\\.*|"
 				+ "oauth\\.*|externalurl\\.*|integration\\.*|actuator\\.*|"
@@ -56,6 +61,8 @@ public class BackofficePropertyStore implements BackofficeStore<PropertyBo, Stri
 
 	@Override
 	public Page<PropertyBo> findAll(PropertyBo entity, Pageable pageable) {
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA))
+			return new PageImpl<>(Collections.emptyList(), pageable, 0);
 		var result = properties.stream()
 				.filter(propertyBo -> entity.getId() == null || propertyBo.getId().contains(entity.getId()))
 				.collect(Collectors.toList());
@@ -66,21 +73,27 @@ public class BackofficePropertyStore implements BackofficeStore<PropertyBo, Stri
 
 	@Override
 	public List<PropertyBo> findAll() {
-		return new ArrayList<>(properties);
+		return featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA) ?
+				new ArrayList<>(properties) :
+				Collections.emptyList();
 	}
 
 	@Override
 	public List<PropertyBo> findAllById(List<String> ids) {
-		return properties.stream()
+		return featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA) ?
+				properties.stream()
 				.filter(propertyBo -> ids.contains(propertyBo.getId()))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()) :
+				Collections.emptyList();
 	}
 
 	@Override
 	public Optional<PropertyBo> findById(String id) {
-		return properties.stream()
+		return featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA) ?
+				properties.stream()
 				.filter(propertyBo -> propertyBo.getId().equals(id))
-				.findFirst();
+				.findFirst() :
+				Optional.empty();
 	}
 
 	@Override

@@ -80,6 +80,9 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si esta habilitada la opción para visualizar el nombre autopercibido del paciente en lugar del nombre del documento")
     HABILITAR_NOMBRE_AUTOPERCIBIDO,
+
+    @Label("Indica si esta habilitada la opción para visualizar las propiedades configuradas en el sistema ")
+    HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA,
     ;
 
     public boolean isActive() {
