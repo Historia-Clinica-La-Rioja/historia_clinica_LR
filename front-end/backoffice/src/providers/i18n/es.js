@@ -73,6 +73,10 @@ const messages = {
     files: {
         cant_download: 'No se pudo descargar el archivo'
     },
+    mergeMedicalCoverage: {
+        merge_success: 'La cobertura se unificó correctamente',
+        cant_merge: 'No se pudo unificar la cobertura médica'
+    },
     resources: {
         beds: {
             name: 'Cama |||| Camas',

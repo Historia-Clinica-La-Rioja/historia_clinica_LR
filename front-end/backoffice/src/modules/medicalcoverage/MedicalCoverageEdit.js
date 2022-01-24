@@ -16,6 +16,7 @@ import {
 import CustomToolbar from '../components/CustomToolbar';
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
+import MergeButton from "../../libs/sgx/components/MergeButton";
 
 const PREPAGA = 1;
 const OBRA_SOCIAL = 2;
@@ -70,6 +71,7 @@ const MedicalCoverageMergeComponent = (props) => {
                                 perPage={10}>
                 <Datagrid>
                     <TextField  source="name" label="resources.medicalcoverages.fields.name"/>
+                    <MergeButton baseMedicalCoverage={record.id}></MergeButton>
                 </Datagrid>
             </ReferenceManyField>
 

@@ -3,9 +3,12 @@ package net.pladema.establishment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
 import net.pladema.patient.controller.dto.BackofficeCoverageDto;
 import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.PatientMedicalCoverageRepository;
+import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceRepository;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.person.repository.HealthInsuranceRepository;
@@ -30,7 +33,13 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
 
     private final PrivateHealthInsuranceRepository privateHealthInsuranceRepository;
 
+    private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+
+    private final PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
+
     private final HealthInsuranceRepository healthInsuranceRepository;
+
+    private final PatientMedicalCoverageRepository patientMedicalCoverageRepository;
 
     @Override
     public Page<BackofficeCoverageDto> findAll(BackofficeCoverageDto coverage, Pageable pageable) {
@@ -88,6 +97,30 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
                 .orElseGet(() -> healthInsuranceRepository.findById(entity.getId())
                         .map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), healthInsurance.getRnos(), healthInsurance.getAcronym(), !healthInsurance.isDeleted()))
                         .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null, true)));
+    }
+
+    public BackofficeCoverageDto merge(Integer id, Integer baseMedicalCoverageId){
+        if(!privateHealthInsuranceRepository.existsById(id))
+            healthInsuranceRepository.deleteById(id);
+        else {
+            privateHealthInsurancePlanRepository.findByPrivateHealthInsuranceId(id)
+                    .forEach(plan -> {
+                            privateHealthInsuranceDetailsRepository.findAllByPlanId(plan.getId())
+                                    .forEach(phid -> {
+                                        phid.setPlanId(null);
+                                        privateHealthInsuranceDetailsRepository.save(phid);
+                                    });
+                            privateHealthInsurancePlanRepository.deleteById(plan.getId());
+                    });
+            privateHealthInsuranceRepository.deleteById(id);
+        }
+        patientMedicalCoverageRepository.getByMedicalCoverageId(id)
+                .forEach(pmc -> {
+                    pmc.setMedicalCoverageId(baseMedicalCoverageId);
+                    patientMedicalCoverageRepository.save(pmc);
+                });
+        medicalCoverageRepository.deleteMergedCoverage(id);
+        return findById(baseMedicalCoverageId).get();
     }
 
 }

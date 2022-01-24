@@ -34,4 +34,10 @@ public interface MedicalCoverageRepository extends SGXAuditableEntityJPAReposito
     @Transactional(readOnly = true)
     @Query(value = "SELECT mc FROM MedicalCoverage mc WHERE mc.cuit = :cuit")
     Optional<MedicalCoverage> findByCUIT(@Param("cuit") String cuit);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM MedicalCoverage mc "+
+            "WHERE mc.id = :id ")
+    void deleteMergedCoverage(@Param("id") Integer id);
 }
