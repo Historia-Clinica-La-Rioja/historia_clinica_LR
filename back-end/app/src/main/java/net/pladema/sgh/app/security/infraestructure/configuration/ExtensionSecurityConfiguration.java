@@ -1,11 +1,13 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
 import static net.pladema.hsi.extensions.configuration.ExtensionAuthorizationBuilder.buildExtensionAuthorization;
+import static net.pladema.hsi.extensions.infrastructure.repository.DemoExtensionService.PUBLIC_MENU_LIST;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import net.pladema.hsi.extensions.configuration.ExtensionAuthorization;
+import net.pladema.hsi.extensions.infrastructure.repository.DemoExtensionService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 
@@ -18,6 +20,7 @@ public class ExtensionSecurityConfiguration {
 	)  {
 		return buildExtensionAuthorization()
 				.isInstitutionMenuAllowed("references", loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRATIVO))
+				.systemMenu(DemoExtensionService.PUBLIC_MENU_LIST, () -> true)
 				.build();
 	}
 

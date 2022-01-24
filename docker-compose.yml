@@ -38,7 +38,7 @@ services:
     build: ./front-end
     container_name: hsi-frontend
     environment:
-      API_IP_PORT: host.docker.internal:8080
+      API_IP_PORT: hsi-backend:8080
     ports:
       - "4200:8280"
 
