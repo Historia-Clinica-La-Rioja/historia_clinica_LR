@@ -16,7 +16,7 @@ Este componente esta dividido en dos aplicaciones: webapp y backoffice. Cada una
 
 ### Webapp
 
-Esta implementada usando [Angular 11](https://angular.io/) y sus componentes gráficos usan [Angular Material] (https://material.angular.io/).
+Esta implementada usando [Angular 12](https://angular.io/) y sus componentes gráficos usan [Angular Material] (https://material.angular.io/).
 
 Este componente gestiona toda la funcionalidad más compleja del sistema (por ejemplo: internaciones, consultas ambulatorias, turnos, busqueda de paciente, historia electronica). Tiene comunicación con el servidor de Snomed para la búsqueda de los terminos clinicos utilizados en la aplicación y con la API de backend.
 
@@ -32,7 +32,7 @@ El mismo mantiene, al igual que el componente de webapp, comunicación con la AP
 
 ## Backend
 
-Esta implementado con [Java 11](https://www.java.com/es/download/) y usando el framework de [Spring Boot 2.3](https://spring.io/projects/spring-boot). 
+Esta implementado con [Java 11](https://www.java.com/es/download/) y usando el framework de [Spring Boot 2.6](https://spring.io/projects/spring-boot). 
 
 Este componente tiene la responsabilidad de proveer la API REST necesaria para cada uno de los componentes de frontend. Sigue una arquitectura en capas:
 
