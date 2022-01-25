@@ -9,6 +9,7 @@ import { ActionDisplays, TableModel } from '@presentation/components/table/table
 import { hasError } from '@core/utils/form.utils';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { intervalValidation} from "@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/utils/ordenesyprescrip.utils";
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -28,6 +29,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
 	hasError = hasError;
+	intervalValidation = intervalValidation;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
@@ -105,7 +107,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	}
 
 	addPrescriptionItem() {
-		if (this.prescriptionItemForm.valid) {
+		if (this.prescriptionItemForm.valid &&
+			!intervalValidation(this.prescriptionItemForm, 'intervalHours','interval') &&
+			!intervalValidation(this.prescriptionItemForm, 'administrationTimeDays','administrationTime')) {
 			const {item, showDosage, showStudyCategory} = this.data;
 			const newItem: NewPrescriptionItem = {
 				id: item ? item.id : null,

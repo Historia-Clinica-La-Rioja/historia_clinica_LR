@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.external.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.external.controller.dto.ExternalClinicalHistoryDto;
 import net.pladema.clinichistory.external.controller.mapper.ExternalClinicalHistoryMapper;
 import net.pladema.clinichistory.external.service.ExternalClinicalHistoryService;
@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/outpatient/consultations")
 @Validated
-@Api(value = "External Clinical History", tags = {"External Clinical History"})
+@Tag(name = "External Clinical History", description = "External Clinical History")
 public class ExternalClinicalHistoryController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExternalClinicalHistoryController.class);

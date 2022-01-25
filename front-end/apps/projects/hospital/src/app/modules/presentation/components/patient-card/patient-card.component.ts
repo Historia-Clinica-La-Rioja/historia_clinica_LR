@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { PersonPhotoDto } from '@api-rest/api-model';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
+import { PatientNameService } from '@core/services/patient-name.service';
 
 const NO_DOCUMENT_TYPE = 'No posee';
 @Component({
@@ -23,7 +24,7 @@ export class PatientCardComponent {
 	@Input() size = 'default';
 	decodedPhoto$: Observable<string>;
 
-	constructor(private readonly imageDecoderService: ImageDecoderService) { }
+	constructor(private readonly imageDecoderService: ImageDecoderService, private readonly patientNameService: PatientNameService) { }
 
 	public showID(): string {
 		if (this.patient?.id === undefined) {
@@ -63,6 +64,14 @@ export class PatientCardComponent {
 		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : '';
 		return gender + age;
 	}
+
+	public viewPatientName(): string {
+		let name = this.patientNameService.getPatientName(this.patient?.firstName, this.patient?.nameSelfDetermination)
+		if (name == this.patient?.firstName && (this.patient?.middleNames !== null && this.patient?.middleNames !== undefined))
+			name = this.patient?.firstName + " " + this.patient?.middleNames
+		return name;
+	}
+
 }
 
 export class PatientBasicData {
@@ -73,4 +82,5 @@ export class PatientBasicData {
 	otherLastNames?: string;
 	gender?: string;
 	age?: number;
+	nameSelfDetermination?: string;
 }

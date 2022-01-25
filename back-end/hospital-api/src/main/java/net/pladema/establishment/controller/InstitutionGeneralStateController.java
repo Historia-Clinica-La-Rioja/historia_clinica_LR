@@ -1,6 +1,6 @@
 package net.pladema.establishment.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.establishment.controller.dto.VInstitutionDto;
 import net.pladema.establishment.controller.mapper.VInstitutionMapper;
 import net.pladema.establishment.service.InstitutionGeneralStateService;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "Institution General State", tags = { "Institution general state" })
+@Tag(name = "Institution general state", description = "Institution general state")
 @RequestMapping("/institution/{institutionId}/generalState")
 public class InstitutionGeneralStateController {
 

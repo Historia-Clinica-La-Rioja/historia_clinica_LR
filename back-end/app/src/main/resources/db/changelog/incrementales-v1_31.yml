@@ -1,0 +1,210 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_31
+    
+    - changeSet: 
+        id: snomed-metadata_update_1_31
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    call safeInsertSnomed('1119306006', 'síndrome inflamatorio multisistémico en adultos', '900000000000207008', 'síndrome inflamatorio multisistémico en adultos (trastorno)');
+                    call safeInsertSnomed('895448002', 'síndrome multisistémico inflamatorio pediátrico', '900000000000207008', 'síndrome multisistémico inflamatorio en niños (trastorno)');
+                    call safeInsertSnomed('414051000221108', 'SARS-COV-2 en puntos de entrada y casos relacionados con importación', '11000221109', 'SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)');
+                    
+    - changeSet: 
+        id: snomed_group-metadata_update_1_31
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO snomed_group (description, ecl, custom_id, last_update) VALUES('Infecciones respiratorias agudas EVENTO 313', '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|', 1, ${date.now});
+                    INSERT INTO snomed_group (description, ecl, custom_id, last_update) VALUES('Sindrome inflamatorio multisistémico (SIM) GRP_EVENTO 191', '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|', 2, ${date.now});
+                    INSERT INTO snomed_group (description, ecl, custom_id, last_update) VALUES('Infecciones respiratorias agudas EVENTO 317', '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|', 1, ${date.now});
+                    
+    - changeSet: 
+        id: snomed_related_group-metadata_update_1_31
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    WITH t1 AS (SELECT id FROM snomed WHERE sctid = '1119306006' AND pt = 'síndrome inflamatorio multisistémico en adultos'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                    WITH t1 AS (SELECT id FROM snomed WHERE sctid = '1119306006' AND pt = 'síndrome inflamatorio multisistémico en adultos'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2;
+                    WITH t1 AS (SELECT id FROM snomed WHERE sctid = '895448002' AND pt = 'síndrome multisistémico inflamatorio pediátrico'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                    WITH t1 AS (SELECT id FROM snomed WHERE sctid = '895448002' AND pt = 'síndrome multisistémico inflamatorio pediátrico'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 2 from t1,t2;
+                    WITH t1 AS (SELECT id FROM snomed WHERE sctid = '414051000221108' AND pt = 'SARS-COV-2 en puntos de entrada y casos relacionados con importación'), t2 AS (SELECT id FROM snomed_group WHERE ecl = '<<840546002 |exposición a coronavirus del síndrome respiratorio agudo severo 2 (evento)|' AND custom_id = 1) INSERT INTO snomed_related_group (snomed_id, group_id, orden) select t1.id, t2.id, 1 from t1,t2;
+                        
+    - changeSet: 
+        id: manual_classification-metadata_update_1_31
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    INSERT INTO manual_classification (id, description) VALUES(1, 'Caso confirmado de SIM asociado a COVID-19 con laboratorio compatible');
+                    INSERT INTO manual_classification (id, description) VALUES(2, 'Caso confirmado de SIM asociado a COVID-19 con nexo epidemiológico');
+                    INSERT INTO manual_classification (id, description) VALUES(3, 'Caso sospechoso de SIM asociado a COVID-19');
+                    INSERT INTO manual_classification (id, description) VALUES(4, 'Caso confirmado de SIM asociado a COVID-19 con laboratorio compatible');
+                    INSERT INTO manual_classification (id, description) VALUES(5, 'Asintomático - Continúa en seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(6, 'Negativo');
+                    INSERT INTO manual_classification (id, description) VALUES(7, 'Contacto - Inicia seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(8, 'Negativo - Persona exceptuada de cuarentena');
+                    INSERT INTO manual_classification (id, description) VALUES(9, 'Asintomático - Fin de seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(10, 'Negativo - FIN del seguimiento');
+                    INSERT INTO manual_classification (id, description) VALUES(11, 'Negativo - Inicia seguimiento');
+                    
+    - changeSet: 
+        id: snvs_group-metadata_update_1_31
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 313, 1, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 313, 1, 1 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 313, 1, 2 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 313, 1, 3 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 313, 1, 798 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 191, 313, 1, 798 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 191, 313, 1, 1 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 191, 313, 1, 596 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 191, 313, 1, 3 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 191, 313, 1, 2 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 5 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 781 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 6 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 7 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 754 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 771 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 8 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 9 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 10 from t1;
+                    WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 113, 317, 1, 11 from t1;
+                    
+    - changeSet:
+          id: add-institution_id-column-external_encounter
+          comment: Add column institution_id
+          author: mvenere
+          changes:
+              - addColumn:
+                    tableName: external_encounter
+                    columns:
+                        - column:
+                              name: institution_id
+                              type: int
+              - addForeignKeyConstraint:
+                    baseColumnNames: institution_id
+                    baseTableName: external_encounter
+                    constraintName: FK_external_encounter_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: institution
+                    validate: true
+                    
+    - changeSet:
+          id: add-cuit-column-medical_coverage
+          author: mvenere
+          changes:
+              - addColumn:
+                    tableName: medical_coverage
+                    columns:
+                        - column:
+                              name: cuit
+                              type: varchar(20)
+              - addUniqueConstraint:
+                    tableName: medical_coverage
+                    columnNames: cuit
+                    constraintName: UQ_cuit
+
+    - changeSet:
+        id: private_health_insurance_plan-createTable
+        comment: Create table private_health_insurance_plan
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: private_health_insurance_plan
+              columns:
+                - column:
+                      autoIncrement: true
+                      constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_private_health_insurance_plan
+                      name: id
+                      type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: private_health_insurance_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: plan
+                    type: varchar(10)
+          - addUniqueConstraint:
+              tableName: private_health_insurance_plan
+              columnNames: private_health_insurance_id, plan
+              constraintName: UQ_private_health_insurance_plan
+          - addForeignKeyConstraint:
+              baseColumnNames: private_health_insurance_id
+              baseTableName: private_health_insurance_plan
+              constraintName: FK_private_health_insurance_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: private_health_insurance
+              validate: true
+
+    - changeSet:
+        id: private_health_insurance_plan-data
+        comment: Actualizar datos private_health_insurance_plan
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO private_health_insurance_plan(private_health_insurance_id,plan) SELECT * FROM private_health_insurance WHERE plan NOTNULL;
+
+    - changeSet:
+        id: add-private_health_insurance_plan_id-column-private_health_insurance_details
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: private_health_insurance_details
+              columns:
+                - column:
+                    name: private_health_insurance_plan_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: private_health_insurance_plan_id
+              baseTableName:  private_health_insurance_details
+              constraintName: FK_private_health_insurance_details_private_health_insurance_plan_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: private_health_insurance_plan
+              validate: true
+
+    - changeSet:
+        id: modifying-private_health_insurance_details-data
+        comment: Actualizar datos private_health_insurance_details
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE private_health_insurance_details phid
+                SET private_health_insurance_plan_id  = phip.id
+                FROM private_health_insurance_plan phip
+                JOIN patient_medical_coverage pmc
+                ON pmc.medical_coverage_id = phip.private_health_insurance_id
+                WHERE phid.id = pmc.private_health_insurance_details_id
+
+    - changeSet:
+        id: snomed-metadata_update_outpatient
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                    call safeInsertSnomed('363812007', 'Circunferencia de la cabeza (entidad observable)', '363812007', 'Circunferencia de la cabeza (entidad observable)');
+                    call safeInsertSnomed('434912009', 'Concentración de glucosa en sangre (entidad observable)', '434912009', 'Concentración de glucosa en sangre (entidad observable)');
+                    call safeInsertSnomed('259689004', 'Hemoglobina glicosilada (sustancia)', '259689004', 'Hemoglobina glicosilada (sustancia)');
+                    call safeInsertSnomed('827181004', 'Riesgo de enfermedad cardiovascular (entidad observable)', '827181004', 'Riesgo de enfermedad cardiovascular (entidad observable)');

@@ -20,15 +20,19 @@ public class PrivateHealthInsuranceDetailsVo {
 
     private LocalDate endDate;
 
-    public PrivateHealthInsuranceDetailsVo(Integer id, LocalDate startDate, LocalDate endDate){
+    private Integer planId;
+
+    public PrivateHealthInsuranceDetailsVo(Integer id, LocalDate startDate, LocalDate endDate, Integer planId){
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.planId = planId;
     }
 
     public PrivateHealthInsuranceDetailsVo(PrivateHealthInsuranceDetails privateHealthInsuranceDetails){
         this.id = privateHealthInsuranceDetails.getId();
         this.startDate = privateHealthInsuranceDetails.getStartDate() != null ? privateHealthInsuranceDetails.getStartDate() : null;
         this.endDate = privateHealthInsuranceDetails.getEndDate() != null ? privateHealthInsuranceDetails.getEndDate() : null;
+        this.planId = privateHealthInsuranceDetails.getPlanId();
     }
 }

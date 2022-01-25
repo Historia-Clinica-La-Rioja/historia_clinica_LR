@@ -1,18 +1,5 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
 import ar.lamansys.sgh.clinichistory.domain.ips.Last2VitalSignsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
@@ -20,23 +7,35 @@ import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.HCHClinicalObservationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(SpringRunner.class)
-public class FetchHospitalizationClinicalObservationStateTest {
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class FetchHospitalizationClinicalObservationStateTest {
 
 	private FetchHospitalizationClinicalObservationState clinicalObservationGeneralStateService;
 
-	@MockBean
+	@Mock
 	private HCHClinicalObservationRepository hchClinicalObservationRepository;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		clinicalObservationGeneralStateService = new FetchHospitalizationClinicalObservationState(hchClinicalObservationRepository);
 	}
 
 
 	@Test
-	public void test_getVitalSignsGeneralState_complete() {
+	void test_getVitalSignsGeneralState_complete() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 2;
 		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
@@ -58,7 +57,7 @@ public class FetchHospitalizationClinicalObservationStateTest {
 	}
 
 	@Test
-	public void test_getVitalSignsGeneralState_partial() {
+	void test_getVitalSignsGeneralState_partial() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 1;
 		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
@@ -78,7 +77,7 @@ public class FetchHospitalizationClinicalObservationStateTest {
 	}
 
 	@Test
-	public void test_getVitalSignsGeneralState_empty() {
+	void test_getVitalSignsGeneralState_empty() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 0;
 		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))

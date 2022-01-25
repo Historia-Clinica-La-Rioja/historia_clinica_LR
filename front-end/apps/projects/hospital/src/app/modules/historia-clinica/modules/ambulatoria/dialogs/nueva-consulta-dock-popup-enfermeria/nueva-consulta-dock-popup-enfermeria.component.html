@@ -39,6 +39,10 @@
 											{{ bloodType.description }}
 										</mat-option>
 									</mat-select>
+									<button id="clear_blood_type" type="button" mat-button *ngIf="datosAntropometricosNuevaConsultaService.getForm().value.bloodType" matSuffix
+										color="warn" mat-icon-button (click)="clear(datosAntropometricosNuevaConsultaService.getForm().controls.bloodType); $event.stopPropagation()">
+										<mat-icon>close</mat-icon>
+									</button>
 								</mat-form-field>
 							</div>
 							<div>
@@ -75,7 +79,7 @@
 					<ng-container concept-form>
 						<form fxLayout="column" fxLayoutGap="10px"
 							[formGroup]="signosVitalesNuevaConsultaService.getForm()">
-							<div fxLayout="row wrap" fxFlex="100%" fxLayoutGap="5px" fxLayout.lt-lg="column">
+							<div fxFlex="100%" fxLayoutGap="5px" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="heartRate">
 									<mat-label
 										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'">
@@ -104,7 +108,7 @@
 								</div>
 							</div>
 
-							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+							<div fxFlex="100%" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="temperature">
 									<mat-label
 										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'">
@@ -133,7 +137,7 @@
 								</div>
 							</div>
 
-							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+							<div fxFlex="100%" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="systolicBloodPressure">
 									<mat-label
 										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'">

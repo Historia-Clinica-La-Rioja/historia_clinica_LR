@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { VITAL_SIGNS } from '@core/constants/validation-constants';
@@ -15,7 +15,7 @@ import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 	templateUrl: './pediatric-triage.component.html',
 	styleUrls: ['./pediatric-triage.component.scss']
 })
-export class PediatricTriageComponent implements OnInit{
+export class PediatricTriageComponent implements OnInit {
 
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
@@ -123,6 +123,23 @@ export class PediatricTriageComponent implements OnInit{
 			},
 			notes: formValue.notes
 		};
-}
+	}
+
+	clear(control: any, value: string): void {
+		switch (value) {
+			case "bodyTemperatureId":
+				control.controls.bodyTemperatureId.reset();
+				break;
+			case "muscleHypertoniaId":
+				control.controls.muscleHypertoniaId.reset();
+				break;
+			case "respiratoryRetractionId":
+				control.controls.respiratoryRetractionId.reset();
+				break;
+			case "perfusionId":
+				control.controls.perfusionId.reset();
+				break;
+		}
+	}
 
 }

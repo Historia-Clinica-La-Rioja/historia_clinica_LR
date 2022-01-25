@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.VitalSignExternalService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageVitalSignMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
@@ -41,7 +41,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/triage")
-@Api(value = "Emergency care Triage", tags = { "Triage" })
+@Tag(name = "Triage", description = "Triage")
 public class TriageController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TriageController.class);

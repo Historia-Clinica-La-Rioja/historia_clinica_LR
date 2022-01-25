@@ -7,13 +7,11 @@
 					<ng-container concept-form>
 						<div fxLayout="row" [formGroup]="formEvolucion">
 							<mat-form-field appearance="outline">
-								<mat-select id="clinicalSpecialtyId"
-											name="clinicalSpecialty"
-											formControlName="clinicalSpecialty"
-											(selectionChange)="setDefaultSpecialty()"
-											[attr.disabled]="fixedSpecialty">
+								<mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
+									formControlName="clinicalSpecialty" (selectionChange)="setDefaultSpecialty()"
+									[attr.disabled]="fixedSpecialty">
 									<mat-option *ngFor="let clinicalSpecialty of this.specialties"
-												[value]="clinicalSpecialty">
+										[value]="clinicalSpecialty">
 										<span class="mat-body">{{clinicalSpecialty.name}}</span>
 									</mat-option>
 								</mat-select>
@@ -26,72 +24,72 @@
 		</div>
 
 		<div id="motivo">
-			<app-new-document-section
-								  sectionTitle="ambulatoria.paciente.nueva-consulta.motivo.TITLE"
-	                        	  sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
+			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.motivo.TITLE"
+				sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
+					<app-concepts-search *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
 						[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
 						(search)="motivoNuevaConsultaService.openSearchDialog($event)">
 					</app-concepts-search>
 
 					<ng-template #mainMotivoConsulta>
 						<form [formGroup]="motivoNuevaConsultaService.getForm()"
-							  (ngSubmit)="motivoNuevaConsultaService.addToList()">
+							(ngSubmit)="motivoNuevaConsultaService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
 								</mat-label>
 								<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
-									   readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
+									readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
 								<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
-										(click)="motivoNuevaConsultaService.resetForm()">
+									(click)="motivoNuevaConsultaService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
 							<div align="end">
 								<button id="submit_motivos" class="uppercase" mat-raised-button color="primary"
-										type="submit">
-								<span class="uppercase"
-									  [translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
+									type="submit">
+									<span class="uppercase"
+										[translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
 								</button>
 							</div>
 						</form>
 					</ng-template>
 				</ng-container>
-				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
-											[columns]="motivoNuevaConsultaService.getTableColumnConfig()"
-											[data]="motivoNuevaConsultaService.getMotivosConsulta()">
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
+					[columns]="motivoNuevaConsultaService.getTableColumnConfig()"
+					[data]="motivoNuevaConsultaService.getMotivosConsulta()">
 				</app-document-section-table>
 			</app-new-document-section>
 		</div>
 
 		<div id="problemas">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.problemas.TITLE"
-									sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
+				sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 				<div concept-form *ngIf="!this.readOnlyProblema else problemaForm">
-					<app-concepts-search *ngIf="!ambulatoryConsultationProblemsService.getSnomedConcept() else problemaForm"
-										 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
-										 (search)="ambulatoryConsultationProblemsService.openSearchDialog($event)">
+					<app-concepts-search
+						*ngIf="!ambulatoryConsultationProblemsService.getSnomedConcept() else problemaForm"
+						[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
+						(search)="ambulatoryConsultationProblemsService.openSearchDialog($event)">
 					</app-concepts-search>
 				</div>
 
 				<ng-template #problemaForm>
 					<form [formGroup]="ambulatoryConsultationProblemsService.getForm()"
-						  (ngSubmit)="this.readOnlyProblema ? this.editProblema(): ambulatoryConsultationProblemsService.addToList(ffIsOn)">
+						(ngSubmit)="this.readOnlyProblema ? this.editProblema(): ambulatoryConsultationProblemsService.addToList(ffIsOn)">
 
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'">
 							</mat-label>
-							<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
-								   matTooltip="{{ ambulatoryConsultationProblemsService.getSnomedConcept().pt }}"
-								   *ngIf="!this.readOnlyProblema">
+							<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed"
+								readonly matTooltip="{{ ambulatoryConsultationProblemsService.getSnomedConcept().pt }}"
+								*ngIf="!this.readOnlyProblema">
 							<input id="snomed-input-new-consultation" matInput type="text" formControlName="snomed"
-								   name="snomed" readonly
-								   *ngIf="this.readOnlyProblema">
+								name="snomed" readonly *ngIf="this.readOnlyProblema">
 							<button id="clear" mat-button matSuffix color="warn" mat-icon-button
-									(click)="ambulatoryConsultationProblemsService.resetForm()" *ngIf="!this.readOnlyProblema">
+								(click)="ambulatoryConsultationProblemsService.resetForm()"
+								*ngIf="!this.readOnlyProblema">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
@@ -116,8 +114,9 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'">
 							</mat-label>
 							<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker"
-								   formControlName="fechaInicio" [min]="minDate" [max]="ambulatoryConsultationProblemsService.getFechaInicioMax()"
-								   (dateChange)="ambulatoryConsultationProblemsService.checkValidFechaFin()">
+								formControlName="fechaInicio" [min]="minDate"
+								[max]="ambulatoryConsultationProblemsService.getFechaInicioMax()"
+								(dateChange)="ambulatoryConsultationProblemsService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #inicioDatePicker></mat-datepicker>
 						</mat-form-field>
@@ -126,28 +125,33 @@
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
 							</mat-label>
 							<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-								   [min]="minDate" [max]="today" (dateChange)="ambulatoryConsultationProblemsService.checkValidFechaFin()">
+								[min]="minDate" [max]="today"
+								(dateChange)="ambulatoryConsultationProblemsService.checkValidFechaFin()">
 							<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #finDatePicker></mat-datepicker>
 							<mat-error *ngIf="ambulatoryConsultationProblemsService.hasError('min', 'fechaFin')"
-									   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
+								[translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
 							</mat-error>
-							<mat-error *ngIf="ambulatoryConsultationProblemsService.hasError('matDatepickerMax', 'fechaFin')"
-									   [translate]="'forms.MAX_DATE_TODAY'">
+							<mat-error
+								*ngIf="ambulatoryConsultationProblemsService.hasError('matDatepickerMax', 'fechaFin')"
+								[translate]="'forms.MAX_DATE_TODAY'">
 							</mat-error>
-							<mat-error *ngIf="ambulatoryConsultationProblemsService.hasError('required_init_date', 'fechaFin')"
-									   [translate]="'forms.REQUIRED_INIT_DATE'">
+							<mat-error
+								*ngIf="ambulatoryConsultationProblemsService.hasError('required_init_date', 'fechaFin')"
+								[translate]="'forms.REQUIRED_INIT_DATE'">
 							</mat-error>
 						</mat-form-field>
 
 						<div align="end" *ngIf="!this.readOnlyProblema">
-							<button id="submit_problema" class="uppercase" mat-raised-button color="primary" type="submit">
+							<button id="submit_problema" class="uppercase" mat-raised-button color="primary"
+								type="submit">
 								<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'"></span>
 							</button>
 						</div>
 
 						<div align="end" *ngIf="this.readOnlyProblema">
-							<button id="edit_problema" class="uppercase" mat-raised-button color="primary" type="submit">
+							<button id="edit_problema" class="uppercase" mat-raised-button color="primary"
+								type="submit">
 								<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.SAVE'"></span>
 							</button>
 						</div>
@@ -155,9 +159,10 @@
 					</form>
 				</ng-template>
 
-				<app-document-section-table data-display tableTitle="ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE"
-											[columns]="ambulatoryConsultationProblemsService.getColumns()"
-											[data]="ambulatoryConsultationProblemsService.getProblemas()">
+				<app-document-section-table data-display
+					tableTitle="ambulatoria.paciente.nueva-consulta.problemas.TABLE_TITLE"
+					[columns]="ambulatoryConsultationProblemsService.getColumns()"
+					[data]="ambulatoryConsultationProblemsService.getProblemas()">
 				</app-document-section-table>
 
 			</app-new-document-section>
@@ -167,26 +172,34 @@
 		<div id="anthropometric_Data">
 			<div>
 				<h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'"></h2>
-					<div *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" class="dialog">
-						<mat-icon  online class="icon"  color="primary">error_outline</mat-icon>
-						<div class="info-text">
-							<span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DESCRIPTION'" [translateParams]="{date: datosAntropometricosNuevaConsultaService.getDate()}"> </span>
-							<span class="question" [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.QUESTION'"></span>
-							<span fxLayout="row">
-								<button class="button" id=include_Anthropometric_Data mat-button color="primary" (click)=datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData()>
-									<span [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.ADD'"></span>
-								</button>
-								<button class="button" id=discard_Anthropometric_Data mat-button color="warn" (click)=datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData()>
-									<span [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DISCARD'"></span>
-								</button>
-							</span>
-						</div>
+				<div *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
+					class="dialog">
+					<mat-icon online class="icon" color="primary">error_outline</mat-icon>
+					<div class="info-text">
+						<span class="text"
+							[translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DESCRIPTION'"
+							[translateParams]="{date: datosAntropometricosNuevaConsultaService.getDate()}"> </span>
+						<span class="question"
+							[translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.QUESTION'"></span>
+						<span fxLayout="row">
+							<button class="button" id=include_Anthropometric_Data mat-button color="primary"
+								(click)=datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData()>
+								<span
+									[translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.ADD'"></span>
+							</button>
+							<button class="button" id=discard_Anthropometric_Data mat-button color="warn"
+								(click)=datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData()>
+								<span
+									[translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DISCARD'"></span>
+							</button>
+						</span>
 					</div>
+				</div>
 				<app-document-section>
 					<ng-container concept-form>
 						<form [formGroup]="datosAntropometricosNuevaConsultaService.getForm()">
 							<div fxLayout="row" fxLayoutAlign="space-between center">
-									<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<mat-form-field [floatLabel]="'never'" appearance="outline">
 									<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'">
 									</mat-label>
 									<mat-select placeholder="B+" formControlName="bloodType">
@@ -196,40 +209,68 @@
 											{{ bloodType.description }}
 										</mat-option>
 									</mat-select>
+									<button id="clear_blood_type" type="button" mat-button
+										*ngIf="datosAntropometricosNuevaConsultaService.getForm().value.bloodType && !datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
+										matSuffix color="warn" mat-icon-button
+										(click)="clear(datosAntropometricosNuevaConsultaService.getForm().controls.bloodType); $event.stopPropagation()">
+										<mat-icon>close</mat-icon>
+									</button>
 								</mat-form-field>
-								<ng-container *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" >
-									<mat-icon  class="field-icon"  color="primary">error_outline</mat-icon>
+								<ng-container
+									*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
+									<mat-icon class="field-icon" color="primary">error_outline</mat-icon>
 								</ng-container>
 							</div>
 							<div>
 								<div fxLayout="row" fxLayoutAlign="space-between center">
 									<mat-form-field [floatLabel]="'never'" appearance="outline">
-										<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'"></mat-label>
-											<input id="height" formControlName="height"
-												   placeholder="Ej: 180"
-										           type="number" matInput>
-										</mat-form-field>
-										<ng-container *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" >
-											<mat-icon  class="field-icon"  color="primary">error_outline</mat-icon>
-										</ng-container>
+										<mat-label
+											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'">
+										</mat-label>
+										<input id="height" formControlName="height" placeholder="Ej: 180" type="number"
+											matInput>
+									</mat-form-field>
+									<ng-container
+										*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
+										<mat-icon class="field-icon" color="primary">error_outline</mat-icon>
+									</ng-container>
 								</div>
-								<h5 class="recomendado recomendado-antropo" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+								<h5 class="recomendado recomendado-antropo"
+									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'">
+								</h5>
 							</div>
 							<div>
 								<div fxLayout="row" fxLayoutAlign="space-between center">
 									<mat-form-field [floatLabel]="'never'" appearance="outline">
 										<mat-label
-											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'"></mat-label>
-										<input id="weight" formControlName="weight" placeholder="Ej: 70"
-										   type="number"
-										   matInput>
+											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'">
+										</mat-label>
+										<input id="weight" formControlName="weight" placeholder="Ej: 70" type="number"
+											matInput>
 									</mat-form-field>
-									<ng-container *ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()" >
-										<mat-icon  class="field-icon"  color="primary">error_outline</mat-icon>
+									<ng-container
+										*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
+										<mat-icon class="field-icon" color="primary">error_outline</mat-icon>
 									</ng-container>
 								</div>
-
-								<h5 class="recomendado recomendado-antropo" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+								<h5 class="recomendado recomendado-antropo"
+									[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'">
+								</h5>
+							</div>
+							<div>
+								<div fxLayout="row" fxLayoutAlign="space-between center">
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<mat-label
+											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEAD_CIRCUNFERENCE'">
+										</mat-label>
+										<input id="head-circumference" formControlName="headCircumference"
+											placeholder="Ej: 47" type="number" matInput>
+									</mat-form-field>
+									<ng-container
+										*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
+										<mat-icon class="field-icon" color="primary">error_outline</mat-icon>
+									</ng-container>
+								</div>
 							</div>
 						</form>
 					</ng-container>
@@ -240,7 +281,7 @@
 
 		<div id="antecedentes-familiares">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE">
-				<ng-container concept-form >
+				<ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm"
 						[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
@@ -248,16 +289,17 @@
 					</app-concepts-search>
 					<ng-template #antecedentesPersonalesForm>
 						<form [formGroup]="antecedentesFamiliaresNuevaConsultaService.getForm()"
-							  (ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
+							(ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
 
 							<mat-form-field appearance="outline">
 								<mat-label
 									[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'">
 								</mat-label>
 								<input id="antecedentes-familiares-input" matInput type="text" formControlName="snomed"
-									   readonly matTooltip="{{antecedentesFamiliaresNuevaConsultaService.getSnomedConcept().pt }}">
+									readonly
+									matTooltip="{{antecedentesFamiliaresNuevaConsultaService.getSnomedConcept().pt }}">
 								<button id="clear-antecedente" mat-button matSuffix color="warn" mat-icon-button
-										(click)="antecedentesFamiliaresNuevaConsultaService.resetForm()">
+									(click)="antecedentesFamiliaresNuevaConsultaService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -267,83 +309,86 @@
 									[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'">
 								</mat-label>
 								<input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker"
-									   formControlName="fecha"
-									   [min]="minDate" [max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
+									formControlName="fecha" [min]="minDate"
+									[max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
 								<mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker"></mat-datepicker-toggle>
 								<mat-datepicker #antecedenteDatePicker></mat-datepicker>
 							</mat-form-field>
 
 							<div align="end">
 								<button id="submit_antecedentes_familiares" class="uppercase" mat-raised-button
-										color="primary"
-										type="submit">
-<span class="uppercase"
-	  [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD'"></span>
+									color="primary" type="submit">
+									<span class="uppercase"
+										[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD'"></span>
 								</button>
 							</div>
 						</form>
 					</ng-template>
 				</ng-container>
-				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
-								[columns]="antecedentesFamiliaresNuevaConsultaService.getTableColumnConfig()"
-								[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
+					[columns]="antecedentesFamiliaresNuevaConsultaService.getTableColumnConfig()"
+					[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
 				</app-document-section-table>
 
 			</app-new-document-section>
 		</div>
-		<div id="medications">
 
+		<div id="medications">
 			<app-new-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE'">
 				<div concept-form>
 					<app-concepts-search
-					    *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm"
-
+						*ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm"
 						label="ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL"
 						(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
 					</app-concepts-search>
 				</div>
 				<ng-template #medicationForm>
 					<form [formGroup]="medicacionesNuevaConsultaService.getForm()"
-						  (ngSubmit)="medicacionesNuevaConsultaService.addToList()">
+						(ngSubmit)="medicacionesNuevaConsultaService.addToList()">
 						<mat-form-field appearance="outline">
-							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION'"></mat-label>
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION'">
+							</mat-label>
 							<input matInput type="text" formControlName="snomed" name="snomed" readonly
-								   matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
+								matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
 							<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
-									(click)="medicacionesNuevaConsultaService.resetForm()">
+								(click)="medicacionesNuevaConsultaService.resetForm()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
 
 						<mat-form-field appearance="outline">
-							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'"></mat-label>
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'">
+							</mat-label>
 							<textarea matInput type="text" id="observations" name="observaciones"
-									  formControlName="observaciones"
-									  placeholder="Descripción"
-							>
+								formControlName="observaciones" placeholder="Descripción">
 							</textarea>
-							<mat-error *ngIf="hasError(medicacionesNuevaConsultaService.getForm(), 'maxlength', 'observaciones')" translate="forms.MAX_LENGTH_ERROR"
-									   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+							<mat-error
+								*ngIf="hasError(medicacionesNuevaConsultaService.getForm(), 'maxlength', 'observaciones')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
 							</mat-error>
 						</mat-form-field>
 
 						<div class="margin-checkbox">
 							<mat-checkbox formControlName="suspendido">
-								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDO'">  </span>
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDO'">
+								</span>
 							</mat-checkbox>
 						</div>
 
 						<div align="end">
-							<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary" type="submit">
+							<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
+								type="submit">
 								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.ADD'"> </span>
 							</button>
 						</div>
 					</form>
 				</ng-template>
 
-				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
-											[columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
-											[data]="medicacionesNuevaConsultaService.getMedicaciones()">
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
+					[columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
+					[data]="medicacionesNuevaConsultaService.getMedicaciones()">
 				</app-document-section-table>
 
 			</app-new-document-section>
@@ -351,7 +396,7 @@
 
 		<div id="procedimientos">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.procedimientos.TITLE">
-						  <ng-container concept-form>
+				<ng-container concept-form>
 					<app-concepts-search
 						*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
 						[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
@@ -360,14 +405,15 @@
 
 					<ng-template #procedimientoForm>
 						<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
-							  (ngSubmit)="procedimientoNuevaConsultaService.addToList()">
+							(ngSubmit)="procedimientoNuevaConsultaService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
 								</mat-label>
-								<input id="procedimiento-input" matInput type="text" formControlName="snomed" name="snomed"
-									   readonly matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
+								<input id="procedimiento-input" matInput type="text" formControlName="snomed"
+									name="snomed" readonly
+									matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
 								<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
-										(click)="procedimientoNuevaConsultaService.resetForm()">
+									(click)="procedimientoNuevaConsultaService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -376,24 +422,27 @@
 								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
 								</mat-label>
 								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-									   formControlName="performedDate"
-									   [min]="minDate" [max]="procedimientoNuevaConsultaService.getFechaMax()">
+									formControlName="performedDate" [min]="minDate"
+									[max]="procedimientoNuevaConsultaService.getFechaMax()">
 								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
 								<mat-datepicker #datePicker></mat-datepicker>
 							</mat-form-field>
 
 							<div align="end">
-								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary" type="submit">
-										<span [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
+									type="submit">
+									<span
+										[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
 								</button>
 							</div>
 
 						</form>
 					</ng-template>
 				</ng-container>
-				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
-											[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
-											[data]="procedimientoNuevaConsultaService.getProcedimientos()">
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
+					[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
+					[data]="procedimientoNuevaConsultaService.getProcedimientos()">
 				</app-document-section-table>
 
 			</app-new-document-section>
@@ -402,38 +451,46 @@
 		<div id="signos-vitales">
 			<div class="margin-bottom">
 				<h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TITLE'"></h2>
-					<div *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" class="dialog">
-						<mat-icon  online class="icon"  color="primary">error_outline</mat-icon>
-						<div class="info-text">
-							<span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DESCRIPTION'" [translateParams]="{date: signosVitalesNuevaConsultaService.getDate()}"> </span>
-							<span class="question" [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.QUESTION'"></span>
-							<span fxLayout="row">
-								<button class="button" id=include_vital_signs mat-button color="primary" (click)=signosVitalesNuevaConsultaService.savePreloadedVitalSignsData()>
-									<span [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.ADD'"></span>
-								</button>
-								<button class="button" id=discard_vital_signs mat-button color="warn" (click)=signosVitalesNuevaConsultaService.discardPreloadedVitalSignsData()>
-									<span [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DISCARD'"></span>
-								</button>
-							</span>
-						</div>
+				<div *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" class="dialog">
+					<mat-icon online class="icon" color="primary">error_outline</mat-icon>
+					<div class="info-text">
+						<span class="text"
+							[translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DESCRIPTION'"
+							[translateParams]="{date: signosVitalesNuevaConsultaService.getDate()}"> </span>
+						<span class="question"
+							[translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.QUESTION'"></span>
+						<span fxLayout="row">
+							<button class="button" id=include_vital_signs mat-button color="primary"
+								(click)=signosVitalesNuevaConsultaService.savePreloadedVitalSignsData()>
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.ADD'"></span>
+							</button>
+							<button class="button" id=discard_vital_signs mat-button color="warn"
+								(click)=signosVitalesNuevaConsultaService.discardPreloadedVitalSignsData()>
+								<span
+									[translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DISCARD'"></span>
+							</button>
+						</span>
 					</div>
+				</div>
 				<app-document-section class="margin-bottom">
 					<ng-container concept-form>
-						<form fxLayout="column" fxLayoutGap="10px" [formGroup]="signosVitalesNuevaConsultaService.getForm()">
+						<form fxLayout="column" fxLayoutGap="10px"
+							[formGroup]="signosVitalesNuevaConsultaService.getForm()">
 							<div fxLayout="row wrap" fxFlex="100%" fxLayoutGap="5px" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="heartRate">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'"></mat-label>
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'">
+									</mat-label>
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
-											<input id="heart_rate"
-												name="heart_rate"
-												formControlName="value"
-												placeholder="00"
-												type="number"
-												matInput>
+											<input id="heart_rate" name="heart_rate" formControlName="value"
+												placeholder="00" type="number" matInput>
 										</mat-form-field>
-										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
-											<mat-icon  class="field-icon-vital-sign"  color="primary">error_outline</mat-icon>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
 										</ng-container>
 									</div>
 									<app-effective-time
@@ -442,18 +499,19 @@
 									</app-effective-time>
 								</div>
 								<div class="signos-vitales-field" formGroupName="respiratoryRate">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'"></mat-label>
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'">
+									</mat-label>
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
-											<input id="respiratory_rate"
-												name="respiratory_rate"
-												formControlName="value"
-												placeholder="00"
-												type="number"
-												matInput>
+											<input id="respiratory_rate" name="respiratory_rate" formControlName="value"
+												placeholder="00" type="number" matInput>
 										</mat-form-field>
-										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
-											<mat-icon  class="field-icon-vital-sign"  color="primary">error_outline</mat-icon>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
 										</ng-container>
 									</div>
 									<app-effective-time
@@ -463,20 +521,21 @@
 								</div>
 							</div>
 
-							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+							<div fxFlex="100%" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="temperature">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'"></mat-label>
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'">
+									</mat-label>
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
-											<input id="temperature"
-												name="temperature"
-												formControlName="value"
-												placeholder="00.0"
-												type="number"
-												matInput>
+											<input id="temperature" name="temperature" formControlName="value"
+												placeholder="00.0" type="number" matInput>
 										</mat-form-field>
-										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
 										</ng-container>
 									</div>
 									<app-effective-time
@@ -485,18 +544,19 @@
 									</app-effective-time>
 								</div>
 								<div class="signos-vitales-field" formGroupName="bloodOxygenSaturation">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'"></mat-label>
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'">
+									</mat-label>
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
-											<input id="blood_oxygen_saturation"
-												name="blood_oxygen_saturation"
-												formControlName="value"
-												placeholder="00"
-												type="number"
-												matInput>
+											<input id="blood_oxygen_saturation" name="blood_oxygen_saturation"
+												formControlName="value" placeholder="00" type="number" matInput>
 										</mat-form-field>
-										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
 										</ng-container>
 									</div>
 									<app-effective-time
@@ -506,47 +566,120 @@
 								</div>
 							</div>
 
-							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+							<div fxFlex="100%" fxLayout.lt-lg="column">
 								<div class="signos-vitales-field" formGroupName="systolicBloodPressure">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'"></mat-label>
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'">
+									</mat-label>
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
-											<input id="systolic_blood_pressure"
-												name="systolicBloodPressure"
-												formControlName="value"
-												placeholder="00"
-												type="number"
-												matInput>
+											<input id="systolic_blood_pressure" name="systolicBloodPressure"
+												formControlName="value" placeholder="00" type="number" matInput>
 										</mat-form-field>
-											<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
-												<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
-											</ng-container>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
+										</ng-container>
 									</div>
-									<h5 class="recomendado recomendado-tension" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+									<h5 class="recomendado recomendado-tension"
+										[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
 									</app-effective-time>
 								</div>
 								<div class="signos-vitales-field" formGroupName="diastolicBloodPressure">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'"></mat-label>
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'">
+									</mat-label>
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
-												<input id="diastolic_blood_pressure"
-												name="diastolicBloodPressure"
-												formControlName="value"
-												placeholder="00"
-												type="number"
-												matInput>
+											<input id="diastolic_blood_pressure" name="diastolicBloodPressure"
+												formControlName="value" placeholder="00" type="number" matInput>
 										</mat-form-field>
-										<ng-container *ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()" >
-											<mat-icon class="field-icon-vital-sign" color="primary">error_outline</mat-icon>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
 										</ng-container>
 									</div>
-									<h5 class="recomendado recomendado-tension" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+									<h5 class="recomendado recomendado-tension"
+										[translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 									<app-effective-time
 										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
 										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
+									</app-effective-time>
+								</div>
+							</div>
+
+							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+								<div class="signos-vitales-field" formGroupName="bloodGlucose">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_GLUCOSE'">
+									</mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="blood_glucose" name="blood_glucose" formControlName="value"
+												placeholder="00" type="number" matInput>
+										</mat-form-field>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
+										</ng-container>
+									</div>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.bloodGlucose.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodGlucose')">
+									</app-effective-time>
+								</div>
+								<div class="signos-vitales-field" formGroupName="glycosylatedHemoglobin">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.GLYCOSYLATED_HEMOGLOBIN'">
+									</mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="glycosylated_hemoglobin" name="glycosylated_hemoglobin"
+												formControlName="value" placeholder="00.00" type="number" matInput>
+										</mat-form-field>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
+										</ng-container>
+									</div>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.glycosylatedHemoglobin.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'glycosylatedHemoglobin')">
+									</app-effective-time>
+								</div>
+							</div>
+
+							<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column">
+								<div class="signos-vitales-field" formGroupName="cardiovascularRisk">
+									<mat-label
+										[translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.CARDIOVASCULAR_RISK'">
+									</mat-label>
+									<div fxLayout="row" fxLayoutAlign="between center">
+										<mat-form-field [floatLabel]="'never'" appearance="outline">
+											<input id="cardiovascular_risk" name="cardiovascular_risk"
+												formControlName="value" placeholder="00" type="number" matInput>
+										</mat-form-field>
+										<ng-container
+											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
+											<mat-icon class="field-icon-vital-sign" color="primary">
+												error_outline
+											</mat-icon>
+										</ng-container>
+									</div>
+									<app-effective-time
+										[effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.cardiovascularRisk.effectiveTime"
+										(update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'cardiovascularRisk')">
 									</app-effective-time>
 								</div>
 							</div>
@@ -559,21 +692,20 @@
 		<div id="alergias">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.alergias.TITLE">
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
+					<app-concepts-search *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
 						[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
 						(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
 					</app-concepts-search>
 					<ng-template #alergiasForm>
 						<form [formGroup]="alergiasNuevaConsultaService.getForm()"
-							  (ngSubmit)="alergiasNuevaConsultaService.addToList()">
+							(ngSubmit)="alergiasNuevaConsultaService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'">
 								</mat-label>
 								<input id="alergias-input" matInput type="text" formControlName="snomed" name="snomed"
-									   readonly matTooltip="{{alergiasNuevaConsultaService.getSnomedConcept().pt }}">
+									readonly matTooltip="{{alergiasNuevaConsultaService.getSnomedConcept().pt }}">
 								<button id="clear-alergias" mat-button matSuffix color="warn" mat-icon-button
-										(click)="alergiasNuevaConsultaService.resetForm()">
+									(click)="alergiasNuevaConsultaService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -582,7 +714,8 @@
 								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.CRITICALITY'">
 								</mat-label>
 								<mat-select id="criticality-select" formControlName="criticality">
-									<mat-option *ngFor="let criticalityType of criticalityTypes" [value]="criticalityType.id">
+									<mat-option *ngFor="let criticalityType of criticalityTypes"
+										[value]="criticalityType.id">
 										{{criticalityType.display}}
 									</mat-option>
 								</mat-select>
@@ -591,15 +724,17 @@
 
 							<div align="end">
 								<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
-										type="submit">
-									<span class="uppercase"[translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
+									type="submit">
+									<span class="uppercase"
+										[translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
 								</button>
 							</div>
 						</form>
 					</ng-template>
 				</ng-container>
 
-				<app-document-section-table data-display [tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
 					[columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
 					[data]="alergiasNuevaConsultaService.getAlergias()">
 				</app-document-section-table>
@@ -612,10 +747,9 @@
 				<ng-container concept-form>
 					<form [formGroup]="formEvolucion">
 						<mat-form-field appearance="outline">
-							<textarea matInput type="text" id="evolucion-input" name="evolucion" formControlName="evolucion"
-									  placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}"
-
-							>
+							<textarea matInput type="text" id="evolucion-input" name="evolucion"
+								formControlName="evolucion"
+								placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
 							</textarea>
 						</mat-form-field>
 					</form>
@@ -625,25 +759,28 @@
 
 		<div id="solicitud-referencia" class="referencia" fxLayout="column" fxLayoutGap="10px">
 			<h2 [translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE'"></h2>
-			<span class="primary" [translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST'" (click)="ambulatoryConsultationReferenceService.openReferenceDialog()"></span>
-				<app-document-section-table data-display
-												[columns]="ambulatoryConsultationReferenceService.getColumns()"
-												[data]="ambulatoryConsultationReferenceService.getData()">
-				</app-document-section-table>
+			<span class="primary" [translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST'"
+				(click)="ambulatoryConsultationReferenceService.openReferenceDialog()"></span>
+			<app-document-section-table data-display [columns]="ambulatoryConsultationReferenceService.getColumns()"
+				[data]="ambulatoryConsultationReferenceService.getData()">
+			</app-document-section-table>
 		</div>
 
-		<div id="validations"
-			 *ngIf="!isValidConsultation() || apiErrors.length > 0">
-			<mat-card>
-				<mat-error *ngFor="let error of errores" class="mat-body-2">{{ error | translate }}</mat-error>
-				<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
-			</mat-card>
+		<div #errorsView>
+			<div id="validations" *ngIf="!isValidConsultation() || apiErrors.length > 0">
+				<mat-card>
+					<mat-error *ngFor="let error of errores" class="mat-body-2">{{ error | translate }}</mat-error>
+					<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
+				</mat-card>
+			</div>
 		</div>
 
 	</div>
+
 	<div actions id="buttons">
 		<div align="end">
-			<button class="uppercase" mat-raised-button color="primary" (click)="save()" [disabled]="disableConfirmButton">
+			<button class="uppercase" mat-raised-button color="primary" (click)="save()"
+				[disabled]="disableConfirmButton">
 				<span [translate]="'buttons.CONFIRM'"></span>
 			</button>
 		</div>

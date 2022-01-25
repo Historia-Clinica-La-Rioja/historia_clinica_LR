@@ -2,7 +2,7 @@ package net.pladema.hl7.supporting.exchange.restful;
 
 import ca.uhn.fhir.rest.param.ReferenceParam;
 import ca.uhn.fhir.rest.param.StringParam;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.hl7.dataexchange.IResourceFhir;
 import net.pladema.hl7.dataexchange.model.domain.dto.IdentifierDto;
 import net.pladema.hl7.dataexchange.model.domain.dto.OrganizationDto;
@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 @RestController
 @RequestMapping("/masterfile-federacion-service/Patient")
 @Conditional(InteroperabilityCondition.class)
-@Api(value = "Fhir Patient Provider", tags = {"Fhir Patient Provider"})
+@Tag(name = "Fhir Patient Provider", description = "Fhir Patient Provider")
 public class PatientProvider {
 
     private final FhirClientR4 client;

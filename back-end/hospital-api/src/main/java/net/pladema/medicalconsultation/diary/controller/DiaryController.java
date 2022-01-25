@@ -1,6 +1,6 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.diary.controller.constraints.*;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
@@ -32,7 +32,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/diary")
-@Api(value = "Diary ", tags = { "Diary" })
+@Tag(name = "Diary", description = "Diary")
 @Validated
 public class DiaryController {
 

@@ -1,17 +1,18 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.validation.ValidationContextSetup;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,25 +20,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-public class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
+@ExtendWith(MockitoExtension.class)
+class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 
-	DiaryEmptyAppointmentsValidator diaryEmptyAppointmentsValidator;
+	private DiaryEmptyAppointmentsValidator diaryEmptyAppointmentsValidator;
 
-	@MockBean
+	@Mock
 	private AppointmentService appointmentService;
 
-	@MockBean
+	@Mock
 	private LocalDateMapper localDateMapper;
 
 
-	@Before
-	public void setUp() {
-		super.setUp();
+	@BeforeEach
+	void setUp() {
 		diaryEmptyAppointmentsValidator = new DiaryEmptyAppointmentsValidator(appointmentService,
 				localDateMapper);
 		when(localDateMapper.fromStringToLocalDate("2020-08-01")).thenReturn(LocalDate.parse("2020-08-01"));
@@ -88,19 +88,17 @@ public class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup 
 	}
 
 	@Test
-	public void test_AppointmentsValid() {
+	void test_AppointmentsValid() {
 		setupContextValid();
-		assertThat(diaryEmptyAppointmentsValidator.isValid(getDiaryDto(), contextMock))
-			.isNotNull()
-			.isTrue();
+		Assertions.assertTrue(diaryEmptyAppointmentsValidator.isValid(getDiaryDto(), contextMock));
 
 	}
 
 	@Test
-	public void test_AppointmentsInvalid() {
+	void test_AppointmentsInvalid() {
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(mockConstraintViolationBuilder);
 		setupContextInvalid();
-		assertThat(diaryEmptyAppointmentsValidator.isValid(getDiaryDto(), contextMock))
-			.isNotNull()
-			.isFalse();
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(mockConstraintViolationBuilder);
+		Assertions.assertFalse(diaryEmptyAppointmentsValidator.isValid(getDiaryDto(), contextMock));
 	}
 }

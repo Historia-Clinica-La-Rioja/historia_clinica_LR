@@ -1,6 +1,6 @@
 package net.pladema.person.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.person.controller.dto.APersonDto;
@@ -33,7 +33,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/person")
-@Api(value = "Person", tags = { "Person" })
+@Tag(name = "Person", description = "Person")
 public class PersonController {
 
     private static final Logger LOG = LoggerFactory.getLogger(PersonController.class);

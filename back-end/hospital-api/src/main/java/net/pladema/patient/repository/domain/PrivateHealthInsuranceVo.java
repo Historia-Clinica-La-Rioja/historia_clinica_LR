@@ -7,19 +7,15 @@ import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class PrivateHealthInsuranceVo extends MedicalCoverageVo {
 
-    private String plan;
-
-    public PrivateHealthInsuranceVo(Integer id, String name, String plan){
-        super(id, name);
-        this.plan = plan;
+    public PrivateHealthInsuranceVo(Integer id, String name, String cuit){
+        super(id, name, cuit);
     }
 
     @Override
     public MedicalCoverageBo newInstance() {
-        return new PrivateHealthInsuranceBo(getId(), getName(), getPlan());
+        return new PrivateHealthInsuranceBo(getId(), getName(), getCuit());
     }
 }

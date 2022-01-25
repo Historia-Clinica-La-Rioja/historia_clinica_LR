@@ -1,8 +1,11 @@
 package ar.lamansys.sgh.publicapi.infrastructure.output;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +18,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "external_encounter")
 @ToString
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExternalEncounter {
@@ -36,4 +41,6 @@ public class ExternalEncounter {
     @Column(name = "external_encounter_type")
     private String externalEncounterType;
 
+    @Column(name = "institution_id")
+    private Integer institutionId;
 }

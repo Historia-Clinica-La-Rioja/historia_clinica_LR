@@ -80,7 +80,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         DiaryOpeningHours diaryOpeningHours = new DiaryOpeningHours();
         diaryOpeningHours.setPk(new DiaryOpeningHoursPK(diaryId, openingHoursId));
         diaryOpeningHours.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
-        diaryOpeningHours.setOverturnCount(doh.getOverturnCount());
+        diaryOpeningHours.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
         return diaryOpeningHours;
     }
 

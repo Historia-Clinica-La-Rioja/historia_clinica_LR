@@ -28,6 +28,7 @@ import { FormBuilder } from '@angular/forms';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
+import { PatientNameService } from "@core/services/patient-name.service";
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -53,8 +54,8 @@ export class HomeComponent implements OnInit {
 		public readonly formBuilder: FormBuilder,
 		public readonly triageMasterDataService: TriageMasterDataService,
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
-		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService
-	) {
+		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
+		private readonly patientNameService: PatientNameService,) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
 
@@ -92,7 +93,7 @@ export class HomeComponent implements OnInit {
 				)
 			)
 			.subscribe((episodes: any[]) => {
-				this.episodes = episodes;
+				this.episodes = this.setPatientNames(episodes);
 				this.episodesOriginal = episodes;
 				this.loading = false;
 				this.completePatientPhotos();
@@ -222,6 +223,13 @@ export class HomeComponent implements OnInit {
 			waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
 				HomeComponent.calculateWaitingTime(episode.creationDate) : undefined
 		};
+	}
+
+	setPatientNames(episodes: any []) {
+		return episodes.filter(e => {
+			if(e.patient?.person)
+				e.patient.person.firstName = this.patientNameService.getPatientName(e.patient.person.firstName, e.patient.person.nameSelfDetermination);
+		})
 	}
 }
 

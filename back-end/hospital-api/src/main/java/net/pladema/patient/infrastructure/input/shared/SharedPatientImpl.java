@@ -66,7 +66,7 @@ public class SharedPatientImpl implements SharedPatientPort {
         personExternalService.addPersonExtended(patientDto, createdPerson.getId(), null);
         Patient createdPatient = persistPatientData(patientDto, createdPerson, patient -> {
         });
-        patientService.auditActionPatient(1, createdPatient.getId(), EActionType.CREATE);
+        patientService.auditActionPatient(requiredPatientDataDto.getInstitutionId(), createdPatient.getId(), EActionType.CREATE);
         return createdPatient.getId();
     }
 
@@ -83,9 +83,9 @@ public class SharedPatientImpl implements SharedPatientPort {
         pmc.setActive(externalPatientCoverageDto.isActive());
         ExternalCoverageDto ecDto = externalPatientCoverageDto.getMedicalCoverage();
         if (ecDto.getType().equals(EMedicalCoverageTypeDto.PREPAGA))
-            pmc.setMedicalCoverage(new PrivateHealthInsuranceBo(null, ecDto.getName(), ecDto.getPlan()));
+            pmc.setMedicalCoverage(new PrivateHealthInsuranceBo(ecDto.getId(), ecDto.getName(), ecDto.getCuit()));
         else
-            pmc.setMedicalCoverage(new HealthInsuranceBo(ecDto.getId(),ecDto.getName(),null,null));
+            pmc.setMedicalCoverage(new HealthInsuranceBo(ecDto.getId(),ecDto.getName(), ecDto.getCuit(), null,null));
         return pmc;
     }
 

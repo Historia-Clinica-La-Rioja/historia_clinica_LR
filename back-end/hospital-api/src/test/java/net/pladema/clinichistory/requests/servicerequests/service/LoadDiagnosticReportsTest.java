@@ -1,5 +1,12 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -9,53 +16,40 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
-import net.pladema.UnitRepository;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class LoadDiagnosticReportsTest extends UnitRepository {
+class LoadDiagnosticReportsTest extends UnitRepository {
 
     private LoadDiagnosticReports loadDiagnosticReports;
 
-
-    @MockBean
+    @Mock
     private NoteService noteService;
 
     @Autowired
     private DiagnosticReportRepository diagnosticReportRepository;
 
-    @MockBean
+    @Mock
     private DocumentService documentService;
 
-    @MockBean
+    @Mock
     private SnomedService snomedService;
 
-    @MockBean
+    @Mock
     private CalculateCie10Facade calculateCie10Facade;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         loadDiagnosticReports = new LoadDiagnosticReports(
                 diagnosticReportRepository,
                 documentService,
@@ -66,7 +60,7 @@ public class LoadDiagnosticReportsTest extends UnitRepository {
     }
 
     @Test
-    public void test_note_flow_delete_dr_use_case(){
+    void test_note_flow_delete_dr_use_case(){
 
         Integer patientId = 1;
         Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
@@ -113,7 +107,7 @@ public class LoadDiagnosticReportsTest extends UnitRepository {
 
 
     @Test
-    public void test_note_flow_complete_or_create_dr_use_case(){
+    void test_note_flow_complete_or_create_dr_use_case(){
 
         Integer patientId = 1;
         Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
@@ -157,7 +151,7 @@ public class LoadDiagnosticReportsTest extends UnitRepository {
     }
 
     @Test
-    public void test_default_status_id(){
+    void test_default_status_id(){
         Integer patientId = 1;
         Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
         Snomed snomed_radiografia = save(SnomedTestMocks.createSnomed("RADIOGRAFIA"));

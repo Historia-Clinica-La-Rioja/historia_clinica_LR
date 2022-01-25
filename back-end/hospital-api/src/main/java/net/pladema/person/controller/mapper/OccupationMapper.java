@@ -15,6 +15,6 @@ public interface OccupationMapper {
     PersonOccupationDto fromOccupationBo(PersonOccupationBo personOccupationBo);
 
     @Named("fromOccupationBoList")
-    @IterableMapping(qualifiedByName = "fromEducationBo")
+    @IterableMapping(qualifiedByName = "fromOccupationBo")
     List<PersonOccupationDto> fromOccupationBoList(List<PersonOccupationBo> personOccupationBoList);
 }

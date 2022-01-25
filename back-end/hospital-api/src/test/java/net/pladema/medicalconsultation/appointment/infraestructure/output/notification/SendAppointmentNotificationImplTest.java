@@ -2,13 +2,11 @@ package net.pladema.medicalconsultation.appointment.infraestructure.output.notif
 
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
 import net.pladema.medicalconsultation.appointment.service.domain.notifypatient.NotifyPatientBo;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.lang.reflect.InvocationTargetException;
 
 @ExtendWith(MockitoExtension.class)
 class SendAppointmentNotificationImplTest {
@@ -23,7 +21,7 @@ class SendAppointmentNotificationImplTest {
     }
 
     @Test
-    void correctFormatting() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    void correctFormatting() {
         NotifyPatientBo notifyPatientBoMock = new NotifyPatientBo(
                 -2,
                 "MockName",
@@ -34,7 +32,7 @@ class SendAppointmentNotificationImplTest {
         );
 
         String shouldBe = "data\":{\"appointmentId\":-2,\"patient\":\"MockName\",\"sector\":-3,\"doctor\":\"MockDrName\",\"doctorsOffice\":\"MockDrsOfficeName\"}";
-        Assert.assertEquals(sendAppointmentNotification.getMessage(notifyPatientBoMock), shouldBe);
+        Assertions.assertEquals(sendAppointmentNotification.getMessage(notifyPatientBoMock), shouldBe);
 
     }
 }

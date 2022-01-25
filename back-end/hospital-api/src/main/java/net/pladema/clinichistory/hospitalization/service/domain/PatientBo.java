@@ -18,4 +18,6 @@ public class PatientBo implements Serializable {
     private String firstName;
 
     private String lastName;
+
+    private String nameSelfDetermination;
 }

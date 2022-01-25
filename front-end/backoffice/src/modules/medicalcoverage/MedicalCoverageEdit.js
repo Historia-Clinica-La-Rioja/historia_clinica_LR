@@ -1,65 +1,87 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
+    Datagrid,
+    DeleteButton,
     Edit,
     FormDataConsumer,
     maxLength, number,
     ReferenceInput,
+    ReferenceManyField,
     required,
     SelectInput,
     SimpleForm,
+    TextField,
     TextInput,
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
+import SectionTitle from "../components/SectionTitle";
+import CreateRelatedButton from "../components/CreateRelatedButton";
 
-const MedicalCoveragePlanField = ({formData}) => {
-    return formData.type !== 1 ? null : (
-        <TextInput source="plan" validate={[
-            maxLength(10)]}/>
-    )
-}
+const PREPAGA = 1;
+const OBRA_SOCIAL = 2;
 
 const MedicalCoverageRnosField = ({formData}) => {
-    return formData.type !== 2 ? null : (
-            <TextInput source="rnos" options={{ disabled: true }} validate={[
+    return formData.type !== OBRA_SOCIAL ? null : (
+            <TextInput source="rnos" validate={[
                 maxLength(10), number()]}/>
     )
 }
 
 const MedicalCoverageAcronymField = ({formData}) => {
-    return formData.type !== 2 ? null : (
+    return formData.type !== OBRA_SOCIAL ? null : (
             <TextInput source="acronym" validate={[
                 maxLength(18)]}/>
     )
 }
 
+const PrivateHealthInsurancePlanComponent = ({formData}) => {
+    return formData.type === PREPAGA ?  (
+        <Fragment>
+        <SectionTitle label="resources.medicalcoverages.fields.plans"/>
+        <CreateRelatedButton
+            reference="privatehealthinsuranceplans"
+            refFieldName="privateHealthInsuranceId"
+            label="resources.privatehealthinsuranceplans.addRelated"/>
+        <ReferenceManyField
+            addLabel={false}
+            reference="privatehealthinsuranceplans"
+            target="privateHealthInsuranceId">
+            <Datagrid>
+                <TextField source="plan"/>
+                <DeleteButton redirect="/medicalcoverages"/>
+            </Datagrid>
+        </ReferenceManyField>
+    </Fragment>
+
+    ) : null
+}
+
 const MedicalCoverageEdit = props => (
     <Edit {...props}>
-        <SimpleForm toolbar={<CustomToolbar isEdit={true}/>}>
-            <TextInput source="name" validate={[required()]}/>
-            {/*Medical Coverage Type*/}
-            <ReferenceInput
-                reference="medicalcoveragetypes"
-                source="type">
-                <SelectInput optionText="value" optionValue="id" validate={[required()]} options={{ disabled: true }}/>
-            </ReferenceInput>
+            <SimpleForm toolbar={<CustomToolbar isEdit={true}/>}>
+                <TextInput source="name" validate={[required()]}/>
+                <TextInput source="cuit" validate={[required(),number()]}/>
+                {/*Medical Coverage Type*/}
+                <ReferenceInput
+                    reference="medicalcoveragetypes"
+                    source="type">
+                    <SelectInput optionText="value" optionValue="id" validate={[required()]} options={{ disabled: true }}/>
+                </ReferenceInput>
+                {/*Rnos health inssurance*/}
+                <FormDataConsumer>
+                    {formDataProps => (<MedicalCoverageRnosField {...formDataProps} source="rnos"/>)}
+                </FormDataConsumer>
+                {/*Acronym health insurance*/}
+                <FormDataConsumer>
+                    {formDataProps => (<MedicalCoverageAcronymField {...formDataProps} source="acronym"/>)}
+                </FormDataConsumer>
 
+                {/*Plan private health insurance*/}
+                <FormDataConsumer>
+                    {formDataProps => (<PrivateHealthInsurancePlanComponent {...formDataProps}/>)}
+                </FormDataConsumer>
 
-            {/*Plan private health insurance*/}
-            <FormDataConsumer>
-                {formDataProps => (<MedicalCoveragePlanField {...formDataProps} source="plan"/>)}
-            </FormDataConsumer>
-
-            {/*Rnos health inssurance*/}
-            <FormDataConsumer>
-                {formDataProps => (<MedicalCoverageRnosField {...formDataProps} source="rnos"/>)}
-            </FormDataConsumer>
-
-            {/*Acronym health insurance*/}
-            <FormDataConsumer>
-                {formDataProps => (<MedicalCoverageAcronymField {...formDataProps} source="acronym"/>)}
-            </FormDataConsumer>
-
-        </SimpleForm>
+            </SimpleForm>
     </Edit>
 );
 

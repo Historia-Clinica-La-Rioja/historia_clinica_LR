@@ -9,6 +9,7 @@ import net.pladema.patient.repository.entity.MedicalCoverage;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "health_insurance")
@@ -27,10 +28,35 @@ public class HealthInsurance extends MedicalCoverage {
     @Column(name = "acronym", length = 18)
     private String acronym;
 
-    public HealthInsurance(Integer id, String name, Integer rnos, String acronym){
+    public HealthInsurance(Integer id, String name, String cuit, Integer rnos, String acronym){
         setId(id);
         setName(name);
+        setCuit(cuit);
         this.rnos = rnos;
         this.acronym = acronym;
+    }
+
+    public HealthInsurance(Integer id,
+                           String name,
+                           Integer createBy,
+                           Timestamp createOn,
+                           Integer updateBy,
+                           Timestamp updateOn,
+                           Boolean deleted,
+                           Integer deletedBy,
+                           Timestamp deletedOn,
+                           String cuit){
+        setId(id);
+        setName(name);
+        setCuit(cuit);
+        setCreatedBy(createBy);
+        setCreatedOn(createOn.toLocalDateTime());
+        setUpdatedBy(updateBy);
+        setUpdatedOn(updateOn.toLocalDateTime());
+        setDeleted(deleted);
+        if(deletedOn!=null) {
+            setDeletedBy(deletedBy);
+            setDeletedOn(deletedOn.toLocalDateTime());
+        }
     }
 }

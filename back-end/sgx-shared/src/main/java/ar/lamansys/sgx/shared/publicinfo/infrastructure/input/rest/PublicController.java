@@ -1,13 +1,13 @@
 package ar.lamansys.sgx.shared.publicinfo.infrastructure.input.rest;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.flavor.FlavorService;
+import ar.lamansys.sgx.shared.publicinfo.application.ApplicationVersionService;
 import ar.lamansys.sgx.shared.publicinfo.infrastructure.input.dto.ApplicationVersionDto;
 import ar.lamansys.sgx.shared.publicinfo.infrastructure.input.dto.PublicInfoDto;
-import io.swagger.annotations.Api;
-import ar.lamansys.sgx.shared.flavor.FlavorService;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.recaptcha.controller.dto.RecaptchaPublicConfigDto;
 import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
-import ar.lamansys.sgx.shared.publicinfo.application.ApplicationVersionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/public")
-@Api(value = "Public", tags = { "Public" })
+@Tag(name = "Public", description = "Public")
 public class PublicController {
 
 	private final String flavor;

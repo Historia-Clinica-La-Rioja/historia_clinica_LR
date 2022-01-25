@@ -91,6 +91,10 @@
 										{{ condition.description }}
 									</mat-option>
 								</mat-select>
+								<button id="clear_condition" type="button" mat-button *ngIf="billableForm.value.condition !== null && billableForm.value.condition !== undefined" matSuffix
+									color="warn" mat-icon-button (click)="clear(billableForm.controls.condition, 'condition', billableForm); $event.stopPropagation()">
+									<mat-icon>close</mat-icon>
+								</button>
 							</mat-form-field>
 
 							<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between">
@@ -109,6 +113,10 @@
 												{{ scheme.description }}
 											</mat-option>
 										</mat-select>
+										<button id="clear_scheme" type="button" mat-button *ngIf="billableForm.value.scheme !== null && billableForm.value.scheme !== undefined" matSuffix
+											color="warn" mat-icon-button (click)="clear(billableForm.controls.scheme, 'scheme', billableForm); $event.stopPropagation()">
+											<mat-icon>close</mat-icon>
+										</button>
 										<mat-error
 											[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
 										</mat-error>
@@ -126,6 +134,10 @@
 												{{ dose.description }}
 											</mat-option>
 										</mat-select>
+										<button id="clear_scheme" type="button" mat-button *ngIf="billableForm.value.dose !== null && billableForm.value.dose !== undefined" matSuffix
+											color="warn" mat-icon-button (click)="clear(billableForm.controls.dose, 'dose', billableForm); $event.stopPropagation()">
+											<mat-icon>close</mat-icon>
+										</button>
 										<mat-error
 											[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
 										</mat-error>
@@ -242,6 +254,10 @@
 									{{ condition.description }}
 								</mat-option>
 							</mat-select>
+							<button id="clear_condition" type="button" mat-button *ngIf="previousForm.value.condition !== null && previousForm.value.condition !== undefined" matSuffix
+								color="warn" mat-icon-button (click)="clear(previousForm.controls.condition, 'condition', previousForm); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
 						</mat-form-field>
 
 						<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between">
@@ -258,6 +274,10 @@
 											{{ scheme.description }}
 										</mat-option>
 									</mat-select>
+									<button id="clear_scheme" type="button" mat-button *ngIf="previousForm.value.scheme !== null && previousForm.value.scheme !== undefined" matSuffix
+										color="warn" mat-icon-button (click)="clear(previousForm.controls.scheme, 'scheme', previousForm); $event.stopPropagation()">
+										<mat-icon>close</mat-icon>
+									</button>
 									<mat-error
 										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_SCHEME_SELECTED_ERROR'">
 									</mat-error>
@@ -274,6 +294,11 @@
 											{{ dose.description }}
 										</mat-option>
 									</mat-select>
+									<button id="clear_dose" type="button" mat-button *ngIf="this.previousForm.value.dose !== null && this.previousForm.value.dose !== undefined" matSuffix
+										color="warn" mat-icon-button (click)="clear(this.previousForm.controls.dose, 'dose', previousForm); $event.stopPropagation()">
+										<mat-icon>close</mat-icon>
+									</button>
+									 
 									<mat-error
 										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
 									</mat-error>

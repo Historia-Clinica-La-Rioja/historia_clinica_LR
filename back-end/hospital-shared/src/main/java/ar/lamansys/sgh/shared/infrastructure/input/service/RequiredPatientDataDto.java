@@ -30,4 +30,5 @@ public class RequiredPatientDataDto {
 
     private String email;
 
+    private Integer institutionId;
 }

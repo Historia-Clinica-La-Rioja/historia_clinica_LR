@@ -1,6 +1,5 @@
 package net.pladema.staff.infrastructure.input.rest;
 
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.application.getprofessionalspecialties.GetProfessionalSpecialties;
@@ -17,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/professionalSpecialty")
-@Api(value = "professional-specialty", tags = {"Professional Specialty"})
+//@Api(value = "professional-specialty", tags = {"Professional Specialty"})
 public class ProfessionalSpecialtyController {
 
     private final GetProfessionalSpecialties getProfessionalSpecialties;

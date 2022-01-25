@@ -108,6 +108,30 @@ public class ClinicalObservationService {
                     documentService.createDocumentVitalSign(documentId, bloodOxygenSaturation.getId());
                 vitalSign.setBloodOxygenSaturation(createObservationFromVitalSign(bloodOxygenSaturation));
             }
+
+            if(mustSaveClinicalObservation(vitalSign.getBloodGlucose())) {
+                ObservationVitalSign bloodGlucose = createObservationVitalSign(patientInfo,
+                        vitalSign.getBloodGlucose(), EVitalSign.BLOOD_GLUCOSE);
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, bloodGlucose.getId());
+                vitalSign.setBloodGlucose(createObservationFromVitalSign(bloodGlucose));
+            }
+
+            if(mustSaveClinicalObservation(vitalSign.getGlycosylatedHemoglobin())) {
+                ObservationVitalSign glycosylatedHemoglobin = createObservationVitalSign(patientInfo,
+                        vitalSign.getGlycosylatedHemoglobin(), EVitalSign.GLYCOSYLATED_HEMOGLOBIN);
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, glycosylatedHemoglobin.getId());
+                vitalSign.setGlycosylatedHemoglobin(createObservationFromVitalSign(glycosylatedHemoglobin));
+            }
+
+            if(mustSaveClinicalObservation(vitalSign.getCardiovascularRisk())) {
+                ObservationVitalSign cardiovascularRisk = createObservationVitalSign(patientInfo,
+                        vitalSign.getCardiovascularRisk(), EVitalSign.CARDIOVASCULAR_RISK);
+                if (documentId != null)
+                    documentService.createDocumentVitalSign(documentId, cardiovascularRisk.getId());
+                vitalSign.setCardiovascularRisk(createObservationFromVitalSign(cardiovascularRisk));
+            }
         });
         LOG.debug(OUTPUT, optVitalSigns);
         return optVitalSigns.orElse(null);
@@ -128,6 +152,13 @@ public class ClinicalObservationService {
                         EVitalSign.WEIGHT);
                 documentService.createDocumentVitalSign(documentId, weight.getId());
                 anthropometricData.setWeight(createObservationFromVitalSign(weight));
+            }
+
+            if(mustSaveClinicalObservation(anthropometricData.getHeadCircumference())) {
+                ObservationVitalSign headCircumference = createObservationVitalSign(patientInfo, anthropometricData.getHeadCircumference(),
+                        EVitalSign.HEAD_CIRCUMFERENCE);
+                documentService.createDocumentVitalSign(documentId, headCircumference.getId());
+                anthropometricData.setHeadCircumference(createObservationFromVitalSign(headCircumference));
             }
 
             if(mustSaveClinicalObservation(anthropometricData.getBloodType())) {

@@ -37,4 +37,15 @@ public class HCEVitalSignDto implements Serializable {
     @Nullable
     private HCEEffectiveClinicalObservationDto bloodOxygenSaturation;
 
+    @Valid
+    @Nullable
+    private HCEEffectiveClinicalObservationDto bloodGlucose;
+
+    @Valid
+    @Nullable
+    private HCEEffectiveClinicalObservationDto glycosylatedHemoglobin;
+
+    @Valid
+    @Nullable
+    private HCEEffectiveClinicalObservationDto cardiovascularRisk;
 }

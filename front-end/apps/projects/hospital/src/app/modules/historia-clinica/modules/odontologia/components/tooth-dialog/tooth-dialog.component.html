@@ -55,9 +55,12 @@
 				[options]="filteredProceduresTypeahead" (selectionChange)="thirdProcedureChanged($event)">
 			</app-typeahead>
 		</div>
-		<span
+		<button
 			[ngClass]="{'activate-button': (!showActionsService?.getIsNotPreviousProcedureSet() && !selectedSurfaces.length), 'disable-button': (showActionsService?.getIsNotPreviousProcedureSet() || selectedSurfaces.length)}"
-			(click)="addTypeaheadProcedure()" style="font-size: 14px;"> + Agregar otro procedimiento:</span>
+			mat-button type="button" onclick="this.blur()" (click)="addTypeaheadProcedure()" color="primary"
+			style="font-size: 14px;">
+			+ Agregar otro procedimiento:
+		</button>
 	</div>
 
 	<mat-dialog-actions fxLayoutAlign="end end">

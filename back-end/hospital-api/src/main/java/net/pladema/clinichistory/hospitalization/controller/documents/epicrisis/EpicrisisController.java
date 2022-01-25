@@ -3,8 +3,8 @@ package net.pladema.clinichistory.hospitalization.controller.documents.epicrisis
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationGeneralState;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.EpicrisisDto;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/epicrisis")
-@Api(value = "Epicrisis", tags = { "Epicrisis" })
+@Tag(name = "Epicrisis", description = "Epicrisis")
 @Validated
 @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
 public class EpicrisisController {

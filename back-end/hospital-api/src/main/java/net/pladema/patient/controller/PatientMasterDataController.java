@@ -1,6 +1,6 @@
 package net.pladema.patient.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.patient.repository.IdentityVerificationStatusRepository;
 import net.pladema.patient.repository.entity.IdentityVerificationStatus;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("masterdata/patient")
-@Api(value = "PatientMasterData", tags = { "PatientMasterData" })
+@Tag(name = "Patient master data", description = "Patient master data")
 public class PatientMasterDataController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PatientMasterDataController.class);

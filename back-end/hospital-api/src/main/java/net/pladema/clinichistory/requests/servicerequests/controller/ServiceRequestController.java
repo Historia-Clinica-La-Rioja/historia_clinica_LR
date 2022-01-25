@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.*;
@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@Api(value = "Service Request", tags = {"Service Request"})
+@Tag(name = "Service request", description = "Service request")
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/service-requests")
 public class ServiceRequestController {
 

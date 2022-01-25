@@ -8,7 +8,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
@@ -35,7 +43,13 @@ public class MedicalCoverage extends SGXAuditableEntity<Integer> implements Seri
     @Column(name = "name", length = 255, nullable = false)
     private String name;
 
-    public MedicalCoverage(String name){
+    @Getter
+    @Setter
+    @Column(name = "cuit", length = 20)
+    private String cuit;
+
+    public MedicalCoverage(String name, String cuit){
         this.name = name;
+        this.cuit = cuit;
     }
 }

@@ -1,6 +1,6 @@
 package net.pladema.address.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.repository.projections.AddressProjection;
 import net.pladema.address.service.AddressMasterDataService;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/address/masterdata")
-@Api(value = "Address Master Data", tags = { "Address Master Data" })
+@Tag(name = "Address Master Data", description = "Address Master Data")
 public class AddressMasterDataController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AddressMasterDataController.class);

@@ -1,6 +1,8 @@
 package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.audit.repository.HospitalAuditRepository;
 import net.pladema.audit.repository.entity.HospitalAudit;
 import net.pladema.audit.service.domain.enums.EActionType;
@@ -47,6 +49,7 @@ public class PatientServiceImpl implements PatientService {
 	private final PatientRepository patientRepository;
 	private final HospitalAuditRepository hospitalAuditRepository;
 	private final PatientAuditRepository patientAuditRepository;
+	private final FeatureFlagsService featureFlagsService;
 
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
@@ -54,10 +57,12 @@ public class PatientServiceImpl implements PatientService {
 							  PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository,
 							  FederarService federarService,
 							  HospitalAuditRepository hospitalAuditRepository,
-							  PatientAuditRepository patientAuditRepository) {
+							  PatientAuditRepository patientAuditRepository,
+							  FeatureFlagsService featureFlagsService) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
+		this.featureFlagsService = featureFlagsService;
 	}
 
 	@Override
@@ -78,8 +83,9 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional(readOnly = true)
 	public LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
 		LOG.debug(INPUT_DATA, searchFilter);
-		Integer actualPatientListSize = patientRepository.getCountByOptionalFilter(searchFilter).intValue();
-		List<PatientSearch> patientList = patientRepository.getAllByOptionalFilter(searchFilter, MAX_RESULT_SIZE);
+		boolean filterByNameSelfDetermination = searchFilter.getFirstName() != null && featureFlagsService.isOn(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO);
+		Integer actualPatientListSize = patientRepository.getCountByOptionalFilter(searchFilter, filterByNameSelfDetermination).intValue();
+		List<PatientSearch> patientList = patientRepository.getAllByOptionalFilter(searchFilter, MAX_RESULT_SIZE, filterByNameSelfDetermination);
 		LimitedPatientSearchBo result = new LimitedPatientSearchBo(patientList, actualPatientListSize);
 		LOG.trace(OUTPUT, result);
 		return result;

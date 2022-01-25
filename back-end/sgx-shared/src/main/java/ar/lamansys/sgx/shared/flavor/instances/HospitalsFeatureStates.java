@@ -35,6 +35,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO, false);
 		map.put(AppFeature.AGREGAR_MEDICOS_ADICIONALES, false);
 		map.put(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF, false);
+		map.put(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO, false);
 		return map;
 	}
 

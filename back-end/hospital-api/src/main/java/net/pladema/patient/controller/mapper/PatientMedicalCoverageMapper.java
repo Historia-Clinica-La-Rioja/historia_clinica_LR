@@ -26,7 +26,7 @@ public interface PatientMedicalCoverageMapper {
     PatientMedicalCoverageBo toPatientMedicalCoverageBo(PatientMedicalCoverageDto patientMedicalCoverageDto);
 
     @Named("toListPatientMedicalCoverageBo")
-    @IterableMapping(qualifiedByName = "toPatientMedicalCoverageDto")
+    @IterableMapping(qualifiedByName = "toPatientMedicalCoverageBo")
     List<PatientMedicalCoverageBo> toListPatientMedicalCoverageBo(List<PatientMedicalCoverageDto> patientMedicalCoverageDtos);
 
 

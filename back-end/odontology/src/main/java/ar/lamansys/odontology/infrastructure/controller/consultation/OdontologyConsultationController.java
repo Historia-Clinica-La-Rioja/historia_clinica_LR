@@ -10,7 +10,7 @@ import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.CpoC
 import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.OdontologyConsultationMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/odontology/consultation")
-@Api(value="Odontology consultation", tags= { "Odontology Consultation" } )
+@Tag(name = "Odontology Consultation", description = "Odontology Consultation")
 public class OdontologyConsultationController {
 
     private static final Logger LOG = LoggerFactory.getLogger(OdontologyConsultationController.class);

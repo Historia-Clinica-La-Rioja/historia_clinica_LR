@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import net.pladema.renaper.controller.dto.MedicalCoverageDto;
 import net.pladema.renaper.controller.dto.PersonBasicDataResponseDto;
@@ -29,7 +29,7 @@ import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/renaper")
-@Api(value = "Renaper", tags = { "Renaper" })
+@Tag(name = "Renaper", description = "Renaper")
 public class RenaperController {
 
 	private static final String SEARCH_PERSON = "/searchPerson";

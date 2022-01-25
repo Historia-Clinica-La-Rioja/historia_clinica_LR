@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocument
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +24,7 @@ import java.nio.file.Paths;
 @RestController
 @RequestMapping("/institutions/{institutionId}/documents")
 @Slf4j
-@Api(value = "Documents", tags = {"Documents"})
+//@Api(value = "Documents", tags = {"Documents"})
 public class DocumentController {
 
     private final FetchDocumentFileById fetchDocumentFileById;

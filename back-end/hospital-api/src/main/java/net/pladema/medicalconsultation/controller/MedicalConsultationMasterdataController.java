@@ -1,10 +1,10 @@
 package net.pladema.medicalconsultation.controller;
 
-import io.swagger.annotations.Api;
+import ar.lamansys.sgx.shared.masterdata.application.MasterDataService;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.output.repository.MasterDataProjection;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
-import ar.lamansys.sgx.shared.masterdata.infrastructure.output.repository.MasterDataProjection;
-import ar.lamansys.sgx.shared.masterdata.application.MasterDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/masterdata/")
-@Api(value = "Appointments Master Data", tags = { "Medical Consultation Master Data" })
+@Tag(name = "Medical consultation master data", description = "Medical consultation master data")
 public class MedicalConsultationMasterdataController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedicalConsultationMasterdataController.class);

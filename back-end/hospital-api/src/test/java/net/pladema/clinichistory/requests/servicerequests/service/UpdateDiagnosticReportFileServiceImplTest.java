@@ -6,32 +6,29 @@ import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.UpdateDiagnosticReportFileServiceImpl;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-public class UpdateDiagnosticReportFileServiceImplTest extends UnitRepository {
+class UpdateDiagnosticReportFileServiceImplTest extends UnitRepository {
 
     private UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
 
     @Autowired
     private  DiagnosticReportFileRepository diagnosticReportFileRepository;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         updateDiagnosticReportFileService = new UpdateDiagnosticReportFileServiceImpl(
                 diagnosticReportFileRepository
         );
     }
 
     @Test
-    public void test_execute_updateDiagnosticReportFile() {
+    void test_execute_updateDiagnosticReportFile() {
         Integer patientId = 5;
         Integer ibuprofenoId = 13;
         var fileIds = populateDiagnosticReportFileRepository();
@@ -45,7 +42,7 @@ public class UpdateDiagnosticReportFileServiceImplTest extends UnitRepository {
         });
     }
 
-    public List<Integer> populateDiagnosticReportFileRepository() {
+    private List<Integer> populateDiagnosticReportFileRepository() {
         DiagnosticReportFile drf1 = new DiagnosticReportFile("path", "text/plain", 124142L, "file1.txt");
         DiagnosticReportFile drf2 = new DiagnosticReportFile("path", "text/pdf", 4125, "file2.pdf");
         DiagnosticReportFile drf3 = new DiagnosticReportFile("path", "image/jpg", 999L, "file3.jpg");

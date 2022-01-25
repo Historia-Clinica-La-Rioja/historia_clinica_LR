@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -15,21 +16,17 @@ import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnos
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepositoryImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.ListDiagnosticReportInfoServiceImpl;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
+class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
 
     private ListDiagnosticReportInfoService listDiagnosticReportInfoService;
     private ListDiagnosticReportRepository listDiagnosticReportRepository;
@@ -37,8 +34,8 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
     @Autowired
     private EntityManager entityManager;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         listDiagnosticReportRepository = new ListDiagnosticReportRepositoryImpl(entityManager);
         listDiagnosticReportInfoService = new ListDiagnosticReportInfoServiceImpl(listDiagnosticReportRepository);
 
@@ -47,7 +44,7 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_success() {
+    void execute_success() {
 
         Integer patientId = 1;
         Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();
@@ -84,7 +81,7 @@ public class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void execute_filters_success() {
+    void execute_filters_success() {
 
         Integer patientId = 1;
         Integer sctId_anginas = save(SnomedTestMocks.createSnomed("ANGINAS")).getId();

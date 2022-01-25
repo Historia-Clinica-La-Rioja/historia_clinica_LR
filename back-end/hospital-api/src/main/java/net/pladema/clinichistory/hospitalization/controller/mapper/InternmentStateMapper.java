@@ -45,7 +45,7 @@ public interface InternmentStateMapper {
     @Mapping(target = "diagnosis", source = "diagnosis", qualifiedByName = "toListDiagnosisDto")
     @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionDto")
     @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
-    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "toListVitalSignDto")
+    @Mapping(target = "vitalSigns", source = "vitalSigns")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     InternmentGeneralStateDto toInternmentGeneralStateDto(HospitalizationGeneralState interment);
 

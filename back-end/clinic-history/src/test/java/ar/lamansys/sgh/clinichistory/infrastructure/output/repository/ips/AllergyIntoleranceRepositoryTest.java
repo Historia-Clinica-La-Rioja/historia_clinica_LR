@@ -2,26 +2,25 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.AllergyIntolerance;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-public class AllergyIntoleranceRepositoryTest extends UnitRepository {
+@DataJpaTest(showSql = false)
+class AllergyIntoleranceRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private AllergyIntoleranceRepository allergyIntoleranceRepository;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 	}
 
 	@Test
-	public void saveCreateTest() {
+	void saveCreateTest() {
 		AllergyIntolerance allergy = createMinimumAllergyEntity();
 
 		assertThat(allergy.getCreatedOn())

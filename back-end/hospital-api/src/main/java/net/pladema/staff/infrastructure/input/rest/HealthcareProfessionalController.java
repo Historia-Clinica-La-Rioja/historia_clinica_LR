@@ -1,6 +1,5 @@
 package net.pladema.staff.infrastructure.input.rest;
 
-import io.swagger.annotations.Api;
 import net.pladema.staff.application.createprofessional.CreateHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
 import net.pladema.staff.application.updatehealthcareprofessional.UpdateHealthcareProfessional;
@@ -27,7 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/healthcareprofessional")
-@Api(value = "Healthcare professionals", tags = { "Healthcare professionals" })
+//@Api(value = "Healthcare professionals", tags = { "Healthcare professionals" })
 public class HealthcareProfessionalController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalController.class);

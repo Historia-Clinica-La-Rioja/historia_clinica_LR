@@ -4,10 +4,14 @@ import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
 import ar.lamansys.sgx.auth.user.domain.userpassword.PasswordEncryptor;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -16,25 +20,25 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
-public class UpdatePasswordImplTest {
+@ExtendWith(MockitoExtension.class)
+class UpdatePasswordImplTest {
 
     private UpdatePassword updatePassword;
 
-    @MockBean
+    @Mock
     private UserStorage userStorage;
 
-    @MockBean
+    @Mock
     private PasswordEncryptor passwordEncryptor;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         updatePassword = new UpdatePasswordImpl(userStorage, passwordEncryptor);
     }
 
     @Test
     @DisplayName("Update password success")
-    public void update_password_success() {
+    void update_password_success() {
         when(userStorage.getUser("username"))
                 .thenReturn(new UserBo(1, "username", true, "password", "salt", "hashAlgorithm", LocalDateTime.of(2020,01,01,10,10)));
         when(passwordEncryptor.encode("password", "salt", "hashAlgorithm"))

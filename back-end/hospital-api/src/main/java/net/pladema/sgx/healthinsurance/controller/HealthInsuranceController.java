@@ -1,6 +1,6 @@
 package net.pladema.sgx.healthinsurance.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.renaper.controller.dto.MedicalCoverageDto;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import net.pladema.sgx.healthinsurance.controller.mapper.HealthInsuranceMapper;
@@ -17,7 +17,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/health-insurance")
-@Api(value = "Medical coverage", tags = { "Health insurance" })
+@Tag(name = "Health insurance", description = "Health insurance")
 public class HealthInsuranceController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HealthInsuranceController.class);

@@ -1,6 +1,6 @@
 package net.pladema.snvs.infrastructure.input.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.snvs.application.fetchmanualclassification.FetchManualClassification;
 import net.pladema.snvs.domain.event.SnvsEventManualClassificationsBo;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/snvs")
-@Api(value = "Snvs master data", tags = { "Snvs master data" })
+@Tag(name = "Snvs master data", description = "Snvs master data")
 @Conditional(SnvsCondition.class)
 @Slf4j
 public class SnvsMasterDataController {

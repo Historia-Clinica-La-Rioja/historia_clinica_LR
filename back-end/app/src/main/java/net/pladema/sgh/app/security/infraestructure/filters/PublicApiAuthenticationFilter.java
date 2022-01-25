@@ -1,13 +1,15 @@
 package net.pladema.sgh.app.security.infraestructure.filters;
 
-import ar.lamansys.sgx.auth.apiKey.infrastructure.input.service.ApiKeyExternalService;
-import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
-import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
-import net.pladema.permissions.service.UserAssignmentService;
-import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGrantedAuthority;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,19 +18,16 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import ar.lamansys.sgx.auth.apiKey.infrastructure.input.service.ApiKeyExternalService;
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.permissions.service.UserAssignmentService;
+import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGrantedAuthority;
 
+@Slf4j
 @Component
 public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
-
-	private final Logger logger;
 
 	private final String apiKeyHeader;
 
@@ -36,10 +35,11 @@ public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
 
 	private final UserAssignmentService userAssignmentService;
 
-	protected PublicApiAuthenticationFilter(@Value("${api-key.header}") String apiKeyHeader,
-											ApiKeyExternalService apiKeyExternalService,
-											UserAssignmentService userAssignmentService) {
-		this.logger = LoggerFactory.getLogger(this.getClass());
+	protected PublicApiAuthenticationFilter(
+			@Value("${api-key.header}") String apiKeyHeader,
+			ApiKeyExternalService apiKeyExternalService,
+			UserAssignmentService userAssignmentService
+	) {
 		this.apiKeyHeader = apiKeyHeader;
 		this.apiKeyExternalService = apiKeyExternalService;
 		this.userAssignmentService = userAssignmentService;
@@ -56,14 +56,14 @@ public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
 								.flatMap(apiKeyExternalService::login)
 								.map(userInfo -> new UsernamePasswordAuthenticationToken(new SgxUserDetails(userInfo.getId()), "", getAuthorities(userInfo.getId())))
 								.ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA)));
-		logger.debug("Request {}", request);
+		log.debug("Request {}", request);
 		chain.doFilter(request, response);
-		logger.debug("Response {}", response);
+		log.debug("Response {}", response);
 	}
 
 
 	private Collection<GrantedAuthority> getAuthorities(Integer id) {
-		logger.debug("Get authorities from user {}", id);
+		log.debug("Get authorities from user {}", id);
 		return userAssignmentService.getRoleAssignment(id).stream()
 				.map(InstitutionGrantedAuthority::new)
 				.collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class PublicApiAuthenticationFilter extends OncePerRequestFilter {
 	public boolean shouldNotFilter(HttpServletRequest request) {
 		var matcher = new AntPathRequestMatcher("/public-api/**");
 		boolean result = !matcher.matches(request);
-		logger.debug("Should not filter request {} ?, result {}", request.getPathInfo(), result);
+		log.debug("Should not filter request {} ?, result {}", request.getPathInfo(), result);
 		return result;
 	}
 

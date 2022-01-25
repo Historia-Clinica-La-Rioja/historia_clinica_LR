@@ -1,23 +1,25 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import net.pladema.UnitRepository;
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
-
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -28,27 +30,26 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(SpringRunner.class)
-public class CreateMedicationRequestServiceImplTest extends UnitRepository {
+class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 	private CreateMedicationRequestService createMedicationRequestService;
 
 	@Autowired
 	private MedicationRequestRepository medicationRequestRepository;
 
-	@MockBean
+	@Mock
 	private DocumentFactory documentFactory;
 
-	@MockBean
+	@Mock
 	private HealthConditionService healthConditionService;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		createMedicationRequestService = new CreateMedicationRequestServiceImpl(medicationRequestRepository, documentFactory, healthConditionService);
 	}
 
 	@Test
-	public void execute_withNullInstitution(){
+	void execute_withNullInstitution(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(null);
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -60,7 +61,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withNullMedicationRequest(){
+	void execute_withNullMedicationRequest(){
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
 			createMedicationRequestService.execute(null)
 		);
@@ -70,7 +71,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withNullPatient(){
+	void execute_withNullPatient(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(1);
 		Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -82,7 +83,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withNullDoctorId(){
+	void execute_withNullDoctorId(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
@@ -95,7 +96,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withEmptyMedications(){
+	void execute_withEmptyMedications(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
@@ -110,7 +111,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withInvalidMedication_startDate(){
+	void execute_withInvalidMedication_startDate(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
@@ -139,7 +140,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withInvalidMedication_Snomed(){
+	void execute_withInvalidMedication_Snomed(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
 		medicationRequest.setDoctorId(1);
@@ -176,7 +177,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withInvalidMedication_HealthCondition_Snomed(){
+	void execute_withInvalidMedication_HealthCondition_Snomed(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(1);
 		medicationRequest.setPatientInfo(new PatientInfoBo(1, (short)1, (short)29));
@@ -210,7 +211,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withNewerSolvedHeathCondition(){
+	void execute_withNewerSolvedHeathCondition(){
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(5);
 		medicationRequest.setDoctorId(1);
@@ -234,7 +235,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_withDuplicatedStudy() {
+	void execute_withDuplicatedStudy() {
 
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(5);
@@ -272,7 +273,7 @@ public class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	}
 
 	@Test
-	public void execute_success() {
+	void execute_success() {
 		MedicationRequestBo medicationRequest = new MedicationRequestBo();
 		medicationRequest.setInstitutionId(5);
 		medicationRequest.setDoctorId(1);

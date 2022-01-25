@@ -28,6 +28,8 @@ public class PersonECEVo implements Serializable {
 
 	private String photo;
 
+	private String nameSelfDetermination;
+
 	public PersonECEVo(Person person){
 		if (person !=null) {
 			this.id = person.getId();
@@ -36,4 +38,15 @@ public class PersonECEVo implements Serializable {
 			this.identificationNumber = person.getIdentificationNumber();
 		}
 	}
+
+	public PersonECEVo(Person person, String nameSelfDetermination){
+		if (person !=null) {
+			this.id = person.getId();
+			this.firstName = person.getFirstName();
+			this.lastName = person.getLastName();
+			this.identificationNumber = person.getIdentificationNumber();
+			this.nameSelfDetermination = nameSelfDetermination;
+		}
+	}
+
 }

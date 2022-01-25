@@ -18,11 +18,13 @@ import java.util.Optional;
 public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARepository<EmergencyCareEpisode, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, dso.description, tc) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, " +
+			"petd.nameSelfDetermination, dso.description, tc) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
 			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
+			" LEFT JOIN PersonExtended petd ON (pe.id = petd.id) "+
 			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) "+
 			" WHERE (ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
 				" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
@@ -31,10 +33,11 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, dso.description, tc, pi) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso.description, tc, pi) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
-			" LEFT JOIN Person pe ON (pe.id = pa.personId) "+
+			" LEFT JOIN Person pe ON (pe.id = pa.personId) " +
+			" LEFT JOIN PersonExtended petd ON (pe.id = petd.id) "+
 			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
 			" LEFT JOIN PoliceInterventionDetails pi ON (pi.id = ece.id) "+
 			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) "+

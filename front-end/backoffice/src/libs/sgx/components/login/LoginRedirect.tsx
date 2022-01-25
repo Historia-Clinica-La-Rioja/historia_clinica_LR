@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactChildren } from 'react';
+import React from 'react';
 
 import { useTranslate } from 'ra-core';
 
@@ -24,15 +24,12 @@ const useStyles = makeStyles({
 
 interface LoginRedirectProps {
     loginUrl: string;
-    children: ReactChild | ReactChildren;
 }
 
-const LoginRedirect = ({ loginUrl = '', children }: LoginRedirectProps) => {
+const LoginRedirect = ({ loginUrl = '' }: LoginRedirectProps) => {
     const classes = useStyles();
     const translate = useTranslate();
-
-    const hideRedirect = !loginUrl;
-    return hideRedirect ? <>{children}</> : (
+    return (
         <Card className={classes.root} variant="outlined">
             <CardContent>
                 <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -49,7 +46,6 @@ const LoginRedirect = ({ loginUrl = '', children }: LoginRedirectProps) => {
                     >
                         {translate('ra.auth.sign_in')}
                     </Button>
-                    
                 </a>
             </CardActions>
         </Card>

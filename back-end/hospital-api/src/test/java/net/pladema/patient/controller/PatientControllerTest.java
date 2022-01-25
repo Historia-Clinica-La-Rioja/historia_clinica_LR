@@ -9,12 +9,10 @@ import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
@@ -24,9 +22,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(PatientController.class)
-public class PatientControllerTest extends UnitController {
+class PatientControllerTest extends UnitController {
 
 	@MockBean
 	private PatientService patientService;
@@ -52,12 +49,12 @@ public class PatientControllerTest extends UnitController {
 	@MockBean
 	private AdditionalDoctorService additionalDoctorService;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 	}
 
 	@Test
-	public void test_getBasicData() throws Exception {
+	void test_getBasicData() throws Exception {
 		final Integer patientId = 1;
 		final String URL = "/patient/"+patientId +"/basicdata";
 		when(patientService.getPatient(any())).thenReturn(Optional.empty());

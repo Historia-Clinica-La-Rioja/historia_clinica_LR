@@ -7,11 +7,9 @@ import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,18 +19,17 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-public class DiaryOpeningHoursRepositoryTest extends UnitRepository {
+class DiaryOpeningHoursRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private DiaryOpeningHoursRepository diaryOpeningHoursRepository;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() {
 	}
 
 	@Test
-	public void test_active_diaries_from_professional() {
+	void test_active_diaries_from_professional() {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");

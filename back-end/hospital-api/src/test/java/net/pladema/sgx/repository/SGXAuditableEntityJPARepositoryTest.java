@@ -3,26 +3,24 @@ package net.pladema.sgx.repository;
 import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
 import net.pladema.UnitRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
-
-@RunWith(SpringRunner.class)
-public class SGXAuditableEntityJPARepositoryTest extends UnitRepository {
+class SGXAuditableEntityJPARepositoryTest extends UnitRepository {
 
     @Autowired
     private AuditableRepository repository;
@@ -30,8 +28,16 @@ public class SGXAuditableEntityJPARepositoryTest extends UnitRepository {
     @MockBean
     private SecurityEvaluationContextExtension securityEvaluationContextExtension;
 
-    @Before
-    public void setUp() {
+    @Configuration
+    static class ContextConfiguration {
+        @Bean
+        public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+            return new SecurityEvaluationContextExtension();
+        }
+    }
+
+    @BeforeEach
+    void setUp() {
         when(securityEvaluationContextExtension.getRootObject()).thenReturn(new SecurityExpressionRoot(new Authentication() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,7 +79,7 @@ public class SGXAuditableEntityJPARepositoryTest extends UnitRepository {
 
     @Test
     @DisplayName("Test soft delete")
-    public void test_soft_delete() {
+    void test_soft_delete() {
         Integer id = save(
                 new AuditableClass(1))
                 .getId();

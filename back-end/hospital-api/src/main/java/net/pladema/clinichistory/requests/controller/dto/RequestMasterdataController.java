@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.controller.dto;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus;
 import net.pladema.clinichistory.requests.service.domain.EMedicationStatus;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
@@ -17,7 +17,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/requests/masterdata")
-@Api(value = "Requests Master Data", tags = { "Requests Master Data" })
+@Tag(name = "Requests Master Data", description = "Requests Master Data")
 public class RequestMasterdataController {
 
     private static final Logger LOG = LoggerFactory.getLogger(RequestMasterdataController.class);

@@ -4,3 +4,8 @@ export enum REFERENCE_STATES {
     WITH_COUNTERREFERENCE = 'Con contrarreferencia',
     ALL = 'Todos'
 }
+
+export enum REFERENCE_CONSULTATION_TYPE {
+    AMBULATORY = 1,
+    ODONTOLOGY = 2
+}

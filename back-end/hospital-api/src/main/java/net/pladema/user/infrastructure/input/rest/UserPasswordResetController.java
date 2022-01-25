@@ -1,6 +1,6 @@
 package net.pladema.user.infrastructure.input.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.user.application.createTokenPassword.CreateTokenPassword;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "User-password-reset", tags = {"User password reset"})
+@Tag(name = "User password reset", description = "User password reset")
 @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 public class UserPasswordResetController {
     private final Logger logger;

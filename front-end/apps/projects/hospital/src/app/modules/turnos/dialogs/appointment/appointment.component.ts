@@ -23,6 +23,7 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -79,6 +80,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly patientNameService: PatientNameService,
 
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -316,6 +318,11 @@ export class AppointmentComponent implements OnInit {
 			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
 		}
 	}
+
+	viewPatientName(appointmentInformation: PatientAppointmentInformation): string {
+		return this.patientNameService.getPatientName(appointmentInformation.patient.fullName, appointmentInformation.patient.fullNameWithNameSelfDetermination);
+	}
+
 }
 
 export interface PatientAppointmentInformation {
@@ -323,7 +330,8 @@ export interface PatientAppointmentInformation {
 		id: number,
 		fullName?: string
 		identificationNumber?: string,
-		typeId: number;
+		typeId: number,
+		fullNameWithNameSelfDetermination?: string
 	};
 	appointmentId: number;
 	appointmentStateId: number;

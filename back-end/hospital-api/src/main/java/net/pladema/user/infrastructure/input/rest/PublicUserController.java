@@ -1,6 +1,6 @@
 package net.pladema.user.infrastructure.input.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.user.application.getuserpersondata.GetUserPersonData;
 import net.pladema.user.infrastructure.input.rest.dto.PersonDataDto;
 import net.pladema.user.infrastructure.input.rest.mapper.UserDataDtoMapper;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth/public-user")
-@Api(value = "publicuser", tags = {"Public user"})
+@Tag(name = "Public user", description = "Public user")
 public class PublicUserController {
 
     private final Logger logger;

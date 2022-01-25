@@ -21,7 +21,7 @@
 				{{professional.professionalDescription}}
 			</mat-option>
 		</mat-select>
-		<button id="clear_specialty" type="button" mat-button *ngIf="form.controls.professional.value" matSuffix
+		<button id="clear_professional" type="button" mat-button *ngIf="form.controls.professional.value" matSuffix
 			color="warn" mat-icon-button (click)="clear(form.controls.professional); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -34,7 +34,7 @@
 				{{problem.problemDescription}}
 			</mat-option>
 		</mat-select>
-		<button id="clear_specialty" type="button" mat-button *ngIf="form.controls.problem.value" matSuffix color="warn"
+		<button id="clear_problem" type="button" mat-button *ngIf="form.controls.problem.value" matSuffix color="warn"
 			mat-icon-button (click)="clear(form.controls.problem); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -47,7 +47,7 @@
 			(dateChange)="sendAllFiltersOnFilterChange()">
 		<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
 		<mat-datepicker #myDatepicker></mat-datepicker>
-		<button id="clear_specialty" type="button" mat-button *ngIf="form.controls.consultationDate.value" matSuffix
+		<button id="clear_consultationDate" type="button" mat-button *ngIf="form.controls.consultationDate.value" matSuffix
 			color="warn" mat-icon-button (click)="clear(form.controls.consultationDate); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -60,7 +60,7 @@
 				{{referenceState}}
 			</mat-option>
 		</mat-select>
-		<button id="clear_specialty" type="button" mat-button *ngIf="form.value.referenceState" matSuffix color="warn"
+		<button id="clear_reference_state" type="button" mat-button *ngIf="form.value.referenceState" matSuffix color="warn"
 			mat-icon-button (click)="clear(form.controls.referenceState); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>

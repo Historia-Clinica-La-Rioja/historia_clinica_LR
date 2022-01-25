@@ -32,6 +32,12 @@ const routes: Routes = [
 				]
 			},
 			{
+				path: 'nueva-agenda/:idProfessional',
+				component: AgendaSetupComponent,
+				canActivate: [RoleGuard],
+				data: {allowedRoles: [ERole.ADMINISTRADOR_AGENDA]}
+			},
+			{
 				path: 'nueva-agenda',
 				component: AgendaSetupComponent,
 				canActivate: [RoleGuard],

@@ -3,6 +3,7 @@ import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeDto } from '@api-rest/api-model';
 import { Router } from '@angular/router';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
+import { PatientNameService } from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-internaciones-table',
@@ -16,6 +17,7 @@ export class InternacionesTableComponent implements OnInit {
 	constructor(
 		private internacionService: InternacionService,
 		private router: Router,
+		private readonly patientNameService: PatientNameService,
 	) { }
 
 	private buildTable(data: InternmentEpisodeDto[]): TableModel<InternmentEpisodeDto> {
@@ -29,7 +31,7 @@ export class InternacionesTableComponent implements OnInit {
 				{
 					columnDef: 'patientName',
 					header: 'Nombre',
-					text: (row) => row.patient.firstName
+					text: (row) => this.patientNameService.getPatientName(row.patient.firstName, row.patient.nameSelfDetermination)
 				},
 				{
 					columnDef: 'patientLastName',

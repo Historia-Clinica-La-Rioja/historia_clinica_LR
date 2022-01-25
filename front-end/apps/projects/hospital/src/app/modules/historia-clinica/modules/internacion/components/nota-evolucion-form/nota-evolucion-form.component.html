@@ -278,6 +278,10 @@
 									{{ bloodType.description }}
 								</mat-option>
 							</mat-select>
+							<button id="clear_blood_type" type="button" mat-button *ngIf="form.value.anthropometricData.bloodType" matSuffix
+								color="warn" mat-icon-button (click)="clearBloodType(form.controls.anthropometricData); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
 						</mat-form-field>
 					</div>
 					<div>

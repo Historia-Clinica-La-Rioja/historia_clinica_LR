@@ -22,6 +22,10 @@
 						<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
 					</mat-option>
                 </mat-select>
+                <button id="clear_medical_coverage" type="button" mat-button *ngIf="prescriptionForm.value.patientMedicalCoverage" matSuffix
+                    color="warn" mat-icon-button (click)="clear(prescriptionForm.controls.patientMedicalCoverage); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
 			</mat-form-field>
 
             <div class="margin-checkbox" *ngIf="isMedication()">

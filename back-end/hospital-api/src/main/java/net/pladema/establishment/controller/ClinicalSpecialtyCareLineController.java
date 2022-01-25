@@ -1,7 +1,7 @@
 package net.pladema.establishment.controller;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@Api(value = "ClinicalSpecialtyCareLine", tags = { "Clinical Specialty Care Line" })
+@Tag(name = "Clinical Specialty Care Line", description = "Clinical Specialty Care Line")
 @RequestMapping("/institution/{institutionId}/careline/{careLineId}/clinicalspecialties")
 public class ClinicalSpecialtyCareLineController {
     

@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.ChangeStateMedicationRequestDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.MedicationInfoDto;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/medication-requests")
-@Api(value = "Medication Request", tags = {"Medication Request"})
+@Tag(name = "Medication Request", description = "Medication Request")
 @Validated
 public class MedicationRequestController {
 

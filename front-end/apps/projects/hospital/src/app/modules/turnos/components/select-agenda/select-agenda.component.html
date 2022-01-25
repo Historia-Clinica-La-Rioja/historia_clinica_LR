@@ -30,6 +30,10 @@
 				</mat-option>
 			</mat-optgroup>
 		</mat-select>
+		<button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected" matSuffix
+			color="warn" mat-icon-button (click)="clear(agendaSelected); $event.stopPropagation()">
+			<mat-icon>close</mat-icon>
+		</button>
 	</mat-form-field>
 
 	<div class="actions" *ngIf="agendaSelected" fxLayout="row" fxLayoutGap="3px">

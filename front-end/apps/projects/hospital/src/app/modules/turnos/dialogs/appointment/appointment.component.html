@@ -5,7 +5,7 @@
 			<div class="header-content" fxLayout="row" fxLayoutAlign="center">
 				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon>
 				<div fxLayout="column" fxLayoutAlign="center start">
-					<span class="mat-body-strong capitalize patient-name-title" *ngIf="params.appointmentData.patient.fullName"> {{ params.appointmentData.patient.fullName | uppercase }}</span>
+					<span class="mat-body-strong capitalize patient-name-title" *ngIf="params.appointmentData.patient.fullName"> {{ viewPatientName(params.appointmentData) | uppercase }}</span>
 					<div>
 						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID {{params.appointmentData.patient.id}}</span> •
 						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="params.appointmentData.patient.identificationNumber">DNI {{params.appointmentData.patient.identificationNumber}}</span>

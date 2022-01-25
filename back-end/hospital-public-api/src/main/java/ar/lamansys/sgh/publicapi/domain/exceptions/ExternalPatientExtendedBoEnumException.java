@@ -8,5 +8,6 @@ public enum ExternalPatientExtendedBoEnumException {
     NULL_IDENTIFICATION_TYPE_ID,
     NULL_LAST_NAME,
     NULL_PHONE_NUMBER,
-    NULL_EMAIL
+    NULL_EMAIL,
+    NULL_INSTITUTION
 }

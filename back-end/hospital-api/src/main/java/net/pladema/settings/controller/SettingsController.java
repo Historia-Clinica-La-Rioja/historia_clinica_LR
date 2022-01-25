@@ -1,6 +1,6 @@
 package net.pladema.settings.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.assets.controller.service.AssetsExternalService;
 import net.pladema.settings.service.SettingsService;
 import org.apache.http.MethodNotSupportedException;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/settings")
-@Api(value = "Settings", tags = { "Settings" })
+@Tag(name = "Settings", description = "Settings")
 public class SettingsController {
 
     private final Logger logger;
@@ -41,8 +41,8 @@ public class SettingsController {
     public boolean uploadFile(HttpServletRequest request,
                               @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
         //TODO: en service crear paquete exception con un exception handler en el controller o en otro paquete dentro de la capa de controler. Parserar a apierrordto
-        logger.debug("Input parameters ->  {} fileName {}",
-                request.getRequestURL().toString());
+        logger.debug("Input parameters -> fileName={}",
+                request.getRequestURL());
 
         return settingsService.uploadFile(this.assetsExternalService.findByName(getFileName(request)), file);
     }
@@ -51,8 +51,8 @@ public class SettingsController {
     @PreAuthorize("hasAnyAuthority('ROOT')")
     @Transactional
     public boolean deleteFile(HttpServletRequest request) throws MethodNotSupportedException {
-        logger.debug("Input parameters ->  {} fileName {}",
-                request.getRequestURL().toString());
+        logger.debug("Input parameters -> fileName={}",
+                request.getRequestURL());
 
         return settingsService.deleteFile(this.assetsExternalService.findByName(getFileName(request)));
     }

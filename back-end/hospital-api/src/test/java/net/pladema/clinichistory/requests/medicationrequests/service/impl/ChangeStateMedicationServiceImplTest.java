@@ -1,26 +1,24 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import net.pladema.UnitRepository;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.mocks.MedicationTestMocks;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -28,8 +26,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-public class ChangeStateMedicationServiceImplTest extends UnitRepository {
+class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
     private ChangeStateMedicationService changeStateMedicationService;
 
@@ -39,30 +36,30 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     @Autowired
     private MedicationStatementRepository medicationStatementRepository;
 
-    @MockBean
+    @Mock
     private DocumentService documentService;
 
-    @MockBean
+    @Mock
     private SnomedService snomedService;
 
-    @MockBean
+    @Mock
     private NoteService noteService;
 
-    @MockBean
+    @Mock
     private LoadMedications loadMedications;
 
-    @MockBean
+    @Mock
     private DateTimeProvider dateTimeProvider;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         MedicationCalculateStatus medicationCalculateStatus = new MedicationCalculateStatus(dateTimeProvider);
         changeStateMedicationService = new ChangeStateMedicationServiceImpl(medicationStatementRepository,
                 loadMedications, dosageRepository, documentService, snomedService, medicationCalculateStatus, noteService, dateTimeProvider);
     }
 
     @Test
-    public void test_execute_withInvalidPatientInfo(){
+    void test_execute_withInvalidPatientInfo(){
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 changeStateMedicationService.execute(null, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, Collections.emptyList()))
         );
@@ -79,7 +76,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void test_execute_withInvalidNewStatus() {
+    void test_execute_withInvalidNewStatus() {
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 changeStateMedicationService.execute(new PatientInfoBo(1, (short)1, (short)4), new ChangeStateMedicationRequestBo(null, 2d, null, Collections.emptyList()))
         );
@@ -96,7 +93,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void test_execute_suspendedMedication_withInvalidStateMedication() {
+    void test_execute_suspendedMedication_withInvalidStateMedication() {
 
         Integer patientId = 5;
         Integer ibuprofenoId = 13;
@@ -155,7 +152,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void test_execute_activeMedication_withInvalidStateMedication() {
+    void test_execute_activeMedication_withInvalidStateMedication() {
         Integer patientId = 5;
         Integer ibuprofenoId = 13;
 
@@ -206,7 +203,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
     }
 
     @Test
-    public void test_execute_finalizeMedication_withInvalidStateMedication() {
+    void test_execute_finalizeMedication_withInvalidStateMedication() {
         Integer patientId = 5;
         Integer ibuprofenoId = 13;
 
@@ -236,7 +233,7 @@ public class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
 
     @Test
-    public void test_execute_success(){
+    void test_execute_success(){
         PatientInfoBo patient = new PatientInfoBo(1, (short) 1, (short) 18);
         changeStateMedicationService.execute(patient, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, Collections.emptyList()));
         Assertions.assertTrue(true);

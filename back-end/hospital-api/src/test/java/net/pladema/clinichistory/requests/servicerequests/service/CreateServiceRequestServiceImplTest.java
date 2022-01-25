@@ -2,43 +2,38 @@ package net.pladema.clinichistory.requests.servicerequests.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.CreateServiceRequestServiceImpl;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class CreateServiceRequestServiceImplTest {
+class CreateServiceRequestServiceImplTest extends UnitRepository {
 
     private CreateServiceRequestService  createServiceRequestServiceImpl;
 
-
-    @MockBean
+    @Mock
     private DocumentFactory documentFactory;
 
     @Autowired
     private ServiceRequestRepository serviceRequestRepository;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         createServiceRequestServiceImpl = new CreateServiceRequestServiceImpl(serviceRequestRepository, documentFactory);
     }
 
     @Test
-    public void execute_withNullInstitution(){
+    void execute_withNullInstitution(){
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setInstitutionId(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -50,7 +45,7 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
-    public void execute_withNullPatient(){
+    void execute_withNullPatient(){
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setPatientInfo(new PatientInfoBo());
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -62,7 +57,7 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
-    public void execute_withNullDoctorId(){
+    void execute_withNullDoctorId(){
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setDoctorId(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -74,7 +69,7 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
-    public void execute_withEmptyDiagnosticReport(){
+    void execute_withEmptyDiagnosticReport(){
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         serviceRequestBo.setDiagnosticReports(null);
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -86,7 +81,7 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
-    public void execute_withInvalidServiceRequest_HealthCondition_Snomed(){
+    void execute_withInvalidServiceRequest_HealthCondition_Snomed(){
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         DiagnosticReportBo diagnosticReportBoWithoutHealthConditionId = new DiagnosticReportBo();
         diagnosticReportBoWithoutHealthConditionId.setHealthConditionId(null);
@@ -102,7 +97,7 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
-    public void execute_withDuplicatedStudy() {
+    void execute_withDuplicatedStudy() {
         ServiceRequestBo serviceRequestBo = getServiceRequestBoWithDuplicatedStudy();
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 createServiceRequestServiceImpl.execute(serviceRequestBo)
@@ -113,7 +108,7 @@ public class CreateServiceRequestServiceImplTest {
     }
 
     @Test
-    public void execute_success() {
+    void execute_success() {
         ServiceRequestBo serviceRequestBo = getValidServiceRequest();
         Integer medicationRequestId = createServiceRequestServiceImpl.execute(serviceRequestBo);
         Assertions.assertEquals(1, serviceRequestRepository.count());

@@ -141,7 +141,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private void setDefaultProblem(ConsultationBo consultationBo) {
         LOG.debug("Input parameter -> consultationBo {}", consultationBo);
-        if (!consultationBo.getDentalActions().isEmpty()) {
+        if (!consultationBo.getDentalActions().isEmpty() && !hasDefaultProblem(consultationBo.getDiagnostics())) {
             ConsultationDiagnosticBo problem = buildDefaultProblem();
             consultationBo.getDiagnostics().add(problem);
         }
@@ -154,6 +154,10 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         defaultProblem.setStartDate(dateTimeProvider.nowDate());
         defaultProblem.setSeverity(DEFAULT_PROBLEM_SEVERITY);
         return defaultProblem;
+    }
+
+    private boolean hasDefaultProblem(List<ConsultationDiagnosticBo> consultationDiagnosticBoList) {
+        return consultationDiagnosticBoList.stream().filter(d -> d.getSnomed().getSctid().equals(DEFAULT_PROBLEM_SCTID) && d.getSnomed().getPt().equals(DEFAULT_PROBLEM_PT)).findAny().isPresent();
     }
 
     private void sortDentalActions(ConsultationBo consultationBo) {

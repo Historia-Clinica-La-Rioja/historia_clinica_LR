@@ -27,7 +27,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter, Integer resultSize) {
+    public List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter, Integer resultSize, boolean filterByNameSelfDetermination) {
         PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
         QueryPart queryPart = new QueryPart(
                 "SELECT ")
@@ -36,13 +36,16 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                 .concatPart(patientSearchQuery.from())
                 .concat("WHERE ")
                 .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+        if (filterByNameSelfDetermination)
+                queryPart.concat("OR ")
+                        .concatPart(patientSearchQuery.whereWithNameSelfDeterminationAttribute(LIKE_COMPARATOR));
         Query query = entityManager.createQuery(queryPart.toString());
         query.setMaxResults(resultSize);
         queryPart.configParams(query);
         return patientSearchQuery.construct(query.getResultList());
     }
 
-    public Long getCountByOptionalFilter(PatientSearchFilter searchFilter){
+    public Long getCountByOptionalFilter(PatientSearchFilter searchFilter, boolean filterByNameSelfDetermination){
         PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
         QueryPart queryPart = new QueryPart(
                 "SELECT COUNT(*)")
@@ -50,6 +53,9 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                 .concatPart(patientSearchQuery.from())
                 .concat("WHERE ")
                 .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+        if (filterByNameSelfDetermination)
+                queryPart.concat("OR ")
+                        .concatPart(patientSearchQuery.whereWithNameSelfDeterminationAttribute(LIKE_COMPARATOR));
         Query query = entityManager.createQuery(queryPart.toString());
         queryPart.configParams(query);
         return (Long) query.getSingleResult();

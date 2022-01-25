@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
 	BasicPatientDto, DoctorsOfficeDto,
@@ -227,5 +227,9 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 			this.form.value.reasons.forEach(reason => this.motivoNuevaConsultaService.add(reason));
 		}
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 }

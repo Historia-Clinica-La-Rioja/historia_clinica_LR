@@ -11,22 +11,17 @@ import {
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 
-const MedicalCoveragePlanField = ({formData}) => {
-    return formData.type !== 1 ? null : (
-                <TextInput source="plan" validate={[
-                    maxLength(10)]}/>
-        )
-}
+const OBRA_SOCIAL = 2;
 
 const MedicalCoverageRnosField = ({formData}) => {
-    return formData.type !== 2 ? null : (
+    return formData.type !== OBRA_SOCIAL ? null : (
             <TextInput source="rnos" validate={[
                 maxLength(10), number()]}/>
     )
 }
 
 const MedicalCoverageAcronymField = ({formData}) => {
-    return formData.type !== 2 ? null : (
+    return formData.type !== OBRA_SOCIAL ? null : (
             <TextInput source="acronym" validate={[
                 maxLength(18)]}/>
     )
@@ -36,18 +31,13 @@ const MedicalCoverageCreate = props => (
     <Create {...props}>
         <SimpleForm redirect="show"  toolbar={<CustomToolbar/>}>
             <TextInput source="name" validate={[required()]}/>
+            <TextInput source="cuit" validate={[required(), number()]}/>
             {/*Medical Coverage Type*/}
             <ReferenceInput
                 reference="medicalcoveragetypes"
                 source="type">
                 <SelectInput optionText="value" optionValue="id" validate={[required()]}/>
             </ReferenceInput>
-
-
-            {/*Plan private health insurance*/}
-            <FormDataConsumer>
-                {formDataProps => (<MedicalCoveragePlanField {...formDataProps} source="plan"/>)}
-            </FormDataConsumer>
 
             {/*Rnos health inssurance*/}
             <FormDataConsumer>

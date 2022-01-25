@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeProcessDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentPatientDto;
@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/patients")
-@Api(value = "Internment Patient", tags = { "Internment Patient" })
+@Tag(name = "Internment Patient", description = "Internment Patient")
 public class InternmentPatientController {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternmentPatientController.class);

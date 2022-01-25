@@ -65,7 +65,12 @@
 					"PESO_MIN": "El peso mínimo debe ser 0 kg",
 					"PESO_MAX": "El peso máximo debe ser 1000 kg",
 					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
-					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres"
+					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
+					"HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 0 y 100 cm",
+					"BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
+					"GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
+					"CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",
+					"MAX_TWO_DECIMAL_DIGITS": "Hemoglobina glicosilada debe tener máximo 2 cifras decimales"
 				},
 				"motivo": {
 					"TITLE": "Motivo de consulta",
@@ -93,7 +98,7 @@
 				"messages": {
 					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
 					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente",
-					"ERROR_TO_UPDATE_FILES": "Error al guardar la solicitud de referencia"
+					"ERROR_TO_UPLOAD_FILES": "Error al guardar la solicitud de referencia"
 				},
 				"problemas": {
 					"buttons": {
@@ -129,13 +134,16 @@
 					"PROCEDIMIENTO": "Procedimiento"
 				},
 				"signos-vitales": {
-					"TITLE": "Signos vitales",
+					"TITLE": "Factores de Riesgo",
 					"HEART_RATE": "Frecuencia cardíaca (/min)",
 					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 					"TEMPERATURE": "Temperatura corporal",
 					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
 					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
-					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
+					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)",
+					"BLOOD_GLUCOSE": "Glucemia (mg/dl)",
+					"GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada (%)",
+					"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
 				},
 				"antecedentes-familiares": {
 					"buttons": {
@@ -171,6 +179,7 @@
 				"datos-antropometricos": {
 					"TITLE": "Datos antropométricos",
 					"BLOOD_TYPE": "Grupo y factor sanguíneo",
+					"HEAD_CIRCUNFERENCE": "Perímetro cefálico (cm)",
 					"HEIGHT": "Talla (cm)",
 					"WEIGHT": "Peso (kg)"
 				},
@@ -179,8 +188,8 @@
 					"DISCARD": "NO, DESCARTARLOS",
 					"ASK": "¿Desea incluirlos en la consulta?",
 					"CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
-					"CONTENT_VITAL_SIGNS": "Hay signos vitales cargados previamente.",
-					"CONTENT": "Hay datos antropométricos y signos vitales cargados previamente."
+					"CONTENT_VITAL_SIGNS": "Hay factores de riesgo cargados previamente.",
+					"CONTENT": "Hay datos antropométricos y factores de riesgo cargados previamente."
 				},
 				"alergias": {
 					"TITLE": "Alergias",
@@ -208,7 +217,7 @@
 				"vital_signs_dialog": {
 					"ADD": "SI, INCLUIRLOS",
 					"DISCARD": "NO, DESCARTARLOS",
-					"DESCRIPTION": "Últimos datos signos vitales cargados previamente el {{date}} hs",
+					"DESCRIPTION": "Últimos factores de riesgo cargados previamente el {{date}} hs",
 					"QUESTION": "¿Desea incluirlos en la consulta? "
 				},
 				"solicitud-referencia": {
@@ -343,7 +352,8 @@
 					"CASE_COULD_NOT_BE_REPORTED": "El caso <b>{{ problemName }}</b> no pudo ser reportado",
 					"ID": "ID",
 					"FAILED_REPORT_ERROR": "Fallo al reportar el problema"
-				}
+				},
+				"PENDING_REFERENCE": "Referencia pendiente"
 			},
 			"ordenes_prescripciones": {
 				"TAB_LABEL": "Órdenes y prescripciones",
@@ -368,7 +378,7 @@
 					"ADMINISTRATION_TIME": "Tiempo de administración",
 					"ADMINISTRATION_TIME_DEFAULT_OPTION": "Habitual",
 					"OBSERVATIONS": "Observaciones",
-					"INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas",
+					"INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas válidas",
 					"ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días"
 				},
 				"new_prescription_dialog": {
@@ -500,4 +510,3 @@
 		}
 	}
 }
-

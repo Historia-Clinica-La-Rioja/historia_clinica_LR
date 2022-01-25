@@ -2,6 +2,7 @@ package net.pladema.sgh.app.swagger;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -27,12 +30,20 @@ class SwaggerAPIIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	@Autowired
+	protected WebApplicationContext webApplicationContext;
+
+	@BeforeEach
+	void setup() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	}
+
 	@Test
 	void contextLoads() throws Exception {
 		// @formatter:off
 		String swaggerJson = mockMvc
 				.perform(
-						get("/v2/api-docs")
+						get("/v3/api-docs")
 						.accept(MediaType.APPLICATION_JSON)
 				)
 				.andExpect(status().isOk())

@@ -24,11 +24,14 @@ public class PersonECEBo {
 
 	private String photo;
 
+	private String nameSelfDetermination;
+
 	public PersonECEBo(PersonECEVo person){
 		this.id = person.getId();
 		this.firstName = person.getFirstName();
 		this.lastName = person.getLastName();
 		this.identificationNumber = person.getIdentificationNumber();
 		this.photo = person.getPhoto();
+		this.nameSelfDetermination = person.getNameSelfDetermination();
 	}
 }

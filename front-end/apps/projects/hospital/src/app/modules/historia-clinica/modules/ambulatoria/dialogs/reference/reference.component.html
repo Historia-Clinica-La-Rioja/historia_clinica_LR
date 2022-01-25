@@ -17,8 +17,8 @@
                                 (+{{associatedProblemsControls.value.length - 1}} {{'más'}})
                                 </span>
                             </mat-select-trigger>
-                            <mat-option *ngFor="let problem of problemsList$ | async" [value]="problem.snomed.pt">
-                                {{problem.snomed.pt | translate}}
+                            <mat-option *ngFor="let problem of problemsList$ | async" [value]="problem.hcePersonalHistoryDto.snomed.pt">
+                                {{problem.hcePersonalHistoryDto.snomed.pt | translate}}
                             </mat-option>
                         </mat-select>
                         <mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -73,6 +73,10 @@
                                 {{institution.name | translate}}
                             </mat-option>
                         </mat-select>
+                        <button id="clear_institution" type="button" mat-button *ngIf="formReference.value.institution" matSuffix
+                            color="warn" mat-icon-button (click)="clear(formReference.controls.institution); $event.stopPropagation()">
+                            <mat-icon>close</mat-icon>
+                        </button>
                     </mat-form-field>
                 </div>
 

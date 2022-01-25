@@ -16,6 +16,6 @@ public interface ExternalClinicalHistoryMapper {
     ExternalClinicalHistoryDto fromExternalClinicalHistoryBo(ExternalClinicalHistoryBo externalClinicalHistoryBo);
 
     @Named("fromListExternalClinicalHistoryBo")
-    @IterableMapping(qualifiedByName = "fromExternalClinicalHistoryo")
+    @IterableMapping(qualifiedByName = "fromExternalClinicalHistoryBo")
     List<ExternalClinicalHistoryDto> fromListExternalClinicalHistoryBo(List<ExternalClinicalHistoryBo> externalClinicalHistoryBos);
 }

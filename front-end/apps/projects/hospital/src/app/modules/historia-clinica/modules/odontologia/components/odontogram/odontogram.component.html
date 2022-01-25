@@ -4,7 +4,7 @@
 	<div id="actions" *appHasRole="['ESPECIALISTA_EN_ODONTOLOGIA']" fxLayout="row" fxLayoutGap="15px"
 		fxLayoutAlign="end">
 		<button mat-stroked-button color="primary" class="uppercase" (click)="clearOdontogram()">Restablecer</button>
-		<button mat-raised-button color="primary" class="uppercase" (click)="hasReferenceNotification()">Completar
+		<button mat-raised-button color="primary" class="uppercase" (click)="referenceNotificationService.hasReferenceNotification()">Completar
 			consulta</button>
 	</div>
 

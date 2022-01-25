@@ -1,25 +1,21 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.UnitRepository;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import net.pladema.clinichistory.requests.servicerequests.service.impl.DeleteDiagnosticReportServiceImpl;
-
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-public class DeleteLoadDiagnosticReportsTest extends UnitRepository {
+class DeleteLoadDiagnosticReportsTest extends UnitRepository {
 
 
     private DeleteDiagnosticReportService deleteDiagnosticReportService;
@@ -28,17 +24,17 @@ public class DeleteLoadDiagnosticReportsTest extends UnitRepository {
     @Autowired
     private DiagnosticReportRepository diagnosticReportRepository;
 
-    @MockBean
+    @Mock
     private DocumentService documentService;
 
-    @MockBean
+    @Mock
     private LoadDiagnosticReports loadDiagnosticReports;
 
-    @MockBean
+    @Mock
     private SnomedService snomedService;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         deleteDiagnosticReportService = new DeleteDiagnosticReportServiceImpl(
                 diagnosticReportRepository,
                 documentService,
@@ -48,7 +44,7 @@ public class DeleteLoadDiagnosticReportsTest extends UnitRepository {
     }
 
     @Test
-    public void test_execute_cancelDiagnosticReport_withInvalidState() {
+    void test_execute_cancelDiagnosticReport_withInvalidState() {
         Integer patientId = 5;
         Integer ibuprofenoId = 13;
 

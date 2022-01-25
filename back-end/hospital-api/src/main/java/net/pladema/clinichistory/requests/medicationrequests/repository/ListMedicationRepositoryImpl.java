@@ -66,7 +66,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 
         query.setParameter("documentStatusId", DocumentStatus.FINAL)
              .setParameter("patientId", filter.getPatientId())
-             .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS));
+             .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE));
 
         if (filter.getMedicationStatement() != null)
             query.setParameter("medication", "%"+filter.getMedicationStatement().toUpperCase()+"%");

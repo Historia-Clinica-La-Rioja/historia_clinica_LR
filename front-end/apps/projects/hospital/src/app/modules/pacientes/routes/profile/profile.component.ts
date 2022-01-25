@@ -261,7 +261,6 @@ export class ProfileComponent implements OnInit {
 			width: '25%',
 			disableClose: true,
 			data: {
-				personId: this.personId,
 				professionalId: this.professionalId,
 				roles: this.roles,
 				userId: this.userData.id,
@@ -270,7 +269,6 @@ export class ProfileComponent implements OnInit {
 		});
 		dialog.afterClosed().subscribe((userRoles: UserRoleDto[]) => {
 			if (userRoles) {
-
 				this.rolesService.updateRoles(this.userData.id, userRoles).subscribe(_ => {
 					this.snackBarService.showSuccess('pacientes.edit_roles.messages.SUCCESS');
 					this.userRoles = [];

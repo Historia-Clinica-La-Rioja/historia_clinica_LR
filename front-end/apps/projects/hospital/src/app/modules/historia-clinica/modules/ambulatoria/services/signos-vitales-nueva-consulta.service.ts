@@ -14,9 +14,12 @@ export interface SignosVitales {
 	respiratoryRate?: EffectiveClinicalObservationDto;
 	systolicBloodPressure: EffectiveClinicalObservationDto;
 	temperature?: EffectiveClinicalObservationDto;
+	bloodGlucose?: EffectiveClinicalObservationDto;
+	glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
+	cardiovascularRisk?: EffectiveClinicalObservationDto;
 }
 
-
+export const PATTERN_MAX_2_DECIMAL_DIGITS = /^[0-9]+(\.[0-9]{1,2})?$/;
 
 export class SignosVitalesNuevaConsultaService {
 
@@ -32,6 +35,12 @@ export class SignosVitalesNuevaConsultaService {
 	private _systolicBloodPressureError$: Observable<string>;
 	private diastolicBloodPressureErrorSource = new Subject<string>();
 	private _diastolicBloodPressureError$: Observable<string>;
+	private bloodGlucoseErrorSource = new Subject<string>();
+	private _bloodGlucoseError$: Observable<string>;
+	private glycosylatedHemoglobinErrorSource = new Subject<string>();
+	private _glycosylatedHemoglobinError$: Observable<string>;
+	private cardiovascularRiskErrorSource = new Subject<string>();
+	private _cardiovascularRiskError$: Observable<string>;
 	private form: FormGroup;
 	private notShowPreloadedVitalSignsData = true;
 	private dateList: string[] = [];
@@ -66,6 +75,18 @@ export class SignosVitalesNuevaConsultaService {
 			diastolicBloodPressure: this.formBuilder.group({
 				value: [null, Validators.min(0)],
 				effectiveTime: [newMoment()],
+			}),
+			bloodGlucose: this.formBuilder.group({
+				value: [null, [Validators.min(1), Validators.max(500), Validators.pattern('^[0-9]+$')]],
+				effectiveTime: [newMoment()],
+			}),
+			glycosylatedHemoglobin: this.formBuilder.group({
+				value: [null, [Validators.min(1), Validators.max(20), Validators.pattern(PATTERN_MAX_2_DECIMAL_DIGITS)]],
+				effectiveTime: [newMoment()],
+			}),
+			cardiovascularRisk: this.formBuilder.group({
+				value: [null, [Validators.min(1), Validators.max(100), Validators.pattern('^[0-9]+$')]],
+				effectiveTime: [newMoment()],
 			})
 		});
 		this.form.controls.heartRate.valueChanges.subscribe(
@@ -73,38 +94,55 @@ export class SignosVitalesNuevaConsultaService {
 				if (dat.value !== undefined) {
 					this.heartRateErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.respiratoryRate.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.respiratoryRateErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.temperature.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.temperatureErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.bloodOxygenSaturation.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.bloodOxygenSaturationErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.systolicBloodPressure.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.systolicBloodPressureErrorSource.next();
 				}
-		});
+			});
 		this.form.controls.diastolicBloodPressure.valueChanges.subscribe(
 			dat => {
 				if (dat.value !== undefined) {
 					this.diastolicBloodPressureErrorSource.next();
 				}
-		});
-
+			});
+		this.form.controls.bloodGlucose.valueChanges.subscribe(
+			dat => {
+				if (dat.value !== undefined) {
+					this.bloodGlucoseErrorSource.next();
+				}
+			});
+		this.form.controls.glycosylatedHemoglobin.valueChanges.subscribe(
+			dat => {
+				if (dat.value !== undefined) {
+					this.glycosylatedHemoglobinErrorSource.next();
+				}
+			});
+		this.form.controls.cardiovascularRisk.valueChanges.subscribe(
+			dat => {
+				if (dat.value !== undefined) {
+					this.cardiovascularRiskErrorSource.next();
+				}
+			});
 	}
 
 	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
@@ -122,7 +160,10 @@ export class SignosVitalesNuevaConsultaService {
 			heartRate: this.getEffectiveClinicalObservationDto(this.form.value.heartRate),
 			respiratoryRate: this.getEffectiveClinicalObservationDto(this.form.value.respiratoryRate),
 			systolicBloodPressure: this.getEffectiveClinicalObservationDto(this.form.value.systolicBloodPressure),
-			temperature: this.getEffectiveClinicalObservationDto(this.form.value.temperature)
+			temperature: this.getEffectiveClinicalObservationDto(this.form.value.temperature),
+			bloodGlucose: this.getEffectiveClinicalObservationDto(this.form.value.bloodGlucose),
+			glycosylatedHemoglobin: this.getEffectiveClinicalObservationDto(this.form.value.glycosylatedHemoglobin),
+			cardiovascularRisk: this.getEffectiveClinicalObservationDto(this.form.value.cardiovascularRisk)
 		};
 	}
 
@@ -174,6 +215,27 @@ export class SignosVitalesNuevaConsultaService {
 		return this._systolicBloodPressureError$;
 	}
 
+	get bloodGlucoseError$(): Observable<string> {
+		if (!this._bloodGlucoseError$) {
+			this._bloodGlucoseError$ = this.bloodGlucoseErrorSource.asObservable();
+		}
+		return this._bloodGlucoseError$;
+	}
+
+	get glycosylatedHemoglobinError$(): Observable<string> {
+		if (!this._glycosylatedHemoglobinError$) {
+			this._glycosylatedHemoglobinError$ = this.glycosylatedHemoglobinErrorSource.asObservable();
+		}
+		return this._glycosylatedHemoglobinError$;
+	}
+
+	get cardiovascularRiskError$(): Observable<string> {
+		if (!this._cardiovascularRiskError$) {
+			this._cardiovascularRiskError$ = this.cardiovascularRiskErrorSource.asObservable();
+		}
+		return this._cardiovascularRiskError$;
+	}
+
 	setHeartRateError(errorMsg: string): void {
 		this.heartRateErrorSource.next(errorMsg);
 	}
@@ -198,6 +260,18 @@ export class SignosVitalesNuevaConsultaService {
 		this.diastolicBloodPressureErrorSource.next(errorMsg);
 	}
 
+	setBloodGlucoseError(errorMsg: string): void {
+		this.bloodGlucoseErrorSource.next(errorMsg);
+	}
+
+	setGlycosylatedHemoglobinError(errorMsg: string): void {
+		this.glycosylatedHemoglobinErrorSource.next(errorMsg);
+	}
+
+	setCardiovascularRiskError(errorMsg: string): void {
+		this.cardiovascularRiskErrorSource.next(errorMsg);
+	}
+
 	setPreviousVitalSignsData(): void {
 		this.hceGeneralStateService.getVitalSigns(this.patientId).subscribe(
 			(vitalSignsData: HCELast2VitalSignsDto) => {
@@ -219,7 +293,7 @@ export class SignosVitalesNuevaConsultaService {
 		this.notShowPreloadedVitalSignsData = false;
 		const defaultValue = { value: null, effectiveTime: newMoment() };
 		Object.keys(this.form.controls).forEach((key: string) => {
-			this.form.patchValue({ [key]:defaultValue});
+			this.form.patchValue({ [key]: defaultValue });
 		});
 		this.form.enable();
 	}

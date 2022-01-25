@@ -3,7 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 import ar.lamansys.refcounterref.application.createcounterreference.CreateCounterReference;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.counterreference.CounterReferenceDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.CounterReferenceMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @RestController
 @Validated
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/counterreference")
-@Api(value = "Counter Reference", tags = {"Counter Reference"})
+@Tag(name = "Counter Reference", description = "Counter Reference")
 public class CounterReferenceController {
 
     private final CreateCounterReference createCounterReference;
