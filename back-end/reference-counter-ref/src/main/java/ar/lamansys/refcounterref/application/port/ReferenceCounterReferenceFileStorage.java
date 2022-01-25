@@ -20,4 +20,6 @@ public interface ReferenceCounterReferenceFileStorage {
 
     void deleteFiles(List<Integer> filesIds);
 
+    List<ReferenceCounterReferenceFileBo> getFilesByReferenceCounterReferenceIdAndType(Integer referenceCounterReferenceId, Integer type);
+
 }

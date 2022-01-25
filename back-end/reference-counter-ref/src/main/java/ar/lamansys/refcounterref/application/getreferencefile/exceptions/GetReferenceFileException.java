@@ -1,6 +1,5 @@
 package ar.lamansys.refcounterref.application.getreferencefile.exceptions;
 
-import ar.lamansys.refcounterref.application.createreferencefile.exceptions.CreateReferenceFileExceptionEnum;
 import lombok.Getter;
 
 @Getter

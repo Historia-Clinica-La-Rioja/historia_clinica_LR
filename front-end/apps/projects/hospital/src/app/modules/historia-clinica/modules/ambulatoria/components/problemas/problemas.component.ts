@@ -5,7 +5,13 @@ import {
 	PROBLEMAS_INTERNACION,
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
-import { ExternalClinicalHistoryDto, HCEHospitalizationHistoryDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import {
+	ExternalClinicalHistoryDto,
+	HCEDocumentDataDto,
+	HCEHospitalizationHistoryDto,
+	HCEPersonalHistoryDto,
+	ReferenceCounterReferenceFileDto
+} from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,6 +32,9 @@ import { ExternalClinicalHistoryFacadeService } from '../../services/external-cl
 import { Moment } from 'moment';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { ReferenceFileService } from '@api-rest/services/reference-file.service';
+import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
+import { DocumentService } from "@api-rest/services/document.service";
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -89,7 +98,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private readonly router: Router,
 		public dialog: MatDialog,
-		private injector: Injector
+		private injector: Injector,
+		private readonly referenceFileService: ReferenceFileService,
+		private readonly counterreferenceFileService: CounterreferenceFileService,
+		private readonly documentService: DocumentService,
 	) {
 		this.contextService = this.injector.get<ContextService>(ContextService);
 		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
@@ -238,7 +250,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			specialty: null,
 			professional: null,
 			problem: problem.snomed.sctid,
-			consultationDate: null
+			consultationDate: null,
+			referenceStateId: null,
 		});
 		this.selectedTab = 0;
 	}
@@ -277,5 +290,18 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		if (moment1.isSame(moment2)) return 0;
 		else if (moment1.isBefore(moment2)) return 1;
 		return -1;
+	}
+
+	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {
+		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
+	}
+
+	downloadCounterreferenceFile(file: ReferenceCounterReferenceFileDto) {
+		this.counterreferenceFileService.downloadCounterreferenceFiles(file.fileId, file.fileName);
+	}
+
+
+	downloadDocument(document: HCEDocumentDataDto) {
+		this.documentService.downloadFile(document);
 	}
 }

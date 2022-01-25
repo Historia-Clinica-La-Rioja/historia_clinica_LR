@@ -95,7 +95,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     @Override
     @Transactional
-    public void run(ConsultationBo consultationBo) {
+    public Integer run(ConsultationBo consultationBo) {
         LOG.debug("Input parameter -> consultationBo {}", consultationBo);
         if (consultationBo == null)
             throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CONSULTATION,
@@ -126,7 +126,9 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId()));
         appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
 
-        LOG.debug("No output");
+        LOG.debug("Output -> encounterId {}", encounterId);
+
+        return encounterId;
     }
 
     private void processDentalActions(ConsultationBo consultationBo) {

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +31,7 @@ public class CreateOutpatientDto {
 
     private List<@Valid OutpatientAllergyConditionDto> allergies = new ArrayList<>();
 
-    private List<@Valid OutpatientReferenceDto> references = new ArrayList<>();
+    private List<@Valid ReferenceDto> references = new ArrayList<>();
 
     @Valid
     @Nullable

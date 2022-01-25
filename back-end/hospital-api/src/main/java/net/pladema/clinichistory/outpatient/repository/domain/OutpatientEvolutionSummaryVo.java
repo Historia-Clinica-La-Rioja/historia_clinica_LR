@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.outpatient.repository.domain;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,13 +29,13 @@ public class OutpatientEvolutionSummaryVo implements Serializable {
 
     private LocalDate startDate;
 
-    private List<ReasonSummaryVo> reasons;
+    private List<ReasonSummaryBo> reasons;
 
     private HealthcareProfessional professional;
 
     private Person person;
 
-    private List<ProcedureSummaryVo> procedures = new ArrayList<>();
+    private List<ProcedureSummaryBo> procedures = new ArrayList<>();
 
     private String evolutionNote;
 

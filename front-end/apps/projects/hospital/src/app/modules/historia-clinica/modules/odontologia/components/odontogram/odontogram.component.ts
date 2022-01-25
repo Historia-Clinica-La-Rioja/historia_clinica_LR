@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { OdontologyConsultationIndicesDto, ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, OdontologyConsultationIndicesDto, ReferenceDto, ToothDrawingsDto, ToothDto } from '@api-rest/api-model';
 import { deepClone } from '@core/utils/core.utils';
 import { OdontogramService as OdontogramRestService } from '../../api-rest/odontogram.service';
 import { ToothAction, Action, ActionType } from '../../services/actions.service';
@@ -13,6 +13,13 @@ import { FieldsToUpdate, OdontologyConsultationDockPopupComponent } from '../odo
 import { ToothDialogComponent } from '../tooth-dialog/tooth-dialog.component';
 import { OdontologyConsultationService } from '../../api-rest/odontology-consultation.service';
 import { Observable } from 'rxjs';
+import { ReferenceService } from '@api-rest/services/reference.service';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { ReferenceNotificationComponent } from '@historia-clinica/modules/ambulatoria/dialogs/reference-notification/reference-notification.component';
+import { CounterreferenceDockPopupComponent } from '@historia-clinica/modules/ambulatoria/dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
+import { MedicacionesService } from '@historia-clinica/modules/ambulatoria/services/medicaciones.service';
+import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+
 
 @Component({
 	selector: 'app-odontogram',
@@ -29,7 +36,11 @@ export class OdontogramComponent implements OnInit {
 		public readonly odontogramService: OdontogramService,
 		private readonly activatedRoute: ActivatedRoute,
 		private readonly dockPopupService: DockPopupService,
-		private readonly odontologyConsultationService: OdontologyConsultationService
+		private readonly odontologyConsultationService: OdontologyConsultationService,
+		private readonly referenceService: ReferenceService,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly medicacionesService: MedicacionesService,
+		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 	) { }
 
 	readonly toothTreatment = ToothTreatment.AS_WHOLE_TOOTH;
@@ -39,6 +50,7 @@ export class OdontogramComponent implements OnInit {
 	actionsFrom = {};
 	private patientId: number;
 	consultationsIndices$: Observable<OdontologyConsultationIndicesDto[]>;
+	specialtiesId: number[] = [];
 	ngOnInit(): void {
 
 		this.odontogramRestService.getOdontogram().subscribe(
@@ -121,6 +133,54 @@ export class OdontogramComponent implements OnInit {
 		this.odontogramService.resetOdontogram();
 	}
 
+	hasReferenceNotification() {
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe((specialties: ClinicalSpecialtyDto[]) => {
+			this.specialtiesId = specialties.map(specialty => specialty.id);
+			this.referenceService.getReferences(this.patientId, this.specialtiesId).subscribe((references: ReferenceDto[]) => {
+				if (references.length) {
+					this.openReferenceNotification(references);
+				}
+				else {
+					this.openConsultationPopup();
+				}
+			});
+		});
+
+	}
+
+	openReferenceNotification(references: ReferenceDto[]) {
+		const dialogRef = this.dialog.open(ReferenceNotificationComponent, {
+			data: references,
+			autoFocus: false,
+			disableClose: true,
+		})
+		dialogRef.afterClosed().subscribe(counterreference => {
+			if (counterreference === null) {
+				return;
+			}
+			if (counterreference === false) {
+				this.openConsultationPopup();
+			}
+			if (counterreference.isACountisACounterrefer === true) {
+				this.openCounterreference(counterreference.reference);
+			}
+		});
+	}
+
+	openCounterreference(reference: ReferenceDto) {
+		const dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent,
+			{
+				reference: reference,
+				patientId: this.patientId
+			}
+		);
+		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+			this.medicacionesService.updateMedication();
+			if (fieldsToUpdate) {
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+			}
+		});
+	}
 }
 
 const currentActionsToRecords = (action: ToothAction) => {

@@ -1,7 +1,5 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper;
 
-import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
-import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 
@@ -46,20 +44,6 @@ public interface OutpatientConsultationMapper {
     @Named("fromListOutpatientEvolutionSummaryBo")
     @IterableMapping(qualifiedByName = "fromOutpatientEvolutionSummaryBo")
     List<OutpatientEvolutionSummaryDto> fromListOutpatientEvolutionSummaryBo(List<EvolutionSummaryBo> evolutionSummaryBos);
-
-    @Named("fromOutpatientReferenceProblemDto")
-    ReferenceProblemBo fromOutpatientReferenceProblemDto(OutpatientReferenceProblemDto problems);
-
-    @Named("fromListOutpatientReferenceProblemDto")
-    @IterableMapping(qualifiedByName = "fromOutpatientReferenceProblemDto")
-    List<ReferenceProblemBo> fromListOutpatientReferenceProblemDto(List<OutpatientReferenceProblemDto> problems);
-
-    @Named("fromOutpatientReferenceDto")
-    ReferenceBo fromOutpatientReferenceDto(OutpatientReferenceDto references);
-
-    @Named("fromListOutpatientReferenceDto")
-    @IterableMapping(qualifiedByName = "fromOutpatientReferenceDto")
-    List<ReferenceBo> fromListOutpatientReferenceDto(List<OutpatientReferenceDto> references);
 
 }
 

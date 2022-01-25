@@ -3,13 +3,6 @@ import { AppFeature, ERole } from '@api-rest/api-model';
 
 export const SIDEBAR_MENU: MenuItemDef[] = [
 	{
-		text: 'app.menu.INSTITUCIONES',
-		icon: 'home',
-		id: 'home',
-		url: '/home',
-		options: {exact: true},
-	},
-	{
 		text: 'app.menu.PACIENTES',
 		icon: 'person',
 		id: 'pacientes',

@@ -7,13 +7,15 @@ import java.util.Optional;
 
 public interface PatientMedicalCoverageService {
 
-	List<PatientMedicalCoverageBo> getActiveCoverages(Integer patientId);
+    List<PatientMedicalCoverageBo> getActiveCoverages(Integer patientId);
 
-	Optional<PatientMedicalCoverageBo> getCoverage(Integer patientMedicalCoverageId);
+    Optional<PatientMedicalCoverageBo> getCoverage(Integer patientMedicalCoverageId);
 
-	List<PatientMedicalCoverageBo> getActiveHealthInsurances(Integer patientId);
+    List<PatientMedicalCoverageBo> getActiveHealthInsurances(Integer patientId);
 
-	List<PatientMedicalCoverageBo> getActivePrivateHealthInsurances(Integer patientId);
+    List<PatientMedicalCoverageBo> getActivePrivateHealthInsurances(Integer patientId);
 
-	List<Integer> saveCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
+    List<Integer> saveCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
+
+    List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
 }

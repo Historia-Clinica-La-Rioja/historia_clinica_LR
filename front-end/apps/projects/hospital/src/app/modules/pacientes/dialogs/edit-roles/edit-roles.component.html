@@ -1,0 +1,50 @@
+<div class="dialog">
+	<div fxLayout="row" fxLayoutAlign="end end">
+		<button matSuffix mat-icon-button [mat-dialog-close]>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<div mat-dialog-title fxLayout="row">
+		<div class="title" class="capitalize-first-letter" translate="pacientes.edit_roles.TITLE"></div>
+	</div>
+
+	<div mat-dialog-content>
+		<form [formGroup]="formParent">
+			<div formArrayName="roles">
+				<div *ngFor="let p of getCtrl('roles',formParent).controls;index as formChild">
+					<div class="form-input" [formGroupName]="formChild">
+						<div class="form-input">
+							<mat-form-field appearance="outline">
+								<button type="button" mat-button matSuffix color="warn" mat-icon-button
+									*ngIf="hadValue(formChild)" (click)="clear(formChild); $event.stopPropagation()">
+									<mat-icon>close</mat-icon>
+								</button>
+								<mat-select id="identificationTypeId" [attr.disabled]="true"
+									placeholder="{{'pacientes.form.SELECT' | translate}}" formControlName="roleId">
+									<mat-option *ngFor="let role of roles" [value]="role.id">
+										{{role.description}}
+									</mat-option>
+								</mat-select>
+
+									<mat-error *ngIf="!isProfessional('roleId',formChild) && hasError('pattern','roleId',formChild)">
+										<span translate="pacientes.edit_roles.PROFESSION_REQUIRED"></span>
+									</mat-error>
+
+							</mat-form-field>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<button [disabled]="isDisabledAddRole()" mat-button type="button" (click)="addNewRole()" color="primary"
+			id="add-button" onclick="this.blur()">
+			+ {{ 'pacientes.edit_roles.ADD_ANOTHER_ROLES' | translate }}
+		</button>
+	</div>
+	<div actions id="buttons" fxLayoutAlign="end">
+		<button class="uppercase" mat-raised-button color="primary" (click)="save()"
+			[disabled]="isDisableConfirmButton()">
+			<span [translate]="'buttons.CONFIRM'"></span>
+		</button>
+	</div>
+</div>

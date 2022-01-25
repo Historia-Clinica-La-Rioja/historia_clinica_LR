@@ -9,7 +9,7 @@ import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.domain.MedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.person.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.MedicalCoverageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -86,8 +86,10 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 									   Integer patientId) {
 		List<Integer> result = new ArrayList<>();
 		coverages.forEach((coverage) -> {
-			MedicalCoverageBo medicalCoverage = coverage.getMedicalCoverage();
-			MedicalCoverage MedicalCoverageSaved = medicalCoverageRepository.save(medicalCoverage.mapToEntity());
+			MedicalCoverage medicalCoverage = (coverage.getMedicalCoverage().getId() != null)
+					? medicalCoverageRepository.findById(coverage.getMedicalCoverage().getId()).get()
+					: coverage.getMedicalCoverage().mapToEntity();
+			MedicalCoverage MedicalCoverageSaved = medicalCoverageRepository.save(medicalCoverage);
 			coverage.getMedicalCoverage().setId(MedicalCoverageSaved.getId());
 			if (coverage.getPrivateHealthInsuranceDetails() != null) {
 				PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
@@ -96,6 +98,30 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 			PatientMedicalCoverageAssn pmcToSave = new PatientMedicalCoverageAssn(coverage, patientId);
 			PatientMedicalCoverageAssn pmcSaved = patientMedicalCoverageRepository.save(pmcToSave);
 			result.add(pmcSaved.getId());
+		});
+		return result;
+	}
+
+	@Override
+	public List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId) {
+		List<Integer> result = new ArrayList<>();
+		coverages.forEach((coverage) -> {
+			MedicalCoverageBo medicalCoverage = coverage.getMedicalCoverage();
+			Integer medicalCoverageId = medicalCoverageRepository.getByName(medicalCoverage.getName())
+					.stream().findFirst()
+					.map(MedicalCoverage::getId)
+					.orElseGet(()->{
+						if (coverage.getPrivateHealthInsuranceDetails() != null) {
+							PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
+							coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
+						}
+						return medicalCoverageRepository.save(medicalCoverage.mapToEntity()).getId();
+					});
+			coverage.getMedicalCoverage().setId(medicalCoverageId);
+			Integer pmcId = patientMedicalCoverageRepository.getByPatientAndMedicalCoverage(patientId,medicalCoverageId)
+					.map(PatientMedicalCoverageAssn::getId)
+					.orElseGet(()->patientMedicalCoverageRepository.save(new PatientMedicalCoverageAssn(coverage, patientId)).getId());
+			result.add(pmcId);
 		});
 		return result;
 	}

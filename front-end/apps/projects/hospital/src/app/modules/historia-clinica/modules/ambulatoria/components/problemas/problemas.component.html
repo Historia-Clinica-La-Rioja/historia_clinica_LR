@@ -259,7 +259,7 @@
 												</mat-icon>
 											</div>
 
-											<div fxLayout="column" fxLayoutGap="15px" fxFlex="calc(93% - 15px)">
+											<div fxLayout="column" fxLayoutGap="15px" fxFlex="calc(88% - 15px)">
 												<div fxLayout="row" fxLayout.lt-md="column"
 													fxLayoutAlign="space-between" fxLayoutGap="10px">
 
@@ -298,9 +298,9 @@
 															</div>
 														</div>
 													</div>
-
-													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(30% - 10px)"
+													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(25% - 10px)"
 														fxFlex.lt-md="100">
+
 														<div>
 															<h3 class="mat-h2 primary"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE'">
@@ -314,7 +314,15 @@
 															{{historicalProblem.consultationProfessionalName}}
 														</div>
 													</div>
-
+													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(10% - 10px)"
+														 fxFlex.lt-md="100" fxLayoutAlign="start end">
+														<div>
+															<button mat-icon-button color="primary" id="download_document" name="download_document"
+																	(click)="downloadDocument(historicalProblem.document)">
+																<mat-icon fontSet="material-icons-outlined">download_icon</mat-icon>
+															</button>
+														</div>
+													</div>
 												</div>
 
 												<div *ngIf="historicalProblem.consultationEvolutionNote">
@@ -324,29 +332,137 @@
 													<p class="mat-body capitalize-first-letter">
 														{{historicalProblem.consultationEvolutionNote}}</p>
 												</div>
+
+												<div id="reference_information" *ngIf="historicalProblem.reference?.length">
+
+													<div class="reference-description" *ngFor="let reference of historicalProblem.reference" fxLayout="column" fxFlex.lt-md="100"
+													fxLayoutGap="10px">
+
+														<ng-container>
+															<strong class="reference-counterref-title reference-request uppercase"
+																[translate]="'ambulatoria.paciente.problemas.historical-problems.REFERENCE_REQUEST'"></strong>
+														</ng-container>
+
+														<div fxLayout="row" fxLayoutGap="10px">
+															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.CARE_LINE'"></strong>
+															<span>{{reference.careLine}}</span>
+														</div>
+
+														<div fxLayout="row" fxLayoutGap="10px">
+															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>
+															<span>{{reference.clinicalSpecialty}}</span>
+														</div>
+
+														<div *ngIf="reference.note" fxLayout="column" fxLayoutGap="10px">
+															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SUMMARY_REFERENCE'"></strong>
+															<span>{{reference.note}}</span>
+														</div>
+
+														<div class="primary" *ngFor="let file of reference.files" fxLayout="row">
+															<mat-icon>attachment_icon</mat-icon>
+															<span class="span-clickable" (click)="downloadReferenceFile(file)">
+																{{file.fileName}}
+															</span>
+														</div>
+
+
+														<div *ngIf="reference.counterReference?.counterReferenceNote" fxLayout="row" fxLayout.lt-md="column"
+														fxLayoutAlign="space-between" fxLayoutGap="10px">
+
+															<div fxLayout="column" fxFlex="70" fxFlex.lt-md="100"
+															fxLayoutGap="10px">
+
+																<div class="counterreference-title" fxLayout="row" fxLayoutGap="10px" >
+
+																	<mat-icon>subdirectory_arrow_right</mat-icon>
+
+																	<ng-container>
+																		<strong class="reference-counterref-title counterreference-request uppercase"
+																			[translate]="'ambulatoria.paciente.problemas.historical-problems.COUNTERREFERENCE'"></strong>
+																	</ng-container>
+
+																</div>
+
+																<div class="counterreference-description" fxLayout="column" fxLayoutGap="10px">
+
+																	<div fxLayout="row" fxLayoutGap="10px">
+																		<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>
+																		<span>{{reference.counterReference.clinicalSpecialtyId}}</span>
+																	</div>
+
+																	<div fxLayout="column" *ngIf="reference.counterReference.procedures.length">
+																		<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.PROCEDURES'"></strong>
+																		<ul *ngFor="let procedure of reference.counterReference.procedures">
+																			<li>
+																				<span>{{procedure.snomed.pt}}</span>
+																			</li>
+																		</ul>
+																	</div>
+
+																	<div *ngIf="reference.counterReference.counterReferenceNote" fxLayout="column" fxLayoutGap="10px">
+																		<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.COUNTERREFERENCE'"></strong>
+																		<span>{{reference.counterReference.counterReferenceNote}}</span>
+																	</div>
+
+																	<div class="primary" *ngFor="let file of reference.counterReference.files" fxLayout="row">
+																		<mat-icon>attachment_icon</mat-icon>
+																		<span class="span-clickable" (click)="downloadCounterreferenceFile(file)">
+																			{{file.fileName}}
+																		</span>
+																	</div>
+
+																</div>
+															</div>
+
+															<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(30% - 10px)"
+															fxFlex.lt-md="100">
+
+																<div>
+																	<h3 class="mat-h2 primary"
+																		[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE'">
+																	</h3>
+																	<span>{{reference.counterReference.performedDate.day}}/{{reference.counterReference.performedDate.month}}/{{reference.counterReference.performedDate.year}}</span>
+
+																</div>
+
+																<div fxLayout="column">
+																	<h3 class="mat-h2 primary"
+																		[translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'">
+																	</h3>
+																	<span>{{reference.counterReference.professional?.firstName}}</span>
+																	<span>{{reference.counterReference.professional?.lastName}}</span>
+																</div>
+
+															</div>
+														</div>
+
+													</div>
+
+												</div>
+
 											</div>
+
 										</div>
 									</div>
-									<mat-divider inset></mat-divider>
 								</div>
+								<mat-divider inset></mat-divider>
 							</div>
 
-							<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex="70"
-								*ngIf="!historicalProblemsList">
-								<div class="no-data-styles">
-									<span [translate]="'messages.NO_DATA'"></span>
-								</div>
-							</section>
+						<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex="70"
+							*ngIf="!historicalProblemsList">
+							<div class="no-data-styles">
+								<span [translate]="'messages.NO_DATA'"></span>
+							</div>
+						</section>
 
-							<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex="70"
-								*ngIf="historicalProblemsList && !historicalProblemsList.length">
-								<div class="no-data-styles">
-									<span [translate]="'ambulatoria.paciente.problemas.NO_FILTERED_PROBLEMS'"></span>
-								</div>
-							</section>
+						<section fxLayout="column" fxLayoutAlign="space-around center" fxFlex="70"
+							*ngIf="historicalProblemsList && !historicalProblemsList.length">
+							<div class="no-data-styles">
+								<span [translate]="'ambulatoria.paciente.problemas.NO_FILTERED_PROBLEMS'"></span>
+							</div>
+						</section>
+					</div>
 
-
-						</div>
 					</mat-card-content>
 				</mat-card>
 

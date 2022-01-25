@@ -1,4 +1,4 @@
-<div fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center stretch">
+<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center stretch">
 
 	<div fxLayout="row" fxLayoutAlign="end">
 		<button class="close" type="button" mat-icon-button (click)="goBack()">
@@ -7,25 +7,29 @@
 	</div>
 
 	<div fxLayout="row" fxLayoutAlign="center">
-		<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center center" fxFlex="80">
-			<div class="image">
-				<img src='assets/images/error_outline.png'>
+		<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center" fxFlex="80">
+			<div>
+				<mat-icon [inline]="true" class="material-icons-outlined" id="warning-icon" color="primary">
+					error_outline
+				</mat-icon>
 			</div>
 
-			<span class="mat-h3 margin-0"
+			<span class="mat-h2 margin-0 normal-weight"
 				[innerHTML]="'ambulatoria.paciente.problemas.epidemiological_report.PROBLEM_DESCRIPTION' | translate: { problemName: data.problemName }">
 			</span>
 		</div>
 	</div>
 
+	<br>
+
 	<form [formGroup]="form" (submit)="reportProblem()">
 
-		<ng-container fxLayout="column" fxLayoutGap="15px">
+		<div fxLayout="column" fxLayoutGap="15px">
 			<div formArrayName="classifications"
 				*ngFor="let eventClassification of data.snvsEventManualClassificationsList; let i=index">
 				<div fxLayout="row" fxLayoutAlign="center">
 					<div fxLayout="row" fxLayoutAlign="start center" fxFlex="80">
-						<span class="mat-h4 margin-0">
+						<span class="mat-h4 margin-0 bold">
 							{{ data.snvsEventManualClassificationsList[i].snvsEvent.description }}
 						</span>
 					</div>
@@ -44,6 +48,10 @@
 									{{classification.description}}
 								</mat-option>
 							</mat-select>
+							<button type="button" mat-button matSuffix color="warn" mat-icon-button
+								(click)="clear(i); $event.stopPropagation()" *ngIf="hadValue(i)">
+								<mat-icon>close</mat-icon>
+							</button>
 						</mat-form-field>
 					</div>
 				</div>
@@ -51,7 +59,7 @@
 			<span *ngIf="tryToSubmit" class="color-warn mat-h5 margin-0">
 				{{ 'ambulatoria.paciente.problemas.epidemiological_report.MIN_ONE_REQUIRED_ERROR' | translate }}
 			</span>
-		</ng-container>
+		</div>
 
 		<div fxLayout="row" fxLayoutAlign="center">
 			<div fxLayout="row" fxLayoutAlign="center center" fxFlex="80">

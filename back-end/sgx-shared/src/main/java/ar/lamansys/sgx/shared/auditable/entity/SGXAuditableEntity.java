@@ -3,6 +3,7 @@ package ar.lamansys.sgx.shared.auditable.entity;
 import ar.lamansys.sgx.shared.auditable.CreationableEntity;
 import ar.lamansys.sgx.shared.auditable.DeleteableEntity;
 import ar.lamansys.sgx.shared.auditable.UpdateableEntity;
+import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.Embedded;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @ToString
+@Getter
 public abstract class SGXAuditableEntity<ID> implements CreationableEntity<Integer>, UpdateableEntity<Integer>, DeleteableEntity<Integer>, Serializable, SGXEntity<ID> {
 
 	/**

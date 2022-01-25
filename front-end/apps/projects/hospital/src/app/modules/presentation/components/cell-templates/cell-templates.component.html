@@ -20,10 +20,11 @@
 		translate="ambulatoria.paciente.nueva-consulta.problemas.ACLARACION_CRONICO"></div>
 	<div *ngIf="rowData.isReportable">
 		<ng-container *ngIf="rowData.epidemiologicalManualClassifications?.length">
-			<span class="color-primary"
-				*ngFor="let classification of rowData.epidemiologicalManualClassifications; let i=index">
-				{{ rowData.epidemiologicalManualClassifications[i] }}
-			</span>
+			<div *ngFor="let classification of rowData.epidemiologicalManualClassifications; let i=index">
+				<span class="color-primary">
+					{{ rowData.epidemiologicalManualClassifications[i] }}
+				</span>
+			</div>
 		</ng-container>
 		<span class="color-warn" *ngIf="!rowData.epidemiologicalManualClassifications"
 			translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>

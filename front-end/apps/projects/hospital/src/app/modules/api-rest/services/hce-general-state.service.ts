@@ -8,7 +8,7 @@ import {
 	HCEPersonalHistoryDto,
 	HCEAllergyDto,
 	HCEHospitalizationHistoryDto,
-	HCEToothRecordDto
+	HCEToothRecordDto, HCEEvolutionSummaryDto
 } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
@@ -83,6 +83,11 @@ export class HceGeneralStateService {
 	getToothRecords(patientId: number, toothSctid: string): Observable<HCEToothRecordDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/toothRecords/tooth/${toothSctid}`;
 		return this.http.get<HCEToothRecordDto[]>(url);
+	}
+
+	getEvolutionSummaryList(patientId: number): Observable<HCEEvolutionSummaryDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/summary-list`;
+		return this.http.get<HCEEvolutionSummaryDto[]>(url);
 	}
 
 }

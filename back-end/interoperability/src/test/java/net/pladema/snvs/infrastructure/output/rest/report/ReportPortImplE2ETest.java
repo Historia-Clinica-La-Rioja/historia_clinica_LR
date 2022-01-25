@@ -61,7 +61,7 @@ class ReportPortImplE2ETest {
 
     @Test
     void errorEvents() throws ReportPortException, SnvsEventInfoBoException {
-        var result = reportPort.run(buildMock(999,999,999));
+        var result = reportPort.run(buildMock(999,999,999, 999));
         Assertions.assertNotNull(result);
         Assertions.assertEquals(999, result.getEventId());
         Assertions.assertEquals(999, result.getGroupEventId());
@@ -71,11 +71,12 @@ class ReportPortImplE2ETest {
         Assertions.assertEquals(LocalDate.of(2020,11,26), result.getLastUpdate());
     }
 
-    private SnvsToReportBo buildMock(Integer eventId, Integer groupEventId, Integer manualClassificationId) throws SnvsEventInfoBoException {
+    private SnvsToReportBo buildMock(Integer eventId, Integer groupEventId, Integer manualClassificationId, Integer professionalId) throws SnvsEventInfoBoException {
         return new SnvsToReportBo(new SnvsEventInfoBo(eventId,groupEventId,manualClassificationId,1),
                 LocalDate.of(2021,11,12),
                 new PatientDataBo(-1, mockPerson()),
-                new InstitutionDataBo(-20, "10064902100232"));
+                new InstitutionDataBo(-20, "10064902100232"),
+                professionalId);
     }
 
     private PersonDataBo mockPerson() {
@@ -118,7 +119,8 @@ class ReportPortImplE2ETest {
         return new SnvsToReportBo(new SnvsEventInfoBo(109,168,596,1),
                 LocalDate.of(2021,11,12),
                 new PatientDataBo(-1, mockSuccessPerson()),
-                new InstitutionDataBo(-20, "10064902100232"));
+                new InstitutionDataBo(-20, "10064902100232"),
+                999);
     }
 
     private PersonDataBo mockSuccessPerson() {

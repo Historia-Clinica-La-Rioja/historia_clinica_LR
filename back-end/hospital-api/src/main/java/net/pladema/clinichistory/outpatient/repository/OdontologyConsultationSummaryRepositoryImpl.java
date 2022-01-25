@@ -1,12 +1,13 @@
 package net.pladema.clinichistory.outpatient.repository;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReferenceSummaryVo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.outpatient.repository.domain.OdontologyEvolutionSummaryVo;
 import net.pladema.person.repository.entity.Person;
@@ -99,7 +100,7 @@ public class OdontologyConsultationSummaryRepositoryImpl implements OdontologyCo
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ReasonSummaryVo> getReasonsByPatient(Integer patientId, List<Integer> odontologyConsultationIds) {
+    public List<ReasonSummaryBo> getReasonsByPatient(Integer patientId, List<Integer> odontologyConsultationIds) {
         String sqlString = "SELECT r.id, r.description, oc.id"
                 +"  FROM OdontologyConsultation oc"
                 +"  JOIN OdontologyConsultationReason ocr ON (ocr.pk.odontologyConsultationId = oc.id)"
@@ -111,11 +112,10 @@ public class OdontologyConsultationSummaryRepositoryImpl implements OdontologyCo
                 .setParameter("patientId", patientId)
                 .setParameter("odontologyConsultationIds", odontologyConsultationIds)
                 .getResultList();
-        List<ReasonSummaryVo> result = new ArrayList<>();
+        List<ReasonSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                result.add(new ReasonSummaryVo(
-                        (String)a[0],
-                        (String)a[1],
+                result.add(new ReasonSummaryBo(
+                        new SnomedBo((String) a[0],(String) a[1]),
                         (Integer)a[2]))
         );
         return result;
@@ -123,8 +123,8 @@ public class OdontologyConsultationSummaryRepositoryImpl implements OdontologyCo
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ProcedureSummaryVo> getProceduresByPatient(Integer patientId, List<Integer> odontologyConsultationIds) {
-        String sqlString = "SELECT p.id, s, p.performedDate, oc.id"
+    public List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> odontologyConsultationIds) {
+        String sqlString = "SELECT p.id, s.id, s.sctid, s.pt, p.performedDate, oc.id"
                 +"  FROM OdontologyConsultation oc"
                 +"  JOIN Document d ON (d.sourceId = oc.id)"
                 +"  JOIN DocumentProcedure dp ON (d.id = dp.pk.documentId)"
@@ -140,13 +140,41 @@ public class OdontologyConsultationSummaryRepositoryImpl implements OdontologyCo
                 .setParameter("patientId", patientId)
                 .setParameter("odontologyConsultationIds", odontologyConsultationIds)
                 .getResultList();
-        List<ProcedureSummaryVo> result = new ArrayList<>();
+        List<ProcedureSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                result.add(new ProcedureSummaryVo(
+                result.add(new ProcedureSummaryBo(
                         (Integer)a[0],
-                        (Snomed) a[1],
-                        a[2] != null ? (LocalDate)a[2] : null,
-                        (Integer) a[3]))
+                        new SnomedBo((Integer) a[1],(String) a[2],(String) a[3]),
+                        a[4] != null ? (LocalDate)a[4] : null,
+                        (Integer) a[5]))
+        );
+        return result;
+    }
+
+    @Override
+    public List<ReferenceSummaryVo> getReferenceByHealthCondition(Integer healthConditionId, Integer consultationId) {
+        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description"
+                +"  FROM Reference r"
+                +"  JOIN OdontologyConsultation oc ON (r.encounterId = oc.id)"
+                +"  JOIN CareLine cl ON (r.careLineId = cl.id)"
+                +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
+                +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
+                +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
+                +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
+                +"  AND r.sourceTypeId= " + SourceType.ODONTOLOGY
+                +"  AND oc.id = :consultationId ";
+
+        List<Object[]> queryResult = entityManager.createQuery(sqlString)
+                .setParameter("healthConditionId", healthConditionId)
+                .setParameter("consultationId", consultationId)
+                .getResultList();
+        List<ReferenceSummaryVo> result = new ArrayList<>();
+        queryResult.forEach(a ->
+                result.add(new ReferenceSummaryVo(
+                        (Integer)a[0],
+                        (String) a[1],
+                        (String) a[2],
+                        a[3] != null ? (String) a[3] : null))
         );
         return result;
     }

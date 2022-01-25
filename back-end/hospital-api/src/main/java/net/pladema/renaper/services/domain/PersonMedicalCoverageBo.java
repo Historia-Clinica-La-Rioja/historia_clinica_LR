@@ -31,7 +31,8 @@ public class PersonMedicalCoverageBo {
 
 	public PersonMedicalCoverageBo(HealthInsuranceVo healthInsurance){
 		this.id = healthInsurance.getId();
-		this.rnos = healthInsurance.getRnos().toString();
+		if(healthInsurance.getRnos()!=null)
+			this.rnos = healthInsurance.getRnos().toString();
 		this.name = healthInsurance.getName();
 		this.acronym = healthInsurance.getAcronym();
 	}

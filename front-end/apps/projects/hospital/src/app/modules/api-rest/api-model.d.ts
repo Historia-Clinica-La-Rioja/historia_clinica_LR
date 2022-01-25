@@ -253,6 +253,15 @@ export interface BMPersonDto extends APersonDto {
     province: ProvinceDto;
 }
 
+export interface BackofficeCoverageDto extends Serializable {
+    acronym?: string;
+    id: number;
+    name: string;
+    plan?: string;
+    rnos?: number;
+    type: number;
+}
+
 export interface BackofficeHealthcareProfessionalCompleteDto {
     clinicalSpecialtyId: number;
     deleted: boolean;
@@ -444,6 +453,10 @@ export interface CounterReferenceProcedureDto extends Serializable {
     snomed: SnomedDto;
 }
 
+export interface CounterReferenceSummaryProcedureDto extends Serializable {
+    snomed: SharedSnomedDto;
+}
+
 export interface CoverageDto extends Serializable {
     id: number;
     name: string;
@@ -471,8 +484,12 @@ export interface CreateOutpatientDto {
     problems: OutpatientProblemDto[];
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
-    references: OutpatientReferenceDto[];
+    references: ReferenceDto[];
     vitalSigns?: OutpatientVitalSignDto;
+}
+
+export interface CreationableDto extends Serializable {
+    createdOn: Date;
 }
 
 export interface DateDto {
@@ -607,6 +624,16 @@ export interface DocumentDto {
     procedures: ProcedureDto[];
     reasons: ReasonDto[];
     vitalSigns: VitalSignDto;
+}
+
+export interface DocumentFileDto {
+    createdOn: Date;
+    creationable: CreationableDto;
+    filename: string;
+    id: number;
+    sourceId: number;
+    sourceTypeId: number;
+    typeId: number;
 }
 
 export interface DocumentHistoricDto {
@@ -860,6 +887,14 @@ export interface HCEAnthropometricDataDto extends Serializable {
     weight?: HCEEffectiveClinicalObservationDto;
 }
 
+export interface HCEBasicPersonDataDto extends Serializable {
+    birthDate: string;
+    firstName: string;
+    id: number;
+    identificationNumber: string;
+    lastName: string;
+}
+
 export interface HCEClinicalObservationDto extends Serializable {
     id?: number;
     value: string;
@@ -875,8 +910,37 @@ export interface HCEDiagnoseDto extends ClinicalTermDto {
     main: boolean;
 }
 
+export interface HCEDocumentDataDto {
+    filename: string;
+    id: number;
+}
+
 export interface HCEEffectiveClinicalObservationDto extends HCEClinicalObservationDto {
     effectiveTime: string;
+}
+
+export interface HCEEvolutionSummaryDto extends Serializable {
+    clinicalSpecialty: ClinicalSpecialtyDto;
+    consultationId: number;
+    document: HCEDocumentDataDto;
+    evolutionNote: string;
+    healthConditions: HCEHealthConditionDto[];
+    procedures: HCEProcedureDto[];
+    professional: HCEHealthcareProfessionalDto;
+    reasons: HCEReasonDto[];
+    startDate: string;
+}
+
+export interface HCEHealthConditionDto extends HCEPersonalHistoryDto {
+    main: boolean;
+    problemId: string;
+    references: HCEReferenceDto[];
+}
+
+export interface HCEHealthcareProfessionalDto {
+    id: number;
+    licenseNumber: string;
+    person: HCEBasicPersonDataDto;
 }
 
 export interface HCEHospitalizationHistoryDto {
@@ -914,6 +978,38 @@ export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
     inactivationDate: string;
     severity: string;
     startDate: string;
+}
+
+export interface HCEProcedureDto extends HCEClinicalTermDto {
+    performedDate?: string;
+}
+
+export interface HCEReasonDto {
+    snomed: SnomedDto;
+}
+
+export interface HCEReferenceCounterReferenceFileDto extends Serializable {
+    fileId: number;
+    fileName: string;
+}
+
+export interface HCEReferenceDto {
+    careLine: string;
+    clinicalSpecialty: string;
+    counterReference: HCESummaryCounterReferenceDto;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    note: string;
+}
+
+export interface HCESummaryCounterReferenceDto {
+    clinicalSpecialtyId: string;
+    counterReferenceNote: string;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    performedDate: DateDto;
+    procedures: CounterReferenceSummaryProcedureDto[];
+    professional: ProfessionalPersonDto;
 }
 
 export interface HCEToothRecordDto extends Serializable {
@@ -1198,6 +1294,11 @@ export interface MedicalCoverageDto {
     service: string;
 }
 
+export interface MedicalCoverageTypeDto extends Serializable {
+    id: number;
+    value: string;
+}
+
 export interface MedicalDischargeDto {
     autopsy: boolean;
     medicalDischargeOn: DateTimeDto;
@@ -1390,6 +1491,7 @@ export interface OdontologyConsultationDto extends Serializable {
     personalHistories?: OdontologyPersonalHistoryDto[];
     procedures?: OdontologyProcedureDto[];
     reasons?: OdontologyReasonDto[];
+    references?: ReferenceDto[];
     temporaryTeethPresent?: number;
 }
 
@@ -1534,26 +1636,31 @@ export interface OutpatientReasonDto {
     snomed: SnomedDto;
 }
 
-export interface OutpatientReferenceDto {
-    careLineId: number;
-    clinicalSpecialtyId: number;
-    consultation?: boolean;
-    fileIds?: number[];
-    note?: string;
-    problems: OutpatientReferenceProblemDto[];
-    procedure?: boolean;
-}
-
-export interface OutpatientReferenceProblemDto {
-    id?: string;
-    snomed: SnomedDto;
+export interface OutpatientSummaryCounterReferenceDto {
+    clinicalSpecialtyId: string;
+    counterReferenceNote: string;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    performedDate: DateDto;
+    procedures: CounterReferenceSummaryProcedureDto[];
+    professional: ProfessionalPersonDto;
 }
 
 export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
     inactivationDate: string;
     main: boolean;
     problemId: string;
+    references: OutpatientSummaryReferenceDto[];
     startDate: string;
+}
+
+export interface OutpatientSummaryReferenceDto {
+    careLine: string;
+    clinicalSpecialty: string;
+    counterReference: OutpatientSummaryCounterReferenceDto;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    note: string;
 }
 
 export interface OutpatientUpdateImmunizationDto {
@@ -1815,30 +1922,40 @@ export interface ReducedPatientDto {
     personalDataDto: BasicPersonalDataDto;
 }
 
+export interface ReferenceCounterReferenceFileDto extends Serializable {
+    fileId: number;
+    fileName: string;
+}
+
 export interface ReferenceDto extends Serializable {
+    careLineId: number;
+    clinicalSpecialtyId: number;
+    consultation?: boolean;
+    fileIds: number[];
+    note?: string;
+    problems: ReferenceProblemDto[];
+    procedure?: boolean;
+}
+
+export interface ReferenceGetDto extends Serializable {
     careLine: CareLineDto;
     clinicalSpecialty: ClinicalSpecialtyDto;
-    files: ReferenceFileDto[];
+    files: ReferenceCounterReferenceFileDto[];
     id: number;
-    note: ReferenceNoteDto;
+    note: ReferenceSummaryNoteDto;
     problems: ReferenceProblemDto[];
     professional: ProfessionalPersonDto;
     referenceDate: DateDto;
 }
 
-export interface ReferenceFileDto extends Serializable {
-    fileId: number;
-    fileName: string;
-}
-
-export interface ReferenceNoteDto extends Serializable {
-    description: string;
-    id: number;
-}
-
 export interface ReferenceProblemDto extends Serializable {
     id?: number;
-    snomed: SnomedDto;
+    snomed: SharedSnomedDto;
+}
+
+export interface ReferenceSummaryNoteDto extends Serializable {
+    description: string;
+    id: number;
 }
 
 export interface RefreshTokenDto {
@@ -1886,6 +2003,11 @@ export interface RoleAssignment extends Serializable {
     role: ERole;
 }
 
+export interface RoleDto {
+    description: string;
+    id: number;
+}
+
 export interface RoomDto extends Serializable {
     description: string;
     id: number;
@@ -1918,6 +2040,11 @@ export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
 }
 
 export interface Serializable {
+}
+
+export interface SharedSnomedDto extends Serializable {
+    pt: string;
+    sctid: string;
 }
 
 export interface SnomedDto extends Serializable {
@@ -2102,6 +2229,13 @@ export interface UserPersonDto extends Serializable {
     lastName: string;
 }
 
+export interface UserRoleDto {
+    institutionId: number;
+    roleDescription?: string;
+    roleId: number;
+    userId: number;
+}
+
 export interface VInstitutionDto {
     lastDateVitalSign: Date;
     latitude: number;
@@ -2196,6 +2330,7 @@ export const enum AppFeature {
     HABILITAR_CREACION_USUARIOS = "HABILITAR_CREACION_USUARIOS",
     HABILITAR_REPORTE_EPIDEMIOLOGICO = "HABILITAR_REPORTE_EPIDEMIOLOGICO",
     AGREGAR_MEDICOS_ADICIONALES = "AGREGAR_MEDICOS_ADICIONALES",
+    HABILITAR_DESCARGA_DOCUMENTOS_PDF = "HABILITAR_DESCARGA_DOCUMENTOS_PDF",
 }
 
 export const enum EDocumentSearch {

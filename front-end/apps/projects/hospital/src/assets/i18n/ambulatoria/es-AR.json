@@ -291,13 +291,20 @@
 					"SPECIALTY": "Especialidad",
 					"PROFESSIONAL": "Profesional",
 					"EVOLUTION_NOTE": "Descripción/Resumen",
-					"CONSULTATION_DATE": "Fecha de consulta"
+					"CONSULTATION_DATE": "Fecha de consulta",
+					"REFERENCE_REQUEST": "referencia solicitada",
+					"CARE_LINE": "Línea de cuidado:",
+					"SPECIALTY": "Especialidad:",
+					"SUMMARY_REFERENCE": "Resumen de referencia",
+					"COUNTERREFERENCE": "Contrarreferencia",
+					"PROCEDURE": "Procedimientos:"
 				},
 				"historical-problems-filters": {
 					"SPECIALTY": "Especialidad",
 					"PROFESSIONAL": "Profesional",
 					"PROBLEM": "Problema",
-					"CONSULTATION_DATE": "Fecha de consulta"
+					"CONSULTATION_DATE": "Fecha de consulta",
+					"REFERENCE_STATE": "Estado de referencia"
 				},
 				"external-clinical-history": {
 					"SPECIALTY": "Especialidad",
@@ -493,3 +500,4 @@
 		}
 	}
 }
+

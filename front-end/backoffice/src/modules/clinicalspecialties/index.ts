@@ -1,13 +1,17 @@
+import SGXPermissions from '../../libs/sgx/auth/SGXPermissions';
+
 import ClinicalSpecialtyShow from './ClinicalSpecialtyShow';
 import ClinicalSpecialtyList from './ClinicalSpecialtyList';
 import ClinicalSpecialtyCreate from './ClinicalSpecialtyCreate';
 import ClinicalSpecialtyEdit from './ClinicalSpecialtyEdit';
 
-const clinicalspecialties = {
+import { ROOT, ADMINISTRADOR } from '../roles';
+
+const clinicalspecialties = (permissions: SGXPermissions) => ({
     show: ClinicalSpecialtyShow,
-    list: ClinicalSpecialtyList,
-    create: ClinicalSpecialtyCreate,
-    edit: ClinicalSpecialtyEdit,
-};
+    list: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyList : undefined,
+    create: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyCreate : undefined,
+    edit: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyEdit : undefined,
+});
 
 export default clinicalspecialties;

@@ -25,7 +25,8 @@ export enum APPOINTMENT_STATES_ID {
 	CONFIRMED = 2,
 	ABSENT = 3,
 	CANCELLED = 4,
-	SERVED = 5
+	SERVED = 5,
+	BOOKED = 6
 }
 
 export const APPOINTMENT_STATES: AppointmentState[] = [
@@ -48,6 +49,10 @@ export const APPOINTMENT_STATES: AppointmentState[] = [
 	{
 		id: APPOINTMENT_STATES_ID.SERVED,
 		description: 'Atendido'
+	},
+	{
+		id: APPOINTMENT_STATES_ID.BOOKED,
+		description: 'Turno online'
 	},
 
 ];

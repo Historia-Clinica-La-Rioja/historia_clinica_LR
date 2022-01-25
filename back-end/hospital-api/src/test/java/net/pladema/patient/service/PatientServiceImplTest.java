@@ -11,7 +11,7 @@ import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.impl.PatientServiceImpl;
-import net.pladema.person.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.Person;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;

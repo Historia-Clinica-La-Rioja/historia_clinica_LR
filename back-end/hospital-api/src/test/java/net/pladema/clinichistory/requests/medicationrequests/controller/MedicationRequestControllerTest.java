@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
+import ar.lamansys.sgx.shared.pdf.PdfService;
 import net.pladema.UnitController;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
@@ -9,7 +10,6 @@ import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicati
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
-import ar.lamansys.sgx.shared.pdf.PdfService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.Before;
 import org.junit.Ignore;

@@ -77,4 +77,42 @@
     }
 }
 
+.reference-counterref-title {
+	border-radius: 6px;
+    padding: 4px 17px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19px;
+    width: 163px;
+    text-align:center;
+}
+
+.reference-request {
+    background-color: #ffcece;
+    color: #EB5757;
+}
+
+.span-clickable {    
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.reference-description {
+    margin-top: 20px;
+}
+
+.counterreference-request {
+    background-color: #b0d2f0;
+    color: #1A73E8;
+}
+
+.counterreference-title {
+    margin-top: 10px;
+}
+
+.counterreference-description {
+    line-height: 19px;
+    margin-left: 40px;
+}
 

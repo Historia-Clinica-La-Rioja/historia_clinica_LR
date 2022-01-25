@@ -24,4 +24,8 @@ public interface PatientMedicalCoverageRepository extends JpaRepository<PatientM
 			"WHERE pmc.id = :patientMedicalCoverageId ")
 	Optional<PatientMedicalCoverageVo> getPatientCoverage(@Param("patientMedicalCoverageId") Integer patientMedicalCoverageId);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT pmc FROM PatientMedicalCoverageAssn pmc WHERE pmc.patientId=:patientId AND pmc.medicalCoverageId =:medicalCoverageId")
+	Optional<PatientMedicalCoverageAssn> getByPatientAndMedicalCoverage(@Param("patientId") Integer patientId, @Param("medicalCoverageId") Integer medicalCoverageId);
+
 }
