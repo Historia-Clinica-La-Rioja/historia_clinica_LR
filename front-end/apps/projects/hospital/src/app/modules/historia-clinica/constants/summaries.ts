@@ -18,7 +18,7 @@ export const DIAGNOSTICOS: SummaryHeader = {
 };
 
 export const SIGNOS_VITALES: SummaryHeader = {
-	title: 'Signos vitales',
+	title: 'Factores de riesgo',
 	matIcon: 'favorite_border'
 };
 
