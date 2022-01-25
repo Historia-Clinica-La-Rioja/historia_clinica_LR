@@ -26,6 +26,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 		height: 'Talla (cm)',
 		weight: 'Peso (kg)',
 		bmi: 'IMC',
+		headCircumference: 'Perímetro cefálico (cm)',
 	};
 
 	constructor(
@@ -41,13 +42,13 @@ export class AntropometricosSummaryComponent implements OnInit {
 			(anthropometricData: AnthropometricDataDto) => {
 				if (anthropometricData) {
 					this.details = [];
-					Object.keys(anthropometricData).forEach(
+					Object.keys(this.LABELS).forEach(
 						key => {
-							if (Object.keys(this.LABELS).includes(key))
+							if (anthropometricData[key]?.value)
 								this.details.push(
 									{
 										description: this.LABELS[key],
-										value: anthropometricData[key]?.value
+										value: anthropometricData[key].value
 									}
 								);
 						}
