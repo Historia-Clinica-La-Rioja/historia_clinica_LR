@@ -20,6 +20,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Diagnos
 import net.pladema.clinichistory.requests.servicerequests.service.impl.ListDiagnosticReportInfoServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -81,6 +82,7 @@ class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
     }
 
     @Test
+    @Disabled
     void execute_filters_success() {
 
         Integer patientId = 1;
