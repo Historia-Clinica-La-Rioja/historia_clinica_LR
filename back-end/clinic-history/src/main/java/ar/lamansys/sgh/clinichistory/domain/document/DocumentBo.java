@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class DocumentBo implements IDocumentBo {
 
     private DocumentObservationsBo notes;
 
-    private LocalDate performedDate;
+    private LocalDateTime performedDate;
 
 
     public String getDocumentStatusId(){

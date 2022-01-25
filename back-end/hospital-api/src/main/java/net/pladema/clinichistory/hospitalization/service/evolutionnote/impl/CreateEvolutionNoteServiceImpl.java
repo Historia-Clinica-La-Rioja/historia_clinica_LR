@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -54,7 +54,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
                 .getInternmentEpisode(evolutionNote.getEncounterId(), evolutionNote.getInstitutionId());
         evolutionNote.setPatientId(internmentEpisode.getPatientId());
 
-        LocalDate now = dateTimeProvider.nowDate();
+        LocalDateTime now = dateTimeProvider.nowDateTime();
         evolutionNote.setPerformedDate(now);
 
         assertDoesNotHaveEpicrisis(internmentEpisode);
@@ -112,7 +112,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         }
     }
 
-    private void assertEffectiveVitalSignTimeValid(EvolutionNoteBo evolutionNote, LocalDate entryDate) {
+    private void assertEffectiveVitalSignTimeValid(EvolutionNoteBo evolutionNote, LocalDateTime entryDate) {
         var validator = new EffectiveVitalSignTimeValidator();
         validator.isValid(evolutionNote, entryDate);
     }

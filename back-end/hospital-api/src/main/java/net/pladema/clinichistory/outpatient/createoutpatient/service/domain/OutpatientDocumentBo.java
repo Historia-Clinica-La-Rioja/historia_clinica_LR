@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private Integer clinicalSpecialtyId;
 
-    private LocalDate performedDate;
+    private LocalDateTime performedDate;
 
     @Override
     public DocumentObservationsBo getNotes() {

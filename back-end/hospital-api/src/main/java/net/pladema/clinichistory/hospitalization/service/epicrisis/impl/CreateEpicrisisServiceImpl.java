@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -51,7 +51,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         assertEffectiveVitalSignTimeValid(epicrisis, internmentEpisode.getEntryDate());
         assertAnthropometricData(epicrisis);
 
-        LocalDate now = dateTimeProvider.nowDate();
+        LocalDateTime now = dateTimeProvider.nowDateTime();
         epicrisis.setPerformedDate(now);
 
         epicrisis.setId(documentFactory.run(epicrisis, true));
@@ -79,7 +79,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
             throw new ConstraintViolationException("Antecedentes familiares repetidos", Collections.emptySet());
     }
 
-    private void assertEffectiveVitalSignTimeValid(EpicrisisBo epicrisis, LocalDate entryDate) {
+    private void assertEffectiveVitalSignTimeValid(EpicrisisBo epicrisis, LocalDateTime entryDate) {
         var validator = new EffectiveVitalSignTimeValidator();
         validator.isValid(epicrisis, entryDate);
     }

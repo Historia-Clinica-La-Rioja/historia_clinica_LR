@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -56,7 +57,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         var internmentEpisode = internmentEpisodeService
                 .getInternmentEpisode(anamnesis.getEncounterId(), anamnesis.getInstitutionId());
 
-        LocalDate now = dateTimeProvider.nowDate();
+        LocalDateTime now = dateTimeProvider.nowDateTime();
         anamnesis.setPerformedDate(now);
 
         anamnesis.setPatientId(internmentEpisode.getPatientId());
@@ -95,7 +96,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
             throw new ConstraintViolationException("Procedimientos repetidos", Collections.emptySet());
     }
 
-    private void assertEffectiveVitalSignTimeValid(AnamnesisBo anamnesis, LocalDate entryDate) {
+    private void assertEffectiveVitalSignTimeValid(AnamnesisBo anamnesis, LocalDateTime entryDate) {
         var validator = new EffectiveVitalSignTimeValidator();
         validator.isValid(anamnesis, entryDate);
     }

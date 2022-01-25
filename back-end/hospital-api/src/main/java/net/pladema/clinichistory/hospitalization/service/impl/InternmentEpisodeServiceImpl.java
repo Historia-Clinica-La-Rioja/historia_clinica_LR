@@ -85,7 +85,6 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		LOG.debug("Input parameters -> internmentEpisode {}, institutionId {}", internmentEpisode, institutionId);
 		internmentEpisode.setInstitutionId(institutionId);
 		internmentEpisode.setStatusId(ACTIVE);
-		internmentEpisode.setEntryDate(LocalDate.now());
 		InternmentEpisode result = internmentEpisodeRepository.save(internmentEpisode);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;

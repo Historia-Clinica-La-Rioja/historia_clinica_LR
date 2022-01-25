@@ -64,9 +64,6 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Mock
     private DocumentFactory documentFactory;
 
-    @Mock
-    private DateTimeProvider dateTimeProvider;
-
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -151,7 +148,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidDiagnosis() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -180,7 +177,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidImmunizations() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -199,7 +196,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidAnthropometricData() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -224,7 +221,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidVitalSign() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -247,7 +244,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidPersonalHistories() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -279,7 +276,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocument_withInvalidFamilyHistories() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -310,7 +307,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidMedications() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());

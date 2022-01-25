@@ -1192,6 +1192,7 @@ export interface InternmentEpisodeADto {
     institutionId: number;
     noteId: number;
     patientId: number;
+    patientMedicalCoverageId: number;
     responsibleContact?: ResponsibleContactDto;
     responsibleDoctorId: number;
 }

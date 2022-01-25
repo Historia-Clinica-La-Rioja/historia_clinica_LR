@@ -67,9 +67,6 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
-	@Mock
-	private DateTimeProvider dateTimeProvider;
-
 	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -171,7 +168,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	public void createDocument_withInvalidDiagnosis() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
@@ -204,7 +201,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	void createDocumentWithInvalidPersonalHistories() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
@@ -237,7 +234,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	void createDocumentWithInvalidFamilyHistories() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
@@ -269,7 +266,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	void createDocumentWithInvalidProcedures() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
@@ -297,7 +294,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	void createDocumentWithInvalidMedications() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
@@ -321,7 +318,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	void createDocumentWithInvalidImmunizations() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
@@ -345,7 +342,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	void createDocumentWithInvalidAnthropometricData() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());
@@ -371,7 +368,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Test
 	void createDocumentWithInvalidVitalSign() {
 		var internmentEpisode = newInternmentEpisodeWithAnamnesis(null);
-		internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+		internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
 		var internmentEpisodeSaved = save(internmentEpisode);
 
 		var anamnesis = validAnamnesis(internmentEpisodeSaved.getInstitutionId(), internmentEpisodeSaved.getId());

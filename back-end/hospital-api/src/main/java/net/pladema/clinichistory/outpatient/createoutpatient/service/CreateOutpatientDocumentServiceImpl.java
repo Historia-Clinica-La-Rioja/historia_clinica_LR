@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 
@@ -43,7 +44,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
         assertContextValid(outpatient);
         outpatient.setId(documentFactory.run(outpatient, true));
-        LocalDate now = dateTimeProvider.nowDate();
+        LocalDateTime now = dateTimeProvider.nowDateTime();
         outpatient.setPerformedDate(now);
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());

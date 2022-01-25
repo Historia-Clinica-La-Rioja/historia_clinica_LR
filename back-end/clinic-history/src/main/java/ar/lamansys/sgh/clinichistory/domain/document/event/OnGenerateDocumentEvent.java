@@ -100,6 +100,6 @@ public class OnGenerateDocumentEvent extends ApplicationEvent {
         return documentBo.getEncounterId();
     }
 
-    public LocalDate getPerformedDate() { return documentBo.getPerformedDate(); }
+    public LocalDateTime getPerformedDate() { return documentBo.getPerformedDate(); }
 }
 

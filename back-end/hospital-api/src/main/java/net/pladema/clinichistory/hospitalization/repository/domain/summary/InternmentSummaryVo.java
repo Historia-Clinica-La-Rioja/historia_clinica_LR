@@ -40,7 +40,7 @@ public class InternmentSummaryVo {
 
 	private String specialty;
 
-	private LocalDate entryDate;
+	private LocalDateTime entryDate;
 
 	private LocalDate dischargeDate;
 
@@ -50,7 +50,7 @@ public class InternmentSummaryVo {
 
 	private Boolean active;
 
-	public InternmentSummaryVo(Integer id, LocalDate entryDate, Long anamnesisDocId, String anamnesisStatusId,
+	public InternmentSummaryVo(Integer id, LocalDateTime entryDate, Long anamnesisDocId, String anamnesisStatusId,
 			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
 			String roomNumber, String sectorDescription, ClinicalSpecialty clinicalSpecialty,
 			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,

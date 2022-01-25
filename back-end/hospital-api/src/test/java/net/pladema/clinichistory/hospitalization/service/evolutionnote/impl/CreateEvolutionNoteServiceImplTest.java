@@ -60,9 +60,6 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Mock
     private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
-    @Mock
-    private DateTimeProvider dateTimeProvider;
-
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -151,7 +148,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidDiagnosis() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -180,7 +177,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidImmunizations() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -199,7 +196,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidProcedures() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -220,7 +217,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidAnthropometricData() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -245,7 +242,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidVitalSign() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
