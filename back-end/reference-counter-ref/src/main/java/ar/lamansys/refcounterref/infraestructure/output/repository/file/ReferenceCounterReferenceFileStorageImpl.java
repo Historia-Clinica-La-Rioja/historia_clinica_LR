@@ -73,6 +73,12 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
         return result;
     }
 
+    @Override
+    public List<ReferenceCounterReferenceFileBo> getFilesByReferenceCounterReferenceIdAndType(Integer referenceCounterReferenceId, Integer type) {
+        log.debug("Input parameters -> referenceCounterReferenceId {}, type {}", referenceCounterReferenceId, type);
+        return referenceCounterReferenceFileRepository.findByReferenceCounterReferenceIdAndType(referenceCounterReferenceId, type);
+    }
+
     public void deleteFiles(List<Integer> filesIds) {
         log.debug("Input parameters -> filesIds {}", filesIds);
         filesIds.stream().forEach(fileId ->  referenceCounterReferenceFileRepository.deleteById(fileId));

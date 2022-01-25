@@ -2,6 +2,13 @@ import spanishMessages from '@blackbox-vision/ra-language-spanish';
 
 const messages = {
     ...spanishMessages,
+    bo: {
+        login: {
+            redirect: {
+                message: "Parece que su sesión ha finalizado."
+            }
+        }
+    },
     sgh: {
         dashboard: {
             title: 'Historia de salud integrada',
@@ -55,7 +62,13 @@ const messages = {
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución",
         "care-line":{
             "clinical-specialty-exists": "La especialidad clínica ya se encuentra asociada a la línea de cuidado"
+        },
+        "medical-coverage":{
+            "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica"
         }
+    },
+    files: {
+        cant_download: 'No se pudo descargar el archivo'
     },
     resources: {
         beds: {
@@ -284,6 +297,57 @@ const messages = {
         },
         "nomivac-immunizationsync": {
             name: 'Nomivac |||| Nomivac',
+        },
+        "rest-client-measures": {
+            name: 'Monitoreo servicio',
+            fields: {
+                uri: 'Uri',
+                host: 'Host',
+                path: 'Path',
+                method: 'Método',
+                time: 'Tiempo de respuesta(seg)',
+                responseTimeInMillis: 'Tiempo de respuesta(ms)',
+                responseCode: 'Código de respuesta',
+                requestDate: 'Fecha de pedido',
+            },
+            addRelated: 'Agregar especialidad',
+        },
+        "documentfiles": {
+            name: 'Documentos |||| Documentos',
+            fields: {
+                sourceTypeId: 'Tipo de atención',
+                typeId: 'Tipo de documento',
+                filename: 'Nombre de archivo',
+                createdOn: 'Fecha de creación',
+                "creationable.createdOn": 'Fecha de creación'
+            },
+            downloadFile: 'Descargar pdf'
+        },
+        "sourcetypes": {
+            name: 'Tipos de atención |||| Tipos de atención',
+            fields: {
+                id: 'Identificador',
+                description: 'Descripción',
+            }
+        },
+        "documenttypes": {
+            name: 'Tipos de documentos |||| Tipos de documentos',
+            fields: {
+                id: 'Identificador',
+                description: 'Descripción',
+            }
+        },
+        medicalcoverages: {
+            name: 'Cobertura médica |||| Coberturas médicas',
+            fields: {
+                name: 'Nombre',
+                type: 'Tipo',
+                plan: 'Plan',
+                rnos: 'Rnos',
+                acronym: 'Acrónimo'
+            },
+            createRelated: 'Crear Cobertura médica'
+
         },
     },
 };

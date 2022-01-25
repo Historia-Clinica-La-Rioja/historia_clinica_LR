@@ -85,7 +85,7 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad     | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| habilitar.boton.consulta | | false | Opcional | Propiedad de configuración de aplicación para des/habilitar el botón Nueva consulta.| v1.3.0
+| habilitar.boton.consulta | | false | Opcional | Propiedad de configuración de aplicación para des/habilitar el botón Nueva consulta.| v1.3.0 |
 
 ## Integración con servicios de terceros (Renaper, Federar, Snowstorm, Nomivac ... )
 
@@ -223,3 +223,12 @@ Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
 | scheduledjobs.updateethnicities.dayofmonth  |  | 15 | Opcional  |  | v1.15.0 |
 | scheduledjobs.updateethnicities.month  |   | * | Opcional |   | v1.15.0 |
 | scheduledjobs.updateethnicities.dayofweek  |  | * | Opcional  |   | v1.15.0 |
+
+
+## Monitoring
+
+Se crearon las siguientes propiedades para el monitoreo del sistema
+
+| Propiedad                             | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                                                                             | Desde   |
+|---------------------------------------|----------------------|-------------------| --------- |---------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| monitoring.rest-client.storage.enable | -                    | true              | Opcional  | Activa el almacenamiento de la información medida cuando se realizan request a servicios externos | v1.30.0 |

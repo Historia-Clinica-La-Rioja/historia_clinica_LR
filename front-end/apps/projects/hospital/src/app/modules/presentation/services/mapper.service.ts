@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
 import {
-		BasicPatientDto,
-		CompletePatientDto,
-		InternmentSummaryDto,
-		PatientType,
-		PersonalInformationDto,
-		BedSummaryDto,
-		OutpatientEvolutionSummaryDto,
-		InternmentPatientDto,
+	BasicPatientDto,
+	CompletePatientDto,
+	InternmentSummaryDto,
+	PatientType,
+	PersonalInformationDto,
+	BedSummaryDto,
+	InternmentPatientDto, HCEEvolutionSummaryDto,
 } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
@@ -29,7 +28,7 @@ export class MapperService {
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
 	toPatientTableData: (patient: InternmentPatientDto) => PatientTableData = MapperService._toPatientTableData;
 	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
-	toHistoricalProblems: (outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
+	toHistoricalProblems: (hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
 
 	constructor() {
 	}
@@ -151,34 +150,39 @@ export class MapperService {
 		return bedManagement;
 	}
 
-	private static _toHistoricalProblems(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): HistoricalProblems[] {
+	private static _toHistoricalProblems(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): HistoricalProblems[] {
 
-		return outpatientEvolutionSummary.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
+		return hceEvolutionSummaryDto.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
 			currentOutpatientEvolutionSummary.healthConditions.length ?
-			historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
+				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-				consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.personId,
-				problemId: problem.snomed.sctid,
+					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
+					document: currentOutpatientEvolutionSummary.document,
+					problemId: problem.snomed.sctid,
 					problemPt: problem.snomed.pt,
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
 					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons?.map(r => ({reasonId: r.snomed.sctid, reasonPt: r.snomed.pt})),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt}))
+					consultationReasons: currentOutpatientEvolutionSummary.reasons?.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
+					reference: problem.references?.length > 0 ? problem.references : null
+
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.personId,
+					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
+					document: currentOutpatientEvolutionSummary.document,
 					problemId: 'Problema no informado',
 					problemPt: 'Problema no informado',
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
 					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({reasonId: r.snomed.sctid, reasonPt: r.snomed.pt})),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt}))
+					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
+					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
+					reference: null,
 				}];
 			return historicalProblemsList;
 		}, []);

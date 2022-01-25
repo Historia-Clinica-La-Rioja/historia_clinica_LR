@@ -4,38 +4,39 @@ import { momentFormat, DateFormat, momentParseDate } from '@core/utils/moment.ut
 import { Subscription } from 'rxjs';
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { HistoricalProblemsFacadeService, Professional, Problem } from '../../services/historical-problems-facade.service';
+import { REFERENCE_STATES } from '../../constants/reference-masterdata';
+
 
 @Component({
-  selector: 'app-historical-problems-filters',
-  templateUrl: './historical-problems-filters.component.html',
-  styleUrls: ['./historical-problems-filters.component.scss']
+	selector: 'app-historical-problems-filters',
+	templateUrl: './historical-problems-filters.component.html',
+	styleUrls: ['./historical-problems-filters.component.scss']
 })
 export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
-  	public form: FormGroup;
+	public form: FormGroup;
 	public specialties: ClinicalSpecialtyDto[] = [];
 	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
+	public referenceStates = [];
 
 	private historicalProblemsFilter$: Subscription;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly historicalProblemsFacadeService: HistoricalProblemsFacadeService
-  	) {	}
+	) { }
 
-  	ngOnInit(): void {
+	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			specialty: [null],
 			professional: [null],
 			problem: [null],
-			consultationDate: [null]
+			consultationDate: [null],
+			referenceState: [null],
 		});
 
-		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
-		this.specialties = filterOptions.specialties;
-		this.professionals = filterOptions.professionals;
-		this.problems = filterOptions.problems;
+		this.setFilterOptions();
 
 		this.historicalProblemsFilter$ = this.historicalProblemsFacadeService.getHistoricalProblemsFilter().subscribe(
 			data => {
@@ -43,8 +44,9 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 				this.form.controls.professional.setValue(data.professional);
 				this.form.controls.problem.setValue(data.problem);
 				this.form.controls.consultationDate.setValue(data.consultationDate ? momentParseDate(data.consultationDate) : null);
+				this.form.controls.referenceState.setValue(data.referenceStateId);
 			});
-  	}
+	}
 
 	public sendAllFiltersOnFilterChange() {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter(this.getHistoricalProblemsFilter());
@@ -56,6 +58,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 			professional: this.form.value.professional,
 			problem: this.form.value.problem,
 			consultationDate: this.form.value.consultationDate ? momentFormat(this.form.value.consultationDate, DateFormat.API_DATE) : null,
+			referenceStateId: this.form.value.referenceState,
 		};
 	}
 
@@ -66,7 +69,15 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.historicalProblemsFilter$.unsubscribe();
-  	}
+	}
+
+	private setFilterOptions(): void{
+		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
+		this.specialties = filterOptions.specialties;
+		this.professionals = filterOptions.professionals;
+		this.problems = filterOptions.problems;
+		this.referenceStates = filterOptions.referenceStates;
+	}
 
 }
 
@@ -75,4 +86,5 @@ export class HistoricalProblemsFilter {
 	professional: number;
 	problem: string;
 	consultationDate: string;
+	referenceStateId: REFERENCE_STATES;
 }

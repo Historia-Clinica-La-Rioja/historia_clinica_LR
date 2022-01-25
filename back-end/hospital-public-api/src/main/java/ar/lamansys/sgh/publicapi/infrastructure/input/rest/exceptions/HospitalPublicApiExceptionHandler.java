@@ -1,6 +1,11 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
+import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalEncounterStorageException;
+import ar.lamansys.sgh.publicapi.application.saveexternalencounter.exceptions.SaveExternalEncounterException;
+import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
+import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
+import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,4 +35,38 @@ public class HospitalPublicApiExceptionHandler {
         return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
     }
 
+    @ExceptionHandler({ ExternalPatientBoException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ApiErrorMessageDto handleExternalPatientBoException(ExternalPatientBoException ex) {
+        logger.error("ExternalPatientBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
+
+    @ExceptionHandler({ ExternalPatientExtendedBoException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ApiErrorMessageDto handleExternalPatienExtendedtBoException(ExternalPatientExtendedBoException ex) {
+        logger.error("ExternalPatienExtendedtBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
+
+    @ExceptionHandler({ ExternalEncounterBoException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ApiErrorMessageDto handleExternalEncounterBoException(ExternalEncounterBoException ex) {
+        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
+
+    @ExceptionHandler({ SaveExternalEncounterException.class })
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    protected ApiErrorMessageDto handleSaveExternalEncounterException(SaveExternalEncounterException ex) {
+        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
+
+    @ExceptionHandler({ExternalEncounterStorageException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ApiErrorMessageDto handleExternalEncounterStorageException(ExternalEncounterStorageException ex) {
+        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
 }

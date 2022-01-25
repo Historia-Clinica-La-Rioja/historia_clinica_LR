@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants/menu';
 import { PermissionsService } from '@core/services/permissions.service';
-import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
 import { AccountService } from '@api-rest/services/account.service';
 import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { ContextService } from '@core/services/context.service';
@@ -12,6 +11,7 @@ import { LoggedUserService } from '../auth/services/logged-user.service';
 import { RoleAssignment } from '@api-rest/api-model';
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
 import { MenuService } from '@extensions/services/menu.service';
+import { UserInfo } from '@presentation/components/main-layout/main-layout.component';
 
 @Component({
 	selector: 'app-home',
@@ -20,7 +20,7 @@ import { MenuService } from '@extensions/services/menu.service';
 })
 export class HomeComponent implements OnInit {
 	menuItems$: Observable<MenuItem[]>;
-	menuFooterItems: MenuFooter = { user: {} };
+	userInfo: UserInfo = {};
 
 	private readonly NO_INSTITUTION = -1;
 
@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
 
 		this.accountService.getInfo()
 			.subscribe(userInfo => {
-				this.menuFooterItems.user = {
+				this.userInfo = {
 					userName: userInfo.email,
 					fullName: mapToFullName(userInfo.personDto)
 				};

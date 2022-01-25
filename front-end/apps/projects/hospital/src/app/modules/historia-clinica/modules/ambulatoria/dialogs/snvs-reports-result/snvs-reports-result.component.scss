@@ -18,9 +18,18 @@ div.spinner {
 }
 
 .separation {
-	margin: 20px 0;
+	margin: 35px 0;
 }
 
 .margin-bottom-0 {
 	margin-bottom: 0;
 }
+
+.normal-weight {
+	@include font-weight-regular;
+}
+
+.bold {
+	@include font-weight-bold
+}
+

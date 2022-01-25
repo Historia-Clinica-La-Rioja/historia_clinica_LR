@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.infrastructure.controller.consultation.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,9 @@ public class OdontologyConsultationDto implements Serializable {
 
     @Nullable
     private List<@Valid OdontologyMedicationDto> medications = new ArrayList<>();
+
+    @Nullable
+    private List<@Valid ReferenceDto> references = new ArrayList<>();
 
     @Nullable
     private String evolutionNote;

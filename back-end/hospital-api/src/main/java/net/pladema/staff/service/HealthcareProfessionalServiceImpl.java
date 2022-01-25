@@ -11,7 +11,7 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalEnumException;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalException;
-import net.pladema.staff.service.exceptions.HealthcareProfessionalSpecialtyEnumException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -9,28 +9,23 @@
 		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
 		             [fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
 			<div class="custom-container">
-
-				<app-menu [menuItems]="menuItems"></app-menu>
-
-				<div class="informative-items">
-					<span *ngIf="menuFooterItems?.user?.fullName; else userName">
-						{{menuFooterItems.user.fullName}}
-					</span>
-					<ng-template #userName>{{menuFooterItems?.user?.userName}}</ng-template>
-					<mat-divider></mat-divider>
-					<span *ngIf="menuFooterItems?.institution?.name">
-						{{menuFooterItems.institution.name}}
-					</span>
-					<span class="address" *ngIf="menuFooterItems?.institution?.address">
-						{{menuFooterItems.institution.address | fullHouseAddress}}
-						{{menuFooterItems.institution.address.cityName}}
-					</span>
-					<mat-divider *ngIf="menuFooterItems?.institution"></mat-divider>
-					<button mat-icon-button id="logout" (click)="logout()">
-						<mat-icon>power_settings_new</mat-icon>
-					</button>
+				<div class="top">
+					<ng-content select="[location-info]"></ng-content>
+					<app-menu [menuItems]="menuItems"></app-menu>
 				</div>
-				
+				<div class="bottom">
+
+					<div class="informative-items">
+						<span *ngIf="userInfo?.fullName; else userName">
+							{{userInfo.fullName}}
+						</span>
+						<ng-template #userName>{{userInfo?.userName}}</ng-template>
+						<mat-divider></mat-divider>
+						<button mat-icon-button id="logout" (click)="logout()">
+							<mat-icon>power_settings_new</mat-icon>
+						</button>
+					</div>
+				</div>
 			</div>
 		</mat-sidenav>
 

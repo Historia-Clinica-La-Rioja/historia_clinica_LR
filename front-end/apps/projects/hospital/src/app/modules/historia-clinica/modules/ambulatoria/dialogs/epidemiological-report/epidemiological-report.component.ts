@@ -76,6 +76,16 @@ export class EpidemiologicalReportComponent implements OnInit {
 		this.dialogRef.close(null);
 	}
 
+	clear(index: number): void {
+		let controlsArray = this.form.get('classifications') as FormArray;
+		controlsArray.at(index).setValue(null);
+	}
+
+	hadValue(index: number): boolean {
+		let controlsArray = this.form.get('classifications') as FormArray;
+		return controlsArray.at(index).value;
+	}
+
 }
 
 export interface EpidemiologicalManualClassificationResult {

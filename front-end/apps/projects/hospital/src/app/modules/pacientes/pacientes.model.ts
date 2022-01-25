@@ -35,13 +35,18 @@ export class IdentityVerificationStatus {
 	description: string;
 }
 
-export interface AdditionalInfo{
+export interface AdditionalInfo {
 	description?: string;
 	data?: string;
 }
 
-export interface PatientInformationScan{
-	identifType: any;
-	identifNumber: any;
-	gender: any;
+export interface PatientInformationScan {
+	identifType: number;
+	identifNumber: string;
+	gender: number;
+	firstName: string;
+	middleNames: string;
+	lastName: string;
+	otherLastNames: string;
+	birthDate: string;
 }

@@ -3,23 +3,29 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { BackofficeComponent } from '@core/components/backoffice/backoffice.component';
 
+/**
+ * Routes principales
+ */
 export enum AppRoutes {
-	Institucion = 'institucion',
-	Backoffice = 'backoffice',
+	Auth = 'auth',					// pantallas de ingreso
+	Backoffice = 'backoffice',		// pantalla de redirección a Backoffice
+	Home = 'home',					// pantallas del sistema general (perfil de usuario, configuración del sistema, etc)
+	Institucion = 'institucion', 	// funcionalidad en la institución (historia clínica, pacientes, turnos, etc)
+	PortalPaciente = 'paciente',	// portal del paciente
 }
 
 const routes: Routes = [
 	{
 		path: '',
-		redirectTo: 'home',
+		redirectTo: AppRoutes.Home,
 		pathMatch: 'full',
 	},
 	{
-		path: 'auth',
+		path: AppRoutes.Auth,
 		loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule),
 	},
 	{
-		path: 'home',
+		path: AppRoutes.Home,
 		loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
 	},
 	{
@@ -27,7 +33,7 @@ const routes: Routes = [
 		loadChildren: () => import('./modules/institucion/institucion.module').then(m => m.InstitucionModule),
 	},
 	{
-		path: 'paciente',
+		path: AppRoutes.PortalPaciente,
 		loadChildren: () => import('./modules/portal-paciente/portal-paciente.module').then(m => m.PortalPacienteModule),
 	},
 	{

@@ -1,0 +1,34 @@
+.institution-info {
+	background-color: #E0EEF7;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+
+	padding: 18px;
+
+	.name {
+		font-style: normal;
+		font-weight: 500;
+		font-size: 14px;
+		line-height: 16px;
+
+		/* identical to box height, or 114% */
+		display: block;
+
+		/* Secundario */
+		color: #192038;
+		padding: 4px;
+	}
+
+	.address {
+		font-style: normal;
+		font-weight: normal;
+		font-size: 13px;
+		line-height: 16px;
+
+		color: #282828;
+
+		opacity: 0.5;
+		padding: 4px;
+	}
+}

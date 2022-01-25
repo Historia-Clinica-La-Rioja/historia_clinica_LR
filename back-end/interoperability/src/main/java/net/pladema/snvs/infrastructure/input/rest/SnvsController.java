@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import net.pladema.snvs.application.ports.event.exceptions.SnvsStorageException;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortException;
 import net.pladema.snvs.application.reportproblems.ReportProblems;
+import net.pladema.snvs.application.reportproblems.RetryReport;
 import net.pladema.snvs.application.reportproblems.exceptions.ReportProblemException;
 import net.pladema.snvs.domain.event.exceptions.SnvsEventInfoBoException;
 import net.pladema.snvs.domain.problem.SnvsProblemBo;
@@ -44,8 +45,11 @@ public class SnvsController {
 
     private final ReportProblems reportProblems;
 
-    public SnvsController(ReportProblems reportProblems){
+    private final RetryReport retryReport;
+
+    public SnvsController(ReportProblems reportProblems, RetryReport retryReport){
         this.reportProblems = reportProblems;
+        this.retryReport = retryReport;
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
@@ -60,7 +64,6 @@ public class SnvsController {
         logger.debug(OUTPUT, resultService);
         return mapReportsSnvsResponse(resultService);
     }
-
     private List<SnvsReportDto> mapReportsSnvsResponse(List<SnvsReportBo> resultService) {
         return resultService.stream().map(this::buildSnvsReportDto).collect(Collectors.toList());
     }
@@ -95,7 +98,7 @@ public class SnvsController {
         List<ReportCommandBo> result = new ArrayList<>();
         for (SnvsToReportDto reportDto: toReportList)
             result.add(new ReportCommandBo(patientId, institutionId, reportDto.getManualClassificationId(),
-                    reportDto.getGroupEventId(), reportDto.getEventId(), buildProblem(reportDto.getProblem())));
+                    reportDto.getGroupEventId(), reportDto.getEventId() , buildProblem(reportDto.getProblem())));
         return result;
     }
 

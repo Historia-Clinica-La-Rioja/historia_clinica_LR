@@ -8,6 +8,8 @@ import ar.lamansys.odontology.infrastructure.controller.consultation.dto.Odontol
 import ar.lamansys.odontology.infrastructure.controller.consultation.dto.OdontologyConsultationDto;
 import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.CpoCeoIndicesMapper;
 import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.OdontologyConsultationMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +44,18 @@ public class OdontologyConsultationController {
 
     private final CpoCeoIndicesMapper cpoCeoIndicesMapper;
 
+    private final SharedReferenceCounterReference sharedReferenceCounterReference;
+
     public OdontologyConsultationController(CreateOdontologyConsultation createOdontologyConsultation,
                                             OdontologyConsultationMapper odontologyConsultationMapper,
                                             FetchCpoCeoIndices fetchCpoCeoIndices,
-                                            CpoCeoIndicesMapper cpoCeoIndicesMapper) {
+                                            CpoCeoIndicesMapper cpoCeoIndicesMapper,
+                                            SharedReferenceCounterReference sharedReferenceCounterReference) {
         this.createOdontologyConsultation = createOdontologyConsultation;
         this.odontologyConsultationMapper = odontologyConsultationMapper;
         this.fetchCpoCeoIndices = fetchCpoCeoIndices;
         this.cpoCeoIndicesMapper = cpoCeoIndicesMapper;
+        this.sharedReferenceCounterReference = sharedReferenceCounterReference;
     }
 
     @Transactional
@@ -66,7 +72,9 @@ public class OdontologyConsultationController {
         consultationBo.setInstitutionId(institutionId);
         consultationBo.setPatientId(patientId);
 
-        createOdontologyConsultation.run(consultationBo);
+        Integer encounterId = createOdontologyConsultation.run(consultationBo);
+        sharedReferenceCounterReference.saveReferences(encounterId, (int)SourceType.ODONTOLOGY, consultationDto.getReferences());
+
         return true;
     }
 

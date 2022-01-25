@@ -256,12 +256,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 	openCounterreference(reference: ReferenceDto) {
 		if (!this.dialogRef) {
-			this.dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent, {
-				data: {
+			this.dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent, 
+				{
 					reference: reference,
 					patientId: this.patientId
 				}
-			});
+			);
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.dialogRef;
 				this.medicacionesService.updateMedication();

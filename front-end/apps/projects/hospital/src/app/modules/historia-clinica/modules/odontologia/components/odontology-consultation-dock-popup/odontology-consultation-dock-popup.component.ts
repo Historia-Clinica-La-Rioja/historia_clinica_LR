@@ -29,6 +29,10 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { take } from 'rxjs/operators';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { MIN_DATE } from "@core/utils/date.utils";
+import { OdontologyReferenceService, Reference } from '../../services/odontology-reference.service';
+import { CareLineService } from '@api-rest/services/care-line.service';
+import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
+import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -52,6 +56,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	diagnosticsNewConsultationService: ActionsNewConsultationService;
 	proceduresNewConsultationService: ActionsNewConsultationService;
 	otherProceduresService: ProcedimientosService;
+	odontologyReferenceService: OdontologyReferenceService;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	errors: string[] = [];
@@ -72,6 +77,9 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly odontologyConsultationService: OdontologyConsultationService,
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
+		private readonly careLineService: CareLineService,
+		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
+		private readonly referenceFileService: ReferenceFileService,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -81,7 +89,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
 		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
-
+		this.odontologyReferenceService = new OdontologyReferenceService(this.dialog, this.data, this.otherDiagnosticsNewConsultationService, this.clinicalSpecialtyCareLine, this.careLineService);
 	}
 
 	ngOnInit(): void {
@@ -144,7 +152,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 					const suggestedFieldsService = new ConsultationSuggestedFieldsService(odontologyDto);
 
 					if (!suggestedFieldsService.nonCompletedFields.length) {
-						this.createConsultation(odontologyDto);
+						this.uploadRefFilesAndCreateConsultation(odontologyDto);
 					}
 					else {
 						this.openDialog(suggestedFieldsService.nonCompletedFields, suggestedFieldsService.presentFields, odontologyDto);
@@ -162,7 +170,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(confirm => {
 			if (confirm) {
-				this.createConsultation(odontologyDto);
+				this.uploadRefFilesAndCreateConsultation(odontologyDto);
 			}
 		});
 	}
@@ -209,9 +217,63 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentesPersonales().map(toOdontologyPersonalHistoryDto),
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
+			references: this.odontologyReferenceService.getOdontologyReferences(),
 		};
 	}
 
+	private uploadRefFilesAndCreateConsultation(odontologyDto: OdontologyConsultationDto) {
+		const references: Reference[] = this.odontologyReferenceService.getReferences();
+
+		if (!references.length) {
+			this.createConsultation(odontologyDto);
+			return;
+		}
+
+		let numberOfReferences = 0;
+		let numberOfFiles = 0;
+		references.forEach((reference: Reference) => {
+
+			if (reference.referenceFiles.length) {
+
+				reference.referenceFiles.forEach(referenceFile => {
+					this.referenceFileService.uploadReferenceFiles(this.data.patientId, referenceFile).subscribe(fileId => {
+						numberOfFiles++;
+						reference.referenceIds.push(fileId);
+						this.odontologyReferenceService.addFileIdAt(reference.referenceNumber, fileId);
+						if (numberOfFiles === reference.referenceFiles.length) {
+							numberOfReferences++;
+							numberOfFiles = 0;
+
+							if (numberOfReferences === references.length) {
+								odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
+								this.createConsultation(odontologyDto);
+							}
+						}
+					},
+						error => {
+							this.errorToUpdateReferenceFiles(references);
+						});
+				});
+			}
+			else {
+				numberOfReferences++;
+				if (numberOfReferences === references.length) {
+					odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
+					this.createConsultation(odontologyDto);
+				}
+			}
+		});
+	}
+
+	private errorToUpdateReferenceFiles(references: Reference[]) {
+		this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
+		references.forEach(reference => {
+			this.referenceFileService.deleteReferenceFiles(reference.referenceIds).subscribe(
+				() => {
+					reference.referenceIds = [];
+				});
+		});
+	}
 }
 
 export interface FieldsToUpdate {

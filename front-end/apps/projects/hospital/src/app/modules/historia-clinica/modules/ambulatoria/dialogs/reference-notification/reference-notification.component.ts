@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ReferenceDto, ReferenceFileDto } from '@api-rest/api-model';
+import { ReferenceDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 
 @Component({
@@ -33,8 +33,8 @@ export class ReferenceNotificationComponent implements OnInit {
 		this.dialogRef.close(counterreference);
 	}
 
-	downloadReferenceFile(file: ReferenceFileDto) {
-		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);	
+	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {
+		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
 	}
 
 }

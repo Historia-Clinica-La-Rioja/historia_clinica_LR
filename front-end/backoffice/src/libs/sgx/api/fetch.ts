@@ -7,6 +7,7 @@ import { configureRefreshFetch } from 'refresh-fetch';
 import { retrieveToken, retrieveRefreshToken, saveTokens, clearTokens } from './tokenStorage';
 import { safeParseJson } from '../shared/json';
 import { JWTokenDto } from './model';
+import { saveAs } from 'file-saver';
 
 import { HttpError } from 'react-admin';
 
@@ -19,6 +20,16 @@ const fetchApiWithToken = <T>(url: string, options: any = {}) => {
         url,
         addAuth(options)
     );
+};
+
+const downloadApiWithToken = (url: string, filename: string) => {
+    const options = addAuth();
+    return fetch(API_CONTEXT_PATH + url, options)
+        .then(ifErrorThrow(mapToApiHttpError()))
+        .then((response) => {
+            return response.blob();
+        })
+        .then(blob => saveAs(blob, filename));
 };
 
 const parseTextAsJson = <T>(response: Response): Promise<T> => {
@@ -81,6 +92,12 @@ const sgxFetchApiWithToken = configureRefreshFetch({
     refreshToken: doRefreshToken,
 });
 
+const sgxDownload = configureRefreshFetch({
+    fetch: downloadApiWithToken,
+    shouldRefreshToken,
+    refreshToken: doRefreshToken,
+});
+
 const withHeader = ({ headers = new Headers(), ...rest }, name: string, value: string) => {
     headers.set(name, value);
     return { headers, ...rest };
@@ -93,4 +110,12 @@ const addAuth = (options: any = {}) => {
 
 const jsonPayload = (method: string, body: any) => ({ method, body: JSON.stringify(body) });
 
-export { sgxFetch, sgxFetchApi, jsonPayload, withHeader, sgxFetchApiWithToken };
+export { 
+    sgxFetch, 
+    sgxFetchApi, 
+    jsonPayload, 
+    withHeader, 
+    sgxFetchApiWithToken, 
+    sgxDownload, 
+    safeParseJson,
+};

@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.outpatient.repository;
 
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureSummaryVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.clinichistory.outpatient.repository.domain.NursingEvolutionSummaryVo;
 import net.pladema.person.repository.entity.Person;
@@ -94,8 +94,8 @@ public class NursingConsultationSummaryRepositoryImpl implements NursingConsulta
     }
 
     @Override
-    public List<ProcedureSummaryVo> getProceduresByPatient(Integer patientId, List<Integer> nursingConsultationIds) {
-        String sqlString = "SELECT p.id, s, p.performedDate, nc.id"
+    public List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> nursingConsultationIds) {
+        String sqlString = "SELECT p.id, s.id, s.sctid, s.pt, p.performedDate, nc.id"
                 + "  FROM NursingConsultation nc"
                 + "  JOIN Document d ON (d.sourceId = nc.id)"
                 + "  JOIN DocumentProcedure dp ON (d.id = dp.pk.documentId)"
@@ -111,13 +111,13 @@ public class NursingConsultationSummaryRepositoryImpl implements NursingConsulta
                 .setParameter("patientId", patientId)
                 .setParameter("nursingConsultationIds", nursingConsultationIds)
                 .getResultList();
-        List<ProcedureSummaryVo> result = new ArrayList<>();
+        List<ProcedureSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
-                result.add(new ProcedureSummaryVo(
-                        (Integer) a[0],
-                        (Snomed) a[1],
-                        a[2] != null ? (LocalDate) a[2] : null,
-                        (Integer) a[3]))
+                result.add(new ProcedureSummaryBo(
+                        (Integer)a[0],
+                        new SnomedBo((Integer) a[1],(String) a[2],(String) a[3]),
+                        a[4] != null ? (LocalDate)a[4] : null,
+                        (Integer) a[5]))
         );
         return result;
     }

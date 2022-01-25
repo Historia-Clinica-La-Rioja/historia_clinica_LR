@@ -7,18 +7,18 @@
                 <ng-container>
                     <strong class="dose" [translate]="'ambulatoria.paciente.reference-notification.REFERENCE_REQUEST'"></strong>
                 </ng-container>
-                <div class="primary" *ngFor="let problem of data.data.reference.problems" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
+                <div class="primary" *ngFor="let problem of data.reference.problems" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
                     <mat-icon  color="primary">assignment</mat-icon>
                     <span> {{problem.snomed.pt}} </span> 
                 </div>
                 <div class="reference-description" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
-                    <span>{{data.data.reference.careLine.description}}</span>
-                    <span>{{data.data.reference.clinicalSpecialty.name}}</span>
+                    <span>{{data.reference.careLine.description}}</span>
+                    <span>{{data.reference.clinicalSpecialty.name}}</span>
                 </div>
     
-                <span *ngIf="data.data.reference.note.description">“{{data.data.reference.note.description}}”</span>
+                <span *ngIf="data.reference.note.description">“{{data.reference.note.description}}”</span>
 				
-				<div class="primary" *ngFor="let file of data.data.reference.files" fxLayout="row">
+				<div class="primary" *ngFor="let file of data.reference.files" fxLayout="row">
 					<mat-icon>attachment_icon</mat-icon>
 					<span class="span-clickable" (click)="downloadReferenceFile(file)">
 						{{file.fileName}}
@@ -26,8 +26,8 @@
 				</div>
 
                 <div class="grayText" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" fxFlex="50px">
-                    <span>{{data.data.reference.professional.firstName}} {{data.data.reference.professional.lastName}}</span>
-                    <span>{{data.data.reference.referenceDate.day}}/{{data.data.reference.referenceDate.month}}/{{data.data.reference.referenceDate.year}}</span>
+                    <span>{{data.reference.professional.firstName}} {{data.reference.professional.lastName}}</span>
+                    <span>{{data.reference.referenceDate.day}}/{{data.reference.referenceDate.month}}/{{data.reference.referenceDate.year}}</span>
                 </div>
             </mat-card>
         </div>

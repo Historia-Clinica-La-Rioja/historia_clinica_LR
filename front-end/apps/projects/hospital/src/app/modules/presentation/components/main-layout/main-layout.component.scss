@@ -38,28 +38,16 @@ app-bar {
 		justify-content: space-between;
 
 		.informative-items {
-			background-color: #fafafa;
-			display: flex;
-			flex-direction: column;
-			font-weight: 500;
-			padding: 1vh 0 0 0;
 			text-align: center;
-
-			.mat-divider {
-				margin: 0.5vh 0;
-			}
-
-			.address {
-				color: #939393;
-				font-size: 13px;
-				font-weight: 400;
-			}
 
 			button {
 				width: auto;
 				color: red;
 				border-radius: 4px;
 			}
+		}
+		.mat-divider {
+			margin: 0.5vh 18px;
 		}
 	}
 }

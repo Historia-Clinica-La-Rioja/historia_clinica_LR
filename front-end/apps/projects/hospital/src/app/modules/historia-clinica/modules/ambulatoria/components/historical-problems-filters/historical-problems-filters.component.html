@@ -7,7 +7,7 @@
 				{{specialty.name}}
 			</mat-option>
 		</mat-select>
-		<button id="clear-specialty" type="button" mat-button *ngIf="form.controls.specialty.value" matSuffix
+		<button id="clear_specialty" type="button" mat-button *ngIf="form.controls.specialty.value" matSuffix
 			color="warn" mat-icon-button (click)="clear(form.controls.specialty); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -21,7 +21,7 @@
 				{{professional.professionalDescription}}
 			</mat-option>
 		</mat-select>
-		<button id="clear-specialty" type="button" mat-button *ngIf="form.controls.professional.value" matSuffix
+		<button id="clear_specialty" type="button" mat-button *ngIf="form.controls.professional.value" matSuffix
 			color="warn" mat-icon-button (click)="clear(form.controls.professional); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -34,7 +34,7 @@
 				{{problem.problemDescription}}
 			</mat-option>
 		</mat-select>
-		<button id="clear-specialty" type="button" mat-button *ngIf="form.controls.problem.value" matSuffix color="warn"
+		<button id="clear_specialty" type="button" mat-button *ngIf="form.controls.problem.value" matSuffix color="warn"
 			mat-icon-button (click)="clear(form.controls.problem); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -47,8 +47,21 @@
 			(dateChange)="sendAllFiltersOnFilterChange()">
 		<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
 		<mat-datepicker #myDatepicker></mat-datepicker>
-		<button id="clear-specialty" type="button" mat-button *ngIf="form.controls.consultationDate.value" matSuffix
+		<button id="clear_specialty" type="button" mat-button *ngIf="form.controls.consultationDate.value" matSuffix
 			color="warn" mat-icon-button (click)="clear(form.controls.consultationDate); $event.stopPropagation()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label [translate]="'ambulatoria.paciente.problemas.historical-problems-filters.REFERENCE_STATE'"></mat-label>
+		<mat-select formControlName="referenceState" (selectionChange)="sendAllFiltersOnFilterChange()">
+			<mat-option *ngFor="let referenceState of referenceStates" [value]="referenceState">
+				{{referenceState}}
+			</mat-option>
+		</mat-select>
+		<button id="clear_specialty" type="button" mat-button *ngIf="form.value.referenceState" matSuffix color="warn"
+			mat-icon-button (click)="clear(form.controls.referenceState); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
 	</mat-form-field>

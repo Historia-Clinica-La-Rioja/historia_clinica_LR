@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ReasonSummaryVo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReasonSummaryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Reason;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +21,8 @@ public class ReasonBo extends ClinicalTerm {
         return getSnomed().getPt();
     }
 
-    public ReasonBo(ReasonSummaryVo reasonSummaryVo){
-        super(new SnomedBo(reasonSummaryVo.getSnomed()));
+    public ReasonBo(ReasonSummaryBo reasonSummaryBo){
+        super(reasonSummaryBo.getSnomed());
     }
 
     public ReasonBo(SnomedBo snomedBo) {

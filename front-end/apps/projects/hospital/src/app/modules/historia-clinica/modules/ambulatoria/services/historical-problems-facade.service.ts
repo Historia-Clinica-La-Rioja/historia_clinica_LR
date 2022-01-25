@@ -4,9 +4,16 @@ import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { momentParseDate } from '@core/utils/moment.utils';
-import { ClinicalSpecialtyDto, OutpatientEvolutionSummaryDto } from '@api-rest/api-model';
+import {
+	ClinicalSpecialtyDto,
+	HCEEvolutionSummaryDto,
+	OutpatientEvolutionSummaryDto,
+	OutpatientSummaryReferenceDto
+} from '@api-rest/api-model';
 import { OutpatientConsultationService } from './../../../../api-rest/services/outpatient-consultation.service';
 import { MapperService } from './../../../../presentation/services/mapper.service';
+import { REFERENCE_STATES } from '../constants/reference-masterdata';
+import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
 
 @Injectable()
 export class HistoricalProblemsFacadeService {
@@ -14,6 +21,7 @@ export class HistoricalProblemsFacadeService {
 	public specialties: ClinicalSpecialtyDto[] = [];
 	public professionals: Professional[] = [];
 	public problems: Problem[] = [];
+	private readonly referenceStates = [REFERENCE_STATES.WITHOUT_REFERENCES, REFERENCE_STATES.WITH_REFERENCES, REFERENCE_STATES.WITH_COUNTERREFERENCE, REFERENCE_STATES.ALL];
 
 	private historicalProblemsSubject = new ReplaySubject<HistoricalProblems[]>(1);
 	private historicalProblems$: Observable<HistoricalProblems[]>;
@@ -22,7 +30,7 @@ export class HistoricalProblemsFacadeService {
 	private originalHistoricalProblems: HistoricalProblems[] = [];
 
 	constructor(
-		private readonly outpatientConsultationService: OutpatientConsultationService,
+		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly mapperService: MapperService,
 	) {
 		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
@@ -36,9 +44,9 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	public loadEvolutionSummaryList(patientId: number) {
-		this.outpatientConsultationService.getEvolutionSummaryList(patientId).pipe(
-			tap((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => this.filterOptions(outpatientEvolutionSummary)),
-			map((outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]) => outpatientEvolutionSummary.length ? this.mapperService.toHistoricalProblems(outpatientEvolutionSummary) : null)
+		this.hceGeneralStateService.getEvolutionSummaryList(patientId).pipe(
+			tap((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => this.filterOptions(hceEvolutionSummaryDto)),
+			map((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => hceEvolutionSummaryDto.length ? this.mapperService.toHistoricalProblems(hceEvolutionSummaryDto) : null)
 		).subscribe(data => {
 			this.originalHistoricalProblems = data;
 			this.sendHistoricalProblems(this.originalHistoricalProblems);
@@ -63,7 +71,8 @@ export class HistoricalProblemsFacadeService {
 			const result = historichalProblemsCopy.filter(historicalProblem => (this.filterBySpecialty(newFilter, historicalProblem)
 				&& this.filterByProfessional(newFilter, historicalProblem)
 				&& this.filterByProblem(newFilter, historicalProblem)
-				&& this.filterByConsultationDate(newFilter, historicalProblem)));
+				&& this.filterByConsultationDate(newFilter, historicalProblem)
+				&& this.filterByReference(newFilter, historicalProblem)));
 			this.historicalProblemsSubject.next(result);
 			this.historicalProblemsFilterSubject.next(newFilter);
 		}
@@ -85,30 +94,53 @@ export class HistoricalProblemsFacadeService {
 		return (filter.consultationDate ? problem.consultationDate ? momentParseDate(problem.consultationDate).isSame(momentParseDate(filter.consultationDate)) : false : true);
 	}
 
+	private filterByReference(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
+		switch (filter.referenceStateId) {
+			case REFERENCE_STATES.WITH_REFERENCES:
+				return problem.reference !== null;
+
+			case REFERENCE_STATES.WITHOUT_REFERENCES:
+				return problem.reference === null;
+
+			case REFERENCE_STATES.WITH_COUNTERREFERENCE:
+				let result;
+				problem.reference?.forEach(problemReference => {
+					if (problemReference.counterReference?.counterReferenceNote !== undefined) {
+						result = true;
+					}
+				})
+				return result;
+
+			default:
+				return true;
+		}
+	}
+
 	public getFilterOptions() {
 		return {
 			specialties: this.specialties,
 			professionals: this.professionals,
-			problems: this.problems
+			problems: this.problems,
+			referenceStates: this.referenceStates,
 		};
 	}
 
-	private filterOptions(outpatientEvolutionSummary: OutpatientEvolutionSummaryDto[]): void {
-		outpatientEvolutionSummary.forEach(outpatientEvolution => {
+	private filterOptions(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): void {
+		hceEvolutionSummaryDto.forEach(hceEvolutionSummaryDto => {
 
-			if (outpatientEvolution.clinicalSpecialty) {
-				this.specialties = pushIfNotExists(this.specialties, outpatientEvolution.clinicalSpecialty, this.compareSpecialty);
+			if (hceEvolutionSummaryDto.clinicalSpecialty) {
+				this.specialties = pushIfNotExists(this.specialties, hceEvolutionSummaryDto.clinicalSpecialty, this.compareSpecialty);
 			}
 
-			if (!outpatientEvolution.healthConditions.length) {
+			if (!hceEvolutionSummaryDto.healthConditions.length) {
 				this.problems = pushIfNotExists(this.problems, { problemId: 'Problema no informado', problemDescription: 'Problema no informado' }, this.compareProblems);
 			} else {
-				outpatientEvolution.healthConditions.forEach(oe => {
+				hceEvolutionSummaryDto.healthConditions.forEach(oe => {
 					this.problems = pushIfNotExists(this.problems, { problemId: oe.snomed.sctid, problemDescription: oe.snomed.pt }, this.compareProblems);
 				});
 			}
 
-			this.professionals = pushIfNotExists(this.professionals, { personId: outpatientEvolution.professional.personId, professionalId: outpatientEvolution.professional.id, professionalDescription: `${outpatientEvolution.professional.person.firstName} ${outpatientEvolution.professional.person.lastName}` }, this.compareProfessional);
+			this.professionals = pushIfNotExists(this.professionals, { personId: hceEvolutionSummaryDto.professional.person.id, professionalId: hceEvolutionSummaryDto.professional.id, professionalDescription: `${hceEvolutionSummaryDto.professional.person.firstName} ${hceEvolutionSummaryDto.professional.person.lastName}` }, this.compareProfessional);
 
 		});
 	}
@@ -144,6 +176,10 @@ export class HistoricalProblems {
 	consultationProfessionalId: number;
 	consultationProfessionalPersonId: number;
 	consultationProfessionalName: string;
+	document:{
+		id: number;
+		filename: string;
+	};
 	problemId: string;
 	problemPt: string;
 	specialtyId: number;
@@ -159,5 +195,6 @@ export class HistoricalProblems {
 			procedureId: string;
 			procedurePt: string;
 		}[];
+	reference: OutpatientSummaryReferenceDto[];
 }
 

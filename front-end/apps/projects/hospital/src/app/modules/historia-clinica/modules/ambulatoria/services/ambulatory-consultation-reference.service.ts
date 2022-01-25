@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, OutpatientReferenceDto } from '@api-rest/api-model';
+import {CareLineDto, ClinicalSpecialtyDto, ReferenceDto} from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
@@ -20,7 +20,7 @@ export class AmbulatoryConsultationReferenceService {
 	specialties: ClinicalSpecialtyDto[];
 	careLines: CareLineDto[];
 	private readonly columns: TableColumnConfig[];
-	outpatientReferences: OutpatientReferenceDto[];
+	outpatientReferences: ReferenceDto[];
 	references: Reference[];
 
 	constructor(
@@ -62,24 +62,25 @@ export class AmbulatoryConsultationReferenceService {
 		const dialogRef = this.dialog.open(ReferenceComponent, {
 			autoFocus: false,
 			data: {
-				newConsultationProblems: this.ambulatoryConsultationProblemsService.getProblemas(),
-				idPatient: this.informationData.idPaciente,
+				consultationProblems: this.ambulatoryConsultationProblemsService.getProblemas(),
+				patientId: this.informationData.idPaciente,
 			}
 		});
 		dialogRef.afterClosed().subscribe(reference => {
 			if (reference.data) {
+				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [] }
 				if (reference.files.length) {
 					let referenceIds: number[] = [];
-					const ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
-					this.references.push(ref);
+					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds }
 				}
+				this.references.push(ref);
 				this.outpatientReferences.push(reference.data);
 			}
 		});
 	}
 
 	remove(index: number): void {
-		this.outpatientReferences = removeFrom<OutpatientReferenceDto>(this.outpatientReferences, index);
+		this.outpatientReferences = removeFrom<ReferenceDto>(this.outpatientReferences, index);
 	}
 
 	getColumns(): TableColumnConfig[] {
@@ -88,7 +89,7 @@ export class AmbulatoryConsultationReferenceService {
 
 	getData(): any[] {
 		return (this.outpatientReferences.map(
-			(reference: OutpatientReferenceDto) => ({
+			(reference: ReferenceDto) => ({
 				problems: reference.problems,
 				consultation: reference.consultation,
 				procedure: reference.procedure,
@@ -99,7 +100,7 @@ export class AmbulatoryConsultationReferenceService {
 		));
 	}
 
-	getOutpatientReferences(): OutpatientReferenceDto[] {
+	getOutpatientReferences(): ReferenceDto[] {
 		return this.outpatientReferences;
 	}
 
@@ -110,6 +111,7 @@ export class AmbulatoryConsultationReferenceService {
 
 	addReferenceId(index: number, fileId: number): void {
 		this.outpatientReferences[index].fileIds.push(fileId);
+		this.references[index].referenceIds.push(fileId);
 	}
 }
 

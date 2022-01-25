@@ -6,8 +6,10 @@ import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.ReferenceSummaryBo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +23,10 @@ public class HealthConditionSummaryBo extends ClinicalTerm {
     private boolean main;
 
     private String problemId;
+
+    private List<ReferenceSummaryBo> references;
+
+    private Integer consultationID;
 
     public HealthConditionSummaryBo(HealthConditionSummaryVo healthConditionSummaryVo){
         this.setId(healthConditionSummaryVo.getId());

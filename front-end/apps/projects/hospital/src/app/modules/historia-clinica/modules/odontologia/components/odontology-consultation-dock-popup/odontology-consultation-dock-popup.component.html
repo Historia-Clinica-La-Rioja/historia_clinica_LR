@@ -450,6 +450,15 @@
 			</app-document-section>
 		</div>
 
+		<div id="reference_request" class="reference" fxLayout="column" fxLayoutGap="10px">
+			<h2>Solicitud de referencia</h2>
+			<span class="primary" (click)="odontologyReferenceService.openReferenceDialog()">+ Agregar solicitud</span>
+			<app-document-section-table data-display
+											[columns]="odontologyReferenceService.getColumns()"
+											[data]="odontologyReferenceService.getData()">
+			</app-document-section-table>
+		</div>
+
 
 	</div>
 

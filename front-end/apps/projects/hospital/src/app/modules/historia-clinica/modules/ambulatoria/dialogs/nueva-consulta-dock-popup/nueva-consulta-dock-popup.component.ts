@@ -215,40 +215,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			if (answerPreviousData) {
 				if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
 					if (!fieldsService.nonCompletedFields.length) {
-						let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
-						if (!references.length) {
-							this.goToCreateConsultation(nuevaConsulta);
-							return;
-						}
-						let longReferences = 0;
-						for (let reference of references) {
-							if (!reference.referenceFiles.length) {
-								this.goToCreateConsultation(nuevaConsulta);
-								return;
-							}
-							let longFiles = 0;
-							for (let file of reference.referenceFiles) {
-								this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
-									fileId => {
-										longFiles = longFiles + 1;
-
-										reference.referenceIds.push(fileId);
-										this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
-
-										if (longFiles === reference.referenceFiles.length) {
-											longReferences = longReferences + 1;
-										}
-
-										if ((longFiles === reference.referenceFiles.length) && (longReferences === references.length)) {
-											this.goToCreateConsultation(nuevaConsulta);
-										}
-									},
-									() => {
-										this.errorToUpdateReferenceFiles(references);
-									}
-								)
-							}
-						}
+						this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
 					}
 					else {
 						this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta);
@@ -270,40 +237,54 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(confirmado => {
 			if (confirmado) {
-				let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
-				if (!references.length) {
-					this.goToCreateConsultation(nuevaConsulta);
-					return;
-				}
-				let longReferences = 0;
-				for (let reference of references) {
-					if (!reference.referenceFiles.length) {
-						this.goToCreateConsultation(nuevaConsulta);
-						return
-					}
-					let longFiles = 0;
-					for (let file of reference.referenceFiles) {
-						this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
-							fileId => {
-								longFiles = longFiles + 1;
-
-								reference.referenceIds.push(fileId);
-								this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
-								if (longFiles === reference.referenceFiles.length) {
-									longReferences = longReferences + 1;
-								}
-								if ((longFiles === reference.referenceFiles.length) && (longReferences === references.length)) {
-									this.goToCreateConsultation(nuevaConsulta);
-								}
-							},
-							() => {
-								this.errorToUpdateReferenceFiles(references);
-							}
-						)
-					}
-				}
+				this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
 			}
 		});
+	}
+
+	private uploadReferencesFileAndCreateConsultation(nuevaConsulta: CreateOutpatientDto) {
+
+		let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+		if (!references.length) {
+			this.goToCreateConsultation(nuevaConsulta);
+			return;
+		}
+
+		let longReferences = 0;
+		references.forEach(reference => {
+			if (reference.referenceFiles.length) {
+				let longFiles = 0;
+				reference.referenceFiles.forEach(file => {
+					this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
+						fileId => {
+							longFiles++;
+							reference.referenceIds.push(fileId);
+							this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
+
+							if (longFiles === reference.referenceFiles.length) {
+								longFiles = 0;
+								longReferences++;
+
+								if (longReferences === references.length) {
+									this.goToCreateConsultation(nuevaConsulta);
+								}
+							}
+						},
+						() => {
+							this.errorToUpdateReferenceFiles(references);
+						}
+					)
+				})
+
+			}
+			else {
+				longReferences++;
+				if (longReferences === references.length) {
+					this.goToCreateConsultation(nuevaConsulta);
+				}
+			}
+		})
+
 	}
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {

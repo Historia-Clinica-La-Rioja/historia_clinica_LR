@@ -1,6 +1,7 @@
 package net.pladema.snvs.domain.report;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.snvs.domain.problem.SnvsProblemBo;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class SnvsReportBo {
 
 	private Integer id;
@@ -33,5 +35,4 @@ public class SnvsReportBo {
 	private Integer sisaRegisteredId;
 
 	private LocalDate lastUpdate;
-
 }

@@ -17,7 +17,7 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
-import net.pladema.person.repository.MedicalCoverageRepository;
+import net.pladema.patient.repository.MedicalCoverageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

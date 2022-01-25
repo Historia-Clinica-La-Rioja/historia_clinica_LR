@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -7,14 +7,17 @@ import { ContextService } from '@core/services/context.service';
 
 import { SIDEBAR_MENU } from './constants/menu';
 import { PermissionsService } from '@core/services/permissions.service';
-import { MenuFooter } from '@presentation/components/main-layout/main-layout.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { InstitutionDto } from '@api-rest/api-model';
 import { AccountService } from '@api-rest/services/account.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
+import { mapToLocation } from '@api-rest/mapper/institution-dto.mapper';
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
+import { UserInfo } from '@presentation/components/main-layout/main-layout.component';
+import { LocationInfo } from '@presentation/components/location-badge/location-badge.component';
 import { MenuService } from '@extensions/services/menu.service';
+import { AppRoutes } from '../../app-routing.module';
 
 @Component({
 	selector: 'app-institucion',
@@ -23,7 +26,7 @@ import { MenuService } from '@extensions/services/menu.service';
 })
 export class InstitucionComponent implements OnInit {
 	menuItems$: Observable<MenuItem[]>;
-	menuFooterItems: MenuFooter = {user: {}, institution: null};
+	menuFooterItems: { user: UserInfo, institution: LocationInfo } = {user: {}, institution: null};
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -32,7 +35,8 @@ export class InstitucionComponent implements OnInit {
 		private permissionsService: PermissionsService,
 		private institutionService: InstitutionService,
 		private accountService: AccountService,
-		private featureFlagService: FeatureFlagService
+		private featureFlagService: FeatureFlagService,
+		private router: Router,
 	) {
 
 	}
@@ -53,25 +57,18 @@ export class InstitucionComponent implements OnInit {
 
 			this.institutionService.getInstitutions(Array.of(institutionId))
 				.subscribe(institutionDto => {
-					this.menuFooterItems.institution = {name: institutionDto[0].name, address: this.mapToAddress(institutionDto[0])};
+					this.menuFooterItems.institution = mapToLocation(institutionDto[0]);
 				});
 			this.accountService.getInfo()
-				.subscribe( userInfo => {
+				.subscribe(userInfo => {
 					this.menuFooterItems.user.userName = userInfo.email;
 					this.menuFooterItems.user.fullName = mapToFullName(userInfo.personDto);
 				}
-			);
+				);
 		});
 	}
 
-	private mapToAddress(institutionDto: InstitutionDto) {
-		return {
-			street: institutionDto.institutionAddressDto.street,
-			number: institutionDto.institutionAddressDto.number,
-			floor: institutionDto.institutionAddressDto.floor,
-			apartment: institutionDto.institutionAddressDto.apartment,
-			cityName:  institutionDto.institutionAddressDto.city.description
-		};
+	institutionHome() {
+		this.router.navigate([AppRoutes.Institucion, this.contextService.institutionId]);
 	}
-
 }
