@@ -1,9 +1,10 @@
-package net.pladema.permissions.controller;
+package net.pladema.sgx.loggeduser.infrastructure.input.rest;
 
 import net.pladema.UnitController;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.permissions.service.dto.RoleAssignment;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

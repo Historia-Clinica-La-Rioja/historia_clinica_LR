@@ -1260,7 +1260,7 @@ export interface LimitedPatientSearchDto {
     patientList: PatientSearchDto[];
 }
 
-export interface LoggedPersonDto extends Serializable {
+export interface LoggedPersonDto {
     firstName: string;
     lastName: string;
 }
