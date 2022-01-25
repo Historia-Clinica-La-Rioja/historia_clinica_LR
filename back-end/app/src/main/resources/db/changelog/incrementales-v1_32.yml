@@ -1,5 +1,25 @@
-databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_32 
+databaseChangeLog:
+  - logicalFilePath: incrementales-v1_32
+
+  - changeSet:
+      id: add-patient_medical_coverage_id-column-internment_episode
+      author: flizalde
+      changes:
+        - addColumn:
+            tableName: internment_episode
+            columns:
+              - column:
+                  name: patient_medical_coverage_id
+                  type: int
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_medical_coverage_id
+            baseTableName: internment_episode
+            constraintName: FK_internment_episode_patient_medical_coverage_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient_medical_coverage
+            validate: true
 
     - changeSet:
           id: system_property-createTable
