@@ -75,7 +75,8 @@ const messages = {
     },
     mergeMedicalCoverage: {
         merge_success: 'La cobertura se unificó correctamente',
-        cant_merge: 'No se pudo unificar la cobertura médica'
+        cant_merge: 'No se pudo unificar la cobertura médica',
+        dialog_title: 'Unificar coberturas médicas',
     },
     resources: {
         beds: {
