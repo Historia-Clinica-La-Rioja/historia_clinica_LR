@@ -21,10 +21,14 @@ public class AnthropometricDataBo extends SelfValidating<AnthropometricDataBo> {
     @Valid
     private ClinicalObservationBo weight;
 
+    @Valid
+    private ClinicalObservationBo headCircumference;
+
     public boolean hasValues(){
         return (bloodType != null ||
                 height != null ||
-                weight != null);
+                weight != null ||
+                headCircumference != null);
     }
 
     public ClinicalObservationBo getBMI(){

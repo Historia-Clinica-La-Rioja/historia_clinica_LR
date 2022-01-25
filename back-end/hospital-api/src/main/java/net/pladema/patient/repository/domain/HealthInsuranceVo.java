@@ -17,16 +17,17 @@ public class HealthInsuranceVo extends MedicalCoverageVo {
 
     private String acronym;
 
-    public HealthInsuranceVo(Integer id, String name, Integer rnos, String acronym){
+    public HealthInsuranceVo(Integer id, String name, String cuit, Integer rnos, String acronym){
         setId(id);
         setName(name);
+        setCuit(cuit);
         this.rnos = rnos;
         this.acronym = acronym;
     }
 
     @Override
     public MedicalCoverageBo newInstance() {
-        return new HealthInsuranceBo(getId(), getName(), getRnos(), getAcronym());
+        return new HealthInsuranceBo(getId(), getName(), getCuit(), getRnos(), getAcronym());
     }
 }
 

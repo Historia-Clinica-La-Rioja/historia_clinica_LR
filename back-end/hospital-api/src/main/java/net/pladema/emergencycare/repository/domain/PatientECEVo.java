@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class PatientECEVo implements Serializable {
 
@@ -32,6 +31,15 @@ public class PatientECEVo implements Serializable {
 		this.typeId = typeId;
 		if (person != null)
 			this.person = new PersonECEVo(person);
+
+	}
+
+	public PatientECEVo(Integer id, Integer patientMedicalCoverageId, Short typeId, Person person, String nameSelfDetermination){
+		this.id = id;
+		this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.typeId = typeId;
+		if (person != null)
+			this.person = new PersonECEVo(person, nameSelfDetermination);
 
 	}
 }

@@ -8,6 +8,7 @@ import { Moment } from 'moment';
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
+import { PatientNameService } from "@core/services/patient-name.service";
 
 const enum COLORES {
 	PROGRAMADA = '#7FC681',
@@ -30,6 +31,7 @@ export class AppointmentsFacadeService {
 
 	constructor(
 		private readonly appointmentService: AppointmentsService,
+		private readonly patientNameService: PatientNameService,
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
@@ -52,7 +54,10 @@ export class AppointmentsFacadeService {
 					.map(appointment => {
 						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
 						const to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
+						const viewName = [appointment.patient.person.lastName, this.patientNameService.getPatientName(appointment.patient.person.firstName, appointment.patient.person.nameSelfDetermination)].
+						filter(val => val).join(', ');
+						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName);
+						return calendarEvent;
 					});
 				this.appointmenstEmitter.next(appointmentsCalendarEvents);
 			});
@@ -130,12 +135,15 @@ export class AppointmentsFacadeService {
 
 }
 
-export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto): CalendarEvent {
+export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string): CalendarEvent {
 	const fullName = [appointment.patient.person.lastName, appointment.patient.person.firstName].
 		filter(val => val).join(', ');
 
+	const fullNameWithNameSelfDetermination = appointment.patient.person.nameSelfDetermination ?
+		[appointment.patient.person.lastName, appointment.patient.person.nameSelfDetermination].filter(val => val).join(', ') : null;
+
 	const title = appointment.patient.typeId === TEMPORARY_PATIENT ?
-		`${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} Temporal` : `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${fullName}`;
+		`${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} Temporal` : `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
 
 	return {
 		start: buildFullDate(from, date).toDate(),
@@ -151,6 +159,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 				fullName,
 				identificationNumber: appointment.patient.person.identificationNumber,
 				typeId: appointment.patient.typeId,
+				fullNameWithNameSelfDetermination: fullNameWithNameSelfDetermination
 			},
 			overturn: appointment.overturn,
 			appointmentId: appointment.id,

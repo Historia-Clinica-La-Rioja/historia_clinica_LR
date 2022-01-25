@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitController;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
@@ -13,16 +15,12 @@ import net.pladema.clinichistory.hospitalization.service.ResponsibleContactServi
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
@@ -34,9 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(InternmentEpisodeController.class)
-public class InternmentEpisodeControllerTest extends UnitController {
+class InternmentEpisodeControllerTest extends UnitController {
 
 	@MockBean
 	private InternmentEpisodeService internmentEpisodeService;
@@ -80,8 +77,8 @@ public class InternmentEpisodeControllerTest extends UnitController {
 	@MockBean
 	private LocalDateMapper localDateMapper;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 	}
 
 	private void configContextInternmentValid(){
@@ -91,7 +88,7 @@ public class InternmentEpisodeControllerTest extends UnitController {
 	
 	@Test
 	@WithMockUser(authorities = {"ROOT"})
-	public void getInternmentSummary() throws Exception {
+	void getInternmentSummary() throws Exception {
 		final Integer internmentEpisodeId = 10;
 		when(internmentEpisodeService.getIntermentSummary(internmentEpisodeId)).thenReturn(Optional.empty());
 		when(internmentEpisodeMapper.toInternmentSummaryDto(any())).thenReturn(MocksInternmentPatient.mockInternmentSummary(internmentEpisodeId));

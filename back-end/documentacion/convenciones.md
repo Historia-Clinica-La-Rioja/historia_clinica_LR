@@ -421,7 +421,7 @@ public class RoleServiceImplTest {
 **Repositorio**
 ```java
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@DataJpaTest(showSql = false)
 public class HealthRepositoryTest extends BaseRepositoryTest {
 
 	private final static Pageable UNPAGED = Pageable.unpaged();

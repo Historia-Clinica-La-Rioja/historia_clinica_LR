@@ -35,7 +35,7 @@ public interface IFhirClient extends IRestfulClient {
      */
     @Search
     DocumentReference getDocumentReference(
-            @RequiredParam(name = "subject:identifier") ReferenceParam subject,
+            @RequiredParam(name = "subject") ReferenceParam subject,
             @RequiredParam(name = "custodian") StringParam custodian,
             @OptionalParam(name = "type") ReferenceParam type);
 

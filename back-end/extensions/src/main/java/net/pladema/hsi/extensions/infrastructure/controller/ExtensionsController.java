@@ -1,5 +1,9 @@
 package net.pladema.hsi.extensions.infrastructure.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.hsi.extensions.domain.ExtensionService;
+import net.pladema.hsi.extensions.infrastructure.controller.dto.UIMenuItemDto;
+import net.pladema.hsi.extensions.infrastructure.controller.dto.UIPageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,14 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import net.pladema.hsi.extensions.domain.ExtensionService;
-import net.pladema.hsi.extensions.infrastructure.controller.dto.UIMenuItemDto;
-import net.pladema.hsi.extensions.infrastructure.controller.dto.UIPageDto;
-
 @RestController
 @RequestMapping("/extensions")
-@Api(value="Extensions", tags= { "Extensions" } )
+@Tag(name = "Extensions", description = "Extensions")
 public class ExtensionsController {
 
     private final Logger logger;

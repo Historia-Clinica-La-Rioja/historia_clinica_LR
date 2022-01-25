@@ -27,7 +27,7 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public boolean uploadFile(Optional<Assets> newAsset, MultipartFile file) throws MethodNotSupportedException {
-        logger.debug("Input parameters ->  {} fileName {}", newAsset);
+        logger.debug("Input parameters -> fileName {}", newAsset);
 
         if (newAsset.isPresent()) {
             String partialPath = PATH.concat(newAsset.get().getNameFile());
@@ -40,7 +40,7 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public boolean deleteFile(Optional<Assets> newAsset) throws MethodNotSupportedException {
-        logger.debug("Input parameters ->  {} fileName {}", newAsset);
+        logger.debug("Input parameters -> fileName {}", newAsset);
 
         if (newAsset.isPresent()) {
             String partialPath = PATH.concat(newAsset.get().getNameFile());

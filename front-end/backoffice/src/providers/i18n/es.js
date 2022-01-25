@@ -64,7 +64,10 @@ const messages = {
             "clinical-specialty-exists": "La especialidad clínica ya se encuentra asociada a la línea de cuidado"
         },
         "medical-coverage":{
-            "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica"
+            "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica",
+            "cuit-duplicated": "El CUIT ya se encuentra asociado a otra cobertura médica",
+            "invalid-cuit": "El CUIT debe ser numérico",
+            "plan-exists": "El plan ya se encuentra asociado a la cobertura médica",
         }
     },
     files: {
@@ -152,6 +155,23 @@ const messages = {
                 provinceCode: 'Código de provincia'
             },
         }, 
+        snvs: {
+            name: 'SNVS |||| SNVS',
+            fields: {
+                groupEventId: 'Grupo evento',
+                eventId: 'Evento',
+                manualClassificationId: 'Clasificación manual',
+                patientId: 'Paciente',
+                snomedSctid: 'Id Snomed',
+                snomedPt: 'Término Snomed',
+                status: 'Estado',
+                responseCode: 'Código de respuesta',
+                professionalId: 'Profesional',
+                institutionId: 'Institución',
+                sisaRegisteredId: 'Id Sisa',
+                lastUpdate: 'Última actualización'
+            },
+        }, 
         sectors: {
             name: 'Sector |||| Sectores',
             fields: {
@@ -220,7 +240,7 @@ const messages = {
             createRelated: 'Crear Profesión | Especialidad',
         }, 
         users: {
-            name: 'Admin |||| Admins',
+            name: 'Usuario |||| Usuarios',
             fields: {
                 username: 'Nombre de usuario',
                 personId: 'Persona',
@@ -344,10 +364,19 @@ const messages = {
                 type: 'Tipo',
                 plan: 'Plan',
                 rnos: 'Rnos',
-                acronym: 'Acrónimo'
+                acronym: 'Acrónimo',
+                plans: 'Planes'
             },
             createRelated: 'Crear Cobertura médica'
 
+        },
+        privatehealthinsuranceplans: {
+            name: 'Plan |||| Planes',
+            fields: {
+                privateHealthInsuranceId: 'Prepaga',
+                plan: 'Plan',
+            },
+            addRelated: 'Agregar plan',
         },
     },
 };

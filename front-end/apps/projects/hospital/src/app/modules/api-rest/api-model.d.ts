@@ -255,9 +255,9 @@ export interface BMPersonDto extends APersonDto {
 
 export interface BackofficeCoverageDto extends Serializable {
     acronym?: string;
+    cuit: string;
     id: number;
     name: string;
-    plan?: string;
     rnos?: number;
     type: number;
 }
@@ -297,6 +297,7 @@ export interface BasicDataPersonDto extends Serializable {
     identificationTypeId: number;
     lastName: string;
     middleNames: string;
+    nameSelfDetermination: string;
     otherLastNames: string;
 }
 
@@ -308,6 +309,7 @@ export interface BasicPatientDto extends Serializable {
 
 export interface BasicPersonalDataDto extends IBasicPersonalData {
     genderId: number;
+    nameSelfDetermination: string;
 }
 
 export interface BedCategoriesDataDto {
@@ -458,6 +460,7 @@ export interface CounterReferenceSummaryProcedureDto extends Serializable {
 }
 
 export interface CoverageDto extends Serializable {
+    cuit: string;
     id: number;
     name: string;
     type: "HealthInsuranceDto" | "PrivateHealthInsuranceDto";
@@ -760,6 +763,7 @@ export interface EmergencyCarePersonDto {
     firstName: string;
     identificationNumber: string;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface EmergencyCareUserDto {
@@ -883,6 +887,7 @@ export interface HCEAllergyDto extends ClinicalTermDto {
 export interface HCEAnthropometricDataDto extends Serializable {
     bloodType?: HCEEffectiveClinicalObservationDto;
     bmi?: HCEClinicalObservationDto;
+    headCircumference?: HCEEffectiveClinicalObservationDto;
     height?: HCEEffectiveClinicalObservationDto;
     weight?: HCEEffectiveClinicalObservationDto;
 }
@@ -975,6 +980,7 @@ export interface HCEMedicationDto extends ClinicalTermDto {
 }
 
 export interface HCEPersonalHistoryDto extends HCEClinicalTermDto {
+    hasPendingReference: boolean;
     inactivationDate: string;
     severity: string;
     startDate: string;
@@ -1019,8 +1025,11 @@ export interface HCEToothRecordDto extends Serializable {
 }
 
 export interface HCEVitalSignDto extends Serializable {
+    bloodGlucose?: HCEEffectiveClinicalObservationDto;
     bloodOxygenSaturation?: HCEEffectiveClinicalObservationDto;
+    cardiovascularRisk?: HCEEffectiveClinicalObservationDto;
     diastolicBloodPressure?: HCEEffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: HCEEffectiveClinicalObservationDto;
     heartRate?: HCEEffectiveClinicalObservationDto;
     respiratoryRate?: HCEEffectiveClinicalObservationDto;
     systolicBloodPressure?: HCEEffectiveClinicalObservationDto;
@@ -1220,6 +1229,7 @@ export interface InternmentPatientDto {
     identificationTypeId: number;
     internmentId: number;
     lastName: string;
+    nameSelfDetermination: string;
     patientId: number;
 }
 
@@ -1580,6 +1590,7 @@ export interface OutpatientAllergyConditionDto {
 export interface OutpatientAnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;
+    headCircumference?: ClinicalObservationDto;
     height: ClinicalObservationDto;
     weight: ClinicalObservationDto;
 }
@@ -1669,8 +1680,11 @@ export interface OutpatientUpdateImmunizationDto {
 }
 
 export interface OutpatientVitalSignDto extends Serializable {
+    bloodGlucose?: EffectiveClinicalObservationDto;
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    cardiovascularRisk?: EffectiveClinicalObservationDto;
     diastolicBloodPressure: EffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
     heartRate?: EffectiveClinicalObservationDto;
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure: EffectiveClinicalObservationDto;
@@ -1708,6 +1722,7 @@ export interface PatientDto {
     fullName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface PatientInfoDto {
@@ -1834,12 +1849,19 @@ export interface PrescriptionItemDto extends Serializable {
 export interface PrivateHealthInsuranceDetailsDto {
     endDate: string;
     id: number;
+    planId?: number;
+    planName?: string;
     startDate: string;
 }
 
 export interface PrivateHealthInsuranceDto extends CoverageDto {
-    plan: string;
     type: "PrivateHealthInsuranceDto";
+}
+
+export interface PrivateHealthInsurancePlanDto {
+    id: number;
+    plan: string;
+    privateHealthInsuranceId: number;
 }
 
 export interface ProbableDischargeDateDto {
@@ -2331,6 +2353,7 @@ export const enum AppFeature {
     HABILITAR_REPORTE_EPIDEMIOLOGICO = "HABILITAR_REPORTE_EPIDEMIOLOGICO",
     AGREGAR_MEDICOS_ADICIONALES = "AGREGAR_MEDICOS_ADICIONALES",
     HABILITAR_DESCARGA_DOCUMENTOS_PDF = "HABILITAR_DESCARGA_DOCUMENTOS_PDF",
+    HABILITAR_NOMBRE_AUTOPERCIBIDO = "HABILITAR_NOMBRE_AUTOPERCIBIDO",
 }
 
 export const enum EDocumentSearch {

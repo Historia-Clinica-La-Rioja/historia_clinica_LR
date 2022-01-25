@@ -36,4 +36,12 @@ public abstract class HCEClinicalTermBo implements Serializable {
         return statusId.equals(ConditionClinicalStatus.ACTIVE);
     }
 
+    public String getSnomedSctid() {
+        return this.snomed.getSctid();
+    }
+
+    public String getSnomedPt() {
+        return this.snomed.getPt();
+    }
+
 }

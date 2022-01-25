@@ -23,4 +23,6 @@ public class HCEPersonalHistoryDto extends HCEClinicalTermDto {
 
     @NotNull(message = "{value.mandatory}")
     private String severity;
+
+    private Boolean hasPendingReference;
 }

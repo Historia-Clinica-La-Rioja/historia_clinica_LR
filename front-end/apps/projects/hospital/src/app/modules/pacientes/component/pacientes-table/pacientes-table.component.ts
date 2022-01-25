@@ -6,6 +6,9 @@ import { momentFormatDate, DateFormat } from '@core/utils/moment.utils';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 import { ContextService } from '@core/services/context.service';
 import { MapperService } from './../../../presentation/services/mapper.service';
+import { PatientNameService } from "@core/services/patient-name.service";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { AppFeature } from "@api-rest/api-model";
 
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
 
@@ -20,15 +23,19 @@ export class PacientesTableComponent implements OnInit {
 	public allPatient: TableModel<PatientTableData>;
 	public genderOptions = {};
 	private readonly routePrefix;
+	nameSelfDeterminationEnabled: boolean;
 
 	constructor(
 		private mapperService: MapperService,
 		private internmentPatientService: InternmentPatientService,
 		private personMasterDataService: PersonMasterDataService,
 		private contextService: ContextService,
-		private router: Router
+		private router: Router,
+		private patientNameService: PatientNameService,
+		private featureFlagService: FeatureFlagService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		this.featureFlagService.isActive(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO).subscribe(isEnabled => this.nameSelfDeterminationEnabled = isEnabled);
 	}
 
 	ngOnInit(): void {
@@ -45,55 +52,102 @@ export class PacientesTableComponent implements OnInit {
 	}
 
 	private buildTable(data: PatientTableData[]): TableModel<PatientTableData> {
-		return {
-			columns: [
-				{
-					columnDef: 'patiendId',
-					header: 'pacientes.search.ROW_TABLE',
-					text: (row) => row.patientId
-				},
-				{
-					columnDef: 'numberDni',
-					header: 'Nro. Documento',
-					text: (row) => row.identificationNumber
-				},
-				{
-					columnDef: 'firstName',
-					header: 'Nombre',
-					text: (row) => row.firstName
-				},
-				{
-					columnDef: 'lastName',
-					header: 'Apellido',
-					text: (row) => row.lastName
-				},
-				{
-					columnDef: 'birthDate',
-					header: 'F. Nac',
-					text: (row) => (row.birthDate == undefined) ? '' : momentFormatDate(new Date(row.birthDate), DateFormat.VIEW_DATE)
-				},
-				{
-					columnDef: 'gender',
-					header: 'Sexo',
-					text: (row) => this.genderOptions[row.genderId]
-				},
-				{
-					columnDef: 'action',
-					action: {
-						displayType: ActionDisplays.BUTTON,
-						display: 'Ver',
-						matColor: 'primary',
-						do: (internacion) => {
-							const url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
-							this.router.navigate([url]);
+		if(this.nameSelfDeterminationEnabled) {
+			return {
+				columns: [
+					{
+						columnDef: 'patiendId',
+						header: 'pacientes.search.ROW_TABLE',
+						text: (row) => row.patientId
+					},
+					{
+						columnDef: 'numberDni',
+						header: 'Nro. Documento',
+						text: (row) => row.identificationNumber
+					},
+					{
+						columnDef: 'firstName',
+						header: 'Nombre',
+						text: (row) => this.patientNameService.getPatientName(row.firstName, row.nameSelfDetermination)
+					},
+					{
+						columnDef: 'lastName',
+						header: 'Apellido',
+						text: (row) => row.lastName
+					},
+					{
+						columnDef: 'birthDate',
+						header: 'F. Nacimiento',
+						text: (row) => (row.birthDate == undefined) ? '' : momentFormatDate(new Date(row.birthDate), DateFormat.VIEW_DATE)
+					},
+					{
+						columnDef: 'action',
+						action: {
+							displayType: ActionDisplays.BUTTON,
+							display: 'Ver',
+							matColor: 'primary',
+							do: (internacion) => {
+								const url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
+								this.router.navigate([url]);
+							}
 						}
-					}
-				},
-			],
-			data,
-			enableFilter: true,
-			enablePagination: true
-		};
+					},
+				],
+				data,
+				enableFilter: true,
+				enablePagination: true
+			};
+		} else {
+			return {
+				columns: [
+					{
+						columnDef: 'patiendId',
+						header: 'pacientes.search.ROW_TABLE',
+						text: (row) => row.patientId
+					},
+					{
+						columnDef: 'numberDni',
+						header: 'Nro. Documento',
+						text: (row) => row.identificationNumber
+					},
+					{
+						columnDef: 'firstName',
+						header: 'Nombre',
+						text: (row) => row.firstName
+					},
+					{
+						columnDef: 'lastName',
+						header: 'Apellido',
+						text: (row) => row.lastName
+					},
+					{
+						columnDef: 'birthDate',
+						header: 'F. Nac',
+						text: (row) => (row.birthDate == undefined) ? '' : momentFormatDate(new Date(row.birthDate), DateFormat.VIEW_DATE)
+					},
+					{
+						columnDef: 'gender',
+						header: 'Sexo',
+						text: (row) => this.genderOptions[row.genderId]
+					},
+					{
+						columnDef: 'action',
+						action: {
+							displayType: ActionDisplays.BUTTON,
+							display: 'Ver',
+							matColor: 'primary',
+							do: (internacion) => {
+								const url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
+								this.router.navigate([url]);
+							}
+						}
+					},
+				],
+				data,
+				enableFilter: true,
+				enablePagination: true
+			};
+		}
 	}
 
 	actionRow(): void {
@@ -112,4 +166,5 @@ export interface PatientTableData {
 	lastName: string;
 	patientId: number;
 	fullName: string;
+	nameSelfDetermination: string;
 }

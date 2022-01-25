@@ -5,7 +5,7 @@ import ar.lamansys.sgh.publicapi.application.fetchactivitiesbyfilter.FetchActivi
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.ActivitiesMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/public-api")
-@Api(value = "Public Api", tags = {"Public Api Activities"})
+@Tag(name = "Public Api", description = "Public Api Activities")
 public class ActivitiesController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivitiesController.class);

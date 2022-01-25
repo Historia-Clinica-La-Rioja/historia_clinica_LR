@@ -1,21 +1,21 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnomedService } from '../../../../services/snomed.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { Problema } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import { PATTERN_MAX_2_DECIMAL_DIGITS, SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnvsToReportDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -36,11 +36,12 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipe } from '@angular/common';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
+import { HCEPersonalHistory } from '../reference/reference.component';
 
 const TIME_OUT = 5000;
 
@@ -74,6 +75,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	minDate = MIN_DATE;
 	public ffIsOn: boolean;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
+	@ViewChild('errorsView') errorsView: ElementRef;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -104,7 +106,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService, this.referenceFileService, this.snackBarService);
+		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
 	}
 
 	setProfessionalSpecialties() {
@@ -153,6 +155,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
 			this.errores[3] = pesoError;
 		});
+		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
+			this.errores[11] = headCircumferenceError;
+		});
 		this.signosVitalesNuevaConsultaService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
 		});
@@ -170,6 +175,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[9] = presionDiastolicaError;
+		});
+		this.signosVitalesNuevaConsultaService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
+			this.errores[12] = bloodGlucoseError;
+		});
+		this.signosVitalesNuevaConsultaService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
+			this.errores[13] = glycosylatedHemoglobinError;
+		});
+		this.signosVitalesNuevaConsultaService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
+			this.errores[14] = cardiovascularRiskError;
 		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
@@ -222,6 +236,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					}
 				} else {
 					this.disableConfirmButton = false;
+					if (!this.isValidConsultation())
+						this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
 				}
 			}
 
@@ -243,51 +260,49 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	private uploadReferencesFileAndCreateConsultation(nuevaConsulta: CreateOutpatientDto) {
-
 		let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
 		if (!references.length) {
 			this.goToCreateConsultation(nuevaConsulta);
 			return;
 		}
 
-		let longReferences = 0;
+		const filesToUpdate: Observable<number>[] = [];
+
 		references.forEach(reference => {
-			if (reference.referenceFiles.length) {
-				let longFiles = 0;
-				reference.referenceFiles.forEach(file => {
-					this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file).subscribe(
-						fileId => {
-							longFiles++;
-							reference.referenceIds.push(fileId);
-							this.ambulatoryConsultationReferenceService.addReferenceId(reference.referenceNumber, fileId);
+			reference.referenceFiles.forEach(file => {
+				const obs = this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file);
+				filesToUpdate.push(obs);
+			})
+		});
 
-							if (longFiles === reference.referenceFiles.length) {
-								longFiles = 0;
-								longReferences++;
+		if (filesToUpdate.length) {
 
-								if (longReferences === references.length) {
-									this.goToCreateConsultation(nuevaConsulta);
-								}
-							}
-						},
-						() => {
-							this.errorToUpdateReferenceFiles(references);
-						}
-					)
-				})
+			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
+				let indiceRefFilesIds = 0;
+				references.forEach(reference => {
 
-			}
-			else {
-				longReferences++;
-				if (longReferences === references.length) {
-					this.goToCreateConsultation(nuevaConsulta);
-				}
-			}
-		})
-
+					const filesLength = reference.referenceFiles.length;
+					for (let a = indiceRefFilesIds; a < indiceRefFilesIds + filesLength; a++)
+						this.ambulatoryConsultationReferenceService.addFileIdAt(reference.referenceNumber, referenceFileId[a]);
+					indiceRefFilesIds += filesLength;
+				});
+				this.goToCreateConsultation(nuevaConsulta);
+			}, _ => {
+				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPLOAD_FILES');
+				this.errorToUploadReferenceFiles();
+			});
+		}
+		else
+			this.goToCreateConsultation(nuevaConsulta);
 	}
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
+		const problemsToUpdate = (!nuevaConsulta.references.length) ? nuevaConsulta.problems : this.problemsToUpdate(nuevaConsulta);
+
+		if (nuevaConsulta.references.length) {
+			nuevaConsulta.problems = problemsToUpdate;
+		}
+
 		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
@@ -314,8 +329,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 						this.apiErrors.push(val);
 					});
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR');
-				let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
-				this.errorToUpdateReferenceFiles(references);
+				const filesToDelete = nuevaConsulta.references.filter(reference => reference.fileIds.length > 0);
+				if (filesToDelete.length) {
+					this.errorToUploadReferenceFiles();
+				}
 			}
 		);
 
@@ -327,7 +344,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				vitalSigns: !!nuevaConsultaDto.vitalSigns,
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
-				problems: !!nuevaConsultaDto.problems?.length
+				problems: !!problemsToUpdate.length,
 			};
 		}
 	}
@@ -349,6 +366,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MIN');
 		} else if (parseInt(consulta.anthropometricData?.weight?.value, 10) > 1000) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
+		}
+
+		if ((parseInt(consulta.anthropometricData?.headCircumference?.value, 10) < 0) || (parseInt(consulta.anthropometricData?.headCircumference?.value, 10) > 100)) {
+			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
 		}
 
 		if (parseInt(consulta.vitalSigns.heartRate?.value, 10) < 0) {
@@ -373,6 +394,24 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		if (parseInt(consulta.vitalSigns?.systolicBloodPressure?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
+		}
+
+		if ((parseInt(consulta.vitalSigns?.bloodGlucose?.value, 10) < 1) || (parseInt(consulta.vitalSigns?.bloodGlucose?.value, 10) > 500)) {
+			this.signosVitalesNuevaConsultaService.setBloodGlucoseError('ambulatoria.paciente.nueva-consulta.errors.BLOOD_GLUCOSE_RANGE');
+		}
+
+		if ((parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) < 1) || (parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) > 20)) {
+			this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
+		}
+		else {
+			const glycosylatedHemoglobinValue = consulta.vitalSigns?.glycosylatedHemoglobin?.value;
+			if (glycosylatedHemoglobinValue && !this.hasMaxTwoDecimalDigits(glycosylatedHemoglobinValue)) {
+				this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
+			}
+		}
+
+		if ((parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) < 1) || (parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) > 100)) {
+			this.signosVitalesNuevaConsultaService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
 		}
 
 		hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
@@ -449,14 +488,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 
-	errorToUpdateReferenceFiles(references: Reference[]) {
-		this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPDATE_FILES');
-		for (let reference of references) {
-			this.referenceFileService.deleteReferenceFiles(reference.referenceIds).subscribe(
-				() => {
-					reference.referenceIds = [];
-				});
-		}
+	errorToUploadReferenceFiles() {
+		const filesToDelete = this.ambulatoryConsultationReferenceService.getReferenceFilesIds();
+		this.referenceFileService.deleteReferenceFiles(filesToDelete);
+		this.ambulatoryConsultationReferenceService.setReferenceFilesIds([]);
 	}
 
 	goToCreateConsultation(nuevaConsulta: CreateOutpatientDto) {
@@ -498,6 +533,44 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 
 		return result;
+	}
+	private mapToOutpatientProblemDto(problem: HCEPersonalHistory): OutpatientProblemDto {
+		return {
+			chronic: problem.chronic,
+			severity: problem.hcePersonalHistoryDto.severity,
+			snomed: problem.hcePersonalHistoryDto.snomed,
+			startDate: problem.hcePersonalHistoryDto.startDate,
+			statusId: problem.hcePersonalHistoryDto.statusId,
+		}
+	}
+
+	private problemsToUpdate(nuevaConsultaDto: CreateOutpatientDto): OutpatientProblemDto[] {
+		const outpatientProblemDto: OutpatientProblemDto[] = [];
+
+		nuevaConsultaDto.problems?.forEach(problem => outpatientProblemDto.push(problem));
+
+		const references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+
+		references.forEach(reference => {
+			const referenceProblems = this.ambulatoryConsultationReferenceService.getReferenceProblems(reference.referenceNumber);
+			referenceProblems.forEach(referenceProblem => {
+				const outProblemDto = this.mapToOutpatientProblemDto(referenceProblem);
+				const existProblem = outpatientProblemDto.find(problem => problem.snomed.sctid === outProblemDto.snomed.sctid);
+				if (!existProblem) {
+					outpatientProblemDto.push(outProblemDto);
+				}
+			});
+		});
+
+		return outpatientProblemDto;
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
+	}
+
+	private hasMaxTwoDecimalDigits(numberValue: string): boolean {
+		return PATTERN_MAX_2_DECIMAL_DIGITS.test(numberValue);
 	}
 }
 

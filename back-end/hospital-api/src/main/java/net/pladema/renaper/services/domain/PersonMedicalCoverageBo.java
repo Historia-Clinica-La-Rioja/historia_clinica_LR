@@ -15,16 +15,18 @@ public class PersonMedicalCoverageBo {
 	private Integer id;
 	private String rnos;
 	private String name;
+	private String cuit;
 	private String service;
 	private String acronym;
 	private String dateQuery;
 	
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public PersonMedicalCoverageBo(@JsonProperty("id") Integer id, @JsonProperty("rnos") String rnos, @JsonProperty("cobertura") String cobertura,
-								   @JsonProperty("servicio")  String servicio, @JsonProperty("fechaConsulta") String fechaConsulta) {
+								   String cuit, @JsonProperty("servicio")  String servicio, @JsonProperty("fechaConsulta") String fechaConsulta) {
 		this.id = id;
 		this.rnos = rnos;
 		this.name = cobertura;
+		this.cuit = cuit;
 		this.service = servicio;
 		this.dateQuery = fechaConsulta;
 	}
@@ -34,6 +36,7 @@ public class PersonMedicalCoverageBo {
 		if(healthInsurance.getRnos()!=null)
 			this.rnos = healthInsurance.getRnos().toString();
 		this.name = healthInsurance.getName();
+		this.cuit = healthInsurance.getCuit();
 		this.acronym = healthInsurance.getAcronym();
 	}
 

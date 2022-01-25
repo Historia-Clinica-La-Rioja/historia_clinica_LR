@@ -68,7 +68,7 @@ public class FhirClientR4 {
         context.getRestfulClientFactory().setSocketTimeout(20000);
 
         // Create the client
-        this.busClient = context.newRestfulClient(IFhirClient.class, bus);
+        this.busClient = context.newRestfulClient(IFhirClient.class, getBusBaseURL(bus));
         busClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         this.nomivacClient = context.newRestfulGenericClient(nomivac);
@@ -76,6 +76,10 @@ public class FhirClientR4 {
         nomivacClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         federadorClient = context.newRestfulGenericClient(federador + CodingSystem.SERVER.PATIENT_SERVICE);
+    }
+
+    private String getBusBaseURL(String url){
+        return url.endsWith("/fhir") ? url : url.concat("/fhir");
     }
 
      public MethodOutcome postImmunizationToNomivac(Immunization immunization) {

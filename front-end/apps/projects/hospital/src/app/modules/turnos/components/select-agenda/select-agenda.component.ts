@@ -19,6 +19,7 @@ import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-pick
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
 import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -54,7 +55,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-
 		this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 			if (data) {
 				this.loadAgendas(data.agendas, data.idAgendaSelected);
@@ -131,7 +131,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	goToNewAgenda(): void {
-		this.router.navigate([`${this.routePrefix}/turnos/nueva-agenda/`]);
+		this.router.navigate([`${this.routePrefix}/turnos/nueva-agenda/`, this.filters.idProfesional]);
 	}
 
 	printAgenda(): void {
@@ -152,5 +152,10 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 						.subscribe();
 				}
 			});
+	}
+
+	clear(control: any): void {
+		this.agendaSelected = null;
+		this.router.navigate([`${this.routePrefix}/turnos`]);
 	}
 }

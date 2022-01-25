@@ -4,32 +4,28 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
-import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-public class InternmentEpisodeRepositoryTest extends UnitRepository {
+class InternmentEpisodeRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private InternmentEpisodeRepository internmentEpisodeRepository;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 	}
 
 	@Test
-	public void canCreateEpicrisis_thenTrue() {
+	void canCreateEpicrisis_thenTrue() {
 
 		InternmentEpisode internmentEpisode = createInternmentEpisode();
 		save(internmentEpisode);
@@ -45,13 +41,13 @@ public class InternmentEpisodeRepositoryTest extends UnitRepository {
 		internmentEpisode.setAnamnesisDocId(anamnesis.getId());
 		save(internmentEpisode);
 
-		assertTrue(internmentEpisodeRepository.canCreateEpicrisis(internmentEpisode.getId()));
+		Assertions.assertTrue(internmentEpisodeRepository.canCreateEpicrisis(internmentEpisode.getId()));
 
 	}
 
 
 	@Test
-	public void canCreateEpicrisis_thenFalse() {
+	void canCreateEpicrisis_thenFalse() {
 
 		InternmentEpisode internmentEpisode = createInternmentEpisode();
 		save(internmentEpisode);
@@ -71,7 +67,7 @@ public class InternmentEpisodeRepositoryTest extends UnitRepository {
 		internmentEpisode.setEpicrisisDocId(epicrisis.getId());
 		save(internmentEpisode);
 
-		assertFalse(internmentEpisodeRepository.canCreateEpicrisis(internmentEpisode.getId()));
+		Assertions.assertFalse(internmentEpisodeRepository.canCreateEpicrisis(internmentEpisode.getId()));
 
 	}
 

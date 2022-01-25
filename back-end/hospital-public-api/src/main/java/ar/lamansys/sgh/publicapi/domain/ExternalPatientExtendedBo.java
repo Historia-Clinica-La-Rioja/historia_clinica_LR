@@ -35,6 +35,8 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
 
     private List<ExternalPatientCoverageBo> medicalCoverages;
 
+    private Integer institutionId;
+
     public ExternalPatientExtendedBo(@Nullable Integer patientId,
                                      @Nullable String externalId,
                                      LocalDateTime birthDate,
@@ -45,7 +47,8 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
                                      String lastName,
                                      String phoneNumber,
                                      String email,
-                                     List<ExternalPatientCoverageBo> medicalCoverages) throws ExternalPatientExtendedBoException {
+                                     List<ExternalPatientCoverageBo> medicalCoverages,
+                                     Integer institutionId) throws ExternalPatientExtendedBoException {
         super(patientId, externalId);
         if(birthDate==null)
             throw new ExternalPatientExtendedBoException(ExternalPatientExtendedBoEnumException.NULL_BIRTHDATE,"La fecha de nacimiento es obligatoria");
@@ -72,5 +75,8 @@ public class ExternalPatientExtendedBo extends ExternalPatientBo {
             throw new ExternalPatientExtendedBoException(ExternalPatientExtendedBoEnumException.NULL_EMAIL,"El email es obligatorio");
         this.email = email;
         this.medicalCoverages = medicalCoverages;
+        if(institutionId==null)
+            throw new ExternalPatientExtendedBoException(ExternalPatientExtendedBoEnumException.NULL_INSTITUTION,"La institución es obligatoria");
+        this.institutionId = institutionId;
     }
 }

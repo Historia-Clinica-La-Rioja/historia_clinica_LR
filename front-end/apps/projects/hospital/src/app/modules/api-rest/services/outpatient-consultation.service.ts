@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import {
 	CreateOutpatientDto,
 	OutpatientEvolutionSummaryDto,
-	HealthConditionNewConsultationDto,
-	ConsultationsDto
+	HealthConditionNewConsultationDto
 } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';

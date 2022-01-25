@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.*;
 import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments-state")
-@Api(value = "Internment State", tags = { "Internment State" })
+@Tag(name = "Internment states", description = "Internment states")
 @Validated
 @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 public class InternmentStateController {

@@ -78,10 +78,11 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo(pa.id, pe.identificationTypeId, " +
-            "pe.identificationNumber, pe.firstName, pe.lastName, pe.birthDate, pe.genderId, ie.id ) " +
+            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id ) " +
             " FROM InternmentEpisode as ie " +
             " JOIN Patient as pa ON (ie.patientId = pa.id) " +
-            " JOIN Person as pe ON (pa.personId = pe.id) "+
+            " JOIN Person as pe ON (pa.personId = pe.id) " +
+            " JOIN PersonExtended petd ON (pe.id = petd.id)"+
             " WHERE ie.institutionId = :institutionId "+
             " AND ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
     List<BasicListedPatientBo> findAllPatientsListedData(@Param("institutionId") Integer institutionId);
@@ -96,7 +97,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo(" +
             "ie.id as internmentEpisodeId, " +
-            "pt.id as patientId, ps.firstName, ps.lastName, " +
+            "pt.id as patientId, ps.firstName, ps.lastName, petd.nameSelfDetermination, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
             "cs as clinicalSpecialtyId, " +
@@ -104,6 +105,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "FROM InternmentEpisode ie " +
             "JOIN Patient pt ON (ie.patientId = pt.id) " +
             "JOIN Person ps ON (pt.personId = ps.id) " +
+            "JOIN PersonExtended petd ON (pt.personId = petd.id) " +
             "JOIN Bed b ON (ie.bedId = b.id) " +
             "JOIN Room r ON (b.roomId = r.id) " +
             "JOIN Sector s ON (r.sectorId = s.id) " +

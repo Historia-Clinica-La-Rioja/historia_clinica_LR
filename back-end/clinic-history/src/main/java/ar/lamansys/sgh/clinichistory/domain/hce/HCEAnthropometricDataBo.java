@@ -18,10 +18,13 @@ public class HCEAnthropometricDataBo implements Serializable {
 
     private HCEClinicalObservationBo weight;
 
+    private HCEClinicalObservationBo headCircumference;
+
     public boolean hasValues(){
         return (bloodType != null ||
                 height != null ||
-                weight != null);
+                weight != null ||
+                headCircumference != null);
     }
 
     public HCEClinicalObservationBo getBMI(){

@@ -16,22 +16,22 @@ import java.util.List;
 public interface HealthcareProfessionalMapper {
 
 
-	@Named("fromProfessionalBo")
-	@Mapping(target = "person", source = "person", qualifiedByName="toBasicDataPersonDto")
-	HealthcareProfessionalDto fromHealthcarePerson(HealthcarePersonBo healthcarePerson);
+	@Named("fromHealthcarePersonBo")
+	@Mapping(target = "person", source = "person")
+	HealthcareProfessionalDto fromHealthcarePersonBo(HealthcarePersonBo healthcarePerson);
 
 	@Named("fromHealthcarePersonList")
-	@IterableMapping(qualifiedByName = "fromProfessionalBo")
+	@IterableMapping(qualifiedByName = "fromHealthcarePersonBo")
 	List<HealthcareProfessionalDto> fromHealthcarePersonList(List<HealthcarePersonBo> healthcarePersonList);
 
-	@Named("fromProfessionalBo")
+	@Named("toProfessionalDto")
 	ProfessionalDto fromProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);
 
 	@Named("fromProfessionalBoList")
-	@IterableMapping(qualifiedByName = "fromProfessionalBo")
+	@IterableMapping(qualifiedByName = "toProfessionalDto")
 	List<ProfessionalDto> fromProfessionalBoList(List<HealthcareProfessionalBo> healthcareProfessionalBos);
 
-	@Name("fromHealthcareProfessionalBo")
+	@Name("toHealthcareProfessionalDto")
 	@Mapping(target = "person.firstName", source = "firstName")
 	@Mapping(target = "person.lastName", source = "lastName")
 	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);

@@ -28,15 +28,20 @@ public class PrivateHealthInsuranceDetails {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    public PrivateHealthInsuranceDetails(LocalDate startDate, LocalDate endDate){
+    @Column(name = "private_health_insurance_plan_id")
+    private Integer planId;
+
+    public PrivateHealthInsuranceDetails(LocalDate startDate, LocalDate endDate, Integer planId){
         this.startDate = startDate;
         this.endDate = endDate;
+        this.planId = planId;
     }
 
     public PrivateHealthInsuranceDetails(PrivateHealthInsuranceDetailsBo privateHealthInsuranceDetailsBo){
         if (privateHealthInsuranceDetailsBo != null) {
             this.startDate = privateHealthInsuranceDetailsBo.getStartDate();
             this.endDate = privateHealthInsuranceDetailsBo.getEndDate();
+            this.planId = privateHealthInsuranceDetailsBo.getPlanId();
         }
     }
 }

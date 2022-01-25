@@ -1,8 +1,8 @@
 package net.pladema.emergencycare.controller;
 
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareDischargeMapper;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/medical-discharge")
-@Api(value = "Emergency care Episodes Discharge", tags = {"Emergency care Episodes Discharge"})
+@Tag(name = "Emergency care episodes discharge", description = "Emergency care episodes discharge")
 public class EmergencyCareEpisodeMedicalDischargeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeMedicalDischargeController.class);

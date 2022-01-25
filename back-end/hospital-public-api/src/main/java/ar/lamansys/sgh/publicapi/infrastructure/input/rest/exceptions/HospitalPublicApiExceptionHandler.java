@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 
+import ar.lamansys.sgh.publicapi.application.deleteexternalencounter.exceptions.DeleteExternalEncounterException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalEncounterStorageException;
 import ar.lamansys.sgh.publicapi.application.saveexternalencounter.exceptions.SaveExternalEncounterException;
@@ -66,6 +67,13 @@ public class HospitalPublicApiExceptionHandler {
     @ExceptionHandler({ExternalEncounterStorageException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ApiErrorMessageDto handleExternalEncounterStorageException(ExternalEncounterStorageException ex) {
+        logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
+
+    @ExceptionHandler({ DeleteExternalEncounterException.class })
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    protected ApiErrorMessageDto handleDeleteExternalEncounterException(DeleteExternalEncounterException ex) {
         logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }

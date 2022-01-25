@@ -3,7 +3,7 @@ package net.pladema.establishment.controller;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.staff.controller.dto.ProfessionalsByClinicalSpecialtyDto;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@Api(value = "ClinicalSpecialty", tags = { "Clinical Specialty" })
+@Tag(name = "Clinical specialties", description = "Clinical specialties")
 public class ClinicalSpecialtyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClinicalSpecialtyController.class);

@@ -27,10 +27,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String PUBLIC = "/public";
 
 	private static final String[] SWAGGER_RESOURCES = {
-			"/v2/**",
-			"/swagger-ui.html",
-			"/swagger-resources/**",
-			"/webjars/springfox-swagger-ui/**"
+			"/v3/**",
+			"/swagger-ui/**"
 	};
 
 	@Value("${api.user}")

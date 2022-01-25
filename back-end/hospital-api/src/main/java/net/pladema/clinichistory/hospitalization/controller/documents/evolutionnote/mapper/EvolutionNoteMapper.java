@@ -17,8 +17,8 @@ import org.mapstruct.Named;
 public interface EvolutionNoteMapper {
 
     @Named("fromEvolutionNoteDto")
-    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromAnthropometricDataDto")
-    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromListAnthropometricDataDto")
+    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromVitalSignDto")
+    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataDto")
     EvolutionNoteBo fromEvolutionNoteDto(EvolutionNoteDto evolutionNoteDto);
 
     @Named("fromEvolutionNote")

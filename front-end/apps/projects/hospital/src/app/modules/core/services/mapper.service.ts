@@ -17,12 +17,15 @@ export class MapperService {
 	private static _toPatientMedicalCoverageDto(s: PatientMedicalCoverage): PatientMedicalCoverageDto {
 		let privateHealthInsuranceDetails;
 		if (s.privateHealthInsuranceDetails?.startDate
-			|| s.privateHealthInsuranceDetails?.endDate) {
+			|| s.privateHealthInsuranceDetails?.endDate
+			|| s.privateHealthInsuranceDetails?.planId) {
 			privateHealthInsuranceDetails = {
 				startDate: s.privateHealthInsuranceDetails.startDate ?
 					momentFormat(s.privateHealthInsuranceDetails.startDate, DateFormat.API_DATE) : null,
 				endDate: s.privateHealthInsuranceDetails.endDate ?
 					momentFormat(s.privateHealthInsuranceDetails.endDate, DateFormat.API_DATE) : null,
+				planId: s.privateHealthInsuranceDetails.planId,
+				planName: s.privateHealthInsuranceDetails.planName
 			};
 		}
 		return {
@@ -49,17 +52,18 @@ export class MapperService {
 
 		// TODO ver la posibilidad de quitar ese if
 		function toMedicalCoverage(dto: CoverageDtoUnion): HealthInsurance | PrivateHealthInsurance {
-			return dto.type === 'HealthInsuranceDto' ? new HealthInsurance(dto.rnos.toString(), dto.acronym, dto.id, dto.name, dto.type)
-				: new PrivateHealthInsurance(dto.plan, dto.id, dto.name, dto.type);
+			return dto.type === 'HealthInsuranceDto' ? new HealthInsurance((dto.rnos) ? dto.rnos.toString() : null, dto.acronym, dto.id, dto.name, dto.type)
+				: new PrivateHealthInsurance(dto.id, dto.name, dto.type,dto.cuit);
 		}
 
 		function mapDetails() {
 			let privateHealthInsuranceDetails;
-			if (s.privateHealthInsuranceDetails?.startDate
-				|| s.privateHealthInsuranceDetails?.endDate) {
+			if (s.privateHealthInsuranceDetails) {
 				privateHealthInsuranceDetails = {
 					startDate: s.privateHealthInsuranceDetails.startDate ? momentParseDate(s.privateHealthInsuranceDetails.startDate) : undefined,
 					endDate: s.privateHealthInsuranceDetails.endDate ? momentParseDate(s.privateHealthInsuranceDetails.endDate) : undefined,
+					planId: s.privateHealthInsuranceDetails.planId,
+					planName: s.privateHealthInsuranceDetails.planName
 				};
 			}
 			return privateHealthInsuranceDetails;

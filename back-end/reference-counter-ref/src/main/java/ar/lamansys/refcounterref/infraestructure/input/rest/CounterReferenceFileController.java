@@ -4,7 +4,6 @@ import ar.lamansys.refcounterref.application.createcounterreferencefile.CreateCo
 import ar.lamansys.refcounterref.application.deletefiles.DeleteFiles;
 import ar.lamansys.refcounterref.application.getcounterreferencefile.GetCounterReferenceFile;
 import ar.lamansys.refcounterref.domain.file.StoredFileBo;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/institutions/{institutionId}/counterreference-file")
-@Api(value = "Counte Reference File", tags = {"Counter Reference File"})
+//@Api(value = "Counte Reference File", tags = {"Counter Reference File"})
 public class CounterReferenceFileController {
 
     private static final String OUTPUT = "Output -> {}";

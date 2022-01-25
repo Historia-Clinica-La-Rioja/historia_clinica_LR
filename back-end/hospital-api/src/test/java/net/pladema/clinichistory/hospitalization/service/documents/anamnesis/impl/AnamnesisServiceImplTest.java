@@ -3,34 +3,34 @@ package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.im
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.AnamnesisServiceImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
-public class AnamnesisServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class AnamnesisServiceImplTest {
 
 	private static final String TOKEN = "TOKEN";
 
 	private AnamnesisServiceImpl anamnesisServiceImpl;
 
-	@MockBean
+	@Mock
 	private DocumentService documentService;
 
-	@MockBean
+	@Mock
 	private NoteService noteService;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		anamnesisServiceImpl = new AnamnesisServiceImpl(documentService, noteService);
 	}
 
 	@Test
-	public void test() {
+	void test() {
 		assertTrue(true);
 	}
 }

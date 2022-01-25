@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.exceptions.BackofficeMedicalCoverageEnumException;
 import net.pladema.establishment.controller.exceptions.BackofficeMedicalCoverageException;
 import net.pladema.patient.controller.dto.BackofficeCoverageDto;
+import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.repository.MedicalCoverageRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceRepository;
 import net.pladema.patient.repository.entity.MedicalCoverage;
@@ -14,6 +15,7 @@ import net.pladema.person.repository.HealthInsuranceRepository;
 import net.pladema.person.repository.entity.HealthInsurance;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,13 +38,16 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     private final PrivateHealthInsuranceRepository privateHealthInsuranceRepository;
 
     private final HealthInsuranceRepository healthInsuranceRepository;
+
     @Override
     public Page<BackofficeCoverageDto> findAll(BackofficeCoverageDto coverage, Pageable pageable) {
         ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName()), customExampleMatcher)).stream()
+        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit()), customExampleMatcher)).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
+        if(coverage.getType()!=null)
+            result = result.stream().filter(backofficeCoverage -> backofficeCoverage.getType().equals(coverage.getType())).collect(Collectors.toList());
         int minIndex = pageable.getPageNumber() * pageable.getPageSize();
         int maxIndex = minIndex + pageable.getPageSize();
         return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
@@ -76,11 +82,16 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     }
 
     private BackofficeCoverageDto update(BackofficeCoverageDto dto) {
+        if (dto.getRnos() != null && healthInsuranceRepository.existsByRnosAndDiferentId(dto.getRnos(),dto.getId()))
+            throw new BackofficeValidationException("medical-coverage.rnos-duplicated");
+        if(medicalCoverageRepository.existsByCUITandDiferentId(dto.getCuit(),dto.getId()))
+                throw new BackofficeValidationException("medical-coverage.cuit-duplicated");
+        String cuit = setAndValidateCuit(dto.getCuit());
         return medicalCoverageRepository.findById(dto.getId())
                 .map(medicalCoverage -> privateHealthInsuranceRepository.findById(medicalCoverage.getId())
                         .map(privateHealthInsurance -> {
-                            privateHealthInsurance.setPlan(dto.getPlan());
                             privateHealthInsurance.setName(dto.getName());
+                            privateHealthInsurance.setCuit(cuit);
                             return (MedicalCoverage) medicalCoverageRepository.save(privateHealthInsurance);
                         })
                         .orElseGet(() -> {
@@ -88,19 +99,29 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
                             healthInsurance.setAcronym(dto.getAcronym());
                             healthInsurance.setRnos(dto.getRnos());
                             healthInsurance.setName(dto.getName());
+                            healthInsurance.setCuit(cuit);
                             return medicalCoverageRepository.save(healthInsurance);
                         })).map(this::mapToDto)
                 .orElseThrow(() -> new BackofficeMedicalCoverageException(BackofficeMedicalCoverageEnumException.UNEXISTED_MEDICAL_COVERAGE, String.format("La cobertura medica con id %s no existe", dto.getId())));
     }
-
     private BackofficeCoverageDto create(BackofficeCoverageDto dto) {
         if (dto.getRnos() != null && healthInsuranceRepository.existsByRnos(dto.getRnos()))
             throw new BackofficeValidationException("medical-coverage.rnos-duplicated");
-        MedicalCoverage entity = (dto.getType()==2)
-                ? new HealthInsurance(dto.getId(),dto.getName(),dto.getRnos(),dto.getAcronym())
-                : new PrivateHealthInsurance(dto.getId(),dto.getName(),dto.getPlan());
+        if (medicalCoverageRepository.existsByCUIT(dto.getCuit()))
+            throw new BackofficeValidationException("medical-coverage.cuit-duplicated");
+        String cuit = setAndValidateCuit(dto.getCuit());
+        MedicalCoverage entity = (dto.getType()== EMedicalCoverageType.OBRASOCIAL.getId())
+                ? new HealthInsurance(dto.getId(),dto.getName(), cuit,dto.getRnos(),dto.getAcronym())
+                : new PrivateHealthInsurance(dto.getId(),dto.getName(), cuit);
         entity = medicalCoverageRepository.save(entity);
         return mapToDto(entity);
+    }
+
+    private String setAndValidateCuit(String cuit){
+        String result =  Arrays.stream(cuit.split("-")).collect(Collectors.joining());
+        if(!(StringUtils.isNumeric(result)))
+            throw new BackofficeValidationException("medical-coverage.invalid-cuit");
+        return result;
     }
 
     @Override
@@ -114,10 +135,10 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     }
 
     private BackofficeCoverageDto mapToDto(MedicalCoverage entity) {
-        return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(),(short)1, null, null, insurance.getPlan()))
+        return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.PREPAGA.getId(), null, null))
                 .orElseGet(() -> healthInsuranceRepository.findById(entity.getId())
-                        .map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(),(short)2, healthInsurance.getRnos(), healthInsurance.getAcronym(), null))
-                        .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(),(short)2,null,null,null)));
+                        .map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), healthInsurance.getRnos(), healthInsurance.getAcronym()))
+                        .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null)));
     }
 
 }

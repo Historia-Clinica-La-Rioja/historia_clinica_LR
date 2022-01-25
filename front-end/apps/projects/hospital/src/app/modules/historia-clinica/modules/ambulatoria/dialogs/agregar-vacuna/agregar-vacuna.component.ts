@@ -1,5 +1,5 @@
 import { AfterContentInit, Component, ElementRef, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DateFormat, momentParseDate, newMoment } from '@core/utils/moment.utils';
@@ -459,6 +459,23 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		delete this.doses;
 		form.get("dose").setValue(null);
 		form.get("dose").disable();
+	}
+
+	clear(control: AbstractControl, value: string, form: FormGroup): void {
+		switch (value) {
+			case 'condition':
+				this.disableSchemes(form);
+				this.disableDoses(form);
+				control.reset();
+				break;
+			case 'scheme':
+				this.disableDoses(form);
+				control.reset();
+				break;
+			case 'dose':
+				control.reset();
+				break;
+		}
 	}
 
 }

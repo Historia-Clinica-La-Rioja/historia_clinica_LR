@@ -103,11 +103,13 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	public BasicDataPersonDto getBasicDataPerson(Integer personId) {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
 		Person person = personService.getPerson(personId);
+		PersonExtended personExtended = personService.getPersonExtended(personId);
 		BasicDataPersonDto result = personMapper.basicDataFromPerson(
 				person,
 				getGender(person.getGenderId()),
 				getIdentificationType(person.getIdentificationTypeId())
 		);
+		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -140,6 +142,12 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		List<BasicDataPersonDto> result = people.parallelStream()
 				.map(p -> mapToBasicDataDto(p, genders, identificationTypes))
 				.collect(Collectors.toList());
+
+		result.forEach(bdp -> {
+			PersonExtended personExtended = personService.getPersonExtended(bdp.getId());
+			bdp.setNameSelfDetermination(personExtended.getNameSelfDetermination());
+		});
+
 		LOG.debug("Result size {}", result.size());
 		LOG.trace(OUTPUT, result);
 		return result;
@@ -167,6 +175,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		PersonExtended personExtended = personService.getPersonExtended(personId);
 		BasicPersonalDataDto result = personMapper.basicPersonalDataDto(person);
 		result.setPhoneNumber(personExtended.getPhoneNumber());
+		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

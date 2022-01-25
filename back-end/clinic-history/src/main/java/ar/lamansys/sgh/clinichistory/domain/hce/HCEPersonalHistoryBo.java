@@ -30,6 +30,8 @@ public class HCEPersonalHistoryBo extends HCEClinicalTermBo {
 
     private boolean main;
 
+    private boolean hasPendingReference;
+
     public HCEPersonalHistoryBo(HCEHealthConditionVo source){
         super(source.getId(), source.getSnomed(), source.getStatusId(), source.getStatus(), source.getPatientId());
         this.verificationId = source.getVerificationId();

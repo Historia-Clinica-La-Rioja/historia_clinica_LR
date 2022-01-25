@@ -29,8 +29,11 @@ public class BasicListedPatientBo {
 
     private Short genderId;
 
+    private String nameSelfDetermination;
+
     public BasicListedPatientBo(Integer patientId, Short identificationTypeId, String identificationNumber,
-                                String firstName, String lastName, LocalDate birthDate, Short genderId, Integer internmentId){
+                                String firstName, String lastName, String nameSelfDetermination, LocalDate birthDate,
+                                Short genderId, Integer internmentId){
         this.internmentId = internmentId;
         this.patientId = patientId;
         this.identificationTypeId = identificationTypeId;
@@ -39,5 +42,6 @@ public class BasicListedPatientBo {
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.genderId = genderId;
+        this.nameSelfDetermination = nameSelfDetermination;
     }
 }

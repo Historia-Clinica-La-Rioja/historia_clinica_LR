@@ -3,7 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 import ar.lamansys.refcounterref.application.getreference.GetReference;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceGetDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/institutions/{institutionId}/reference/patient/{patientId}")
-@Api(value = "Reference", tags = {"Reference"})
+@Tag(name = "Reference", description = "References")
 public class ReferenceController {
 
     private final GetReference getReference;

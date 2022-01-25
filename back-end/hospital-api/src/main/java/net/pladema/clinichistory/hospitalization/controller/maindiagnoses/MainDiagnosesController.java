@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.maindiagnoses;
 
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.dto.MainDiagnosisDto;
 import net.pladema.clinichistory.hospitalization.controller.maindiagnoses.mapper.MainDiagnosesMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/main-diagnoses")
-@Api(value = "Main diagnoses", tags = { "Main diagnoses" })
+@Tag(name = "Main diagnoses", description = "Main diagnoses")
 @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
 @Validated
 public class MainDiagnosesController {

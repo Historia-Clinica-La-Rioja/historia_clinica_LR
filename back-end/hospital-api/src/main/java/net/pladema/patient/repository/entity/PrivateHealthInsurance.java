@@ -15,13 +15,10 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class PrivateHealthInsurance extends MedicalCoverage {
 
-    @Column(name = "plan", length = 10)
-    private String plan;
-
-    public PrivateHealthInsurance(Integer id, String name, String plan){
+    public PrivateHealthInsurance(Integer id, String name, String cuit){
         setId(id);
         setName(name);
-        this.plan=plan;
+        setCuit(cuit);
     }
 
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, ERole } from '@api-rest/api-model';
 
-import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, ClinicalSpecialtyDto, ReferenceDto } from '@api-rest/api-model';
+import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -29,10 +29,9 @@ import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ReferenceNotificationComponent } from '../../dialogs/reference-notification/reference-notification.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { CounterreferenceDockPopupComponent } from '../../dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
-
+import { ReferenceNotificationInfo, ReferenceNotificationService } from '@historia-clinica/services/reference-notification.service';
+import { REFERENCE_CONSULTATION_TYPE } from '../../constants/reference-masterdata';
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -61,8 +60,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public spinner = false;
 	private timeOut = 15000;
 	public CurrentUserIsAllowedToMakeBothQueries = false;
-	specialtiesId: number[] = [];
-	reference: ReferenceDto;
+	referenceNotificationService: ReferenceNotificationService;
+	refNotificationInfo: ReferenceNotificationInfo;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -81,24 +80,31 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 
-	) { }
+	) {
+		this.route.paramMap.subscribe(
+			(params) => {
+				this.patientId = Number(params.get('idPaciente'));
+				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
+					patient => {
+						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
+						this.patient = this.mapperService.toPatientBasicData(patient);
+					}
+				);
+				this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
+				this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
+				this.patientService.getPatientPhoto(this.patientId)
+					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
+				this.refNotificationInfo = {
+					patientId: this.patientId,
+					consultationType: REFERENCE_CONSULTATION_TYPE.AMBULATORY
+				}
+				this.referenceNotificationService = new ReferenceNotificationService(this.refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
+		}) 
+	}
 	ngOnInit(): void {
 		this.setActionsLayout();
 		this.personInformation = [];
-		this.route.paramMap.subscribe((params) => {
-			this.patientId = Number(params.get('idPaciente'));
-			this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
-				patient => {
-					this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
-					this.patient = this.mapperService.toPatientBasicData(patient);
-				}
-			);
-			this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
-			this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
-			this.patientService.getPatientPhoto(this.patientId)
-				.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
-		});
-
+		
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD)
 			.subscribe(isOn => this.externalInstitutionsEnabled = isOn);
 
@@ -108,6 +114,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.extensionTabs$ = this.extensionPatientService.getTabs(this.patientId);
 
 		this.odontogramService.resetOdontogram();
+
+		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
+			if (type === REFERENCE_CONSULTATION_TYPE.AMBULATORY) {
+				this.openNuevaConsulta();
+			}
+		})
 	}
 
 	loadExternalInstitutions() {
@@ -220,60 +232,4 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		});
 	}
 
-	hasReferenceNotification() {
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe((specialties: ClinicalSpecialtyDto[]) => {
-			specialties.forEach((specialty: ClinicalSpecialtyDto) => {
-				this.specialtiesId.push(specialty.id);
-			});
-			this.referenceService.getReferences(this.patientId, this.specialtiesId).subscribe((references: ReferenceDto[]) => {
-				if (references.length > 0) {
-					this.openReferenceNotification(references);
-				}
-				else {
-					this.openNuevaConsulta();
-				}
-			});
-		});
-	}
-
-	openReferenceNotification(references: ReferenceDto[]) {
-		const dialogRef = this.dialog.open(ReferenceNotificationComponent, {
-			data: references,
-			autoFocus: false
-		})
-		dialogRef.afterClosed().subscribe(counterreference => {
-			if (counterreference === false) {
-				this.openNuevaConsulta();
-			}
-			if (counterreference === null) {
-				return;
-			}
-			if (counterreference.isACountisACounterrefer === true) {
-				this.openCounterreference(counterreference.reference);
-			}
-		});
-	}
-
-	openCounterreference(reference: ReferenceDto) {
-		if (!this.dialogRef) {
-			this.dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent, 
-				{
-					reference: reference,
-					patientId: this.patientId
-				}
-			);
-			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
-				delete this.dialogRef;
-				this.medicacionesService.updateMedication();
-				if (fieldsToUpdate) {
-					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-				}
-			});
-		}
-		else {
-			if (this.dialogRef.isMinimized()) {
-				this.dialogRef.maximize();
-			}
-		}
-	}
 }

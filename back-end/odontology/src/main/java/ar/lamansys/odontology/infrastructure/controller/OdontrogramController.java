@@ -10,7 +10,7 @@ import ar.lamansys.odontology.infrastructure.controller.dto.ToothDrawingsDto;
 import ar.lamansys.odontology.infrastructure.controller.dto.ToothSurfacesDto;
 import ar.lamansys.odontology.infrastructure.controller.mapper.OdontogramQuadrantMapper;
 import ar.lamansys.odontology.infrastructure.controller.mapper.ToothSurfacesMapper;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/odontology/odontogram")
-@Api(value="Odontogram", tags= { "Odontogram" } )
+@Tag(name = "Odontogram", description = "Odontogram")
 public class OdontrogramController {
     private final Logger logger;
 

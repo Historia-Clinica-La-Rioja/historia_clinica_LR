@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.requests.medicalrequests.controller;
 
-import io.swagger.annotations.Api;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.medicalrequests.controller.dto.MedicalRequestDto;
 import net.pladema.clinichistory.requests.medicalrequests.controller.dto.NewMedicalRequestDto;
 import net.pladema.clinichistory.requests.medicalrequests.controller.mapper.CreateMedicalRequestMapper;
@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/institutions/{institutionId}/patient/{patientId}/medical-requests")
-@Api(value = "Medical Request", tags = {"Medical Request"})
+@Tag(name = "Medical Request", description = "Medical Request")
 public class MedicalRequestController {
     private static final Logger LOG = LoggerFactory.getLogger(MedicalRequestController.class);
 

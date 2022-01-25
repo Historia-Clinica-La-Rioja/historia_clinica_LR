@@ -2,15 +2,15 @@ package net.pladema.person.controller;
 
 import net.pladema.person.controller.dto.BasicDataPersonDto;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(SpringRunner.class)
-public class BasicDataPersonDtoTest {
+@ExtendWith(MockitoExtension.class)
+class BasicDataPersonDtoTest {
 
     @Test
-    public void test_completeName_success(){
+    void test_completeName_success(){
         BasicDataPersonDto basicDataPersonDto = new BasicDataPersonDto();
 
         basicDataPersonDto.setFirstName("Juan");

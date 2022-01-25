@@ -15,8 +15,8 @@ import org.mapstruct.Named;
 public interface AnamnesisMapper {
 
     @Named("fromAnamnesisDto")
-    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromAnthropometricDataDto")
-    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromListAnthropometricDataDto")
+    @Mapping(target = "vitalSigns", source = "vitalSigns", qualifiedByName = "fromVitalSignDto")
+    @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataDto")
     AnamnesisBo fromAnamnesisDto(AnamnesisDto anamnesisDto);
 
     @Named("fromAnamnesis")

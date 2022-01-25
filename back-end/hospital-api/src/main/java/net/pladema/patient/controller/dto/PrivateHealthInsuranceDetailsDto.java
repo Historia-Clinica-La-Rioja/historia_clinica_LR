@@ -8,6 +8,8 @@ import lombok.Setter;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceDetailsBo;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
+import javax.annotation.Nullable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -21,6 +23,12 @@ public class PrivateHealthInsuranceDetailsDto {
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String endDate;
+
+    @Nullable
+    private Integer planId;
+
+    @Nullable
+    private String planName;
 
     public PrivateHealthInsuranceDetailsDto(PrivateHealthInsuranceDetailsBo privateHealthInsuranceDetailsBo){
         this.id = privateHealthInsuranceDetailsBo.getId();

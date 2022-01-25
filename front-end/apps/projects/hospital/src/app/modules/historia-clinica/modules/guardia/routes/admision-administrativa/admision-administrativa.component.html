@@ -19,6 +19,10 @@
 					{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 				</mat-option>
 			</mat-select>
+			<button id="clear_medical_coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverageId" matSuffix
+				color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverageId); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
 		</mat-form-field>
 		<button mat-stroked-button type="button" color="primary" (click)="openMedicalCoverageDialog()" class="uppercase"
 			translate="guardia.administrative_admision.UPDATE_MEDICAL_COVERAGE"></button>
@@ -70,6 +74,10 @@
 				{{emergencyCareType.description}}
 			</mat-option>
 		</mat-select>
+		<button id="clear_emergency_care_type" type="button" mat-button *ngIf="form.value.emergencyCareTypeId" matSuffix
+			color="warn" mat-icon-button (click)="clear(form.controls.emergencyCareTypeId); $event.stopPropagation()">
+			<mat-icon>close</mat-icon>
+		</button>
 	</mat-form-field>
 
 	<mat-form-field appearance="outline">
@@ -81,6 +89,10 @@
 				[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
 			</mat-option>
 		</mat-select>
+		<button id="clear_emergency_care_entrance" type="button" mat-button *ngIf="form.value.emergencyCareEntranceTypeId" matSuffix
+			color="warn" mat-icon-button (click)="clear(form.controls.emergencyCareEntranceTypeId); $event.stopPropagation()">
+			<mat-icon>close</mat-icon>
+		</button>
 	</mat-form-field>
 
 	<mat-form-field appearance="outline"
@@ -99,6 +111,10 @@
 				{{office.description}}
 			</mat-option>
 		</mat-select>
+		<button id="clear_waiting_room" type="button" mat-button *ngIf="form.value.doctorsOfficeId" matSuffix
+			color="warn" mat-icon-button (click)="clear(form.controls.doctorsOfficeId); $event.stopPropagation()">
+			<mat-icon>close</mat-icon>
+		</button>
 	</mat-form-field>
 	<span *ngIf="!isDoctorOfficeEditable" class="in-attention" translate="guardia.episode.edit.IN_ATTENTION_PATIENT"></span>
 

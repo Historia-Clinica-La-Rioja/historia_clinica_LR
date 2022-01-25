@@ -2,7 +2,7 @@ package net.pladema.oauth.infrastructure.input.rest;
 
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.JWTokenDto;
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.OauthConfigDto;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.oauth.application.OauthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/oauth")
-@Api(value = "Oauth", tags = {"Oauth"})
+@Tag(name = "Oauth", description = "Oauth")
 public class ExternalAuthenticationController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExternalAuthenticationController.class);

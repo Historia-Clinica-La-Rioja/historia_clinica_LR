@@ -1,7 +1,7 @@
 package net.pladema.snvs.infrastructure.input.rest;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.snvs.application.ports.event.exceptions.SnvsStorageException;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortException;
 import net.pladema.snvs.application.reportproblems.ReportProblems;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/snvs")
-@Api(value = "Snvs", tags = { "Snvs" })
+@Tag(name = "Snvs", description = "Snvs")
 @Conditional(SnvsCondition.class)
 public class SnvsController {
 

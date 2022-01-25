@@ -11,6 +11,7 @@ export interface DatosAntropometricos {
 	bmi?: ClinicalObservationDto;
 	height: ClinicalObservationDto;
 	weight: ClinicalObservationDto;
+	headCircumference: ClinicalObservationDto;
 }
 
 export class DatosAntropometricosNuevaConsultaService {
@@ -21,6 +22,8 @@ export class DatosAntropometricosNuevaConsultaService {
 	private _heightError$: Observable<string>;
 	private weightErrorSource = new Subject<string>();
 	private _weightError$: Observable<string>;
+	private headCircumferenceErrorSource = new Subject<string>();
+	private _headCircumferenceError$: Observable<string>;
 	private notShowPreloadedAnthropometricData = true;
 	private dateList: string[] = [];
 
@@ -33,6 +36,7 @@ export class DatosAntropometricosNuevaConsultaService {
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
+			headCircumference: [null, [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]+$')]],
 			height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
 			weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
 		});
@@ -48,6 +52,11 @@ export class DatosAntropometricosNuevaConsultaService {
 		});
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
 			this.bloodTypes = bloodTypes;
+		});
+		this.form.controls.headCircumference.valueChanges.subscribe(headCircumference => {
+			if (headCircumference !== undefined) {
+				this.headCircumferenceErrorSource.next();
+			}
 		});
 	}
 
@@ -65,6 +74,7 @@ export class DatosAntropometricosNuevaConsultaService {
 				id: this.form.value.bloodType.id,
 				value: this.form.value.bloodType.description
 			} : undefined,
+			headCircumference: (this.form.value.headCircumference || (this.form.value.headCircumference === 0)) ? { value: this.form.value.headCircumference } : undefined,
 			height: (this.form.value.height || (this.form.value.height === 0)) ? { value: this.form.value.height } : undefined,
 			weight: (this.form.value.weight || (this.form.value.weight === 0)) ? { value: this.form.value.weight } : undefined
 		};
@@ -84,6 +94,13 @@ export class DatosAntropometricosNuevaConsultaService {
 		return this._weightError$;
 	}
 
+	get headCircumferenceError$(): Observable<string> {
+		if (!this._headCircumferenceError$) {
+			this._headCircumferenceError$ = this.headCircumferenceErrorSource.asObservable();
+		}
+		return this._headCircumferenceError$;
+	}
+
 	setHeightError(errorMsg: string): void {
 		this.heightErrorSource.next(errorMsg);
 	}
@@ -92,25 +109,32 @@ export class DatosAntropometricosNuevaConsultaService {
 		this.weightErrorSource.next(errorMsg);
 	}
 
+	setHeadCircumferenceError(errorMsg: string): void {
+		this.headCircumferenceErrorSource.next(errorMsg);
+	}
+
 	setPreviousAnthropometricData(): void {
 		this.hceGeneralStateService.getAnthropometricData(this.patientId).subscribe(
 			(anthropometricData: HCEAnthropometricDataDto) => {
 				if (anthropometricData === null)
 					this.notShowPreloadedAnthropometricData = false;
 				else {
-					this.setAnthropometric(anthropometricData.weight?.value , anthropometricData.height?.value, anthropometricData.bloodType?.value);
+					this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
 					Object.keys(anthropometricData).forEach((key: string) => {
 						if (anthropometricData[key].effectiveTime != undefined) {
 							this.dateList.push(anthropometricData[key].effectiveTime);
 						}
-				})
-			}});
+					})
+				}
+			}
+		);
 	}
 
-	setAnthropometric(weight?: string, height?: string, bloodDescription?: string): void {
+	setAnthropometric(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string): void {
 		this.form.get('weight').setValue(weight);
 		this.form.get('height').setValue(height);
-		if(bloodDescription != null )
+		this.form.get('headCircumference').setValue(headCircumference);
+		if (bloodDescription != null)
 			this.form.get('bloodType').setValue(this.bloodTypes.find(b => b.description === bloodDescription));
 		this.form.disable();
 	}

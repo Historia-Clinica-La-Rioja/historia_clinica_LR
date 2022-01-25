@@ -5,7 +5,6 @@ import ar.lamansys.sgh.publicapi.application.saveexternalencounter.SaveExternalE
 import ar.lamansys.sgh.publicapi.domain.ExternalEncounterBo;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ExternalEncounterDto;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/public-api/patient/{externalId}/external-encounters")
-@Api(value = "External Encounter", tags = {"External Encounter"})
+@RequestMapping("/public-api/patient/{externalId}/institution/{institutionId}/external-encounters")
+//@Api(value = "External Encounter", tags = {"External Encounter"})
 public class ExternalEncounterController {
 
     private final SaveExternalEncounter saveExternalEncounter;
@@ -31,26 +30,29 @@ public class ExternalEncounterController {
     @PostMapping()
     @ResponseStatus(code = HttpStatus.CREATED)
     public void save(@PathVariable("externalId") String externalId,
+                     @PathVariable("institutionId") Integer institutionId,
                      @RequestBody ExternalEncounterDto externalEncounterDto) throws ExternalEncounterBoException {
-        log.debug("Input parameters -> externalId {}, externalEncounterDto {}",externalId, externalEncounterDto);
-        saveExternalEncounter.run(toExternalEncounterBo(externalEncounterDto,externalId));
+        log.debug("Input parameters -> externalId {}, institutionId {}, externalEncounterDto {}",externalId, institutionId, externalEncounterDto);
+        saveExternalEncounter.run(toExternalEncounterBo(externalEncounterDto,externalId, institutionId));
     }
 
     @DeleteMapping("/{externalEncounterId}")
     @ResponseStatus(code = HttpStatus.OK)
     public void delete(@PathVariable("externalId") String externalId,
-                       @PathVariable("externalEncounterId") String externalEncounterId){
-        log.debug("Input parameters -> externalId {}, externalEncounterId {}",externalId, externalEncounterId);
-        deleteExternalEncounter.run(externalEncounterId);
+                       @PathVariable("institutionId") Integer institutionId,
+                       @PathVariable("externalEncounterId") String externalEncounterId) throws ExternalEncounterBoException {
+        log.debug("Input parameters -> externalId {}, institutionId {}, externalEncounterId {}",externalId, institutionId, externalEncounterId);
+        deleteExternalEncounter.run(externalEncounterId, institutionId);
     }
 
 
-    private ExternalEncounterBo toExternalEncounterBo(ExternalEncounterDto externalEncounter, String externalId) throws ExternalEncounterBoException {
+    private ExternalEncounterBo toExternalEncounterBo(ExternalEncounterDto externalEncounter, String externalId, Integer institutionId) throws ExternalEncounterBoException {
         return new ExternalEncounterBo(
                 externalEncounter.getId(),
                 externalId,
                 externalEncounter.getExternalEncounterId(),
                 externalEncounter.getExternalEncounterDate(),
-                externalEncounter.getExternalEncounterType());
+                externalEncounter.getExternalEncounterType(),
+                institutionId);
     }
 }

@@ -28,4 +28,8 @@ public class HCEAnthropometricDataDto implements Serializable {
     @Nullable
     private HCEClinicalObservationDto bmi;
 
+    @Valid
+    @Nullable
+    private HCEEffectiveClinicalObservationDto headCircumference;
+
 }

@@ -29,5 +29,6 @@ public class InternmentPatientDto {
 
     private Short genderId;
 
+    private String nameSelfDetermination;
 
 }

@@ -4,7 +4,7 @@ BASEDIR=$(dirname "$0")"/.."
 
 # supone que ya se corrio build-pack
 rm ci/docker/nginx-jar/*.jar || true
-cp *.jar ci/docker/nginx-jar/
+cp back-end/app/target/app*.jar ci/docker/nginx-jar/hospital.jar
 
 rm -r ci/docker/nginx-jar/front-end-dist 2> /dev/null || true
 cp -r front-end/apps/dist/ ci/docker/nginx-jar/front-end-dist

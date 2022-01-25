@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import io.swagger.annotations.Api;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
@@ -8,7 +9,6 @@ import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/diaryOpeningHours")
-@Api(value = "Diary opening hours", tags = { "Diary Opening Hours" })
+@Tag(name = "Diary Opening Hours", description = "Diary Opening Hours")
 public class DiaryOpeningHoursController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiaryOpeningHoursController.class);

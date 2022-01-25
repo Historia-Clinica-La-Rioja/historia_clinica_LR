@@ -29,12 +29,14 @@ public class HealthConditionStorageImpl implements HealthConditionStorage {
                 +"  AND d.statusId = '" + DocumentStatus.FINAL + "'"
                 +"  AND d.sourceTypeId = :sourceTypeId"
                 +"  AND hc.problemId IN ('"+ ProblemType.PROBLEM+"', '"+ ProblemType.CHRONIC+ "')"
-                +"  AND s.sctid = :sctid";
+                +"  AND s.sctid = :sctid"
+                +"  AND s.pt = :pt";
 
         Integer result = (Integer) entityManager.createQuery(sqlString)
                 .setParameter("encounterId", encounterId)
                 .setParameter("sourceTypeId", sourceTypeId.shortValue())
                 .setParameter("sctid", sctid)
+                .setParameter("pt", pt)
                 .getSingleResult();
 
         log.debug("Output parameter -> result {}", result);

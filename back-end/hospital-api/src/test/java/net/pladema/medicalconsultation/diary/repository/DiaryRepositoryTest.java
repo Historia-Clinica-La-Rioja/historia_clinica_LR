@@ -5,31 +5,26 @@ import net.pladema.medicalconsultation.diary.mocks.DiaryTestMocks;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest(showSql = false)
-public class DiaryRepositoryTest extends UnitRepository {
+class DiaryRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private DiaryRepository diaryRepository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 	}
 
 	@Test
-	public void test_active_diaries_from_professional() {
+	void test_active_diaries_from_professional() {
 
 		String startDate = "2020-05-04";
 		String endDate = "2020-06-04";

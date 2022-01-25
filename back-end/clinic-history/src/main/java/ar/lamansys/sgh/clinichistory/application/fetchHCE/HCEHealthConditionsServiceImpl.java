@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHCE;
 
+import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCEReferenceProblemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCEHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHospitalizationVo;
@@ -22,9 +24,12 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     private static final String LOGGING_INPUT = "Input parameters -> patientId {} ";
 
     private final HCEHealthConditionRepository hceHealthConditionRepository;
+    private final HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage;
 
-    public HCEHealthConditionsServiceImpl(HCEHealthConditionRepository hceHealthConditionRepository) {
+    public HCEHealthConditionsServiceImpl(HCEHealthConditionRepository hceHealthConditionRepository,
+                                          HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage) {
         this.hceHealthConditionRepository = hceHealthConditionRepository;
+        this.hceReferenceCounterReferenceStorage = hceReferenceCounterReferenceStorage;
     }
 
 
@@ -55,6 +60,15 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isChronic)
                 .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed()).collect(Collectors.toList());
+
+        List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId);
+        result.stream().forEach(p -> {
+            problemsWithReferences.stream().forEach(pwr -> {
+                if (p.getSnomedSctid().equals(pwr.getSnomedSctid()) && p.getSnomedPt().equals(pwr.getSnomedPt()))
+                    p.setHasPendingReference(true);
+            });
+        });
+
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
@@ -65,6 +79,15 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistories(patientId);
         List<HCEPersonalHistoryBo> result = resultQuery.stream().map(HCEPersonalHistoryBo::new).filter(HCEPersonalHistoryBo::isActiveProblem)
                 .sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed()).collect(Collectors.toList());
+
+        List<HCEReferenceProblemBo> problemsWithReferences = hceReferenceCounterReferenceStorage.getProblemsWithReferences(patientId);
+        result.stream().forEach(p -> {
+            problemsWithReferences.stream().forEach(pwr -> {
+                if (p.getSnomedSctid().equals(pwr.getSnomedSctid()) && p.getSnomedPt().equals(pwr.getSnomedPt()))
+                    p.setHasPendingReference(true);
+            });
+        });
+
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }

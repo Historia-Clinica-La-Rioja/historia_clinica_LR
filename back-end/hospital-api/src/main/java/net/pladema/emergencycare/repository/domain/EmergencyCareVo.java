@@ -51,9 +51,10 @@ public class EmergencyCareVo implements Serializable {
 
 	private Boolean hasPoliceIntervention;
 
-	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String doctorsOfficeDescription, TriageCategory triage){
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
+						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage){
 		this.id = emergencyCareEpisode.getId();
-		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person) : null;
+		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person, nameSelfDetermination) : null;
 		this.triageCategoryId = triage.getId();
 		this.triageName = triage.getName();
 		this.triageColorCode = triage.getColorCode();
@@ -67,8 +68,9 @@ public class EmergencyCareVo implements Serializable {
 		this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
 	}
 
-	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails){
-		this(emergencyCareEpisode, person, patientTypeId, doctorsOfficeDescription, triage);
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
+						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails){
+		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage);
 		this.policeInterventionDetails = policeInterventionDetails != null ? new PoliceInterventionDetailsVo(policeInterventionDetails) : null;
 	}
 }

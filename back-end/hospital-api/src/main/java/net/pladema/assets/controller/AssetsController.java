@@ -1,6 +1,6 @@
 package net.pladema.assets.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.assets.service.AssetsService;
 import net.pladema.assets.service.domain.AssetsFileBo;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/assets")
-@Api(value = "Assets", tags = { "Assets" })
+@Tag(name = "Assets", description = "Assets")
 public class AssetsController {
 
     private final Logger logger;

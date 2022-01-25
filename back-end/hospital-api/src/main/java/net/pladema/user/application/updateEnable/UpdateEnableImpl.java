@@ -24,7 +24,7 @@ public class UpdateEnableImpl implements UpdateEnable {
 
     @Override
     public Boolean run(Integer userId, Boolean enable) {
-        logger.debug("Input -> userId {}, enable {}", userId);
+        logger.debug("Input -> userId {}, enable {}", userId, enable);
         userValidator.assertUpdate(userId);
         if (enable)
             hospitalUserStorage.enableUser(userId);

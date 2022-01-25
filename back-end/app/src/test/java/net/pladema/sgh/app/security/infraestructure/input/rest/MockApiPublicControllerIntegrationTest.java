@@ -4,6 +4,7 @@ import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.UserAssignmentService;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgh.app.IntegrationTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,10 +25,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:integration-test.properties")
+@Disabled
 class MockApiPublicControllerIntegrationTest extends IntegrationTest {
 
     @MockBean
     private UserAssignmentService userAssignmentService;
+
+    @BeforeEach
+    void setUp(){
+        this.buildMockMvc();
+    }
 
     @Test
     @WithUserDetails(value="user-24-API_CONSUMER", userDetailsServiceBeanName="UserDetailsServiceWithRole")
@@ -39,7 +46,8 @@ class MockApiPublicControllerIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @WithUserDetails(value="user-24-ROOT", userDetailsServiceBeanName="UserDetailsServiceWithRole")
+    @WithUserDetails(value="user-24-ROOT2", userDetailsServiceBeanName="UserDetailsServiceWithRole")
+    @Disabled
     void invalidRole() throws Exception {
         when(userAssignmentService.getRoleAssignment(any()))
                 .thenReturn(List.of(new RoleAssignment(ERole.ROOT, -1)));
@@ -48,7 +56,7 @@ class MockApiPublicControllerIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @Disabled(value = "Falla en el ci, pero no local. Responde 200 cuando se espera un 401")
+    @Disabled
     void nonAuthenticated() throws Exception {
         getValidate()
                 .andExpect(status().isUnauthorized());

@@ -1,7 +1,7 @@
 package ar.lamansys.sgx.cubejs.infrastructure.api;
 
 import ar.lamansys.sgx.cubejs.application.dashboardinfo.DashboardInfoService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/dashboards/cubejs-api")
-@Api(value = "Dashboards", tags = { "Dashboards" })
+@Tag(name = "Dashboards", description = "Dashboards")
 public class CubeController {
 	private final Logger logger;
 	private final DashboardInfoService dashboardInfoService;

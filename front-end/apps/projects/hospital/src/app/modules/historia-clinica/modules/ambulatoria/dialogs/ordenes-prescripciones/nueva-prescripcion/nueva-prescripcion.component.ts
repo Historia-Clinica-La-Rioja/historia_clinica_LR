@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
 
@@ -198,6 +198,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 
 }

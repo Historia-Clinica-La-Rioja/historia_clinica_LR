@@ -12,11 +12,9 @@ import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOf
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.person.repository.entity.HealthInsurance;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -25,21 +23,20 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-public class DailyAppointmentRepositoryTest extends UnitRepository {
+class DailyAppointmentRepositoryTest extends UnitRepository {
 
     @Autowired
     private EntityManager entityManager;
 
     private DailyAppointmentRepositoryImpl dailyAppointmentRepository;
 
-    @Before
-    public void setUp(){
+    @BeforeEach
+    void setUp(){
         this.dailyAppointmentRepository = new DailyAppointmentRepositoryImpl(entityManager);
     }
 
     @Test
-    public void test_getDailyAppointmentsByDiaryIdAndDate_success(){
+    void test_getDailyAppointmentsByDiaryIdAndDate_success(){
         Integer institutionId = 2;
         LocalDate date = LocalDate.of(2020, 9, 5);
 
@@ -62,9 +59,9 @@ public class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(), 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
         merge(hi);
 
         // programmed appointments
@@ -101,7 +98,7 @@ public class DailyAppointmentRepositoryTest extends UnitRepository {
     }
 
     @Test
-    public void test_getDailyAppointmentsByDiaryIdAndDate_differentInstitutionId(){
+    void test_getDailyAppointmentsByDiaryIdAndDate_differentInstitutionId(){
         Integer consultedInstitutionId = 5;
 
         Integer appointmentsInstitutionId = 2;
@@ -126,9 +123,9 @@ public class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(), 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
         merge(hi);
 
         // programmed appointments

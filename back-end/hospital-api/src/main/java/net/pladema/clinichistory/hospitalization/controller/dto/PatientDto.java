@@ -16,4 +16,6 @@ public class PatientDto {
     private String lastName;
 
     private String fullName;
+
+    private String nameSelfDetermination;
 }

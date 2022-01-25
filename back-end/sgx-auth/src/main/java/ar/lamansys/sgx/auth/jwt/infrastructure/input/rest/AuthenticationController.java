@@ -1,13 +1,16 @@
 package ar.lamansys.sgx.auth.jwt.infrastructure.input.rest;
 
-import javax.validation.Valid;
-
 import ar.lamansys.sgx.auth.jwt.application.login.Login;
+import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginException;
 import ar.lamansys.sgx.auth.jwt.application.refreshtoken.RefreshToken;
+import ar.lamansys.sgx.auth.jwt.application.refreshtoken.exceptions.BadRefreshTokenException;
+import ar.lamansys.sgx.auth.jwt.domain.LoginBo;
+import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.JWTokenDto;
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.LoginDto;
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.RefreshTokenDto;
-import io.swagger.annotations.Api;
+import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,15 +19,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgx.auth.jwt.domain.LoginBo;
-import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginException;
-import ar.lamansys.sgx.auth.jwt.application.refreshtoken.exceptions.BadRefreshTokenException;
-import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
-import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@Api(value = "Authorization", tags = { "Authorization" })
+@Tag(name = "Authorization", description = "Authorization")
 public class AuthenticationController {
 
 	private final Logger logger;

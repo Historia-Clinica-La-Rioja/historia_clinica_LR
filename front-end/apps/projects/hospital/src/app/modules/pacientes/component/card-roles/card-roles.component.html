@@ -4,8 +4,8 @@
 
 		<mat-list class="sub-title">
 			<div>
-				<strong fxFlex="60%" [translate]="'pacientes.card_roles.ROL_COLUMN'"></strong>
-				<strong fxFlex="40%" [translate]="'pacientes.card_roles.CLINIC_COLUMN'"></strong>
+				<strong fxFlex="60%">{{'pacientes.card_roles.ROL_COLUMN' |translate}}:</strong>
+				<strong fxFlex="40%">{{'pacientes.card_roles.CLINIC_COLUMN' |translate}}:</strong>
 			</div>
 			<mat-list>
 
@@ -14,10 +14,9 @@
 						<mat-icon class="icon" fxFlex="10%" color="primary" fontSet="material-icons-outlined">
 							medical_services</mat-icon>
 					</div>
-					<div fxFlex="50%">
-						<div id="role">
-							<span id="rol" fxFlex="90%">{{role}} </span>
-						</div>
+
+					<div id="role" fxFlex="50%">
+						<span id="rol" fxFlex="90%">{{role}} </span>
 					</div>
 
 					<div id="clinic" fxFlex="40%">

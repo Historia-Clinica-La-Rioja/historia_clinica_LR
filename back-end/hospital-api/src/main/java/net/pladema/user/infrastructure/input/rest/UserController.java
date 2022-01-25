@@ -1,6 +1,6 @@
 package net.pladema.user.infrastructure.input.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.user.application.updateEnable.UpdateEnable;
 import net.pladema.user.application.createDefaultUser.CreateDefaultUser;
 import net.pladema.user.application.getUser.GetUser;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users/institution/{institutionId}")
-@Api(value = "User", tags = {"User"})
+@Tag(name = "User", description = "User")
 @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 public class UserController {
 

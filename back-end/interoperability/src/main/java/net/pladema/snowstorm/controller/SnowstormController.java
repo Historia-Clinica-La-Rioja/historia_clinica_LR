@@ -1,6 +1,6 @@
 package net.pladema.snowstorm.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/snowstorm")
-@Api(value = "Snowstorm", tags = { "Snowstorm" })
+@Tag(name = "Snowstorm", description = "Snowstorm")
 public class SnowstormController {
 
     private static final String CONCEPTS = "/concepts";

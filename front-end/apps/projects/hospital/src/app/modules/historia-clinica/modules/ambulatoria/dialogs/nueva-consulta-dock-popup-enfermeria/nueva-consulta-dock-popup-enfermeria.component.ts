@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ClinicalTermDto, ClinicalSpecialtyDto, NursingConsultationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
@@ -327,5 +327,9 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		if (this.problemasService.editProblem()) {
 			this.readOnlyProblema = false;
 		}
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 }

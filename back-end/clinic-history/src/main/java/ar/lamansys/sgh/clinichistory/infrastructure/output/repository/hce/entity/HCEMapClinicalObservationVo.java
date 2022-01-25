@@ -80,6 +80,15 @@ public class HCEMapClinicalObservationVo {
         getLastNClinicalObservationByCode(EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> 
             vitalSignBo.setSystolicBloodPressure(new HCEClinicalObservationBo(v))
         );
+        getLastNClinicalObservationByCode(EVitalSign.BLOOD_GLUCOSE.getSctidCode(),i).ifPresent(v ->
+                vitalSignBo.setBloodGlucose(new HCEClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.GLYCOSYLATED_HEMOGLOBIN.getSctidCode(),i).ifPresent(v ->
+                vitalSignBo.setGlycosylatedHemoglobin(new HCEClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.CARDIOVASCULAR_RISK.getSctidCode(),i).ifPresent(v ->
+                vitalSignBo.setCardiovascularRisk(new HCEClinicalObservationBo(v))
+        );
         getLastNClinicalObservationByCode(EVitalSign.HEART_RATE.getSctidCode(),i).ifPresent(v -> 
             vitalSignBo.setHeartRate(new HCEClinicalObservationBo(v))
         );
@@ -110,6 +119,9 @@ public class HCEMapClinicalObservationVo {
         );
         getLastNClinicalObservationByCode(EVitalSign.WEIGHT.getSctidCode(),i).ifPresent(v ->
             result.setWeight(new HCEClinicalObservationBo(v))
+        );
+        getLastNClinicalObservationByCode(EVitalSign.HEAD_CIRCUMFERENCE.getSctidCode(),i).ifPresent(v ->
+                result.setHeadCircumference(new HCEClinicalObservationBo(v))
         );
         getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),i).ifPresent(v ->
             result.setBloodType(new HCEClinicalObservationBo(v))

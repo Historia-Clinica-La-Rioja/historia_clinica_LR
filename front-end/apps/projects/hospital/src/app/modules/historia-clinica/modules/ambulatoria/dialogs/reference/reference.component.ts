@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, DateDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 @Component({
 	selector: 'app-reference',
 	templateUrl: './reference.component.html',
@@ -16,12 +16,12 @@ export class ReferenceComponent implements OnInit {
 
 	formReference: FormGroup;
 	problemsList$: Observable<any[]>;
-	problemsList: any[];
+	problemsList: any[] = [];
 	specialties$: Observable<ClinicalSpecialtyDto[]>;
 	careLines$: Observable<CareLineDto[]>;
 	careLineId: number;
 	specialtyId: number;
-	problemsReference: ReferenceProblemDto[];
+	referenceProblemDto: ReferenceProblemDto[] = [];
 	institutions$: Observable<InstitutionBasicInfoDto[]>;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
@@ -54,21 +54,46 @@ export class ReferenceComponent implements OnInit {
 		this.careLines$ = this.careLineService.getCareLines();
 
 		this.institutions$ = this.institutionService.getAllInstitutions();
-
-		this.problemsReference = [];
 	}
 
 	setProblems() {
-		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			const activeProblemsList = this.mapProblems(activeProblems);
 
-			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
-				const chronicProblemsList = this.mapProblems(chronicProblems);
+		const consultationProblems = this.data.consultationProblems.map(consultationProblem => {
+			return {
+				hcePersonalHistoryDto: this.buildPersonalHistoryDto(consultationProblem),
+				chronic: consultationProblem.cronico,
+			}
+		});
 
-				const newConsultationProblems = this.mapProblems(this.data.consultationProblems);
-				this.problemsList = activeProblemsList.concat(newConsultationProblems, chronicProblemsList);
-				this.problemsList$ = of(this.problemsList);
+		consultationProblems.forEach(problem => this.problemsList.push(problem));
+
+		const activeProblems$ = this.hceGeneralStateService.getActiveProblems(this.data.patientId);
+
+		const chronicProblems$ = this.hceGeneralStateService.getChronicConditions(this.data.patientId);
+
+		forkJoin([activeProblems$, chronicProblems$]).subscribe(([activeProblems, chronicProblems]) => {
+			const chronicProblemsHCEPersonalHistory = chronicProblems.map(chronicProblem => {
+				return {
+					hcePersonalHistoryDto: chronicProblem,
+					chronic: true,
+				}
 			});
+
+			const activeProblemsHCEPersonalHistory = activeProblems.map(activeProblem => {
+				return {
+					hcePersonalHistoryDto: activeProblem,
+					chronic: null,
+				}
+			});
+
+			const problems = [...activeProblemsHCEPersonalHistory, ...chronicProblemsHCEPersonalHistory];
+			problems.forEach((problem: HCEPersonalHistory) => {
+				const existProblem = this.problemsList.find(consultationProblem => consultationProblem.hcePersonalHistoryDto.snomed.sctid === problem.hcePersonalHistoryDto.snomed.sctid);
+				if (!existProblem) {
+					this.problemsList.push(problem);
+				}
+			});
+			this.problemsList$ = of(this.problemsList);
 		});
 	}
 
@@ -104,15 +129,15 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	setProblemsReference(problemsArray: string[]) {
-		this.problemsReference = problemsArray.map(problem => ({
-			id: this.problemsList.find(p => p.snomed.pt === problem).id,
-			snomed: this.problemsList.find(p => p.snomed.pt === problem).snomed,
+		this.referenceProblemDto = problemsArray.map(problem => ({
+			id: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.id,
+			snomed: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.snomed,
 		}));
 	}
 
 	save(): void {
 		if (this.formReference.valid) {
-			const reference = { data: this.buildReference(), files: this.selectedFiles };
+			const reference = { data: this.buildReference(), files: this.selectedFiles, problems: this.getReferenceProblems() };
 			this.dialogRef.close(reference);
 		}
 	}
@@ -123,7 +148,7 @@ export class ReferenceComponent implements OnInit {
 			clinicalSpecialtyId: this.specialtyId,
 			consultation: true,
 			note: this.formReference.value.summary,
-			problems: this.problemsReference,
+			problems: this.mapProblems(this.referenceProblemDto),
 			procedure: false,
 			fileIds: []
 		}
@@ -140,4 +165,39 @@ export class ReferenceComponent implements OnInit {
 		this.selectedFiles.splice(index, 1);
 		this.selectedFilesShow.splice(index, 1);
 	}
+
+	private getReferenceProblems(): HCEPersonalHistory[] {
+		let referenceProblems: HCEPersonalHistory[] = [];
+		this.referenceProblemDto.forEach(referenceProblemDto => {
+			const problemToAdd = this.problemsList.find(problem => problem.hcePersonalHistoryDto.snomed.sctid === referenceProblemDto.snomed.sctid)
+			referenceProblems.push(problemToAdd);
+
+		});
+		return referenceProblems;
+	}
+
+	private buildPersonalHistoryDto(problem): HCEPersonalHistoryDto {
+		return {
+			hasPendingReference: false,
+			inactivationDate: null,
+			severity: problem.codigoSeveridad,
+			startDate: (problem.fechaInicio?.day) ? this.mapToString(problem.fechaInicio) : problem.fechaInicio,
+			snomed: problem.snomed
+		}
+	}
+
+	private mapToString(date: DateDto): string {
+		return date.year.toString() + date.month.toString() + date.day.toString();
+
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
+	}
+
+}
+
+export interface HCEPersonalHistory {
+	hcePersonalHistoryDto: HCEPersonalHistoryDto;
+	chronic: boolean
 }

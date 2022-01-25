@@ -1,6 +1,6 @@
 package ar.lamansys.sgx.shared.i18n;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/i18n")
-@Api(value = "I18n", tags = { "I18n" })
+@Tag(name = "I18n", description = "I18n")
 public class I18NController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(I18NController.class);

@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/state")
-@Api(value = "Emergency care Episodes State", tags = {"Emergency care Episodes State"})
+@Tag(name = "Emergency care episodes state", description = "Emergency care episodes state")
 public class EmergencyCareEpisodeStateController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeStateController.class);

@@ -20,4 +20,6 @@ public class BasicPersonalDataDto implements IBasicPersonalData {
     private String phoneNumber;
 
     private Short genderId;
+
+    private String nameSelfDetermination;
 }

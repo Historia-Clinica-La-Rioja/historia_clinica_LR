@@ -1,6 +1,6 @@
 package net.pladema.person.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.person.controller.dto.EducationLevelDto;
 import net.pladema.person.controller.dto.EthnicityDto;
 import net.pladema.person.controller.dto.GenderDto;
@@ -31,7 +31,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/person/masterdata")
-@Api(value = "Person Master Data", tags = { "Person Master Data" })
+@Tag(name = "Person Master Data", description = "Person Master Data")
 public class PersonMasterDataController {
 
     private static final Logger LOG = LoggerFactory.getLogger(PersonMasterDataController.class);
