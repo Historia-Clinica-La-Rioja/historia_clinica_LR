@@ -1,17 +1,16 @@
 package ar.lamansys.sgx.shared.featureflags.states;
 
-import java.util.EnumMap;
-import java.util.Optional;
-
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
+import java.util.EnumMap;
+import java.util.Optional;
+
 public class PropertyOverridesFeatureStates implements InitialFeatureStates {
 	private final Logger logger;
-	private final InitialFeatureStates initialFeatureStates;
+	private final EnumMap<AppFeature, Boolean> overridenFeatureStates;
 	private final Environment environment;
 
 	public PropertyOverridesFeatureStates(
@@ -20,16 +19,24 @@ public class PropertyOverridesFeatureStates implements InitialFeatureStates {
 	) {
 		this.logger = LoggerFactory.getLogger(this.getClass());
 		this.environment = environment;
-		this.initialFeatureStates = initialFeatureStates;
+		overridenFeatureStates = new EnumMap<>(AppFeature.class);
+		initialFeatureStates.getStates().forEach((appFeature, initialValue) ->
+				overridenFeatureStates.put(appFeature, propertyValue(appFeature, initialValue))
+		);
 	}
 
 	@Override
 	public EnumMap<AppFeature, Boolean> getStates() {
-		EnumMap<AppFeature, Boolean> overridenFeatureStates = new EnumMap<>(AppFeature.class);
-		initialFeatureStates.getStates().forEach((appFeature, initialValue) ->
-				overridenFeatureStates.put(appFeature, propertyValue(appFeature, initialValue))
-		);
 		return overridenFeatureStates;
+	}
+
+	@Override
+	public Optional<AppFeature> getAppFeatureByPropertyKey(String propertyKey) {
+		if (propertyKey == null)
+			return Optional.empty();
+		return overridenFeatureStates.keySet().stream()
+				.filter(appFeature -> appFeature.propertyNameFor().equals(propertyKey))
+				.findFirst();
 	}
 
 	private boolean propertyValue(AppFeature feature, boolean initialValue) {
@@ -50,7 +57,7 @@ public class PropertyOverridesFeatureStates implements InitialFeatureStates {
 	}
 
 	private Optional<Boolean> propertyValueFor(AppFeature feature) {
-		String propertyToOverrideFeatureState = propertyNameFor(feature);
+		String propertyToOverrideFeatureState = feature.propertyNameFor();
 		logger.debug("Looking for property {}", propertyToOverrideFeatureState);
 
 		Optional<String> propertyValue = Optional.ofNullable(environment.getProperty(propertyToOverrideFeatureState));
@@ -58,7 +65,4 @@ public class PropertyOverridesFeatureStates implements InitialFeatureStates {
 		return propertyValue.map(String::trim).map(Boolean::parseBoolean);
 	}
 
-	private static String propertyNameFor(AppFeature feature) {
-		return String.format("app.feature.%s", feature);
-	}
 }

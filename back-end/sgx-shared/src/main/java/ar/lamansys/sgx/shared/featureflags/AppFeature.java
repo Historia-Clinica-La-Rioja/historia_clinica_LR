@@ -5,7 +5,7 @@ import org.togglz.core.annotation.Label;
 import org.togglz.core.context.FeatureContext;
 
 public enum AppFeature implements Feature {
- 
+
     @Label("Indica si se puede dar de alta una internación sin tener una epicrisis asociada")
     HABILITAR_ALTA_SIN_EPICRISIS,
 
@@ -88,4 +88,14 @@ public enum AppFeature implements Feature {
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
     }
+
+    public String getLabel() {
+        return FeatureContext.getFeatureManager().getMetaData(this).getLabel();
+    }
+
+    public String propertyNameFor() {
+        return String.format("%s%s", ToggleConfiguration.PREFIX_APP_FEATURE_PROPERTY, this);
+    }
+
+
 }
