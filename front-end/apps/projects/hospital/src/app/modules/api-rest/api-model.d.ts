@@ -160,6 +160,7 @@ export interface AnnexIIDto {
 export interface AnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;
+    headCircumference?: ClinicalObservationDto;
     height?: ClinicalObservationDto;
     weight?: ClinicalObservationDto;
 }
@@ -886,7 +887,7 @@ export interface HCEAllergyDto extends ClinicalTermDto {
 
 export interface HCEAnthropometricDataDto extends Serializable {
     bloodType?: HCEEffectiveClinicalObservationDto;
-    bmi?: HCEClinicalObservationDto;
+    bmi?: HCEEffectiveClinicalObservationDto;
     headCircumference?: HCEEffectiveClinicalObservationDto;
     height?: HCEEffectiveClinicalObservationDto;
     weight?: HCEEffectiveClinicalObservationDto;
@@ -2304,8 +2305,11 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
 }
 
 export interface VitalSignDto extends Serializable {
+    bloodGlucose?: EffectiveClinicalObservationDto;
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    cardiovascularRisk?: EffectiveClinicalObservationDto;
     diastolicBloodPressure?: EffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
     heartRate?: EffectiveClinicalObservationDto;
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure?: EffectiveClinicalObservationDto;

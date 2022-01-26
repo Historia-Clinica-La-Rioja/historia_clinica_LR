@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -36,5 +37,17 @@ public class VitalSignDto implements Serializable {
     @Valid
     @Nullable
     private EffectiveClinicalObservationDto bloodOxygenSaturation;
+
+    @Valid
+    @Nullable
+    private EffectiveClinicalObservationDto bloodGlucose;
+
+    @Valid
+    @Nullable
+    private EffectiveClinicalObservationDto glycosylatedHemoglobin;
+
+    @Valid
+    @Nullable
+    private EffectiveClinicalObservationDto cardiovascularRisk;
 
 }

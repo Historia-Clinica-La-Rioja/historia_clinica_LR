@@ -25,8 +25,9 @@ public class HCEAnthropometricDataDto implements Serializable {
     @Nullable
     private HCEEffectiveClinicalObservationDto weight;
 
+    @Valid
     @Nullable
-    private HCEClinicalObservationDto bmi;
+    private HCEEffectiveClinicalObservationDto bmi;
 
     @Valid
     @Nullable

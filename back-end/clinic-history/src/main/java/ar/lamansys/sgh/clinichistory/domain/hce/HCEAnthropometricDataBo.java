@@ -27,13 +27,15 @@ public class HCEAnthropometricDataBo implements Serializable {
                 headCircumference != null);
     }
 
-    public HCEClinicalObservationBo getBMI(){
+    public HCEClinicalObservationBo getBmi(){
         if (height == null || weight == null)
             return null;
         if (height.getValue() == null || weight.getValue() == null)
             return null;
         if (height.getValue().isEmpty() || weight.getValue().isEmpty())
             return null;
+        if (Float.parseFloat(height.getValue()) <= 0)
+        	return null;
         try {
             Double bmi = Float.parseFloat(weight.getValue()) / Math.pow((Float.parseFloat(height.getValue())/100),2);
             return new HCEClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime());
