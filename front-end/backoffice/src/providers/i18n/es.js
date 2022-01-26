@@ -388,9 +388,11 @@ const messages = {
         "properties": {
             name: 'Propiedades del sistema |||| Propiedades del sistema',
             fields: {
-                id: 'Identificador',
+                property: 'Propiedad',
                 value: 'Valor',
                 origin: 'Fuente de datos',
+                nodeId: 'Nodo',
+                updatedOn: 'Última actualización',
             }
         },
     },

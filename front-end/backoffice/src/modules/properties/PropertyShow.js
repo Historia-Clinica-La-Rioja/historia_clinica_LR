@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    DateField,
     Show,
     SimpleShowLayout,
     TextField,
@@ -9,9 +10,12 @@ const PropertyShow = (props) => {
     return (
         <Show {...props}>
             <SimpleShowLayout>
-                <TextField source="id" />
+                <TextField source="property" />
                 <TextField source="value" />
                 <TextField source="origin" />
+                <TextField source="description" />
+                <TextField source="nodeId"/>
+                <DateField source="updatedOn" showTime />
             </SimpleShowLayout>
         </Show>
     )

@@ -1,3 +1,47 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_32 
 
+    - changeSet:
+          id: system_property-createTable
+          comment: Create table system_property
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: system_property
+                    columns:
+                        - column:
+                            autoIncrement: true
+                            constraints:
+                              primaryKey: true
+                              primaryKeyName: PK_system_property
+                            name: id
+                            type: int
+                        - column:
+                              constraints:
+                                nullable: false
+                              name: property
+                              type: varchar(255)
+                        - column:
+                              name: value
+                              type: varchar(255)
+                        - column:
+                              name: origin
+                              type: varchar(255)
+                        - column:
+                              constraints:
+                                nullable: false
+                              name: node_id
+                              type: varchar(255)
+                        - column:
+                            name: description
+                            type: varchar(255)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+              - addUniqueConstraint:
+                  tableName: system_property
+                  columnNames: id, node_id
+                  constraintName: UQ_system_property

@@ -3,23 +3,40 @@ package ar.lamansys.sgx.shared.actuator.domain;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @ToString
 public class PropertyBo {
 
     @ToString.Include
-    private final String id;
+    private Integer id;
 
     @ToString.Include
-    private final String value;
+    private String property;
 
     @ToString.Include
-    private final String origin;
+    private String description;
 
-    public PropertyBo(String id, String value, String origin) {
+    @ToString.Include
+    private String value;
+
+    @ToString.Include
+    private String origin;
+
+    @ToString.Include
+    private String nodeId;
+
+    private LocalDateTime updatedOn;
+
+    public PropertyBo(Integer id, String property, String value, String description, String origin, String nodeId, LocalDateTime updatedOn) {
         this.id = id;
+        this.property = property;
         this.value = value;
+        this.description = description;
+        this.nodeId = nodeId;
         this.origin = origin;
+        this.updatedOn = updatedOn;
     }
 
     @Override
@@ -29,11 +46,14 @@ public class PropertyBo {
 
         PropertyBo that = (PropertyBo) o;
 
-        return id.equals(that.id);
+        if (!property.equals(that.property)) return false;
+        return nodeId.equals(that.nodeId);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        int result = property.hashCode();
+        result = 31 * result + nodeId.hashCode();
+        return result;
     }
 }

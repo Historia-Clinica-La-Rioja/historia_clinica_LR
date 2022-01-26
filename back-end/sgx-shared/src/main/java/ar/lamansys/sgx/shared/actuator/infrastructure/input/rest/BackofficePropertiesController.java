@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("backoffice/properties")
-public class BackofficePropertiesController extends AbstractBackofficeController<PropertyBo, String>{
+public class BackofficePropertiesController extends AbstractBackofficeController<PropertyBo, Integer>{
 
 	public BackofficePropertiesController(BackofficePropertyStore store) {
 		super(store, new BackofficePermissionValidatorAdapter<>(HttpMethod.GET));

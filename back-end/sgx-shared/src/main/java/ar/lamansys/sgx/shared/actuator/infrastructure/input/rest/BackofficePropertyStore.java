@@ -2,97 +2,76 @@ package ar.lamansys.sgx.shared.actuator.infrastructure.input.rest;
 
 
 import ar.lamansys.sgx.shared.actuator.domain.PropertyBo;
+import ar.lamansys.sgx.shared.actuator.infrastructure.output.repository.SystemProperty;
+import ar.lamansys.sgx.shared.actuator.infrastructure.output.repository.SystemPropertyRepository;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
-import org.springframework.boot.actuate.env.EnvironmentEndpoint;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class BackofficePropertyStore implements BackofficeStore<PropertyBo, String> {
+public class BackofficePropertyStore implements BackofficeStore<PropertyBo, Integer> {
 
-	private final Set<PropertyBo> properties;
+	private final SystemPropertyRepository systemPropertyRepository;
 
 	private final FeatureFlagsService featureFlagsService;
 
-	public BackofficePropertyStore(Optional<EnvironmentEndpoint> environ, FeatureFlagsService featureFlagsService) {
-		this.featureFlagsService = featureFlagsService;
-		String include = "(spring\\.*|email-*|ws\\.*|logging\\.*|ws\\.*|jobs\\.*|"
-				+ "app\\.*|api\\.*|admin\\.*|token\\.*|management\\.*|"
-				+ "oauth\\.*|externalurl\\.*|integration\\.*|actuator\\.*|"
-				+ "internment\\.*|images\\.*|mail\\.*|recaptcha\\.*|.*\\.cron\\.*|"
-				+ "habilitar\\.*|hsi\\.*"
-				+ ")";
-		properties = environ.map(env -> env.environment(include))
-				.map(environmentDescriptor -> generateSource(environmentDescriptor.getPropertySources()))
-				.orElse(Collections.emptySet());
-
-	}
-
-	private Set<PropertyBo> generateSource(List<EnvironmentEndpoint.PropertySourceDescriptor> propertySources) {
-		Set<PropertyBo> sortedSet = new LinkedHashSet<>();
-		propertySources.forEach(propertySourceDescriptor -> {
-				Set<PropertyBo> subProperties = buildProperty(propertySourceDescriptor);
-				sortedSet.addAll(subProperties);
-		});
-		return sortedSet;
-
-	}
-
-	private Set<PropertyBo> buildProperty(EnvironmentEndpoint.PropertySourceDescriptor propertySourceDescriptor) {
-		Set<PropertyBo> sortedSet = new LinkedHashSet();
-		propertySourceDescriptor
-				.getProperties()
-				.forEach((s, propertyValueDescriptor) -> sortedSet.add(new PropertyBo(s, (String)(propertyValueDescriptor.getValue()), propertySourceDescriptor.getName())));
-		return sortedSet;
+	public BackofficePropertyStore(SystemPropertyRepository systemPropertyRepository,
+								   FeatureFlagsService featureFlagsService1) {
+		this.systemPropertyRepository = systemPropertyRepository;
+		this.featureFlagsService = featureFlagsService1;
 	}
 
 	@Override
 	public Page<PropertyBo> findAll(PropertyBo entity, Pageable pageable) {
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA))
 			return new PageImpl<>(Collections.emptyList(), pageable, 0);
-		var result = properties.stream()
-				.filter(propertyBo -> entity.getId() == null || propertyBo.getId().contains(entity.getId()))
-				.collect(Collectors.toList());
-		int from = pageable.getPageSize() * pageable.getPageNumber();
-		int to = Math.min(result.size(), (from + pageable.getPageSize()));
-		return new PageImpl<>(result.subList(from, to), pageable, result.size());
+
+		ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("property", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withMatcher("nodeId", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withMatcher("value", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+
+		return systemPropertyRepository
+				.findAll(Example.of(mapTo(entity), customExampleMatcher),pageable)
+				.map(this::mapTo);
 	}
 
 	@Override
 	public List<PropertyBo> findAll() {
 		return featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA) ?
-				new ArrayList<>(properties) :
+				systemPropertyRepository.findAll().stream()
+						.map(this::mapTo)
+						.collect(Collectors.toList()) :
 				Collections.emptyList();
 	}
 
 	@Override
-	public List<PropertyBo> findAllById(List<String> ids) {
+	public List<PropertyBo> findAllById(List<Integer> ids) {
 		return featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA) ?
-				properties.stream()
-				.filter(propertyBo -> ids.contains(propertyBo.getId()))
-				.collect(Collectors.toList()) :
+				systemPropertyRepository
+						.findAllById(ids)
+						.stream()
+						.map(this::mapTo)
+						.collect(Collectors.toList()) :
 				Collections.emptyList();
 	}
 
 	@Override
-	public Optional<PropertyBo> findById(String id) {
+	public Optional<PropertyBo> findById(Integer id) {
 		return featureFlagsService.isOn(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA) ?
-				properties.stream()
-				.filter(propertyBo -> propertyBo.getId().equals(id))
-				.findFirst() :
+				systemPropertyRepository.findById(id)
+						.map(this::mapTo) :
 				Optional.empty();
 	}
 
@@ -102,7 +81,7 @@ public class BackofficePropertyStore implements BackofficeStore<PropertyBo, Stri
 	}
 	
 	@Override
-	public void deleteById(String id) {
+	public void deleteById(Integer id) {
 		return;
 	}
 
@@ -111,5 +90,23 @@ public class BackofficePropertyStore implements BackofficeStore<PropertyBo, Stri
 		return Example.of(entity);
 	}
 
+	private SystemProperty mapTo(PropertyBo propertyBo) {
+		return new SystemProperty(propertyBo.getId(),
+				propertyBo.getProperty(),
+				propertyBo.getValue(),
+				propertyBo.getDescription(),
+				propertyBo.getOrigin(),
+				propertyBo.getNodeId(),
+				propertyBo.getUpdatedOn());
+	}
 
+	private PropertyBo mapTo(SystemProperty systemProperty) {
+		return new PropertyBo(systemProperty.getId(),
+				systemProperty.getProperty(),
+				systemProperty.getValue(),
+				systemProperty.getDescription(),
+				systemProperty.getOrigin(),
+				systemProperty.getNodeId(),
+				systemProperty.getUpdatedOn());
+	}
 }
