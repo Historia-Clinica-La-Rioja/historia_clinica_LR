@@ -50,8 +50,8 @@ public class RegisterUserImpl implements RegisterUser {
     public void execute(String username, String email, String password) {
         logger.debug("Register new user -> {}", username);
         validations(username);
-        register(username, password);
         registerInOAuthService(username, email, password);
+        register(username, password);
     }
 
     private void register(String username, String password) {

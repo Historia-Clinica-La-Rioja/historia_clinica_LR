@@ -1,6 +1,8 @@
 package ar.lamansys.sgx.auth.user.infrastructure.output.oauthuser;
 
 import ar.lamansys.sgx.auth.oauth.infrastructure.output.config.OAuthWSConfig;
+import ar.lamansys.sgx.auth.user.application.exception.OAuthUserEnumException;
+import ar.lamansys.sgx.auth.user.application.exception.OAuthUserException;
 import ar.lamansys.sgx.auth.user.domain.user.model.OAuthUserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.OAuthUserManagementStorage;
 import ar.lamansys.sgx.auth.user.infrastructure.output.oauthuser.configuration.OAuthRestTemplateAuth;
@@ -31,7 +33,7 @@ public class OAuthUserManagementStorageImpl extends RestClient implements OAuthU
         log.debug("Input parameter -> currentUsername {}, newUserData {}", currentUsername, newUserData);
         String oAuthUserId = this.getOAuthUserId(currentUsername);
         if (oAuthUserId == null)
-            return;
+            throw new OAuthUserException(OAuthUserEnumException.ERROR_GETTING_USER, "Error obteniendo usuario en el servidor");
         updateUserData(oAuthUserId, newUserData);
     }
 
@@ -75,6 +77,7 @@ public class OAuthUserManagementStorageImpl extends RestClient implements OAuthU
             }
         } catch (Exception e) {
             log.debug("Error creating user in OAuth Server");
+            throw new OAuthUserException(OAuthUserEnumException.ERROR_CREATING_USER, "Error creando el usuario en el servidor");
         }
 
     }
