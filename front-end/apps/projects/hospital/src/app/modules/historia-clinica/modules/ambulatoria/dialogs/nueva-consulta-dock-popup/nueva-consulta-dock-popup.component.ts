@@ -368,7 +368,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 
-		if ((parseInt(consulta.anthropometricData?.headCircumference?.value, 10) < 0) || (parseInt(consulta.anthropometricData?.headCircumference?.value, 10) > 100)) {
+		if ((parseInt(consulta.anthropometricData?.headCircumference?.value, 10) < 1) || (parseInt(consulta.anthropometricData?.headCircumference?.value, 10) > 100)) {
 			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
 		}
 
