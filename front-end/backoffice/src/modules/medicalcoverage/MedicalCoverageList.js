@@ -20,7 +20,7 @@ const MedicalCoverageList = props => (
     <List {...props} filters={<MedicalCoverageFilter/>}>
         <Datagrid rowClick="show">
             <TextField source="name"/>
-            <ReferenceField source="type" reference="medicalcoveragetypes">
+            <ReferenceField source="type" reference="medicalcoveragetypes" link={false}>
                 <TextField source="value" />
             </ReferenceField>
             <TextField source="cuit"/>
