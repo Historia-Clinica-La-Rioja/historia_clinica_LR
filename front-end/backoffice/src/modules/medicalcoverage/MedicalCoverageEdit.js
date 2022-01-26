@@ -60,7 +60,7 @@ const PrivateHealthInsurancePlanComponent = ({formData}) => {
 
 const MedicalCoverageMergeComponent = (props) => {
     const record = useRecordContext(props);
-    return record && record.cuit
+    return record && record.cuit && record.enabled
         ?
         <Fragment>
             <SectionTitle label="resources.medicalcoverages.fields.merge"/>

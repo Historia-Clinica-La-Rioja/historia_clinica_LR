@@ -257,6 +257,7 @@ export interface BMPersonDto extends APersonDto {
 export interface BackofficeCoverageDto extends Serializable {
     acronym?: string;
     cuit: string;
+    enabled: boolean;
     id: number;
     name: string;
     rnos?: number;

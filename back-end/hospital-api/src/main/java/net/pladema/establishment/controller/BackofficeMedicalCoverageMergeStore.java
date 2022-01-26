@@ -47,7 +47,7 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
         List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit()), customExampleMatcher)).stream()
                 .map(this::mapToDto)
-                .filter(backofficeCoverageDto -> backofficeCoverageDto.getCuit()==null)
+                .filter(backofficeCoverageDto -> backofficeCoverageDto.getCuit()==null&&backofficeCoverageDto.getEnabled())
                 .collect(Collectors.toList());
         if(coverage.getType()!=null)
             result = result.stream().filter(backofficeCoverage -> backofficeCoverage.getType().equals(coverage.getType())).collect(Collectors.toList());
