@@ -22,7 +22,9 @@
 			"card": {
 				"buttons": {
 					"NUEVA_CONSULTA": "Nueva consulta"
-				}
+				},
+				"GROUP_AND_FACTOR": "Grupo y factor",
+				"SANGUINEOUS": "sanguíneo"
 			},
 			"new-nursing-consultation": {
 				"TITLE": "Nueva consulta de enfermería",

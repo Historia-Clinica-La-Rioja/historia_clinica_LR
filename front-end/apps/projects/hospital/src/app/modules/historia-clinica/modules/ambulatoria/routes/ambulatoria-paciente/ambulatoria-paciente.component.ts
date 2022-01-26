@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, ERole } from '@api-rest/api-model';
 
-import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto } from '@api-rest/api-model';
+import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -62,6 +62,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public CurrentUserIsAllowedToMakeBothQueries = false;
 	referenceNotificationService: ReferenceNotificationService;
 	refNotificationInfo: ReferenceNotificationInfo;
+	bloodType: string;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -99,12 +100,15 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					consultationType: REFERENCE_CONSULTATION_TYPE.AMBULATORY
 				}
 				this.referenceNotificationService = new ReferenceNotificationService(this.refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
-		}) 
+				this.ambulatoriaSummaryFacadeService.anthropometricData$.subscribe(
+					(data: HCEAnthropometricDataDto) => this.bloodType = data?.bloodType?.value
+				);
+			});
 	}
 	ngOnInit(): void {
 		this.setActionsLayout();
 		this.personInformation = [];
-		
+
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD)
 			.subscribe(isOn => this.externalInstitutionsEnabled = isOn);
 
