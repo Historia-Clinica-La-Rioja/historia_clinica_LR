@@ -45,9 +45,8 @@ public class BackofficePrivateHealthInsurancePlanStore implements BackofficeStor
 
     @Override
     public PrivateHealthInsurancePlan save(PrivateHealthInsurancePlan entity) {
-        PrivateHealthInsurancePlan privateHealthInsurancePlan = this.repository.findByIdAndPlan(entity.getPrivateHealthInsuranceId(), entity.getPlan());
-        if (privateHealthInsurancePlan != null) {
-            return update(privateHealthInsurancePlan);
+        if (entity.getId() != null) {
+            return update(entity);
         }
         return create(entity);
     }
