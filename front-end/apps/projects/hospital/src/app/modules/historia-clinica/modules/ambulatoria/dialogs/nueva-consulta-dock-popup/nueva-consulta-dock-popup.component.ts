@@ -236,8 +236,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					}
 				} else {
 					this.disableConfirmButton = false;
-					if (!this.isValidConsultation())
-						this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					if (!this.isValidConsultation()) {
+						setTimeout(() => {
+							this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}, 500);
+					}
 
 				}
 			}
