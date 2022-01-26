@@ -7,7 +7,7 @@ import { ContextService } from '@core/services/context.service';
 import { InstitutionDto } from '@api-rest/api-model';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { AppRoutes } from '../../../../app-routing.module';
-import { mapToAddress } from '@api-rest/mapper/institution-dto.mapper';
+import { mapToAddress } from '@api-presentation/mappers/institution-dto.mapper';
 
 @Component({
 	selector: 'app-home',

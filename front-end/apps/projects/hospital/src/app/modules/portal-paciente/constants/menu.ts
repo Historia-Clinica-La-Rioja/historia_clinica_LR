@@ -21,12 +21,6 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'my_personal_data',
 		url: '/paciente/perfil',
 	},
-	{
-		text: 'app.menu.PERFIL',
-		icon: 'account_circle',
-		id: 'home_profile',
-		url: '/home/profile',
-	},
 ];
 
 export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [

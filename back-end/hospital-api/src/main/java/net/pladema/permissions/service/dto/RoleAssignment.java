@@ -5,14 +5,10 @@ import lombok.Getter;
 import lombok.ToString;
 import net.pladema.permissions.repository.enums.ERole;
 
-import java.io.Serializable;
-
 @EqualsAndHashCode
 @Getter
 @ToString
-public class RoleAssignment implements Serializable {
-	
-	private static final long serialVersionUID = 4400712415700752391L;
+public class RoleAssignment {
 	
 	public final ERole role;
 	public final Integer institutionId;

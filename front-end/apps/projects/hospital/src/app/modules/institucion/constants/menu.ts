@@ -86,11 +86,5 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES
 	},
-	{
-		text: 'app.menu.PERFIL',
-		icon: 'account_circle',
-		id: 'home_profile',
-		url: '/home/profile',
-	},
 
 ];

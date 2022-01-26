@@ -1262,6 +1262,7 @@ export interface LimitedPatientSearchDto {
 }
 
 export interface LoggedPersonDto {
+    avatar?: string;
     firstName: string;
     lastName: string;
 }
@@ -1783,7 +1784,7 @@ export interface PatientType extends Serializable {
 }
 
 export interface PermissionsDto {
-    roleAssignments: RoleAssignment[];
+    roleAssignments: RoleAssignmentDto[];
 }
 
 export interface PersonBasicDataResponseDto extends Serializable {
@@ -2021,9 +2022,10 @@ export interface ResponsibleDoctorDto extends Serializable {
     licence: string;
 }
 
-export interface RoleAssignment extends Serializable {
+export interface RoleAssignmentDto {
     institutionId: number;
     role: ERole;
+    roleDescription: string;
 }
 
 export interface RoleDto {
