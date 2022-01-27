@@ -164,6 +164,7 @@
             - Talla: <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong><br/>
             - Peso: <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong><br/>
             - IMC: <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong><br/>
+            - Perímetro cefálico: <strong><label  th:if="${anthropometricData.headCircumference  != null}" th:text="${anthropometricData.headCircumference.value + 'cm'}"></label></strong><br/>
         </div>
     </div>
 
@@ -368,6 +369,24 @@
             <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%' + 'Hs'}"></span></strong>
             &nbsp;<span th:if="${vitalSigns.bloodOxygenSaturation != null}" >Fecha de medición: </span>
             <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${#temporals.format(vitalSigns.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+
+            - Glucemia:
+            <strong><span  th:if="${vitalSigns.bloodGlucose  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.bloodGlucose != null}" th:text="${vitalSigns.bloodGlucose.value + 'Mg/dl'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.bloodGlucose != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.bloodGlucose != null}" th:text="${#temporals.format(vitalSigns.bloodGlucose.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+
+            - Hemoglobina glicosilada:
+            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin != null}" th:text="${vitalSigns.glycosylatedHemoglobin.value+ '%'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.glycosylatedHemoglobin != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin != null}" th:text="${#temporals.format(vitalSigns.glycosylatedHemoglobin.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+
+            - Riesgo cardiovascular:
+            <strong><span  th:if="${vitalSigns.cardiovascularRisk  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.cardiovascularRisk != null}" th:text="${vitalSigns.cardiovascularRisk.value+ '%'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.cardiovascularRisk != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.cardiovascularRisk != null}" th:text="${#temporals.format(vitalSigns.cardiovascularRisk.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
         </div>
     </div>
 
