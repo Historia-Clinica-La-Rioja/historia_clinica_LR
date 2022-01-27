@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

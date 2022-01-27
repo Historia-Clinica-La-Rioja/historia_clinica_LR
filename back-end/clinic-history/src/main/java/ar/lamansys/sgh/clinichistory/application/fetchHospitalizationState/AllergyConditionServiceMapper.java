@@ -3,7 +3,7 @@ package ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.AllergyConditionVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import org.mapstruct.IterableMapping;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 

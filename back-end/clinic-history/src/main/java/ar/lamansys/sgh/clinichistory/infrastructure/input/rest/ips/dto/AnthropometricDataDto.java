@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.constraints.HeightDataValid;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.constraints.WeightDataValid;
 import lombok.Getter;

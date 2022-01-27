@@ -1,12 +1,9 @@
 package net.pladema.permissions.service;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.session.application.port.UserSessionStorage;

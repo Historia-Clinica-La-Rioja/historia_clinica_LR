@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.patient.service.domain.MedicalCoverageBo;
-import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
 
 @Setter
 @Getter

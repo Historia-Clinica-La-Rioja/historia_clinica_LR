@@ -1,7 +1,6 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
 import static net.pladema.hsi.extensions.configuration.ExtensionAuthorizationBuilder.buildExtensionAuthorization;
-import static net.pladema.hsi.extensions.infrastructure.repository.DemoExtensionService.PUBLIC_MENU_LIST;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
