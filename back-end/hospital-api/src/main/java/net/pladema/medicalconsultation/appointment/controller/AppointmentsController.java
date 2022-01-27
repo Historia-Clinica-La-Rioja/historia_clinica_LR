@@ -196,7 +196,7 @@ public class AppointmentsController {
     public ResponseEntity<Boolean> updateMedicalCoverage(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "appointmentId") Integer appointmentId,
-            @RequestParam(name = "patientMedicalCoverageId") Integer patientMedicalCoverageId) {
+            @RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
         LOG.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}",
                 institutionId, appointmentId, patientMedicalCoverageId);
         boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);

@@ -5,7 +5,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
@@ -179,13 +179,16 @@ export class AppointmentComponent implements OnInit {
 
 	edit(): void {
 		if (this.formEdit.valid) {
-			if (this.isAssigned()
-				&& this.formEdit.controls.newCoverageData.dirty
-				&& this.formEdit.controls.newCoverageData.value) {
-				const patientMedicalCoverageId = this.formEdit.controls.newCoverageData.value.id;
-				this.coverageData = this.formEdit.controls.newCoverageData.value
-				this.updateCoverageData(patientMedicalCoverageId);
-				this.setCoverageText(this.formEdit.controls.newCoverageData.value);
+			if (this.isAssigned()) {
+				if (this.formEdit.controls.newCoverageData.value) {
+					this.coverageData = this.formEdit.controls.newCoverageData.value;
+					this.updateCoverageData(this.coverageData.id);
+					this.setCoverageText(this.coverageData);
+				} else {
+					this.coverageData = null;
+					this.coverageNumber = null;
+					this.updateCoverageData(null);
+				}
 			}
 			if (this.formEdit.controls.phoneNumber.dirty){
 				this.updatePhoneNumber(this.formEdit.controls.phoneNumber.value);
@@ -257,6 +260,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	openMedicalCoverageDialog(): void {
+		this.formEdit.controls.newCoverageData.setValue(null);
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {
 				identificationNumber: this.params.appointmentData.patient.identificationNumber,
@@ -323,6 +327,9 @@ export class AppointmentComponent implements OnInit {
 		return this.patientNameService.getPatientName(appointmentInformation.patient.fullName, appointmentInformation.patient.fullNameWithNameSelfDetermination);
 	}
 
+	clear(): void {
+		this.formEdit.controls.newCoverageData.setValue(null);
+	}
 }
 
 export interface PatientAppointmentInformation {

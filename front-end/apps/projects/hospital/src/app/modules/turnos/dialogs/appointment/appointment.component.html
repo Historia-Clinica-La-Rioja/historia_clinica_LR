@@ -40,6 +40,10 @@
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
 					<mat-form-field appearance="outline" *ngIf="isAssigned()">
+						<button type="button" mat-button matSuffix color="warn" mat-icon-button
+								*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
 						<mat-select formControlName="newCoverageData">
 							<mat-option
