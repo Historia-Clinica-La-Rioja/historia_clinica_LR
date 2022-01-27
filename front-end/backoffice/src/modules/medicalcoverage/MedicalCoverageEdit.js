@@ -103,7 +103,8 @@ const MedicalCoverageEdit = props => (
                 <FormDataConsumer>
                     {formDataProps => (<PrivateHealthInsurancePlanComponent {...formDataProps}/>)}
                 </FormDataConsumer>
-                <MedicalCoverageMergeComponent/>
+                <div className="height-30" />
+                <MedicalCoverageMergeComponent  />
 
             </SimpleForm>
     </Edit>
