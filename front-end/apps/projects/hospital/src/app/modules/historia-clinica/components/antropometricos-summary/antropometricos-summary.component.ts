@@ -41,6 +41,9 @@ export class AntropometricosSummaryComponent implements OnInit {
 		this.anthropometricData$.subscribe(
 			(anthropometricData: AnthropometricDataDto) => {
 				if (anthropometricData) {
+					if (anthropometricData.bmi?.value) {
+						anthropometricData.bmi.value = this.truncateIfNecessary(anthropometricData.bmi?.value);
+					}
 					this.details = [];
 					Object.keys(this.LABELS).forEach(
 						key => {
@@ -73,6 +76,22 @@ export class AntropometricosSummaryComponent implements OnInit {
 			}
 		}
 		);
+	}
+
+	private truncateIfNecessary(floatValue: string): string {
+		if (!floatValue)
+			return undefined;
+
+		const lastPartValue = floatValue.substring(floatValue.length - 3);
+		if (lastPartValue === '.00') {
+			return floatValue.substring(0, floatValue.length - 3);
+		}
+
+		if (lastPartValue[2] === '0') {
+			return floatValue.substring(0, floatValue.length - 1);
+		}
+
+		return floatValue;
 	}
 
 }
