@@ -5,6 +5,72 @@
 			<h4 class="page-title" [translate]="'internaciones.new-internment.SUBTITLE'"></h4>
 			<br>
 			<form [formGroup]="form" (ngSubmit)="save()">
+
+				<section>
+					<div class="form-row" fxLayoutGap="5px" formGroupName="dateTime">
+						<span translate="internaciones.new-internment.DATE_TIME"></span>
+
+						<mat-form-field class="date" appearance="outline">
+
+							<input formControlName="date" id="date" matInput [matDatepicker]="datePicker"
+								[value]="today" [min]="validPreviousDays" [max]="today"
+								placeholder="{{'internaciones.new-internment.DATE' | translate}}">
+
+							<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+							<mat-datepicker #datePicker></mat-datepicker>
+
+							<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'date') else invalidDate"
+								translate="internaciones.new-internment.REQUIRED"></mat-error>
+							<ng-template #invalidDate>
+								<mat-error translate="internaciones.new-internment.INVALID_DATE"></mat-error>
+							</ng-template>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
+								placeholder="{{'internaciones.new-internment.TIME' | translate}}">
+
+							<mat-error *ngIf="hasError(form.get('dateTime'), 'pattern', 'time')"
+								translate="internaciones.new-internment.TIME_FORMAT">
+							</mat-error>
+							<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')"
+								translate="internaciones.new-internment.REQUIRED">
+							</mat-error>
+							<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')"
+								translate="internaciones.new-internment.MAX_TIME_ERROR"></mat-error>
+						</mat-form-field>
+					</div>
+				</section>
+
+				<section>
+					<div class="form-row">
+						<span translate="internaciones.new-internment.MEDICAL_CONVERGE"></span>
+						<mat-form-field appearance="outline">
+							<mat-select formControlName="patientMedicalCoverage" placeholder="{{'internaciones.new-internment.NO_MEDICAL_CONVERGE' | translate}}">
+								<mat-option id="medicalConverge"
+									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+									[value]="patientMedicalCoverage">
+									{{getFullMedicalCoverageText(patientMedicalCoverage)}}
+								</mat-option>
+								<mat-option [value]="'null'" >{{'internaciones.new-internment.NO_MEDICAL_CONVERGE'
+									|translate}}</mat-option>
+								<mat-divider></mat-divider>
+								<mat-option (click)="openMedicalCoverageDialog()">
+									<span class="color-primary"
+										translate="internaciones.new-internment.UPDATE_COVERAGE"></span>
+								</mat-option>
+							</mat-select>
+
+							<button id="clear_coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverage" matSuffix
+								color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+
+							<mat-error translate="internaciones.new-internment.REQUIRED"></mat-error>
+						</mat-form-field>
+					</div>
+				</section>
+
 				<section>
 					<h2 [translate]="'internaciones.new-internment.SECTION_SERVICE'"></h2>
 					<div class="form-row">
