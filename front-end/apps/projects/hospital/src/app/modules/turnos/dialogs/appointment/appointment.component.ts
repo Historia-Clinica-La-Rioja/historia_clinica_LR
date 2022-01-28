@@ -110,14 +110,9 @@ export class AppointmentComponent implements OnInit {
 				}
 				if (this.appointment.patientMedicalCoverageId) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
-						.pipe(
-							map(
-								s => this.patientMedicalCoverages.find(mc => mc.id === s.id)
-							)
-						)
 						.subscribe(coverageData => {
 							if (coverageData) {
-								this.coverageData = coverageData;
+								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
 								this.formEdit.controls.newCoverageData.setValue(coverageData);
 								this.setCoverageText(this.formEdit.controls.newCoverageData.value);
 							}
