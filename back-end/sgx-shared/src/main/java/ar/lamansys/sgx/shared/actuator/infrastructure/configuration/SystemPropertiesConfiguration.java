@@ -8,16 +8,20 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.ToggleConfiguration;
 import ar.lamansys.sgx.shared.flavor.FlavorService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.env.EnvironmentEndpoint;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -35,15 +39,23 @@ public class SystemPropertiesConfiguration {
 
     private final SystemPropertyRepository systemPropertyRepository;
 
+    private final MessageSource messageSource;
+
+    private final String defaultLanguage;
+
     public SystemPropertiesConfiguration(Optional<EnvironmentEndpoint> environ,
                                          SystemPropertyRepository systemPropertyRepository,
                                          DateTimeProvider dateTimeProvider,
-                                         FlavorService flavorService) {
+                                         FlavorService flavorService,
+                                         MessageSource messageSource,
+                                         @Value("${app.default.language}") String defaultLanguage) {
         this.environ = environ;
         this.systemPropertyRepository = systemPropertyRepository;
         this.dateTimeProvider = dateTimeProvider;
+        this.messageSource = messageSource;
         this.nodeId = UUID.randomUUID().toString();
         this.flavorService = flavorService;
+        this.defaultLanguage = defaultLanguage;
         systemPropertyRepository.deleteAll();
     }
 
@@ -69,7 +81,9 @@ public class SystemPropertiesConfiguration {
             sortedSet.addAll(subProperties);
         });
         sortedSet.addAll(buildDefaultFeatureFlags());
+        String exclude = "app.data.sample.*";
         return sortedSet.stream()
+                .filter(propertyBo -> !Pattern.matches(exclude,propertyBo.getProperty()))
                 .map(this::mapToEntity)
                 .collect(Collectors.toSet());
 
@@ -101,10 +115,16 @@ public class SystemPropertiesConfiguration {
                         new PropertyBo(null,
                                 propertyKey,
                                 (String)(propertyValueDescriptor.getValue()),
-                                isFeatureFlag(propertyKey) ? getLabel(propertyKey) : propertyKey,
+                                buildLabel(propertyKey),
                                 propertySourceDescriptor.getName(),
                                 nodeId, dateTimeProvider.nowDateTime())));
         return sortedSet;
+    }
+
+    private String buildLabel(String propertyKey) {
+        return isFeatureFlag(propertyKey) ?
+                getLabel(propertyKey) :
+                messageSource.getMessage(propertyKey, null, propertyKey, new Locale(defaultLanguage));
     }
 
     private String getLabel(String propertyKey) {

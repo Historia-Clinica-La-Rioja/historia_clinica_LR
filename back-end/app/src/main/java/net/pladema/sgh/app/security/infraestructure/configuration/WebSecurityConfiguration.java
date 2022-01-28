@@ -6,7 +6,6 @@ import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.ActuatorConf
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgh.app.security.infraestructure.filters.AuthorizationFilter;
 import net.pladema.sgh.app.security.infraestructure.filters.PublicApiAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -31,21 +30,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			"/v3/**",
 			"/swagger-ui/**"
 	};
-
-	@Value("${api.user}")
-	protected String apiUser;
-
-	@Value("${api.password}")
-	protected String apiPassword;
-
-	@Value("${api.user.activateUser}")
-	protected String activateApiUser;
-
-	@Value("${api.password.reset}")
-	protected String apiPasswordReset;
-
-	@Value("${api.auth}")
-	protected String apiAuth;
 
 	private final AuthenticationTokenFilter authenticationTokenFilter;
 
@@ -78,15 +62,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.authorizeRequests()
-				.antMatchers(HttpMethod.GET, apiUser + "/{id}" + activateApiUser).permitAll()
-				.antMatchers(HttpMethod.POST, apiUser + "/activationlink/resend").permitAll()
-				.antMatchers(apiPassword + apiPasswordReset ).permitAll()
+				.antMatchers(HttpMethod.GET,  "/users/{id}/enable").permitAll()
+				.antMatchers(HttpMethod.POST, "/users/activationlink/resend").permitAll()
+				.antMatchers("/passwords/reset" ).permitAll()
 				.antMatchers("/actuator/health").permitAll()
 				.antMatchers("/actuator/env/**").hasAnyAuthority(
 						ERole.ROOT.getValue(),
 						ERole.ADMINISTRADOR.getValue())
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
-				.antMatchers(apiAuth + "/**").permitAll()
+				.antMatchers( "/auth/**").permitAll()
 				.antMatchers(SWAGGER_RESOURCES).permitAll()
 				.antMatchers(BACKOFFICE + "/properties").hasAnyAuthority(
 						ERole.ROOT.getValue(),

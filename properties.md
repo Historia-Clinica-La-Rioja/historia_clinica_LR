@@ -18,7 +18,6 @@ Este documento detalla las propiedades configurables del sistema.
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | admin.password | ADMIN_PASS | admin123 | **Obligatorio** | Contraseña del usuario Administrador |  v0.2.0  |
 | internment.document.directory |DOCUMENT_ROOT_DIRECTORY | /temp | **Obligatorio** | Directorio donde se almacenan documentos clínicos y fotos de pacientes | v0.2.0 |
-| frontend.loginpage |  LOGIN_PAGE  | / | Opcional  |   | v0.2.0   |
 | spring.profiles.active  |   | default  | **Único**  | Valores posibles: dev, qa, prod   | v0.2.0  |
 
 
@@ -30,13 +29,13 @@ Este documento detalla las propiedades configurables del sistema.
 
 ## Configuración DDBB (SQL)
 
-| Propiedad | Variable de ambiente | Valor por defecto | Necesidad | Descripcion | Desde |
-| ---- | ---- | ---- | ------ | ---------------- | ---- |
-| spring.datasource.url | DATABASE_IP_PORT y DATABASE_SCHEMA | [JDBC](back-end/app/src/main/resources/application.properties#L63) | **Obligatorio** | Url de conexión a la base de datos | v0.2.0 |
-| spring.datasource.username | DATABASE_USER | postgres | **Obligatorio** | Nombre de usuario utilizado para realizar la conexión a la base de datos | v0.2.0 |
-| spring.datasource.password | DATABASE_PASS | Local123 | **Obligatorio** | Contraseña utilizada para realizar la conexión a la base de datos | v0.2.0  |
-| spring.datasource.hikari.maximumPoolSize  | HICKARI_MAXIMUM_POOL_SIZE  |  4 | Opcional  |   | v0.2.0  |
-| spring.jpa.database-platform |  | [Dialect](back-end/app/src/main/resources/application.properties#L66) | Opcional | Nombre de la clase que representa el dialecto del motor de base de datos a utilizar  |  v0.2.0 |
+| Propiedad | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                | Desde |
+| ---- | ---- | ---- | ------ |--------------------------------------------------------------------------------------------| ---- |
+| spring.datasource.url | DATABASE_IP_PORT y DATABASE_SCHEMA | [JDBC](back-end/app/src/main/resources/application.properties#L63) | **Obligatorio** | Url de conexión a la base de datos                                                         | v0.2.0 |
+| spring.datasource.username | DATABASE_USER | postgres | **Obligatorio** | Nombre de usuario utilizado para realizar la conexión a la base de datos                   | v0.2.0 |
+| spring.datasource.password | DATABASE_PASS | Local123 | **Obligatorio** | Contraseña utilizada para realizar la conexión a la base de datos                          | v0.2.0  |
+| spring.datasource.hikari.maximumPoolSize  | HICKARI_MAXIMUM_POOL_SIZE  |  4 | Opcional  | Tamaño del pool de conexiones abiertas que estan en la escucha de request | v0.2.0  |
+| spring.jpa.database-platform |  | [Dialect](back-end/app/src/main/resources/application.properties#L66) | Opcional | Nombre de la clase que representa el dialecto del motor de base de datos a utilizar        |  v0.2.0 |
 
 ## Configuración de Mail
 
@@ -58,18 +57,18 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad	| Variable de ambiente       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ------------ | -------- | ------ | --------- | ---------- | ---- |
-| logging.level.net.pladema.sgx.restclient  |   | DEBUG  | Opcional  |   | v0.2.0  |
-| logging.level.net.pladema.federar  |   |  DEBUG | Opcional  |   | v0.2.0   |
-| management.endpoint.metrics  |   | false  | Opcional  |   | v0.2.0  |
-| management.endpoints.web.exposure.include | ACTUATOR_ENABLED_ENDPOINTS  | health,info,env  | Opcional  |   | v0.2.0  |
-| management.endpoints.jmx.exposure.include | ACTUATOR_ENABLED_ENDPOINTS  | health,info,env  | Opcional  |   | v0.2.0  |
-| management.endpoint.prometheus.enabled  |  | false | Opcional |   |  v0.2.0  |
-| management.metrics.export.prometheus.enabled  |   | false  | Opcional  |   | v0.2.0  |
-| management.health.mail.enabled  |   |  false | Opcional  |   | v0.2.0  |
-| management.endpoint.health.show-details  |   |   | Opcional  |   | v0.2.0  |
-| management.info.git.mode |   | full  | Opcional  |   | v0.2.0  |
-| actuator.configuration.whitelist | ACTUATOR_WHITELIST  | 0:0:0:0:0:0:0:1  | Opcional  |   | v0.2.0  |
-| actuator.configuration.authenticated | ACTUATOR_REQUIRED_AUTHENTICATION  | false  | Opcional  |   | v0.2.0  |
+| logging.level.net.pladema.sgx.restclient  |   | DEBUG  | Opcional  | Define el nivel de log del paquete net.pladema.sgx.restclient | v0.2.0  |
+| logging.level.net.pladema.federar  |   |  DEBUG | Opcional  |  Define el nivel de log del paquete net.pladema.federar | v0.2.0   |
+| management.endpoint.metrics  |   | false  | Opcional  | Habilita metricas del servidor  | v0.2.0  |
+| management.endpoints.web.exposure.include | ACTUATOR_ENABLED_ENDPOINTS  | Define que endpoints de la libreria actuator se pueden consultar  | Opcional  |   | v0.2.0  |
+| management.endpoints.jmx.exposure.include | ACTUATOR_ENABLED_ENDPOINTS  | Define que endpoints de la libreria actuator se pueden consultar  | Opcional  |   | v0.2.0  |
+| management.endpoint.prometheus.enabled  |  | false | Opcional |  Define si esta habilitado los endpoints de prometheus (para monitoreo de la aplicación) |  v0.2.0  |
+| management.metrics.export.prometheus.enabled  |   | false  | Opcional  | Define si esta habilitado los endpoints de prometheus (para monitoreo de la aplicación) | v0.2.0  |
+| management.health.mail.enabled  |   |  false | Opcional  |  Habilita información sobre el estado de tu sistema | v0.2.0  |
+| management.endpoint.health.show-details  |   |   | Opcional  |  Habilita  información detallada sobre el estado de tu sistema | v0.2.0  |
+| management.info.git.mode |   | full  | Opcional  |  Incorpora información de git relacionada al sistema | v0.2.0  |
+| actuator.configuration.whitelist | ACTUATOR_WHITELIST  | 0:0:0:0:0:0:0:1  | Opcional  |  Define la lista de ips habilitada a acceder a los endpoints de la libreria actuator | v0.2.0  |
+| actuator.configuration.authenticated | ACTUATOR_REQUIRED_AUTHENTICATION  | false  | Opcional  |  Define si se requiere autenticación para acceder a los endpoints de la libreria actuator | v0.2.0  |
 
 ## Configuración recaptcha 
 
@@ -189,18 +188,6 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 
 ## Propiedades específicas de flavors 
 
-### Chaco
-
-| Propiedad    | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion | Desde |
-| ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-|oauth.enabled   |   | false  | Opcional  |   | v0.2.0   |
-|oauth.tokenUrl   |   | http://stage.ventanillaunica.chaco.gov.ar/oauth/v2/token  |  Opcional |    | v0.2.0  |
-|oauth.tokenHeader   |   | Authorization  | Opcional  |   | v0.2.0  |
-|oauth.apiData   |   |  http://stage.ventanillaunica.chaco.gov.ar/api/v1/persona | Opcional  |   | v0.2.0  |
-|oauth.redirectUri   |   | http://localhost:8080/oauth/chaco  | Opcional  |   |  v0.2.0 |
-|oauth.loginUrl   |   | http://stage.ventanillaunica.chaco.gov.ar  | Opcional  |    | v0.2.0  |
-|oauth.appLaunchUrl   |   | /frontpanel/aplicacion/59/launch  | Opcional  |   | v0.2.0  |
-
 
 ## Pruebas de estrés
 
@@ -212,23 +199,23 @@ Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
 
 
 ## Scheduled Jobs
-| Propiedad | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion | Desde |
-| ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| scheduledjobs.enabled  |   | true  | Opcional  | Des/habilitar la ejecución general de trabajos automáticos | v1.13.0   |
-| scheduledjobs.federatepatients.enabled  |   | true  | Opcional  | Des/habilitar la federación de pacientes en estado validado  | v1.13.0   |
-| scheduledjobs.federatepatients.seconds  |   | 0 | Opcional |   | v1.13.0   |
-| scheduledjobs.federatepatients.minutes |   | 0 | Opcional |   | v1.13.0   |
-| scheduledjobs.federatepatients.hours  |   | 3 | Opcional |   | v1.13.0   |
-| scheduledjobs.federatepatients.dayofmonth  |  | * | Opcional |   | v1.13.0   |
-| scheduledjobs.federatepatients.month  |   | * | Opcional |  | v1.13.0   |
-| scheduledjobs.federatepatients.dayofweek  |  | * | Opcional |   | v1.13.0   |
-| scheduledjobs.updateethnicities.enabled  |   | true  | Opcional  | Des/habilitar la actualización de etnias desde el servicio de Snowstorm | v1.15.0 |
-| scheduledjobs.updateethnicities.seconds  |   | 0 | Opcional  |   | v1.15.0 |
-| scheduledjobs.updateethnicities.minutes  |   | 0 | Opcional  |   | v1.15.0 |
-| scheduledjobs.updateethnicities.hours  |   | 0 | Opcional  |   | v1.15.0 |
-| scheduledjobs.updateethnicities.dayofmonth  |  | 15 | Opcional  |  | v1.15.0 |
-| scheduledjobs.updateethnicities.month  |   | * | Opcional |   | v1.15.0 |
-| scheduledjobs.updateethnicities.dayofweek  |  | * | Opcional  |   | v1.15.0 |
+| Propiedad | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion                                                                       | Desde |
+| ----------------------- | ----------------| ----------------------- | --------- |-----------------------------------------------------------------------------------| ----- |
+| scheduledjobs.enabled  |   | true  | Opcional  | Des/habilitar la ejecución general de trabajos automáticos                        | v1.13.0   |
+| scheduledjobs.federatepatients.enabled  |   | true  | Opcional  | Des/habilitar la federación de pacientes en estado validado                       | v1.13.0   |
+| scheduledjobs.federatepatients.seconds  |   | 0 | Opcional | Configura los segundos del cron usado para la federación de pacientes.            | v1.13.0   |
+| scheduledjobs.federatepatients.minutes |   | 0 | Opcional | Configura los minutos del cron usado para la federación de pacientes.             | v1.13.0   |
+| scheduledjobs.federatepatients.hours  |   | 3 | Opcional | Configura las horas del cron usado para la federación de pacientes.               | v1.13.0   |
+| scheduledjobs.federatepatients.dayofmonth  |  | * | Opcional | Configura el dia del mes del cron usado para la federación de pacientes.          | v1.13.0   |
+| scheduledjobs.federatepatients.month  |   | * | Opcional | Configura el mes del cron usado para la federación de pacientes.                  | v1.13.0   |
+| scheduledjobs.federatepatients.dayofweek  |  | * | Opcional | Configura el dia de la semana del cron usado para la federación de pacientes.     | v1.13.0   |
+| scheduledjobs.updateethnicities.enabled  |   | true  | Opcional  | Des/habilitar la actualización de etnias desde el servicio de Snowstorm           | v1.15.0 |
+| scheduledjobs.updateethnicities.seconds  |   | 0 | Opcional  | Configura los segundos del cron usado para la actualización de las etnias.        | v1.15.0 |
+| scheduledjobs.updateethnicities.minutes  |   | 0 | Opcional  | Configura los minutos del cron usado para la actualización de las etnias.         | v1.15.0 |
+| scheduledjobs.updateethnicities.hours  |   | 0 | Opcional  | Configura las horas del cron usado para la actualización de las etnias.           | v1.15.0 |
+| scheduledjobs.updateethnicities.dayofmonth  |  | 15 | Opcional  | Configura el dia del mes del cron usado para la actualización de las etnias.      | v1.15.0 |
+| scheduledjobs.updateethnicities.month  |   | * | Opcional | Configura el mes del cron usado para la actualización de las etnias.              | v1.15.0 |
+| scheduledjobs.updateethnicities.dayofweek  |  | * | Opcional  | Configura el dia de la semana del cron usado para la actualización de las etnias. | v1.15.0 |
 
 
 ## Monitoring
