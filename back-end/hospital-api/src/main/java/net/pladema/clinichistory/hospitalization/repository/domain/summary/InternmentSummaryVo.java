@@ -9,6 +9,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -42,7 +43,7 @@ public class InternmentSummaryVo {
 
 	private LocalDateTime entryDate;
 
-	private LocalDate dischargeDate;
+	private LocalDateTime dischargeDate;
 
 	private ResponsibleContactVo responsibleContact;
 
@@ -54,7 +55,7 @@ public class InternmentSummaryVo {
 			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
 			String roomNumber, String sectorDescription, ClinicalSpecialty clinicalSpecialty,
 			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
-			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate, LocalDate dischargeDate, Short internmentStatusId) {
+			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate, LocalDateTime dischargeDate, Short internmentStatusId) {
 		this.id = id;
 		this.documents = new DocumentsSummaryVo();
 		this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));

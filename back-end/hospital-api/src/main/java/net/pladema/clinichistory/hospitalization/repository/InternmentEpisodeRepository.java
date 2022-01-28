@@ -136,7 +136,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Query("SELECT ie.entryDate " +
             "FROM InternmentEpisode ie " +
             "WHERE ie.id = :internmentEpisodeId ")
-    LocalDate getEntryDate(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
+    LocalDateTime getEntryDate(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
 
 
     @Transactional(readOnly = true)

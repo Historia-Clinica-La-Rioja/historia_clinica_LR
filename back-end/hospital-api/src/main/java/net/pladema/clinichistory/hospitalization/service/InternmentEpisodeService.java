@@ -29,7 +29,7 @@ public interface InternmentEpisodeService {
 
     boolean haveEpicrisis(Integer internmentEpisodeId);
 
-    LocalDate getEntryDate(Integer internmentEpisodeId);
+    LocalDateTime getEntryDate(Integer internmentEpisodeId);
 
     boolean canCreateEpicrisis(Integer internmentEpisodeId);
  
@@ -43,7 +43,7 @@ public interface InternmentEpisodeService {
 
 	boolean existsActiveForBedId(Integer bedId);
 
-	LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisode);
+	LocalDateTime getLastUpdateDateOfInternmentEpisode(Integer internmentEpisode);
 
 	LocalDateTime updateInternmentEpisodeProbableDischargeDate(Integer internmentEpisode, LocalDateTime probableDischargeDate);
 	

@@ -44,7 +44,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
@@ -166,18 +165,18 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/minDischargeDate")
-	public DateDto getMinDischargeDate(
+	public DateTimeDto getMinDischargeDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
 		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
-			return localDateMapper.toDateDto(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
+			return localDateMapper.toDateTimeDto(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
 		}
 		PatientDischargeBo patientDischarge =  patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
-		LocalDate result = patientDischarge.getMedicalDischargeDate();
+		LocalDateTime result = patientDischarge.getMedicalDischargeDate();
 		LOG.debug(OUTPUT, result);
-		return localDateMapper.toDateDto(result);
+		return localDateMapper.toDateTimeDto(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}")
@@ -204,13 +203,13 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/lastupdatedate")
-	public DateDto getLastUpdateDateOfInternmentEpisode(
+	public DateTimeDto getLastUpdateDateOfInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
-		LocalDate result = internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId);
+		LocalDateTime result = internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId);
 		LOG.debug(OUTPUT, result);
-		return localDateMapper.toDateDto(result);
+		return localDateMapper.toDateTimeDto(result);
 	}
 
 	@ProbableDischargeDateValid
