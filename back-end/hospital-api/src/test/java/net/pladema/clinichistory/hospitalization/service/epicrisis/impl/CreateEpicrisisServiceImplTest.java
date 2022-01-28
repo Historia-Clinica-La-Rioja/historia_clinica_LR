@@ -58,6 +58,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Autowired
     private DocumentRepository documentRepository;
 
+	@Mock
+	private DateTimeProvider dateTimeProvider;
+
     @Mock
     private DocumentService documentService;
 
@@ -68,7 +71,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
-                evolutionNoteDocumentRepository,
+                dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService
         );

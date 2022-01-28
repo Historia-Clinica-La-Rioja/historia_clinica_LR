@@ -49,6 +49,9 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Autowired
 	private InternmentEpisodeRepository internmentEpisodeRepository;
 
+	@Mock
+	private DateTimeProvider dateTimeProvider;
+
 	@Autowired
 	private EvolutionNoteDocumentRepository evolutionNoteDocumentRepository;
 
@@ -71,7 +74,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
 				internmentEpisodeRepository,
-				evolutionNoteDocumentRepository,
+                dateTimeProvider, evolutionNoteDocumentRepository,
 				patientDischargeRepository,
 				documentService
 		);

@@ -51,6 +51,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Autowired
     private PatientDischargeRepository patientDischargeRepository;
 
+	@Mock
+	DateTimeProvider dateTimeProvider;
+
     @Mock
     private DocumentService documentService;
 
@@ -64,7 +67,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
-                evolutionNoteDocumentRepository,
+                dateTimeProvider,
+				evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService
         );
