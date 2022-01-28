@@ -22,7 +22,6 @@ export class AntropometricosSummaryComponent implements OnInit {
 	details: DetailBox[] = [];
 
 	private readonly LABELS = {
-		bloodType: 'Grupo sanguíneo',
 		height: 'Talla (cm)',
 		weight: 'Peso (kg)',
 		bmi: 'IMC',
