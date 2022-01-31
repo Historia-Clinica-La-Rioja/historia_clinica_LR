@@ -33,15 +33,18 @@ export class OauthAuthenticationService {
 	private configureOauthService() {
 
 		this.authService.getOauthConfig().subscribe(config => {
-			let oAuthConfig: AuthConfig = {
-				issuer: config.issuerUrl,
-				redirectUri: location.origin + '/' + AppRoutes.Auth + '/oauth/login',
-				clientId: config.clientId,
-				scope: 'openid profile',
-				responseType: 'code',
+			if (config.enabled) {
+				let oAuthConfig: AuthConfig = {
+					issuer: config.issuerUrl,
+					redirectUri: location.origin + '/' + AppRoutes.Auth + '/oauth/login',
+					clientId: config.clientId,
+					scope: 'openid profile',
+					responseType: 'code',
+					requireHttps: false,
+				}
+				this.oauthService.configure(oAuthConfig);
+				this.oauthService.loadDiscoveryDocumentAndTryLogin();
 			}
-			this.oauthService.configure(oAuthConfig);
-			this.oauthService.loadDiscoveryDocumentAndTryLogin();
 		})
 	}
 
