@@ -296,7 +296,4 @@ export class NewInternmentComponent implements OnInit {
 		);
 	}
 
-	clear(control: AbstractControl): void {
-		control.reset();
-	}
 }

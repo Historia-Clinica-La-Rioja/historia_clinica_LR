@@ -60,12 +60,6 @@
 										translate="internaciones.new-internment.UPDATE_COVERAGE"></span>
 								</mat-option>
 							</mat-select>
-
-							<button id="clear_coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverage" matSuffix
-								color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
-								<mat-icon>close</mat-icon>
-							</button>
-
 							<mat-error translate="internaciones.new-internment.REQUIRED"></mat-error>
 						</mat-form-field>
 					</div>
