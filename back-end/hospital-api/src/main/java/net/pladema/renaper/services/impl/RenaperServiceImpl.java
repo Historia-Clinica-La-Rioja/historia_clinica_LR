@@ -1,6 +1,7 @@
 package net.pladema.renaper.services.impl;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,17 @@ public class RenaperServiceImpl extends RestClient implements RenaperService {
 
 	@Override
 	public List<PersonMedicalCoverageBo> getPersonMedicalCoverage(String nroDocumento, Short idSexo) {
-		String urlWithParams = renaperWSConfig.getUrlCobertura() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo; 
-		ResponseEntity<PersonMedicalCoverageBo[]> response = exchangeGet(urlWithParams, PersonMedicalCoverageBo[].class);
-		return Arrays.asList(response.getBody());
+		String urlWithParams = renaperWSConfig.getUrlCobertura() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo;
+		ResponseEntity<PersonMedicalCoverageBo[]> response = exchangeGet(urlWithParams,
+			PersonMedicalCoverageBo[].class);
+		switch(response.getStatusCode()) {
+			case OK:
+				return Arrays.asList(response.getBody());
+			case NO_CONTENT:
+			case INTERNAL_SERVER_ERROR:
+			default:
+				return Collections.emptyList();
+		}
 	}
 
 	@Override
