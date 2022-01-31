@@ -64,7 +64,7 @@ export class MedicalCoverageComponent implements OnInit {
 			this.healthInsuranceFilteredMasterData = values;
 			this.healthInsuranceMasterData = values;
 
-			if (this.personInfo.identificationTypeId === DNI_TYPE_ID) {
+			if (this.personInfo.identificationTypeId === DNI_TYPE_ID && this.personInfo.genderId) {
 				this.renaperService.getHealthInsurance
 					({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
 					.subscribe((healthInsurances: MedicalCoverageDto[]) => {
