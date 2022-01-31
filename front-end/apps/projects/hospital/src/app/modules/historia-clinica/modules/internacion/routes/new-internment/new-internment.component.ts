@@ -133,7 +133,7 @@ export class NewInternmentComponent implements OnInit {
 		});
 
 		this.form.controls.dateTime.get('date').valueChanges.subscribe((value: Moment) => {
-			if (value.isSame(newMoment(), 'day')) {
+			if (value?.isSame(newMoment(), 'day')) {
 				this.form.controls.dateTime.get('time').setValidators(futureTimeValidation);
 			} else {
 				this.form.controls.dateTime.get('time').removeValidators(futureTimeValidation);
