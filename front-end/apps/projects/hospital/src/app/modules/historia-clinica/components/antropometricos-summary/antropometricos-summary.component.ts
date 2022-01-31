@@ -16,12 +16,14 @@ export class AntropometricosSummaryComponent implements OnInit {
 	@Input() internmentEpisodeId: number;
 	@Input() anthropometricData$: Observable<AnthropometricDataDto>;
 	@Input() editable = false;
+	@Input() hideBloodType = false;
 
 	antropometricosSummary = ANTROPOMETRICOS;
 
 	details: DetailBox[] = [];
 
-	private readonly LABELS = {
+	private LABELS = {
+		bloodType: 'Grupo sanguíneo',
 		height: 'Talla (cm)',
 		weight: 'Peso (kg)',
 		bmi: 'IMC',
@@ -33,6 +35,9 @@ export class AntropometricosSummaryComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		if (this.hideBloodType) {
+			delete this.LABELS.bloodType;
+		}
 		this.updateAnthropometricData();
 	}
 
