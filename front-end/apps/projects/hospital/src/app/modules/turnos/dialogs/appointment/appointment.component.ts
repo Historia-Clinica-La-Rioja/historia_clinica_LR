@@ -6,7 +6,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -24,6 +24,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
+import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -59,6 +60,7 @@ export class AppointmentComponent implements OnInit {
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
+	identificationType: IdentificationTypeDto;
 
 	public hideFilterPanel = false;
 
@@ -81,6 +83,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientNameService: PatientNameService,
+		private readonly personMasterDataService: PersonMasterDataService,
 
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -125,6 +128,11 @@ export class AppointmentComponent implements OnInit {
 		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
+
+		this.personMasterDataService.getIdentificationTypes()
+			.subscribe(identificationTypes => {
+				this.identificationType = identificationTypes.find(identificationType => identificationType.id==this.params.appointmentData.patient.identificationTypeId);
+			});
 	}
 
 	private setMedicalCoverages(): void {
