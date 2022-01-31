@@ -2,6 +2,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentExceptionEnum;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
+import java.time.LocalDate;
 import java.util.Collections;
 
 
@@ -24,10 +26,14 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     private final UpdateOutpatientConsultationService updateOutpatientConsultationService;
 
+    private final DateTimeProvider dateTimeProvider;
+
     public CreateOutpatientDocumentServiceImpl(DocumentFactory documentFactory,
-                                              UpdateOutpatientConsultationService updateOutpatientConsultationService) {
+                                               UpdateOutpatientConsultationService updateOutpatientConsultationService,
+                                               DateTimeProvider dateTimeProvider) {
         this.documentFactory = documentFactory;
         this.updateOutpatientConsultationService = updateOutpatientConsultationService;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
 
@@ -37,6 +43,8 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
         assertContextValid(outpatient);
         outpatient.setId(documentFactory.run(outpatient, true));
+        LocalDate now = dateTimeProvider.nowDate();
+        outpatient.setPerformedDate(now);
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());
         LOG.debug(OUTPUT, outpatient);

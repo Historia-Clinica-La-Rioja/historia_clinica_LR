@@ -123,7 +123,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         consultationBo.setConsultationId(encounterId);
         cpoCeoIndicesCalculator.run(consultationBo);
 
-        odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId()));
+        odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
         appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
 
         LOG.debug("Output -> encounterId {}", encounterId);

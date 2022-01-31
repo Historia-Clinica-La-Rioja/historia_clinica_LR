@@ -12,6 +12,7 @@ import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -51,6 +52,8 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 
     @Valid
     private VitalSignBo vitalSigns;
+
+    private LocalDate performedDate;
 
     @Override
     public Integer getPatientId() {

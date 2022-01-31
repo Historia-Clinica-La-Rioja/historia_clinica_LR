@@ -2,6 +2,7 @@ package ar.lamansys.nursing.infrastructure.output.repository.document.mapper;
 
 import ar.lamansys.nursing.domain.document.NursingDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,7 +11,7 @@ import org.mapstruct.Named;
 
 import java.util.ArrayList;
 
-@Mapper
+@Mapper(uses = {LocalDateMapper.class})
 public interface NursingDocumentMapper {
 
     @Named("fromNursingDocumentBo")

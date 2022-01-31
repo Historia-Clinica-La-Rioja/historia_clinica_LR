@@ -13,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Medicatio
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProblemDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProcedureDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -68,5 +69,7 @@ public class DocumentDto {
     private List<ReasonDto> reasons;
 
     private List<DentalActionDto> dentalActions  = new ArrayList<>();
+
+    private DateDto performedDate;
 
 }

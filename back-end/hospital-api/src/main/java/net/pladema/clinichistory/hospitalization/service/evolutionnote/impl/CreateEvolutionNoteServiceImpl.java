@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
@@ -32,12 +33,16 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
     private final FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
+    private final DateTimeProvider dateTimeProvider;
+
     public CreateEvolutionNoteServiceImpl(DocumentFactory documentFactory,
                                           InternmentEpisodeService internmentEpisodeService,
-                                          FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState) {
+                                          FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState,
+                                          DateTimeProvider dateTimeProvider) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
         this.fetchHospitalizationHealthConditionState = fetchHospitalizationHealthConditionState;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
@@ -49,6 +54,8 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
                 .getInternmentEpisode(evolutionNote.getEncounterId(), evolutionNote.getInstitutionId());
         evolutionNote.setPatientId(internmentEpisode.getPatientId());
 
+        LocalDate now = dateTimeProvider.nowDate();
+        evolutionNote.setPerformedDate(now);
 
         assertDoesNotHaveEpicrisis(internmentEpisode);
         assertEvolutionNoteValid(evolutionNote);

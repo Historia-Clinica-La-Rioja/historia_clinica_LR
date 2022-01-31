@@ -624,6 +624,7 @@ export interface DocumentDto {
     medications: MedicationDto[];
     notes: DocumentObservationsDto;
     patientId: number;
+    performedDate: DateDto;
     personalHistories: HealthHistoryConditionDto[];
     problems: ProblemDto[];
     procedures: ProcedureDto[];

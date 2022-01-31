@@ -86,6 +86,7 @@ public class AuditableContextBuilder {
 		contextMap.put("notes", document.getNotes());
 		contextMap.put("author", authorFromDocumentFunction.apply(document.getId()));
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
+		contextMap.put("performedDate", document.getPerformedDate());
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {

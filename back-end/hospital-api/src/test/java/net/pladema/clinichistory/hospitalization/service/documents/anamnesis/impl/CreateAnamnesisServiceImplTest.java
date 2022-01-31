@@ -13,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -66,6 +67,9 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
+	@Mock
+	private DateTimeProvider dateTimeProvider;
+
 	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -75,7 +79,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 				documentService
 		);
 		createAnamnesisServiceImpl =
-				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, featureFlagsService);
+				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, featureFlagsService, dateTimeProvider);
 	}
 
 	@Test

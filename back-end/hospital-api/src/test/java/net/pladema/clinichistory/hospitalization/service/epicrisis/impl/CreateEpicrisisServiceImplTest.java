@@ -16,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -63,6 +64,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Mock
     private DocumentFactory documentFactory;
 
+    @Mock
+    private DateTimeProvider dateTimeProvider;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -73,7 +77,8 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         );
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
-                internmentEpisodeService);
+                internmentEpisodeService,
+                dateTimeProvider);
     }
 
     @Test

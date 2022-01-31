@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +77,8 @@ public class DocumentBo implements IDocumentBo {
     private AnthropometricDataBo anthropometricData;
 
     private DocumentObservationsBo notes;
+
+    private LocalDate performedDate;
 
 
     public String getDocumentStatusId(){

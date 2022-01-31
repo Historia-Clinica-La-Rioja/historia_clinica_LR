@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
@@ -33,11 +34,14 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
     @Mock
     private DocumentFactory documentFactory;
 
+    @Mock
+    private DateTimeProvider dateTimeProvider;
+
     @BeforeEach
     public void setUp() {
         var updateOutpatientConsultationService = new UpdateOutpatientDocumentServiceImpl(outpatientConsultationRepository);
         createOutpatientDocumentService =
-                new CreateOutpatientDocumentServiceImpl(documentFactory, updateOutpatientConsultationService);
+                new CreateOutpatientDocumentServiceImpl(documentFactory, updateOutpatientConsultationService, dateTimeProvider);
     }
 
     @Test

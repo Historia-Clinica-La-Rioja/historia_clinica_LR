@@ -10,6 +10,7 @@ import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,8 @@ public class OutpatientDocumentBo implements IDocumentBo {
     private List<ReasonBo> reasons = new ArrayList<>();
 
     private Integer getClinicalSpecialtyId;
+
+    private LocalDate performedDate;
 
     @Override
     public DocumentObservationsBo getNotes() {

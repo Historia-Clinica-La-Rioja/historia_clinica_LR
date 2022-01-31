@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -59,6 +60,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Mock
     private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
+    @Mock
+    private DateTimeProvider dateTimeProvider;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -70,7 +74,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                fetchHospitalizationHealthConditionState);
+                fetchHospitalizationHealthConditionState,
+                dateTimeProvider);
     }
 
 

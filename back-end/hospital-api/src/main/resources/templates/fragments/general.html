@@ -478,7 +478,7 @@
         </div>
         <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.evolutionNote}">
-                <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+                <label th:text="${notes.evolutionNote}"></label>
             </div>
         </div>
     </div>
@@ -486,6 +486,9 @@
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
     <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
+    </div>
+    <div class="col-12">
+        <strong>Fecha consulta: </strong><label  th:text="${#temporals.format(performedDate, 'dd-MM-yyyy')}"></label>
     </div>
 </footer>
 </html>
