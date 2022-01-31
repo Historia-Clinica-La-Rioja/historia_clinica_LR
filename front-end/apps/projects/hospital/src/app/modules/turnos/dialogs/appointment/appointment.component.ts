@@ -258,7 +258,9 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(null);
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {
+				identificationTypeId: this.params.appointmentData.patient.identificationTypeId,
 				identificationNumber: this.params.appointmentData.patient.identificationNumber,
+				genderId: this.params.appointmentData.patient.genderId,
 				initValues: this.patientMedicalCoverages,
 			}
 		});
@@ -332,8 +334,10 @@ export interface PatientAppointmentInformation {
 		id: number,
 		fullName?: string
 		identificationNumber?: string,
+		identificationTypeId?: number,
 		typeId: number,
-		fullNameWithNameSelfDetermination?: string
+		fullNameWithNameSelfDetermination?: string,
+		genderId?: number,
 	};
 	appointmentId: number;
 	appointmentStateId: number;
