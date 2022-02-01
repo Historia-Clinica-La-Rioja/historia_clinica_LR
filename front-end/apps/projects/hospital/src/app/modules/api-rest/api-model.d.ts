@@ -2339,8 +2339,11 @@ export interface VitalSignObservationDto extends Serializable {
 }
 
 export interface VitalSignsReportDto extends Serializable {
+    bloodGlucose?: ReportClinicalObservationDto;
     bloodOxygenSaturation?: ReportClinicalObservationDto;
+    cardiovascularRisk?: ReportClinicalObservationDto;
     diastolicBloodPressure?: ReportClinicalObservationDto;
+    glycosylatedHemoglobin?: ReportClinicalObservationDto;
     heartRate?: ReportClinicalObservationDto;
     respiratoryRate?: ReportClinicalObservationDto;
     systolicBloodPressure?: ReportClinicalObservationDto;

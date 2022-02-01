@@ -160,11 +160,25 @@
             </dl>
         </div>
         <div th:if="${anthropometricData  != null}">
-            - Factor sanguíneo: <strong><label  th:if="${anthropometricData.bloodType  != null}" th:text="${anthropometricData.bloodType.value}"></label></strong><br/>
-            - Talla: <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong><br/>
-            - Peso: <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong><br/>
-            - IMC: <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong><br/>
-            - Perímetro cefálico: <strong><label  th:if="${anthropometricData.headCircumference  != null}" th:text="${anthropometricData.headCircumference.value + 'cm'}"></label></strong><br/>
+            - Factor sanguíneo:
+            <strong><label  th:if="${anthropometricData.bloodType  != null}" th:text="${anthropometricData.bloodType.value}"></label></strong>
+            <strong><span  th:if="${anthropometricData.bloodType  == null}">Sin cambios registrados</span></strong><br/>
+
+            - Talla:
+            <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong>
+            <strong><span  th:if="${anthropometricData.height  == null}">Sin cambios registrados</span></strong><br/>
+
+            - Peso:
+            <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong>
+            <strong><span  th:if="${anthropometricData.weight  == null}">Sin cambios registrados</span></strong><br/>
+
+            - IMC:
+            <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong>
+            <strong><span  th:if="${anthropometricData.BMI  == null}">Sin cambios registrados</span></strong><br/>
+
+            - Perímetro cefálico:
+            <strong><label  th:if="${anthropometricData.headCircumference  != null}" th:text="${anthropometricData.headCircumference.value + 'cm'}"></label></strong>
+            <strong><span  th:if="${anthropometricData.headCircumference  == null}">Sin cambios registrados</span></strong><br/>
         </div>
     </div>
 
@@ -325,7 +339,7 @@
     <!-- Signos vitales -->
 
     <div th:fragment="vitalSigns">
-        <h3 >Signos vitales</h3>
+        <h3 >Factores de riesgo</h3>
         <div  th:if="${vitalSigns  == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
