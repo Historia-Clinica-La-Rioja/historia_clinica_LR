@@ -6,6 +6,8 @@ import { Subject, Observable } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
+import { PATTERN_NUMBER_WITH_DECIMALS } from '@core/constants/validation-constants';
+import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 
 export interface SignosVitales {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
@@ -53,39 +55,39 @@ export class SignosVitalesNuevaConsultaService {
 	) {
 		this.form = this.formBuilder.group({
 			heartRate: this.formBuilder.group({
-				value: [null, Validators.min(0)],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.heartRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			respiratoryRate: this.formBuilder.group({
-				value: [null, Validators.min(0)],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.respiratoryRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			temperature: this.formBuilder.group({
-				value: [null, Validators.min(0)],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.temperature), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			bloodOxygenSaturation: this.formBuilder.group({
-				value: [null, Validators.min(0)],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			systolicBloodPressure: this.formBuilder.group({
-				value: [null, Validators.min(0)],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.systolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			diastolicBloodPressure: this.formBuilder.group({
-				value: [null, Validators.min(0)],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.diastolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			bloodGlucose: this.formBuilder.group({
-				value: [null, [Validators.min(1), Validators.max(500), Validators.pattern('^[0-9]+$')]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.bloodGlucose), Validators.max(FACTORES_DE_RIESGO.MAX.bloodGlucose), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			glycosylatedHemoglobin: this.formBuilder.group({
-				value: [null, [Validators.min(1), Validators.max(20), Validators.pattern(PATTERN_MAX_2_DECIMAL_DIGITS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin), Validators.max(FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin), Validators.pattern(PATTERN_MAX_2_DECIMAL_DIGITS)]],
 				effectiveTime: [newMoment()],
 			}),
 			cardiovascularRisk: this.formBuilder.group({
-				value: [null, [Validators.min(1), Validators.max(100), Validators.pattern('^[0-9]+$')]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.cardiovascularRisk), Validators.max(FACTORES_DE_RIESGO.MAX.cardiovascularRisk), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			})
 		});
