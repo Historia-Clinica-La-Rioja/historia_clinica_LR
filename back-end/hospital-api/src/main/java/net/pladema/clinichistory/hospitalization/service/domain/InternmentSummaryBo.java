@@ -72,10 +72,10 @@ public class InternmentSummaryBo {
 
     private int totalInternmentDays(boolean active){
         if (active) {
-            return (int) ChronoUnit.DAYS.between(getEntryDate().toLocalDate(), LocalDateTime.now());
+            return (int) ChronoUnit.DAYS.between(getEntryDate(), LocalDateTime.now());
         }
         else {
-            return (int) ChronoUnit.DAYS.between(getEntryDate(), getDischargeDate());
+            return (int) ChronoUnit.DAYS.between(getEntryDate(), getDischargeDate().atStartOfDay());
         }
     }
 }
