@@ -21,6 +21,8 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
+import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +53,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Autowired
     private PatientDischargeRepository patientDischargeRepository;
 
+	@Autowired
+	private PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+
 	@Mock
 	DateTimeProvider dateTimeProvider;
 
@@ -70,7 +75,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
                 dateTimeProvider,
 				evolutionNoteDocumentRepository,
                 patientDischargeRepository,
-                documentService
+                documentService,
+				privateHealthInsurancePlanRepository
         );
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,

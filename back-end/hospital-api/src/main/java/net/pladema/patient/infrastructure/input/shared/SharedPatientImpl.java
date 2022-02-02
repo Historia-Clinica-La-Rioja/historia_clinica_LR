@@ -80,7 +80,7 @@ public class SharedPatientImpl implements SharedPatientPort {
         PatientMedicalCoverageBo pmc = new PatientMedicalCoverageBo();
         pmc.setVigencyDate(externalPatientCoverageDto.getVigencyDate());
         pmc.setAffiliateNumber(externalPatientCoverageDto.getAffiliateNumber());
-        pmc.setActive(externalPatientCoverageDto.isActive());
+        pmc.setActive(externalPatientCoverageDto.getActive());
         ExternalCoverageDto ecDto = externalPatientCoverageDto.getMedicalCoverage();
         if (ecDto.getType().equals(EMedicalCoverageTypeDto.PREPAGA))
             pmc.setMedicalCoverage(new PrivateHealthInsuranceBo(ecDto.getId(), ecDto.getName(), ecDto.getCuit()));

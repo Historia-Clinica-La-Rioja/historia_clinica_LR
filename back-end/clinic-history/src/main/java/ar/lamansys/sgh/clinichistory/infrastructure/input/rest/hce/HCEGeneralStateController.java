@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEImmunizationService
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEMedicationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEToothRecordService;
 import ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory.FetchSummaryClinicHistory;
+import ar.lamansys.sgh.clinichistory.application.getactiveepisodemedicalcoverage.GetActiveEpisodeMedicalCoverage;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
@@ -28,6 +29,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPerson
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
@@ -87,6 +89,8 @@ public class HCEGeneralStateController {
 
     private final FetchSummaryClinicHistory fetchSummaryClinicHistory;
 
+	private final GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage;
+
     public HCEGeneralStateController(HCEHealthConditionsService hceHealthConditionsService,
                                      HCEClinicalObservationService hceClinicalObservationService,
                                      HCEGeneralStateMapper hceGeneralStateMapper,
@@ -97,7 +101,8 @@ public class HCEGeneralStateController {
                                      LocalDateMapper localDateMapper,
                                      SharedImmunizationPort sharedImmunizationPort,
                                      SharedInstitutionPort sharedInstitutionPort,
-                                     SharedStaffPort sharedStaffPort, FetchSummaryClinicHistory fetchSummaryClinicHistory) {
+                                     SharedStaffPort sharedStaffPort, FetchSummaryClinicHistory fetchSummaryClinicHistory,
+									 GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage) {
         this.hceHealthConditionsService = hceHealthConditionsService;
         this.hceClinicalObservationService = hceClinicalObservationService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
@@ -110,6 +115,7 @@ public class HCEGeneralStateController {
         this.sharedInstitutionPort = sharedInstitutionPort;
         this.sharedStaffPort = sharedStaffPort;
         this.fetchSummaryClinicHistory = fetchSummaryClinicHistory;
+		this.getActiveEpisodeMedicalCoverage = getActiveEpisodeMedicalCoverage;
     }
 
     @GetMapping("/personalHistories")
@@ -311,5 +317,16 @@ public class HCEGeneralStateController {
         LOG.debug("Get summary  => {}", result);
         return ResponseEntity.ok(result);
     }
+
+	@GetMapping("/active-internment-episode/{internmentEpisodeId}/medical-coverage")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<ExternalPatientCoverageDto> getActiveEpisodeMedicalCoverage(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		ExternalPatientCoverageDto result = getActiveEpisodeMedicalCoverage.run(internmentEpisodeId);
+		LOG.debug("Get active internment episode medical coverage => {}", result);
+		return ResponseEntity.ok(result);
+	}
 
 }

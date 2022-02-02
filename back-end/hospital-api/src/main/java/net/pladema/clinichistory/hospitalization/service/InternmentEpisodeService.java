@@ -4,6 +4,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNote
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,5 +48,7 @@ public interface InternmentEpisodeService {
 	LocalDateTime updateInternmentEpisodeProbableDischargeDate(Integer internmentEpisode, LocalDateTime probableDischargeDate);
 	
 	Integer updateInternmentEpisodeBed(Integer internmentEpisode, Integer newBedId);
+
+	Optional<PatientMedicalCoverageBo> getMedicalCoverage(Integer internmentEpisode);
 	
 }

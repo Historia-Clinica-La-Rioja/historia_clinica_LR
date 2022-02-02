@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
+import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -183,4 +185,19 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
                                                       @Param("bedId") Integer bedId,
                                                       @Param("currentUser") Integer currentUser,
                                                       @Param("today") LocalDateTime today);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.patient.repository.domain.PatientMedicalCoverageVo" +
+			"(pmc.id, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id, mc.name, " +
+			"mc.cuit, hi.rnos, hi.acronym, phi.id, phid) " +
+			"FROM PatientMedicalCoverageAssn pmc " +
+			"JOIN InternmentEpisode ie ON (ie.patientMedicalCoverageId = pmc.id) " +
+			"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
+			"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
+			"LEFT JOIN PrivateHealthInsurance phi ON (mc.id = phi.id) " +
+			"LEFT JOIN PrivateHealthInsuranceDetails phid ON (pmc.privateHealthInsuranceDetailsId = phid.id) " +
+			"WHERE pmc.id = ie.patientMedicalCoverageId " +
+			"AND ie.id = :internmentEpisodeId")
+	Optional<PatientMedicalCoverageVo> getInternmentEpisodeMedicalCoverage(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
+
 }

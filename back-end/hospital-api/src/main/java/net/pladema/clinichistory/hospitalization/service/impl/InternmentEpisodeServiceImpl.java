@@ -18,6 +18,12 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeEnumException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
+import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+
+import net.pladema.patient.service.domain.PrivateHealthInsuranceDetailsBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -52,16 +58,20 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private final PatientDischargeRepository patientDischargeRepository;
 
+	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+
     private final DocumentService documentService;
 
     public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
                                         DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
-                                        PatientDischargeRepository patientDischargeRepository, DocumentService documentService) {
+                                        PatientDischargeRepository patientDischargeRepository, DocumentService documentService,
+										PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
         this.patientDischargeRepository = patientDischargeRepository;
         this.documentService = documentService;
+		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
     }
 
     @Override
@@ -270,5 +280,18 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
         LOG.debug(LOGGING_OUTPUT, newBedId);
         return oldBed;
     }
+
+	@Override
+	public Optional<PatientMedicalCoverageBo> getMedicalCoverage(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Optional<PatientMedicalCoverageBo> result = internmentEpisodeRepository.getInternmentEpisodeMedicalCoverage(internmentEpisodeId).map(PatientMedicalCoverageBo::new).map(bo -> {
+			PrivateHealthInsuranceDetailsBo phid = bo.getPrivateHealthInsuranceDetails();
+			if (phid != null && phid.getPlanId() != null)
+				bo.getPrivateHealthInsuranceDetails().setPlanName(privateHealthInsurancePlanRepository.findById(phid.getPlanId()).get().getPlan());
+			return bo;
+		});
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
 
 }
