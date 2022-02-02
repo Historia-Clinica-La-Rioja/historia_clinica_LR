@@ -228,7 +228,7 @@
 											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'">
 										</mat-label>
 										<input id="height" formControlName="height" placeholder="Ej: 180" type="number"
-											matInput>
+											matInput (keypress)="isValidNumericKey($event)">
 									</mat-form-field>
 									<ng-container
 										*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
@@ -246,7 +246,7 @@
 											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'">
 										</mat-label>
 										<input id="weight" formControlName="weight" placeholder="Ej: 70" type="number"
-											matInput>
+											matInput (keypress)="isValidNumericKey($event)">
 									</mat-form-field>
 									<ng-container
 										*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
@@ -264,7 +264,8 @@
 											[translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEAD_CIRCUNFERENCE'">
 										</mat-label>
 										<input id="head-circumference" formControlName="headCircumference"
-											placeholder="Ej: 47" type="number" matInput>
+											placeholder="Ej: 47" type="number" matInput
+											(keypress)="isValidNumericKey($event)">
 									</mat-form-field>
 									<ng-container
 										*ngIf="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()">
@@ -484,7 +485,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="heart_rate" name="heart_rate" formControlName="value"
-												placeholder="00" type="number" matInput>
+												placeholder="00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -505,7 +507,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="respiratory_rate" name="respiratory_rate" formControlName="value"
-												placeholder="00" type="number" matInput>
+												placeholder="00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -529,7 +532,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="temperature" name="temperature" formControlName="value"
-												placeholder="00.0" type="number" matInput>
+												placeholder="00.0" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -550,7 +554,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="blood_oxygen_saturation" name="blood_oxygen_saturation"
-												formControlName="value" placeholder="00" type="number" matInput>
+												formControlName="value" placeholder="00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -574,7 +579,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="systolic_blood_pressure" name="systolicBloodPressure"
-												formControlName="value" placeholder="00" type="number" matInput>
+												formControlName="value" placeholder="00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -597,7 +603,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="diastolic_blood_pressure" name="diastolicBloodPressure"
-												formControlName="value" placeholder="00" type="number" matInput>
+												formControlName="value" placeholder="00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -623,7 +630,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="blood_glucose" name="blood_glucose" formControlName="value"
-												placeholder="00" type="number" matInput>
+												placeholder="00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -644,7 +652,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="glycosylated_hemoglobin" name="glycosylated_hemoglobin"
-												formControlName="value" placeholder="00.00" type="number" matInput>
+												formControlName="value" placeholder="00.00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">
@@ -668,7 +677,8 @@
 									<div fxLayout="row" fxLayoutAlign="between center">
 										<mat-form-field [floatLabel]="'never'" appearance="outline">
 											<input id="cardiovascular_risk" name="cardiovascular_risk"
-												formControlName="value" placeholder="00" type="number" matInput>
+												formControlName="value" placeholder="00" type="number" matInput
+												(keypress)="isValidNumericKey($event)">
 										</mat-form-field>
 										<ng-container
 											*ngIf="signosVitalesNuevaConsultaService.getShowPreloadedVitalSignsData()">

@@ -575,6 +575,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	private hasMaxTwoDecimalDigits(numberValue: string): boolean {
 		return PATTERN_MAX_2_DECIMAL_DIGITS.test(numberValue);
 	}
+
+	isValidNumericKey(event: KeyboardEvent) {
+		const pattern = /^[\d\.]{1}$/;
+		return pattern.test(event.key);
+	}
 }
 
 export interface NuevaConsultaData {
