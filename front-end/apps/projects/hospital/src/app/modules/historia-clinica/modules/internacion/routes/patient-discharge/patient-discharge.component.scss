@@ -1,3 +1,19 @@
+@import "../../../../../../../assets/styles/mixins";
+@import "../../../../../../../assets/styles/mat-mixins";
+
+.form-row{
+	@include form-row;
+	@include mat-form-field-background-white;
+
+	.mat-form-field{
+		width: 100%;
+	}
+}
+
+.date {
+	margin-bottom: 15px;
+}
+
 .header{
 	display: flex;
 	justify-content: flex-end;

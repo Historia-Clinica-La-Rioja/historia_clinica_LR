@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CompletePatientDto, PersonalInformationDto, PatientDischargeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
+import { CompletePatientDto, PersonalInformationDto, PatientMedicalCoverageDto, PersonPhotoDto, DateTimeDto } from '@api-rest/api-model';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { DateFormat } from '@core/utils/moment.utils';
+import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { hasError } from '@core/utils/form.utils';
+import { futureTimeValidation, hasError, TIME_PATTERN } from '@core/utils/form.utils';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { PersonService } from '@api-rest/services/person.service';
@@ -17,7 +17,11 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToStringDate } from '@api-rest/mapper/date-dto.mapper';
+
+import { DatePipe } from '@angular/common';
+import { DatePipeFormat } from '@core/utils/date.utils';
+
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -25,9 +29,12 @@ import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 	styleUrls: ['./medical-discharge.component.scss']
 })
 export class MedicalDischargeComponent implements OnInit {
+	TIME_PATTERN = TIME_PATTERN;
+	hasError = hasError;
+	todayDate = new Date();
+	today = moment();
 
 	public dischargeForm: FormGroup;
-	public today: Moment = moment();
 	public minMedicalDischargeDate: Date;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
@@ -41,10 +48,9 @@ export class MedicalDischargeComponent implements OnInit {
 	private patientId: number;
 	private internmentId: number;
 
-	public hasError = hasError;
 
 	constructor(
-		private formBuilder: FormBuilder,
+		private readonly formBuilder: FormBuilder,
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
 		private readonly personService: PersonService,
@@ -54,6 +60,7 @@ export class MedicalDischargeComponent implements OnInit {
 		private contextService: ContextService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private readonly datePipe: DatePipe,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -64,9 +71,20 @@ export class MedicalDischargeComponent implements OnInit {
 			.subscribe(dischargeTypes => this.dischargeTypes = dischargeTypes);
 
 		this.dischargeForm = this.formBuilder.group({
-			dischargeDate: [null, [Validators.required]],
+			date: [newMoment(), [Validators.required]],
+			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME), [Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]],
 			dischargeTypeId: [null, [Validators.required]]
 		});
+
+		this.dischargeForm.get('date').valueChanges.subscribe((value: Moment) => {
+			if (value.isSame(newMoment(), 'day')) {
+				this.dischargeForm.get('time').setValidators(futureTimeValidation);
+			} else {
+				this.dischargeForm.get('time').removeValidators(futureTimeValidation);
+			}
+			this.dischargeForm.get('time').updateValueAndValidity();
+		});
+
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
@@ -88,19 +106,21 @@ export class MedicalDischargeComponent implements OnInit {
 
 				this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
 					.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
+				this.intermentEpisodeService.getLastUpdateDateOfInternmentEpisode(this.internmentId)
+					.subscribe((lastUpdateDate: DateTimeDto) =>
+						this.minMedicalDischargeDate = new Date(dateTimeDtoToStringDate(lastUpdateDate))
+					);
 			}
 		);
-		this.intermentEpisodeService.getLastUpdateDateOfInternmentEpisode(this.internmentId)
-			.subscribe(lastUpdateDate => this.minMedicalDischargeDate = dateDtoToDate(lastUpdateDate));
-
-
 	}
 
 	save(): void {
+
 		this.formSubmited = true;
 		if (this.dischargeForm.valid) {
-			const request: PatientDischargeDto = this.dischargeForm.value;
-			request.medicalDischargeDate = this.dischargeForm.value.dischargeDate.format(DateFormat.API_DATE);
+			const request = this.dischargeForm.value;
+			const newDatetime = new Date(this.dischargeForm.value.date);
+			request.medicalDischargeDate = newDatetime.toISOString();
 			this.route.paramMap.subscribe(
 				(params) => {
 					this.intermentEpisodeService.medicalDischargeInternmentEpisode(request, this.internmentId)
