@@ -1,5 +1,6 @@
-package net.pladema.snowstorm.repository.entity;
+package net.pladema.snowstorm.repository;
 
+import net.pladema.snowstorm.repository.entity.SnomedGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
