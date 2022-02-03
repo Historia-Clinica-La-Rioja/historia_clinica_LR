@@ -25,11 +25,13 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "AND doctorsOfficeId = :doId " +
             "AND startDate <= :endDate " +
             "AND endDate >= :startDate " +
+	    	"AND appointmentDuration = :appointmentDuration " +
             "AND deleteable.deleted = false")
     List<Integer> findAllOverlappingDiaryByProfessional(@Param("hcpId") Integer healthcareProfessionalId,
                                                         @Param("doId") Integer doctorsOfficeId,
                                                         @Param("startDate") LocalDate newDiaryStart,
-                                                        @Param("endDate") LocalDate newDiaryEnd);
+                                                        @Param("endDate") LocalDate newDiaryEnd,
+														@Param("appointmentDuration") Short appointmentDuration);
     
     @Transactional(readOnly = true)
     @Query("SELECT id " +
@@ -38,12 +40,14 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "AND doctorsOfficeId = :doId " +
             "AND startDate <= :endDate " +
             "AND endDate >= :startDate " +
+	    	"AND appointmentDuration = :appointmentDuration " +
             "AND id <> :excludeDiaryId " +
             "AND deleteable.deleted = false")
     List<Integer> findAllOverlappingDiaryByProfessionalExcludingDiary(@Param("hcpId") Integer healthcareProfessionalId,
                                                                       @Param("doId") Integer doctorsOfficeId,
                                                                       @Param("startDate") LocalDate newDiaryStart,
                                                                       @Param("endDate") LocalDate newDiaryEnd,
+																	  @Param("appointmentDuration") Short appointmentDuration,
                                                                       @Param("excludeDiaryId") Integer excludeDiaryId);
 
 
