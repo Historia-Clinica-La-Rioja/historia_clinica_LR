@@ -35,6 +35,7 @@ export class MapperService {
 
 	private static _toInternmentEpisodeSummary(internmentSummary: InternmentSummaryDto): InternmentEpisodeSummary {
 		const internmentEpisodeSummary = {
+			id: internmentSummary.id,
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,
 			sectorDescription: internmentSummary.bed.room.sector.description,

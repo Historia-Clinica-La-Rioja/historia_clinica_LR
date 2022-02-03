@@ -10,7 +10,7 @@ import {
 	UserDataDto,
 	UserRoleDto,
 	RoleDto,
-	InstitutionDto, InternmentSummaryDto
+	InstitutionDto, InternmentSummaryDto, PatientDischargeDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -45,10 +45,9 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { INTERNACION } from "@historia-clinica/constants/summaries";
 import { InternmentEpisodeSummary } from "@presentation/components/internment-episode-summary/internment-episode-summary.component";
 import { InternacionService } from "@api-rest/services/internacion.service";
+import {InternmentEpisodeService} from "@api-rest/services/internment-episode.service";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
-const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
-const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
 
@@ -74,7 +73,7 @@ export class ProfileComponent implements OnInit {
 	public codigoColor: string;
 	public internacionSummary = INTERNACION;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
-	private patientId: number;
+	public patientId: number;
 	private readonly routePrefix;
 	public internmentEpisode;
 	public userData: UserDataDto;
@@ -84,6 +83,7 @@ export class ProfileComponent implements OnInit {
 	private specialties: number[] = [];
 	private professions: number[] = [];
 	private professionalSpecialtyId: number[] = [];
+	public showDischarge: boolean;
 	showProfessions: string[] = [];
 	showSpecialties: string[] = [];
 	public hasAssignedProfessions = false;
@@ -101,6 +101,7 @@ export class ProfileComponent implements OnInit {
 		private contextService: ContextService,
 		private userPasswordResetService: UserPasswordResetService,
 		private internmentPatientService: InternmentPatientService,
+		private internmentEpisodeService: InternmentEpisodeService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly featureFlagService: FeatureFlagService,
 		public dialog: MatDialog,
@@ -178,6 +179,12 @@ export class ProfileComponent implements OnInit {
 							this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
 								.pipe(map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
 								);
+							this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
+								.subscribe((patientDischarge: PatientDischargeDto) => {
+									this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
+										this.showDischarge = isOn || (patientDischarge.dischargeTypeId !== 0);
+									});
+								});
 						}
 					});
 
@@ -246,10 +253,6 @@ export class ProfileComponent implements OnInit {
 			{
 				queryParams: { patientId: this.patientId }
 			});
-	}
-
-	goInternmentEpisode(): void {
-		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this.internmentEpisode.id + ROUTE_INTERNMENT_EPISODE_SUFIX + this.patientId]);
 	}
 
 	goToEditProfile(): void {

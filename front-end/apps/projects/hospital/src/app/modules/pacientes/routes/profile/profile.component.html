@@ -7,9 +7,6 @@
 	</ng-template>
 
 	<div *appHasRole="['ADMINISTRATIVO']">
-		<button *ngIf="internmentEpisode?.id" mat-raised-button color="primary" (click)="goInternmentEpisode()">
-			<span class="uppercase">Ver internación</span>
-		</button>
 		<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary" (click)="goNewInternment()">
 			<span class="uppercase">Iniciar internación</span>
 		</button>
@@ -182,7 +179,7 @@
 				<app-summary-card *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary"
 								  id="internment_summary_card" [header]="internacionSummary">
 					<mat-card-content>
-						<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary">
+						<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary" [patientId]="patientId" [showDischarge]="showDischarge">
 						</app-internment-episode-summary>
 					</mat-card-content>
 				</app-summary-card>
