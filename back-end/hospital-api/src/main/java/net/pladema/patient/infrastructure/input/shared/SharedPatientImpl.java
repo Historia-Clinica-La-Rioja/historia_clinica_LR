@@ -110,7 +110,7 @@ public class SharedPatientImpl implements SharedPatientPort {
         return aPatientDto;
     }
 
-    private BasicDataPersonDto mapPersonData(net.pladema.person.controller.dto.BasicDataPersonDto person) {
+    private BasicDataPersonDto mapPersonData(BasicDataPersonDto person) {
         var result = new BasicDataPersonDto();
         result.setId(person.getId());
         result.setFirstName(person.getFirstName());
@@ -126,7 +126,7 @@ public class SharedPatientImpl implements SharedPatientPort {
         return result;
     }
 
-    private GenderDto mapGender(net.pladema.person.controller.dto.GenderDto gender) {
+    private GenderDto mapGender(GenderDto gender) {
         var result = new GenderDto();
         result.setId(gender.getId());
         result.setDescription(gender.getDescription());

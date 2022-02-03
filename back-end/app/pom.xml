@@ -203,7 +203,7 @@
                         <pattern>net.pladema.**.controller.**Dto</pattern>
                         <pattern>net.pladema.**.masterdata.**Dto</pattern>
                         <pattern>net.pladema.hl7.**.dto.**Dto</pattern>
-                        <pattern>ar.lamansys.**.dto.**Dto</pattern>
+                        <pattern>ar.lamansys.**.**Dto</pattern>
                         <pattern>net.pladema.**.infrastructure.**.dto.**Dto</pattern>
                     </classPatterns>
                     <excludeClassPatterns>

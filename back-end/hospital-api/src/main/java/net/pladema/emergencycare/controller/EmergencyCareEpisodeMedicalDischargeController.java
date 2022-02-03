@@ -2,6 +2,7 @@ package net.pladema.emergencycare.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
 import net.pladema.emergencycare.controller.dto.VMedicalDischargeDto;
@@ -14,7 +15,6 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.security.UserInfo;

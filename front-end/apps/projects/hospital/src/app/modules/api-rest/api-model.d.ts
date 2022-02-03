@@ -244,6 +244,13 @@ export interface AttentionTypeReportItemDto {
     patientMedicalCoverageId: number;
 }
 
+export interface AuthorDto extends Serializable {
+    firstName: string;
+    id: number;
+    lastName: string;
+    licence: string;
+}
+
 export interface BMPatientDto extends APatientDto {
     id: number;
 }
@@ -304,7 +311,11 @@ export interface BasicDataPersonDto extends Serializable {
 }
 
 export interface BasicPatientDto extends Serializable {
+    firstName: string;
     id: number;
+    identificationNumber: string;
+    lastName: string;
+    middleName: string;
     person: BasicDataPersonDto;
     typeId: number;
 }
@@ -455,6 +466,16 @@ export interface CounterReferenceMedicationDto extends Serializable {
 export interface CounterReferenceProcedureDto extends Serializable {
     performedDate?: DateDto;
     snomed: SnomedDto;
+}
+
+export interface CounterReferenceSummaryDto extends Serializable {
+    clinicalSpecialty: string;
+    files: ReferenceCounterReferenceFileDto[];
+    id: number;
+    note: string;
+    performedDate: Date;
+    procedures: CounterReferenceSummaryProcedureDto[];
+    professional: ProfessionalPersonDto;
 }
 
 export interface CounterReferenceSummaryProcedureDto extends Serializable {
@@ -843,6 +864,21 @@ export interface ExternalClinicalHistoryDto extends Serializable {
     professionalSpecialty?: string;
 }
 
+export interface ExternalCoverageDto {
+    cuit: string;
+    id?: number;
+    name: string;
+    plan?: string;
+    type: EMedicalCoverageTypeDto;
+}
+
+export interface ExternalPatientCoverageDto {
+    active: boolean;
+    affiliateNumber: string;
+    medicalCoverage: ExternalCoverageDto;
+    vigencyDate?: Date;
+}
+
 export interface FhirAddressDto {
     address: string;
     city: string;
@@ -1135,6 +1171,20 @@ export interface ImmunizationDto extends ClinicalTermDto {
     lotNumber?: string;
     note: string;
     schemeId?: number;
+}
+
+export interface ImmunizationInfoDto {
+    administrationDate: string;
+    billable: boolean;
+    condition: VaccineConditionDto;
+    doctorInfo: string;
+    dose: VaccineDoseInfoDto;
+    id: number;
+    institutionInfo: string;
+    lotNumber: string;
+    note: string;
+    scheme: VaccineSchemeInfoDto;
+    snomed: SnomedDto;
 }
 
 export interface ImmunizationInteroperabilityDto {
@@ -2005,6 +2055,18 @@ export interface ReportClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: Date;
 }
 
+export interface RequiredPatientDataDto {
+    birthDate: Date;
+    email: string;
+    firstName: string;
+    genderId: number;
+    identificationNumber: string;
+    identificationTypeId: number;
+    institutionId: number;
+    lastName: string;
+    phoneNumber: string;
+}
+
 export interface ResponseAnamnesisDto extends AnamnesisDto {
     id: number;
 }
@@ -2046,6 +2108,12 @@ export interface RoleAssignmentDto {
 export interface RoleDto {
     description: string;
     id: number;
+}
+
+export interface RoleInfoDto {
+    id: number;
+    institution: number;
+    value: string;
 }
 
 export interface RoomDto extends Serializable {
@@ -2385,6 +2453,11 @@ export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
+}
+
+export const enum EMedicalCoverageTypeDto {
+    OBRASOCIAL = "OBRASOCIAL",
+    PREPAGA = "PREPAGA",
 }
 
 export const enum ERole {

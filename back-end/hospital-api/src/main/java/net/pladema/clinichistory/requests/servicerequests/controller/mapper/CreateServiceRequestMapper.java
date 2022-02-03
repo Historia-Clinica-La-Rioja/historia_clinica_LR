@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

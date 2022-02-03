@@ -1,5 +1,7 @@
 package net.pladema.patient.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +13,6 @@ import net.pladema.federar.services.domain.FederarResourceAttributes;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
 import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
 import net.pladema.patient.controller.dto.PatientPhotoDto;
@@ -28,7 +29,6 @@ import net.pladema.patient.service.domain.DoctorsBo;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.dto.BMPersonDto;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.mapper.PersonMapper;

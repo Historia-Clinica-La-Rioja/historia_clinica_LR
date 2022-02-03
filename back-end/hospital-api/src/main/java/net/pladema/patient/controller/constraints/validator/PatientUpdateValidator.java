@@ -1,12 +1,12 @@
 package net.pladema.patient.controller.constraints.validator;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 

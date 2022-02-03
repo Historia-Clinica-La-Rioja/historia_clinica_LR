@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
@@ -17,11 +19,9 @@ import net.pladema.medicalconsultation.appointment.service.CreateAppointmentServ
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;

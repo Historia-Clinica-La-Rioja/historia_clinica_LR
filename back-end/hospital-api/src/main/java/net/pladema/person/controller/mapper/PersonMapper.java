@@ -1,5 +1,6 @@
 package net.pladema.person.controller.mapper;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.repository.entity.IdentificationType;
 import org.mapstruct.Mapper;
@@ -15,7 +16,6 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
@@ -53,7 +53,7 @@ public interface PersonMapper {
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
     @Mapping(target = "identificationType", source = "identificationType.description")
-    BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, IdentificationType identificationType);
+	BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, IdentificationType identificationType);
 
 
     @Named("fromPersonalInformation")

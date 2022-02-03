@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
@@ -11,7 +12,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;

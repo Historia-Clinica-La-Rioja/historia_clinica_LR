@@ -1,6 +1,7 @@
 package net.pladema.person.controller.mock;
 
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.GenderDto;
 import net.pladema.address.controller.mocks.MocksAddress;
 import net.pladema.person.controller.dto.*;
 

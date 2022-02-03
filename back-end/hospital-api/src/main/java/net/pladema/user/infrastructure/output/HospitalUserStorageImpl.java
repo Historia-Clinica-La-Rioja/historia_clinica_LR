@@ -1,7 +1,7 @@
 package net.pladema.user.infrastructure.output;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.application.port.exceptions.UserPersonStorageEnumException;
 import net.pladema.user.application.port.exceptions.UserPersonStorageException;
@@ -117,7 +117,7 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
                 .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
     }
 
-    private PersonDataBo mapPersonDataBo(BasicDataPersonDto person,VHospitalUser user) {
+    private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
         return new PersonDataBo(
                 person.getFirstName(),
                 person.getLastName(),

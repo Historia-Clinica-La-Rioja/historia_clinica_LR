@@ -1,6 +1,7 @@
 package net.pladema.person.controller;
 
-import net.pladema.person.controller.dto.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
