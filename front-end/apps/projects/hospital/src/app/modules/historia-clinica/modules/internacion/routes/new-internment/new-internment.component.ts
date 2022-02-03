@@ -41,7 +41,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { map } from 'rxjs/internal/operators/map';
-const ROUTE_INTERNMENT = 'internaciones/internacion/';
+const ROUTE_PROFILE = 'pacientes/profile/';
 
 const MIN_YEAR = 1900;
 const MIN_MONTH = 0;
@@ -191,7 +191,7 @@ export class NewInternmentComponent implements OnInit {
 					this.internmentEpisodeService.setNewInternmentEpisode(intenmentEpisodeReq)
 						.subscribe(data => {
 							if (data && data.id) {
-								const url = `${this.routePrefix}${ROUTE_INTERNMENT}${data.id}/paciente/${this.patientId}`;
+								const url = this.routePrefix + ROUTE_PROFILE + this.patientId;
 								this.router.navigate([url]);
 								this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
 							}

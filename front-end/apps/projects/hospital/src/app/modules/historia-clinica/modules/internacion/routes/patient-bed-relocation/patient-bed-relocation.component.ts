@@ -32,7 +32,7 @@ import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 
-const ROUTE_INTERNMENT = 'internaciones/internacion/';
+const ROUTE_PROFILE = 'pacientes/profile/';
 
 @Component({
 	selector: 'app-patient-bed-relocation',
@@ -187,7 +187,7 @@ export class PatientBedRelocationComponent implements OnInit {
 					this.bed.relocatePatientBed(patientBedRelocation)
 						.subscribe(data => {
 							if (data) {
-								const url = `${this.routePrefix}${ROUTE_INTERNMENT}${this.internmentId}/paciente/${this.patientId}`;
+								const url = this.routePrefix + ROUTE_PROFILE + this.patientId;
 								this.router.navigate([url]);
 								this.snackBarService.showSuccess('internaciones.bed-relocation.messages.SUCCESS');
 							}

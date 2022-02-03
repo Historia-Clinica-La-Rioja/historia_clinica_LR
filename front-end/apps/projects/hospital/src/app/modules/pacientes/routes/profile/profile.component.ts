@@ -61,6 +61,8 @@ export class ProfileComponent implements OnInit {
 	roles: RoleDto[] = [];
 	userId: number = null;
 	rolesByUser: UserRoleDto[] = [];
+	patientId: number;
+	showDischarge = false;
 	public institutionName: string;
 	private institution: number[] = [];
 	private rolesAdmin = false;
@@ -73,7 +75,6 @@ export class ProfileComponent implements OnInit {
 	public codigoColor: string;
 	public internacionSummary = INTERNACION;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
-	public patientId: number;
 	private readonly routePrefix;
 	public internmentEpisode;
 	public userData: UserDataDto;
@@ -83,7 +84,6 @@ export class ProfileComponent implements OnInit {
 	private specialties: number[] = [];
 	private professions: number[] = [];
 	private professionalSpecialtyId: number[] = [];
-	public showDischarge: boolean;
 	showProfessions: string[] = [];
 	showSpecialties: string[] = [];
 	public hasAssignedProfessions = false;

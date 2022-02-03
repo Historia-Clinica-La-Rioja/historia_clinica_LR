@@ -153,6 +153,5 @@ export class PatientDischargeComponent implements OnInit {
 
 	back(): void {
 		this.formSubmited = false;
-		this.router.navigate([`${this.routePrefix}internaciones/internacion/${this.internmentId}/paciente/${this.patientId}`]);
-	}
+		this.router.navigate([`${this.routePrefix}${ROUTE_PROFILE}${this.patientId}`]);	}
 }
