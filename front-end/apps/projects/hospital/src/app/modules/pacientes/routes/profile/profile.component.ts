@@ -10,7 +10,7 @@ import {
 	UserDataDto,
 	UserRoleDto,
 	RoleDto,
-	InstitutionDto
+	InstitutionDto, InternmentSummaryDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -32,7 +32,7 @@ import { UserService } from "@api-rest/services/user.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { processErrors } from "@core/utils/form.utils";
-import { take } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { PermissionsService } from "@core/services/permissions.service";
 import { UserPasswordResetService } from "@api-rest/services/user-password-reset.service";
@@ -42,6 +42,9 @@ import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { EditRolesComponent } from '@pacientes/dialogs/edit-roles/edit-roles.component';
 import { RolesService } from '@api-rest/services/roles.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
+import { INTERNACION } from "@historia-clinica/constants/summaries";
+import { InternmentEpisodeSummary } from "@presentation/components/internment-episode-summary/internment-episode-summary.component";
+import { InternacionService } from "@api-rest/services/internacion.service";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -69,6 +72,8 @@ export class ProfileComponent implements OnInit {
 	public person: PersonalInformationDto;
 	public personPhoto: PersonPhotoDto;
 	public codigoColor: string;
+	public internacionSummary = INTERNACION;
+	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	private patientId: number;
 	private readonly routePrefix;
 	public internmentEpisode;
@@ -106,7 +111,8 @@ export class ProfileComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly rolesService: RolesService,
 		private readonly institutionService: InstitutionService,
-		private readonly permissionService: PermissionsService
+		private readonly permissionService: PermissionsService,
+		private readonly internmentService: InternacionService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -169,6 +175,9 @@ export class ProfileComponent implements OnInit {
 					.subscribe(internmentEpisodeProcessDto => {
 						if (internmentEpisodeProcessDto) {
 							this.internmentEpisode = internmentEpisodeProcessDto;
+							this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
+								.pipe(map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
+								);
 						}
 					});
 

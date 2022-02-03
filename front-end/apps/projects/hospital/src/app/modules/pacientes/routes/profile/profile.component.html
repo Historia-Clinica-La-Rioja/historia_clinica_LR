@@ -44,127 +44,150 @@
 				otra
 				institución.</em>
 		</div>
-		<div fxFlex="50" *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
-			<div *ngIf="createUsersIsEnable">
-				<mat-card class="box user-data">
-					<mat-card-header>
-						<mat-card-title>
-							<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
-								<mat-icon fontSet="material-icons-outlined">person</mat-icon>
-								<span [translate]="'pacientes.user_data.TITLE'"></span>
-							</div>
-						</mat-card-title>
-						<ng-container *ngIf="!userData?.id">
-							<div fxLayout="row" fxLayoutAlign="center center">
-								<button mat-raised-button color="primary" class="create-user">
+		<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+				<div *ngIf="createUsersIsEnable">
+					<mat-card class="box user-data">
+						<mat-card-header>
+							<mat-card-title>
+								<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+									<mat-icon fontSet="material-icons-outlined">person</mat-icon>
+									<span [translate]="'pacientes.user_data.TITLE'"></span>
+								</div>
+							</mat-card-title>
+							<ng-container *ngIf="!userData?.id">
+								<div fxLayout="row" fxLayoutAlign="center center">
+									<button mat-raised-button color="primary" class="create-user">
 									<span [translate]="'pacientes.user_data.buttons.CREATE_USER'"
-										(click)="addUser()"></span>
-								</button>
-							</div>
-						</ng-container>
-					</mat-card-header>
-					<mat-divider inset></mat-divider>
-					<mat-card-content>
-						<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
-							<div fxLayout="row" fxLayoutGap="5px">
-								<strong [translate]="'pacientes.user_data.USER_ID'"></strong>
-								<span>{{userData.id}}</span>
-							</div>
-							<div *ngIf="!userData.username" fxLayout="row" fxLayoutGap="10px">
-								<mat-icon color="primary" fontSet="material-icons-outlined">error_outline</mat-icon>
-								<span class="color-primary" [translate]="'pacientes.user_data.PENDING_DATA'"></span>
-							</div>
-							<ng-container *ngIf="userData.username">
+										  (click)="addUser()"></span>
+									</button>
+								</div>
+							</ng-container>
+						</mat-card-header>
+						<mat-divider inset></mat-divider>
+						<mat-card-content>
+							<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
 								<div fxLayout="row" fxLayoutGap="5px">
-									<strong [translate]="'pacientes.user_data.USERNAME'"></strong>
-									<span>{{userData.username}}</span>
+									<strong [translate]="'pacientes.user_data.USER_ID'"></strong>
+									<span>{{userData.id}}</span>
 								</div>
-								<div fxLayout="row" fxLayoutGap="5px">
-									<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
-									<span *ngIf="userData.lastLogin else noInformation">{{userData.lastLogin | date :
-										'dd/MM/yyyy - HH:mm'}} hs</span>
+								<div *ngIf="!userData.username" fxLayout="row" fxLayoutGap="10px">
+									<mat-icon color="primary" fontSet="material-icons-outlined">error_outline</mat-icon>
+									<span class="color-primary" [translate]="'pacientes.user_data.PENDING_DATA'"></span>
 								</div>
-								<div fxLayout="row">
-									<form [formGroup]="form">
-										<mat-slide-toggle color="primary" formControlName="enable"
-											(change)="enableUser()">
-											<span [translate]="'pacientes.user_data.ENABLE'"></span>
-										</mat-slide-toggle>
-									</form>
-								</div>
-								<ng-container>
+								<ng-container *ngIf="userData.username">
+									<div fxLayout="row" fxLayoutGap="5px">
+										<strong [translate]="'pacientes.user_data.USERNAME'"></strong>
+										<span>{{userData.username}}</span>
+									</div>
+									<div fxLayout="row" fxLayoutGap="5px">
+										<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
+										<span
+											*ngIf="userData.lastLogin else noInformation">{{userData.lastLogin | date :
+											'dd/MM/yyyy - HH:mm'}} hs</span>
+									</div>
+									<div fxLayout="row">
+										<form [formGroup]="form">
+											<mat-slide-toggle color="primary" formControlName="enable"
+															  (change)="enableUser()">
+												<span [translate]="'pacientes.user_data.ENABLE'"></span>
+											</mat-slide-toggle>
+										</form>
+									</div>
+									<ng-container>
+										<div content>
+											<button mat-stroked-button color="primary" (click)="goResetAccessData()">
+												<span class="uppercase"
+													  [translate]="'pacientes.user_data.buttons.RESET_ACCESS_DATA'"></span>
+											</button>
+										</div>
+									</ng-container>
+								</ng-container>
+								<ng-container *ngIf="!userData.username">
 									<div content>
-										<button mat-stroked-button color="primary" (click)="goResetAccessData()">
-											<span class="uppercase" [translate]="'pacientes.user_data.buttons.RESET_ACCESS_DATA'"></span>
+										<button mat-raised-button color="primary" (click)="goResetAccessData()">
+											<span [translate]="'pacientes.user_data.buttons.SET_ACCESS_DATA'"
+												  class="uppercase"></span>
 										</button>
 									</div>
 								</ng-container>
-							</ng-container>
-							<ng-container *ngIf="!userData.username">
+								<mat-divider inset></mat-divider>
 								<div content>
-								<button mat-raised-button color="primary" (click)="goResetAccessData()">
-									<span [translate]="'pacientes.user_data.buttons.SET_ACCESS_DATA'" class="uppercase"></span>
-								</button>
+									<ng-container *ngIf="!isInstitutionalAdministrator() else doesNotHavePermissions">
+										<app-card-roles [userRoles]="userRoles" [institutionName]="institutionName">
+										</app-card-roles>
+									</ng-container>
 								</div>
-							</ng-container>
-							<mat-divider inset></mat-divider>
-							<div content>
-								<ng-container *ngIf="!isInstitutionalAdministrator() else doesNotHavePermissions">
-									<app-card-roles [userRoles]="userRoles" [institutionName]="institutionName">
-									</app-card-roles>
-								</ng-container>
-							</div>
-							<div content>
-									<button  [disabled]="isInstitutionalAdministrator()" id="button-edit-roles" mat-stroked-button color="primary" (click)="editRoles()">
+								<div content>
+									<button [disabled]="isInstitutionalAdministrator()" id="button-edit-roles"
+											mat-stroked-button color="primary" (click)="editRoles()">
 										<span [translate]="'pacientes.user_data.buttons.EDIT_ROLES'"
-											class="uppercase"></span>
+											  class="uppercase"></span>
 									</button>
+								</div>
 							</div>
-						</div>
-						<mat-divider inset></mat-divider>
-						<div fxLayout="column" fxLayoutGap="10px">
-							<div content>
-								<ng-container *ngIf="hasAssignedProfessions else noInfo">
-									<div fxLayout="column" fxLayoutGap="10px">
-										<div class="sub-title" fxLayout="column" fxLayoutGap="5px">
-											<strong [translate]="'pacientes.user_data.LICENCE'"></strong>
-											<div>{{license}}</div>
-										</div>
-										<div content>
-											<div fxLayout="row">
-												<div fxFlex="50%">
-													<div>
-														<strong [translate]="'pacientes.user_data.PROFESSION'"></strong>
-														<div id="profession" class="data" fxLayout="row" fxLayoutGap="16px"
-															*ngFor="let profession of showProfessions">
-															<mat-icon color="primary" fontSet="material-icons-outlined">
-																medical_services</mat-icon>
-															<span>{{profession}} </span>
+							<mat-divider inset></mat-divider>
+							<div fxLayout="column" fxLayoutGap="10px">
+								<div content>
+									<ng-container *ngIf="hasAssignedProfessions else noInfo">
+										<div fxLayout="column" fxLayoutGap="10px">
+											<div class="sub-title" fxLayout="column" fxLayoutGap="5px">
+												<strong [translate]="'pacientes.user_data.LICENCE'"></strong>
+												<div>{{license}}</div>
+											</div>
+											<div content>
+												<div fxLayout="row">
+													<div fxFlex="50%">
+														<div>
+															<strong
+																[translate]="'pacientes.user_data.PROFESSION'"></strong>
+															<div id="profession" class="data" fxLayout="row"
+																 fxLayoutGap="16px"
+																 *ngFor="let profession of showProfessions">
+																<mat-icon color="primary"
+																		  fontSet="material-icons-outlined">
+																	medical_services
+																</mat-icon>
+																<span>{{profession}} </span>
+															</div>
 														</div>
 													</div>
-												</div>
-												<div fxFlex="50%">
-													<strong [translate]="'pacientes.user_data.SPECIALTY'"></strong>
-													<div id="specialty" class="data" fxLayout="row" fxLayoutGap="16px"
-														*ngFor="let specialty of showSpecialties">
-														<span>{{specialty}}</span>
+													<div fxFlex="50%">
+														<strong [translate]="'pacientes.user_data.SPECIALTY'"></strong>
+														<div id="specialty" class="data" fxLayout="row"
+															 fxLayoutGap="16px"
+															 *ngFor="let specialty of showSpecialties">
+															<span>{{specialty}}</span>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-								</ng-container>
-							</div>
-							<div content>
-								<button id="button-edit-professions" mat-stroked-button color="primary" (click)="editProfessions()">
+									</ng-container>
+								</div>
+								<div content>
+									<button id="button-edit-professions" mat-stroked-button color="primary"
+											(click)="editProfessions()">
 									<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'"
-										class="uppercase"></span>
-								</button>
+										  class="uppercase"></span>
+									</button>
+								</div>
 							</div>
-						</div>
-					</mat-card-content>
-				</mat-card>
+						</mat-card-content>
+					</mat-card>
+				</div>
 			</div>
+			<ng-container
+				*appHasRole="['ADMINISTRATIVO']">
+				<app-summary-card *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary"
+								  id="internment_summary_card" [header]="internacionSummary">
+					<mat-card-content>
+						<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary">
+						</app-internment-episode-summary>
+					</mat-card-content>
+				</app-summary-card>
+
+			</ng-container>
 		</div>
 	</div>
 </app-content>
