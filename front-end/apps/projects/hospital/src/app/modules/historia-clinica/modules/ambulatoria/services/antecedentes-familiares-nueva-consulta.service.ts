@@ -50,6 +50,12 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 				text: v => v.snomed.pt
 			},
 			{
+				def: 'fecha',
+				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.FECHA',
+				template: CellTemplates.TEXT,
+				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
+			},
+			{
 				def: 'eliminar',
 				template: CellTemplates.REMOVE_BUTTON,
 				action: (rowIndex) => this.remove(rowIndex)
