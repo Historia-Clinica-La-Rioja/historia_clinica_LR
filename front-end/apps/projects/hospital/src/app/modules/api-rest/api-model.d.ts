@@ -918,6 +918,11 @@ export interface FormVDto {
     sisaCode: string;
 }
 
+export interface FullySpecifiedNamesDto {
+    lang: string;
+    term: string;
+}
+
 export interface GenderDto extends AbstractMasterdataDto<number> {
     id: number;
 }
@@ -1904,6 +1909,11 @@ export interface PoliceInterventionDetailsDto extends Serializable {
     plateNumber: string;
 }
 
+export interface PreferredTermDto {
+    lang: string;
+    term: string;
+}
+
 export interface PrescriptionDto extends Serializable {
     hasRecipe: boolean;
     items: PrescriptionItemDto[];
@@ -2178,6 +2188,18 @@ export interface SnomedEclDto {
 export interface SnomedResponseDto extends Serializable {
     items: SnomedDto[];
     total: number;
+}
+
+export interface SnomedSearchDto {
+    items: SnomedSearchItemDto[];
+    total: number;
+}
+
+export interface SnomedSearchItemDto {
+    conceptId: string;
+    fsn: FullySpecifiedNamesDto;
+    id: string;
+    pt: PreferredTermDto;
 }
 
 export interface SnvsEventDto {
