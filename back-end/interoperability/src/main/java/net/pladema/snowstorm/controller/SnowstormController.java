@@ -1,9 +1,15 @@
 package net.pladema.snowstorm.controller;
 
+
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.snowstorm.controller.dto.FullySpecifiedNamesDto;
+import net.pladema.snowstorm.controller.dto.PreferredTermDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
+import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
+import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
+import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.slf4j.Logger;
@@ -22,26 +28,35 @@ import java.util.stream.Collectors;
 public class SnowstormController {
 
     private static final String CONCEPTS = "/concepts";
-
     private static final Logger LOG = LoggerFactory.getLogger(SnowstormController.class);
-
-    public static final String OUTPUT = "Output -> {}";
-
     private final SnowstormService snowstormService;
 
     private final FetchAllSnomedEcl fetchAllSnomedEcl;
 
-    public SnowstormController(SnowstormService snowstormService, FetchAllSnomedEcl fetchAllSnomedEcl){
+    public SnowstormController(SnowstormService snowstormService, FetchAllSnomedEcl fetchAllSnomedEcl) {
         this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
     }
 
     @GetMapping(value = CONCEPTS)
-    public SnowstormSearchResponse getConcepts(
+    public SnomedSearchDto getConcepts(
             @RequestParam(value = "term") String term,
             @RequestParam(value = "ecl", required = false) String eclKey) throws SnowstormApiException {
         LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
-        return snowstormService.getConcepts(term, eclKey);
+        SnowstormSearchResponse response = snowstormService.getConcepts(term, eclKey);
+        List<SnomedSearchItemDto> itemList = mapToSnomedSearchItemDtoList(response.getItems());
+        SnomedSearchDto result = new SnomedSearchDto(itemList, response.getTotal());
+        LOG.debug("Output -> {}", result);
+        return result;
+    }
+
+    private List<SnomedSearchItemDto> mapToSnomedSearchItemDtoList(List<SnowstormItemResponse> items) {
+        return items.stream()
+                .map(i -> new SnomedSearchItemDto(i.getConceptId(),
+                        i.getConceptId(),
+                        new FullySpecifiedNamesDto(i.getFsn().get("term").textValue(), i.getFsn().get("lang").textValue()),
+                        new PreferredTermDto(i.getPt().get("term").textValue(), i.getFsn().get("lang").textValue())))
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/ecl")
