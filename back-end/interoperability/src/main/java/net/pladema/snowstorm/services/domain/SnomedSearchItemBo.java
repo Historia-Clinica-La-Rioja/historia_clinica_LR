@@ -3,12 +3,12 @@ package net.pladema.snowstorm.services.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import net.pladema.snowstorm.repository.domain.SnomedSearchVo;
+import net.pladema.snowstorm.repository.domain.SnomedSearchItemVo;
 
 @AllArgsConstructor
 @Getter
 @ToString
-public class SnomedCachedSearchBo {
+public class SnomedSearchItemBo {
 
     private Integer snomedId;
 
@@ -16,7 +16,7 @@ public class SnomedCachedSearchBo {
 
     private String pt;
 
-    public SnomedCachedSearchBo(SnomedSearchVo snomedSearchVo) {
+    public SnomedSearchItemBo(SnomedSearchItemVo snomedSearchVo) {
         this.snomedId = snomedSearchVo.getSnomedId();
         this.sctid = snomedSearchVo.getSctid();
         this.pt = snomedSearchVo.getPt();

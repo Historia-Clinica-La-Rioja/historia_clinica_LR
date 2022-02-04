@@ -3,7 +3,9 @@ package net.pladema.snowstorm.services.searchCachedConcepts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.snowstorm.repository.SnomedConceptsRepository;
-import net.pladema.snowstorm.services.domain.SnomedCachedSearchBo;
+import net.pladema.snowstorm.repository.domain.SnomedSearchVo;
+import net.pladema.snowstorm.services.domain.SnomedSearchBo;
+import net.pladema.snowstorm.services.domain.SnomedSearchItemBo;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,15 @@ public class SearchCachedConcepts {
     private final SnomedConceptsRepository snomedConceptsRepository;
     private final SnomedSemantics snomedSemantics;
 
-    public List<SnomedCachedSearchBo> run(String term, String eclKey) {
+    public SnomedSearchBo run(String term, String eclKey) {
         log.debug("Input parameters -> term {}, eclKey {}", term, eclKey);
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
-        List<SnomedCachedSearchBo> result = snomedConceptsRepository.searchConceptsByEcl(term, ecl)
+        SnomedSearchVo searchResult = snomedConceptsRepository.searchConceptsByEcl(term, ecl);
+        List<SnomedSearchItemBo> items = searchResult.getItems()
                 .stream()
-                .map(SnomedCachedSearchBo::new)
+                .map(SnomedSearchItemBo::new)
                 .collect(Collectors.toList());
+        SnomedSearchBo result = new SnomedSearchBo(items, searchResult.getTotalMatches());
         log.debug("Output -> {}", result);
         return result;
     }

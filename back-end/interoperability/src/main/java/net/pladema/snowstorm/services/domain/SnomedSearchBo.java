@@ -1,4 +1,4 @@
-package net.pladema.snowstorm.repository.domain;
+package net.pladema.snowstorm.services.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
-public class SnomedSearchVo {
+public class SnomedSearchBo {
 
-    private List<SnomedSearchItemVo> items;
+    private List<SnomedSearchItemBo> items;
 
     private Integer totalMatches;
 
