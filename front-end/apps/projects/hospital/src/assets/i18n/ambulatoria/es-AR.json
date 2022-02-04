@@ -460,7 +460,7 @@
 				}
 			},
 			"profile": {
-				"BUTTON_HISTORIA_CLINICA": "Historia Clínica",
+				"BUTTON_HISTORIA_CLINICA": "ver historia clínica",
 				"WARNING_INTERNADO": "El paciente se encuentra internado en otra institución."
 			},
 			"resumen": {

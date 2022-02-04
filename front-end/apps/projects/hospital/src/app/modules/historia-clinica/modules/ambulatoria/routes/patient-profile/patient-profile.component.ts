@@ -7,25 +7,25 @@ import { PersonService } from '@api-rest/services/person.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
+import { ContextService } from '@core/services/context.service';
 
 
 @Component({
-  selector: 'app-patient-profile',
-  templateUrl: './patient-profile.component.html',
-  styleUrls: ['./patient-profile.component.scss']
+	selector: 'app-patient-profile',
+	templateUrl: './patient-profile.component.html',
+	styleUrls: ['./patient-profile.component.scss']
 })
 export class PatientProfileComponent implements OnInit {
 
+	patientId: number;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
 	public person: PersonalInformationDto;
 	public personPhoto: PersonPhotoDto;
-	private patientId: number;
-	private readonly routePrefix;
 	public internmentEpisode: InternmentEpisodeProcessDto;
 	public patientMedicalCoverage: PatientMedicalCoverageDto[];
 
@@ -33,12 +33,11 @@ export class PatientProfileComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly personService: PersonService,
-		private readonly contextService: ContextService,
 		private readonly internmentPatientService: InternmentPatientService,
+		private readonly contextService: ContextService,
+		private readonly router: Router,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
-		this.routePrefix = `institucion/${this.contextService.institutionId}`;
 	}
 
 	ngOnInit(): void {
@@ -71,9 +70,8 @@ export class PatientProfileComponent implements OnInit {
 					});
 			});
 	}
-
-	goToAmbulatoria() {
-		const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
-		this.router.navigateByUrl(url);
+	goToMedicalHistory() {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}`;
+		this.router.navigate([url]);
 	}
 }

@@ -19,11 +19,11 @@
 								(click)="referenceNotificationService.hasReferenceNotification()">Ambulatoria</button>
 							<button mat-menu-item (click)="openNuevaConsultaEnfermeria()">Enfermeria</button>
 						</mat-menu>
-						<div fxLayout="end" fxLayoutAlign="end">
-							<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>{{
-								'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
-						</div>
 					</ng-container>
+					<div fxLayout="end" fxLayoutAlign="end">
+						<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>{{
+							'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
+					</div>
 				</ng-container>
 			</div>
 		</app-patient-card>
