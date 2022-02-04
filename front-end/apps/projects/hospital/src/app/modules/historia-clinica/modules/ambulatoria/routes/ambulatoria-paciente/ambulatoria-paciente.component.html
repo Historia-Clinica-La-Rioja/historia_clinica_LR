@@ -7,7 +7,7 @@
 		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]="personInformation"
 						  [personPhoto]="personPhoto" [showAdditionalInformation]="true" [bloodType]="bloodType"
 						  [internmentEpisodeProcess]="internmentEpisodeProcess" [internmentEpisodeCoverageInfo]="internmentEpisodeCoverageInfo">
-			<div horizontal-content>
+			<div horizontal-content fxLayout="column" fxLayoutGap="10px">
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
 					<ng-container
 						*ngIf="CurrentUserIsAllowedToMakeBothQueries; else currentUserIsNotAllowedToMakeBothQueries">
@@ -19,6 +19,10 @@
 								(click)="referenceNotificationService.hasReferenceNotification()">Ambulatoria</button>
 							<button mat-menu-item (click)="openNuevaConsultaEnfermeria()">Enfermeria</button>
 						</mat-menu>
+						<div fxLayout="end" fxLayoutAlign="end">
+							<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>{{
+								'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
+						</div>
 					</ng-container>
 				</ng-container>
 			</div>

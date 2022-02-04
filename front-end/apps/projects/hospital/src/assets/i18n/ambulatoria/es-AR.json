@@ -21,7 +21,8 @@
 			"TITLE": "Historia Clínica",
 			"card": {
 				"buttons": {
-					"NUEVA_CONSULTA": "Nueva consulta"
+					"NUEVA_CONSULTA": "Nueva consulta",
+					"SHOW_PATIENT": "ver paciente"
 				},
 				"GROUP_AND_FACTOR": "Grupo y factor",
 				"SANGUINEOUS": "sanguíneo",

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, ERole } from '@api-rest/api-model';
@@ -34,6 +34,7 @@ import { ReferenceNotificationInfo, ReferenceNotificationService } from '@histor
 import { REFERENCE_CONSULTATION_TYPE } from '../../constants/reference-masterdata';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
+import { ContextService } from '@core/services/context.service';
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -86,6 +87,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly internmentPatientService: InternmentPatientService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly contextService: ContextService,
+		private readonly router: Router,
 
 	) {
 		this.route.paramMap.subscribe(
@@ -118,7 +121,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
 						}
 					})
-				
+
 			});
 	}
 	ngOnInit(): void {
@@ -252,4 +255,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		});
 	}
 
+	goToPatient() {
+		const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${this.patientId}/profile`;
+		this.router.navigateByUrl(url);
+	}
 }
