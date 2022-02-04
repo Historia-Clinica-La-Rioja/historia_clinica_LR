@@ -7,10 +7,8 @@ import { momentParseDate } from '@core/utils/moment.utils';
 import {
 	ClinicalSpecialtyDto,
 	HCEEvolutionSummaryDto,
-	OutpatientEvolutionSummaryDto,
 	OutpatientSummaryReferenceDto
 } from '@api-rest/api-model';
-import { OutpatientConsultationService } from './../../../../api-rest/services/outpatient-consultation.service';
 import { MapperService } from './../../../../presentation/services/mapper.service';
 import { REFERENCE_STATES } from '../constants/reference-masterdata';
 import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";

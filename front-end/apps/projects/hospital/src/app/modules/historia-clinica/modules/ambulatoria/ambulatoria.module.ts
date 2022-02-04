@@ -50,6 +50,7 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { FactoresDeRiesgoNuevaConsultaComponent } from './components/factores-de-riesgo-nueva-consulta/factores-de-riesgo-nueva-consulta.component';
 import { ShowAllergiesComponent } from './dialogs/show-allergies/show-allergies.component';
+import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
 
 @NgModule({
 	declarations: [
@@ -90,6 +91,7 @@ import { ShowAllergiesComponent } from './dialogs/show-allergies/show-allergies.
 		DatosAntropometricosNuevaConsultaComponent,
 		FactoresDeRiesgoNuevaConsultaComponent,
 		ShowAllergiesComponent,
+		InternacionPacienteComponent,
 	],
 	imports: [
 		CommonModule,

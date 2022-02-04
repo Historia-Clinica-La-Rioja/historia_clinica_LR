@@ -4,9 +4,12 @@ import { ConceptsSearchDialogComponent } from '../concepts-search-dialog/concept
 import { HealthConditionDto, MasterDataInterface, EvolutionNoteDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { HEALTH_VERIFICATIONS, HEALTH_CLINICAL_STATUS } from '../../modules/internacion/constants/ids';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import {
+	HEALTH_CLINICAL_STATUS,
+	HEALTH_VERIFICATIONS
+} from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
 
 @Component({
 	selector: 'app-remove-diagnosis',

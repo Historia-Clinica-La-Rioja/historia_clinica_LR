@@ -9,8 +9,11 @@ import { TableModel, ActionDisplays } from '@presentation/components/table/table
 
 import { DIAGNOSTICOS } from '../../constants/summaries';
 import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-diagnosis.component';
-import { HEALTH_CLINICAL_STATUS } from '../../modules/internacion/constants/ids';
-import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
+import { ContextService } from '@core/services/context.service';
+import {
+	EvolutionNotesListenerService
+} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/evolution-notes-listener.service";
+import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
 
 export const COVID_SNOMED = { sctid: '186747009', pt: 'infección por coronavirus' };
 
@@ -93,7 +96,8 @@ export class DiagnosisSummaryComponent implements OnInit {
 					display: 'note_add',
 					matColor: 'primary',
 					do: row => {
-						this.router.navigate([`${this.router.url}/eval-clinica-diagnosticos/${row.id}`]);
+						const url_prefix = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}/`;
+						this.router.navigate([url_prefix + `eval-clinica-diagnosticos/${row.id}`]);
 					},
 					hide: row => row.statusId !== HEALTH_CLINICAL_STATUS.ACTIVO
 				},

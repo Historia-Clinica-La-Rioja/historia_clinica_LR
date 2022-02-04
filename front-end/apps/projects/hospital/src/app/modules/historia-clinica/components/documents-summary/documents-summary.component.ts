@@ -4,9 +4,11 @@ import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} 
 import { Moment } from 'moment';
 import { DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto, DocumentHistoricDto } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
 import { hasError } from '@core/utils/form.utils';
 import {pairwise, startWith} from 'rxjs/operators';
+import {
+	EvolutionNotesListenerService
+} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/evolution-notes-listener.service";
 
 @Component({
 	selector: 'app-documents-summary',
