@@ -149,7 +149,7 @@ export class HomeComponent implements OnInit {
 							display: 'Ver',
 							matColor: 'primary',
 							do: (row) => {
-								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}/profile`;
+								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}`;
 								this.router.navigateByUrl(url);
 							}
 						}
@@ -198,7 +198,7 @@ export class HomeComponent implements OnInit {
 							display: 'Ver',
 							matColor: 'primary',
 							do: (row) => {
-								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}/profile`;
+								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}`;
 								this.router.navigateByUrl(url);
 							}
 						}
