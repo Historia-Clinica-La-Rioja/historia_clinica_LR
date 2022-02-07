@@ -96,6 +96,17 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+
+	@Override
+	public EmergencyCareBo getEpisodeSummary(Integer institutionId, Integer episodeId) {
+		LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
+		EmergencyCareVo resultQuery = emergencyCareEpisodeRepository.getEpisode(episodeId, institutionId).get();
+		EmergencyCareBo result = new EmergencyCareBo(resultQuery);
+		result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
     @Override
     public EmergencyCareBo get(Integer episodeId, Integer institutionId) {
         LOG.debug("Input parameters -> episodeId {}, institutionId {}", episodeId, institutionId);
