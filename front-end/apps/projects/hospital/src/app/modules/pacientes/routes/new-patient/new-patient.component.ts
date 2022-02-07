@@ -16,7 +16,7 @@ import {
 	SelfPerceivedGenderDto
 } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
-import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
+import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -108,6 +108,7 @@ export class NewPatientComponent implements OnInit {
 					// Person extended
 					cuil: [params.cuil, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
+					phonePrefix: [],
 					phoneNumber: [],
 					email: [null, Validators.email],
 					ethnicityId: [],
@@ -259,6 +260,7 @@ export class NewPatientComponent implements OnInit {
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
+			phonePrefix: this.form.controls.phonePrefix.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
 			// Address
@@ -358,6 +360,17 @@ export class NewPatientComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	updatePhoneValidators(){
+		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+		} else {
+			updateControlValidator(this.form, 'phoneNumber', []);
+			updateControlValidator(this.form, 'phonePrefix', []);
+		}
+
 	}
 
 }

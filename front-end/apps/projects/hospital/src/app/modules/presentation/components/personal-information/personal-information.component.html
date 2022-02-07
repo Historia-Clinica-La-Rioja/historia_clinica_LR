@@ -42,7 +42,7 @@
 	</div>
 	<div fxFlex="50%">
 		<span class="info-title">Nro de teléfono</span>
-		<span *ngIf="personalInformation?.phoneNumber; else noInformation" class="info-content">{{personalInformation?.phoneNumber}}</span>
+		<span *ngIf="personalInformation?.phoneNumber; else noInformation" class="info-content">{{formatPhonePrefixAndNumber()}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>

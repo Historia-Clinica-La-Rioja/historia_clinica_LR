@@ -278,15 +278,29 @@
 					</mat-form-field>
 				</div>
 			</div>
-
-			<div fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px">
+			<div class="form-row white-bg-color" fxLayoutGap="10px">
 				<div>
-					<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
+					<div>
+						<span [translate]="'pacientes.form.PHONE_PREFIX'"></span>
+					</div>
+					<mat-form-field appearance="outline">
+						<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()" formControlName="phonePrefix" maxlength="10"
+							   placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
+						<mat-error *ngIf="hasError(form, 'required', 'phonePrefix')">
+							<span translate="forms.REQUIRED"></span>
+						</mat-error>
+					</mat-form-field>
 				</div>
-				<div fxLayout="row" class="white-bg-color">
-					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
-						<input id="phoneNumber" name="phoneNumber" formControlName="phoneNumber" maxlength="15"
-							placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
+				<div>
+					<div>
+						<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
+					</div>
+					<mat-form-field appearance="outline">
+						<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber" formControlName="phoneNumber" maxlength="15"
+							   placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
+						<mat-error *ngIf="hasError(form, 'required', 'phoneNumber')">
+							<span translate="forms.REQUIRED"></span>
+						</mat-error>
 					</mat-form-field>
 				</div>
 			</div>

@@ -38,6 +38,7 @@
             "ONLY_NUMBERS": "Solo números",
             "OTHER_LAST_NAMES": "Otros apellidos",
             "PAMI_DOCTOR": "Médico de PAMI",
+			"PHONE_PREFIX": "Prefijo",
             "PHONE_NUMBER": "Teléfono",
             "RELIGION": "Religión",
             "REQUIRED": "El campo es requerido",

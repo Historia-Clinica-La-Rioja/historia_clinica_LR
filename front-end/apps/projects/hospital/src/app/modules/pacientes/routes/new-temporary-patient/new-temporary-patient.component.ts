@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
-import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
+import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
@@ -101,6 +101,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					// Person extended
 					cuil: [params.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
 					mothersLastName: [],
+					phonePrefix: [],
 					phoneNumber: [],
 					email: [null, [Validators.email]],
 					ethnicityId: [],
@@ -219,6 +220,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
+			phonePrefix: this.form.controls.phonePrefix.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
 			// Address
@@ -350,6 +352,17 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public clearGenderSelfDetermination(): void {
 		this.form.controls.genderSelfDeterminationId.reset();
 		this.showOtherSelfPerceivedGender();
+	}
+
+	updatePhoneValidators(){
+		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+		} else {
+			updateControlValidator(this.form, 'phoneNumber', []);
+			updateControlValidator(this.form, 'phonePrefix', []);
+		}
+
 	}
 
 }

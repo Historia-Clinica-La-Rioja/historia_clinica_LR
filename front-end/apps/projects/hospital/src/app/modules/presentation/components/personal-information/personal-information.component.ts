@@ -24,6 +24,11 @@ export class PersonalInformationComponent implements OnChanges {
 		}
 	}
 
+	formatPhonePrefixAndNumber() : string{
+		return this.personalInformation.phonePrefix
+			? this.personalInformation.phonePrefix + "-" + this.personalInformation.phoneNumber
+			: this.personalInformation.phoneNumber;
+	}
 	mapToAddress(addressDto: AddressDto) {
 		return {
 			street: addressDto.street,
@@ -42,6 +47,7 @@ export class PersonalInformation {
 	address: AddressDto;
 	birthDate: string;
 	email: string;
+	phonePrefix: string;
 	phoneNumber: string;
 	medicalCoverageName: string;
 	medicalCoverageAffiliateNumber: string;

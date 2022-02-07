@@ -83,6 +83,7 @@ export class MapperService {
 			address: person.address,
 			birthDate: person.birthDate ? momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE) : '',
 			email: person.email,
+			phonePrefix: person.phonePrefix,
 			phoneNumber: person.phoneNumber,
 			medicalCoverageName: patient.medicalCoverageName,
 			medicalCoverageAffiliateNumber: patient.medicalCoverageAffiliateNumber
