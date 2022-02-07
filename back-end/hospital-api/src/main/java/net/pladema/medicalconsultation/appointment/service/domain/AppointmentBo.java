@@ -44,6 +44,8 @@ public class AppointmentBo {
     
     private String stateChangeReason;
 
+	private String phonePrefix;
+
     private String phoneNumber;
 
     public AppointmentBo(AppointmentDiaryVo appointmentDiaryVo) {
@@ -58,6 +60,7 @@ public class AppointmentBo {
         this.openingHoursId = null;
         this.patientMedicalCoverageId = appointmentDiaryVo.getPatientMedicalCoverageId();
         this.medicalAttentionTypeId = appointmentDiaryVo.getMedicalAttentionTypeId();
+		this.phonePrefix = appointmentDiaryVo.getPhonePrefix();
         this.phoneNumber = appointmentDiaryVo.getPhoneNumber();
     }
     
@@ -88,6 +91,7 @@ public class AppointmentBo {
                 appointment.getPatientMedicalCoverageId(),
                 null,
                 null,
+				appointment.getPhonePrefix(),
                 appointment.getPhoneNumber());
     }
 }

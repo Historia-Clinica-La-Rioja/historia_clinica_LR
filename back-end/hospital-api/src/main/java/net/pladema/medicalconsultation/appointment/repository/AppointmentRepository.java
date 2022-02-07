@@ -23,7 +23,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
-            "a.patientMedicalCoverageId, a.phoneNumber, doh.medicalAttentionTypeId)" +
+            "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
@@ -48,7 +48,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
-            "a.patientMedicalCoverageId, a.phoneNumber, doh.medicalAttentionTypeId) " +
+            "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
@@ -98,10 +98,12 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Modifying
     @Query( "UPDATE Appointment  AS a " +
             "SET a.phoneNumber = :phoneNumber, " +
+			"a.phonePrefix = :phonePrefix, " +
             "a.updateable.updatedOn = CURRENT_TIMESTAMP, " +
             "a.updateable.updatedBy = :userId " +
             "WHERE a.id = :appointmentId ")
     void updatePhoneNumber(@Param("appointmentId") Integer appointmentId,
+						   @Param("phonePrefix") String phonePrefix,
                            @Param("phoneNumber") String phoneNumber,
                            @Param("userId") Integer userId);
 

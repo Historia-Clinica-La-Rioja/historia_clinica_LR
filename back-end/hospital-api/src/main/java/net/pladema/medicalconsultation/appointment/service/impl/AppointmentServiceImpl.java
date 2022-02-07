@@ -98,8 +98,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean updatePhoneNumber(Integer appointmentId, String phoneNumber, Integer userId) {
-		appointmentRepository.updatePhoneNumber(appointmentId,phoneNumber,userId);
+	public boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId) {
+		appointmentRepository.updatePhoneNumber(appointmentId,phonePrefix,phoneNumber,userId);
 		LOG.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}

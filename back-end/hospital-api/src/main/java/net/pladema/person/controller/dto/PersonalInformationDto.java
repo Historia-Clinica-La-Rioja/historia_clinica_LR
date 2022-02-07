@@ -23,6 +23,8 @@ public class PersonalInformationDto {
 
     private String cuil;
 
+	private String phonePrefix;
+
     private String phoneNumber;
 
     private IdentificationTypeDto identificationType;

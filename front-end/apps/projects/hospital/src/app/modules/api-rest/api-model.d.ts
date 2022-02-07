@@ -59,6 +59,7 @@ export interface APersonDto {
     otherGenderSelfDetermination?: string;
     otherLastNames: string;
     phoneNumber: string;
+    phonePrefix: string;
     postcode: string;
     quarter: string;
     religion: string;
@@ -220,6 +221,7 @@ export interface AppointmentListDto {
     overturn: boolean;
     patient: AppointmentBasicPatientDto;
     phoneNumber: string;
+    phonePrefix: string;
 }
 
 export interface AttentionTypeReportDto {
@@ -323,6 +325,7 @@ export interface BasicPatientDto extends Serializable {
 export interface BasicPersonalDataDto extends IBasicPersonalData {
     genderId: number;
     nameSelfDetermination: string;
+    phonePrefix: string;
 }
 
 export interface BedCategoriesDataDto {
@@ -498,6 +501,7 @@ export interface CreateAppointmentDto {
     patientId: number;
     patientMedicalCoverageId?: number;
     phoneNumber?: string;
+    phonePrefix?: string;
 }
 
 export interface CreateOutpatientDto {
@@ -1889,6 +1893,7 @@ export interface PersonalInformationDto {
     identificationNumber: string;
     identificationType: IdentificationTypeDto;
     phoneNumber: string;
+    phonePrefix: string;
 }
 
 export interface PoliceInterventionDetailsDto extends Serializable {

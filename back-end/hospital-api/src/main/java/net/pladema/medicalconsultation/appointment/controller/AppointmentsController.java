@@ -139,7 +139,7 @@ public class AppointmentsController {
     }
 
     private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
-		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(appointmentBo.getPatientId()),appointmentBo.getPhoneNumber());
+		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(appointmentBo.getPatientId()),appointmentBo.getPhoneNumber(), appointmentBo.getPhonePrefix());
 		AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, appointmentBasicPatientDto);
         LOG.debug("AppointmentListDto id result {}", result.getId());
         LOG.trace(OUTPUT, result);
@@ -188,9 +188,10 @@ public class AppointmentsController {
     public ResponseEntity<Boolean> updatePhoneNumber(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "appointmentId") Integer appointmentId,
-            @RequestParam(required = false) @Size(max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
-        LOG.debug("Input parameters -> institutionId {},appointmentId {}, phoneNumber {}", institutionId, appointmentId, phoneNumber);
-        boolean result = appointmentService.updatePhoneNumber(appointmentId,phoneNumber,UserInfo.getCurrentAuditor());
+            @RequestParam(required = false) @Size(max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber,
+			@RequestParam(required = false) @Size(max = 10, message = "{appointment.new.phonePrefix.invalid}") String phonePrefix) {
+        LOG.debug("Input parameters -> institutionId {},appointmentId {}, phonePrefix {}, phoneNumber {}", institutionId, appointmentId, phonePrefix, phoneNumber);
+        boolean result = appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber,UserInfo.getCurrentAuditor());
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
@@ -236,9 +237,9 @@ public class AppointmentsController {
         notifyPatient.run(institutionId, appointmentId);
     }
 
-	private AppointmentBasicPatientDto toAppointmentBasicPatientDto(BasicPatientDto basicData, String phoneNumber) {
+	private AppointmentBasicPatientDto toAppointmentBasicPatientDto(BasicPatientDto basicData, String phoneNumber, String phonePrefix) {
 		BasicDataPersonDto basicPatientDto = basicData.getPerson();
-		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(basicPatientDto.getFirstName(), basicPatientDto.getLastName(), basicPatientDto.getIdentificationNumber(), basicPatientDto.getIdentificationTypeId(), phoneNumber, basicPatientDto.getGender().getId(), basicPatientDto.getNameSelfDetermination());
+		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(basicPatientDto.getFirstName(), basicPatientDto.getLastName(), basicPatientDto.getIdentificationNumber(), basicPatientDto.getIdentificationTypeId(), phonePrefix, phoneNumber, basicPatientDto.getGender().getId(), basicPatientDto.getNameSelfDetermination());
 		return new AppointmentBasicPatientDto(basicData.getId(), basicPersonalDataDto, basicData.getTypeId());
 	}
 

@@ -58,6 +58,9 @@ public class Appointment extends SGXAuditableEntity<Integer> {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+	@Column(name = "phone_prefix", length = 10)
+	private String phonePrefix;
+
     public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
         Appointment result = new Appointment();
         result.setDateTypeId(appointmentBo.getDate());
@@ -66,6 +69,7 @@ public class Appointment extends SGXAuditableEntity<Integer> {
         result.setPatientId(appointmentBo.getPatientId());
         result.setAppointmentStateId(AppointmentState.ASSIGNED);
         result.setPatientMedicalCoverageId(appointmentBo.getPatientMedicalCoverageId());
+		result.setPhonePrefix(appointmentBo.getPhonePrefix());
         result.setPhoneNumber(appointmentBo.getPhoneNumber());
         return result;
         

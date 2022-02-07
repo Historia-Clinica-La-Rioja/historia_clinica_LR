@@ -174,6 +174,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		Person person = personService.getPerson(personId);
 		PersonExtended personExtended = personService.getPersonExtended(personId);
 		BasicPersonalDataDto result = personMapper.basicPersonalDataDto(person);
+		result.setPhonePrefix(personExtended.getPhonePrefix());
 		result.setPhoneNumber(personExtended.getPhoneNumber());
 		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 		LOG.debug(OUTPUT, result);

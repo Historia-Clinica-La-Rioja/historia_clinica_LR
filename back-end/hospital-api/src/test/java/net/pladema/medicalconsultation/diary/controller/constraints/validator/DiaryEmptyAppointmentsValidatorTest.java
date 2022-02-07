@@ -50,7 +50,7 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	private void setupContextValid() {
 		LocalDate apbDate = LocalDate.parse("2020-08-12");
 		LocalTime apbHour = LocalTime.parse("11:15:00");
-		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1,null, (short) 1, null,"429784");
+		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1,null, (short) 1, null,"011","429784");
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
 		when(appointmentService.getFutureActiveAppointmentsByDiary(anyInt())).thenReturn(returnFutureAppmets);
 
@@ -59,7 +59,7 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	private void setupContextInvalid() {
 		LocalDate apbDate = LocalDate.parse("2020-08-12");
 		LocalTime apbHour = LocalTime.parse("13:15:00");
-		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1,  null, (short) 2, null,null);
+		AppointmentBo apb1 = new AppointmentBo(1, 1, 1, apbDate, apbHour, (short) 1, false, 1,  null, (short) 2, null,null,null);
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
 		when(appointmentService.getFutureActiveAppointmentsByDiary(anyInt())).thenReturn(returnFutureAppmets);
 
