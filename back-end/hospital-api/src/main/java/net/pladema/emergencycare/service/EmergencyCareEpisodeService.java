@@ -8,6 +8,8 @@ public interface  EmergencyCareEpisodeService {
 
     List<EmergencyCareBo> getAll(Integer institutionId);
 
+    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
+
     EmergencyCareBo get(Integer episodeId, Integer institutionId);
 
     EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId);

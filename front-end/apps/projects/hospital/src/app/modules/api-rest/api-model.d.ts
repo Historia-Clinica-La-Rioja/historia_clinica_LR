@@ -764,6 +764,11 @@ export interface EmergencyCareDto extends Serializable {
     reasons: SnomedDto[];
 }
 
+export interface EmergencyCareEpisodeInProgressDto {
+    id?: number;
+    inProgress: boolean;
+}
+
 export interface EmergencyCareEpisodeListTriageDto {
     color: string;
     id: number;
