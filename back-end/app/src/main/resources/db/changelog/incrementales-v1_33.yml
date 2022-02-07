@@ -1,3 +1,12 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_33 
-
+    - logicalFilePath: incrementales-v1_33
+    - changeSet:
+        id: add-phone_prefix-column-person_extended
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: person_extended
+              columns:
+                - column:
+                    name: phone_prefix
+                    type: varchar(10)
