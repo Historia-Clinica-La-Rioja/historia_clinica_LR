@@ -126,6 +126,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.snowstorm.params.termActive |   | true | Único |  Parametro para consulta a servicio Conceptos que indica si el termino a buscar debe estar activo  | v1.2.0  |
 | ws.snowstorm.auth.language |   | es-AR;q=0.8,en-GB;q=0.6 | Único |  Header que indica el lenguaje de los resultados  | v1.2.0  |
 | ws.snowstorm.url.concepts |   | /MAIN/concepts | Único |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
+| ws.snowstorm.searchLocally.enabled |   | false | Opcional |  Determina si las búsquedas se hacen de forma local o consultando al servicio de Snowstorm  | v1.33.0  |
 
 #### Snomed Ecls
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
