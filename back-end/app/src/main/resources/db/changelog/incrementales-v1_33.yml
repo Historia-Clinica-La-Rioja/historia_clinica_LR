@@ -10,3 +10,14 @@ databaseChangeLog:
                 - column:
                     name: phone_prefix
                     type: varchar(10)
+
+    - changeSet:
+        id: add-phone_prefix-column-appointment
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    name: phone_prefix
+                    type: varchar(10)
