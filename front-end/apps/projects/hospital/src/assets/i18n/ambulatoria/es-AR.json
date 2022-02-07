@@ -516,6 +516,12 @@
 					}
 				}
 			}
+		},
+		"screen_change_warning_dialog": {
+			"CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
+			"ANSWER_CONTENT": "¿Desea continuar de todos modos?",
+			"CONFIRM_BUTTON": "Si, descartar y continuar",
+			"CANCEL_BUTTON": "No, regresar y completar"
 		}
 	}
 }

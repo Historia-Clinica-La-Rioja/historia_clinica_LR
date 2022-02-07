@@ -28,6 +28,7 @@ import { REFERENCE_CONSULTATION_TYPE } from '@historia-clinica/modules/ambulator
 })
 export class OdontogramComponent implements OnInit {
 
+	@Output() isOpenOdontologyConsultation = new EventEmitter<boolean>();
 	@Output() consultationCompleted = new EventEmitter<FieldsToUpdate>()
 
 	constructor(
@@ -41,7 +42,7 @@ export class OdontogramComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly medicacionesService: MedicacionesService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
-	) { 
+	) {
 		this.activatedRoute.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
@@ -93,7 +94,7 @@ export class OdontogramComponent implements OnInit {
 		});
 
 		this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
-		
+
 		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
 			if (type === REFERENCE_CONSULTATION_TYPE.ODONTOLOGY) {
 				this.openConsultationPopup();
@@ -130,8 +131,10 @@ export class OdontogramComponent implements OnInit {
 	}
 
 	openConsultationPopup() {
+		this.isOpenOdontologyConsultation.emit(true);
 		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
 		dialogRef.afterClosed().subscribe(consultationResult => {
+			this.isOpenOdontologyConsultation.emit(false);
 			if (consultationResult && consultationResult.confirmed) {
 				this.setActionsAsRecords();
 				this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);

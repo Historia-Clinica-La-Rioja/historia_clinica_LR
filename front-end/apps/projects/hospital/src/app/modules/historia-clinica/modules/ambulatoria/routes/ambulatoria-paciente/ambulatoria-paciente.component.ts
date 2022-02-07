@@ -35,6 +35,9 @@ import { REFERENCE_CONSULTATION_TYPE } from '../../constants/reference-masterdat
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { ContextService } from '@core/services/context.service';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
+import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -68,6 +71,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	bloodType: string;
 	internmentEpisodeProcess: InternmentEpisodeProcessDto;
 	internmentEpisodeCoverageInfo: ExternalPatientCoverageDto;
+	private isOpenOdontologyConsultation = false;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -225,6 +229,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				this.dialogRef.maximize();
 			}
 		}
+
 	}
 
 	onTabChanged(event: MatTabChangeEvent) {
@@ -256,7 +261,30 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	goToPatient() {
-		const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${this.patientId}/profile`;
-		this.router.navigateByUrl(url);
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}/${HomeRoutes.Profile}`;
+		if (this.dialogRef || this.isOpenOdontologyConsultation) {
+			const dialog = this.dialog.open(DiscardWarningComponent,
+				{
+					data: {
+						content: 'ambulatoria.screen_change_warning_dialog.CONTENT',
+						contentBold: `ambulatoria.screen_change_warning_dialog.ANSWER_CONTENT`,
+						okButtonLabel: 'ambulatoria.screen_change_warning_dialog.CONFIRM_BUTTON',
+						cancelButtonLabel: 'ambulatoria.screen_change_warning_dialog.CANCEL_BUTTON',
+					}
+				});
+			dialog.afterClosed().subscribe((result: boolean) => {
+				if (result) {
+					this.dialogRef?.close();
+					this.router.navigate([url]);
+				}
+			});
+		}
+		else {
+			this.router.navigate([url]);
+		}
+	}
+
+	setStateConsultationOdontology(isOpenOdontologyConsultation: boolean): void {
+		this.isOpenOdontologyConsultation = isOpenOdontologyConsultation;
 	}
 }

@@ -38,6 +38,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { MedicalCoverageComponent } from './dialogs/medical-coverage/medical-coverage.component';
+import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 // pipes
@@ -84,6 +85,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ConfirmDialogComponent,
 		DatePickerComponent,
 		DocumentSectionComponent,
+		DiscardWarningComponent,
 		MedicalCoverageComponent,
 		// directives
 		CtrlTemplateDirective,

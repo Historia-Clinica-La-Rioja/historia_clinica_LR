@@ -108,7 +108,8 @@
 							<span>ODONTOLOGÍA</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-odontogram (consultationCompleted)="updateFields($event)"></app-odontogram>
+							<app-odontogram (isOpenOdontologyConsultation)="setStateConsultationOdontology($event)"
+								(consultationCompleted)="updateFields($event)"></app-odontogram>
 						</ng-template>
 					</mat-tab>
 
