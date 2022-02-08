@@ -261,6 +261,14 @@ export class MedicalCoverageComponent implements OnInit {
 			.map(s => s.id)[0];
 		const medicalCoverage = new HealthInsurance(healthInsurance.rnos, healthInsurance.acronym,
 			healthInsuranceId, healthInsurance.name, 'HealthInsuranceDto');
+
+		if(medicalCoverage.id === undefined) {
+			this.healthInsuranceService.get(parseInt(healthInsurance.rnos))
+				.subscribe(data => {
+					medicalCoverage.id = data.id;
+				})
+		}
+
 		return {
 			affiliateNumber: null,
 			medicalCoverage,
