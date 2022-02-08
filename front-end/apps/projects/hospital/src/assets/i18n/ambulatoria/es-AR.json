@@ -481,6 +481,9 @@
                 "TAB_LABEL": "Indicaciones",
                 "TITLE": "Indicaciones"
             },
+            "internacion": {
+				"TAB_LABEL": "Internación"
+			},
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
                 "TITLE": "Historial de vacunación",

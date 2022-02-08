@@ -84,6 +84,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	internmentEpisodeCoverageInfo: ExternalPatientCoverageDto;
 	private isOpenOdontologyConsultation = false;
 	emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
+	hasInternmentEpisodeInThisInstitution = undefined;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -140,12 +141,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
 						}
+						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
 					})
 
 				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
 					.subscribe(emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
 			});
 	}
+
 	ngOnInit(): void {
 		this.setActionsLayout();
 		this.personInformation = [];

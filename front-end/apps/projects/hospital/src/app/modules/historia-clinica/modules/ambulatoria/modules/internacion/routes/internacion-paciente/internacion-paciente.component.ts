@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -61,7 +61,6 @@ export class InternacionPacienteComponent implements OnInit {
 	public epicrisisDoc: EpicrisisSummaryDto;
 	public lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	public lastProbableDischargeDate: Moment;
-	public internmentEpisodeId: number;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	public showDischarge: boolean;
 	public editDiagnosisSummary$: boolean;
@@ -74,11 +73,13 @@ export class InternacionPacienteComponent implements OnInit {
 	public medications$: Observable<MedicationDto[]>;
 	public riskFactors$: Observable<Last2RiskFactorsDto>;
 	public anthropometricData$: Observable<AnthropometricDataDto>;
+	public showPatientCard = false;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
 	public readonly medicationsHeader = MEDICACION;
 	private readonly routePrefix;
 	private patientId: number;
+	@Input() internmentEpisodeId: number;
 
 	constructor(
 		private patientService: PatientService,
@@ -99,7 +100,10 @@ export class InternacionPacienteComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
-				this.internmentEpisodeId = Number(params.get('idInternacion'));
+				if (params.get('idInternacion')) {
+					this.internmentEpisodeId = Number(params.get('idInternacion'));
+					this.showPatientCard = true;
+				}
 
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))

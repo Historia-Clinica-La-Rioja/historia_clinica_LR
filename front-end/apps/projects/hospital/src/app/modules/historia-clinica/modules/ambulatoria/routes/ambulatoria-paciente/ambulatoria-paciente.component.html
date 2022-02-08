@@ -140,13 +140,21 @@
 
 		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
-				<mat-tab-group (selectedTabChange)="onTabChanged($event)">
-					<mat-tab id="tab_resumen">
+				<mat-tab-group (selectedTabChange)="onTabChanged($event)" *ngIf="hasInternmentEpisodeInThisInstitution !== undefined">
+					<mat-tab id="tab_resumen" *ngIf="!hasInternmentEpisodeInThisInstitution">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
 							<app-resumen [patientExternalSummary]="patientExternalSummary"></app-resumen>
+						</ng-template>
+					</mat-tab>
+					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution">
+						<ng-template mat-tab-label>
+							<span>{{ 'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-internacion-paciente [internmentEpisodeId]="internmentEpisodeProcess.id"></app-internacion-paciente>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_indications">
@@ -157,7 +165,7 @@
 							<app-card-medicaciones [patientId]="patientId" [medicamentStatus]="medicamentStatus$ | async" ></app-card-medicaciones>
 						</ng-template>
 					</mat-tab>
-					 <mat-tab id="tab_studies">
+					<mat-tab id="tab_studies">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.studies.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
