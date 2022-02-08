@@ -99,11 +99,13 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit = this.formBuilder.group({
 			//Medical Coverage selected in Edit Mode
 			newCoverageData: null,
+			phonePrefix: null,
 			phoneNumber: null
 		});
 
 		this.setMedicalCoverages();
 		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
+		this.formEdit.controls.phonePrefix.setValue(this.params.appointmentData.phonePrefix);
 		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -133,6 +135,13 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(identificationTypes => {
 				this.identificationType = identificationTypes.find(identificationType => identificationType.id==this.params.appointmentData.patient.identificationTypeId);
 			});
+	}
+
+	formatPhonePrefixAndNumber(): string {
+		return this.params.appointmentData.phoneNumber ? this.params.appointmentData.phonePrefix
+			? this.params.appointmentData.phonePrefix + "-" + this.params.appointmentData.phoneNumber
+			: this.params.appointmentData.phoneNumber
+			: "Sin información";
 	}
 
 	private setMedicalCoverages(): void {
@@ -193,8 +202,8 @@ export class AppointmentComponent implements OnInit {
 					this.updateCoverageData(null);
 				}
 			}
-			if (this.formEdit.controls.phoneNumber.dirty){
-				this.updatePhoneNumber(this.formEdit.controls.phoneNumber.value);
+			if (this.formEdit.controls.phoneNumber.dirty||this.formEdit.controls.phonePrefix.dirty){
+				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value,this.formEdit.controls.phoneNumber.value);
 			}
 		}
 		this.hideFilters();
@@ -231,8 +240,8 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
-	updatePhoneNumber(phoneNumber: string) {
-		this.appointmentFacade.updatePhoneNumber(this.params.appointmentData.appointmentId, phoneNumber).subscribe(() => {
+	updatePhoneNumber(phonePrefix: string, phoneNumber: string) {
+		this.appointmentFacade.updatePhoneNumber(this.params.appointmentData.appointmentId, phonePrefix, phoneNumber).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -350,6 +359,7 @@ export interface PatientAppointmentInformation {
 	appointmentId: number;
 	appointmentStateId: number;
 	date: Date;
+	phonePrefix: string;
 	phoneNumber: string;
 	healthInsurance?: {
 		name: string,

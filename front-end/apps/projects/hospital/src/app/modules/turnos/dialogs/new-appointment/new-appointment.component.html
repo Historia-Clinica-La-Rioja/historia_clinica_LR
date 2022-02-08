@@ -106,13 +106,33 @@
 							</mat-select>
 						</mat-form-field>
 						<mat-form-field appearance="outline">
-							<mat-label>Nro Telefónico</mat-label>
+							<mat-label [translate]="'turnos.new-appointment.PHONE_PREFIX'"></mat-label>
+							<input matInput
+								   type="text"
+								   id="phonePrefix"
+								   name="phonePrefix"
+								   formControlName="phonePrefix"
+								   placeholder="{{'turnos.new-appointment.PHONE_PREFIX' | translate }}"
+								   (keyup)="updatePhoneValidators()">
+							<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'phonePrefix')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phonePrefix')"
+									   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'turnos.new-appointment.PHONE_NUMBER'"></mat-label>
 							<input matInput
 								type="text"
 								id="phoneNumber"
 								name="phoneNumber"
 								formControlName="phoneNumber"
-								placeholder="Número Telefónico">
+								placeholder="{{'turnos.new-appointment.PHONE_NUMBER' | translate }}"
+								   (keyup)="updatePhoneValidators()">
+							<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'phoneNumber')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
 							<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phoneNumber')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
 							</mat-error>

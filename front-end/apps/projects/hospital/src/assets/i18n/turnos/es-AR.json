@@ -46,6 +46,8 @@
 			"STEP_2": "Confirmar turno",
 			"TEMPORARY_PATIENT": "Paciente temporal",
 			"PATIENT_ID": "ID del paciente",
+			"PHONE_NUMBER": "Número Telefónico",
+			"PHONE_PREFIX": "Prefijo",
 			"messages": {
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",
@@ -67,7 +69,8 @@
 		"appointment": {
 			"phoneNumber": {
 				"SUCCESS": "El teléfono se modificó correctamente",
-				"PHONE_NUMBER": "Teléfono"
+				"PHONE_NUMBER": "Teléfono",
+				"PHONE_PREFIX": "Prefijo"
 			},
 			"coverageData": {
 				"COVERAGE_DATA": "Cobertura Médica",

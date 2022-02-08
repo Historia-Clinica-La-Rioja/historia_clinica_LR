@@ -68,14 +68,15 @@ export class AppointmentsFacadeService {
 	}
 
 
-	updatePhoneNumber(appointmentId: number, phoneNumber: string): Observable<boolean> {
-		return this.appointmentService.updatePhoneNumber(appointmentId, phoneNumber)
+	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {
+		return this.appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber)
 			.pipe(
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
 							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
 							toEdit.meta.phoneNumber = phoneNumber;
+							toEdit.meta.phonePrefix = phonePrefix;
 							this.appointmenstEmitter.next(events);
 						});
 						return true;
@@ -167,6 +168,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 			appointmentId: appointment.id,
 			appointmentStateId: appointment.appointmentStateId,
 			date: buildFullDate(appointment.hour, momentParseDate(appointment.date)),
+			phonePrefix: appointment.phonePrefix,
 			phoneNumber: appointment.phoneNumber,
 			rnos: appointment.healthInsuranceId,
 			medicalCoverageName: appointment.medicalCoverageName,

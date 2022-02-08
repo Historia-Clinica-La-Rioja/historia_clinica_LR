@@ -35,7 +35,7 @@
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
-					<span class="mat-body patient-info coverage-text">{{params.appointmentData.phoneNumber || "Sin información"}}</span>
+					<span class="mat-body patient-info coverage-text">{{formatPhonePrefixAndNumber()}}</span>
 				</div>
 			</ng-container>
 
@@ -58,6 +58,14 @@
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
+					<div class="form-row">
+					<mat-form-field class="input" appearance="outline">
+						<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_PREFIX'"></mat-label>
+						<input matInput formControlName="phonePrefix"
+							   type="tel"
+							   id="phonePrefix"
+							   name="phonePrefix">
+					</mat-form-field>
 					<mat-form-field class="input" appearance="outline">
 						<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
 						<input matInput formControlName="phoneNumber"
@@ -65,6 +73,7 @@
 								id="phonenumber"
 								name="phonenumber">
 					</mat-form-field>
+					</div>
 					<div align="end">
 						<button mat-flat-button color="primary" type="submit">
 							<span class="uppercase">Guardar</span>
