@@ -5,3 +5,11 @@
     @include app-agenda($theme);
     @include app-appointment($theme);
 }
+
+.turnos div.calendar-event-white-text .cal-event-title {
+    color: white;
+}
+
+.turnos div.calendar-event-grey-text .cal-event-title {
+    color: #7D807D;
+}

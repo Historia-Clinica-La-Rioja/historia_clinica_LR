@@ -5,17 +5,38 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
 import { momentParseTime, DateFormat, momentParseDate, buildFullDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
-import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
 
 const enum COLORES {
-	PROGRAMADA = '#7FC681',
-	ESPONTANEA = '#2687C5',
-	SOBRETURNO = '#E3A063'
+	ASSIGNED = '#4187FF',
+	CONFIRMED = '#FFA500',
+	ABSENT = '#D5E0D5',
+	SERVED = '#AAFDBC',
 }
 const TEMPORARY_PATIENT = 3;
+const GREY_TEXT = 'calendar-event-grey-text';
+const WHITE_TEXT = 'calendar-event-white-text';
+
+const APPOINTMENT_COLORS_STATES: AppointmentColorsStates[] = [
+	{
+		id: APPOINTMENT_STATES_ID.ASSIGNED,
+		color: COLORES.ASSIGNED
+	},
+	{
+		id: APPOINTMENT_STATES_ID.CONFIRMED,
+		color: COLORES.CONFIRMED
+	},
+	{
+		id: APPOINTMENT_STATES_ID.ABSENT,
+		color: COLORES.ABSENT
+	},
+	{
+		id: APPOINTMENT_STATES_ID.SERVED,
+		color: COLORES.SERVED
+	}
+];
 
 @Injectable({
 	providedIn: 'root'
@@ -132,8 +153,6 @@ export class AppointmentsFacadeService {
 				})
 			);
 	}
-
-
 }
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string): CalendarEvent {
@@ -151,9 +170,10 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 		end: buildFullDate(to, date).toDate(),
 		title,
 		color: {
-			primary: getColor(appointment.overturn, appointment.medicalAttentionTypeId),
-			secondary: getColor(appointment.overturn, appointment.medicalAttentionTypeId)
+			primary: getColor(appointment.appointmentStateId),
+			secondary: getColor(appointment.appointmentStateId)
 		},
+		cssClass: getSpanColor(appointment.appointmentStateId),
 		meta: {
 			patient: {
 				id: appointment.patient.id,
@@ -177,9 +197,15 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 	};
 }
 
-function getColor(isOverturn: boolean, medicalAttentionTypeId: number): COLORES {
-	if (isOverturn) {
-		return COLORES.SOBRETURNO;
-	}
-	return medicalAttentionTypeId === MEDICAL_ATTENTION.SPONTANEOUS_ID ? COLORES.ESPONTANEA : COLORES.PROGRAMADA;
+export function getColor(appointmentStateId: number): COLORES {
+	return APPOINTMENT_COLORS_STATES.find(appointmentColor => appointmentColor.id === appointmentStateId).color;
+}
+
+export function getSpanColor(appointmentStateId: number): string {
+	return ((appointmentStateId === APPOINTMENT_STATES_ID.ABSENT) || (appointmentStateId === APPOINTMENT_STATES_ID.SERVED)) ? GREY_TEXT : WHITE_TEXT;
+}
+
+interface AppointmentColorsStates {
+	id: APPOINTMENT_STATES_ID,
+	color: COLORES
 }

@@ -245,7 +245,8 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				this.closeDialog('statuschanged');
+				const appointmentInformation = {id: this.params.appointmentData.appointmentId, stateId: newStateId};
+				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
 				this.changeState(this.appointment?.appointmentStateId);

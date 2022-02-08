@@ -21,9 +21,9 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MINUTES_IN_HOUR } from '../../constants/appointment';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService, getColor, getSpanColor } from '@turnos/services/appointments-facade.service';
 import { map, take } from 'rxjs/operators';
-import { forkJoin, Observable, of, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -60,6 +60,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	dailyAmounts: AppointmentDailyAmountDto[];
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
 	appointmentSubscription: Subscription;
+	refreshCalendar = new Subject<void>();
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 
@@ -216,19 +217,29 @@ export class AgendaComponent implements OnInit, OnDestroy {
 			this.healthInsuranceService.get(event.meta.rnos)
 				.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
 					event.meta.healthInsurance = medicalCoverageDto;
-					this.dialog.open(AppointmentComponent, {
+					const dialogRef = this.dialog.open(AppointmentComponent, {
 						data: {
 							appointmentData: event.meta,
 							professionalPermissions: this.agenda.professionalAssignShift
 						}
 					});
+					dialogRef.afterClosed().subscribe(appointmentInformation => {
+						if (appointmentInformation?.id) {
+							this.updateAppoinment(appointmentInformation);
+						}
+					});
 				});
 		} else {
-			this.dialog.open(AppointmentComponent, {
+			const dialogRef = this.dialog.open(AppointmentComponent, {
 				data: {
 					appointmentData: event.meta,
 					hasPermissionToAssignShift: this.agenda.professionalAssignShift
 				},
+			});
+			dialogRef.afterClosed().subscribe(appointmentInformation => {
+				if (appointmentInformation?.id) {
+					this.updateAppoinment(appointmentInformation);
+				}
 			});
 		}
 	}
@@ -349,5 +360,13 @@ export class AgendaComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	private updateAppoinment(appointmentInformation) {
+		const appointment = this.appointments.find(appointment => appointment.meta.appointmentId === appointmentInformation?.id);
+		appointment.meta.appointmentStateId = appointmentInformation.stateId;
+		const color = getColor(appointmentInformation.stateId);
+		appointment.color.primary = color;
+		appointment.color.secondary = color;
+		appointment.cssClass = getSpanColor(appointmentInformation.stateId);
+		this.refreshCalendar.next();
+	}
 }
-
