@@ -17,14 +17,14 @@ public class MapClinicalObservationVo {
 
     private Map<String, List<ClinicalObservationVo>> clinicalObservationByCode;
 
-    public MapClinicalObservationVo(List<ClinicalObservationVo> vitalsSignVos){
+    public MapClinicalObservationVo(List<ClinicalObservationVo> RiskFactorVos){
         super();
-        clinicalObservationByCode = vitalsSignVos.stream().collect(Collectors.groupingBy(ClinicalObservationVo::getSctidCode));
+        clinicalObservationByCode = RiskFactorVos.stream().collect(Collectors.groupingBy(ClinicalObservationVo::getSctidCode));
         clinicalObservationByCode.forEach(this::processData);
     }
 
     private void processData(String key, List<ClinicalObservationVo> inputValues) {
-        LOG.debug("Input parameters -> key {}, vitalSigns {}", key, inputValues);
+        LOG.debug("Input parameters -> key {}, RiskFactors {}", key, inputValues);
         inputValues.sort(Comparator.comparing(ClinicalObservationVo::getEffectiveTime).reversed());
         List<ClinicalObservationVo> result = new ArrayList<>();
         int historyLength = 2;
@@ -50,47 +50,47 @@ public class MapClinicalObservationVo {
     }
 
     private Optional<ClinicalObservationVo> getLastNClinicalObservationByCode(String sctidCode, Integer pos){
-        List<ClinicalObservationVo> sortedVitalSign = clinicalObservationByCode.get(sctidCode);
-        if (sortedVitalSign == null || sortedVitalSign.isEmpty() || sortedVitalSign.size() <= pos)
+        List<ClinicalObservationVo> sortedRiskFactor = clinicalObservationByCode.get(sctidCode);
+        if (sortedRiskFactor == null || sortedRiskFactor.isEmpty() || sortedRiskFactor.size() <= pos)
             return Optional.empty();
-        return Optional.of(sortedVitalSign.get(pos));
+        return Optional.of(sortedRiskFactor.get(pos));
     }
 
     public List<ClinicalObservationVo> getClinicalObservationByCode(String key){
         return clinicalObservationByCode.getOrDefault(key, new ArrayList<>());
     }
 
-    public Optional<VitalSignBo> getLastVitalSigns() {
-        return getLastNVitalSigns(0);
+    public Optional<RiskFactorBo> getLastRiskFactors() {
+        return getLastNRiskFactors(0);
     }
 
-    public Optional<VitalSignBo> getLastNVitalSigns(int i) {
+    public Optional<RiskFactorBo> getLastNRiskFactors(int i) {
         LOG.debug("Input parameters -> pos {}", i);
-        VitalSignBo vitalSignBo = new VitalSignBo();
-        getLastNClinicalObservationByCode(EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v ->
-            vitalSignBo.setBloodOxygenSaturation(new ClinicalObservationBo(v))
+        RiskFactorBo riskFactorBo = new RiskFactorBo();
+        getLastNClinicalObservationByCode(ERiskFactor.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v ->
+            riskFactorBo.setBloodOxygenSaturation(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setDiastolicBloodPressure(new ClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v ->
+            riskFactorBo.setDiastolicBloodPressure(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setSystolicBloodPressure(new ClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v ->
+            riskFactorBo.setSystolicBloodPressure(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.HEART_RATE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setHeartRate(new ClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.HEART_RATE.getSctidCode(),i).ifPresent(v ->
+            riskFactorBo.setHeartRate(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.TEMPERATURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setTemperature(new ClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.TEMPERATURE.getSctidCode(),i).ifPresent(v ->
+            riskFactorBo.setTemperature(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setRespiratoryRate(new ClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v ->
+            riskFactorBo.setRespiratoryRate(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setMeanPressure(new ClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v ->
+            riskFactorBo.setMeanPressure(new ClinicalObservationBo(v))
         );
-        LOG.debug(OUTPUT, vitalSignBo);
-        if (vitalSignBo.hasValues())
-            return Optional.of(vitalSignBo);
+        LOG.debug(OUTPUT, riskFactorBo);
+        if (riskFactorBo.hasValues())
+            return Optional.of(riskFactorBo);
         return Optional.empty();
     }
 
@@ -101,10 +101,10 @@ public class MapClinicalObservationVo {
     public Optional<AnthropometricDataBo> getLastNAnthropometricData(int i) {
         LOG.debug("Input parameters -> pos {}", i);
         AnthropometricDataBo result = new AnthropometricDataBo();
-        getLastNClinicalObservationByCode(EVitalSign.HEIGHT.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(ERiskFactor.HEIGHT.getSctidCode(),i).ifPresent(v ->
             result.setHeight(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.WEIGHT.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(ERiskFactor.WEIGHT.getSctidCode(),i).ifPresent(v ->
             result.setWeight(new ClinicalObservationBo(v))
         );
         getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),i).ifPresent(v ->

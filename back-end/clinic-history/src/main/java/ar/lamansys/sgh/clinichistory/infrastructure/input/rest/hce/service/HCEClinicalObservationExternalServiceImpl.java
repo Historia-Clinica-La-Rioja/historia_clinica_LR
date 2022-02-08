@@ -1,11 +1,11 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCERiskFactorsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,10 +37,10 @@ public class HCEClinicalObservationExternalServiceImpl implements HCEClinicalObs
 	}
 
 	@Override
-	public HCELast2VitalSignsDto getLast2VitalSignsGeneralState(Integer patientId) {
+	public HCELast2RiskFactorsDto getLast2RiskFactorsGeneralState(Integer patientId) {
 		LOG.debug(LOGGING_INPUT, patientId);
-		Last2HCEVitalSignsBo resultService = hceClinicalObservationService.getLast2VitalSignsGeneralState(patientId);
-		HCELast2VitalSignsDto result = hceGeneralStateMapper.toHCELast2VitalSignsDto(resultService);
+		Last2HCERiskFactorsBo resultService = hceClinicalObservationService.getLast2RiskFactorsGeneralState(patientId);
+		HCELast2RiskFactorsDto result = hceGeneralStateMapper.toHCELast2RiskFactorsDto(resultService);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}

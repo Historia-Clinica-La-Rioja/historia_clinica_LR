@@ -52,7 +52,7 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
     private AnthropometricDataBo anthropometricData;
 
     @Valid
-    private VitalSignBo vitalSigns;
+    private RiskFactorBo riskFactors;
 
     private LocalDateTime performedDate;
 

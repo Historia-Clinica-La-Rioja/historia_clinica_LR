@@ -171,13 +171,13 @@ public class InternmentStateController {
     }
 
     @InternmentValid
-    @GetMapping("/{internmentEpisodeId}/general/vitalSigns")
-    public ResponseEntity<Last2VitalSignsDto> vitalSignsGeneralState(
+    @GetMapping("/{internmentEpisodeId}/general/riskFactors")
+    public ResponseEntity<Last2RiskFactorsDto> riskFactorsGeneralState(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
         LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        Last2VitalSignsBo vitalSignBos = fetchHospitalizationClinicalObservationState.getLast2VitalSignsGeneralState(internmentEpisodeId);
-        Last2VitalSignsDto result = internmentStateMapper.toLast2VitalSignDto(vitalSignBos);
+        Last2RiskFactorsBo riskFactorBos = fetchHospitalizationClinicalObservationState.getLast2RiskFactorsGeneralState(internmentEpisodeId);
+        Last2RiskFactorsDto result = internmentStateMapper.toLast2RiskFactorDto(riskFactorBos);
         LOG.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }

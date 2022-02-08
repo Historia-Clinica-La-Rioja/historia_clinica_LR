@@ -59,7 +59,7 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
     private AnthropometricDataBo anthropometricData;
 
     @Valid
-    private VitalSignBo vitalSigns;
+    private RiskFactorBo riskFactors;
 
     private LocalDateTime performedDate;
 

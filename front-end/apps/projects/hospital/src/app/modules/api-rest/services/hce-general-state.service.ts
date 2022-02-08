@@ -54,7 +54,7 @@ export class HceGeneralStateService {
 	}
 
 	getVitalSigns(patientId: number): Observable<HCELast2VitalSignsDto> {
-		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/vitalSigns`;
+		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/riskFactors`;
 		return this.http.get<HCELast2VitalSignsDto>(url);
 	}
 

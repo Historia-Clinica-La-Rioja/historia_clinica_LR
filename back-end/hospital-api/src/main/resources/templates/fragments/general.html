@@ -336,71 +336,71 @@
         </div>
     </div>
 
-    <!-- Signos vitales -->
+    <!-- Factores de riesgo -->
 
-    <div th:fragment="vitalSigns">
+    <div th:fragment="riskFactors">
         <h3 >Factores de riesgo</h3>
-        <div  th:if="${vitalSigns  == null}">
+        <div  th:if="${riskFactors  == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
             </dl>
         </div>
 
-        <div th:if="${vitalSigns != null}">
+        <div th:if="${riskFactors != null}">
             - Frecuencía cardíaca:
-            <strong><span  th:if="${vitalSigns.heartRate  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${vitalSigns.heartRate  != null}" th:text="${vitalSigns.heartRate.value + '/min'} "></span></strong>
-            &nbsp;<span th:if="${vitalSigns.heartRate != null}" >Fecha de medición: </span>
-            <strong><span th:if="${vitalSigns.heartRate != null}" th:text="${#temporals.format(vitalSigns.heartRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            <strong><span  th:if="${riskFactors.heartRate  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${riskFactors.heartRate  != null}" th:text="${riskFactors.heartRate.value + '/min'} "></span></strong>
+            &nbsp;<span th:if="${riskFactors.heartRate != null}" >Fecha de medición: </span>
+            <strong><span th:if="${riskFactors.heartRate != null}" th:text="${#temporals.format(riskFactors.heartRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Frecuencía respiratoria:
-            <strong><span  th:if="${vitalSigns.respiratoryRate  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${vitalSigns.respiratoryRate != null}" th:text="${vitalSigns.respiratoryRate.value + '/min'}"></span></strong>
-            &nbsp;<span th:if="${vitalSigns.respiratoryRate != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${vitalSigns.respiratoryRate != null}" th:text="${#temporals.format(vitalSigns.respiratoryRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            <strong><span  th:if="${riskFactors.respiratoryRate  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${riskFactors.respiratoryRate != null}" th:text="${riskFactors.respiratoryRate.value + '/min'}"></span></strong>
+            &nbsp;<span th:if="${riskFactors.respiratoryRate != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${riskFactors.respiratoryRate != null}" th:text="${#temporals.format(riskFactors.respiratoryRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Tensión arterial (Sistolica/Diastolica):
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure == null)}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${(riskFactors.systolicBloodPressure == null) &&  (riskFactors.diastolicBloodPressure == null)}">Sin cambios registrados</span></strong>
 
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure == null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/- mm Hg'}"></span></strong>
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${'-/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${vitalSigns.systolicBloodPressure.value + '/' + vitalSigns.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
+            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure == null)}" th:text="${riskFactors.systolicBloodPressure.value + '/- mm Hg'}"></span></strong>
+            <strong><span  th:if="${(riskFactors.systolicBloodPressure == null) &&  (riskFactors.diastolicBloodPressure != null)}" th:text="${'-/' + riskFactors.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
+            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure != null)}" th:text="${riskFactors.systolicBloodPressure.value + '/' + riskFactors.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
 
 
-            &nbsp;<span th:if="${(vitalSigns.systolicBloodPressure != null) || (vitalSigns.diastolicBloodPressure != null)}" >Fecha de medición: </span>
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure != null) &&  (vitalSigns.diastolicBloodPressure == null)}" th:text="${#temporals.format(vitalSigns.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
-            <strong><span  th:if="${(vitalSigns.systolicBloodPressure == null) &&  (vitalSigns.diastolicBloodPressure != null)}" th:text="${#temporals.format(vitalSigns.diastolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            &nbsp;<span th:if="${(riskFactors.systolicBloodPressure != null) || (riskFactors.diastolicBloodPressure != null)}" >Fecha de medición: </span>
+            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure != null)}" th:text="${#temporals.format(riskFactors.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
+            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure == null)}" th:text="${#temporals.format(riskFactors.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
+            <strong><span  th:if="${(riskFactors.systolicBloodPressure == null) &&  (riskFactors.diastolicBloodPressure != null)}" th:text="${#temporals.format(riskFactors.diastolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Temperatura corporal:
-            <strong><span  th:if="${vitalSigns.temperature  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${vitalSigns.temperature != null}" th:text="${vitalSigns.temperature.value  + '°C'}"></span></strong>
-            &nbsp;<span th:if="${vitalSigns.temperature != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${vitalSigns.temperature != null}" th:text="${#temporals.format(vitalSigns.temperature.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            <strong><span  th:if="${riskFactors.temperature  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${riskFactors.temperature != null}" th:text="${riskFactors.temperature.value  + '°C'}"></span></strong>
+            &nbsp;<span th:if="${riskFactors.temperature != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${riskFactors.temperature != null}" th:text="${#temporals.format(riskFactors.temperature.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Saturación de oxígeno:
-            <strong><span  th:if="${vitalSigns.bloodOxygenSaturation  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%' + 'Hs'}"></span></strong>
-            &nbsp;<span th:if="${vitalSigns.bloodOxygenSaturation != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${#temporals.format(vitalSigns.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            <strong><span  th:if="${riskFactors.bloodOxygenSaturation  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${riskFactors.bloodOxygenSaturation != null}" th:text="${riskFactors.bloodOxygenSaturation.value+ '%' + 'Hs'}"></span></strong>
+            &nbsp;<span th:if="${riskFactors.bloodOxygenSaturation != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${riskFactors.bloodOxygenSaturation != null}" th:text="${#temporals.format(riskFactors.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Glucemia:
-            <strong><span  th:if="${vitalSigns.bloodGlucose  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${vitalSigns.bloodGlucose != null}" th:text="${vitalSigns.bloodGlucose.value + 'Mg/dl'}"></span></strong>
-            &nbsp;<span th:if="${vitalSigns.bloodGlucose != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${vitalSigns.bloodGlucose != null}" th:text="${#temporals.format(vitalSigns.bloodGlucose.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            <strong><span  th:if="${riskFactors.bloodGlucose  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${riskFactors.bloodGlucose != null}" th:text="${riskFactors.bloodGlucose.value + 'Mg/dl'}"></span></strong>
+            &nbsp;<span th:if="${riskFactors.bloodGlucose != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${riskFactors.bloodGlucose != null}" th:text="${#temporals.format(riskFactors.bloodGlucose.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Hemoglobina glicosilada:
-            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin != null}" th:text="${vitalSigns.glycosylatedHemoglobin.value+ '%'}"></span></strong>
-            &nbsp;<span th:if="${vitalSigns.glycosylatedHemoglobin != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin != null}" th:text="${#temporals.format(vitalSigns.glycosylatedHemoglobin.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            <strong><span  th:if="${riskFactors.glycosylatedHemoglobin  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${riskFactors.glycosylatedHemoglobin != null}" th:text="${riskFactors.glycosylatedHemoglobin.value+ '%'}"></span></strong>
+            &nbsp;<span th:if="${riskFactors.glycosylatedHemoglobin != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${riskFactors.glycosylatedHemoglobin != null}" th:text="${#temporals.format(riskFactors.glycosylatedHemoglobin.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
 
             - Riesgo cardiovascular:
-            <strong><span  th:if="${vitalSigns.cardiovascularRisk  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${vitalSigns.cardiovascularRisk != null}" th:text="${vitalSigns.cardiovascularRisk.value+ '%'}"></span></strong>
-            &nbsp;<span th:if="${vitalSigns.cardiovascularRisk != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${vitalSigns.cardiovascularRisk != null}" th:text="${#temporals.format(vitalSigns.cardiovascularRisk.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+            <strong><span  th:if="${riskFactors.cardiovascularRisk  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${riskFactors.cardiovascularRisk != null}" th:text="${riskFactors.cardiovascularRisk.value+ '%'}"></span></strong>
+            &nbsp;<span th:if="${riskFactors.cardiovascularRisk != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${riskFactors.cardiovascularRisk != null}" th:text="${#temporals.format(riskFactors.cardiovascularRisk.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
         </div>
     </div>
 

@@ -57,7 +57,7 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-    default VitalSignBo getVitalSigns() {
+    default RiskFactorBo getRiskFactors() {
         return null;
     }
 

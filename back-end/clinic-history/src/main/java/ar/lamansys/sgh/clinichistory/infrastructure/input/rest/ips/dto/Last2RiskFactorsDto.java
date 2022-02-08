@@ -9,10 +9,10 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class Last2VitalSignsDto implements Serializable {
+public class Last2RiskFactorsDto implements Serializable {
 
-    private VitalSignDto current;
+    private RiskFactorDto current;
 
-    private VitalSignDto previous;
+    private RiskFactorDto previous;
 
 }

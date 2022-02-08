@@ -2,7 +2,7 @@ package net.pladema.patient.portal.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEAllergyExternalService;
@@ -128,12 +128,12 @@ public class PatientPortalController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@GetMapping("/vitalSigns")
-	public ResponseEntity<HCELast2VitalSignsDto> getVitalSigns() throws MethodNotSupportedException {
+	@GetMapping("/riskFactors")
+	public ResponseEntity<HCELast2RiskFactorsDto> getRiskFactors() throws MethodNotSupportedException {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
-		HCELast2VitalSignsDto result = hceClinicalObservationExternalService.getLast2VitalSignsGeneralState(patientId);
+		HCELast2RiskFactorsDto result = hceClinicalObservationExternalService.getLast2RiskFactorsGeneralState(patientId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

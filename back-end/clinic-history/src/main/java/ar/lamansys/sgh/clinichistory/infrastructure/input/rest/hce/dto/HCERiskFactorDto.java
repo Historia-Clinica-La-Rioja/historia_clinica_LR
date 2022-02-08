@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class HCEVitalSignDto implements Serializable {
+public class HCERiskFactorDto implements Serializable {
 
     @Valid
     @Nullable

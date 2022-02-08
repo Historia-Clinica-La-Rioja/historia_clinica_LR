@@ -3,7 +3,7 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import java.util.Arrays;
 
-public enum EVitalSign {
+public enum ERiskFactor {
 
 	SYSTOLIC_BLOOD_PRESSURE("271649006", "8480-6"),
     DIASTOLIC_BLOOD_PRESSURE("271650006", "8462-4"),
@@ -24,7 +24,7 @@ public enum EVitalSign {
 
     private String sctidCode;
 
-    EVitalSign(String sctidCode, String loincCode) {
+    ERiskFactor(String sctidCode, String loincCode) {
         this.sctidCode = sctidCode;
         this.loincCode = loincCode;
     }
@@ -41,7 +41,7 @@ public enum EVitalSign {
         return Arrays.asList(HEIGHT.sctidCode, WEIGHT.sctidCode, BMI.sctidCode, HEAD_CIRCUMFERENCE.sctidCode).contains(sctidCode);
     }
 
-    public static boolean isCodeVitalSign(String sctidCode) {
+    public static boolean isCodeRiskFactor(String sctidCode) {
         return Arrays.asList(SYSTOLIC_BLOOD_PRESSURE.sctidCode, DIASTOLIC_BLOOD_PRESSURE.sctidCode,
                 MEAN_PRESSURE.sctidCode, TEMPERATURE.sctidCode, HEART_RATE.sctidCode,
                 RESPIRATORY_RATE.sctidCode, BLOOD_OXYGEN_SATURATION.sctidCode, BLOOD_GLUCOSE.sctidCode,

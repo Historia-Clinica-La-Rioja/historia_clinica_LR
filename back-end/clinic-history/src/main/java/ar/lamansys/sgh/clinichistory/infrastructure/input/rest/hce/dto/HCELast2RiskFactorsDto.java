@@ -9,10 +9,10 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class HCELast2VitalSignsDto implements Serializable {
+public class HCELast2RiskFactorsDto implements Serializable {
 
-    private HCEVitalSignDto current;
+    private HCERiskFactorDto current;
 
-    private HCEVitalSignDto previous;
+    private HCERiskFactorDto previous;
 
 }

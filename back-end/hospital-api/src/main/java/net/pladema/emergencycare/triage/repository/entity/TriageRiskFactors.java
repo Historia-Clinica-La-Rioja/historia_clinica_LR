@@ -17,16 +17,16 @@ import javax.persistence.Table;
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode
-public class TriageVitalSigns {
+public class TriageRiskFactors {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = -229982705620842778L;
 
 	@EmbeddedId
-	private TriageVitalSignsPk pk;
+	private TriageRiskFactorsPk pk;
 
-	public TriageVitalSigns(Integer triageId, Integer observationVitalSignsId){
-		pk = new TriageVitalSignsPk(triageId, observationVitalSignsId);
+	public TriageRiskFactors(Integer triageId, Integer observationRiskFactorsId){
+		pk = new TriageRiskFactorsPk(triageId, observationRiskFactorsId);
 	}
 }

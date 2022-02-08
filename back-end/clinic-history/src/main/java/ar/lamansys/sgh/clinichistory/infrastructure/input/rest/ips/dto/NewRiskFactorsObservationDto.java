@@ -15,7 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class NewVitalSignsObservationDto implements Serializable {
+public class NewRiskFactorsObservationDto implements Serializable {
 
     @Nullable
     private NewEffectiveClinicalObservationDto systolicBloodPressure;

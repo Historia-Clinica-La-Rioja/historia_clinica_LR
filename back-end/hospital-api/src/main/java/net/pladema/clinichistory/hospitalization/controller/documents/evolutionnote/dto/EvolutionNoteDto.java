@@ -45,6 +45,6 @@ public class EvolutionNoteDto implements Serializable {
 
     @Valid
     @Nullable
-    private VitalSignDto vitalSigns;
+    private RiskFactorDto riskFactors;
 
 }

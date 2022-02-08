@@ -14,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class DocumentVitalSignPK implements Serializable {
+public class DocumentRiskFactorPK implements Serializable {
 
 	/**
 	 *
@@ -25,19 +25,19 @@ public class DocumentVitalSignPK implements Serializable {
 	private Long documentId;
 
 	@Column(name = "observation_vital_sign_id", nullable = false)
-	private Integer observationVitalSignId;
+	private Integer observationRiskFactorId;
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		DocumentVitalSignPK that = (DocumentVitalSignPK) o;
+		DocumentRiskFactorPK that = (DocumentRiskFactorPK) o;
 		return documentId.equals(that.documentId) &&
-				observationVitalSignId.equals(that.observationVitalSignId);
+				observationRiskFactorId.equals(that.observationRiskFactorId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(documentId, observationVitalSignId);
+		return Objects.hash(documentId, observationRiskFactorId);
 	}
 }

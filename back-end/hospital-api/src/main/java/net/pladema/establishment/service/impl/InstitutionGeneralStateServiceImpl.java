@@ -1,10 +1,10 @@
 package net.pladema.establishment.service.impl;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
+import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
 import net.pladema.establishment.repository.VInstitutionRepository;
-import net.pladema.establishment.repository.VInstitutionVitalSignRepository;
+import net.pladema.establishment.repository.VInstitutionRiskFactorRepository;
 import net.pladema.establishment.repository.entity.VInstitution;
-import net.pladema.establishment.repository.entity.VInstitutionVitalSign;
+import net.pladema.establishment.repository.entity.VInstitutionRiskFactor;
 import net.pladema.establishment.service.InstitutionGeneralStateService;
 import net.pladema.establishment.service.domain.VInstitutionBo;
 import org.slf4j.Logger;
@@ -23,12 +23,12 @@ public class InstitutionGeneralStateServiceImpl implements InstitutionGeneralSta
 
     private final VInstitutionRepository vInstitutionRepository;
 
-    private final VInstitutionVitalSignRepository vInstitutionVitalSignRepository;
+    private final VInstitutionRiskFactorRepository vInstitutionRiskFactorRepository;
 
     public InstitutionGeneralStateServiceImpl(VInstitutionRepository vInstitutionRepository,
-                                              VInstitutionVitalSignRepository vInstitutionVitalSignRepository){
+                                              VInstitutionRiskFactorRepository vInstitutionRiskFactorRepository){
         this.vInstitutionRepository = vInstitutionRepository;
-        this.vInstitutionVitalSignRepository = vInstitutionVitalSignRepository;
+        this.vInstitutionRiskFactorRepository = vInstitutionRiskFactorRepository;
     }
 
     @Override
@@ -57,20 +57,20 @@ public class InstitutionGeneralStateServiceImpl implements InstitutionGeneralSta
                 .count();
         result.setPatientWithCovidPresumtiveCount(count);
 
-        List<VInstitutionVitalSign> vitalSignGeneralState = vInstitutionVitalSignRepository.getGeneralState(institutionId);
-        List<VInstitutionVitalSign> vitalSignsValid = vitalSignGeneralState.stream()
-                .filter(i -> EVitalSign.isCodeVitalSign(i.getSctidCode()))
+        List<VInstitutionRiskFactor> riskFactorGeneralState = vInstitutionRiskFactorRepository.getGeneralState(institutionId);
+        List<VInstitutionRiskFactor> riskFactorsValid = riskFactorGeneralState.stream()
+                .filter(i -> ERiskFactor.isCodeRiskFactor(i.getSctidCode()))
                 .collect(Collectors.toList());
 
-        //#Cantidad de adultos mayores con signos vitales cargados en las últimas 24hh
-        count = vitalSignsValid.stream().filter(i -> i.getLoadDays() < 2).count();
-        result.setPatientWithVitalSignCount(count);
+        //#Cantidad de adultos mayores con factores de riesgo cargados en las últimas 24hh
+        count = riskFactorsValid.stream().filter(i -> i.getLoadDays() < 2).count();
+        result.setPatientWithRiskFactorCount(count);
 
-        //#Fecha más lejana de carga de signo vital
-        Optional<VInstitutionVitalSign> minLoadVitalSign = vitalSignsValid.stream()
-                .min(Comparator.comparing( VInstitutionVitalSign::getEffectiveTime ) );
-        minLoadVitalSign.ifPresent(v ->
-            result.setLastDateVitalSign(v.getEffectiveTime())
+        //#Fecha más lejana de carga de factor de riesgo
+        Optional<VInstitutionRiskFactor> minLoadRiskFactor = riskFactorsValid.stream()
+                .min(Comparator.comparing( VInstitutionRiskFactor::getEffectiveTime ) );
+        minLoadRiskFactor.ifPresent(v ->
+            result.setLastDateRiskFactor(v.getEffectiveTime())
         );
         LOG.debug("Output -> {}", result);
         return result;

@@ -18,7 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Embeddable
 @EqualsAndHashCode
-public class TriageVitalSignsPk implements Serializable {
+public class TriageRiskFactorsPk implements Serializable {
 	/**
 	 *
 	 */
@@ -28,5 +28,5 @@ public class TriageVitalSignsPk implements Serializable {
 	private Integer triageId;
 
 	@Column(name = "observation_vital_sign_id", nullable = false)
-	private Integer observationVitalSignId;
+	private Integer observationRiskFactorId;
 }

@@ -32,7 +32,7 @@ public class  DocumentServiceImpl implements DocumentService {
 
     private final DocumentProcedureRepository documentProcedureRepository;
 
-    private final DocumentVitalSignRepository documentVitalSignRepository;
+    private final DocumentRiskFactorRepository documentRiskFactorRepository;
 
     private final DocumentLabRepository documentLabRepository;
 
@@ -50,7 +50,7 @@ public class  DocumentServiceImpl implements DocumentService {
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentImmunizationRepository documentImmunizationRepository,
                                DocumentProcedureRepository documentProcedureRepository,
-                               DocumentVitalSignRepository documentVitalSignRepository,
+                               DocumentRiskFactorRepository documentRiskFactorRepository,
                                DocumentLabRepository documentLabRepository,
                                DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
                                DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
@@ -60,7 +60,7 @@ public class  DocumentServiceImpl implements DocumentService {
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
         this.documentProcedureRepository = documentProcedureRepository;
-        this.documentVitalSignRepository = documentVitalSignRepository;
+        this.documentRiskFactorRepository = documentRiskFactorRepository;
         this.documentLabRepository = documentLabRepository;
         this.documentAllergyIntoleranceRepository = documentAllergyIntoleranceRepository;
         this.documentMedicamentionStatementRepository = documentMedicamentionStatementRepository;
@@ -95,10 +95,10 @@ public class  DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public DocumentVitalSign createDocumentVitalSign(Long documentId, Integer observationVitalSignId) {
-        LOG.debug("Input parameters -> documentId {}, observationVitalSignId {}", documentId, observationVitalSignId);
-        DocumentVitalSign result = new DocumentVitalSign(documentId, observationVitalSignId);
-        result = documentVitalSignRepository.save(result);
+    public DocumentRiskFactor createDocumentRiskFactor(Long documentId, Integer observationRiskFactorsId) {
+        LOG.debug("Input parameters -> documentId {}, observationRiskFactorsId {}", documentId, observationRiskFactorsId);
+        DocumentRiskFactor result = new DocumentRiskFactor(documentId, observationRiskFactorsId);
+        result = documentRiskFactorRepository.save(result);
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -215,7 +215,7 @@ public class  DocumentServiceImpl implements DocumentService {
     @Override
     public AnthropometricDataBo getAnthropometricDataStateFromDocument(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        List<ClinicalObservationVo> clinicalObservationVos = documentVitalSignRepository.getVitalSignStateFromDocument(documentId);
+        List<ClinicalObservationVo> clinicalObservationVos = documentRiskFactorRepository.getRiskFactorStateFromDocument(documentId);
         clinicalObservationVos.addAll(documentLabRepository.getLabStateFromDocument(documentId));
         MapClinicalObservationVo resultQuery = new MapClinicalObservationVo(clinicalObservationVos);
         AnthropometricDataBo result = resultQuery.getLastAnthropometricData().orElse(null);
@@ -224,10 +224,10 @@ public class  DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public VitalSignBo getVitalSignStateFromDocument(Long documentId) {
+    public RiskFactorBo getRiskFactorStateFromDocument(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        MapClinicalObservationVo resultQuery = new MapClinicalObservationVo(documentVitalSignRepository.getVitalSignStateFromDocument(documentId));
-        VitalSignBo result = resultQuery.getLastVitalSigns().orElse(null);
+        MapClinicalObservationVo resultQuery = new MapClinicalObservationVo(documentRiskFactorRepository.getRiskFactorStateFromDocument(documentId));
+        RiskFactorBo result = resultQuery.getLastRiskFactors().orElse(null);
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -283,7 +283,7 @@ public class  DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void deleteObservationsVitalSignsHistory(Long documentId) {
+    public void deleteObservationsRiskFactorsHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
         LOG.debug(LOGGING_DELETE_SUCCESS);
     }

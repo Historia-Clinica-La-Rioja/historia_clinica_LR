@@ -12,7 +12,7 @@ import javax.validation.Valid;
 @Setter
 @ToString
 @NoArgsConstructor
-public class VitalSignBo extends SelfValidating<VitalSignBo> {
+public class RiskFactorBo extends SelfValidating<RiskFactorBo> {
 
     @Valid
     private ClinicalObservationBo systolicBloodPressure;

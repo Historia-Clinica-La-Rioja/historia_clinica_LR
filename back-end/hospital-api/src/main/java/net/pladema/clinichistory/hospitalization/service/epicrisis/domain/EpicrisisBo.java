@@ -58,7 +58,7 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     private AnthropometricDataBo anthropometricData;
 
     @Valid
-    private VitalSignBo vitalSigns;
+    private RiskFactorBo riskFactors;
 
     private LocalDateTime performedDate;
 

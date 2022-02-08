@@ -1,8 +1,8 @@
 package net.pladema.emergencycare.controller;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternalService;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.VitalSignExternalService;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +12,7 @@ import net.pladema.emergencycare.controller.dto.ECPediatricDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.dto.NewEmergencyCareDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
-import net.pladema.emergencycare.controller.mapper.TriageVitalSignMapper;
+import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -52,27 +52,27 @@ public class EmergencyCareEpisodeController {
 
     private final ReasonExternalService reasonExternalService;
 
-    private final VitalSignExternalService vitalSignExternalService;
+    private final RiskFactorExternalService riskFactorExternalService;
 
     private final SnomedMapper snomedMapper;
 
-    private final TriageVitalSignMapper triageVitalSignMapper;
+    private final TriageRiskFactorMapper triageRiskFactorMapper;
 
     private final LocalDateMapper localDateMapper;
 
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
-                                          EmergencyCareMapper emergencyCareMapper,
-                                          ReasonExternalService reasonExternalService,
-                                          VitalSignExternalService vitalSignExternalService,
-                                          SnomedMapper snomedMapper,
-                                          TriageVitalSignMapper triageVitalSignMapper, LocalDateMapper localDateMapper){
+										  EmergencyCareMapper emergencyCareMapper,
+										  ReasonExternalService reasonExternalService,
+										  RiskFactorExternalService riskFactorExternalService,
+										  SnomedMapper snomedMapper,
+										  TriageRiskFactorMapper triageRiskFactorMapper, LocalDateMapper localDateMapper){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
-        this.vitalSignExternalService = vitalSignExternalService;
+        this.riskFactorExternalService = riskFactorExternalService;
         this.snomedMapper = snomedMapper;
-        this.triageVitalSignMapper = triageVitalSignMapper;
+        this.triageRiskFactorMapper = triageRiskFactorMapper;
         this.localDateMapper = localDateMapper;
     }
 
@@ -132,9 +132,9 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.adultGynecologicalEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
-        NewVitalSignsObservationDto vitalSignsObservationDto =
-                vitalSignExternalService.saveVitalSigns(body.patientId(), body.vitalSignsObservation());
-        newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
+        NewRiskFactorsObservationDto riskFactorsObservationDto =
+                riskFactorExternalService.saveRiskFactors(body.patientId(), body.riskFactorsObservation());
+        newEmergencyCare.setTriageRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
 
         List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
@@ -154,9 +154,9 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
-        NewVitalSignsObservationDto vitalSignsObservationDto = triageVitalSignMapper.fromTriagePediatricDto(body.getTriage());
-        vitalSignsObservationDto = vitalSignExternalService.saveVitalSigns(body.patientId(), vitalSignsObservationDto);
-        newEmergencyCare.setTriageVitalSignIds(getVitalSignIds(vitalSignsObservationDto));
+        NewRiskFactorsObservationDto riskFactorsObservationDto = triageRiskFactorMapper.fromTriagePediatricDto(body.getTriage());
+        riskFactorsObservationDto = riskFactorExternalService.saveRiskFactors(body.patientId(), riskFactorsObservationDto);
+        newEmergencyCare.setTriageRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
 
         List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
@@ -179,21 +179,21 @@ public class EmergencyCareEpisodeController {
         return ResponseEntity.ok().body(output);
     }
 
-    private List<Integer> getVitalSignIds(NewVitalSignsObservationDto vitalSignsObservationDto){
-        LOG.debug("Input parameter -> vitalSignsObservationDto {}", vitalSignsObservationDto);
+    private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){
+        LOG.debug("Input parameter -> riskFactorsObservationDto {}", riskFactorsObservationDto);
         List<Integer> result = new ArrayList<>();
-        if (vitalSignsObservationDto.getSystolicBloodPressure() != null && vitalSignsObservationDto.getSystolicBloodPressure().getId() != null)
-            result.add(vitalSignsObservationDto.getSystolicBloodPressure().getId());
-        if (vitalSignsObservationDto.getDiastolicBloodPressure() != null && vitalSignsObservationDto.getDiastolicBloodPressure().getId() != null)
-            result.add(vitalSignsObservationDto.getDiastolicBloodPressure().getId());
-        if (vitalSignsObservationDto.getTemperature() != null && vitalSignsObservationDto.getTemperature().getId() != null)
-            result.add(vitalSignsObservationDto.getTemperature().getId());
-        if (vitalSignsObservationDto.getHeartRate() != null && vitalSignsObservationDto.getHeartRate().getId() != null)
-            result.add(vitalSignsObservationDto.getHeartRate().getId());
-        if (vitalSignsObservationDto.getRespiratoryRate() != null && vitalSignsObservationDto.getRespiratoryRate().getId() != null)
-            result.add(vitalSignsObservationDto.getRespiratoryRate().getId());
-        if (vitalSignsObservationDto.getBloodOxygenSaturation() != null && vitalSignsObservationDto.getBloodOxygenSaturation().getId() != null)
-            result.add(vitalSignsObservationDto.getBloodOxygenSaturation().getId());
+        if (riskFactorsObservationDto.getSystolicBloodPressure() != null && riskFactorsObservationDto.getSystolicBloodPressure().getId() != null)
+            result.add(riskFactorsObservationDto.getSystolicBloodPressure().getId());
+        if (riskFactorsObservationDto.getDiastolicBloodPressure() != null && riskFactorsObservationDto.getDiastolicBloodPressure().getId() != null)
+            result.add(riskFactorsObservationDto.getDiastolicBloodPressure().getId());
+        if (riskFactorsObservationDto.getTemperature() != null && riskFactorsObservationDto.getTemperature().getId() != null)
+            result.add(riskFactorsObservationDto.getTemperature().getId());
+        if (riskFactorsObservationDto.getHeartRate() != null && riskFactorsObservationDto.getHeartRate().getId() != null)
+            result.add(riskFactorsObservationDto.getHeartRate().getId());
+        if (riskFactorsObservationDto.getRespiratoryRate() != null && riskFactorsObservationDto.getRespiratoryRate().getId() != null)
+            result.add(riskFactorsObservationDto.getRespiratoryRate().getId());
+        if (riskFactorsObservationDto.getBloodOxygenSaturation() != null && riskFactorsObservationDto.getBloodOxygenSaturation().getId() != null)
+            result.add(riskFactorsObservationDto.getBloodOxygenSaturation().getId());
         LOG.debug("Output -> {}", result);
         return result;
     }

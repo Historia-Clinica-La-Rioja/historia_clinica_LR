@@ -46,7 +46,7 @@ export class InternmentStateService {
 	}
 
 	getVitalSigns(internmentId: number): Observable<Last2VitalSignsDto> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/vitalSigns`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/riskFactors`;
 		return this.http.get<Last2VitalSignsDto>(url);
 	}
 

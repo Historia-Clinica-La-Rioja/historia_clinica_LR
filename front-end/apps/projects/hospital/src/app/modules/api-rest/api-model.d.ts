@@ -132,7 +132,7 @@ export interface AnamnesisDto extends Serializable {
     notes?: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
     procedures?: HospitalizationProcedureDto[];
-    vitalSigns?: VitalSignDto;
+    riskFactors?: RiskFactorDto;
 }
 
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
@@ -515,7 +515,7 @@ export interface CreateOutpatientDto {
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
     references: ReferenceDto[];
-    vitalSigns?: OutpatientVitalSignDto;
+    riskFactors?: OutpatientRiskFactorDto;
 }
 
 export interface CreationableDto extends Serializable {
@@ -660,7 +660,7 @@ export interface DocumentDto {
     problems: ProblemDto[];
     procedures: ProcedureDto[];
     reasons: ReasonDto[];
-    vitalSigns: VitalSignDto;
+    riskFactors: RiskFactorDto;
 }
 
 export interface DocumentFileDto {
@@ -867,7 +867,7 @@ export interface EvolutionNoteDto extends Serializable {
     mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
     procedures?: HospitalizationProcedureDto[];
-    vitalSigns?: VitalSignDto;
+    riskFactors?: RiskFactorDto;
 }
 
 export interface ExternalClinicalHistoryDto extends Serializable {
@@ -1029,9 +1029,9 @@ export interface HCEImmunizationDto extends Serializable {
     statusId: string;
 }
 
-export interface HCELast2VitalSignsDto extends Serializable {
-    current: HCEVitalSignDto;
-    previous: HCEVitalSignDto;
+export interface HCELast2RiskFactorsDto extends Serializable {
+    current: HCERiskFactorDto;
+    previous: HCERiskFactorDto;
 }
 
 export interface HCEMedicationDto extends ClinicalTermDto {
@@ -1067,6 +1067,18 @@ export interface HCEReferenceDto {
     note: string;
 }
 
+export interface HCERiskFactorDto extends Serializable {
+    bloodGlucose?: HCEEffectiveClinicalObservationDto;
+    bloodOxygenSaturation?: HCEEffectiveClinicalObservationDto;
+    cardiovascularRisk?: HCEEffectiveClinicalObservationDto;
+    diastolicBloodPressure?: HCEEffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: HCEEffectiveClinicalObservationDto;
+    heartRate?: HCEEffectiveClinicalObservationDto;
+    respiratoryRate?: HCEEffectiveClinicalObservationDto;
+    systolicBloodPressure?: HCEEffectiveClinicalObservationDto;
+    temperature?: HCEEffectiveClinicalObservationDto;
+}
+
 export interface HCESummaryCounterReferenceDto {
     clinicalSpecialtyId: string;
     counterReferenceNote: string;
@@ -1081,18 +1093,6 @@ export interface HCEToothRecordDto extends Serializable {
     date: DateDto;
     snomed: SnomedDto;
     surfaceSctid?: string;
-}
-
-export interface HCEVitalSignDto extends Serializable {
-    bloodGlucose?: HCEEffectiveClinicalObservationDto;
-    bloodOxygenSaturation?: HCEEffectiveClinicalObservationDto;
-    cardiovascularRisk?: HCEEffectiveClinicalObservationDto;
-    diastolicBloodPressure?: HCEEffectiveClinicalObservationDto;
-    glycosylatedHemoglobin?: HCEEffectiveClinicalObservationDto;
-    heartRate?: HCEEffectiveClinicalObservationDto;
-    respiratoryRate?: HCEEffectiveClinicalObservationDto;
-    systolicBloodPressure?: HCEEffectiveClinicalObservationDto;
-    temperature?: HCEEffectiveClinicalObservationDto;
 }
 
 export interface HealthCareProfessionalGroupDto {
@@ -1292,7 +1292,7 @@ export interface InternmentGeneralStateDto extends Serializable {
     immunizations: ImmunizationDto[];
     medications: MedicationDto[];
     personalHistories: HealthHistoryConditionDto[];
-    vitalSigns: Last2VitalSignsDto;
+    riskFactors: Last2RiskFactorsDto;
 }
 
 export interface InternmentPatientDto {
@@ -1324,9 +1324,9 @@ export interface JWTokenDto {
     token: string;
 }
 
-export interface Last2VitalSignsDto extends Serializable {
-    current: VitalSignDto;
-    previous: VitalSignDto;
+export interface Last2RiskFactorsDto extends Serializable {
+    current: RiskFactorDto;
+    previous: RiskFactorDto;
 }
 
 export interface LimitedPatientSearchDto {
@@ -1472,18 +1472,18 @@ export interface NewMedicalRequestDto {
     observations: string;
 }
 
-export interface NewServiceRequestListDto extends Serializable {
-    medicalCoverageId: number;
-    studiesDto: StudyDto[];
-}
-
-export interface NewVitalSignsObservationDto extends Serializable {
+export interface NewRiskFactorsObservationDto extends Serializable {
     bloodOxygenSaturation?: NewEffectiveClinicalObservationDto;
     diastolicBloodPressure?: NewEffectiveClinicalObservationDto;
     heartRate?: NewEffectiveClinicalObservationDto;
     respiratoryRate?: NewEffectiveClinicalObservationDto;
     systolicBloodPressure?: NewEffectiveClinicalObservationDto;
     temperature?: NewEffectiveClinicalObservationDto;
+}
+
+export interface NewServiceRequestListDto extends Serializable {
+    medicalCoverageId: number;
+    studiesDto: StudyDto[];
 }
 
 export interface NursingAnthropometricDataDto extends Serializable {
@@ -1500,7 +1500,7 @@ export interface NursingConsultationDto extends Serializable {
     evolutionNote?: string;
     problem: NursingProblemDto;
     procedures?: NursingProcedureDto[];
-    vitalSigns?: NursingVitalSignDto;
+    riskFactors?: NursingRiskFactorDto;
 }
 
 export interface NursingHealtConditionDto extends Serializable {
@@ -1522,7 +1522,7 @@ export interface NursingProcedureDto extends Serializable {
     snomed: SnomedDto;
 }
 
-export interface NursingVitalSignDto extends Serializable {
+export interface NursingRiskFactorDto extends Serializable {
     bloodGlucose?: EffectiveClinicalObservationDto;
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
     cardiovascularRisk?: EffectiveClinicalObservationDto;
@@ -1738,6 +1738,18 @@ export interface OutpatientReasonDto {
     snomed: SnomedDto;
 }
 
+export interface OutpatientRiskFactorDto extends Serializable {
+    bloodGlucose?: EffectiveClinicalObservationDto;
+    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    cardiovascularRisk?: EffectiveClinicalObservationDto;
+    diastolicBloodPressure: EffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
+    heartRate?: EffectiveClinicalObservationDto;
+    respiratoryRate?: EffectiveClinicalObservationDto;
+    systolicBloodPressure: EffectiveClinicalObservationDto;
+    temperature?: EffectiveClinicalObservationDto;
+}
+
 export interface OutpatientSummaryCounterReferenceDto {
     clinicalSpecialtyId: string;
     counterReferenceNote: string;
@@ -1768,18 +1780,6 @@ export interface OutpatientSummaryReferenceDto {
 export interface OutpatientUpdateImmunizationDto {
     administrationDate: string;
     snomed: SnomedDto;
-}
-
-export interface OutpatientVitalSignDto extends Serializable {
-    bloodGlucose?: EffectiveClinicalObservationDto;
-    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
-    cardiovascularRisk?: EffectiveClinicalObservationDto;
-    diastolicBloodPressure: EffectiveClinicalObservationDto;
-    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
-    heartRate?: EffectiveClinicalObservationDto;
-    respiratoryRate?: EffectiveClinicalObservationDto;
-    systolicBloodPressure: EffectiveClinicalObservationDto;
-    temperature?: EffectiveClinicalObservationDto;
 }
 
 export interface Overlapping<T> {
@@ -2129,6 +2129,35 @@ export interface ResponsibleDoctorDto extends Serializable {
     licence: string;
 }
 
+export interface RiskFactorDto extends Serializable {
+    bloodGlucose?: EffectiveClinicalObservationDto;
+    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    cardiovascularRisk?: EffectiveClinicalObservationDto;
+    diastolicBloodPressure?: EffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
+    heartRate?: EffectiveClinicalObservationDto;
+    respiratoryRate?: EffectiveClinicalObservationDto;
+    systolicBloodPressure?: EffectiveClinicalObservationDto;
+    temperature?: EffectiveClinicalObservationDto;
+}
+
+export interface RiskFactorObservationDto extends Serializable {
+    loincCode: string;
+    riskFactorObservation: NewEffectiveClinicalObservationDto;
+}
+
+export interface RiskFactorsReportDto extends Serializable {
+    bloodGlucose?: ReportClinicalObservationDto;
+    bloodOxygenSaturation?: ReportClinicalObservationDto;
+    cardiovascularRisk?: ReportClinicalObservationDto;
+    diastolicBloodPressure?: ReportClinicalObservationDto;
+    glycosylatedHemoglobin?: ReportClinicalObservationDto;
+    heartRate?: ReportClinicalObservationDto;
+    respiratoryRate?: ReportClinicalObservationDto;
+    systolicBloodPressure?: ReportClinicalObservationDto;
+    temperature?: ReportClinicalObservationDto;
+}
+
 export interface RoleAssignmentDto {
     institutionId: number;
     role: ERole;
@@ -2291,7 +2320,7 @@ export interface TriageAdministrativeDto extends TriageDto {
 }
 
 export interface TriageAdultGynecologicalDto extends TriageNoAdministrativeDto {
-    vitalSigns: NewVitalSignsObservationDto;
+    riskFactors: NewRiskFactorsObservationDto;
 }
 
 export interface TriageAppearanceDto extends Serializable {
@@ -2339,7 +2368,7 @@ export interface TriageListDto extends Serializable {
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     notes: string;
-    vitalSigns: NewVitalSignsObservationDto;
+    riskFactors: NewRiskFactorsObservationDto;
 }
 
 export interface TriageNoAdministrativeDto extends TriageDto {
@@ -2389,12 +2418,12 @@ export interface UserRoleDto {
 }
 
 export interface VInstitutionDto {
-    lastDateVitalSign: Date;
+    lastDateRiskFactor: Date;
     latitude: number;
     longitude: number;
     patientCount: number;
     patientWithCovidPresumtiveCount: number;
-    patientWithVitalSignCount: number;
+    patientWithRiskFactorCount: number;
 }
 
 export interface VMedicalDischargeDto extends MedicalDischargeDto {
@@ -2431,35 +2460,6 @@ export interface VaccineSchemeDto {
 
 export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
-}
-
-export interface VitalSignDto extends Serializable {
-    bloodGlucose?: EffectiveClinicalObservationDto;
-    bloodOxygenSaturation?: EffectiveClinicalObservationDto;
-    cardiovascularRisk?: EffectiveClinicalObservationDto;
-    diastolicBloodPressure?: EffectiveClinicalObservationDto;
-    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
-    heartRate?: EffectiveClinicalObservationDto;
-    respiratoryRate?: EffectiveClinicalObservationDto;
-    systolicBloodPressure?: EffectiveClinicalObservationDto;
-    temperature?: EffectiveClinicalObservationDto;
-}
-
-export interface VitalSignObservationDto extends Serializable {
-    loincCode: string;
-    vitalSignObservation: NewEffectiveClinicalObservationDto;
-}
-
-export interface VitalSignsReportDto extends Serializable {
-    bloodGlucose?: ReportClinicalObservationDto;
-    bloodOxygenSaturation?: ReportClinicalObservationDto;
-    cardiovascularRisk?: ReportClinicalObservationDto;
-    diastolicBloodPressure?: ReportClinicalObservationDto;
-    glycosylatedHemoglobin?: ReportClinicalObservationDto;
-    heartRate?: ReportClinicalObservationDto;
-    respiratoryRate?: ReportClinicalObservationDto;
-    systolicBloodPressure?: ReportClinicalObservationDto;
-    temperature?: ReportClinicalObservationDto;
 }
 
 export type CoverageDtoUnion = HealthInsuranceDto | PrivateHealthInsuranceDto;

@@ -11,7 +11,7 @@ import javax.validation.Valid;
 @Getter
 @Setter
 @ToString
-public class NursingVitalSignBo {
+public class NursingRiskFactorBo {
 
     @Valid
     private EffectiveClinicalObservationDto systolicBloodPressure;

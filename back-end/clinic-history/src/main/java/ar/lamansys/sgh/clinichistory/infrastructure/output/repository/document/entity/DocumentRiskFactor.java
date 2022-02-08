@@ -17,7 +17,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class DocumentVitalSign implements Serializable {
+public class DocumentRiskFactor implements Serializable {
 
 	/**
 	 *
@@ -25,17 +25,17 @@ public class DocumentVitalSign implements Serializable {
 	private static final long serialVersionUID = -3053291021636483828L;
 
 	@EmbeddedId
-	private DocumentVitalSignPK pk;
+	private DocumentRiskFactorPK pk;
 
-	public DocumentVitalSign(Long documentId, Integer observationVitalSignId){
-		pk = new DocumentVitalSignPK(documentId, observationVitalSignId);
+	public DocumentRiskFactor(Long documentId, Integer observationRiskFactorId){
+		pk = new DocumentRiskFactorPK(documentId, observationRiskFactorId);
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		DocumentVitalSign that = (DocumentVitalSign) o;
+		DocumentRiskFactor that = (DocumentRiskFactor) o;
 		return Objects.equals(pk, that.pk);
 	}
 

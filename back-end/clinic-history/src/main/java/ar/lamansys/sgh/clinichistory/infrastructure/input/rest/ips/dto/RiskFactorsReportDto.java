@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class VitalSignsReportDto implements Serializable {
+public class RiskFactorsReportDto implements Serializable {
 
     @Valid
     @Nullable

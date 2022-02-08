@@ -19,7 +19,7 @@ public interface NursingDocumentMapper {
     @Mapping(target = "notes.evolutionNote", source = "evolutionNote")
     @Mapping(target = "procedures", source = "procedures")
     @Mapping(target = "anthropometricData", source = "anthropometricData")
-    @Mapping(target = "vitalSigns", source = "vitalSigns")
+    @Mapping(target = "riskFactors", source = "riskFactors")
     DocumentDto fromNursingDocumentBo(NursingDocumentBo nursingDocumentBo);
 
     @AfterMapping

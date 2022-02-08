@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @NoArgsConstructor
-public class HCEVitalSignBo implements Serializable {
+public class HCERiskFactorBo implements Serializable {
 
     private HCEClinicalObservationBo systolicBloodPressure;
 

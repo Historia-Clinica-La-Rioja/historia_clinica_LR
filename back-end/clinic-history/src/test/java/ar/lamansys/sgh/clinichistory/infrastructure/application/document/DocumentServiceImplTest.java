@@ -11,7 +11,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentVitalSignRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +34,7 @@ class DocumentServiceImplTest {
 	private DocumentHealthConditionRepository documentHealthConditionRepository;
 
 	@MockBean
-	private DocumentVitalSignRepository documentVitalSignRepository;
+	private DocumentRiskFactorRepository documentRiskFactorRepository;
 
 	@MockBean
 	private DocumentLabRepository documentLabRepository;
@@ -63,7 +63,7 @@ class DocumentServiceImplTest {
 	@BeforeEach
 	void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
-                documentImmunizationRepository, documentProcedureRepository, documentVitalSignRepository, documentLabRepository,
+                documentImmunizationRepository, documentProcedureRepository, documentRiskFactorRepository, documentLabRepository,
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
 				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository);
 	}

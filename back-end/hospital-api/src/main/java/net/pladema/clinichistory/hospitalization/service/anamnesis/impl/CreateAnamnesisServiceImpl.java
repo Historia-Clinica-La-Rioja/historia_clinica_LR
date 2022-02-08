@@ -11,7 +11,7 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveRiskFactorTimeValidator;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
         assertAnamnesisValid(anamnesis);
         assertDoesNotHaveAnamnesis(internmentEpisode);
-        assertEffectiveVitalSignTimeValid(anamnesis, internmentEpisode.getEntryDate());
+        assertEffectiveRiskFactorTimeValid(anamnesis, internmentEpisode.getEntryDate());
         assertAnthropometricData(anamnesis);
 
         
@@ -96,8 +96,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
             throw new ConstraintViolationException("Procedimientos repetidos", Collections.emptySet());
     }
 
-    private void assertEffectiveVitalSignTimeValid(AnamnesisBo anamnesis, LocalDateTime entryDate) {
-        var validator = new EffectiveVitalSignTimeValidator();
+    private void assertEffectiveRiskFactorTimeValid(AnamnesisBo anamnesis, LocalDateTime entryDate) {
+        var validator = new EffectiveRiskFactorTimeValidator();
         validator.isValid(anamnesis, entryDate);
     }
 

@@ -50,7 +50,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private AnthropometricDataBo anthropometricData ;
 
-    private VitalSignBo vitalSigns;
+    private RiskFactorBo riskFactors;
 
     private List<ReasonBo> reasons = new ArrayList<>();
 

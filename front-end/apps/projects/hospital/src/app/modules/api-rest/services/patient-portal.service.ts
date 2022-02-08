@@ -45,7 +45,7 @@ export class PatientPortalService {
 	}
 
 	getVitalSigns(): Observable<HCELast2VitalSignsDto> {
-		const url = `${environment.apiBase}/patientportal/vitalSigns`;
+		const url = `${environment.apiBase}/patientportal/riskFactors`;
 		return this.http.get<HCELast2VitalSignsDto>(url);
 	}
 

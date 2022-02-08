@@ -9,8 +9,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -228,7 +228,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     }
 
     @Test
-    void createDocumentWithInvalidVitalSign() {
+    void createDocumentWithInvalidRiskFactor() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
@@ -237,13 +237,13 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         LocalDateTime localDateTime = LocalDateTime.of(
                 LocalDate.of(2020, 10,29),
                 LocalTime.of(11,20));
-        epicrisis.setVitalSigns(newVitalSigns(null, localDateTime));
+        epicrisis.setRiskFactors(newRiskFactors(null, localDateTime));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis)
         );
-        Assertions.assertTrue(exception.getMessage().contains("vitalSigns.bloodOxygenSaturation.value: {value.mandatory}"));
+        Assertions.assertTrue(exception.getMessage().contains("riskFactors.bloodOxygenSaturation.value: {value.mandatory}"));
 
-        epicrisis.setVitalSigns(newVitalSigns("Value", LocalDateTime.of(2020,9,9,1,5,6)));
+        epicrisis.setRiskFactors(newRiskFactors("Value", LocalDateTime.of(2020,9,9,1,5,6)));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis)
         );
@@ -370,8 +370,8 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         return internmentEpisode;
     }
 
-    private VitalSignBo newVitalSigns(String value, LocalDateTime time) {
-        var vs = new VitalSignBo();
+    private RiskFactorBo newRiskFactors(String value, LocalDateTime time) {
+        var vs = new RiskFactorBo();
         vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time));
         return vs;
     }

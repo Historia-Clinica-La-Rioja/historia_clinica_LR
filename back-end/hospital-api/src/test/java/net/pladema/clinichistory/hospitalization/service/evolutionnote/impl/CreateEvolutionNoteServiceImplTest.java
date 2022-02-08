@@ -9,8 +9,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
@@ -250,7 +250,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     }
 
     @Test
-    void createDocumentWithInvalidVitalSign() {
+    void createDocumentWithInvalidRiskFactor() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
@@ -259,13 +259,13 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         LocalDateTime localDateTime = LocalDateTime.of(
                 LocalDate.of(2020, 10,29),
                 LocalTime.of(11,20));
-        evolutionNote.setVitalSigns(newVitalSigns(null, localDateTime));
+        evolutionNote.setRiskFactors(newRiskFactors(null, localDateTime));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEvolutionNoteService.execute(evolutionNote)
         );
-        Assertions.assertTrue(exception.getMessage().contains("vitalSigns.bloodOxygenSaturation.value: {value.mandatory}"));
+        Assertions.assertTrue(exception.getMessage().contains("riskFactors.bloodOxygenSaturation.value: {value.mandatory}"));
 
-        evolutionNote.setVitalSigns(newVitalSigns("Value", LocalDateTime.of(2020,9,9,1,5,6)));
+        evolutionNote.setRiskFactors(newRiskFactors("Value", LocalDateTime.of(2020,9,9,1,5,6)));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEvolutionNoteService.execute(evolutionNote)
         );
@@ -293,8 +293,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         return result;
     }
 
-    private VitalSignBo newVitalSigns(String value, LocalDateTime time) {
-        var vs = new VitalSignBo();
+    private RiskFactorBo newRiskFactors(String value, LocalDateTime time) {
+        var vs = new RiskFactorBo();
         vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time));
         return vs;
     }

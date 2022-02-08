@@ -4,7 +4,7 @@ import ar.lamansys.nursing.domain.NursingAnthropometricDataBo;
 import ar.lamansys.nursing.domain.NursingConsultationBo;
 import ar.lamansys.nursing.domain.NursingProblemBo;
 import ar.lamansys.nursing.domain.NursingProcedureBo;
-import ar.lamansys.nursing.domain.NursingVitalSignBo;
+import ar.lamansys.nursing.domain.NursingRiskFactorBo;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ public class NursingDocumentBo {
 
     private final NursingAnthropometricDataBo anthropometricData;
 
-    private final NursingVitalSignBo vitalSigns;
+    private final NursingRiskFactorBo riskFactors;
 
     private final String evolutionNote;
 
@@ -57,7 +57,7 @@ public class NursingDocumentBo {
         this.clinicalSpecialtyId = nursingConsultationBo.getClinicalSpecialtyId();
         this.problems = problems;
         this.anthropometricData = nursingConsultationBo.getAnthropometricData();
-        this.vitalSigns = nursingConsultationBo.getVitalSigns();
+        this.riskFactors = nursingConsultationBo.getRiskFactors();
         this.procedures = nursingConsultationBo.getProcedures();
         this.evolutionNote = nursingConsultationBo.getEvolutionNote();
         this.patientMedicalCoverage = nursingConsultationBo.getPatientMedicalCoverageId();

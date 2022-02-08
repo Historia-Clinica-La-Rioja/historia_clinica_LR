@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
+import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,21 +20,21 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ObservationVitalSign extends ClinicalObservation {
+public class ObservationRiskFactor extends ClinicalObservation {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
-	private static final String VITAL_SIGN = "61746007";
+	private static final String RISK_FACTOR = "61746007";
 	
 	@Column(name = "loinc_code", length = 20)
 	private String loincCode;
 
-	public ObservationVitalSign(Integer patientId, String value, Integer snomedId,
-								String cie10Codes, EVitalSign evitalSign, LocalDateTime effectiveTime){
-		super(patientId, value, snomedId, cie10Codes, VITAL_SIGN, effectiveTime);
-		this.loincCode = evitalSign.getLoincCode();
+	public ObservationRiskFactor(Integer patientId, String value, Integer snomedId,
+								 String cie10Codes, ERiskFactor eRiskFactor, LocalDateTime effectiveTime){
+		super(patientId, value, snomedId, cie10Codes, RISK_FACTOR, effectiveTime);
+		this.loincCode = eRiskFactor.getLoincCode();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class ObservationVitalSign extends ClinicalObservation {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ObservationVitalSign other = (ObservationVitalSign) obj;
+		ObservationRiskFactor other = (ObservationRiskFactor) obj;
 		return Objects.equals(loincCode, other.getLoincCode());
 	}
 

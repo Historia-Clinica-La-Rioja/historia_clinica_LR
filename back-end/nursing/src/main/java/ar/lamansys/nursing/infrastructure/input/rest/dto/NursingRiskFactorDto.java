@@ -1,5 +1,6 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
+package ar.lamansys.nursing.infrastructure.input.rest.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.EffectiveClinicalObservationDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,14 +12,12 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class VitalSignDto implements Serializable {
+public class NursingRiskFactorDto implements Serializable {
 
     @Valid
-    @Nullable
     private EffectiveClinicalObservationDto systolicBloodPressure;
 
     @Valid
-    @Nullable
     private EffectiveClinicalObservationDto diastolicBloodPressure;
 
     @Valid
@@ -37,16 +36,17 @@ public class VitalSignDto implements Serializable {
     @Nullable
     private EffectiveClinicalObservationDto bloodOxygenSaturation;
 
-    @Valid
-    @Nullable
-    private EffectiveClinicalObservationDto bloodGlucose;
+	@Valid
+	@Nullable
+	private EffectiveClinicalObservationDto bloodGlucose;
 
-    @Valid
-    @Nullable
-    private EffectiveClinicalObservationDto glycosylatedHemoglobin;
+	@Valid
+	@Nullable
+	private EffectiveClinicalObservationDto glycosylatedHemoglobin;
 
-    @Valid
-    @Nullable
-    private EffectiveClinicalObservationDto cardiovascularRisk;
+	@Valid
+	@Nullable
+	private EffectiveClinicalObservationDto cardiovascularRisk;
+
 
 }

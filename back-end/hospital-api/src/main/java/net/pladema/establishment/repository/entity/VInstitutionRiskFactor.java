@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class VInstitutionVitalSign {
+public class VInstitutionRiskFactor {
 
     @Id
     @Column(name = "id")

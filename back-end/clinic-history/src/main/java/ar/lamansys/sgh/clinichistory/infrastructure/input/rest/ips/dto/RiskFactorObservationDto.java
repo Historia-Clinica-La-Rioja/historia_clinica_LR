@@ -13,10 +13,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class VitalSignObservationDto implements Serializable {
+public class RiskFactorObservationDto implements Serializable {
 
     private String loincCode;
 
-    NewEffectiveClinicalObservationDto vitalSignObservation;
+    NewEffectiveClinicalObservationDto riskFactorObservation;
 
 }

@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class OutpatientVitalSignDto implements Serializable {
+public class OutpatientRiskFactorDto implements Serializable {
 
     @Valid
     private EffectiveClinicalObservationDto systolicBloodPressure;

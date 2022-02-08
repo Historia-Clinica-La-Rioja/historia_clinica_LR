@@ -2,7 +2,8 @@ package net.pladema.clinichistory.hospitalization.service.documents.validation;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,9 +12,9 @@ import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-public class EffectiveVitalSignTimeValidator {
+public class EffectiveRiskFactorTimeValidator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EffectiveVitalSignTimeValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EffectiveRiskFactorTimeValidator.class);
 
     public boolean isValid(IDocumentBo IDocumentBo, LocalDateTime entryDate) {
         LOG.debug("Input parameters -> document {}", IDocumentBo);
@@ -23,26 +24,26 @@ public class EffectiveVitalSignTimeValidator {
             return false;
         }
 
-        VitalSignBo vitalSigns = IDocumentBo.getVitalSigns();
-        if (vitalSigns == null)
+        RiskFactorBo riskFactors = IDocumentBo.getRiskFactors();
+        if (riskFactors == null)
             return true;
 
-        validEffectiveClinicalObservation(vitalSigns, entryDate);
+        validEffectiveClinicalObservation(riskFactors, entryDate);
         return true;
     }
 
-    private void validEffectiveClinicalObservation(VitalSignBo vitalSigns, LocalDateTime entryDate){
-        validEffectiveClinicalObservation("Saturación de oxigeno", vitalSigns.getBloodOxygenSaturation(), entryDate);
+    private void validEffectiveClinicalObservation(RiskFactorBo riskFactors, LocalDateTime entryDate){
+        validEffectiveClinicalObservation("Saturación de oxigeno", riskFactors.getBloodOxygenSaturation(), entryDate);
 
-        validEffectiveClinicalObservation("Tensión diastólica", vitalSigns.getDiastolicBloodPressure(), entryDate);
+        validEffectiveClinicalObservation("Tensión diastólica", riskFactors.getDiastolicBloodPressure(), entryDate);
 
-        validEffectiveClinicalObservation("Frecuencia cardíaca", vitalSigns.getHeartRate(), entryDate);
+        validEffectiveClinicalObservation("Frecuencia cardíaca", riskFactors.getHeartRate(), entryDate);
 
-        validEffectiveClinicalObservation("Frecuencia respiratoria", vitalSigns.getRespiratoryRate(), entryDate);
+        validEffectiveClinicalObservation("Frecuencia respiratoria", riskFactors.getRespiratoryRate(), entryDate);
 
-        validEffectiveClinicalObservation("Tensión sistólica", vitalSigns.getSystolicBloodPressure(), entryDate);
+        validEffectiveClinicalObservation("Tensión sistólica", riskFactors.getSystolicBloodPressure(), entryDate);
 
-        validEffectiveClinicalObservation("Temperatura corporal", vitalSigns.getTemperature(), entryDate);
+        validEffectiveClinicalObservation("Temperatura corporal", riskFactors.getTemperature(), entryDate);
     }
 
     private void validEffectiveClinicalObservation(String property, ClinicalObservationBo effectiveClinicalObservationDto, LocalDateTime entryDate){
