@@ -219,7 +219,7 @@ export class NewInternmentComponent implements OnInit {
 	private mapToPersonInternmentEpisodeRequest() {
 		const newTime: string = this.form.controls.dateTime.value.time;
 		const newDatetime = new Date(this.form.controls.dateTime.value.date);
-		const medicalCoverageId = (this.form.controls?.patientMedicalCoverage?.value?.medicalCoverage?.id) ? this.form.controls.patientMedicalCoverage.value.medicalCoverage.id : null;
+		const medicalCoverageId = (this.form.controls?.patientMedicalCoverage?.value?.id) ? this.form.controls.patientMedicalCoverage.value.id : null;
 		newDatetime.setHours(+newTime.substr(0, 2), +newTime.substr(3, 2), 0, 0);
 
 		const response = {
