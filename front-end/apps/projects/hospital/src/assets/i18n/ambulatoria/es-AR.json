@@ -24,7 +24,13 @@
 					"NUEVA_CONSULTA": "Nueva consulta"
 				},
 				"GROUP_AND_FACTOR": "Grupo y factor",
-				"SANGUINEOUS": "sanguíneo"
+				"SANGUINEOUS": "sanguíneo",
+				"internment": {
+					"COVERAGE_TITLE": "Cobertura del episodio",
+					"AFFILIATE_NUMBER": "Afiliado N°:",
+					"WITHOUT_COVERAGE": "Sin cobertura",
+					"NO_INFO": "Sin información"
+				}
 			},
 			"new-nursing-consultation": {
 				"TITLE": "Nueva consulta de enfermería",

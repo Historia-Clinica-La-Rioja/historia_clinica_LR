@@ -5,7 +5,8 @@
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]="personInformation"
-			[personPhoto]="personPhoto" [showAdditionalInformation]="true" [bloodType]="bloodType">
+						  [personPhoto]="personPhoto" [showAdditionalInformation]="true" [bloodType]="bloodType"
+						  [internmentEpisodeProcess]="internmentEpisodeProcess" [internmentEpisodeCoverageInfo]="internmentEpisodeCoverageInfo">
 			<div horizontal-content>
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
 					<ng-container

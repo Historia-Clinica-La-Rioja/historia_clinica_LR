@@ -3,8 +3,7 @@
     <div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayout.lt-md="column">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
             <mat-card-header>
-                <img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async"
-                    onerror="this.src='../../../../../assets/images/empty-profile.png'">
+                <img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
                 <mat-card-title class="card-style-1">
                     <span id="title" class="capitalize">
                         {{viewPatientName()}} {{patient?.lastName}} {{patient?.otherLastNames}}
@@ -17,12 +16,46 @@
                     <span id="gender_age" [translate]=viewGenderAge()></span>
                 </mat-card-subtitle>
             </mat-card-header>
-
-            <div *ngIf="bloodType?.length" fxLayout="column" fxLayoutAlign="center" id="blood-type-container">
-                <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3px">
-                    <span class="center-align">{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}</span>
-                    <span class="center-align">{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}</span>
-                    <h1 class="color-primary" id="blood-type">{{ bloodType }}</h1>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <div *ngIf="bloodType?.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3px" id="blood-type-container">
+                <span class="center-align">{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}</span>
+                <span class="center-align">{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}</span>
+                <h1 class="color-primary bold" id="blood-type">{{ bloodType }}</h1>
+            </div>
+            <div *ngIf="internmentEpisodeProcess?.inProgress" fxLayout="column" id="coverage-container">
+                <div fxLayout="row">
+                    <div fxLayout="column">
+                        <mat-icon class="color-primary" fontSet="material-icons-outlined">health_and_safety</mat-icon>
+                    </div>
+                    <div fxLayout="column">
+                        <div fxLayout="row" id="coverage-title">
+                            <span class="color-primary bold">{{ 'ambulatoria.paciente.card.internment.COVERAGE_TITLE' | translate }}</span>
+                        </div>
+                        <ng-container *ngIf="internmentEpisodeCoverageInfo">
+                            <div fxLayout="row">
+                                <span class="bold"> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}</span>
+                            </div>
+                            <div fxLayout="row">
+                                <span> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.plan }}</span>
+                            </div>
+                            <div fxLayout="row">
+                                <span> {{ 'ambulatoria.paciente.card.internment.AFFILIATE_NUMBER' | translate }}
+									<ng-container *ngIf="!internmentEpisodeCoverageInfo?.affiliateNumber">
+										<span class="no-information">{{ 'ambulatoria.paciente.card.internment.NO_INFO' | translate }}</span>
+									</ng-container>
+							        <ng-container *ngIf="internmentEpisodeCoverageInfo?.affiliateNumber">
+										<span>{{ internmentEpisodeCoverageInfo?.affiliateNumber }}</span>
+									</ng-container>
+								</span>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="!internmentEpisodeCoverageInfo">
+                            <div fxLayout="row" class="no-information">
+                                <span>{{ 'ambulatoria.paciente.card.internment.WITHOUT_COVERAGE' | translate }}</span>
+                            </div>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
         </div>

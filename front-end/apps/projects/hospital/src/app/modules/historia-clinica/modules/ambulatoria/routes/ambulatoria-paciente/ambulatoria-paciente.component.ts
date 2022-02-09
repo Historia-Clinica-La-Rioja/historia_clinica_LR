@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, ERole } from '@api-rest/api-model';
-
+import { InternmentEpisodeProcessDto, ExternalPatientCoverageDto } from '@api-rest/api-model';
 import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
@@ -32,6 +32,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ReferenceNotificationInfo, ReferenceNotificationService } from '@historia-clinica/services/reference-notification.service';
 import { REFERENCE_CONSULTATION_TYPE } from '../../constants/reference-masterdata';
+import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
+import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -63,6 +65,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	referenceNotificationService: ReferenceNotificationService;
 	refNotificationInfo: ReferenceNotificationInfo;
 	bloodType: string;
+	internmentEpisodeProcess: InternmentEpisodeProcessDto;
+	internmentEpisodeCoverageInfo: ExternalPatientCoverageDto;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -80,6 +84,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly referenceService: ReferenceService,
 		private readonly dialog: MatDialog,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly internmentPatientService: InternmentPatientService,
+		private readonly hceGeneralStateService: HceGeneralStateService,
 
 	) {
 		this.route.paramMap.subscribe(
@@ -103,6 +109,16 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				this.ambulatoriaSummaryFacadeService.anthropometricData$.subscribe(
 					(data: HCEAnthropometricDataDto) => this.bloodType = data?.bloodType?.value
 				);
+
+				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(
+					(internmentEpisodeProcess: InternmentEpisodeProcessDto) => {
+						this.internmentEpisodeProcess = internmentEpisodeProcess;
+						if(this.internmentEpisodeProcess.inProgress) {
+							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
+								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
+						}
+					})
+				
 			});
 	}
 	ngOnInit(): void {
