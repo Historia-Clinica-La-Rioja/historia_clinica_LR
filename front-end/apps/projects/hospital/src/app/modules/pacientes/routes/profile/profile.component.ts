@@ -10,7 +10,12 @@ import {
 	UserDataDto,
 	UserRoleDto,
 	RoleDto,
-	InstitutionDto, InternmentSummaryDto, PatientDischargeDto, EpicrisisSummaryDto
+    InternmentSummaryDto,
+	PatientDischargeDto,
+	EpicrisisSummaryDto,
+	InstitutionDto,
+	EmergencyCareEpisodeInProgressDto,
+	EmergencyCareListDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -32,8 +37,6 @@ import { UserService } from "@api-rest/services/user.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { processErrors } from "@core/utils/form.utils";
-import { map, take } from "rxjs/operators";
-import { Observable } from "rxjs";
 import { PermissionsService } from "@core/services/permissions.service";
 import { UserPasswordResetService } from "@api-rest/services/user-password-reset.service";
 import { EditProfessionsComponent, ProfessionDto } from '@pacientes/dialogs/edit-professions/edit-professions.component';
@@ -45,10 +48,14 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { INTERNACION } from "@historia-clinica/constants/summaries";
 import { InternmentEpisodeSummary } from "@presentation/components/internment-episode-summary/internment-episode-summary.component";
 import { InternacionService } from "@api-rest/services/internacion.service";
-import {InternmentEpisodeService} from "@api-rest/services/internment-episode.service";
+import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { EstadosEpisodio, Triages } from "@historia-clinica/modules/guardia/constants/masterdata";
+import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
+import { AppRoutes } from "../../../../app-routing.module";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
+const ROUTE_EMERGENCY_CARE_EPISODE_PREFIX = 'guardia/episodio/';
 const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
 
 @Component({
@@ -93,6 +100,11 @@ export class ProfileComponent implements OnInit {
 	public downloadReportIsEnabled: boolean;
 	public createUsersIsEnable: boolean;
 
+	emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
+	emergencyCareEpisodeSummary: EmergencyCareListDto;
+	readonly triages = Triages;
+	readonly episodeStates = EstadosEpisodio;
+
 	constructor(
 		private patientService: PatientService,
 		private mapperService: MapperService,
@@ -115,6 +127,7 @@ export class ProfileComponent implements OnInit {
 		private readonly institutionService: InstitutionService,
 		private readonly permissionService: PermissionsService,
 		private readonly internmentService: InternacionService,
+		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -195,6 +208,15 @@ export class ProfileComponent implements OnInit {
 
 				this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
+
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+					.subscribe( emergencyCareEpisodeInProgressDto => {
+						this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto
+						if (this.emergencyCareEpisodeInProgress?.inProgress) {
+							this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeSummary(this.emergencyCareEpisodeInProgress.id)
+								.subscribe(emergencyCareEpisodeListDto => this.emergencyCareEpisodeSummary = emergencyCareEpisodeListDto);
+						}
+					});
 
 			});
 
@@ -365,4 +387,11 @@ export class ProfileComponent implements OnInit {
 				processErrors(JSON.parse(error), (msg) => this.snackBarService.showError(msg));
 			});
 	}
+
+
+	goToEmergencyCareEpisode(): void {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_EMERGENCY_CARE_EPISODE_PREFIX}/${this.emergencyCareEpisodeSummary.id}`;
+		this.router.navigate([url]);
+	}
+
 }

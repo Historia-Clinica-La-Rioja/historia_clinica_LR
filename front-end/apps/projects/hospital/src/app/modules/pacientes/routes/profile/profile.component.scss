@@ -60,3 +60,21 @@ mat-card {
 		margin-top: 10px;
 	}
 }
+
+#triage-chip {
+    width: fit-content;
+    padding: 1.5px 8px;
+    border-radius: 5px;
+}
+
+#episode-state {
+    color: #009B68;
+}
+
+mat-card.box mat-card-content {
+    margin: 10px;
+}
+
+#emergency-care-episode-summary-card {
+	margin-top: 30px;
+}

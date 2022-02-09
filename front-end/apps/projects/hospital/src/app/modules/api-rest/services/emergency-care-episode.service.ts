@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ECAdministrativeDto, ECPediatricDto, ECAdultGynecologicalDto, ResponseEmergencyCareDto, EmergencyCareListDto, DateTimeDto } from '@api-rest/api-model';
+import {
+	ECAdministrativeDto,
+	ECPediatricDto,
+	ECAdultGynecologicalDto,
+	ResponseEmergencyCareDto,
+	EmergencyCareListDto,
+	DateTimeDto,
+	EmergencyCareEpisodeInProgressDto
+} from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';

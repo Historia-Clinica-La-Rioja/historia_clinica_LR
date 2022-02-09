@@ -183,6 +183,12 @@
 			"ROL_COLUMN": "Rol",
 			"CLINIC_COLUMN": "Clínica",
 			"WITHOUT_ROLES": "Sin roles asignados."
+		},
+		"emergency_care_episode_sumamry": {
+			"TITLE": "Resumen de Guardia",
+			"buttons": {
+				"VIEW_EPISODE": "VER GUARDIA"
+			}
 		}
     }
 }
