@@ -13,7 +13,7 @@ const enum COLORES {
 	ASSIGNED = '#4187FF',
 	CONFIRMED = '#FFA500',
 	ABSENT = '#D5E0D5',
-	SERVED = '#AAFDBC',
+	SERVED = '#A3EBAF',
 }
 const TEMPORARY_PATIENT = 3;
 const GREY_TEXT = 'calendar-event-grey-text';

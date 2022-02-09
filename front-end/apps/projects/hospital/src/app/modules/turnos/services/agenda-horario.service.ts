@@ -24,12 +24,12 @@ function ceilToNearest(amount: number, precision: number) {
 
 const colors: any = {
 	blue: {
-		primary: '#0095E1',
-		secondary: '#B3DFFF',
+		primary: '#FFF5E0',
+		secondary: '#FFF5E0',
 	},
 	green: {
-		primary: '#4CAF50',
-		secondary: '#C6E4C7',
+		primary: '#D6FBD8',
+		secondary: '#D6FBD8',
 	},
 };
 
