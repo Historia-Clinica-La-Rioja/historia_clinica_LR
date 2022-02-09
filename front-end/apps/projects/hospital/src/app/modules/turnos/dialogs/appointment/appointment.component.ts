@@ -8,7 +8,7 @@ import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
-import { getError, hasError, processErrors } from '@core/utils/form.utils';
+import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -106,6 +106,10 @@ export class AppointmentComponent implements OnInit {
 		this.setMedicalCoverages();
 		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.params.appointmentData.phonePrefix);
+		if (this.params.appointmentData.phoneNumber) {
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+		}
 		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -142,6 +146,16 @@ export class AppointmentComponent implements OnInit {
 			? this.params.appointmentData.phonePrefix + "-" + this.params.appointmentData.phoneNumber
 			: this.params.appointmentData.phoneNumber
 			: "Sin información";
+	}
+
+	updatePhoneValidators() {
+		if (this.formEdit.controls.phoneNumber.value || this.formEdit.controls.phonePrefix.value) {
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+		} else {
+			updateControlValidator(this.formEdit, 'phoneNumber', []);
+			updateControlValidator(this.formEdit, 'phonePrefix', []);
+		}
 	}
 
 	private setMedicalCoverages(): void {
@@ -204,9 +218,9 @@ export class AppointmentComponent implements OnInit {
 			}
 			if (this.formEdit.controls.phoneNumber.dirty||this.formEdit.controls.phonePrefix.dirty){
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value,this.formEdit.controls.phoneNumber.value);
-			}
 		}
 		this.hideFilters();
+		}
 	}
 
 	isMotivoRequired(): boolean {

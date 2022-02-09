@@ -108,6 +108,7 @@ export class NewAppointmentComponent implements OnInit {
 				updateControlValidator(this.formSearch, 'identifNumber', [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
 				updateControlValidator(this.formSearch, 'gender', [Validators.required]);
 			});
+		this.appointmentInfoForm.markAllAsTouched();
 	}
 
 	search(): void {
