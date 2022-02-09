@@ -1483,6 +1483,7 @@ export interface NewVitalSignsObservationDto extends Serializable {
 export interface NursingAnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;
+    headCircumference?: ClinicalObservationDto;
     height: ClinicalObservationDto;
     weight: ClinicalObservationDto;
 }
@@ -1516,8 +1517,11 @@ export interface NursingProcedureDto extends Serializable {
 }
 
 export interface NursingVitalSignDto extends Serializable {
+    bloodGlucose?: EffectiveClinicalObservationDto;
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    cardiovascularRisk?: EffectiveClinicalObservationDto;
     diastolicBloodPressure: EffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
     heartRate?: EffectiveClinicalObservationDto;
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure: EffectiveClinicalObservationDto;

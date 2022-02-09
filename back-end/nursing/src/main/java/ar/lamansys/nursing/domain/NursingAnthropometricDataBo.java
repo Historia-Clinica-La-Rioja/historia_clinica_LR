@@ -30,4 +30,8 @@ public class NursingAnthropometricDataBo {
     @Nullable
     private ClinicalObservationDto bmi;
 
+	@Valid
+	@Nullable
+	private ClinicalObservationDto headCircumference;
+
 }

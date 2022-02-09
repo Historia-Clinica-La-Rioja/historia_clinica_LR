@@ -35,4 +35,16 @@ public class NursingVitalSignBo {
     @Nullable
     private EffectiveClinicalObservationDto bloodOxygenSaturation;
 
+	@Valid
+	@Nullable
+	private EffectiveClinicalObservationDto bloodGlucose;
+
+	@Valid
+	@Nullable
+	private EffectiveClinicalObservationDto glycosylatedHemoglobin;
+
+	@Valid
+	@Nullable
+	private EffectiveClinicalObservationDto cardiovascularRisk;
+
 }
