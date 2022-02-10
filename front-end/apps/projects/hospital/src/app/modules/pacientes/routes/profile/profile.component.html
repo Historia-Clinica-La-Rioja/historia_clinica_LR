@@ -176,10 +176,10 @@
 			</div>
 			<ng-container
 				*appHasRole="['ADMINISTRATIVO']">
-				<app-summary-card *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary"
+				<app-summary-card *ngIf="internmentEpisodeSummary"
 								  id="internment_summary_card" [header]="internacionSummary">
 					<mat-card-content>
-						<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary" [patientId]="patientId" [showDischarge]="showDischarge">
+						<app-internment-episode-summary [hasEpicrisis]="epicrisisDoc" [internmentEpisode]="internmentEpisodeSummary" [patientId]="patientId" [showDischarge]="showDischarge">
 						</app-internment-episode-summary>
 					</mat-card-content>
 				</app-summary-card>

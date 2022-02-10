@@ -10,7 +10,7 @@ import {
 	UserDataDto,
 	UserRoleDto,
 	RoleDto,
-	InstitutionDto, InternmentSummaryDto, PatientDischargeDto
+	InstitutionDto, InternmentSummaryDto, PatientDischargeDto, EpicrisisSummaryDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -63,6 +63,7 @@ export class ProfileComponent implements OnInit {
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
 	showDischarge = false;
+	epicrisisDoc: EpicrisisSummaryDto;
 	public institutionName: string;
 	private institution: number[] = [];
 	private rolesAdmin = false;
@@ -74,7 +75,7 @@ export class ProfileComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 	public codigoColor: string;
 	public internacionSummary = INTERNACION;
-	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
+	public internmentEpisodeSummary: InternmentEpisodeSummary;
 	private readonly routePrefix;
 	public internmentEpisode;
 	public userData: UserDataDto;
@@ -176,9 +177,11 @@ export class ProfileComponent implements OnInit {
 					.subscribe(internmentEpisodeProcessDto => {
 						if (internmentEpisodeProcessDto.id) {
 							this.internmentEpisode = internmentEpisodeProcessDto;
-							this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
-								.pipe(map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
-								);
+							this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
+								.subscribe((internmentEpisode: InternmentSummaryDto) => {
+									this.internmentEpisodeSummary = this.mapperService.toInternmentEpisodeSummary(internmentEpisode)
+									this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
+								});
 							this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
 								.subscribe((patientDischarge: PatientDischargeDto) => {
 									this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {

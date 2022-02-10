@@ -19,11 +19,13 @@
 			<span class="mat-body-2">{{ internmentEpisode?.sectorDescription}}</span>
 		</div>
 	</mat-list-item>
-	<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary"
-			(click)="goToPaseCama()">
+	<div *ngIf="!hasEpicrisis">
+		<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary"
+				(click)="goToPaseCama()">
 						<span class="uppercase"
 							  [translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
-	</button>
+		</button>
+	</div>
 	<mat-divider inset></mat-divider>
 
 	<mat-list-item id="doctor" *ngIf="internmentEpisode?.doctor">

@@ -19,6 +19,7 @@ export class InternmentEpisodeSummaryComponent {
 	@Input() canLoadProbableDischargeDate: boolean;
 	@Input() patientId : number;
 	@Input() showDischarge: boolean;
+	@Input() hasEpicrisis: boolean;
 	private readonly routePrefix;
 
 	constructor(private router: Router,
