@@ -86,9 +86,8 @@ export class AmbulatoriaSummaryFacadeService {
 			this.hceGeneralStateService.getSolvedProblems(this.idPaciente).subscribe(c => {
 				this.solvedProblemsSubject.next(c);
 			});
-			this.historialProblemsFacadeService.loadEvolutionSummaryList(this.idPaciente);
 		}
-
+		this.historialProblemsFacadeService.loadEvolutionSummaryList(this.idPaciente);
 		this.appointmentsService.hasNewConsultationEnabled(this.idPaciente)
 			.subscribe(h => this.hasNewConsultationEnabledSubject.next(h));
 	}
