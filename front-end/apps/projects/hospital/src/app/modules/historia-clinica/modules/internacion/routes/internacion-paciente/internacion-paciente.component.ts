@@ -136,7 +136,7 @@ export class InternacionPacienteComponent implements OnInit {
 			}
 		);
 		this.permissionService.hasContextAssignments$(ROLES_FOR_EDIT_DIAGNOSIS).subscribe(
-			hasRole => this.editDiagnosisSummary$ = !hasRole
+			hasRole => this.editDiagnosisSummary$ = hasRole
 		);
 	}
 
