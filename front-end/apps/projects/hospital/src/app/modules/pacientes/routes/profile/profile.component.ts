@@ -174,7 +174,7 @@ export class ProfileComponent implements OnInit {
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
 					.subscribe(internmentEpisodeProcessDto => {
-						if (internmentEpisodeProcessDto) {
+						if (internmentEpisodeProcessDto.id) {
 							this.internmentEpisode = internmentEpisodeProcessDto;
 							this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
 								.pipe(map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
