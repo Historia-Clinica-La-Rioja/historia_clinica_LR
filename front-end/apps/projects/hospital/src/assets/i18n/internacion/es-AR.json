@@ -423,6 +423,7 @@
 			"DATE_TIME": "Fecha y hora de ingreso",
 			"INVALID_TIME": "La hora debe ser posterior a la de creación del episodio",
 			"INVALID_DATE": "La fecha ingresada no es válida",
+			"MIN_TIME_ERROR": "La hora debe ser posterior a la hora: {{minTime}}",
 			"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
 			"REQUIRED": "El campo es requerido",
 			"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",

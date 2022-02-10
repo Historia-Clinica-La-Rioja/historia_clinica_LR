@@ -6,7 +6,7 @@
 
 				<span [translate]="'internaciones.discharge.DISCHARGE_DATE'"></span> *
 				<section>
-					<div  class="form-row" fxLayoutGap="5px">
+					<div class="form-row" fxLayoutGap="5px">
 						<mat-form-field appearance="outline">
 							<input formControlName="date" id="date" matInput [matDatepicker]="datePicker"
 								[value]="today" [max]="today" [min]="minMedicalDischargeDate"
@@ -26,6 +26,9 @@
 							<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
 								placeholder="{{'internaciones.discharge.TIME' | translate}}">
 
+							<mat-error *ngIf="hasError(dischargeForm, 'beforeTime', 'time')"
+								translate="internaciones.discharge.MIN_TIME_ERROR"
+								[translateParams]="{ minTime: minTime }"></mat-error>
 							<mat-error *ngIf="hasError(dischargeForm, 'pattern', 'time')"
 								translate="internaciones.discharge.TIME_FORMAT">
 							</mat-error>
@@ -68,7 +71,7 @@
 					</div>
 					<div content>
 						<app-personal-information [personalInformation]="personalInformation"
-						                          [patientMedicalCoverage]="patientMedicalCoverage">
+							[patientMedicalCoverage]="patientMedicalCoverage">
 						</app-personal-information>
 					</div>
 				</app-patient-card>
