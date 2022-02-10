@@ -176,6 +176,7 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.oauth.url.issuer |	| - | Opcional |	URL del issuer para obtener los *access tokens* de OAuth | v1.32.0 |
 | ws.oauth.realm  |  | - | Opcional | Nombre del *realm* donde se van a estar almacenando los usuarios del sistema | v1.32.0  |
 | ws.oauth.client-id  |  | - | Opcional | *Client-id* del cliente público en el *realm* | v1.32.0  |
+| ws.oauth.token-expiration  |  | 1800 | Opcional | Tiempo de expiración en segundos de los *access tokens* | v1.34.0  |
 | ws.oauth.user-admin.username  |  | - | Opcional | Username del usuario con rol **realm-admin** en el *realm* | v1.32.0  |
 | ws.oauth.user-admin.password  |  | - | Opcional | Contraseña del usuario con rol **realm-admin** en el *realm* | v1.32.0  |
 | ws.oauth.url.userinfo  |  | /auth/realms/REALM_NAME/protocol/openid-connect/userinfo | Opcional | Ruta relativa de obtención de datos del usuario. No debería cambiar | v1.32.0  |

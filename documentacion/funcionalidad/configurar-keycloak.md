@@ -38,12 +38,15 @@ Dejar las demás opciones como están, y clickear en _**Save**_.
 
 11. En las configuraciones de ese usuario, ir a la pestaña _**Credentials**_. Asignarle un password al usuario, por ejemplo "_admin123_", y deshabilitar la opción _Temporary_. Clickear _**Set Password**_.
 
-12. Antes de iniciar el Back End, configurar las siguientes propiedades de OAuth:
+12. Volver a _**Realm Settings**_ e ir a la pestaña _**Tokens**_. Revisar el valor configurado de _Access Token Lifespan_, ya que servirá para configurar el Back-End (por defecto son 5 minutos).
+
+13. Antes de iniciar el Back End, configurar las siguientes propiedades de OAuth:
 
 ```   
     ws.oauth.enabled = true
     ws.oauth.realm = <NOMBRE DEL REALM>
     ws.oauth.client-id = <NOMBRE DEL CLIENTE>
+    ws.oauth.token-expiration = <TIEMPO HASTA LA EXPIRACIÓN DEL ACCESS TOKEN EN SEGUNDOS>
     ws.oauth.user-admin.username = <NOMBRE DEL USUARIO ADMINISTRADOR DE USUARIOS>
     ws.oauth.user-admin.password = <CONTRASEÑA DEL USUARIO ADMINISTRADOR DE USUARIOS>
     ws.oauth.url.base = <URL BASE DONDE CORRE KEYCLOAK>
@@ -56,11 +59,12 @@ Con los valores de ejemplo de esta guía, las propiedades quedan así:
     ws.oauth.enabled = true
     ws.oauth.realm = hsi-test
     ws.oauth.client-id = hsi-client
+    ws.oauth.token-expiration = 300
     ws.oauth.user-admin.username = user-admin
     ws.oauth.user-admin.password = admin123
     ws.oauth.url.base = http://localhost:8080
     ws.oauth.url.issuer = http://localhost:8080/auth/realms/hsi-test
 ```
 
-13. Iniciar el Back End.
-14. De ahora en adelante, los usuarios creados desde la aplicación serán creados también en Keycloak.
+14. Iniciar el Back End.
+15. De ahora en adelante, los usuarios creados desde la aplicación serán creados también en Keycloak.
