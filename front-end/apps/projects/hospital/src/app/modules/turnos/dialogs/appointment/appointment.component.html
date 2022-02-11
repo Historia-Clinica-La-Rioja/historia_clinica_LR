@@ -49,7 +49,7 @@
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
 						<mat-select formControlName="newCoverageData">
 							<mat-option
-								*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
+								*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage.id">
 								{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 							</mat-option>
 							<mat-divider></mat-divider>

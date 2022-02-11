@@ -122,8 +122,8 @@ export class AppointmentComponent implements OnInit {
 						.subscribe(coverageData => {
 							if (coverageData) {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
-								this.formEdit.controls.newCoverageData.setValue(coverageData);
-								this.setCoverageText(this.formEdit.controls.newCoverageData.value);
+								this.formEdit.controls.newCoverageData.setValue(coverageData.id);
+								this.setCoverageText(coverageData);
 							}
 						});
 				}
@@ -207,7 +207,7 @@ export class AppointmentComponent implements OnInit {
 		if (this.formEdit.valid) {
 			if (this.isAssigned()) {
 				if (this.formEdit.controls.newCoverageData.value) {
-					this.coverageData = this.formEdit.controls.newCoverageData.value;
+					this.coverageData = this.patientMedicalCoverages.find(mc=>this.formEdit.controls.newCoverageData.value==mc.id);
 					this.updateCoverageData(this.coverageData.id);
 					this.setCoverageText(this.coverageData);
 				} else {
