@@ -1,0 +1,43 @@
+.dialog {
+	display: flex;
+}
+
+.info-text{
+	flex-direction: column;
+	font-family: Roboto;
+	font-size: 14px;
+	padding: 20px 10px 20px 16px;
+
+	.text{
+		padding: 0px 0px 0px 0px;
+		text-align:right;
+	}
+
+	.question {
+		display: block;
+		font-weight: 500;
+	}
+
+	.button{
+		padding: 0px 16px 0px 0px;
+		font-size: 16px;
+	}
+}
+
+.field-icon{
+	padding: 0px 15px 20px 5px;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+.recomendado-antropo {
+	margin-top: -3%;
+}
+
+.recomendado {
+	color: lightgray;
+	font-size: 13px;
+	font-weight: lighter;
+}

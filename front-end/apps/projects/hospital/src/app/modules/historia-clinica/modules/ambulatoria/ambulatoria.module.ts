@@ -47,6 +47,7 @@ import { ReferenceNotificationComponent } from './dialogs/reference-notification
 import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
 import { SnvsReportsResultComponent } from './dialogs/snvs-reports-result/snvs-reports-result.component';
 import { ClipboardModule } from "@angular/cdk/clipboard";
+import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 
 @NgModule({
 	declarations: [
@@ -84,6 +85,7 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 		ReferenceNotificationComponent,
 		CounterreferenceDockPopupComponent,
 		SnvsReportsResultComponent,
+  DatosAntropometricosNuevaConsultaComponent,
 	],
 	imports: [
 		CommonModule,

@@ -1,0 +1,94 @@
+<div>
+    <h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'"></h2>
+    <div *ngIf="showPreloadData" class="dialog">
+        <mat-icon online class="icon" color="primary">error_outline</mat-icon>
+        <div class="info-text">
+            <span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DESCRIPTION'"
+                [translateParams]="{date: datosAntropometricosNuevaConsultaService.getDate()}"> </span>
+            <span class="question"
+                [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.QUESTION'"></span>
+            <span fxLayout="row">
+                <button class="button" id=include_Anthropometric_Data mat-button color="primary"
+                    (click)=datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData()>
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.ADD'"></span>
+                </button>
+                <button class="button" id=discard_Anthropometric_Data mat-button color="warn"
+                    (click)=datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData()>
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.anthropometric_dialog.DISCARD'"></span>
+                </button>
+            </span>
+        </div>
+    </div>
+    <app-document-section>
+        <ng-container concept-form>
+            <form [formGroup]="datosAntropometricosNuevaConsultaService.getForm()">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-form-field [floatLabel]="'never'" appearance="outline">
+                        <mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'">
+                        </mat-label>
+                        <mat-select placeholder="B+" formControlName="bloodType">
+                            <mat-option
+                                *ngFor="let bloodType of datosAntropometricosNuevaConsultaService.getBloodTypes()"
+                                [value]="bloodType">
+                                {{ bloodType.description }}
+                            </mat-option>
+                        </mat-select>
+                        <button id="clear_blood_type" type="button" mat-button
+                            *ngIf="datosAntropometricosNuevaConsultaService.getForm().value.bloodType && !showPreloadData"
+                            matSuffix color="warn" mat-icon-button
+                            (click)="datosAntropometricosNuevaConsultaService.getForm().controls.bloodType.reset(); $event.stopPropagation()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <ng-container *ngIf="showPreloadData">
+                        <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
+                    </ng-container>
+                </div>
+                <div>
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <mat-form-field [floatLabel]="'never'" appearance="outline">
+                            <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'">
+                            </mat-label>
+                            <input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput>
+                        </mat-form-field>
+                        <ng-container *ngIf="showPreloadData">
+                            <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
+                        </ng-container>
+                    </div>
+                    <h5 class="recomendado recomendado-antropo"
+                        [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'">
+                    </h5>
+                </div>
+                <div>
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <mat-form-field [floatLabel]="'never'" appearance="outline">
+                            <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'">
+                            </mat-label>
+                            <input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput>
+                        </mat-form-field>
+                        <ng-container *ngIf="showPreloadData">
+                            <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
+                        </ng-container>
+                    </div>
+                    <h5 class="recomendado recomendado-antropo"
+                        [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'">
+                    </h5>
+                </div>
+                <div>
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <mat-form-field [floatLabel]="'never'" appearance="outline">
+                            <mat-label
+                                [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEAD_CIRCUNFERENCE'">
+                            </mat-label>
+                            <input id="head-circumference" formControlName="headCircumference" placeholder="Ej: 47"
+                                type="number" matInput>
+                        </mat-form-field>
+                        <ng-container *ngIf="showPreloadData">
+                            <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
+                        </ng-container>
+                    </div>
+                </div>
+            </form>
+        </ng-container>
+    </app-document-section>
+</div>
