@@ -48,6 +48,7 @@ import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-d
 import { SnvsReportsResultComponent } from './dialogs/snvs-reports-result/snvs-reports-result.component';
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
+import { FactoresDeRiesgoNuevaConsultaComponent } from './components/factores-de-riesgo-nueva-consulta/factores-de-riesgo-nueva-consulta.component';
 
 @NgModule({
 	declarations: [
@@ -86,6 +87,7 @@ import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-a
 		CounterreferenceDockPopupComponent,
 		SnvsReportsResultComponent,
   DatosAntropometricosNuevaConsultaComponent,
+  FactoresDeRiesgoNuevaConsultaComponent,
 	],
 	imports: [
 		CommonModule,
