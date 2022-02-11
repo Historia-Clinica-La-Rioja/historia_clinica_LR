@@ -49,7 +49,8 @@
                         <mat-form-field [floatLabel]="'never'" appearance="outline">
                             <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEIGHT'">
                             </mat-label>
-                            <input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput>
+                            <input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput
+                                (keypress)="isNumberOrDot($event.key)">
                         </mat-form-field>
                         <ng-container *ngIf="showPreloadData">
                             <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
@@ -64,7 +65,8 @@
                         <mat-form-field [floatLabel]="'never'" appearance="outline">
                             <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.WEIGHT'">
                             </mat-label>
-                            <input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput>
+                            <input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput
+                                (keypress)="isNumberOrDot($event.key)">
                         </mat-form-field>
                         <ng-container *ngIf="showPreloadData">
                             <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
@@ -81,7 +83,7 @@
                                 [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEAD_CIRCUNFERENCE'">
                             </mat-label>
                             <input id="head-circumference" formControlName="headCircumference" placeholder="Ej: 47"
-                                type="number" matInput>
+                                type="number" matInput (keypress)="isNumberOrDot($event.key)">
                         </mat-form-field>
                         <ng-container *ngIf="showPreloadData">
                             <mat-icon class="field-icon" color="primary">error_outline</mat-icon>

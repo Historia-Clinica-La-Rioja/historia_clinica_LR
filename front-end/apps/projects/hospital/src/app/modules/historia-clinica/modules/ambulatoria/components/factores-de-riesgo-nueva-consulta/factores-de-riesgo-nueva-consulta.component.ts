@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { isNumberOrDot } from '@core/utils/core.utils';
 import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 
 @Component({
@@ -10,6 +11,7 @@ export class FactoresDeRiesgoNuevaConsultaComponent implements OnInit {
 
   @Input() signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
   @Input() showPreloadData: boolean = false;
+  readonly isNumberOrDot = isNumberOrDot;
 
   constructor() { }
 
