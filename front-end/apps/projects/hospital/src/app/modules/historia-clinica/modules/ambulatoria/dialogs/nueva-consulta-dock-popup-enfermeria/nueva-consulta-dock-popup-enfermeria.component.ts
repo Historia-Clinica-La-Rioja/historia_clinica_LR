@@ -21,7 +21,7 @@ import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-a
 import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-nurse-consultation-suggested-fields.service';
-import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import { PATTERN_MAX_2_DECIMAL_DIGITS, SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 
 export interface FieldsToUpdate {
@@ -172,6 +172,9 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
 			this.errores[3] = pesoError;
 		});
+		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
+			this.errores[11] = headCircumferenceError;
+		});
 		this.signosVitalesNuevaConsultaService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
 		});
@@ -189,6 +192,15 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		});
 		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[9] = presionDiastolicaError;
+		});
+		this.signosVitalesNuevaConsultaService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
+			this.errores[12] = bloodGlucoseError;
+		});
+		this.signosVitalesNuevaConsultaService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
+			this.errores[13] = glycosylatedHemoglobinError;
+		});
+		this.signosVitalesNuevaConsultaService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
+			this.errores[14] = cardiovascularRiskError;
 		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
@@ -279,6 +291,10 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 
+		if ((parseInt(consulta.anthropometricData?.headCircumference?.value, 10) < 1) || (parseInt(consulta.anthropometricData?.headCircumference?.value, 10) > 100)) {
+			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
+		}
+
 		if (parseInt(consulta.vitalSigns.heartRate?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
 		}
@@ -301,6 +317,24 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 		if (parseInt(consulta.vitalSigns?.systolicBloodPressure?.value, 10) < 0) {
 			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
+		}
+
+		if ((parseInt(consulta.vitalSigns?.bloodGlucose?.value, 10) < 1) || (parseInt(consulta.vitalSigns?.bloodGlucose?.value, 10) > 500)) {
+			this.signosVitalesNuevaConsultaService.setBloodGlucoseError('ambulatoria.paciente.nueva-consulta.errors.BLOOD_GLUCOSE_RANGE');
+		}
+
+		if ((parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) < 1) || (parseFloat(consulta.vitalSigns?.glycosylatedHemoglobin?.value) > 20)) {
+			this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
+		}
+		else {
+			const glycosylatedHemoglobinValue = consulta.vitalSigns?.glycosylatedHemoglobin?.value;
+			if (glycosylatedHemoglobinValue && !this.hasMaxTwoDecimalDigits(glycosylatedHemoglobinValue)) {
+				this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
+			}
+		}
+
+		if ((parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) < 1) || (parseInt(consulta.vitalSigns?.cardiovascularRisk?.value, 10) > 100)) {
+			this.signosVitalesNuevaConsultaService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
 		}
 
 		hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
@@ -331,5 +365,9 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	private hasMaxTwoDecimalDigits(numberValue: string): boolean {
+		return PATTERN_MAX_2_DECIMAL_DIGITS.test(numberValue);
 	}
 }
