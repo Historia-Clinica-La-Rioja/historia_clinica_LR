@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { isNumberOrDot } from '@core/utils/core.utils';
+import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 
 @Component({

@@ -28,6 +28,3 @@ export const VITAL_SIGNS = {
 export const TEXT_AREA_MAX_LENGTH = 1024;
 
 export const REMOVEATTENTION = 'removeAttention';
-
-export const PATTERN_NUMBER_WITH_DECIMALS = /^\d+(\.\d+)?$/;
-export const PATTERN_INTEGER_NUMBER = /^\d+$/;

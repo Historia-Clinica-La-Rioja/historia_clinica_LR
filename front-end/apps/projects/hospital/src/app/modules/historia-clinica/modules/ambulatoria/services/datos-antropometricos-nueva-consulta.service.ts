@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
-import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/constants/validation-constants';
+import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 
 export interface DatosAntropometricos {

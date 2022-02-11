@@ -6,8 +6,8 @@ import { Subject, Observable } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
-import { PATTERN_NUMBER_WITH_DECIMALS } from '@core/constants/validation-constants';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
+import { PATTERN_NUMBER_WITH_DECIMALS, PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from '@core/utils/pattern.utils';
 
 export interface SignosVitales {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
@@ -20,8 +20,6 @@ export interface SignosVitales {
 	glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
 	cardiovascularRisk?: EffectiveClinicalObservationDto;
 }
-
-export const PATTERN_MAX_2_DECIMAL_DIGITS = /^[0-9]+(\.[0-9]{1,2})?$/;
 
 export class SignosVitalesNuevaConsultaService {
 
@@ -83,7 +81,7 @@ export class SignosVitalesNuevaConsultaService {
 				effectiveTime: [newMoment()],
 			}),
 			glycosylatedHemoglobin: this.formBuilder.group({
-				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin), Validators.max(FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin), Validators.pattern(PATTERN_MAX_2_DECIMAL_DIGITS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin), Validators.max(FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin), Validators.pattern(PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS)]],
 				effectiveTime: [newMoment()],
 			}),
 			cardiovascularRisk: this.formBuilder.group({

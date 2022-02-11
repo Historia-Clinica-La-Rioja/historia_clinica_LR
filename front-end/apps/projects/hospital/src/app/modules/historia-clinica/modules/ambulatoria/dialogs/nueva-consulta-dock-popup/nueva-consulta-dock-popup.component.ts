@@ -8,7 +8,7 @@ import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/med
 import { Problema } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { PATTERN_MAX_2_DECIMAL_DIGITS, SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
@@ -23,7 +23,7 @@ import { HealthConditionService } from '@api-rest/services/healthcondition.servi
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuggestedFieldsPopupComponent } from '../../../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
-import { PATTERN_INTEGER_NUMBER, TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -43,6 +43,7 @@ import { ReferenceFileService } from '@api-rest/services/reference-file.service'
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
 import { HCEPersonalHistory } from '../reference/reference.component';
 import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
+import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 const TIME_OUT = 5000;
 
@@ -426,7 +427,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if ((parseFloat(value) < FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin) || (parseFloat(value) > FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin)) {
 			this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
 		}
-		else if (value && !this.hasMaxTwoDecimalDigits(value)) {
+		else if (value && !hasMaxTwoDecimalDigits(value)) {
 			this.signosVitalesNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
 		}
 
@@ -589,10 +590,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
-	}
-
-	private hasMaxTwoDecimalDigits(numberValue: string): boolean {
-		return PATTERN_MAX_2_DECIMAL_DIGITS.test(numberValue);
 	}
 
 }
