@@ -6,13 +6,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.Duration;
 import java.util.Map;
 
+import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
+import ar.lamansys.sgx.shared.token.JWTUtils;
 import org.junit.jupiter.api.Test;
 
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-class JWTUtilsTest {
+class TokenUtilsTest {
 
 	private final Map<String, Object> defaultClaims = Map.of(
 			JWTUtils.TOKEN_CLAIM_TYPE, ETokenType.NORMAL
@@ -66,7 +68,7 @@ class JWTUtilsTest {
 	@Test
 	void isTokenType_okWhenCorrect() {
 		assertTrue(
-				JWTUtils.isTokenType(
+				TokenUtils.isTokenType(
 						ETokenType.VERIFICATION,
 						claimsWith(ETokenType.VERIFICATION.toString())
 				)
@@ -76,7 +78,7 @@ class JWTUtilsTest {
 	@Test
 	void isTokenType_failWhenDifferentTokenType() {
 		assertFalse(
-				JWTUtils.isTokenType(
+				TokenUtils.isTokenType(
 						ETokenType.VERIFICATION,
 						claimsWith("sarasa")
 				)

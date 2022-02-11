@@ -4,7 +4,8 @@ package ar.lamansys.sgx.auth.jwt.application.verificationuser;
 import java.time.Duration;
 import java.util.Map;
 
-import ar.lamansys.sgx.auth.jwt.domain.token.JWTUtils;
+import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
+import ar.lamansys.sgx.shared.token.JWTUtils;
 import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 	@Override
 	public boolean validVerificationToken(String verificationToken) {
 		return JWTUtils.parseClaims(verificationToken, secret)
-			.map(claims -> JWTUtils.isTokenType(ETokenType.VERIFICATION, claims))
+			.map(claims -> TokenUtils.isTokenType(ETokenType.VERIFICATION, claims))
 			.orElse(false);
 
 	}
