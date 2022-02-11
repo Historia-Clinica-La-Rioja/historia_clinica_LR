@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ClinicalTermDto, ClinicalSpecialtyDto, NursingConsultationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
@@ -59,6 +59,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	defaultProblem: HCEPersonalHistoryDto;
 	specialties: ClinicalSpecialtyDto[];
 	problems: ClinicalTermDto[];
+	@ViewChild('errorsView') errorsView: ElementRef;
 
 
 	readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
@@ -227,6 +228,11 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		} else {
 			this.disableConfirmButton = false;
 			this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
+			if (!this.isValidConsultation()) {
+				setTimeout(() => {
+					this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				}, 500);
+			}
 		}
 	}
 
