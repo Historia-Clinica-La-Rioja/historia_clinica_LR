@@ -7,6 +7,7 @@ import net.pladema.snowstorm.controller.dto.SnomedEclDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
 import net.pladema.snowstorm.services.SnowstormService;
+import net.pladema.snowstorm.services.loadCsv.UpdateSnomedConceptsByCsv;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
 import net.pladema.snowstorm.services.domain.SnomedSearchBo;
 import net.pladema.snowstorm.services.domain.SnomedSearchItemBo;
@@ -17,10 +18,13 @@ import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConcepts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,12 +47,16 @@ public class SnowstormController {
 
     private final SearchCachedConcepts searchCachedConcepts;
 
+    private final UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv;
+
     public SnowstormController(SnowstormService snowstormService,
                                FetchAllSnomedEcl fetchAllSnomedEcl,
-                               SearchCachedConcepts searchCachedConcepts) {
+                               SearchCachedConcepts searchCachedConcepts,
+                               UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv) {
         this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
         this.searchCachedConcepts = searchCachedConcepts;
+        this.updateSnomedConceptsByCsv = updateSnomedConceptsByCsv;
     }
 
     @GetMapping(value = CONCEPTS)
@@ -111,6 +119,14 @@ public class SnowstormController {
         return fetchAllSnomedEcl.run().stream()
                 .map(snomedECLBo -> new SnomedEclDto(snomedECLBo.getKey(), snomedECLBo.getValue()))
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping("/load-concepts-csv")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	public void loadConceptsByCsv(@RequestParam("file") MultipartFile file,
+						   @RequestParam(value = "ecl") String eclKey) {
+        LOG.debug("Input parameters -> file {}, eclKey {}", file.getOriginalFilename(), eclKey);
+        updateSnomedConceptsByCsv.run(file, eclKey);
     }
 
 }
