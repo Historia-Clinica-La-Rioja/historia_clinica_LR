@@ -1,9 +1,11 @@
 <ng-template #noInformation>
 	<span class="noInformation">Sin Información</span>
 </ng-template>
-<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']" mat-raised-button color="primary" (click)="buttonIsPressedGoToMedicalHistory()">
-	<span class="uppercase" [translate]="'ambulatoria.paciente.profile.BUTTON_HISTORIA_CLINICA'"></span>
-</button>
+<div *ngIf="showButtonGoToMedicalHistory">
+	<button  *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']" mat-raised-button color="primary" (click)="buttonIsPressedGoToMedicalHistory()">
+		<span class="uppercase" [translate]="'ambulatoria.paciente.profile.BUTTON_HISTORIA_CLINICA'"></span>
+	</button>
+</div>
 <div fxLayout="row" class="form-row">
 	<mat-icon color="primary" fontSet="material-icons-outlined">assignment_ind</mat-icon>
 	<h3 class="primary bold">Información Personal</h3>

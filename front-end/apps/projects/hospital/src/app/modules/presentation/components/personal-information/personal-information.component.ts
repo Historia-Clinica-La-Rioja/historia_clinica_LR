@@ -13,6 +13,7 @@ export class PersonalInformationComponent implements OnChanges {
 
 	@Input() personalInformation: PersonalInformation;
 	@Input() patientMedicalCoverage: PatientMedicalCoverageDto[];
+	@Input() showButtonGoToMedicalHistory: boolean;
 	@Output() goToMedicalHistory = new EventEmitter<boolean>();
 	public addressPresent = false;
 	public address: Address;

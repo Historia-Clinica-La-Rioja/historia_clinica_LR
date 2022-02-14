@@ -21,6 +21,7 @@ import { ContextService } from '@core/services/context.service';
 export class PatientProfileComponent implements OnInit {
 
 	patientId: number;
+	showButtonGoToMedicalHistory = true;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
 	public patientTypeData: PatientTypeData;
