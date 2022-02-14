@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { InternmentEpisodeProcessDto, ExternalPatientCoverageDto } from '@api-rest/api-model';
+import { EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
 import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
@@ -38,6 +39,8 @@ import { ContextService } from '@core/services/context.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
+import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
+
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -72,6 +75,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	internmentEpisodeProcess: InternmentEpisodeProcessDto;
 	internmentEpisodeCoverageInfo: ExternalPatientCoverageDto;
 	private isOpenOdontologyConsultation = false;
+	emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -93,6 +97,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly contextService: ContextService,
 		private readonly router: Router,
+		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 
 	) {
 		this.route.paramMap.subscribe(
@@ -126,6 +131,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 						}
 					})
 
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+					.subscribe( emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
 			});
 	}
 	ngOnInit(): void {

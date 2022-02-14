@@ -5,8 +5,9 @@
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]="personInformation"
-						  [personPhoto]="personPhoto" [showAdditionalInformation]="true" [bloodType]="bloodType"
-						  [internmentEpisodeProcess]="internmentEpisodeProcess">
+						  [personPhoto]="personPhoto" [showAdditionalInformation]="true"
+						  [internmentEpisodeProcess]="internmentEpisodeProcess"
+						  [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 			<div info-content fxLayout="row">
 					<div *ngIf="bloodType?.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3px" id="blood-type-container">
 							<span class="center-align">{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}</span>

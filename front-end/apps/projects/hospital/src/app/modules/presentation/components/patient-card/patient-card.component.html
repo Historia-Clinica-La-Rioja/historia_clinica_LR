@@ -20,6 +20,12 @@
                         <strong class="uppercase" [translate]="'ambulatoria.paciente.card.INTERNMENT_EPISODE_ACTIVE'"></strong>
                     </div>
                 </mat-card-subtitle>
+				<mat-card-subtitle *ngIf="emergencyCareEpisodeInProgress">
+					<div class="label-episodes label-emergency-care-episode">
+						<strong class="uppercase"
+								[translate]="'ambulatoria.paciente.card.EMERGENCY_CARE_EPISODE_ACTIVE'"></strong>
+					</div>
+				</mat-card-subtitle>
             </mat-card-header>
         </div>
 		<ng-content id="info-content" select="[info-content]"></ng-content>
