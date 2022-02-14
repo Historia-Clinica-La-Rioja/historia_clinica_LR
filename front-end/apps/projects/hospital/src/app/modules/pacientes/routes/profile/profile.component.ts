@@ -175,19 +175,21 @@ export class ProfileComponent implements OnInit {
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
 					.subscribe(internmentEpisodeProcessDto => {
-						if (internmentEpisodeProcessDto.id) {
+						if (internmentEpisodeProcessDto) {
 							this.internmentEpisode = internmentEpisodeProcessDto;
-							this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
-								.subscribe((internmentEpisode: InternmentSummaryDto) => {
-									this.internmentEpisodeSummary = this.mapperService.toInternmentEpisodeSummary(internmentEpisode)
-									this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
-								});
-							this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
-								.subscribe((patientDischarge: PatientDischargeDto) => {
-									this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
-										this.showDischarge = isOn || (patientDischarge.dischargeTypeId !== 0);
+							if (internmentEpisodeProcessDto.id) {
+								this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
+									.subscribe((internmentEpisode: InternmentSummaryDto) => {
+										this.internmentEpisodeSummary = this.mapperService.toInternmentEpisodeSummary(internmentEpisode)
+										this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
 									});
-								});
+								this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
+									.subscribe((patientDischarge: PatientDischargeDto) => {
+										this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
+											this.showDischarge = isOn || (patientDischarge.dischargeTypeId !== 0);
+										});
+									});
+							}
 						}
 					});
 
