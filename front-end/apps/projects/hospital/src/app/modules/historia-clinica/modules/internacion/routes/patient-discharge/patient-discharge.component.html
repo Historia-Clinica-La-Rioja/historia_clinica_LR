@@ -25,7 +25,9 @@
 						<mat-form-field appearance="outline">
 							<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
 								placeholder="{{'internaciones.discharge.TIME' | translate}}">
-
+							<mat-error *ngIf="hasError(dischargeForm, 'beforeTime', 'time')"
+								translate="internaciones.discharge.MIN_TIME_ERROR"
+								[translateParams]="{ minTime: minTime }"></mat-error>
 							<mat-error *ngIf="hasError(dischargeForm, 'pattern', 'time')"
 								translate="internaciones.discharge.TIME_FORMAT">
 							</mat-error>

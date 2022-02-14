@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { futureTimeValidation, hasError, TIME_PATTERN } from '@core/utils/form.utils';
+import { beforeTimeDateValidation, futureTimeValidation, hasError, TIME_PATTERN } from '@core/utils/form.utils';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 
@@ -44,6 +44,8 @@ export class PatientDischargeComponent implements OnInit {
 
 	todayDate = new Date();
 	TIME_PATTERN = TIME_PATTERN;
+	minTime: string;
+	minDate: string;
 	public dischargeForm: FormGroup;
 	public today: Moment = moment();
 	public minDischargeDate: Date;
@@ -124,9 +126,30 @@ export class PatientDischargeComponent implements OnInit {
 	private loadForm() {
 		this.dischargeForm = this.formBuilder.group({
 			date: [newMoment(), [Validators.required]],
-			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME), [Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]],
+			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME)],
 			dischargeTypeId: [null, [Validators.required]]
 		});
+		this.setValidators()
+		this.dischargeForm.get('date').valueChanges.subscribe((value: Moment) => {
+			if (value.isSame(newMoment(), 'day')) {
+				if (this.minDate === (this.datePipe.transform(new Date(), DatePipeFormat.SHORT_DATE))) {
+					this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
+				} else {
+					this.dischargeForm.get('time').setValidators([Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
+				}
+			} else {
+				this.dischargeForm.get('time').removeValidators(futureTimeValidation);
+			}
+			this.dischargeForm.get('time').updateValueAndValidity();
+		});
+	}
+
+	setValidators(): void {
+		if (this.minDate === (this.datePipe.transform(new Date(), DatePipeFormat.SHORT_DATE))) {
+			this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
+		} else {
+			this.dischargeForm.get('time').setValidators([Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
+		}
 	}
 
 	private setDischargeFormWithEpicrisisRequired() {
@@ -141,6 +164,8 @@ export class PatientDischargeComponent implements OnInit {
 		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
 			.subscribe(minDischargeDate => {
 				this.minDischargeDate = new Date(dateTimeDtoToStringDate(minDischargeDate));
+				this.minTime = this.datePipe.transform(this.minDischargeDate, DatePipeFormat.SHORT_TIME);
+				this.minDate = this.datePipe.transform(this.minDischargeDate, DatePipeFormat.SHORT_DATE);
 			});
 	}
 
