@@ -13,7 +13,7 @@
 							<span class="center-align">{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}</span>
 							<h1 class="color-primary bold" id="blood-type">{{ bloodType }}</h1>
 					</div>
-					<div *ngIf="internmentEpisodeProcess?.inProgress" id="coverage-container">
+					<div *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress" id="coverage-container">
 						<div fxLayout="row">
 							<div fxLayout="column">
 								<mat-icon class="color-primary" fontSet="material-icons-outlined">health_and_safety</mat-icon>

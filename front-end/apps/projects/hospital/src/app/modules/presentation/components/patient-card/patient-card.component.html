@@ -15,7 +15,7 @@
                 <mat-card-subtitle>
                     <span id="gender_age" [translate]=viewGenderAge()></span>
                 </mat-card-subtitle>
-				<mat-card-subtitle *ngIf="internmentEpisodeProcess?.inProgress">
+				<mat-card-subtitle *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress">
                     <div class="label-episodes label-internment-episode uppercase">
                         <strong class="uppercase" [translate]="'ambulatoria.paciente.card.INTERNMENT_EPISODE_ACTIVE'"></strong>
                     </div>

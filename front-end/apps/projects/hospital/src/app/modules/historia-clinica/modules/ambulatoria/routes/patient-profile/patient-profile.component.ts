@@ -64,9 +64,7 @@ export class PatientProfileComponent implements OnInit {
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
 					.subscribe(internmentEpisodeProcessDto => {
-						if (internmentEpisodeProcessDto) {
-							this.internmentEpisode = internmentEpisodeProcessDto;
-						}
+						this.internmentEpisode = internmentEpisodeProcessDto;
 					});
 			});
 	}

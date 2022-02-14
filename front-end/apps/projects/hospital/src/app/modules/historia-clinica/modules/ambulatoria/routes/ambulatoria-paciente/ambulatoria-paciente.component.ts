@@ -119,8 +119,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(
 					(internmentEpisodeProcess: InternmentEpisodeProcessDto) => {
-						this.internmentEpisodeProcess = internmentEpisodeProcess;
-						if(this.internmentEpisodeProcess.inProgress) {
+						this.internmentEpisodeProcess = internmentEpisodeProcess
+						if (this.internmentEpisodeProcess.id && this.internmentEpisodeProcess.inProgress) {
 							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
 						}
