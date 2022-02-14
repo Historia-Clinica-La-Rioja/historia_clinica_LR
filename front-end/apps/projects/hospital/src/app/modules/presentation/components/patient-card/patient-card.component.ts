@@ -29,7 +29,6 @@ export class PatientCardComponent {
 	decodedPhoto$: Observable<string>;
 	@Input() bloodType: string;
 	@Input() internmentEpisodeProcess: InternmentEpisodeProcessDto;
-	@Input() internmentEpisodeCoverageInfo: ExternalPatientCoverageDto;
 
 	constructor(private readonly imageDecoderService: ImageDecoderService, private readonly patientNameService: PatientNameService) { }
 

@@ -1,529 +1,529 @@
 {
-	"ambulatoria": {
-		"bus-interoperabilidad": {
-			"TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
-			"PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",
-			"PACIENTE-SIN-DATOS": "Este paciente no posee datos en la institución seleccionada",
-			"INSTITUTION_LOADING_ERROR": "Error al comunicarse con el bus"
-		},
-		"home": {
-			"TITLE": "Historia Clínica",
-			"SUBTITLE": "Complete los campos deseados",
-			"search_limit": {
-				"TITLE": "Se encontraron {{resultsLength}} resultados en la búsqueda",
-				"WARNING": "Si no se encuentra el resultado esperado, por favor refine la búsqueda"
-			}
-		},
-		"historia-clinica-externa": {
-			"TITLE": "Ver historia clínica externa"
-		},
-		"paciente": {
-			"TITLE": "Historia Clínica",
-			"card": {
-				"buttons": {
-					"NUEVA_CONSULTA": "Nueva consulta",
-					"SHOW_PATIENT": "ver paciente"
-				},
-				"GROUP_AND_FACTOR": "Grupo y factor",
-				"SANGUINEOUS": "sanguíneo",
-				"internment": {
-					"COVERAGE_TITLE": "Cobertura del episodio",
-					"AFFILIATE_NUMBER": "Afiliado N°:",
-					"WITHOUT_COVERAGE": "Sin cobertura",
-					"NO_INFO": "Sin información"
-				}
-			},
-			"new-nursing-consultation": {
-				"TITLE": "Nueva consulta de enfermería",
-				"ASSOCIATED_PROBLEM": "Problema asociado",
-				"SPECIALTY": "Especialidad",
-				"messages": {
-					"ERROR": "Error al guardar el documento nueva consulta de enfermería",
-					"SUCCESS": "El documento nueva consulta de enfermería se guardó exitosamente"
-				}
-			},
-			"nueva-consulta": {
-				"TITLE": "Nueva consulta",
-				"SUBTITLE": "Completa los siguientes datos.",
-				"TITLE_MENU": "Consulta",
-				"TENSION_SISTOLICA": "Tensión sistólica",
-				"TENSION_DIASTOLICA": "Tensión diastólica",
-				"TALLA": "Talla",
-				"PESO": "Peso",
-				"MOTIVO": "Motivos de consulta",
-				"PROBLEMA": "Problema de la consulta",
-				"RECOMENDADO": "*Recomendado",
-				"evolucion": {
-					"TITLE": "Evolución",
-					"DESCRIPCION": "Descripción"
-				},
-				"errors": {
-					"MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
-					"FRECUENCIA_CARDIACA_MIN": "La frecuencia cardíaca mínima debe ser 0 (/min)",
-					"FRECUENCIA_RESPIRATORIA_MIN": "La frecuencia respiratoria mínima debe ser 0 (/min)",
-					"TEMPERATURA_CORPORAL_MIN": "La temperatura corporal mínima debe ser 0",
-					"SATURACION_OXIGENO_MIN": "La saturación de oxígeno mínima debe ser 0%",
-					"TENSION_DIASTOLICA_OBLIGATORIO": "Tensión arterial diastólica obligatorio",
-					"TENSION_DIASTOLICA_MIN": "Tensión arterial diastólica mínima debe ser 0 mmHg",
-					"TENSION_SISTOLICA_OBLIGATORIO": "Tensión arterial sistólica obligatorio",
-					"TENSION_SISTOLICA_MIN": "Tensión arterial sistólica mínima debe ser 0 mmHg",
-					"TALLA_OBLIGATORIO": "Talla obligatorio",
-					"TALLA_NOT_INTEGER": "La talla debe ser un valor entero",
-					"TALLA_MIN": "La talla mínima debe ser 0 cm",
-					"TALLA_MAX": "La talla máxima debe ser 1000 cm",
-					"PESO_OBLIGATORIO": "Peso obligatorio",
-					"PESO_MIN": "El peso mínimo debe ser 0 kg",
-					"PESO_MAX": "El peso máximo debe ser 1000 kg",
-					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
-					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
-					"HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
-					"HEAD_CIRCUNFERENCE_NOT_INTEGER": "Perímetro cefálico debe ser un valor entero",
-					"BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
-					"GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
-					"CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",
-					"MAX_TWO_DECIMAL_DIGITS": "Hemoglobina glicosilada debe tener máximo 2 cifras decimales"
-				},
-				"motivo": {
-					"TITLE": "Motivo de consulta",
-					"MOTIVO": "motivo",
-					"ADD": "Agregar motivo",
-					"table": {
-						"TITLE": "Motivos registrados",
-						"columns": {
-							"MOTIVO": "Motivos"
-						}
-					}
-				},
-				"medicaciones": {
-					"CONCEPT_LABEL": "Medicación habitual",
-					"DESCRIPCION": "Descripción",
-					"NOMBRE_MEDICACION": "Nombre de medicación",
-					"OBSERVACIONES": "Observaciones",
-					"SUSPENDIDO": "Suspendido",
-					"TABLE_TITLE": "Medicaciones registradas",
-					"TITLE": "Medicación habitual",
-					"STATE": "Estado",
-					"MEDICATION": "Medicación",
-					"ADD": "Agregar Medicación"
-				},
-				"messages": {
-					"ERROR": "Error al guardar documento de nueva consulta ambulatoria",
-					"SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente",
-					"ERROR_TO_UPLOAD_FILES": "Error al guardar la solicitud de referencia"
-				},
-				"problemas": {
-					"buttons": {
-						"ADD": "Agregar problema",
-						"SAVE": "Guardar cambios"
-					},
-					"CONCEPT_LABEL": "Problema",
-					"SEVERIDAD": "Severidad",
-					"CRONICO": "Crónico",
-					"errors": {
-						"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio",
-						"FECHA_FIN_MAX": "La fecha de fin no puede ser posterior a la fecha actual"
-					},
-					"FECHA_FIN": "Fecha fin",
-					"FECHA_INICIO": "Fecha inicio",
-					"FECHA": "Fecha",
-					"PROBLEMA": "Problema",
-					"TABLE_TITLE": "Problemas registrados",
-					"TITLE": "Problema",
-					"ACLARACION_CRONICO": "(Crónico)",
-					"FECHA_INICIO_PREFIJO": "Desde",
-					"FECHA_FIN_PREFIJO": "Hasta",
-					"DO_NOT_REPORT_PROBLEM": "No reportar"
-				},
-				"procedimientos": {
-					"buttons": {
-						"ADD": "Agregar procedimiento"
-					},
-					"FECHA": "Fecha",
-					"TABLE_TITLE": "Procedimientos registrados",
-					"TITLE": "Procedimiento",
-					"TIPO": "Tipo de procedimiento",
-					"PROCEDIMIENTO": "Procedimiento"
-				},
-				"signos-vitales": {
-					"TITLE": "Factores de Riesgo",
-					"HEART_RATE": "Frecuencia cardíaca (/min)",
-					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
-					"TEMPERATURE": "Temperatura corporal",
-					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
-					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
-					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)",
-					"BLOOD_GLUCOSE": "Glucemia (mg/dl)",
-					"GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada (%)",
-					"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
-				},
-				"antecedentes-familiares": {
-					"buttons": {
-						"ADD": "Agregar antecedente familiar"
-					},
-					"table": {
-						"TITLE": "Antecedentes familiares seleccionados",
-						"columns": {
-							"ANTECEDENTE_FAMILIAR": "Antecedente familiar",
-							"FECHA": "Fecha de registro"
-						}
-					},
-					"TITLE": "Antecedentes familiares",
-					"ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
-					"FECHA": "Fecha de registro"
-				},
-				"antecedentes-personales": {
-					"buttons": {
-						"ADD": "Agregar antecedente personal"
-					},
-					"table": {
-						"TITLE": "Antecedentes registrados",
-						"columns": {
-							"ANTECEDENTE_PERSONAL": "Antecedente",
-							"FECHA": "Fecha de registro"
-						}
-					},
-					"TITLE": "Antecedentes personales",
-					"ANTECEDENTES_PERSONALES": "Antecedentes personales",
-					"TIPO_DE_PROBLEMA": "Tipo de problema",
-					"FECHA": "Fecha de registro"
-				},
-				"datos-antropometricos": {
-					"TITLE": "Datos antropométricos",
-					"BLOOD_TYPE": "Grupo y factor sanguíneo",
-					"HEAD_CIRCUNFERENCE": "Perímetro cefálico (cm)",
-					"HEIGHT": "Talla (cm)",
-					"WEIGHT": "Peso (kg)"
-				},
-				"previous-data": {
-					"ADD": "SI, INCLUIRLOS",
-					"DISCARD": "NO, DESCARTARLOS",
-					"ASK": "¿Desea incluirlos en la consulta?",
-					"CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
-					"CONTENT_VITAL_SIGNS": "Hay factores de riesgo cargados previamente.",
-					"CONTENT": "Hay datos antropométricos y factores de riesgo cargados previamente."
-				},
-				"alergias": {
-					"TITLE": "Alergias",
-					"ADD": "Agregar alergia",
-					"ALLERGY": "Alergia",
-					"CRITICALITY": "Criticidad",
-					"form": {
-						"REGISTRY_DATE": "Fecha registro"
-					},
-					"table": {
-						"TITLE": "Alergias registradas",
-						"columns": {
-							"ALLERGY": "Alergia",
-							"CRITICALITY": "Criticidad",
-							"REGISTRY_DATE": "Fecha registro"
-						}
-					}
-				},
-				"anthropometric_dialog": {
-					"ADD": "SI, INCLUIRLOS",
-					"DISCARD": "NO, DESCARTARLOS",
-					"DESCRIPTION": "Últimos datos antropométricos cargados previamente el {{date}} hs",
-					"QUESTION": "¿Desea incluirlos en la consulta? "
-				},
-				"vital_signs_dialog": {
-					"ADD": "SI, INCLUIRLOS",
-					"DISCARD": "NO, DESCARTARLOS",
-					"DESCRIPTION": "Últimos factores de riesgo cargados previamente el {{date}} hs",
-					"QUESTION": "¿Desea incluirlos en la consulta? "
-				},
-				"solicitud-referencia": {
-					"TITLE": "Solicitud de referencia",
-					"ADD_REQUEST": "+ Agregar solicitud",
-					"REQUESTED_REFERENCE": "Referencias solicitadas",
-					"table": {
-						"columns": {
-							"REFERENCES": "Referencias agregadas"
-						},
-						"row": {
-							"PROBLEMS": "Problema asociado:",
-							"CARE_LINE": "Línea de cuidado:",
-							"SPECIALTY": "Especialidad:"
-						}
-					}
-				},
-				"reference-dialog": {
-					"TITLE": "Agregar solicitud de referencia",
-					"PLACEHOLDER_ASSOCIATED_PROBLEM": "Problema asociado",
-					"ADD_ASSOCIATED_PROBLEM": "+ Agregar otro problema asociado",
-					"PLACEHOLDER_CARE_LINE": "Línea de cuidado",
-					"REFERENCE_TYPE": "Tipo de referencia",
-					"CONSULTATION_OPTION": "Consulta",
-					"PROCEDURE_OPTION": "Procedimiento",
-					"PLACEHOLDER_SPECIALITY": "Especialidad",
-					"PLACEHOLDER_INSTITUTION": "Institución",
-					"PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
-					"UPLOAD_FILES": "Adjuntar archivos",
-					"ADD_REFERENCE": "AGREGAR SOLICITUD"
-				}
-			},
-			"reference-notification": {
-				"TITLE": "Hay al menos una solicitud de referencia en relación a la línea de cuidado a la que usted pertenece: ",
-				"REFERENCE_REQUEST": "REFERENCIA SOLICITADA",
-				"OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
-				"DESCRIPTION": "Si no desea responder a la referencia y realizar una consulta independiente seleccione “Consulta clásica”.",
-				"NEW_CONSULTATION": "CONSULTA CLÁSICA",
-				"COUNTERREFERENCE": "CONTRARREFERENCIA"
-			},
-			"counterreference": {
-				"TITLE": "Responder referencia",
-				"COUNTERREFERENCE": "Contrarreferencia",
-				"PLACEHOLDER_DESCRIPTION": "Descripción",
-				"CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
-				"messages": {
-					"ERROR": "Error al guardar documento de contrarreferencia",
-					"SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
-				}
-			},
-			"problemas": {
-				"TAB_LABEL": "Problemas",
-				"TITLE": "Problemas y evoluciones",
-				"ACTIVOS": "Problemas activos",
-				"CRONICOS": "Problemas crónicos",
-				"RESUELTOS": "Problemas resueltos",
-				"INTERNACION": "Problemas de internación",
-				"END": "Resolver",
-				"TITLE_POPUP_RESOLVER_PROBLEMA": "Resolver problema",
-				"CONFIRM_RESOLVER_PROBLEMA": "Resolver",
-				"CONFIRMACION_POPUP": "¿Está seguro de resolver el problema sin generar una nueva consulta ambulatoria?",
-				"BOTON_CONFIRMAR_POPUP": "Confirmar",
-				"SUCCESS_CONFIRMAR_POPUP": "El problema ha sido resuelto exitosamente",
-				"ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema",
-				"ACCEDER": "Acceder episodio",
-				"table-columns": {
-					"TYPE": "Problema",
-					"SEVERITY": "Severidad",
-					"START_DATE": "Desde",
-					"END_DATE": "Hasta"
-				},
-				"HISTORICAL_TITLE": "Histórico de evoluciones",
-				"HISTORICAL_HSI_TAB_LABEL": "Histórico HSI",
-				"HISTORICAL_EXTERNAL_TAB_LABEL": "Histórico Externo",
-				"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
-				"RESULTS": "resultados",
-				"historical-problems": {
-					"REASONS": "Motivos",
-					"PROCEDURES": "Procedimientos",
-					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Profesional",
-					"EVOLUTION_NOTE": "Descripción/Resumen",
-					"CONSULTATION_DATE": "Fecha de consulta",
-					"REFERENCE_REQUEST": "referencia solicitada",
-					"CARE_LINE": "Línea de cuidado:",
-					"SPECIALTY": "Especialidad:",
-					"SUMMARY_REFERENCE": "Resumen de referencia",
-					"COUNTERREFERENCE": "Contrarreferencia",
-					"PROCEDURE": "Procedimientos:"
-				},
-				"historical-problems-filters": {
-					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Profesional",
-					"PROBLEM": "Problema",
-					"CONSULTATION_DATE": "Fecha de consulta",
-					"REFERENCE_STATE": "Estado de referencia"
-				},
-				"external-clinical-history": {
-					"SPECIALTY": "Especialidad",
-					"NOTES": "Descripción/Resumen",
-					"CONSULTATION_DATE": "Fecha de consulta",
-					"INSTITUTION": "Institución",
-					"NO_PROFESSIONAL_DATA": "No hay información del profesional"
-				},
-				"external-clinical-histories-filters": {
-					"SEARCH_BY_KEYWORD": "Buscar por palabra clave",
-					"SPECIALTY": "Especialidad",
-					"PROFESSIONAL": "Profesional",
-					"INSTITUTION": "Institución",
-					"CONSULTATION_DATE": "Fecha de consulta"
-				},
-				"nueva_opened_confirm_dialog": {
-					"TITLE": "Consulta desde problema",
-					"CONTENT": "Ya existe una nueva consulta abierta, de continuar se perderán los datos cargados",
-					"OK_BUTTON": "Continuar",
-					"CANCEL_BUTTON": "Cancelar"
-				},
-				"epidemiological_report": {
-					"PROBLEM_DESCRIPTION": "El problema <b>{{ problemName }}</b> es reportable a nivel epidemiológico.",
-					"CASE_CLASSIFICATION": "Clasificación del caso",
-					"MIN_ONE_REQUIRED_ERROR": "Se debe seleccionar alguna clasificación manual",
-					"buttons": {
-						"CONFIRM_REPORT": "REPORTAR CASO",
-						"CANCEL_REPORT": "OMITIR"
-					}
-				},
-				"snvs-reports-result": {
-					"ERROR_FAIL_TO_REPORT": "Fallo al reportar el/los problema/s",
-					"REPORTING": "Reportando casos al S.N.V.S.",
-					"SNVS": "(Sistema Nacional de Vigilancia de la Salud - Argentina)",
-					"SUCCESSFULLY_REPORTED": "El caso <b>{{ problemName }}</b> fue reportado con éxito",
-					"CASE_COULD_NOT_BE_REPORTED": "El caso <b>{{ problemName }}</b> no pudo ser reportado",
-					"ID": "ID",
-					"FAILED_REPORT_ERROR": "Fallo al reportar el problema"
-				},
-				"PENDING_REFERENCE": "Referencia pendiente"
-			},
-			"ordenes_prescripciones": {
-				"TAB_LABEL": "Órdenes y prescripciones",
-				"TITLE": "Órdenes y prescripciones",
-				"MEDICACION": "Medicación",
-				"RECOMENDACIONES": "Recomendaciones generales",
-				"ESTUDIOS": "Estudios",
-				"SIN_RECETA": "Sin receta",
-				"DESDE_HOY": "Desde hoy",
-				"UN_DIA": "Hace 1 día",
-				"APLICACION_DIARIA": "Una aplicación por día",
-				"USO_CRONICO": "Uso crónico",
-				"add_prescription_item_dialog": {
-					"MEDICATION": "Medicación",
-					"MEDICATION_TITLE": "Agregar medicación",
-					"STUDY": "Estudio",
-					"STUDY_TITLE": "Agregar estudio",
-					"ASSOCIATED_PROBLEM": "Problema asociado",
-					"STUDY_CATEGORY": "Categoría del estudio",
-					"INTERVAL": "Intervalo",
-					"INTERVAL_DEFAULT_OPTION": "Diario",
-					"ADMINISTRATION_TIME": "Tiempo de administración",
-					"ADMINISTRATION_TIME_DEFAULT_OPTION": "Habitual",
-					"OBSERVATIONS": "Observaciones",
-					"INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas válidas",
-					"ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días"
-				},
-				"new_prescription_dialog": {
-					"MEDICATION_TITLE": "Nueva medicación",
-					"ADD_MEDICATION_LABEL": "Agregar medicación",
-					"STUDY_TITLE": "Nueva orden",
-					"ADD_STUDY_LABEL": "Agregar estudio",
-					"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
-					"WITHOUT_RECIPE": "Sin receta",
-					"UPDATE_COVERAGE": "Actualizar cobertura"
-				},
-				"confirm_prescription_dialog": {
-					"MEDICATION_TITLE": "Su medicación fue agregada correctamente",
-					"STUDY_TITLE": "Su orden fue realizada correctamente",
-					"DOWNLOAD_BUTTON_MEDICATION": "Descargar receta",
-					"DOWNLOAD_BUTTON_STUDY": "Descargar orden"
-				},
-				"suspend_medication_dialog": {
-					"INPUT_OBSERVATIONS": "Observaciones",
-					"INPUT_DAY_QUANTITY": "Cantidad de días",
-					"INPUT_DAY_QUANTITY_HINT": "Número de días para la suspensión de medicación",
-					"INPUT_DAY_QUANTITY_REQUIRED": "Cantidad de días de suspensión obligatorio",
-					"SUSPEND_BUTTON": "Suspender",
-					"SUSPEND_TITLE": "Suspender medicación"
-				},
-				"complete_study_dialog": {
-					"TITLE": "Completar estudio",
-					"COMPLETE_BUTTON": "Completar",
-					"OBSERVATIONS_LABEL": "Observaciones",
-					"OBSERVATIONS_PLACEHOLDER": "Descripción de los resultados",
-					"UPLOAD_FILES": "Adjuntar archivos"
-				},
-				"show_study_results_dialog": {
-					"TITLE": "Resultados"
-				},
-				"toast_messages": {
-					"POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
-					"POST_MEDICATION_ERROR": "Error al agregar medicación",
-					"POST_STUDY_SUCCESS": "Orden creada correctamente",
-					"POST_STUDY_ERROR": "Error al crear órden",
-					"POST_UPDATE_COVERAGE_SUCCESS": "Las coberturas fueron actualizadas correctamente",
-					"POST_UPDATE_COVERAGE_ERROR": "Ocurrió un error al actualizar las coberturas",
-					"MEDICATION_CHANGE_SUCCESS": "La medicación cambió de estado correctamente",
-					"MEDICATION_CHANGE_ERROR": "La medicación no puede cambiarse a este estado",
-					"DOWNLOAD_RECIPE_SUCCESS": "La receta se descargó correctamente",
-					"DOWNLOAD_ORDER_SUCCESS": "La orden se descargó correctamente",
-					"DELETE_STUDY_SUCCESS": "El estudio se borró correctamente",
-					"DELETE_STUDY_ERROR": "Error al borrar estudio",
-					"COMPLETE_STUDY_SUCCESS": "Estudio completado correctamente",
-					"COMPLETE_STUDY_ERROR": "Error al completar estudio"
-				},
-				"menu_items": {
-					"DOWNLOAD": "Descargar receta",
-					"DOWNLOAD_STUDY": "Descargar orden",
-					"RE_PRESCRIBE": "Volver a recetar",
-					"SUSPEND": "Suspender",
-					"FINALIZE": "Finalizar",
-					"COMPLETE": "Completar",
-					"DELETE": "Eliminar",
-					"REACTIVATE": "Reactivar",
-					"SHOW_RESULTS": "Ver resultados"
-				},
-				"filter": {
-					"STATE": "Estado",
-					"MEDICATION": "Medicamento",
-					"PROBLEM": "Problema asociado",
-					"STUDY": "Estudio",
-					"CATEGORY": "Categoría",
-					"BUTTON_FILTER": "Aplicar filtro"
-				}
-			},
-			"profile": {
-				"BUTTON_HISTORIA_CLINICA": "ver historia clínica",
-				"WARNING_INTERNADO": "El paciente se encuentra internado en otra institución."
-			},
-			"resumen": {
-				"TAB_LABEL": "Resumen",
-				"TITLE": "Resumen de historia clínica"
-			},
-			"vacunas": {
-				"TAB_LABEL": "Vacunas",
-				"TITLE": "Historial de vacunación",
-				"ADD": "Agregar vacunas",
-				"DETAILS": "Ver detalle",
-				"NO-INFO": "No hay información para mostrar",
-				"VACCINE": "Vacuna",
-				"DOSE": "Dosis",
-				"DATE": "Fecha",
-				"details": {
-					"DOSE": "Dosis",
-					"DATE": "Fecha",
-					"LOT_NUMBER": "Lote",
-					"INSTITUTION": "Institución",
-					"PROFESSIONAL": "Profesional",
-					"CONDITION_MOTIVE": "Condición o motivo",
-					"SCHEME": "Esquema",
-					"NO-INFO": "Sin información",
-					"NO-OBS": "Sin observaciones"
-				},
-				"agregar_vacunas": {
-					"TITLE": "Agregar vacunas",
-					"SPECIALTY": "Especialidad",
-					"ADD": "Agregar vacuna",
-					"NEW_VACCINE_TITLE": "Aplicación de vacuna",
-					"PREVIOUS_VACCINE_TITLE": "Registro de vacuna previa",
-					"SUCCESS": "Vacunas agregadas exitosamente",
-					"ERROR": "Error al guardar las vacunas agregadas",
-					"agregar_vacuna": {
-						"TITLE": "Agregar vacuna",
-						"NEW_VACCINE_TAB": "Aplicar vacuna",
-						"PREVIOUS_VACCINE_TAB": "Registrar vacuna previa",
-						"ADMINISTRATION_DATE": "Fecha de vacunación",
-						"NOTE": "Observaciones",
-						"IMMUNIZATION": "Vacuna",
-						"CONDITION": "Condición o motivo",
-						"SCHEME": "Esquema",
-						"DOSE": "Dosis",
-						"LOT": "Lote",
-						"INSTITUTION": "Institución",
-						"PROFESSIONAL": "Profesional",
-						"NOT_VACCINE_SELECTED_ERROR": "Debe seleccionar una vacuna",
-						"NOT_SCHEME_SELECTED_ERROR": "Si selecciona una condición, debe elegir un esquema",
-						"NOT_DOSE_SELECTED_ERROR": "Si selecciona un esquema, debe elegir una dosis",
-						"NULL_OPTION_MESSAGE": "Seleccione una opción",
-						"COLUMN_VACCINE_HEADER": "Descripción SNOMED"
-					}
-				}
-			}
-		},
-		"screen_change_warning_dialog": {
-			"CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
-			"ANSWER_CONTENT": "¿Desea continuar de todos modos?",
-			"CONFIRM_BUTTON": "Si, descartar y continuar",
-			"CANCEL_BUTTON": "No, regresar y completar"
-		}
-	}
+    "ambulatoria": {
+        "bus-interoperabilidad": {
+            "TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
+            "PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",
+            "PACIENTE-SIN-DATOS": "Este paciente no posee datos en la institución seleccionada",
+            "INSTITUTION_LOADING_ERROR": "Error al comunicarse con el bus"
+        },
+        "home": {
+            "TITLE": "Historia Clínica",
+            "SUBTITLE": "Complete los campos deseados",
+            "search_limit": {
+                "TITLE": "Se encontraron {{resultsLength}} resultados en la búsqueda",
+                "WARNING": "Si no se encuentra el resultado esperado, por favor refine la búsqueda"
+            }
+        },
+        "historia-clinica-externa": {
+            "TITLE": "Ver historia clínica externa"
+        },
+        "paciente": {
+            "TITLE": "Historia Clínica",
+            "card": {
+                "buttons": {
+                    "NUEVA_CONSULTA": "Nueva consulta",
+                    "SHOW_PATIENT": "ver paciente"
+                },
+                "GROUP_AND_FACTOR": "Grupo y factor",
+                "SANGUINEOUS": "sanguíneo",
+                "internment": {
+                    "COVERAGE_TITLE": "Cobertura del episodio",
+                    "AFFILIATE_NUMBER": "Afiliado N°:",
+                    "WITHOUT_COVERAGE": "Sin cobertura",
+                    "NO_INFO": "Sin información"
+                }
+            },
+            "new-nursing-consultation": {
+                "TITLE": "Nueva consulta de enfermería",
+                "ASSOCIATED_PROBLEM": "Problema asociado",
+                "SPECIALTY": "Especialidad",
+                "messages": {
+                    "ERROR": "Error al guardar el documento nueva consulta de enfermería",
+                    "SUCCESS": "El documento nueva consulta de enfermería se guardó exitosamente"
+                }
+            },
+            "nueva-consulta": {
+                "TITLE": "Nueva consulta",
+                "SUBTITLE": "Completa los siguientes datos.",
+                "TITLE_MENU": "Consulta",
+                "TENSION_SISTOLICA": "Tensión sistólica",
+                "TENSION_DIASTOLICA": "Tensión diastólica",
+                "TALLA": "Talla",
+                "PESO": "Peso",
+                "MOTIVO": "Motivos de consulta",
+                "PROBLEMA": "Problema de la consulta",
+                "RECOMENDADO": "*Recomendado",
+                "evolucion": {
+                    "TITLE": "Evolución",
+                    "DESCRIPCION": "Descripción"
+                },
+                "errors": {
+                    "MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
+                    "FRECUENCIA_CARDIACA_MIN": "La frecuencia cardíaca mínima debe ser 0 (/min)",
+                    "FRECUENCIA_RESPIRATORIA_MIN": "La frecuencia respiratoria mínima debe ser 0 (/min)",
+                    "TEMPERATURA_CORPORAL_MIN": "La temperatura corporal mínima debe ser 0",
+                    "SATURACION_OXIGENO_MIN": "La saturación de oxígeno mínima debe ser 0%",
+                    "TENSION_DIASTOLICA_OBLIGATORIO": "Tensión arterial diastólica obligatorio",
+                    "TENSION_DIASTOLICA_MIN": "Tensión arterial diastólica mínima debe ser 0 mmHg",
+                    "TENSION_SISTOLICA_OBLIGATORIO": "Tensión arterial sistólica obligatorio",
+                    "TENSION_SISTOLICA_MIN": "Tensión arterial sistólica mínima debe ser 0 mmHg",
+                    "TALLA_OBLIGATORIO": "Talla obligatorio",
+                    "TALLA_NOT_INTEGER": "La talla debe ser un valor entero",
+                    "TALLA_MIN": "La talla mínima debe ser 0 cm",
+                    "TALLA_MAX": "La talla máxima debe ser 1000 cm",
+                    "PESO_OBLIGATORIO": "Peso obligatorio",
+                    "PESO_MIN": "El peso mínimo debe ser 0 kg",
+                    "PESO_MAX": "El peso máximo debe ser 1000 kg",
+                    "PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
+                    "MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
+                    "HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
+                    "HEAD_CIRCUNFERENCE_NOT_INTEGER": "Perímetro cefálico debe ser un valor entero",
+                    "BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
+                    "GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
+                    "CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",
+                    "MAX_TWO_DECIMAL_DIGITS": "Hemoglobina glicosilada debe tener máximo 2 cifras decimales"
+                },
+                "motivo": {
+                    "TITLE": "Motivo de consulta",
+                    "MOTIVO": "motivo",
+                    "ADD": "Agregar motivo",
+                    "table": {
+                        "TITLE": "Motivos registrados",
+                        "columns": {
+                            "MOTIVO": "Motivos"
+                        }
+                    }
+                },
+                "medicaciones": {
+                    "CONCEPT_LABEL": "Medicación habitual",
+                    "DESCRIPCION": "Descripción",
+                    "NOMBRE_MEDICACION": "Nombre de medicación",
+                    "OBSERVACIONES": "Observaciones",
+                    "SUSPENDIDO": "Suspendido",
+                    "TABLE_TITLE": "Medicaciones registradas",
+                    "TITLE": "Medicación habitual",
+                    "STATE": "Estado",
+                    "MEDICATION": "Medicación",
+                    "ADD": "Agregar Medicación"
+                },
+                "messages": {
+                    "ERROR": "Error al guardar documento de nueva consulta ambulatoria",
+                    "SUCCESS": "El documento de consulta ambulatoria se guardó exitosamente",
+                    "ERROR_TO_UPLOAD_FILES": "Error al guardar la solicitud de referencia"
+                },
+                "problemas": {
+                    "buttons": {
+                        "ADD": "Agregar problema",
+                        "SAVE": "Guardar cambios"
+                    },
+                    "CONCEPT_LABEL": "Problema",
+                    "SEVERIDAD": "Severidad",
+                    "CRONICO": "Crónico",
+                    "errors": {
+                        "FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio",
+                        "FECHA_FIN_MAX": "La fecha de fin no puede ser posterior a la fecha actual"
+                    },
+                    "FECHA_FIN": "Fecha fin",
+                    "FECHA_INICIO": "Fecha inicio",
+                    "FECHA": "Fecha",
+                    "PROBLEMA": "Problema",
+                    "TABLE_TITLE": "Problemas registrados",
+                    "TITLE": "Problema",
+                    "ACLARACION_CRONICO": "(Crónico)",
+                    "FECHA_INICIO_PREFIJO": "Desde",
+                    "FECHA_FIN_PREFIJO": "Hasta",
+                    "DO_NOT_REPORT_PROBLEM": "No reportar"
+                },
+                "procedimientos": {
+                    "buttons": {
+                        "ADD": "Agregar procedimiento"
+                    },
+                    "FECHA": "Fecha",
+                    "TABLE_TITLE": "Procedimientos registrados",
+                    "TITLE": "Procedimiento",
+                    "TIPO": "Tipo de procedimiento",
+                    "PROCEDIMIENTO": "Procedimiento"
+                },
+                "signos-vitales": {
+                    "TITLE": "Factores de Riesgo",
+                    "HEART_RATE": "Frecuencia cardíaca (/min)",
+                    "RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
+                    "TEMPERATURE": "Temperatura corporal",
+                    "BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
+                    "SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
+                    "DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)",
+                    "BLOOD_GLUCOSE": "Glucemia (mg/dl)",
+                    "GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada (%)",
+                    "CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
+                },
+                "antecedentes-familiares": {
+                    "buttons": {
+                        "ADD": "Agregar antecedente familiar"
+                    },
+                    "table": {
+                        "TITLE": "Antecedentes familiares seleccionados",
+                        "columns": {
+                            "ANTECEDENTE_FAMILIAR": "Antecedente familiar",
+                            "FECHA": "Fecha de registro"
+                        }
+                    },
+                    "TITLE": "Antecedentes familiares",
+                    "ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
+                    "FECHA": "Fecha de registro"
+                },
+                "antecedentes-personales": {
+                    "buttons": {
+                        "ADD": "Agregar antecedente personal"
+                    },
+                    "table": {
+                        "TITLE": "Antecedentes registrados",
+                        "columns": {
+                            "ANTECEDENTE_PERSONAL": "Antecedente",
+                            "FECHA": "Fecha de registro"
+                        }
+                    },
+                    "TITLE": "Antecedentes personales",
+                    "ANTECEDENTES_PERSONALES": "Antecedentes personales",
+                    "TIPO_DE_PROBLEMA": "Tipo de problema",
+                    "FECHA": "Fecha de registro"
+                },
+                "datos-antropometricos": {
+                    "TITLE": "Datos antropométricos",
+                    "BLOOD_TYPE": "Grupo y factor sanguíneo",
+                    "HEAD_CIRCUNFERENCE": "Perímetro cefálico (cm)",
+                    "HEIGHT": "Talla (cm)",
+                    "WEIGHT": "Peso (kg)"
+                },
+                "previous-data": {
+                    "ADD": "SI, INCLUIRLOS",
+                    "DISCARD": "NO, DESCARTARLOS",
+                    "ASK": "¿Desea incluirlos en la consulta?",
+                    "CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
+                    "CONTENT_VITAL_SIGNS": "Hay factores de riesgo cargados previamente.",
+                    "CONTENT": "Hay datos antropométricos y factores de riesgo cargados previamente."
+                },
+                "alergias": {
+                    "TITLE": "Alergias",
+                    "ADD": "Agregar alergia",
+                    "ALLERGY": "Alergia",
+                    "CRITICALITY": "Criticidad",
+                    "form": {
+                        "REGISTRY_DATE": "Fecha registro"
+                    },
+                    "table": {
+                        "TITLE": "Alergias registradas",
+                        "columns": {
+                            "ALLERGY": "Alergia",
+                            "CRITICALITY": "Criticidad",
+                            "REGISTRY_DATE": "Fecha registro"
+                        }
+                    }
+                },
+                "anthropometric_dialog": {
+                    "ADD": "SI, INCLUIRLOS",
+                    "DISCARD": "NO, DESCARTARLOS",
+                    "DESCRIPTION": "Últimos datos antropométricos cargados previamente el {{date}} hs",
+                    "QUESTION": "¿Desea incluirlos en la consulta? "
+                },
+                "vital_signs_dialog": {
+                    "ADD": "SI, INCLUIRLOS",
+                    "DISCARD": "NO, DESCARTARLOS",
+                    "DESCRIPTION": "Últimos factores de riesgo cargados previamente el {{date}} hs",
+                    "QUESTION": "¿Desea incluirlos en la consulta? "
+                },
+                "solicitud-referencia": {
+                    "TITLE": "Solicitud de referencia",
+                    "ADD_REQUEST": "+ Agregar solicitud",
+                    "REQUESTED_REFERENCE": "Referencias solicitadas",
+                    "table": {
+                        "columns": {
+                            "REFERENCES": "Referencias agregadas"
+                        },
+                        "row": {
+                            "PROBLEMS": "Problema asociado:",
+                            "CARE_LINE": "Línea de cuidado:",
+                            "SPECIALTY": "Especialidad:"
+                        }
+                    }
+                },
+                "reference-dialog": {
+                    "TITLE": "Agregar solicitud de referencia",
+                    "PLACEHOLDER_ASSOCIATED_PROBLEM": "Problema asociado",
+                    "ADD_ASSOCIATED_PROBLEM": "+ Agregar otro problema asociado",
+                    "PLACEHOLDER_CARE_LINE": "Línea de cuidado",
+                    "REFERENCE_TYPE": "Tipo de referencia",
+                    "CONSULTATION_OPTION": "Consulta",
+                    "PROCEDURE_OPTION": "Procedimiento",
+                    "PLACEHOLDER_SPECIALITY": "Especialidad",
+                    "PLACEHOLDER_INSTITUTION": "Institución",
+                    "PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
+                    "UPLOAD_FILES": "Adjuntar archivos",
+                    "ADD_REFERENCE": "AGREGAR SOLICITUD"
+                }
+            },
+            "reference-notification": {
+                "TITLE": "Hay al menos una solicitud de referencia en relación a la línea de cuidado a la que usted pertenece: ",
+                "REFERENCE_REQUEST": "REFERENCIA SOLICITADA",
+                "OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
+                "DESCRIPTION": "Si no desea responder a la referencia y realizar una consulta independiente seleccione “Consulta clásica”.",
+                "NEW_CONSULTATION": "CONSULTA CLÁSICA",
+                "COUNTERREFERENCE": "CONTRARREFERENCIA"
+            },
+            "counterreference": {
+                "TITLE": "Responder referencia",
+                "COUNTERREFERENCE": "Contrarreferencia",
+                "PLACEHOLDER_DESCRIPTION": "Descripción",
+                "CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
+                "messages": {
+                    "ERROR": "Error al guardar documento de contrarreferencia",
+                    "SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
+                }
+            },
+            "problemas": {
+                "TAB_LABEL": "Problemas",
+                "TITLE": "Problemas y evoluciones",
+                "ACTIVOS": "Problemas activos",
+                "CRONICOS": "Problemas crónicos",
+                "RESUELTOS": "Problemas resueltos",
+                "INTERNACION": "Problemas de internación",
+                "END": "Resolver",
+                "TITLE_POPUP_RESOLVER_PROBLEMA": "Resolver problema",
+                "CONFIRM_RESOLVER_PROBLEMA": "Resolver",
+                "CONFIRMACION_POPUP": "¿Está seguro de resolver el problema sin generar una nueva consulta ambulatoria?",
+                "BOTON_CONFIRMAR_POPUP": "Confirmar",
+                "SUCCESS_CONFIRMAR_POPUP": "El problema ha sido resuelto exitosamente",
+                "ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema",
+                "ACCEDER": "Acceder episodio",
+                "table-columns": {
+                    "TYPE": "Problema",
+                    "SEVERITY": "Severidad",
+                    "START_DATE": "Desde",
+                    "END_DATE": "Hasta"
+                },
+                "HISTORICAL_TITLE": "Histórico de evoluciones",
+                "HISTORICAL_HSI_TAB_LABEL": "Histórico HSI",
+                "HISTORICAL_EXTERNAL_TAB_LABEL": "Histórico Externo",
+                "NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
+                "RESULTS": "resultados",
+                "historical-problems": {
+                    "REASONS": "Motivos",
+                    "PROCEDURES": "Procedimientos",
+                    "SPECIALTY": "Especialidad",
+                    "PROFESSIONAL": "Profesional",
+                    "EVOLUTION_NOTE": "Descripción/Resumen",
+                    "CONSULTATION_DATE": "Fecha de consulta",
+                    "REFERENCE_REQUEST": "referencia solicitada",
+                    "CARE_LINE": "Línea de cuidado:",
+                    "SPECIALTY": "Especialidad:",
+                    "SUMMARY_REFERENCE": "Resumen de referencia",
+                    "COUNTERREFERENCE": "Contrarreferencia",
+                    "PROCEDURE": "Procedimientos:"
+                },
+                "historical-problems-filters": {
+                    "SPECIALTY": "Especialidad",
+                    "PROFESSIONAL": "Profesional",
+                    "PROBLEM": "Problema",
+                    "CONSULTATION_DATE": "Fecha de consulta",
+                    "REFERENCE_STATE": "Estado de referencia"
+                },
+                "external-clinical-history": {
+                    "SPECIALTY": "Especialidad",
+                    "NOTES": "Descripción/Resumen",
+                    "CONSULTATION_DATE": "Fecha de consulta",
+                    "INSTITUTION": "Institución",
+                    "NO_PROFESSIONAL_DATA": "No hay información del profesional"
+                },
+                "external-clinical-histories-filters": {
+                    "SEARCH_BY_KEYWORD": "Buscar por palabra clave",
+                    "SPECIALTY": "Especialidad",
+                    "PROFESSIONAL": "Profesional",
+                    "INSTITUTION": "Institución",
+                    "CONSULTATION_DATE": "Fecha de consulta"
+                },
+                "nueva_opened_confirm_dialog": {
+                    "TITLE": "Consulta desde problema",
+                    "CONTENT": "Ya existe una nueva consulta abierta, de continuar se perderán los datos cargados",
+                    "OK_BUTTON": "Continuar",
+                    "CANCEL_BUTTON": "Cancelar"
+                },
+                "epidemiological_report": {
+                    "PROBLEM_DESCRIPTION": "El problema <b>{{ problemName }}</b> es reportable a nivel epidemiológico.",
+                    "CASE_CLASSIFICATION": "Clasificación del caso",
+                    "MIN_ONE_REQUIRED_ERROR": "Se debe seleccionar alguna clasificación manual",
+                    "buttons": {
+                        "CONFIRM_REPORT": "REPORTAR CASO",
+                        "CANCEL_REPORT": "OMITIR"
+                    }
+                },
+                "snvs-reports-result": {
+                    "ERROR_FAIL_TO_REPORT": "Fallo al reportar el/los problema/s",
+                    "REPORTING": "Reportando casos al S.N.V.S.",
+                    "SNVS": "(Sistema Nacional de Vigilancia de la Salud - Argentina)",
+                    "SUCCESSFULLY_REPORTED": "El caso <b>{{ problemName }}</b> fue reportado con éxito",
+                    "CASE_COULD_NOT_BE_REPORTED": "El caso <b>{{ problemName }}</b> no pudo ser reportado",
+                    "ID": "ID",
+                    "FAILED_REPORT_ERROR": "Fallo al reportar el problema"
+                },
+                "PENDING_REFERENCE": "Referencia pendiente"
+            },
+            "ordenes_prescripciones": {
+                "TAB_LABEL": "Órdenes y prescripciones",
+                "TITLE": "Órdenes y prescripciones",
+                "MEDICACION": "Medicación",
+                "RECOMENDACIONES": "Recomendaciones generales",
+                "ESTUDIOS": "Estudios",
+                "SIN_RECETA": "Sin receta",
+                "DESDE_HOY": "Desde hoy",
+                "UN_DIA": "Hace 1 día",
+                "APLICACION_DIARIA": "Una aplicación por día",
+                "USO_CRONICO": "Uso crónico",
+                "add_prescription_item_dialog": {
+                    "MEDICATION": "Medicación",
+                    "MEDICATION_TITLE": "Agregar medicación",
+                    "STUDY": "Estudio",
+                    "STUDY_TITLE": "Agregar estudio",
+                    "ASSOCIATED_PROBLEM": "Problema asociado",
+                    "STUDY_CATEGORY": "Categoría del estudio",
+                    "INTERVAL": "Intervalo",
+                    "INTERVAL_DEFAULT_OPTION": "Diario",
+                    "ADMINISTRATION_TIME": "Tiempo de administración",
+                    "ADMINISTRATION_TIME_DEFAULT_OPTION": "Habitual",
+                    "OBSERVATIONS": "Observaciones",
+                    "INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas válidas",
+                    "ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días"
+                },
+                "new_prescription_dialog": {
+                    "MEDICATION_TITLE": "Nueva medicación",
+                    "ADD_MEDICATION_LABEL": "Agregar medicación",
+                    "STUDY_TITLE": "Nueva orden",
+                    "ADD_STUDY_LABEL": "Agregar estudio",
+                    "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
+                    "WITHOUT_RECIPE": "Sin receta",
+                    "UPDATE_COVERAGE": "Actualizar cobertura"
+                },
+                "confirm_prescription_dialog": {
+                    "MEDICATION_TITLE": "Su medicación fue agregada correctamente",
+                    "STUDY_TITLE": "Su orden fue realizada correctamente",
+                    "DOWNLOAD_BUTTON_MEDICATION": "Descargar receta",
+                    "DOWNLOAD_BUTTON_STUDY": "Descargar orden"
+                },
+                "suspend_medication_dialog": {
+                    "INPUT_OBSERVATIONS": "Observaciones",
+                    "INPUT_DAY_QUANTITY": "Cantidad de días",
+                    "INPUT_DAY_QUANTITY_HINT": "Número de días para la suspensión de medicación",
+                    "INPUT_DAY_QUANTITY_REQUIRED": "Cantidad de días de suspensión obligatorio",
+                    "SUSPEND_BUTTON": "Suspender",
+                    "SUSPEND_TITLE": "Suspender medicación"
+                },
+                "complete_study_dialog": {
+                    "TITLE": "Completar estudio",
+                    "COMPLETE_BUTTON": "Completar",
+                    "OBSERVATIONS_LABEL": "Observaciones",
+                    "OBSERVATIONS_PLACEHOLDER": "Descripción de los resultados",
+                    "UPLOAD_FILES": "Adjuntar archivos"
+                },
+                "show_study_results_dialog": {
+                    "TITLE": "Resultados"
+                },
+                "toast_messages": {
+                    "POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
+                    "POST_MEDICATION_ERROR": "Error al agregar medicación",
+                    "POST_STUDY_SUCCESS": "Orden creada correctamente",
+                    "POST_STUDY_ERROR": "Error al crear órden",
+                    "POST_UPDATE_COVERAGE_SUCCESS": "Las coberturas fueron actualizadas correctamente",
+                    "POST_UPDATE_COVERAGE_ERROR": "Ocurrió un error al actualizar las coberturas",
+                    "MEDICATION_CHANGE_SUCCESS": "La medicación cambió de estado correctamente",
+                    "MEDICATION_CHANGE_ERROR": "La medicación no puede cambiarse a este estado",
+                    "DOWNLOAD_RECIPE_SUCCESS": "La receta se descargó correctamente",
+                    "DOWNLOAD_ORDER_SUCCESS": "La orden se descargó correctamente",
+                    "DELETE_STUDY_SUCCESS": "El estudio se borró correctamente",
+                    "DELETE_STUDY_ERROR": "Error al borrar estudio",
+                    "COMPLETE_STUDY_SUCCESS": "Estudio completado correctamente",
+                    "COMPLETE_STUDY_ERROR": "Error al completar estudio"
+                },
+                "menu_items": {
+                    "DOWNLOAD": "Descargar receta",
+                    "DOWNLOAD_STUDY": "Descargar orden",
+                    "RE_PRESCRIBE": "Volver a recetar",
+                    "SUSPEND": "Suspender",
+                    "FINALIZE": "Finalizar",
+                    "COMPLETE": "Completar",
+                    "DELETE": "Eliminar",
+                    "REACTIVATE": "Reactivar",
+                    "SHOW_RESULTS": "Ver resultados"
+                },
+                "filter": {
+                    "STATE": "Estado",
+                    "MEDICATION": "Medicamento",
+                    "PROBLEM": "Problema asociado",
+                    "STUDY": "Estudio",
+                    "CATEGORY": "Categoría",
+                    "BUTTON_FILTER": "Aplicar filtro"
+                }
+            },
+            "profile": {
+                "BUTTON_HISTORIA_CLINICA": "ver historia clínica",
+                "WARNING_INTERNADO": "El paciente se encuentra internado en otra institución."
+            },
+            "resumen": {
+                "TAB_LABEL": "Resumen",
+                "TITLE": "Resumen de historia clínica"
+            },
+            "vacunas": {
+                "TAB_LABEL": "Vacunas",
+                "TITLE": "Historial de vacunación",
+                "ADD": "Agregar vacunas",
+                "DETAILS": "Ver detalle",
+                "NO-INFO": "No hay información para mostrar",
+                "VACCINE": "Vacuna",
+                "DOSE": "Dosis",
+                "DATE": "Fecha",
+                "details": {
+                    "DOSE": "Dosis",
+                    "DATE": "Fecha",
+                    "LOT_NUMBER": "Lote",
+                    "INSTITUTION": "Institución",
+                    "PROFESSIONAL": "Profesional",
+                    "CONDITION_MOTIVE": "Condición o motivo",
+                    "SCHEME": "Esquema",
+                    "NO-INFO": "Sin información",
+                    "NO-OBS": "Sin observaciones"
+                },
+                "agregar_vacunas": {
+                    "TITLE": "Agregar vacunas",
+                    "SPECIALTY": "Especialidad",
+                    "ADD": "Agregar vacuna",
+                    "NEW_VACCINE_TITLE": "Aplicación de vacuna",
+                    "PREVIOUS_VACCINE_TITLE": "Registro de vacuna previa",
+                    "SUCCESS": "Vacunas agregadas exitosamente",
+                    "ERROR": "Error al guardar las vacunas agregadas",
+                    "agregar_vacuna": {
+                        "TITLE": "Agregar vacuna",
+                        "NEW_VACCINE_TAB": "Aplicar vacuna",
+                        "PREVIOUS_VACCINE_TAB": "Registrar vacuna previa",
+                        "ADMINISTRATION_DATE": "Fecha de vacunación",
+                        "NOTE": "Observaciones",
+                        "IMMUNIZATION": "Vacuna",
+                        "CONDITION": "Condición o motivo",
+                        "SCHEME": "Esquema",
+                        "DOSE": "Dosis",
+                        "LOT": "Lote",
+                        "INSTITUTION": "Institución",
+                        "PROFESSIONAL": "Profesional",
+                        "NOT_VACCINE_SELECTED_ERROR": "Debe seleccionar una vacuna",
+                        "NOT_SCHEME_SELECTED_ERROR": "Si selecciona una condición, debe elegir un esquema",
+                        "NOT_DOSE_SELECTED_ERROR": "Si selecciona un esquema, debe elegir una dosis",
+                        "NULL_OPTION_MESSAGE": "Seleccione una opción",
+                        "COLUMN_VACCINE_HEADER": "Descripción SNOMED"
+                    }
+                }
+            }
+        },
+        "screen_change_warning_dialog": {
+            "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
+            "ANSWER_CONTENT": "¿Desea continuar de todos modos?",
+            "CONFIRM_BUTTON": "Si, descartar y continuar",
+            "CANCEL_BUTTON": "No, regresar y completar"
+        }
+    }
 }

@@ -6,8 +6,50 @@
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]="personInformation"
 						  [personPhoto]="personPhoto" [showAdditionalInformation]="true" [bloodType]="bloodType"
-						  [internmentEpisodeProcess]="internmentEpisodeProcess" [internmentEpisodeCoverageInfo]="internmentEpisodeCoverageInfo">
-			<div horizontal-content fxLayout="column" fxLayoutGap="10px">
+						  [internmentEpisodeProcess]="internmentEpisodeProcess">
+			<div info-content fxLayout="row">
+					<div *ngIf="bloodType?.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3px" id="blood-type-container">
+							<span class="center-align">{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}</span>
+							<span class="center-align">{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}</span>
+							<h1 class="color-primary bold" id="blood-type">{{ bloodType }}</h1>
+					</div>
+					<div *ngIf="internmentEpisodeProcess?.inProgress" id="coverage-container">
+						<div fxLayout="row">
+							<div fxLayout="column">
+								<mat-icon class="color-primary" fontSet="material-icons-outlined">health_and_safety</mat-icon>
+							</div>
+							<div fxLayout="column">
+								<div fxLayout="row" id="coverage-title">
+									<span class="color-primary bold">{{ 'ambulatoria.paciente.card.internment.COVERAGE_TITLE' | translate }}</span>
+								</div>
+								<ng-container *ngIf="internmentEpisodeCoverageInfo">
+									<div fxLayout="row">
+										<span class="bold"> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}</span>
+									</div>
+									<div fxLayout="row">
+										<span> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.plan }}</span>
+									</div>
+									<div fxLayout="row">
+										<span> {{ 'ambulatoria.paciente.card.internment.AFFILIATE_NUMBER' | translate }}
+											<ng-container *ngIf="!internmentEpisodeCoverageInfo?.affiliateNumber">
+												<span class="no-information">{{ 'ambulatoria.paciente.card.internment.NO_INFO' | translate }}</span>
+											</ng-container>
+											<ng-container *ngIf="internmentEpisodeCoverageInfo?.affiliateNumber">
+												<span>{{ internmentEpisodeCoverageInfo?.affiliateNumber }}</span>
+											</ng-container>
+										</span>
+									</div>
+								</ng-container>
+								<ng-container *ngIf="!internmentEpisodeCoverageInfo">
+									<div fxLayout="row" class="no-information">
+										<span>{{ 'ambulatoria.paciente.card.internment.WITHOUT_COVERAGE' | translate }}</span>
+									</div>
+								</ng-container>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div buttons-content>
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
 					<ng-container
 						*ngIf="CurrentUserIsAllowedToMakeBothQueries; else currentUserIsNotAllowedToMakeBothQueries">

@@ -1,0 +1,31 @@
+.bold {
+	font-weight: bold;
+}
+
+.no-information {
+	color: #a8a8a8;
+}
+
+
+#blood-type {
+	font-size: 28px;
+	margin: 0;
+}
+
+#blood-type-container {
+	border-left: 1px solid #BDBDBD;
+	border-right: 1px solid #BDBDBD;
+	height: 100%;
+}
+
+.center-align {
+	text-align: center;
+}
+#blood-type-container, #coverage-container {
+	padding: 10px;
+}
+
+#coverage-title{
+	margin-top: 2px;
+	margin-bottom: 2px;
+}

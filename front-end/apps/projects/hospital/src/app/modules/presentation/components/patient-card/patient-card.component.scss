@@ -22,6 +22,21 @@ mat-card-header {
 		width: 100px;
 		height: 100px;
 	}
+
+	.label-episodes {
+		margin-top: 10px;
+		border-radius: 6px;
+		padding: 4px 15px;
+		font-weight: 700;
+		font-size: 14px;
+		line-height: 19px;
+		width: 130px;
+		text-align: center;
+	}
+	.label-internment-episode {
+		background-color: #ffcece;
+		color: #EB5757;
+	}
 }
 
 .card-style-1{
@@ -62,34 +77,3 @@ mat-card-subtitle {
 	}
 }
 
-#blood-type {
-	font-size: 28px;
-	margin: 0;
-}
-
-#blood-type-container {
-	border-left: 1px solid #BDBDBD;
-	border-right: 1px solid #BDBDBD;
-	height: 100%;
-}
-
-#blood-type-container, #coverage-container {
-	padding: 0 10px;
-}
-
-#coverage-title{
-	margin-top: 2px;
-	margin-bottom: 2px;
-}
-
-.center-align {
-	text-align: center;
-}
-
-.bold {
-	font-weight: bold;
-}
-
-.no-information {
-	color: #a8a8a8;
-}

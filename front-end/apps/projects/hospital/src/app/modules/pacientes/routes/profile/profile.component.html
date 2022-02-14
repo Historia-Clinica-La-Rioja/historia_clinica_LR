@@ -14,7 +14,8 @@
 	<div>
 		<div fxFlex="50">
 			<div class="profile-card">
-				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto">
+				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
+								  [internmentEpisodeProcess]="internmentEpisode">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 						<ng-container>
