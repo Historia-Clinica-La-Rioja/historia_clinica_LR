@@ -31,7 +31,8 @@
                     "AFFILIATE_NUMBER": "Afiliado N°:",
                     "WITHOUT_COVERAGE": "Sin cobertura",
                     "NO_INFO": "Sin información"
-                }
+                },
+                "INTERNMENT_EPISODE_ACTIVE": "En internación"
             },
             "new-nursing-consultation": {
                 "TITLE": "Nueva consulta de enfermería",
