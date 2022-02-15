@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.cubejs.infrastructure.configuration;
+package ar.lamansys.sgx.cubejs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

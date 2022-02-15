@@ -5,13 +5,14 @@ import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.DashboardRol
 import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorage;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Primary
+@Order(1)
 public class UserPermissionStorageImpl implements UserPermissionStorage {
 
 	private final SharedPermissionPort permissionPort;

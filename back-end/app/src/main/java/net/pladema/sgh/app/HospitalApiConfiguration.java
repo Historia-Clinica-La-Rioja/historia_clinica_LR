@@ -6,18 +6,14 @@ import ar.lamansys.mqtt.EnableMqttCall;
 import ar.lamansys.refcounterref.EnableReferenceCounterReference;
 import ar.lamansys.sgh.publicapi.EnableHospitalPublicApi;
 import ar.lamansys.nursing.EnableNursing;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPermissionPort;
 import ar.lamansys.sgx.auth.EnableAuth;
-import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorage;
 import ar.lamansys.sgx.shared.EnableSharedLibrary;
 import ar.lamansys.odontology.EnableOdontology;
-import ar.lamansys.sgx.cubejs.infrastructure.configuration.EnableCubeJs;
+import ar.lamansys.sgx.cubejs.EnableCubeJs;
 import net.pladema.EnableHospitalLib;
-import net.pladema.sgh.app.dashboards.configuration.UserPermissionStorageImpl;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -40,9 +36,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = {"net.pladema.sgh.app"})
 public class HospitalApiConfiguration {
 
-
-	@Bean
-	public UserPermissionStorage userPermissionStorageImpl(SharedPermissionPort sharedPermissionPort) {
-		return new UserPermissionStorageImpl(sharedPermissionPort);
-	}
 }

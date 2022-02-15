@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.cubejs.application.dashboardinfo.DashboardInfoService;
-import ar.lamansys.sgx.cubejs.infrastructure.configuration.CubejsAutoConfiguration;
+import ar.lamansys.sgx.cubejs.CubejsAutoConfiguration;
 import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
 

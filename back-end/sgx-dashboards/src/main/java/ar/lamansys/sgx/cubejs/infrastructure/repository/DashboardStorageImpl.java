@@ -1,7 +1,7 @@
 package ar.lamansys.sgx.cubejs.infrastructure.repository;
 
 import ar.lamansys.sgx.cubejs.domain.DashboardStorage;
-import ar.lamansys.sgx.cubejs.infrastructure.configuration.CubejsAutoConfiguration;
+import ar.lamansys.sgx.cubejs.CubejsAutoConfiguration;
 import ar.lamansys.sgx.cubejs.domain.DashboardBoInfo;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorage;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;

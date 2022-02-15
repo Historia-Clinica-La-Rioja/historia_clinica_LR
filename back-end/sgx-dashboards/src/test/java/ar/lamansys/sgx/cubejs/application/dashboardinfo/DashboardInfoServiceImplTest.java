@@ -1,7 +1,7 @@
 package ar.lamansys.sgx.cubejs.application.dashboardinfo;
 
 import ar.lamansys.sgx.cubejs.application.dashboardinfo.excepciones.DashboardInfoException;
-import ar.lamansys.sgx.cubejs.infrastructure.configuration.CubejsAutoConfiguration;
+import ar.lamansys.sgx.cubejs.CubejsAutoConfiguration;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorageEmptyImpl;
@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
-import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

@@ -1,4 +1,3 @@
-
 cube(`Referencias`, {
   sql: `SELECT 
   r.id,
@@ -25,7 +24,14 @@ JOIN healthcare_professional hp ON (oc.doctor_id = hp.id)
 JOIN person p ON (hp.person_id = p.id)
 join patient pat on (pat.id=oc.patient_id)
 join person p2 on (p2.id=pat.person_id)
-LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)`,
+LEFT JOIN counter_reference cr ON (r.id = cr.reference_id) 
+${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
+WHERE oc.institution_id IN (
+SELECT ur.institution_id 
+FROM users as u 
+JOIN user_role ur on u.id = ur.user_id 
+WHERE ur.role_id = 5 
+AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})` : ''}`,
   
   measures: {
     cant_referencia: {
