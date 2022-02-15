@@ -11,3 +11,4 @@ ENV CUBEJS_API_SECRET=a36e649cedd441107c7531ec2da8415e592f19e9f93c250f001e9c40a6
 ENV CUBEJS_JWT_ALGS=HS512
 
 COPY schema/ /cube/conf/schema/
+COPY cube.js /cube/conf/
