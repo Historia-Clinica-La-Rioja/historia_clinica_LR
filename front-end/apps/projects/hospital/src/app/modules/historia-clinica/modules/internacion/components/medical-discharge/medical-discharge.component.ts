@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CompletePatientDto, PersonalInformationDto, PatientMedicalCoverageDto, PersonPhotoDto, DateTimeDto } from '@api-rest/api-model';
-import { Validators, FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -137,6 +137,9 @@ export class MedicalDischargeComponent implements OnInit {
 		if (this.dischargeForm.valid) {
 			const request = this.dischargeForm.value;
 			const newDatetime = new Date(this.dischargeForm.value.date);
+			newDatetime.setHours(this.dischargeForm.value.time.split(":")[0]);
+			newDatetime.setMinutes(this.dischargeForm.value.time.split(":")[1]);
+			newDatetime.setSeconds(0);
 			request.medicalDischargeDate = newDatetime.toISOString();
 			this.route.paramMap.subscribe(
 				(params) => {

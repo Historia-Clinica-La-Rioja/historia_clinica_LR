@@ -174,6 +174,9 @@ export class PatientDischargeComponent implements OnInit {
 		if (this.dischargeForm.valid) {
 			const request = this.dischargeForm.getRawValue();
 			const newDatetime = new Date(this.dischargeForm.value.date);
+			newDatetime.setHours(this.dischargeForm.value.time.split(":")[0]);
+			newDatetime.setMinutes(this.dischargeForm.value.time.split(":")[1]);
+			newDatetime.setSeconds(0);
 			request.administrativeDischargeDate = newDatetime.toISOString();
 			this.intermentEpisodeService.dischargeInternmentEpisode(request, this.internmentId)
 				.subscribe(response => {
@@ -185,5 +188,6 @@ export class PatientDischargeComponent implements OnInit {
 
 	back(): void {
 		this.formSubmited = false;
-		this.router.navigate([`${this.routePrefix}${ROUTE_PROFILE}${this.patientId}`]);	}
+		this.router.navigate([`${this.routePrefix}${ROUTE_PROFILE}${this.patientId}`]);
+	}
 }
