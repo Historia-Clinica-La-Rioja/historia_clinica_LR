@@ -1,6 +1,12 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.input.shared;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationAllergyState;
+
+import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 
 import org.springframework.stereotype.Service;
 
@@ -20,6 +26,10 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 
 	private final InternmentEpisodeService internmentEpisodeService;
 
+	private final FetchHospitalizationAllergyState fetchHospitalizationAllergyState;
+
+	private final InternmentPatientService internmentPatientService;
+
 	@Override
 	public Optional<ExternalPatientCoverageDto> getActiveEpisodeMedicalCoverage(Integer internmentEpisodeId) {
 		log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
@@ -27,6 +37,24 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 		log.debug("Output -> {}", result);
 		return result;
 	}
+
+	@Override
+	public List<Integer> getInternmentEpisodeAllergies(Integer internmentEpisodeId) {
+		log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		List<Integer> result = fetchHospitalizationAllergyState.run(internmentEpisodeId)
+				.stream().map(a -> a.getId()).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<Integer> getInternmenEpisodeId(Integer patientId){
+		log.debug("Input parameters -> patientId {}", patientId);
+		Optional<Integer> result = internmentPatientService.getInternmentEpisodeInProcessAnyInstitution(patientId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 
 	private ExternalPatientCoverageDto mapToExternalPatientCoverageDto(PatientMedicalCoverageBo bo) {
 		MedicalCoverageBo medicalCoverage = bo.getMedicalCoverage();

@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEMedicationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEToothRecordService;
 import ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory.FetchSummaryClinicHistory;
 import ar.lamansys.sgh.clinichistory.application.getactiveepisodemedicalcoverage.GetActiveEpisodeMedicalCoverage;
+import ar.lamansys.sgh.clinichistory.application.getcriticalallergies.GetCriticalAllergies;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
@@ -91,6 +92,8 @@ public class HCEGeneralStateController {
 
 	private final GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage;
 
+	private final GetCriticalAllergies getCriticalAllergies;
+
     public HCEGeneralStateController(HCEHealthConditionsService hceHealthConditionsService,
                                      HCEClinicalObservationService hceClinicalObservationService,
                                      HCEGeneralStateMapper hceGeneralStateMapper,
@@ -102,7 +105,8 @@ public class HCEGeneralStateController {
                                      SharedImmunizationPort sharedImmunizationPort,
                                      SharedInstitutionPort sharedInstitutionPort,
                                      SharedStaffPort sharedStaffPort, FetchSummaryClinicHistory fetchSummaryClinicHistory,
-									 GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage) {
+									 GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage,
+									 GetCriticalAllergies getCriticalAllergies) {
         this.hceHealthConditionsService = hceHealthConditionsService;
         this.hceClinicalObservationService = hceClinicalObservationService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
@@ -116,7 +120,8 @@ public class HCEGeneralStateController {
         this.sharedStaffPort = sharedStaffPort;
         this.fetchSummaryClinicHistory = fetchSummaryClinicHistory;
 		this.getActiveEpisodeMedicalCoverage = getActiveEpisodeMedicalCoverage;
-    }
+    	this.getCriticalAllergies = getCriticalAllergies;
+	}
 
     @GetMapping("/personalHistories")
     public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories(
@@ -231,6 +236,16 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@GetMapping("/critical-allergies")
+	public ResponseEntity<List<HCEAllergyDto>> getCriticalAllergies(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug(LOGGING_INPUT, institutionId, patientId);
+		List<HCEAllergyDto> result = hceGeneralStateMapper.toListHCEAllergyDto(getCriticalAllergies.run(patientId));
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
     @GetMapping("/chronic")
     public ResponseEntity<List<HCEPersonalHistoryDto>> getChronicConditions(

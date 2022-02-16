@@ -7,4 +7,6 @@ import java.util.List;
 public interface HCEAllergyIntoleranceRepository {
 
     List<HCEAllergyVo> findAllergies(Integer patientId);
+
+	HCEAllergyVo findHCEAllergy(Integer allergyId);
 }
