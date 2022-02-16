@@ -76,6 +76,7 @@ public class FhirClientR4 {
         nomivacClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         federadorClient = context.newRestfulGenericClient(federador + CodingSystem.SERVER.PATIENT_SERVICE);
+        federadorClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
     }
 
      public MethodOutcome postImmunizationToNomivac(Immunization immunization) {

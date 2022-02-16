@@ -30,21 +30,15 @@ public class ClientAuthInterceptor extends BearerTokenAuthInterceptor {
 
     @Override
     public void interceptRequest(IHttpRequest theRequest) {
-        String token = null;
-        if(Arrays.asList(ArrayUtils
-                .addAll(environment.getActiveProfiles(), environment.getDefaultProfiles()))
-                .contains("prod")) {
-            try {
-                FederarLoginResponse body = authenticationService.callLogin().getBody();
-                if(body != null)
-                    token = body.getToken();
-            }
-            catch(NullPointerException | RestClientException e){
-                e.printStackTrace();
-            }
+        String token = "jwt";
+        try {
+            FederarLoginResponse body = authenticationService.callLogin().getBody();
+            if(body != null)
+                token = body.getToken();
         }
-        else
-            token = "jwt";
+        catch(NullPointerException | RestClientException e){
+            e.printStackTrace();
+        }
         theRequest.addHeader("Authorization", "Bearer " + token);
     }
 }
