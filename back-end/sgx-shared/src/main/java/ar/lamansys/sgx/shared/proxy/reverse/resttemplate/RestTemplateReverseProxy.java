@@ -16,7 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class RestTemplateReverseProxy implements ReverseProxy {
 	private final RestTemplate restTemplate;
 	private final String baseUrl;
-	private final Map<String, String> defaultHeaders;
+	private final HttpHeaders defaultHeaders;
 
 	public RestTemplateReverseProxy(
 			String baseUrl,
@@ -25,7 +25,7 @@ public class RestTemplateReverseProxy implements ReverseProxy {
 		this.restTemplate = new RestTemplateSSL();
 		this.restTemplate.setErrorHandler(new ReverseProxyResponseErrorHandler());
 		this.baseUrl = baseUrl;
-		this.defaultHeaders = defaultHeaders;
+		this.defaultHeaders = buildHeaders(defaultHeaders);
 	}
 
 
@@ -38,7 +38,7 @@ public class RestTemplateReverseProxy implements ReverseProxy {
 		parameterMap
 				.forEach(uriBuilder::queryParam);
 
-		HttpEntity<String> entity = new HttpEntity<>(buildHeaders(this.defaultHeaders));
+		HttpEntity<String> entity = new HttpEntity<>(defaultHeaders);
 
 		return restTemplate.exchange(
 				uriBuilder.build().toUri(),
@@ -46,6 +46,17 @@ public class RestTemplateReverseProxy implements ReverseProxy {
 				entity,
 				String.class
 		);
+	}
+
+	public void addHeaders(Map<String, String> headersValues) {
+		headersValues.forEach(defaultHeaders::add);
+	}
+
+	@Override
+	public void updateHeader(String key, String value) {
+		if (defaultHeaders.containsKey(key))
+			defaultHeaders.set(key, value);
+		else addHeaders(Map.of(key, value));
 	}
 
 	private static HttpHeaders buildHeaders(Map<String, String> headersValues) {

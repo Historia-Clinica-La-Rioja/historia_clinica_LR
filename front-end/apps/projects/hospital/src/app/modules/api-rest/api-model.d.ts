@@ -522,6 +522,12 @@ export interface CreationableDto extends Serializable {
     createdOn: Date;
 }
 
+export interface DashboardRoleInfoDto {
+    id: number;
+    institution: number;
+    value: string;
+}
+
 export interface DateDto {
     day: number;
     month: number;

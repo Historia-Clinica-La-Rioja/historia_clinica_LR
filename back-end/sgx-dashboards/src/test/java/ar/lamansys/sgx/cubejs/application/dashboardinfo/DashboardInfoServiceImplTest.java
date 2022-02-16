@@ -4,6 +4,7 @@ import ar.lamansys.sgx.cubejs.application.dashboardinfo.excepciones.DashboardInf
 import ar.lamansys.sgx.cubejs.infrastructure.configuration.CubejsAutoConfiguration;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
+import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorageEmptyImpl;
 import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +48,9 @@ class DashboardInfoServiceImplTest {
         when(reverseProxy.getAsString(any(), any())).thenReturn(ResponseEntity.of(Optional.empty()));
         when(cubejsAutoConfiguration.getApiUrl()).thenReturn("http://localhost:4000/cubejs-api");
         when(cubejsAutoConfiguration.getHeaders()).thenReturn(new HashMap<>());
-        dashboardInfoService = new DashboardInfoServiceImpl(new DashboardStorageImpl(cubejsAutoConfiguration));
+        dashboardInfoService = new DashboardInfoServiceImpl(
+				new DashboardStorageImpl(cubejsAutoConfiguration, new UserPermissionStorageEmptyImpl(),
+						"SECRET", "AUTHORIZATION", Duration.ofDays(2)));
         Map<String, String[]> parameterMap = new HashMap<>();
         parameterMap.put("PRUEBA",new String[]{"Prueba2"});
         var result = dashboardInfoService.execute("TEST",parameterMap);

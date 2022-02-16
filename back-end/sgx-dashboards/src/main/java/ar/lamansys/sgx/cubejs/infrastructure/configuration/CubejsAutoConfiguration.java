@@ -1,9 +1,13 @@
 package ar.lamansys.sgx.cubejs.infrastructure.configuration;
 
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorage;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,6 +36,7 @@ import net.pladema.hsi.extensions.configuration.plugins.InstitutionMenuExtension
 @PropertySource(value = "classpath:dashboards.properties", ignoreResourceNotFound = true)
 public class CubejsAutoConfiguration {
     private String apiUrl;
+
     private Map<String, String> headers = new HashMap<>();
 
     public boolean isEnabled() {
@@ -39,12 +44,15 @@ public class CubejsAutoConfiguration {
     }
 
     @Bean
-    public DashboardStorage dashboardStorageImpl() throws Exception {
+    public DashboardStorage dashboardStorageImpl(UserPermissionStorage userPermissionStorage,
+								@Value("${app.gateway.cubejs.token.secret}") String secret,
+								@Value("${app.gateway.cubejs.token.header:Authorization}") String cubeTokenHeader,
+								@Value("${app.gateway.cubejs.token.expiration:20d}") Duration tokenExpiration) throws Exception {
         if (!isEnabled()) {
             log.warn("Cubejs dashboards are disabled");
             return new DashboardStorageUnavailableImpl();
         }
-        return new DashboardStorageImpl(this);
+        return new DashboardStorageImpl(this, userPermissionStorage, secret, cubeTokenHeader, tokenExpiration);
     }
 
     @Bean
