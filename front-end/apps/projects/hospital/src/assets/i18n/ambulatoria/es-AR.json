@@ -33,7 +33,9 @@
                     "NO_INFO": "Sin información"
                 },
                 "INTERNMENT_EPISODE_ACTIVE": "En internación",
-                "EMERGENCY_CARE_EPISODE_ACTIVE": "En guardia"
+                "EMERGENCY_CARE_EPISODE_ACTIVE": "En guardia",
+				"NO_CRITICAL_ALLERGIES": "Sin alergias críticas registradas",
+                "MORE_CRITICAL_ALLERGIES": "+ {{allergies}} alergias críticas"
             },
             "new-nursing-consultation": {
                 "TITLE": "Nueva consulta de enfermería",

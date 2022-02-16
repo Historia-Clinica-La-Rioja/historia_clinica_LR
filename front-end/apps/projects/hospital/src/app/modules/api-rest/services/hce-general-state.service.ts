@@ -33,6 +33,11 @@ export class HceGeneralStateService {
 		return this.http.get<HCEAllergyDto[]>(url);
 	}
 
+	getCriticalAllergies(patientId: number): Observable<HCEAllergyDto[]> {
+		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/critical-allergies`;
+		return this.http.get<HCEAllergyDto[]>(url);
+	}
+
 	getFamilyHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
 		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/familyHistories`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);

@@ -1,31 +1,52 @@
 .bold {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .no-information {
-	color: #a8a8a8;
+    color: #a8a8a8;
 }
 
 
 #blood-type {
-	font-size: 28px;
-	margin: 0;
+    font-size: 28px;
+    margin: 0;
 }
 
 #blood-type-container {
-	border-left: 1px solid #BDBDBD;
-	border-right: 1px solid #BDBDBD;
-	height: 100%;
+    border-left: 1px solid #BDBDBD;
+    height: 100%;
 }
 
 .center-align {
-	text-align: center;
+    text-align: center;
 }
-#blood-type-container, #coverage-container {
-	padding: 10px;
+#blood-type-container, #coverage-container, #allergy-container {
+    padding: 10px;
 }
 
 #coverage-title{
-	margin-top: 2px;
-	margin-bottom: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+#allergy-container{
+    border-left: 1px solid #BDBDBD;
+    border-right: 1px solid #BDBDBD;
+}
+
+.color-disabled {
+    color: rgba(0, 0, 0, 0.38);
+}
+
+.allergies-button:hover{
+    text-decoration: underline;
+}
+
+.allergies-button{
+    padding-left: 0;
+}
+
+.allergy-icon{
+    font-size: 16px;
+    padding-top: 2px;
 }

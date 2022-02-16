@@ -40,7 +40,7 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
-
+import { HCEAllergyDto } from '@api-rest/api-model';
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -56,6 +56,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	patient: PatientBasicData;
 	patientId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
+	criticalAllergies: HCEAllergyDto[];
+	limitAllergies = 2;
 	public personInformation: AdditionalInfo[];
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;
@@ -110,6 +112,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					}
 				);
 				this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
+				this.updateCriticalAllergies();
 				this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 				this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
@@ -212,6 +215,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
+				this.updateCriticalAllergies();
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -230,6 +234,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
+				this.updateCriticalAllergies();
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -293,5 +298,13 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 	setStateConsultationOdontology(isOpenOdontologyConsultation: boolean): void {
 		this.isOpenOdontologyConsultation = isOpenOdontologyConsultation;
+	}
+
+	updateCriticalAllergies(): void{
+		this.hceGeneralStateService.getCriticalAllergies(this.patientId)
+			.subscribe(allergies => this.criticalAllergies = allergies);
+	}
+
+	openAllergies() {
 	}
 }
