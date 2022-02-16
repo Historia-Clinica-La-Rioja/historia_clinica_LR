@@ -275,7 +275,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 	goToPatient() {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}/${HomeRoutes.Profile}`;
-		if (this.dialogRef || this.isOpenOdontologyConsultation) {
+
+		if (this.dialogRef || this.isOpenOdontologyConsultation ||  this.odontogramService.existActionedTeeth()) {
 			const dialog = this.dialog.open(DiscardWarningComponent,
 				{
 					data: {
