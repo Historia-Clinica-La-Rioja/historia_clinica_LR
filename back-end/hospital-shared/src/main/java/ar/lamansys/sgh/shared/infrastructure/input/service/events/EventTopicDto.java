@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum EventTopicDto {
 
+	CONSULTA_ODONTOLOGICA_CREADA(3,"odontologia/nuevaConsulta");
 
 	private Integer id;
 	private String description;
