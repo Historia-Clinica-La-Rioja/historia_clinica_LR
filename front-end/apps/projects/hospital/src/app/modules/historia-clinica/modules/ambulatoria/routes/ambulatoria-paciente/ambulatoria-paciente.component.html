@@ -51,23 +51,25 @@
 					</div>
 			</div>
 			<div buttons-content>
-				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
-					<ng-container
-						*ngIf="CurrentUserIsAllowedToMakeBothQueries; else currentUserIsNotAllowedToMakeBothQueries">
-						<button id="nueva_consulta" mat-flat-button color="primary" mat-button
-							[matMenuTriggerFor]="menu">
-							{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}</button>
-						<mat-menu #menu="matMenu">
-							<button mat-menu-item
-								(click)="referenceNotificationService.hasReferenceNotification()">Ambulatoria</button>
-							<button mat-menu-item (click)="openNuevaConsultaEnfermeria()">Enfermeria</button>
-						</mat-menu>
+				<div fxLayout="row" fxLayout.gt-xs="column" fxLayoutGap="10px">
+					<ng-container *ngIf="hasNewConsultationEnabled$ | async">
+						<ng-container
+							*ngIf="CurrentUserIsAllowedToMakeBothQueries; else currentUserIsNotAllowedToMakeBothQueries">
+							<button id="nueva_consulta" mat-flat-button color="primary" mat-button
+								[matMenuTriggerFor]="menu">
+								{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}</button>
+							<mat-menu #menu="matMenu">
+								<button mat-menu-item
+									(click)="referenceNotificationService.hasReferenceNotification()">Ambulatoria</button>
+								<button mat-menu-item (click)="openNuevaConsultaEnfermeria()">Enfermeria</button>
+							</mat-menu>
+						</ng-container>
+						<div fxLayout="end" fxLayoutAlign="end">
+							<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>{{
+								'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
+						</div>
 					</ng-container>
-					<div fxLayout="end" fxLayoutAlign="end">
-						<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>{{
-							'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
-					</div>
-				</ng-container>
+				</div>
 			</div>
 		</app-patient-card>
 
