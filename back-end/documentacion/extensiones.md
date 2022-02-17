@@ -1,10 +1,10 @@
 ### ![logo](../../front-end/apps/projects/hospital/src/assets/custom/icons/icon-72x72.png) Módulo de extensiones | Componentes
- 
+
 
 
 # Introducción a extensiones
 
-Una Jurisdicción que cuente con un equipo de desarrollo propio puede decidir implementar sus propias funcionalidades usando las extensiones disponibles en el sistema.
+Extensiones tiene como objetivo plantear un mecanismo claro y sencillo para permitir agregar cualquier tipo de funcionalidad en la solución sin la necesidad de mantener un fork.
 
 Esta alternativa tiene la ventaja de permitir actualizar la versión del sistema central sin requerir una revisión manual del código, buildear y publicar un contenedor modificado.
 
@@ -13,54 +13,38 @@ La desventaja es que los puntos de extensión permitidos son definidos previamen
 
 ## Implementación
 
-Para cumplir con el propósito mencionado se creó un módulo bajo la carpeta de back-end llamado `extensiones`.
+Para cumplir con el propósito mencionado se creó un módulo bajo la carpeta de back-end llamado `extensiones` que expone los endpoints con el prefijo "extensions".
 
 Actualmente SGH brinda tres puntos de extensión de la aplicación:
 
-* Extender el menú en la página principal del sistema.
-* Extender el menú una vez dentro de una institución.
-* Extender los tabs de la historia clínica de un paciente.  
+* `/extensions/menu` Opciones a agregar en el menú principal del sistema.
+* `/extensions/page/{menuId}` Página a mostrar en la opción de menú del sistema seleccionada.
+* `/extensions/institution/{institutionId}/menu` Opciones a agregar en el menú de una institución.
+* `/extensions/institution/{institutionId}/page/{menuId}` Página a mostrar en la opción de menú seleccionada en una institución.
+* `/extensions/patient/{patientId}/menu` Pestañas a agregar en la historia clínica de un paciente.
+* `/extensions/patient/{patientId}/page/{menuId}` Contenido a mostrar en en el tab de paciente.
 
-Cada uno de estos puntos de extensión debe contener en un archivo `menu.json` el listado de elementos que desea añadir. Cada uno de los ítems que se agreguen a la lista deben ser del tipo `UIMenuItemDto`.
+La clave del módulo de extensiones es que se puede configurar para que redirija los pedidos a estos endpoints a un sistema externo que debe ser capaz de implementar todos estos endpoints.
 
-```typescript
-export interface UIMenuItemDto {
-    icon: string; // ==> Icono a agregar
-    id: string; // ==> nombre del archivo .json en donde se encuentran los componentes a visualizar
-    label: UILabelDto; // ==> Texto informativo que puede ser el valor o bien una key para traducción
-}
-```
-Como se anticipó en la definición del dto, se debe contar con otro archivo de extensión `.json` bajo el módulo `page` que contenga la lista de componentes que se desea agregar. Los mismos estarán definidos por el `UIComponentDto` 
+Cada endpoint de menu retorna una lista de [UIMenuItemDto](../../back-end/extensions/src/main/java/net/pladema/hsi/extensions/infrastructure/controller/dto/UIMenuItemDto.java) y cada endpoint de página asociada al menú un [UIPageDto](../../back-end/extensions/src/main/java/net/pladema/hsi/extensions/infrastructure/controller/dto/UIPageDto.java).
 
-```typescript
-export interface UIComponentDto {
-    type: string; // ==> Tipo de componente que se desea agregar
-    args: { [index: string]: any }; // ==> Lista de argumentos para el tipo de componente deseado
-}
-```
+La lista completa de DTOs de este módulo se puede observar en [extensions-model.d.ts](../../front-end/apps/projects/hospital/src/app/modules/extensions/extensions-model.d.ts).
 
-## Definición de componentes
-Los componentes que serán brindados para el uso de las jurisdicciones estan definidos en el front-end de la aplicación y los mismos se encuentran en [ui-component.component.html][2] 
+A continuación se detallan los componentes que se pueden utilizar para definir una página asociada a un menú.
 
 ## Componentes
 
-A continuación se listan una serie de componentes diseñados por el equipo de desarrollo con el fin de ser utilizados por cada uno de las jurisdicciones:
+Los componentes que serán brindados para el uso de las jurisdicciones estan definidos en el front-end de la aplicación y los mismos se encuentran en [ui-component.component.html](../../front-end/apps/projects/hospital/src/app/modules/extensions/components/ui-component/ui-component.component.html).
 
-* Typography: Permite añadir un texto añadiendo los [estilos provistos por material][1] ( No debe agregarse el prefijo `mat`)
-* Link: Permite agregar un botón con un título
-* Html: Permite insertar una porcion de codigo html
-* Code: Permite insertar texto con formato de código
+El catálogo completo de componentes, su parametrización y su apariencia visual, se puede apreciar en la opción del menú "Componentes" al activar el "Módo de demostración" del módulo de extenciones.
 
-Cuando un componente que se desea agregar no coincide con ninguno de los mencionados anteriormente, obtendremos un texto que informa que el mismo es indefinido. 
+Cuando un componente que se desea agregar no coincide con ninguno de los mencionados anteriormente, obtendremos un texto que informa que el mismo es indefinido.
 
-## Módulo Demo
+## Módo de demostración
 
-El propósito del mismo es mostrar ejemplos de cómo una jurisdicción puede agregar sus funcionalidades. Este se encuentra  bajo el módulo de `extensiones` mencionado anteriormente.
+El propósito del mismo es agregar opciones de menú y solapas en la historia clínica del paciente para mostrar ejemplos de cómo se puede agregar funcionalidades.
 
-Para conocer cómo es posible agregar componentes, se agrego un item al menu de la pagina principal de la aplicación en donde se cuenta con el código json de cada uno de los componentes proveídos por el sistema junto a su código `json` para que el mismo pueda ser copiado y pegado en el lugar deseado. 
-
- [1]: https://material.angular.io/guide/typography#using-typography-styles-in-your-application
- [2]: https://git.pladema.net/minsalud/sgh-os/-/blob/67b497d838947e7cccfa41bda1f9fa6279fa4bbf/front-end/apps/projects/hospital/src/app/modules/presentation/components/ui-component/ui-component.component.html
+Este módo utiliza los archivos estáticos que se encuentran como "ClassPathResource" dentro de [module/demo](../../back-end/extensions/src/main/resources/module/demo).
 
 # Extensiones Locales
 
@@ -70,7 +54,7 @@ Para agregar un menú en la página principal del sistema se debe crear un `@Bea
 
 > Nota: cada módulo puede tener estos recursos dentro de su carpeta 'resources', como [sgx-dashboards](../sgx-dashboards/src/main/resources/extension/tableros/).
 
-Esto crea una dependencia de este módulo con `extensions`, en el [pom.xml](../sgx-dashboards/pom.xml#L24). 
+Esto crea una dependencia de este módulo con `extensions`, en el [pom.xml](../sgx-dashboards/pom.xml#L24).
 
 ``` xml
  <dependency>
