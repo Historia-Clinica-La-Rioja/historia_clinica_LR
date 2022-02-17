@@ -1,16 +1,17 @@
 package net.pladema.person.repository;
 
-import net.pladema.person.repository.domain.CompletePersonVo;
-import net.pladema.person.repository.domain.PersonalInformation;
-import net.pladema.person.repository.entity.Person;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import net.pladema.person.repository.domain.CompletePersonVo;
+import net.pladema.person.repository.domain.PersonalInformation;
+import net.pladema.person.repository.entity.Person;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Integer> {
@@ -21,8 +22,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "WHERE pe.identificationTypeId = :identificationTypeId " +
             "AND pe.identificationNumber = :identificationNumber " +
             "AND pe.genderId = :genderId")
-    List<Integer> findByDniAndGender(@Param("identificationTypeId") Short identificationTypeId, @Param("identificationNumber") String identificationNumber,
-                                                @Param("genderId") Short genderId);
+    List<Integer> findByDniAndGender(
+            @Param("identificationTypeId") Short identificationTypeId,
+            @Param("identificationNumber") String identificationNumber,
+            @Param("genderId") Short genderId
+    );
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.person.repository.domain.PersonalInformation(" +
@@ -41,7 +45,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "LEFT JOIN Province as pr ON (pr.id = d.provinceId) " +
             "WHERE p.id = :personId ")
     Optional<PersonalInformation> getPersonalInformation(@Param("personId") Integer personId);
-    
+
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonVo( p, pe, a, c, pr, d) " +
             "FROM Person as p " +
@@ -52,5 +56,5 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "LEFT JOIN Province as pr ON (pr.id = d.provinceId) " +
             "WHERE p.id = :personId ")
     Optional<CompletePersonVo> getCompletePerson(@Param("personId") Integer personId);
-    
+
 }

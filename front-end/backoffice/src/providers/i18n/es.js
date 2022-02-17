@@ -36,7 +36,7 @@ const messages = {
             "matchingIds": "Esa Especialidad | Sector no pertenece a esa institución"
         },
         "healthcareprofessional":{
-          "exists": "Esta persona ya está registrada como profesional en el sistema"
+            "exists": "Esta persona ya está registrada como profesional en el sistema"
         },
         "healthcare-professional":{
             "specialty-profession-exists": "La profesión y especialidad ya se encuentra asignada",
@@ -176,7 +176,7 @@ const messages = {
                 sisaRegisteredId: 'Id Sisa',
                 lastUpdate: 'Última actualización'
             },
-        }, 
+        },
         sectors: {
             name: 'Sector |||| Sectores',
             fields: {
@@ -211,7 +211,7 @@ const messages = {
                 doctorsoffices: 'Consultorios',
             },
             createRelated: 'Crear Especialidad | Sector'
-        }, 
+        },
         professionalspecialties: {
             name: 'Profesión |||| Profesiones',
             fields: {
@@ -220,7 +220,7 @@ const messages = {
                 sctidCode: 'Código SNOMED',
                 educationTypeId: 'Formación',
             }
-        }, 
+        },
         healthcareprofessionals: {
             name: 'Profesional |||| Profesionales',
             fields: {
@@ -243,7 +243,7 @@ const messages = {
                 description: 'Descripción',
             },
             createRelated: 'Crear Profesión | Especialidad',
-        }, 
+        },
         users: {
             name: 'Usuario |||| Usuarios',
             fields: {

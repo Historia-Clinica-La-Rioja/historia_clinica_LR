@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -49,7 +48,6 @@ public class AppointmentBo {
     private String phoneNumber;
 
     public AppointmentBo(AppointmentDiaryVo appointmentDiaryVo) {
-        super();
         this.id = appointmentDiaryVo.getId();
         this.diaryId = appointmentDiaryVo.getDiaryId();
         this.patientId = appointmentDiaryVo.getPatientId();
@@ -65,7 +63,6 @@ public class AppointmentBo {
     }
     
     public AppointmentBo(AppointmentVo appointmentVo) {
-        super();
         this.id = appointmentVo.getId();
         this.patientId = appointmentVo.getPatientId();
         this.date = appointmentVo.getDate();
@@ -80,7 +77,8 @@ public class AppointmentBo {
     }
 
     public static AppointmentBo newFromAppointment(Appointment appointment) {
-        return new AppointmentBo(appointment.getId(),
+        return new AppointmentBo(
+				appointment.getId(),
                 null,
                 appointment.getPatientId(),
                 appointment.getDateTypeId(),
@@ -92,6 +90,7 @@ public class AppointmentBo {
                 null,
                 null,
 				appointment.getPhonePrefix(),
-                appointment.getPhoneNumber());
+                appointment.getPhoneNumber()
+		);
     }
 }

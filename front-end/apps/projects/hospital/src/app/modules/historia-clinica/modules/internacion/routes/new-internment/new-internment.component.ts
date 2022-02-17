@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,7 +32,7 @@ import { PatientTypeData } from '@presentation/components/patient-type-logo/pati
 import { MapperService } from '@presentation/services/mapper.service';
 import { MapperService as CoreMapperService } from '@core/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { BedAssignmentComponent } from './../../../../dialogs/bed-assignment/bed-assignment.component';
+import { BedAssignmentComponent } from '../../../../dialogs/bed-assignment/bed-assignment.component';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
@@ -40,7 +40,8 @@ import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
-import { map } from 'rxjs/internal/operators/map';
+import { map } from 'rxjs/operators';
+
 const ROUTE_PROFILE = 'pacientes/profile/';
 
 const MIN_YEAR = 1900;
@@ -49,6 +50,7 @@ const MIN_DAY = 1;
 
 const MIDDLE_DASH_SYMBOL = '-';
 const SLASH_SYMBOL = '/	';
+
 export const MIN_DATE = new Date(MIN_YEAR, MIN_MONTH, MIN_DAY);
 
 @Component({

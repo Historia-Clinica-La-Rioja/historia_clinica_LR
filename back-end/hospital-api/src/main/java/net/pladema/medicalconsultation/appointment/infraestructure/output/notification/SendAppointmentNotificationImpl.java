@@ -26,7 +26,7 @@ public class SendAppointmentNotificationImpl implements SendAppointmentNotificat
         return new MqttMetadataDto(
                 notifyPatientBo.getTopic(),
                 getMessage(notifyPatientBo),
-                true,
+                false,
                 2,
                 "add"
         );
