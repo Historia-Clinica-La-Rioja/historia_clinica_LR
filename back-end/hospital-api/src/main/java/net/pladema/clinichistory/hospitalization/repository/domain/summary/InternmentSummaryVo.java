@@ -10,7 +10,6 @@ import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleCo
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

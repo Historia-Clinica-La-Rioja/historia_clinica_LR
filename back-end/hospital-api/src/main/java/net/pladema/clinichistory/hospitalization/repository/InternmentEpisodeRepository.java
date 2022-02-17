@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

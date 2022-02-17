@@ -6,7 +6,6 @@ import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummar
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

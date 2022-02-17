@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;

@@ -19,7 +19,6 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeEnumException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
 import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
-import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import net.pladema.patient.service.domain.PrivateHealthInsuranceDetailsBo;
@@ -30,7 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

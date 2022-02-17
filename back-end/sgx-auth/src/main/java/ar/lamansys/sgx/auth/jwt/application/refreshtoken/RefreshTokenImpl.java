@@ -10,8 +10,6 @@ import ar.lamansys.sgx.auth.oauth.application.RefreshOAuthToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 
 @Service
 public class RefreshTokenImpl implements RefreshToken {

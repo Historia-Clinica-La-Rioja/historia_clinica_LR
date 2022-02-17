@@ -12,7 +12,7 @@ import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.List;
 

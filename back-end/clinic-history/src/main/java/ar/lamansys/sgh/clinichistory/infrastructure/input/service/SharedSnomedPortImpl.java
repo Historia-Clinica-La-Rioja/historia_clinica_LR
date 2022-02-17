@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
 import ar.lamansys.sgh.clinichistory.application.saveSnomedConcept.SaveSnomedConcept;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import lombok.RequiredArgsConstructor;
