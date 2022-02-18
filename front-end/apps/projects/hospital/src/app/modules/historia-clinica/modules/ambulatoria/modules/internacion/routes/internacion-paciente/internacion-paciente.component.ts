@@ -143,28 +143,8 @@ export class InternacionPacienteComponent implements OnInit {
 		);
 	}
 
-	goToAnamnesis(): void {
-		if (this.anamnesisDoc?.id) {
-			this.router.navigate([`${this.routePrefix}/anamnesis/${this.anamnesisDoc?.id}`]);
-		} else {
-			this.router.navigate([`${this.routePrefix}/anamnesis`]);
-		}
-	}
-
-	goToNotaEvolucion(): void {
-		this.router.navigate([`${this.routePrefix}/nota-evolucion`]);
-	}
-
-	goToEpicrisis(): void {
-		this.router.navigate([`${this.routePrefix}/epicrisis`]);
-	}
-
 	goToAdministrativeDischarge(): void {
 		this.router.navigate([`${this.routePrefix}/alta`]);
-	}
-
-	goToMedicalDischarge(): void {
-		this.router.navigate([`${this.routePrefix}/alta-medica`]);
 	}
 
 	initSummaries() {
