@@ -71,6 +71,7 @@ export class ProfileComponent implements OnInit {
 	patientId: number;
 	showDischarge = false;
 	epicrisisDoc: EpicrisisSummaryDto;
+	canLoadProbableDischargeDate: boolean;
 	public institutionName: string;
 	private institution: number[] = [];
 	private rolesAdmin = false;
@@ -185,7 +186,9 @@ export class ProfileComponent implements OnInit {
 						});
 
 					});
-
+				this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
+					this.canLoadProbableDischargeDate = isOn;
+				});
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
 					.subscribe(internmentEpisodeProcessDto => {
 						if (internmentEpisodeProcessDto) {
