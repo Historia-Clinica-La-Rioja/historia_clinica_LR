@@ -3,9 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, ERole } from '@api-rest/api-model';
-import { InternmentEpisodeProcessDto, ExternalPatientCoverageDto } from '@api-rest/api-model';
-import { EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
-import { BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
+import { EvaluationNoteSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, HCEAnthropometricDataDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -85,6 +83,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	private isOpenOdontologyConsultation = false;
 	emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
 	hasInternmentEpisodeInThisInstitution = undefined;
+	anamnesisDoc: AnamnesisSummaryDto;
+	epicrisisDoc: EpicrisisSummaryDto;
+	lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
+	hasMedicalDischarge: boolean;
+	currentUserIsAllowedToDoAConsultation = false;
+	hasMedicalRole = false;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -287,6 +291,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.CurrentUserIsAllowedToMakeBothQueries = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
 				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
+			this.currentUserIsAllowedToDoAConsultation = (anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO]));
+			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
 		});
 	}
 
@@ -342,5 +348,21 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				allergies: this.criticalAllergies
 			}
 		});
+	}
+
+	setAnamnesisDoc(anamnesisDoc: AnamnesisSummaryDto) {
+		this.anamnesisDoc = anamnesisDoc;
+	}
+
+	setEpicrisisDoc(epicrisisDoc: EpicrisisSummaryDto) {
+		this.epicrisisDoc = epicrisisDoc;
+	}
+
+	setLastEvolutionNoteDoc(lastEvolutionNoteDoc: EvaluationNoteSummaryDto) {
+		this.lastEvolutionNoteDoc = lastEvolutionNoteDoc;
+	}
+
+	setHasMedicalDischarge(hasMedicalDischarge: boolean) {
+		this.hasMedicalDischarge = hasMedicalDischarge;
 	}
 }

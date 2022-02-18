@@ -21,8 +21,17 @@
             "TITLE": "Historia Clínica",
             "card": {
                 "buttons": {
-                    "NUEVA_CONSULTA": "Nueva consulta",
-                    "SHOW_PATIENT": "ver paciente"
+                    "SHOW_PATIENT": "ver paciente",
+                    "actions": {
+                        "ACTIONS":"+ acciones",
+                        "EVOLUTION_NOTE": "Agregar nota de evolución",
+                        "ANAMNESIS": "Agregar evaluación de ingreso",
+                        "EPICRISIS": "Epicrisis",
+                        "MEDICAL_DISCHARGE": "Alta médica",
+                        "NUEVA_CONSULTA": "Nueva consulta",
+                        "AMBULATORY": "Ambulatoria",
+                        "NURSING": "Enfermería"                        
+                    }
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
                 "SANGUINEOUS": "sanguíneo",

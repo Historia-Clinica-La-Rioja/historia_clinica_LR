@@ -2,8 +2,8 @@
     font-weight: bold;
 }
 
-.no-information {
-    color: #a8a8a8;
+.color-grey {
+	color: #a8a8a8;
 }
 
 
@@ -49,4 +49,13 @@ mat-divider.header-divider{
 .allergy-icon{
     font-size: 16px;
     padding-top: 2px;
+}
+mat-label.actions-labels {
+	margin-left: 15px;
+	font-size: 12px; 
+	font-weight: 600;
+}
+
+button.actions{
+	font-weight: 500;
 }

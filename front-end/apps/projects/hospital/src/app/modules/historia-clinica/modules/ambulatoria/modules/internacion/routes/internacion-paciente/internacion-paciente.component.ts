@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -27,11 +27,7 @@ import {
 	AnthropometricDataDto,
 	PersonPhotoDto,
 } from '@api-rest/api-model';
-
-import {
-	AppFeature,
-} from '@api-rest/api-model';
-
+import { AppFeature } from '@api-rest/api-model';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
@@ -79,6 +75,10 @@ export class InternacionPacienteComponent implements OnInit {
 	private routePrefix;
 	private patientId: number;
 	@Input() internmentEpisodeId: number;
+	@Output() anamnesisDocEmmiter = new EventEmitter<AnamnesisSummaryDto>();
+	@Output() epicrisisDocEmmiter= new EventEmitter<EpicrisisSummaryDto>();
+	@Output() lastEvolutionNoteDocEmmiter = new EventEmitter<EvaluationNoteSummaryDto>();
+	@Output() hasMedicalDischargeEmmiter = new EventEmitter<boolean>();
 
 	constructor(
 		private patientService: PatientService,
@@ -91,8 +91,8 @@ export class InternacionPacienteComponent implements OnInit {
 		private internmentEpisodeService: InternmentEpisodeService,
 		private readonly internmentStateService: InternmentStateService,
 		public dialog: MatDialog,
-		private contextService: ContextService ) {
-		}
+		private contextService: ContextService) {
+	}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
@@ -116,6 +116,9 @@ export class InternacionPacienteComponent implements OnInit {
 						this.anamnesisDoc = internmentEpisode.documents?.anamnesis;
 						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
 						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
+						this.anamnesisDocEmmiter.emit(this.anamnesisDoc);
+						this.epicrisisDocEmmiter.emit(this.epicrisisDoc);
+						this.lastEvolutionNoteDocEmmiter.emit(this.lastEvolutionNoteDoc);
 						this.lastProbableDischargeDate = internmentEpisode.probableDischargeDate ? momentParseDateTime(internmentEpisode.probableDischargeDate) : undefined;
 						// La alta administrativa está disponible cuando existe el alta medica
 						// o el flag de alta sin epicrisis está activa
@@ -130,6 +133,7 @@ export class InternacionPacienteComponent implements OnInit {
 				this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
 					.subscribe((patientDischarge: PatientDischargeDto) => {
 						this.hasMedicalDischarge = patientDischarge.dischargeTypeId !== 0;
+						this.hasMedicalDischargeEmmiter.emit(this.hasMedicalDischarge);
 					});
 
 				this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
@@ -142,6 +146,7 @@ export class InternacionPacienteComponent implements OnInit {
 			hasRole => this.editDiagnosisSummary$ = hasRole
 		);
 	}
+
 
 	goToAdministrativeDischarge(): void {
 		this.router.navigate([`${this.routePrefix}/alta`]);
@@ -181,7 +186,7 @@ export class InternacionPacienteComponent implements OnInit {
 		const person = {
 			id: this.patientId,
 		};
-		const url = 'institucion/' + this.contextService.institutionId + '/'+ ROUTE_EDIT_PATIENT
+		const url = 'institucion/' + this.contextService.institutionId + '/' + ROUTE_EDIT_PATIENT
 		this.router.navigate([url], {
 			queryParams: person
 		});
