@@ -43,8 +43,8 @@ Listar en formato de links los issues o user stories asociados al MR.
  
 ## Código
 
-- [ ] Respetar las convenciones definidas en [back-end](../back-end/documentacion/convenciones.md).
-- [ ] Respetar las convenciones definidas en [front-end](front-end/README.md).
+- [ ] Respetar las convenciones definidas en [back-end](../../back-end/documentacion/convenciones.md).
+- [ ] Respetar las convenciones definidas en [front-end](../../front-end/README.md).
 
 ## Testing
 
