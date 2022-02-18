@@ -37,7 +37,6 @@ public class AssetsController {
     }
 
     @GetMapping(value = "/{fileName:.+}/**")
-    @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity getAssetFile(HttpServletRequest request) {
         logger.debug("Input parameters -> fileName {} ", request.getRequestURL().toString());

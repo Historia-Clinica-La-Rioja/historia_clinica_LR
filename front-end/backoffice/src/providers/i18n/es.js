@@ -393,6 +393,7 @@ const messages = {
                 origin: 'Fuente de datos',
                 nodeId: 'Nodo',
                 updatedOn: 'Última actualización',
+                description: 'Descripción',
             }
         },
     },

@@ -43,6 +43,8 @@ public class SystemPropertiesConfiguration {
 
     private final String defaultLanguage;
 
+	private final String include;
+
     public SystemPropertiesConfiguration(Optional<EnvironmentEndpoint> environ,
                                          SystemPropertyRepository systemPropertyRepository,
                                          DateTimeProvider dateTimeProvider,
@@ -57,16 +59,17 @@ public class SystemPropertiesConfiguration {
         this.flavorService = flavorService;
         this.defaultLanguage = defaultLanguage;
         systemPropertyRepository.deleteAll();
+		this.include = "(spring\\.*|email-*|ws\\.*|logging\\.*|ws\\.*|jobs\\.*|"
+				+ "app\\.*|api\\.*|admin\\.*|token\\.*|management\\.*|"
+				+ "oauth\\.*|externalurl\\.*|integration\\.*|actuator\\.*|"
+				+ "internment\\.*|images\\.*|mail\\.*|recaptcha\\.*|.*\\.cron\\.*|"
+				+ "habilitar\\.*|hsi\\.*"
+				+ ")";
+		loadProperties();
     }
 
-    @Scheduled(cron = "0 0/1 * * * * ")
+	@Scheduled(cron = "${app.system.properties.cron.config:-}")
     public void loadProperties() {
-        String include = "(spring\\.*|email-*|ws\\.*|logging\\.*|ws\\.*|jobs\\.*|"
-                + "app\\.*|api\\.*|admin\\.*|token\\.*|management\\.*|"
-                + "oauth\\.*|externalurl\\.*|integration\\.*|actuator\\.*|"
-                + "internment\\.*|images\\.*|mail\\.*|recaptcha\\.*|.*\\.cron\\.*|"
-                + "habilitar\\.*|hsi\\.*"
-                + ")";
         systemPropertyRepository.deleteByIpNodeId(nodeId);
         systemPropertyRepository.saveAll(environ.map(env -> env.environment(include))
                 .map(environmentDescriptor -> generateSource(environmentDescriptor.getPropertySources()))

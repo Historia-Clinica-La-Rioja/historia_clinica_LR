@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 @ComponentScan(basePackages = {"ar.lamansys.sgx.shared"})
 @EnableJpaRepositories(basePackages = {"ar.lamansys.sgx.shared"})
 @EntityScan(basePackages = {"ar.lamansys.sgx.shared"})
-@PropertySource(value = "classpath:sgx_shared.properties")
+@PropertySource(value = "classpath:sgx_shared.properties", ignoreResourceNotFound = true)
 public class SharedAutoConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(SharedAutoConfiguration.class);
