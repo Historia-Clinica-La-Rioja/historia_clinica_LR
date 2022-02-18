@@ -42,6 +42,8 @@ import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { HCEAllergyDto } from '@api-rest/api-model';
 import { ShowAllergiesComponent } from "@historia-clinica/modules/ambulatoria/dialogs/show-allergies/show-allergies.component";
+import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
+
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -59,6 +61,9 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
 	criticalAllergies: HCEAllergyDto[] = [];
 	limitAllergies = 2;
+	medicamentStatus$: Observable<any>;
+	studyCategories$: Observable<any>;
+	diagnosticReportsStatus$: Observable<any>;
 	public personInformation: AdditionalInfo[];
 	public personPhoto: PersonPhotoDto;
 	public hasNewConsultationEnabled$: Observable<boolean>;
@@ -101,6 +106,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+
+		private readonly requestMasterDataService: RequestMasterDataService,
 
 	) {
 		this.route.paramMap.subscribe(
@@ -158,6 +165,13 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				this.openNuevaConsulta();
 			}
 		})
+
+		this.medicamentStatus$ = this.requestMasterDataService.medicationStatus();
+
+		this.diagnosticReportsStatus$ = this.requestMasterDataService.diagnosticReportStatus();
+
+		this.studyCategories$ = this.requestMasterDataService.categories();
+
 	}
 
 	loadExternalInstitutions() {

@@ -149,6 +149,23 @@
 							<app-resumen [patientExternalSummary]="patientExternalSummary"></app-resumen>
 						</ng-template>
 					</mat-tab>
+					<mat-tab id="tab_indications">
+						<ng-template mat-tab-label>
+							<span>{{ 'ambulatoria.paciente.indications.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-card-medicaciones [patientId]="patientId" [medicamentStatus]="medicamentStatus$ | async" ></app-card-medicaciones>
+						</ng-template>
+					</mat-tab>
+					 <mat-tab id="tab_studies">
+						<ng-template mat-tab-label>
+							<span>{{ 'ambulatoria.paciente.studies.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-card-estudios [patientId]="patientId" [diagnosticReportsStatus]="diagnosticReportsStatus$ | async" [categories]="studyCategories$ | async"></app-card-estudios>
+							<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
+						</ng-template>
+					</mat-tab>
 					<mat-tab id="tab_vacunas">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
@@ -163,15 +180,6 @@
 						</ng-template>
 						<ng-template matTabContent>
 							<app-problemas [nuevaConsultaRef]="dialogRef"></app-problemas>
-						</ng-template>
-					</mat-tab>
-					<mat-tab id="tab_ordenes_prescripciones">
-						<ng-template mat-tab-label>
-							<span>{{ 'ambulatoria.paciente.ordenes_prescripciones.TAB_LABEL' | translate | uppercase
-								}}</span>
-						</ng-template>
-						<ng-template matTabContent>
-							<app-ordenes [patientId]="patientId"></app-ordenes>
 						</ng-template>
 					</mat-tab>
 					<mat-tab *ngFor="let extensionTab of extensionTabs$ | async" [id]="extensionTab.head.id">
