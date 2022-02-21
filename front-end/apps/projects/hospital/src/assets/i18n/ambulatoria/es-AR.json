@@ -521,7 +521,10 @@
                         "COLUMN_VACCINE_HEADER": "Descripción SNOMED"
                     }
                 }
-            }
+            },
+			"allergies": {
+				"TITLE": "Alergias críticas"
+			}
         },
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",

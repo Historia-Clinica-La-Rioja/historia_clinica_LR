@@ -49,6 +49,7 @@ import { SnvsReportsResultComponent } from './dialogs/snvs-reports-result/snvs-r
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { FactoresDeRiesgoNuevaConsultaComponent } from './components/factores-de-riesgo-nueva-consulta/factores-de-riesgo-nueva-consulta.component';
+import { ShowAllergiesComponent } from './dialogs/show-allergies/show-allergies.component';
 
 @NgModule({
 	declarations: [
@@ -86,8 +87,9 @@ import { FactoresDeRiesgoNuevaConsultaComponent } from './components/factores-de
 		ReferenceNotificationComponent,
 		CounterreferenceDockPopupComponent,
 		SnvsReportsResultComponent,
-  DatosAntropometricosNuevaConsultaComponent,
-  FactoresDeRiesgoNuevaConsultaComponent,
+		DatosAntropometricosNuevaConsultaComponent,
+		FactoresDeRiesgoNuevaConsultaComponent,
+		ShowAllergiesComponent,
 	],
 	imports: [
 		CommonModule,

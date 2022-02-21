@@ -41,6 +41,7 @@ import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { HCEAllergyDto } from '@api-rest/api-model';
+import { ShowAllergiesComponent } from "@historia-clinica/modules/ambulatoria/dialogs/show-allergies/show-allergies.component";
 const RESUMEN_INDEX = 0;
 
 @Component({
@@ -306,5 +307,13 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	openAllergies() {
+		this.dialog.open(ShowAllergiesComponent, {
+			disableClose: true,
+			autoFocus: false,
+			width: '35%',
+			data: {
+				allergies: this.criticalAllergies
+			}
+		});
 	}
 }
