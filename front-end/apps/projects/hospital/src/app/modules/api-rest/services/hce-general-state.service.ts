@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import {
 	HCEImmunizationDto,
 	HCEMedicationDto,
-	HCELast2VitalSignsDto,
+	HCELast2RiskFactorsDto,
 	HCEAnthropometricDataDto,
 	HCEPersonalHistoryDto,
 	HCEAllergyDto,
@@ -53,9 +53,9 @@ export class HceGeneralStateService {
 		return this.http.get<HCEImmunizationDto[]>(url);
 	}
 
-	getVitalSigns(patientId: number): Observable<HCELast2VitalSignsDto> {
+	getRiskFactors(patientId: number): Observable<HCELast2RiskFactorsDto> {
 		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/riskFactors`;
-		return this.http.get<HCELast2VitalSignsDto>(url);
+		return this.http.get<HCELast2RiskFactorsDto>(url);
 	}
 
 	getAnthropometricData(patientId: number): Observable<HCEAnthropometricDataDto> {
@@ -93,7 +93,7 @@ export class HceGeneralStateService {
 		return this.http.get<HCEEvolutionSummaryDto[]>(url);
 	}
 
-	getInternmentEpisodeMedicalCoverage(patientId:number, internmentId: number): Observable<ExternalPatientCoverageDto> {
+	getInternmentEpisodeMedicalCoverage(patientId: number, internmentId: number): Observable<ExternalPatientCoverageDto> {
 		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/active-internment-episode/${internmentId}/medical-coverage`;
 		return this.http.get<ExternalPatientCoverageDto>(url);
 	}

@@ -1,42 +1,42 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
-import { SIGNOS_VITALES } from '../../constants/summaries';
-import { VitalSingCurrentPrevious } from '@presentation/components/signo-vital-current-previous/signo-vital-current-previous.component';
-import { Last2VitalSignsDto, VitalSignDto } from '@api-rest/api-model';
+import { FACTORES_DE_RIESGO } from '../../constants/summaries';
+import { RiskFactorCurrentPrevious } from '@presentation/components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
+import { Last2RiskFactorsDto, RiskFactorDto } from '@api-rest/api-model';
 import { momentParseDateTime } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
-import { AddVitalSignsComponent } from '../../dialogs/add-vital-signs/add-vital-signs.component';
+import { AddRiskFactorsComponent } from '../../dialogs/add-risk-factors/add-risk-factors.component';
 import { Observable } from 'rxjs';
 
 @Component({
-	selector: 'app-signos-vitales-summary',
-	templateUrl: './signos-vitales-summary.component.html',
-	styleUrls: ['./signos-vitales-summary.component.scss']
+	selector: 'app-factores-de-riesgo-summary',
+	templateUrl: './factores-de-riesgo-summary.component.html',
+	styleUrls: ['./factores-de-riesgo-summary.component.scss']
 })
-export class SignosVitalesSummaryComponent implements OnInit {
+export class FactoresDeRiesgoSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
 	@Input() editable = false;
-	@Input() vitalSigns$: Observable<Last2VitalSignsDto>;
+	@Input() riskFactors$: Observable<Last2RiskFactorsDto>;
 
-	signosVitalesSummary: SummaryHeader = SIGNOS_VITALES;
-	signosVitales: VitalSingCurrentPrevious[] = [];
+	factoresDeRiesgoSummary: SummaryHeader = FACTORES_DE_RIESGO;
+	factoresDeRiesgo: RiskFactorCurrentPrevious[] = [];
 
 	constructor(
 		public dialog: MatDialog
 	) { }
 
 	ngOnInit(): void {
-		this.refreshVitalSigns();
+		this.refreshRiskFactors();
 	}
 
-	refreshVitalSigns(): void {
-		this.vitalSigns$.subscribe(
-			this.initSignosVitales(), this.initSignosVitales()
+	refreshRiskFactors(): void {
+		this.riskFactors$.subscribe(
+			this.initFactoresDeRiesgo(), this.initFactoresDeRiesgo()
 		);
 	}
 
-	initSignosVitales(): (vitalSigns: Last2VitalSignsDto) => void {
+	initFactoresDeRiesgo(): (riskFactors: Last2RiskFactorsDto) => void {
 		const LABELS = {
 			systolicBloodPressure: 'Tensión arterial sistólica',
 			diastolicBloodPressure: 'Tensión arterial diastólica',
@@ -48,11 +48,11 @@ export class SignosVitalesSummaryComponent implements OnInit {
 			glycosylatedHemoglobin: 'Hemoglobina glicosilada (%)',
 			cardiovascularRisk: 'Riesgo cardiovascular (%)'
 		};
-		return (vitalSigns: Last2VitalSignsDto) => {
-			this.signosVitales = [];
-			const current: VitalSignDto = vitalSigns.current || {};
-			const previous: VitalSignDto = vitalSigns.previous || {};
-			Object.keys(LABELS).forEach(key => this.signosVitales.push(
+		return (riskFactors: Last2RiskFactorsDto) => {
+			this.factoresDeRiesgo = [];
+			const current: RiskFactorDto = riskFactors.current || {};
+			const previous: RiskFactorDto = riskFactors.previous || {};
+			Object.keys(LABELS).forEach(key => this.factoresDeRiesgo.push(
 				{
 					description: LABELS[key],
 					currentValue: {
@@ -70,7 +70,7 @@ export class SignosVitalesSummaryComponent implements OnInit {
 
 
 	openDialog() {
-		const dialogRef = this.dialog.open(AddVitalSignsComponent, {
+		const dialogRef = this.dialog.open(AddRiskFactorsComponent, {
 			disableClose: true,
 			width: '35%',
 			data: {
@@ -80,7 +80,7 @@ export class SignosVitalesSummaryComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
-				this.refreshVitalSigns();
+				this.refreshRiskFactors();
 			}
 		});
 	}

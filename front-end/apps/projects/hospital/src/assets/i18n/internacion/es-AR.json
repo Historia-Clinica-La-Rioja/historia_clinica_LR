@@ -103,9 +103,9 @@
 				"ERROR": "Error al guardar documento de evaluación de ingreso",
 				"SUCCESS": "El documento de evaluación de ingreso se guardó exitosamente"
 			},
-			"vital-signs": {
+			"risk-factors": {
 				"form": {
-					"TITLE": "Signos vitales",
+					"TITLE": "Factores de riesgo",
 					"HEART_RATE": "Frecuencia cardíaca (/min)",
 					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 					"TEMPERATURE": "Temperatura corporal",
@@ -367,11 +367,11 @@
 					"ERROR": "Error al guardar nueva vacuna"
 				}
 			},
-			"vital-signs-summary": {
-				"UPDATE": "Actualizar signos vitales",
+			"risk-factors-summary": {
+				"UPDATE": "Actualizar factores de riesgo",
 				"save": {
-					"SUCCESS": "Los signos vitales se actualizaron exitosamente",
-					"ERROR": "Error al actualizar signos vitales"
+					"SUCCESS": "Los factores de riesgo se actualizaron exitosamente",
+					"ERROR": "Error al actualizar factores de riesgo"
 				}
 			}
 		},

@@ -19,11 +19,11 @@ export class NewNurseConsultationSuggestedFieldsService {
       this.addTranslated('ambulatoria.paciente.nueva-consulta.TALLA', this.presentFields) :
       this.addTranslated('ambulatoria.paciente.nueva-consulta.TALLA', this.nonCompletedFields);
 
-    this.nursingConsultationDto.vitalSigns.systolicBloodPressure ?
+    this.nursingConsultationDto.riskFactors.systolicBloodPressure ?
       this.addTranslated('ambulatoria.paciente.nueva-consulta.TENSION_SISTOLICA', this.presentFields) :
       this.addTranslated('ambulatoria.paciente.nueva-consulta.TENSION_SISTOLICA', this.nonCompletedFields);
 
-    this.nursingConsultationDto.vitalSigns.diastolicBloodPressure ?
+    this.nursingConsultationDto.riskFactors.diastolicBloodPressure ?
       this.addTranslated('ambulatoria.paciente.nueva-consulta.TENSION_DIASTOLICA', this.presentFields) :
       this.addTranslated('ambulatoria.paciente.nueva-consulta.TENSION_DIASTOLICA', this.nonCompletedFields);
   }

@@ -1,0 +1,12 @@
+<app-summary-card [header]="factoresDeRiesgoSummary"
+	[tooltip]="'historia-clinica.summary-card.factores-de-riesgo.TOOLTIP'"
+	[canEdit]="['ENFERMERO', 'ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']" [editable]="editable"
+	(openInNew)="openDialog()">
+	<mat-card-content>
+		<div fxLayout="row wrap" fxLayoutAlign="start" fxLayoutAlign.xs="center center" fxLayout.xs="column">
+			<app-factor-de-riesgo-current-previous *ngFor="let riskFactor of factoresDeRiesgo"
+				[riskFactor]="riskFactor">
+			</app-factor-de-riesgo-current-previous>
+		</div>
+	</mat-card-content>
+</app-summary-card>

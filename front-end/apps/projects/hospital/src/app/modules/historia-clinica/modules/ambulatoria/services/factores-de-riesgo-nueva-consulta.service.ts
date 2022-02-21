@@ -1,7 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
-import { EffectiveClinicalObservationDto, HCELast2VitalSignsDto } from '@api-rest/api-model';
+import { EffectiveClinicalObservationDto, HCELast2RiskFactorsDto } from '@api-rest/api-model';
 import { Subject, Observable } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { PATTERN_NUMBER_WITH_DECIMALS, PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from '@core/utils/pattern.utils';
 
-export interface SignosVitales {
+export interface FactoresDeRiesgo {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
 	diastolicBloodPressure: EffectiveClinicalObservationDto;
 	heartRate?: EffectiveClinicalObservationDto;
@@ -21,7 +21,7 @@ export interface SignosVitales {
 	cardiovascularRisk?: EffectiveClinicalObservationDto;
 }
 
-export class SignosVitalesNuevaConsultaService {
+export class FactoresDeRiesgoNuevaConsultaService {
 
 	private heartRateErrorSource = new Subject<string>();
 	private _heartRateError$: Observable<string>;
@@ -42,7 +42,7 @@ export class SignosVitalesNuevaConsultaService {
 	private cardiovascularRiskErrorSource = new Subject<string>();
 	private _cardiovascularRiskError$: Observable<string>;
 	private form: FormGroup;
-	private notShowPreloadedVitalSignsData = true;
+	private notShowPreloadedRiskFactorsData = true;
 	private dateList: string[] = [];
 
 	constructor(
@@ -145,7 +145,7 @@ export class SignosVitalesNuevaConsultaService {
 			});
 	}
 
-	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
 		(this.form.controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
@@ -153,7 +153,7 @@ export class SignosVitalesNuevaConsultaService {
 		return this.form;
 	}
 
-	getSignosVitales(): SignosVitales {
+	getFactoresDeRiesgo(): FactoresDeRiesgo {
 		return {
 			bloodOxygenSaturation: this.getEffectiveClinicalObservationDto(this.form.value.bloodOxygenSaturation),
 			diastolicBloodPressure: this.getEffectiveClinicalObservationDto(this.form.value.diastolicBloodPressure),
@@ -272,16 +272,16 @@ export class SignosVitalesNuevaConsultaService {
 		this.cardiovascularRiskErrorSource.next(errorMsg);
 	}
 
-	setPreviousVitalSignsData(): void {
-		this.hceGeneralStateService.getVitalSigns(this.patientId).subscribe(
-			(vitalSignsData: HCELast2VitalSignsDto) => {
-				if (vitalSignsData.current === undefined)
-					this.notShowPreloadedVitalSignsData = false;
+	setPreviousRiskFactorsData(): void {
+		this.hceGeneralStateService.getRiskFactors(this.patientId).subscribe(
+			(riskFactorsData: HCELast2RiskFactorsDto) => {
+				if (riskFactorsData.current === undefined)
+					this.notShowPreloadedRiskFactorsData = false;
 				else {
-					Object.keys(vitalSignsData.current).forEach((key: string) => {
-						if (vitalSignsData.current[key].value != undefined) {
-							this.form.patchValue({ [key]: { value: vitalSignsData.current[key].value } });
-							this.dateList.push(vitalSignsData.current[key].effectiveTime);
+					Object.keys(riskFactorsData.current).forEach((key: string) => {
+						if (riskFactorsData.current[key].value != undefined) {
+							this.form.patchValue({ [key]: { value: riskFactorsData.current[key].value } });
+							this.dateList.push(riskFactorsData.current[key].effectiveTime);
 						}
 					});
 					this.form.disable();
@@ -289,8 +289,8 @@ export class SignosVitalesNuevaConsultaService {
 			});
 	}
 
-	discardPreloadedVitalSignsData() {
-		this.notShowPreloadedVitalSignsData = false;
+	discardPreloadedRiskFactorsData() {
+		this.notShowPreloadedRiskFactorsData = false;
 		const defaultValue = { value: null, effectiveTime: newMoment() };
 		Object.keys(this.form.controls).forEach((key: string) => {
 			this.form.patchValue({ [key]: defaultValue });
@@ -298,12 +298,12 @@ export class SignosVitalesNuevaConsultaService {
 		this.form.enable();
 	}
 
-	getShowPreloadedVitalSignsData(): boolean {
-		return this.notShowPreloadedVitalSignsData;
+	getShowPreloadedRiskFactorsData(): boolean {
+		return this.notShowPreloadedRiskFactorsData;
 	}
 
-	savePreloadedVitalSignsData() {
-		this.notShowPreloadedVitalSignsData = false;
+	savePreloadedRiskFactorsData() {
+		this.notShowPreloadedRiskFactorsData = false;
 		this.form.enable();
 	}
 

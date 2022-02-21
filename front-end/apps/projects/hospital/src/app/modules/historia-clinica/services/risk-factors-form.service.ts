@@ -2,12 +2,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { Injectable } from '@angular/core';
-import { VITAL_SIGNS } from '@core/constants/validation-constants';
+import { RISK_FACTORS } from '@core/constants/validation-constants';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class VitalSignsFormService {
+export class RiskFactorsFormService {
 
 	constructor(private formBuilder: FormBuilder) {
 	}
@@ -15,33 +15,33 @@ export class VitalSignsFormService {
 	buildForm(): FormGroup {
 		return this.formBuilder.group({
 			heartRate: this.formBuilder.group({
-				value: [null, Validators.min(VITAL_SIGNS.min_value)],
+				value: [null, Validators.min(RISK_FACTORS.min_value)],
 				effectiveTime: [newMoment()],
 			}),
 			respiratoryRate: this.formBuilder.group({
-				value: [null, Validators.min(VITAL_SIGNS.min_value)],
+				value: [null, Validators.min(RISK_FACTORS.min_value)],
 				effectiveTime: [newMoment()],
 			}),
 			temperature: this.formBuilder.group({
-				value: [null, Validators.min(VITAL_SIGNS.min_value)],
+				value: [null, Validators.min(RISK_FACTORS.min_value)],
 				effectiveTime: [newMoment()],
 			}),
 			bloodOxygenSaturation: this.formBuilder.group({
-				value: [null, Validators.min(VITAL_SIGNS.min_value)],
+				value: [null, Validators.min(RISK_FACTORS.min_value)],
 				effectiveTime: [newMoment()],
 			}),
 			systolicBloodPressure: this.formBuilder.group({
-				value: [null, Validators.min(VITAL_SIGNS.min_value)],
+				value: [null, Validators.min(RISK_FACTORS.min_value)],
 				effectiveTime: [newMoment()],
 			}),
 			diastolicBloodPressure: this.formBuilder.group({
-				value: [null, Validators.min(VITAL_SIGNS.min_value)],
+				value: [null, Validators.min(RISK_FACTORS.min_value)],
 				effectiveTime: [newMoment()],
 			}),
 		});
 	}
 
-	setVitalSignEffectiveTime(newEffectiveTime: Moment, form: FormGroup, field: string): void {
+	setRiskFactorEffectiveTime(newEffectiveTime: Moment, form: FormGroup, field: string): void {
 		(form.controls[field] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
@@ -60,7 +60,7 @@ export class VitalSignsFormService {
 			: undefined;
 	}
 
-	buildVitalSignsValue(form: FormGroup): VitalSignsValue {
+	buildRiskFactorsValue(form: FormGroup): RiskFactorsValue {
 		return isNull(form.value) ? undefined : {
 			bloodOxygenSaturation: this.getEffectiveObservation(form.value.bloodOxygenSaturation),
 			diastolicBloodPressure: this.getEffectiveObservation(form.value.diastolicBloodPressure),
@@ -77,7 +77,7 @@ export class VitalSignsFormService {
 
 }
 
-export interface VitalSignsValue {
+export interface RiskFactorsValue {
 	bloodOxygenSaturation?: EffectiveObservation;
 	diastolicBloodPressure?: EffectiveObservation;
 	heartRate?: EffectiveObservation;

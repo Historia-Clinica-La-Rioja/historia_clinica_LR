@@ -132,7 +132,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					})
 
 				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
-					.subscribe( emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
+					.subscribe(emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
 			});
 	}
 	ngOnInit(): void {
@@ -247,7 +247,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				allergies: false,
 				familyHistories: false,
 				personalHistories: false,
-				vitalSigns: false,
+				riskFactors: false,
 				medications: true,
 				anthropometricData: false,
 				problems: false

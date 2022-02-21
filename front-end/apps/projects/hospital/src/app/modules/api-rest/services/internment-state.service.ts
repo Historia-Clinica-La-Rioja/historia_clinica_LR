@@ -9,7 +9,7 @@ import {
 	HealthConditionDto,
 	HealthHistoryConditionDto,
 	ImmunizationDto,
-	Last2VitalSignsDto,
+	Last2RiskFactorsDto,
 	MedicationDto
 } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
@@ -45,9 +45,9 @@ export class InternmentStateService {
 		return this.http.get<DiagnosesGeneralStateDto[]>(url);
 	}
 
-	getVitalSigns(internmentId: number): Observable<Last2VitalSignsDto> {
+	getRiskFactors(internmentId: number): Observable<Last2RiskFactorsDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments-state/${internmentId}/general/riskFactors`;
-		return this.http.get<Last2VitalSignsDto>(url);
+		return this.http.get<Last2RiskFactorsDto>(url);
 	}
 
 	getAnthropometricData(internmentId: number): Observable<AnthropometricDataDto> {

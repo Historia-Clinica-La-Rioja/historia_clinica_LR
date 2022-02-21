@@ -8,17 +8,17 @@ import { EvolutionNoteService } from '@api-rest/services/evolution-note.service'
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
-	selector: 'app-add-vital-signs',
-	templateUrl: './add-vital-signs.component.html',
-	styleUrls: ['./add-vital-signs.component.scss']
+	selector: 'app-add-risk-factors',
+	templateUrl: './add-risk-factors.component.html',
+	styleUrls: ['./add-risk-factors.component.scss']
 })
-export class AddVitalSignsComponent implements OnInit {
+export class AddRiskFactorsComponent implements OnInit {
 
 	form: FormGroup;
 	loading = false;
 
 	constructor(
-		public dialogRef: MatDialogRef<AddVitalSignsComponent>,
+		public dialogRef: MatDialogRef<AddRiskFactorsComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
@@ -54,17 +54,17 @@ export class AddVitalSignsComponent implements OnInit {
 		});
 	}
 
-	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
 		(this.form.controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
-	formHasNoValues(vitalSignsForm): boolean {
-		return ((vitalSignsForm.bloodOxygenSaturation.value === null)
-			 && (vitalSignsForm.diastolicBloodPressure.value === null)
-			 && (vitalSignsForm.heartRate.value === null)
-			 && (vitalSignsForm.respiratoryRate.value === null)
-			 && (vitalSignsForm.systolicBloodPressure.value === null)
-			 && (vitalSignsForm.temperature.value === null));
+	formHasNoValues(riskFactorsForm): boolean {
+		return ((riskFactorsForm.bloodOxygenSaturation.value === null)
+			&& (riskFactorsForm.diastolicBloodPressure.value === null)
+			&& (riskFactorsForm.heartRate.value === null)
+			&& (riskFactorsForm.respiratoryRate.value === null)
+			&& (riskFactorsForm.systolicBloodPressure.value === null)
+			&& (riskFactorsForm.temperature.value === null));
 	}
 
 	submit() {
@@ -72,30 +72,30 @@ export class AddVitalSignsComponent implements OnInit {
 		if (evolutionNote) {
 			this.loading = true;
 			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId).subscribe(_ => {
-					this.snackBarService.showSuccess('internaciones.internacion-paciente.vital-signs-summary.save.SUCCESS');
-					this.dialogRef.close(true);
-				}, error => {
+				this.snackBarService.showSuccess('internaciones.internacion-paciente.risk-factors-summary.save.SUCCESS');
+				this.dialogRef.close(true);
+			}, error => {
 				const errorMessages = error.errors.join() ? error.errors.join(', ')
-					: 'internaciones.internacion-paciente.vital-signs-summary.save.ERROR';
+					: 'internaciones.internacion-paciente.risk-factors-summary.save.ERROR';
 				this.snackBarService.showError(errorMessages);
 				this.loading = false;
-				}
+			}
 			);
 		}
 
 	}
 
-	private buildEvolutionNote(vitalSignsForm): EvolutionNoteDto {
-		const vitalSigns = isNull(vitalSignsForm) ? undefined : {
-			bloodOxygenSaturation: getEffectiveValue(vitalSignsForm.bloodOxygenSaturation),
-			diastolicBloodPressure: getEffectiveValue(vitalSignsForm.diastolicBloodPressure),
-			heartRate: getEffectiveValue(vitalSignsForm.heartRate),
-			respiratoryRate: getEffectiveValue(vitalSignsForm.respiratoryRate),
-			systolicBloodPressure: getEffectiveValue(vitalSignsForm.systolicBloodPressure),
-			temperature: getEffectiveValue(vitalSignsForm.temperature)
+	private buildEvolutionNote(riskFactorsForm): EvolutionNoteDto {
+		const riskFactors = isNull(riskFactorsForm) ? undefined : {
+			bloodOxygenSaturation: getEffectiveValue(riskFactorsForm.bloodOxygenSaturation),
+			diastolicBloodPressure: getEffectiveValue(riskFactorsForm.diastolicBloodPressure),
+			heartRate: getEffectiveValue(riskFactorsForm.heartRate),
+			respiratoryRate: getEffectiveValue(riskFactorsForm.respiratoryRate),
+			systolicBloodPressure: getEffectiveValue(riskFactorsForm.systolicBloodPressure),
+			temperature: getEffectiveValue(riskFactorsForm.temperature)
 		};
 
-		return vitalSigns ? { confirmed: true, vitalSigns } : undefined;
+		return riskFactors ? { confirmed: true, riskFactors } : undefined;
 
 		function isNull(formGroupValues: any): boolean {
 			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Moment }) => el.value === null);

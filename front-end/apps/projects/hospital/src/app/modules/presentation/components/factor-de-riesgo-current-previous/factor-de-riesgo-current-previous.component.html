@@ -1,0 +1,17 @@
+<ng-container *ngIf="riskFactor.currentValue">
+	<app-factor-de-riesgo [description]="riskFactor.description" [riskFactor]="riskFactor.currentValue">
+		<mat-divider inset></mat-divider>
+		<div class="flex-row">
+			<span class="mat-caption">Anterior</span>
+			<div class="flex-row">
+				<mat-icon *ngIf="riskFactor.previousValue?.effectiveTime" inline color="accent"
+					matTooltip="{{ getDate(riskFactor.previousValue.effectiveTime) | date: 'dd/MM/yy - HH:mm' }} hs">
+					access_time
+				</mat-icon>
+				<span class="mat-body-1">
+					{{ riskFactor.previousValue.value || '-' }}
+				</span>
+			</div>
+		</div>
+	</app-factor-de-riesgo>
+</ng-container>

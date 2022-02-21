@@ -1,9 +1,9 @@
 
 @import "~@angular/material/theming";
 
-@mixin app-signo-vital($theme) {
+@mixin app-factor-de-riesgo($theme) {
 	$palette: map-get($theme, primary);
-	app-signo-vital {
+	app-factor-de-riesgo {
 		mat-card.mat-card {
 			background-color: $primary-bg;
 			div.current-value {

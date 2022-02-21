@@ -78,7 +78,7 @@ export class AnamnesisFormComponent implements OnInit {
 				height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
 				weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
 			}),
-			vitalSigns: this.formBuilder.group({
+			riskFactors: this.formBuilder.group({
 				heartRate: this.formBuilder.group({
 					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
@@ -104,7 +104,7 @@ export class AnamnesisFormComponent implements OnInit {
 					effectiveTime: [newMoment()],
 				}),
 			}),
-			observations: this.formBuilder.group ({
+			observations: this.formBuilder.group({
 				currentIllnessNote: [null],
 				physicalExamNote: [null],
 				studiesSummaryNote: [null],
@@ -139,13 +139,13 @@ export class AnamnesisFormComponent implements OnInit {
 
 				this.form.controls.observations.setValue(anamnesis.notes);
 
-				this.form.controls.vitalSigns.setValue({
-					heartRate: anamnesis.vitalSigns.heartRate,
-					respiratoryRate: anamnesis.vitalSigns.respiratoryRate,
-					temperature: anamnesis.vitalSigns.temperature,
-					bloodOxygenSaturation: anamnesis.vitalSigns.bloodOxygenSaturation,
-					systolicBloodPressure: anamnesis.vitalSigns.systolicBloodPressure,
-					diastolicBloodPressure: anamnesis.vitalSigns.diastolicBloodPressure
+				this.form.controls.riskFactors.setValue({
+					heartRate: anamnesis.riskFactors.heartRate,
+					respiratoryRate: anamnesis.riskFactors.respiratoryRate,
+					temperature: anamnesis.riskFactors.temperature,
+					bloodOxygenSaturation: anamnesis.riskFactors.bloodOxygenSaturation,
+					systolicBloodPressure: anamnesis.riskFactors.systolicBloodPressure,
+					diastolicBloodPressure: anamnesis.riskFactors.diastolicBloodPressure
 				});
 
 			});
@@ -175,7 +175,7 @@ export class AnamnesisFormComponent implements OnInit {
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			this.apiErrors = [];
 			this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
-			.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
+				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
 					this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
 					this.goToInternmentSummary();
 				}, responseErrors => {
@@ -212,13 +212,13 @@ export class AnamnesisFormComponent implements OnInit {
 			medications: this.medications,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
 			personalHistories: this.personalHistories,
-			vitalSigns: isNull(formValues.vitalSigns) ? undefined : {
-				bloodOxygenSaturation: getEffectiveValue(formValues.vitalSigns.bloodOxygenSaturation),
-				diastolicBloodPressure: getEffectiveValue(formValues.vitalSigns.diastolicBloodPressure),
-				heartRate: getEffectiveValue(formValues.vitalSigns.heartRate),
-				respiratoryRate: getEffectiveValue(formValues.vitalSigns.respiratoryRate),
-				systolicBloodPressure: getEffectiveValue(formValues.vitalSigns.systolicBloodPressure),
-				temperature: getEffectiveValue(formValues.vitalSigns.temperature)
+			riskFactors: isNull(formValues.riskFactors) ? undefined : {
+				bloodOxygenSaturation: getEffectiveValue(formValues.riskFactors.bloodOxygenSaturation),
+				diastolicBloodPressure: getEffectiveValue(formValues.riskFactors.diastolicBloodPressure),
+				heartRate: getEffectiveValue(formValues.riskFactors.heartRate),
+				respiratoryRate: getEffectiveValue(formValues.riskFactors.respiratoryRate),
+				systolicBloodPressure: getEffectiveValue(formValues.riskFactors.systolicBloodPressure),
+				temperature: getEffectiveValue(formValues.riskFactors.temperature)
 			},
 			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos()
 		};
@@ -237,8 +237,8 @@ export class AnamnesisFormComponent implements OnInit {
 
 	}
 
-	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
-		((this.form.controls.vitalSigns as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
+	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+		((this.form.controls.riskFactors as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
 	private apiErrorsProcess(responseErrors): void {
@@ -251,7 +251,7 @@ export class AnamnesisFormComponent implements OnInit {
 						this.apiErrors.push(elementError)
 					);
 				} else {
-				this.apiErrors.push(error);
+					this.apiErrors.push(error);
 				}
 			}
 		});

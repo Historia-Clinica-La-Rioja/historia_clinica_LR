@@ -13,7 +13,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private familyHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private personalHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private vitalSignsSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private anthropometricDataSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private activeProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private chronicProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
@@ -24,7 +24,7 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
 	public readonly personalHistories$ = this.personalHistoriesSubject.asObservable();
 	public readonly medications$ = this.medicationsSubject.asObservable();
-	public readonly vitalSigns$ = this.vitalSignsSubject.asObservable();
+	public readonly riskFactors$ = this.riskFactorsSubject.asObservable();
 	public readonly anthropometricData$ = this.anthropometricDataSubject.asObservable();
 	public readonly activeProblems$ = this.activeProblemsSubject.asObservable();
 	public readonly chronicProblems$ = this.chronicProblemsSubject.asObservable();
@@ -44,7 +44,7 @@ export class AmbulatoriaSummaryFacadeService {
 			allergies: true,
 			familyHistories: true,
 			personalHistories: true,
-			vitalSigns: true,
+			riskFactors: true,
 			medications: true,
 			anthropometricData: true,
 			problems: true
@@ -64,8 +64,8 @@ export class AmbulatoriaSummaryFacadeService {
 			this.hceGeneralStateService.getPersonalHistories(this.idPaciente).subscribe(ph => this.personalHistoriesSubject.next(ph));
 		}
 
-		if (fieldsToUpdate.vitalSigns) {
-			this.hceGeneralStateService.getVitalSigns(this.idPaciente).subscribe(vs => this.vitalSignsSubject.next(vs));
+		if (fieldsToUpdate.riskFactors) {
+			this.hceGeneralStateService.getRiskFactors(this.idPaciente).subscribe(vs => this.riskFactorsSubject.next(vs));
 		}
 
 		if (fieldsToUpdate.medications) {
@@ -97,7 +97,7 @@ export interface AmbulatoriaFields {
 	allergies?: boolean;
 	familyHistories?: boolean;
 	personalHistories?: boolean;
-	vitalSigns?: boolean;
+	riskFactors?: boolean;
 	medications?: boolean;
 	anthropometricData?: boolean;
 	problems?: boolean;

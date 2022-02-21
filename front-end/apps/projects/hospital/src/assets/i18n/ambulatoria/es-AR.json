@@ -146,7 +146,7 @@
                     "TIPO": "Tipo de procedimiento",
                     "PROCEDIMIENTO": "Procedimiento"
                 },
-                "signos-vitales": {
+                "factores-de-riesgo": {
                     "TITLE": "Factores de Riesgo",
                     "HEART_RATE": "Frecuencia cardíaca (/min)",
                     "RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
@@ -201,7 +201,7 @@
                     "DISCARD": "NO, DESCARTARLOS",
                     "ASK": "¿Desea incluirlos en la consulta?",
                     "CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
-                    "CONTENT_VITAL_SIGNS": "Hay factores de riesgo cargados previamente.",
+                    "CONTENT_RISK_FACTORS": "Hay factores de riesgo cargados previamente.",
                     "CONTENT": "Hay datos antropométricos y factores de riesgo cargados previamente."
                 },
                 "alergias": {
@@ -227,7 +227,7 @@
                     "DESCRIPTION": "Últimos datos antropométricos cargados previamente el {{date}} hs",
                     "QUESTION": "¿Desea incluirlos en la consulta? "
                 },
-                "vital_signs_dialog": {
+                "risk_factors_dialog": {
                     "ADD": "SI, INCLUIRLOS",
                     "DISCARD": "NO, DESCARTARLOS",
                     "DESCRIPTION": "Últimos factores de riesgo cargados previamente el {{date}} hs",

@@ -23,7 +23,7 @@ import {
 	HealthHistoryConditionDto,
 	ImmunizationDto,
 	MedicationDto,
-	Last2VitalSignsDto,
+	Last2RiskFactorsDto,
 	AnthropometricDataDto,
 	PersonPhotoDto,
 
@@ -72,7 +72,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public personalHistory$: Observable<HealthHistoryConditionDto[]>;
 	public immunizations$: Observable<ImmunizationDto[]>;
 	public medications$: Observable<MedicationDto[]>;
-	public vitalSigns$: Observable<Last2VitalSignsDto>;
+	public riskFactors$: Observable<Last2RiskFactorsDto>;
 	public anthropometricData$: Observable<AnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
@@ -91,7 +91,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private internmentEpisodeService: InternmentEpisodeService,
 		private readonly internmentStateService: InternmentStateService,
 		public dialog: MatDialog,
-		private contextService: ContextService ) {
+		private contextService: ContextService) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 
@@ -106,7 +106,7 @@ export class InternacionPacienteComponent implements OnInit {
 				);
 
 				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
+					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 
 				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 					tap((internmentEpisode: InternmentSummaryDto) => {
@@ -174,7 +174,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.personalHistory$ = this.internmentStateService.getPersonalHistories(this.internmentEpisodeId);
 		this.immunizations$ = this.internmentStateService.getImmunizations(this.internmentEpisodeId);
 		this.medications$ = this.internmentStateService.getMedications(this.internmentEpisodeId);
-		this.vitalSigns$ = this.internmentStateService.getVitalSigns(this.internmentEpisodeId);
+		this.riskFactors$ = this.internmentStateService.getRiskFactors(this.internmentEpisodeId);
 		this.anthropometricData$ = this.internmentStateService.getAnthropometricData(this.internmentEpisodeId);
 	}
 
@@ -200,7 +200,7 @@ export class InternacionPacienteComponent implements OnInit {
 
 	goToEditPatient(): void {
 		const person = {
-			id: this.patientId ,
+			id: this.patientId,
 		};
 		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
 			queryParams: person

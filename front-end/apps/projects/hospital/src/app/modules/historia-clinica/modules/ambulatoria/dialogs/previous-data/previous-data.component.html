@@ -10,8 +10,7 @@
 		<img src='assets/images/error_outline.png'>
 	</div>
 	<div fxLayout="column" class="message" fxLayoutAlign="start center" fxLayoutGap="10px">
-		<ng-container
-			*ngIf="previousData.isVitalSigns && previousData.isAnthropometricData; else content">
+		<ng-container *ngIf="previousData.isRiskFactors && previousData.isAnthropometricData; else content">
 			<span [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.CONTENT'"></span>
 		</ng-container>
 		<span class="question" [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.ASK'"></span>
@@ -28,14 +27,13 @@
 </div>
 
 <ng-template #content>
-	<ng-container
-		*ngIf="previousData.isAnthropometricData; else content_else">
+	<ng-container *ngIf="previousData.isAnthropometricData; else content_else">
 		<span [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.CONTENT_ANTHROMETRIC'"></span>
 	</ng-container>
 </ng-template>
 
 <ng-template #content_else>
-	<ng-container *ngIf="previousData.isVitalSigns">
-		<span [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.CONTENT_VITAL_SIGNS'"></span>
+	<ng-container *ngIf="previousData.isRiskFactors">
+		<span [translate]="'ambulatoria.paciente.nueva-consulta.previous-data.CONTENT_RISK_FACTORS'"></span>
 	</ng-container>
 </ng-template>

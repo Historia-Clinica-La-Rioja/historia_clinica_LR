@@ -73,7 +73,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 				height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
 				weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
 			}),
-			vitalSigns: this.formBuilder.group({
+			riskFactors: this.formBuilder.group({
 				heartRate: this.formBuilder.group({
 					value: [null, Validators.min(0)],
 					effectiveTime: [newMoment()],
@@ -118,7 +118,7 @@ export class NotaEvolucionFormComponent implements OnInit {
 			this.apiErrors = [];
 			const evolutionNote = this.buildEvolutionNoteDto();
 			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId)
-			.subscribe(() => {
+				.subscribe(() => {
 					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
 					this.goToInternmentSummary();
 				}, error => {
@@ -153,13 +153,13 @@ export class NotaEvolucionFormComponent implements OnInit {
 			diagnosis: this.diagnosticos,
 			immunizations: this.immunizations,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
-			vitalSigns: isNull(formValues.vitalSigns) ? undefined : {
-				bloodOxygenSaturation: getEffectiveValue(formValues.vitalSigns.bloodOxygenSaturation),
-				diastolicBloodPressure: getEffectiveValue(formValues.vitalSigns.diastolicBloodPressure),
-				heartRate: getEffectiveValue(formValues.vitalSigns.heartRate),
-				respiratoryRate: getEffectiveValue(formValues.vitalSigns.respiratoryRate),
-				systolicBloodPressure: getEffectiveValue(formValues.vitalSigns.systolicBloodPressure),
-				temperature: getEffectiveValue(formValues.vitalSigns.temperature)
+			riskFactors: isNull(formValues.riskFactors) ? undefined : {
+				bloodOxygenSaturation: getEffectiveValue(formValues.riskFactors.bloodOxygenSaturation),
+				diastolicBloodPressure: getEffectiveValue(formValues.riskFactors.diastolicBloodPressure),
+				heartRate: getEffectiveValue(formValues.riskFactors.heartRate),
+				respiratoryRate: getEffectiveValue(formValues.riskFactors.respiratoryRate),
+				systolicBloodPressure: getEffectiveValue(formValues.riskFactors.systolicBloodPressure),
+				temperature: getEffectiveValue(formValues.riskFactors.temperature)
 			},
 			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos()
 		};
@@ -177,8 +177,8 @@ export class NotaEvolucionFormComponent implements OnInit {
 		}
 	}
 
-	setVitalSignEffectiveTime(newEffectiveTime: Moment, formField: string): void {
-		((this.form.controls.vitalSigns as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
+	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+		((this.form.controls.riskFactors as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
 	back(): void {

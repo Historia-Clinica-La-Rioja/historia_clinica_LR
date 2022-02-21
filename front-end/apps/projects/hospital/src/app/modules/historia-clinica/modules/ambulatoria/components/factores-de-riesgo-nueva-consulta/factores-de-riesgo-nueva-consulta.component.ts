@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
-import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
 
 @Component({
   selector: 'app-factores-de-riesgo-nueva-consulta',
@@ -9,7 +9,7 @@ import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales
 })
 export class FactoresDeRiesgoNuevaConsultaComponent implements OnInit {
 
-  @Input() signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
+  @Input() factoresDeRiesgoNuevaConsultaService: FactoresDeRiesgoNuevaConsultaService;
   @Input() showPreloadData: boolean = false;
   readonly isNumberOrDot = isNumberOrDot;
 

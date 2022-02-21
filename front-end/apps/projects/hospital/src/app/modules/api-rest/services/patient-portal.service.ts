@@ -1,28 +1,28 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import {
 	BasicPatientDto,
 	CompletePatientDto,
 	HCEAllergyDto,
 	HCEAnthropometricDataDto,
-	HCELast2VitalSignsDto,
+	HCELast2RiskFactorsDto,
 	HCEMedicationDto,
 	HCEPersonalHistoryDto,
 	PatientMedicalCoverageDto,
 	PersonalInformationDto,
 	PersonPhotoDto,
 } from '@api-rest/api-model';
-import {environment} from '@environments/environment';
+import { environment } from '@environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class PatientPortalService {
 
-  constructor(
-  	private readonly http: HttpClient,
-  ) { }
+	constructor(
+		private readonly http: HttpClient,
+	) { }
 
 	getAllergies(): Observable<HCEAllergyDto[]> {
 		const url = `${environment.apiBase}/patientportal/allergies`;
@@ -44,9 +44,9 @@ export class PatientPortalService {
 		return this.http.get<HCEMedicationDto[]>(url);
 	}
 
-	getVitalSigns(): Observable<HCELast2VitalSignsDto> {
+	getRiskFactors(): Observable<HCELast2RiskFactorsDto> {
 		const url = `${environment.apiBase}/patientportal/riskFactors`;
-		return this.http.get<HCELast2VitalSignsDto>(url);
+		return this.http.get<HCELast2RiskFactorsDto>(url);
 	}
 
 	getAnthropometricData(): Observable<HCEAnthropometricDataDto> {
@@ -55,8 +55,8 @@ export class PatientPortalService {
 	}
 
 	getBasicDataPatient(): Observable<BasicPatientDto> {
-  		const url = `${environment.apiBase}/patientportal/basicdata`;
-  		return this.http.get<BasicPatientDto>(url);
+		const url = `${environment.apiBase}/patientportal/basicdata`;
+		return this.http.get<BasicPatientDto>(url);
 	}
 
 	getPatientPhoto(): Observable<PersonPhotoDto> {

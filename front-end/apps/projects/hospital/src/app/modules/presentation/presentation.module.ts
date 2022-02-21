@@ -27,8 +27,8 @@ import { NoDataComponent } from './components/no-data/no-data.component';
 import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { PatientTypeLogoComponent } from './components/patient-type-logo/patient-type-logo.component';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
-import { SignoVitalComponent } from './components/signo-vital-current/signo-vital.component';
-import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-current-previous/signo-vital-current-previous.component';
+import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
+import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
@@ -75,8 +75,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientCardComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
-		SignoVitalComponent,
-		SignoVitalCurrentPreviousComponent,
+		FactorDeRiesgoComponent,
+		FactorDeRiesgoCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,
@@ -132,8 +132,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientCardComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
-		SignoVitalComponent,
-		SignoVitalCurrentPreviousComponent,
+		FactorDeRiesgoComponent,
+		FactorDeRiesgoCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,

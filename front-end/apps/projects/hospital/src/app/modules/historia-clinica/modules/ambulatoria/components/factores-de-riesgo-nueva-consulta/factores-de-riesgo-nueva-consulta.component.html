@@ -1,30 +1,30 @@
 <div class="margin-bottom">
-    <h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TITLE'"></h2>
+    <h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.TITLE'"></h2>
     <div *ngIf="showPreloadData" class="dialog">
         <mat-icon online class="icon" color="primary">error_outline</mat-icon>
         <div class="info-text">
-            <span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DESCRIPTION'"
-                [translateParams]="{date: signosVitalesNuevaConsultaService.getDate()}"> </span>
+            <span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DESCRIPTION'"
+                [translateParams]="{date: factoresDeRiesgoNuevaConsultaService.getDate()}"> </span>
             <span class="question"
-                [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.QUESTION'"></span>
+                [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.QUESTION'"></span>
             <span fxLayout="row">
-                <button class="button" id=include_vital_signs mat-button color="primary"
-                    (click)=signosVitalesNuevaConsultaService.savePreloadedVitalSignsData()>
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.ADD'"></span>
+                <button class="button" id=include_risk_factors mat-button color="primary"
+                    (click)=factoresDeRiesgoNuevaConsultaService.savePreloadedRiskFactorsData()>
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.ADD'"></span>
                 </button>
-                <button class="button" id=discard_vital_signs mat-button color="warn"
-                    (click)=signosVitalesNuevaConsultaService.discardPreloadedVitalSignsData()>
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.vital_signs_dialog.DISCARD'"></span>
+                <button class="button" id=discard_risk_factors mat-button color="warn"
+                    (click)=factoresDeRiesgoNuevaConsultaService.discardPreloadedRiskFactorsData()>
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DISCARD'"></span>
                 </button>
             </span>
         </div>
     </div>
     <app-document-section class="margin-bottom">
         <ng-container concept-form>
-            <form fxLayout="column" fxLayoutGap="15px" [formGroup]="signosVitalesNuevaConsultaService.getForm()">
+            <form fxLayout="column" fxLayoutGap="15px" [formGroup]="factoresDeRiesgoNuevaConsultaService.getForm()">
                 <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
-                    <div class="signos-vitales-field" formGroupName="heartRate">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.HEART_RATE'">
+                    <div class="factores-de-riesgo-field" formGroupName="heartRate">
+                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.HEART_RATE'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -32,18 +32,19 @@
                                     type="number" matInput (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.heartRate.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'heartRate')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.heartRate.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'heartRate')">
                         </app-effective-time>
                     </div>
-                    <div class="signos-vitales-field" formGroupName="respiratoryRate">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.RESPIRATORY_RATE'">
+                    <div class="factores-de-riesgo-field" formGroupName="respiratoryRate">
+                        <mat-label
+                            [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.RESPIRATORY_RATE'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -51,21 +52,21 @@
                                     placeholder="00" type="number" matInput (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'respiratoryRate')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'respiratoryRate')">
                         </app-effective-time>
                     </div>
                 </div>
 
                 <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
-                    <div class="signos-vitales-field" formGroupName="temperature">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.TEMPERATURE'">
+                    <div class="factores-de-riesgo-field" formGroupName="temperature">
+                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.TEMPERATURE'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -73,19 +74,19 @@
                                     type="number" matInput (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.temperature.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'temperature')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.temperature.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'temperature')">
                         </app-effective-time>
                     </div>
-                    <div class="signos-vitales-field" formGroupName="bloodOxygenSaturation">
+                    <div class="factores-de-riesgo-field" formGroupName="bloodOxygenSaturation">
                         <mat-label
-                            [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_OXYGEN_SATURATION'">
+                            [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.BLOOD_OXYGEN_SATURATION'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -94,22 +95,22 @@
                                     (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodOxygenSaturation')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'bloodOxygenSaturation')">
                         </app-effective-time>
                     </div>
                 </div>
 
                 <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
-                    <div class="signos-vitales-field" formGroupName="systolicBloodPressure">
+                    <div class="factores-de-riesgo-field" formGroupName="systolicBloodPressure">
                         <mat-label
-                            [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.SYSTOLIC_BLOOD_PRESSURE'">
+                            [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.SYSTOLIC_BLOOD_PRESSURE'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -117,7 +118,7 @@
                                     placeholder="00" type="number" matInput (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
@@ -125,13 +126,13 @@
                         <h5 class="recomendado recomendado-tension"
                             [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'systolicBloodPressure')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'systolicBloodPressure')">
                         </app-effective-time>
                     </div>
-                    <div class="signos-vitales-field" formGroupName="diastolicBloodPressure">
+                    <div class="factores-de-riesgo-field" formGroupName="diastolicBloodPressure">
                         <mat-label
-                            [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.DIASTOLIC_BLOOD_PRESSURE'">
+                            [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.DIASTOLIC_BLOOD_PRESSURE'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -140,7 +141,7 @@
                                     (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
@@ -148,15 +149,15 @@
                         <h5 class="recomendado recomendado-tension"
                             [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'diastolicBloodPressure')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'diastolicBloodPressure')">
                         </app-effective-time>
                     </div>
                 </div>
 
                 <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
-                    <div class="signos-vitales-field" formGroupName="bloodGlucose">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.BLOOD_GLUCOSE'">
+                    <div class="factores-de-riesgo-field" formGroupName="bloodGlucose">
+                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.BLOOD_GLUCOSE'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -164,19 +165,19 @@
                                     type="number" matInput (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.bloodGlucose.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'bloodGlucose')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.bloodGlucose.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'bloodGlucose')">
                         </app-effective-time>
                     </div>
-                    <div class="signos-vitales-field" formGroupName="glycosylatedHemoglobin">
+                    <div class="factores-de-riesgo-field" formGroupName="glycosylatedHemoglobin">
                         <mat-label
-                            [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.GLYCOSYLATED_HEMOGLOBIN'">
+                            [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.GLYCOSYLATED_HEMOGLOBIN'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -185,22 +186,22 @@
                                     (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.glycosylatedHemoglobin.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'glycosylatedHemoglobin')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.glycosylatedHemoglobin.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'glycosylatedHemoglobin')">
                         </app-effective-time>
                     </div>
                 </div>
 
                 <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
-                    <div class="signos-vitales-field" formGroupName="cardiovascularRisk">
+                    <div class="factores-de-riesgo-field" formGroupName="cardiovascularRisk">
                         <mat-label
-                            [translate]="'ambulatoria.paciente.nueva-consulta.signos-vitales.CARDIOVASCULAR_RISK'">
+                            [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.CARDIOVASCULAR_RISK'">
                         </mat-label>
                         <div fxLayout="row" fxLayoutAlign="between center">
                             <mat-form-field [floatLabel]="'never'" appearance="outline">
@@ -208,14 +209,14 @@
                                     placeholder="00" type="number" matInput (keypress)="isNumberOrDot($event.key)">
                             </mat-form-field>
                             <ng-container *ngIf="showPreloadData">
-                                <mat-icon class="field-icon-vital-sign" color="primary">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
                                     error_outline
                                 </mat-icon>
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="signosVitalesNuevaConsultaService.getForm().value.cardiovascularRisk.effectiveTime"
-                            (update)="signosVitalesNuevaConsultaService.setVitalSignEffectiveTime($event, 'cardiovascularRisk')">
+                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.cardiovascularRisk.effectiveTime"
+                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'cardiovascularRisk')">
                         </app-effective-time>
                     </div>
                 </div>

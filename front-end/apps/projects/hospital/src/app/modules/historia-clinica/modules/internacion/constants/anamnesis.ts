@@ -1,27 +1,27 @@
-export const VITAL_SIGNS_COLUMNS = [
+export const RISK_FACTORS_COLUMNS = [
 	{
 		def: 'heartRate',
-		header: 'internaciones.anamnesis.vital-signs.table.columns.HEART_RATE',
+		header: 'internaciones.anamnesis.risk-factors.table.columns.HEART_RATE',
 		text: ap => ap.heartRate.description
 	},
 	{
 		def: 'respiratoryRate',
-		header: 'internaciones.anamnesis.vital-signs.table.columns.RESPIRATORY_RATE',
+		header: 'internaciones.anamnesis.risk-factors.table.columns.RESPIRATORY_RATE',
 		text: ap => ap.respiratoryRate.description
 	},
 	{
 		def: 'temperature',
-		header: 'internaciones.anamnesis.vital-signs.table.columns.TEMPERATURE',
+		header: 'internaciones.anamnesis.risk-factors.table.columns.TEMPERATURE',
 		text: ap => ap.temperature.description
 	},
 	{
 		def: 'bloodOxygenSaturation',
-		header: 'internaciones.anamnesis.vital-signs.table.columns.BLOOD_OXYGEN_SATURATION',
+		header: 'internaciones.anamnesis.risk-factors.table.columns.BLOOD_OXYGEN_SATURATION',
 		text: ap => ap.bloodOxygenSaturation.description
 	},
 	{
 		def: 'systolicBloodPressure',
-		header: 'internaciones.anamnesis.vital-signs.table.columns.BLOOD_PRESURE',
+		header: 'internaciones.anamnesis.risk-factors.table.columns.BLOOD_PRESURE',
 		text: ap => `${ap.systolicBloodPressure.description}/${ap.diastolicBloodPressure.description}`
 	}
 ];
