@@ -2,7 +2,7 @@ package ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter;
 
 import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
 import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
-import ar.lamansys.sgx.shared.token.JWTUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

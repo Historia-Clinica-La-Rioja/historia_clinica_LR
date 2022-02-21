@@ -2,7 +2,6 @@ package ar.lamansys.sgx.auth.jwt.application.generatetoken;
 
 import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
 import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
-import ar.lamansys.sgx.shared.token.JWTUtils;
 import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
 import ar.lamansys.sgx.auth.jwt.domain.token.TokenData;
 import org.junit.jupiter.api.BeforeEach;

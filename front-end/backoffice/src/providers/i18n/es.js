@@ -35,40 +35,40 @@ const messages = {
             "closingBeforeOpening": "La hora de apertura no puede ser posterior a la hora de cierre",
             "matchingIds": "Esa Especialidad | Sector no pertenece a esa institución"
         },
-        "healthcareprofessional":{
-            "exists": "Esta persona ya está registrada como profesional en el sistema"
+        "healthcareprofessional": {
+            "exists": "Esta persona ya está registrada como profesional en el sistema",
         },
-        "healthcare-professional":{
+        "healthcare-professional": {
             "specialty-profession-exists": "La profesión y especialidad ya se encuentra asignada",
             "only-one-specialty": "Esta especialidad no puede borrarse dado que es la única que posee el profesional",
             "specialty-profession-not-exists": "La especialidad no existe",
-            "affected-to-diary-agenda":"Esta especialidad y profesional están afectados a una agenda en curso"
+            "affected-to-diary-agenda": "Esta especialidad y profesional están afectados a una agenda en curso"
         },
-        "role":{
-          "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
+        "role": {
+            "requiresprofessional": "Alguno de los roles asignados requiere que el usuario sea un profesional"
         },
         "PROFESSIONAL_REQUIRED": "Alguno de los roles asignados requiere que el usuario sea un profesional",
         "ROOT_LOST_PERMISSION": "El admin no puede perder el rol: ROOT",
         "USER_INVALID_ROLE": "El usuario creado no puede tener el siguiente rol: ROOT",
-        "user":{
+        "user": {
             "exists": "Esta persona ya tiene un usuario en el sistema",
             "hasrole": "El profesional que quiere eliminar tiene un rol asociado"
         },
-        "sector":{
-          "mandatoryCareType": "El tipo de cuidado es obligatorio para ese tipo de organización de sector",
-          "parentOfItself": "Un sector no puede ser padre de sí mismo"
+        "sector": {
+            "mandatoryCareType": "El tipo de cuidado es obligatorio para ese tipo de organización de sector",
+            "parentOfItself": "Un sector no puede ser padre de sí mismo"
         },
         forbidden: 'No tiene los permisos necesarios',
         "sector-description-inst-unique": "Ya existe un sector con el mismo nombre en la institución",
-        "care-line":{
+        "care-line": {
             "clinical-specialty-exists": "La especialidad clínica ya se encuentra asociada a la línea de cuidado"
         },
-        "medical-coverage":{
+        "medical-coverage": {
             "rnos-duplicated": "El Rnos ya se encuentra asociado a otra cobertura médica",
             "cuit-duplicated": "El CUIT ya se encuentra asociado a otra cobertura médica",
             "invalid-cuit": "El CUIT debe ser numérico",
             "plan-exists": "El plan ya se encuentra asociado a la cobertura médica",
-        }
+        },
     },
     files: {
         cant_download: 'No se pudo descargar el archivo'
@@ -93,17 +93,17 @@ const messages = {
             createRelated: 'Crear Cama'
         },
         rooms: {
-          name: 'Habitación |||| Habitaciones',
-          fields: {
-              description: 'Nombre',
-              type: 'Tipo',
-              specialityId: 'Especialidad',
-              dischargeDate: 'Fecha de alta',
-              sectorId: 'Sector',
-              clinicalSpecialtySectorId: 'Especialidad | Sector',
-              roomNumber: 'Nro. habitación',
-              beds: 'Camas'
-          },
+            name: 'Habitación |||| Habitaciones',
+            fields: {
+                description: 'Nombre',
+                type: 'Tipo',
+                specialityId: 'Especialidad',
+                dischargeDate: 'Fecha de alta',
+                sectorId: 'Sector',
+                clinicalSpecialtySectorId: 'Especialidad | Sector',
+                roomNumber: 'Nro. habitación',
+                beds: 'Camas'
+            },
             createRelated: 'Crear Habitación'
         },
         cities: {
@@ -119,17 +119,17 @@ const messages = {
                 description: 'Nombre',
             },
         },
-        doctorsoffices:{
-          name: 'Consultorio |||| Consultorios',
-          fields:{
-              description: 'Nombre',
-              openingTime: 'Horario de apertura',
-              closingTime: 'Horario de cierre',
-              clinicalSpecialtySectorId: 'Especialidad | Sector',
-              institutionId: 'Institución',
-              topic: 'Tópico'
-          },
-          createRelated: 'Crear Consultorio',
+        doctorsoffices: {
+            name: 'Consultorio |||| Consultorios',
+            fields: {
+                description: 'Nombre',
+                openingTime: 'Horario de apertura',
+                closingTime: 'Horario de cierre',
+                clinicalSpecialtySectorId: 'Especialidad | Sector',
+                institutionId: 'Institución',
+                topic: 'Tópico'
+            },
+            createRelated: 'Crear Consultorio',
         },
         addresses: {
             name: 'Dirección |||| Direcciones',
@@ -146,7 +146,7 @@ const messages = {
                 latitude: 'Latitud',
                 longitude: 'Longitud',
             },
-        }, 
+        },
         institutions: {
             name: 'Institución |||| Instituciones',
             fields: {
@@ -159,7 +159,7 @@ const messages = {
                 dependencyId: 'Dependencia',
                 provinceCode: 'Código de provincia'
             },
-        }, 
+        },
         snvs: {
             name: 'SNVS |||| SNVS',
             fields: {
@@ -200,7 +200,7 @@ const messages = {
                 description: 'Descripción',
                 sctidCode: 'Código SNOMED',
             },
-        }, 
+        },
         clinicalspecialtysectors: {
             name: 'Especialidad | Sector',
             fields: {
@@ -210,7 +210,7 @@ const messages = {
                 rooms: 'Habitaciones',
                 doctorsoffices: 'Consultorios',
             },
-            createRelated: 'Crear Especialidad | Sector'
+            createRelated: 'Crear Especialidad | Sector',
         },
         professionalspecialties: {
             name: 'Profesión |||| Profesiones',
@@ -232,7 +232,7 @@ const messages = {
                 clinicalSpecialtyId: 'Especialidad'
             },
             createRelated: 'Crear Profesional',
-        }, 
+        },
         healthcareprofessionalspecialties: {
             name: 'Profesión | Especialidad',
             fields: {
