@@ -2,6 +2,8 @@ package net.pladema.emergencycare.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.events.EventTopicDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
@@ -42,15 +44,9 @@ public class EmergencyCareEpisodeMedicalDischargeController {
     private final EmergencyCareEpisodeService emergencyCareEpisodeService;
     private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
     private final InstitutionExternalService institutionExternalService;
+	private final SimplePublishService simplePublishService;
 
-    EmergencyCareEpisodeMedicalDischargeController(
-            EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService,
-            EmergencyCareDischargeMapper emergencyCareDischargeMapper,
-            HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-            PatientExternalService patientExternalService,
-            EmergencyCareEpisodeService emergencyCareEpisodeService,
-            EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
-            InstitutionExternalService institutionExternalService) {
+    EmergencyCareEpisodeMedicalDischargeController(EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService, EmergencyCareDischargeMapper emergencyCareDischargeMapper, HealthcareProfessionalExternalService healthcareProfessionalExternalService, PatientExternalService patientExternalService, EmergencyCareEpisodeService emergencyCareEpisodeService, EmergencyCareEpisodeStateService emergencyCareEpisodeStateService, InstitutionExternalService institutionExternalService, SimplePublishService simplePublishService) {
         this.emergencyCareEpisodeDischargeService = emergencyCareEpisodeDischargeService;
         this.emergencyCareDischargeMapper = emergencyCareDischargeMapper;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
@@ -58,7 +54,8 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
         this.institutionExternalService = institutionExternalService;
-    }
+		this.simplePublishService = simplePublishService;
+	}
 
     @Transactional
     @PostMapping
@@ -81,6 +78,7 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         MedicalDischargeBo medicalDischargeBo = emergencyCareDischargeMapper.toMedicalDischargeBo(medicalDischargeDto,medicalDischargeBy,patientInfo, episodeId);
         boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(medicalDischargeBo, institutionZoneId, institutionId);
         emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null);
+		simplePublishService.publish(medicalDischargeBo.getPatientId(), EventTopicDto.ALTA_MEDICA_GUARDIA);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
     }
