@@ -5,6 +5,7 @@ import { AnthropometricDataDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
 import { Observable } from 'rxjs';
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
 	selector: 'app-antropometricos-summary',
@@ -31,7 +32,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 	};
 
 	constructor(
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -77,6 +79,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.updateAnthropometricData();
+				this.internmentSummaryFacadeService.setFieldsToUpdate({ anthropometricData: true });
 			}
 		}
 		);

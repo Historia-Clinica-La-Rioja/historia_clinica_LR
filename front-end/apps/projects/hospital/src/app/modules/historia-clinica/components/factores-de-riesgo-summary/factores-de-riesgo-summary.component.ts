@@ -7,6 +7,7 @@ import { momentParseDateTime } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { AddRiskFactorsComponent } from '../../dialogs/add-risk-factors/add-risk-factors.component';
 import { Observable } from 'rxjs';
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
 	selector: 'app-factores-de-riesgo-summary',
@@ -23,7 +24,8 @@ export class FactoresDeRiesgoSummaryComponent implements OnInit {
 	factoresDeRiesgo: RiskFactorCurrentPrevious[] = [];
 
 	constructor(
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -81,6 +83,7 @@ export class FactoresDeRiesgoSummaryComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.refreshRiskFactors();
+				this.internmentSummaryFacadeService.setFieldsToUpdate({ riskFactors: true });
 			}
 		});
 	}

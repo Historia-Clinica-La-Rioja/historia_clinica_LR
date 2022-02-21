@@ -10,10 +10,9 @@ import { TableModel, ActionDisplays } from '@presentation/components/table/table
 import { DIAGNOSTICOS } from '../../constants/summaries';
 import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-diagnosis.component';
 import { ContextService } from '@core/services/context.service';
-import {
-	EvolutionNotesListenerService
-} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/evolution-notes-listener.service";
+
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
+import { InternmentSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 
 export const COVID_SNOMED = { sctid: '186747009', pt: 'infección por coronavirus' };
 
@@ -38,9 +37,9 @@ export class DiagnosisSummaryComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly router: Router,
 		public dialog: MatDialog,
-		private evolutionNotesListenerService: EvolutionNotesListenerService,
 		private readonly route: ActivatedRoute,
 		private readonly contextService: ContextService,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -127,7 +126,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 						dialogRef.afterClosed().subscribe(
 							() => {
 								this.loadDiagnosesGeneral();
-								this.evolutionNotesListenerService.loadEvolutionNotes();
+								this.internmentSummaryFacadeService.loadEvolutionNotes();
 							}
 						);
 					},

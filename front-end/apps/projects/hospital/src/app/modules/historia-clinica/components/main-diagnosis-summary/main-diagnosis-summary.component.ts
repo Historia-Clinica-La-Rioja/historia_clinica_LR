@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { DIAGNOSTICO_PRINCIPAL } from '../../constants/summaries';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { HealthConditionDto } from '@api-rest/api-model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 
@@ -15,6 +15,7 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
 	@Input() editable = true;
+	@Input() mainDiagnosis: HealthConditionDto;
 
 	mainDiagnosticosSummary = DIAGNOSTICO_PRINCIPAL;
 	mainDiagnosis$: Observable<HealthConditionDto>;
@@ -34,6 +35,12 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 				const patientId = Number(params.get('idPaciente'));
 				this.routePrefix = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${patientId}`;
 			});
+	}
+
+	ngOnChanges() {
+		if (this.mainDiagnosis) {
+			this.mainDiagnosis$ = of(this.mainDiagnosis);
+		}
 	}
 
 	goToClinicalEvaluation(id: number): void {
