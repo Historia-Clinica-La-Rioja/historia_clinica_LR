@@ -1,26 +1,26 @@
 package net.pladema.assets.service.impl;
 
-import net.pladema.assets.service.AssetsService;
-import net.pladema.assets.service.domain.AssetsFileBo;
-import net.pladema.assets.service.domain.Assets;
-import ar.lamansys.sgx.shared.files.FileService;
-import ar.lamansys.sgx.shared.files.StreamFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.files.StreamFile;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.assets.service.AssetsService;
+import net.pladema.assets.service.domain.Assets;
+import net.pladema.assets.service.domain.AssetsFileBo;
+
+@Slf4j
 @Service
 public class AssetsServiceImpl implements AssetsService {
 
     private static final String ORIGINAL_PATH = "/assets/webapp/";
     private static final String CUSTOM_PATH = "/assets/custom/";
-    private final Logger logger;
     private final String INPUT_LOG = "Input parameters -> fileName {}";
     private static final Assets SPONSOR_LOGO = new Assets("image/png", "sponsor-logo-512x128.png");
     private static final Assets FAVICON = new Assets("image/x-icon", "favicon.ico");
@@ -51,32 +51,35 @@ public class AssetsServiceImpl implements AssetsService {
     public AssetsServiceImpl(FileService fileService, StreamFile streamFile) {
         this.fileService = fileService;
         this.streamFile = streamFile;
-        this.logger = LoggerFactory.getLogger(getClass());
     }
 
     @Override
     public Optional<Assets> findByName(String name) {
-        logger.debug(INPUT_LOG, name);
+        log.debug(INPUT_LOG, name);
         return this.assetsList.stream().filter(a -> a.getNameFile().equals(name)).findAny();
     }
 
     @Override
     public AssetsFileBo getFile(String fileName) {
-        logger.debug(INPUT_LOG, fileName);
+        log.debug(INPUT_LOG, fileName);
 
         Assets newAsset = this.findByName(fileName).get();
         String partialPath = CUSTOM_PATH.concat(newAsset.getNameFile());
         String completePath = fileService.buildRelativePath(partialPath);
         
         if (this.streamFile.existFile(completePath)) {
+			log.debug("Using custom {}", fileName);
             return new AssetsFileBo(
                     this.fileService.loadFile(partialPath),
-                    newAsset.getContentType());
+                    newAsset.getContentType()
+			);
         }
 
         String newPartialPath = ORIGINAL_PATH.concat(newAsset.getNameFile());
+		log.debug("Using original {}", fileName);
         return new AssetsFileBo(
                 new ClassPathResource(newPartialPath),
-                newAsset.getContentType());
+                newAsset.getContentType()
+		);
     }
 }
