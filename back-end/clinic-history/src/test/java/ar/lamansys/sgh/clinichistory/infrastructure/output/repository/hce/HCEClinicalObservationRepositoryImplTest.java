@@ -21,6 +21,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,11 +43,12 @@ class HCEClinicalObservationRepositoryImplTest extends UnitRepository {
 	void test_hce_risk_factor_condition_success() {
 
 		Integer outpatientId = 1;
+		List<Short> invalidDocumentTypes = Arrays.asList(DocumentType.ANAMNESIS, DocumentType.EVALUATION_NOTE, DocumentType.EPICRISIS);
 		String date = "2020-05-04 16:00";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		createOutpatientStates(outpatientId, LocalDateTime.parse(date, formatter));
 
-		HCEMapClinicalObservationVo mapClinicalObservationVo = hceClinicalObservationRepository.getGeneralState(outpatientId);
+		HCEMapClinicalObservationVo mapClinicalObservationVo = hceClinicalObservationRepository.getGeneralState(outpatientId, invalidDocumentTypes);
 
 		assertThat(mapClinicalObservationVo.getClinicalObservationByCode().entrySet())
 				.isNotNull()
