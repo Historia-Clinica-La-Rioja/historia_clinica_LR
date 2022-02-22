@@ -37,10 +37,12 @@ public class UpdateSnomedConceptsByCsv {
     private final SharedSnomedPort sharedSnomedPort;
 	private final SnomedCacheLogRepository snomedCacheLogRepository;
 
-    public void run(MultipartFile csvFile, String eclKey) {
+    public UpdateConceptsResultBo run(MultipartFile csvFile, String eclKey) {
 		log.debug("Input parameters -> csvFile {}, eclKey {}", csvFile.getOriginalFilename(), eclKey);
 
         Integer conceptsProcessed = 0;
+		Integer erroneousConcepts = 0;
+		List<String> errorMessages = new ArrayList<>();
 		Integer batchSize = BATCH_MAX_SIZE;
         Integer totalConcepts = SnomedConceptsCsvReader.getTotalRecords(csvFile);
         LocalDate today = dateTimeProvider.nowDate();
@@ -51,8 +53,6 @@ public class UpdateSnomedConceptsByCsv {
         while (conceptsProcessed < totalConcepts) {
 			try {
 				conceptBatch = getNextBatch(batchSize, conceptsProcessed, totalConcepts, allConcepts);
-				if (conceptBatch.isEmpty())
-					return;
 				conceptsProcessed = saveConcepts(conceptsProcessed, today, snomedGroupId, conceptBatch);
 				// if the batch size had decreased before due to an error, it will increase again
 				batchSize = Math.min(batchSize * BATCH_SIZE_MULTIPLIER, BATCH_MAX_SIZE);
@@ -61,9 +61,9 @@ public class UpdateSnomedConceptsByCsv {
 				// If the batch size is equal to 1, it means that that element is the one that can't be saved.
 				// So, it should be skipped to try to save the rest
 				if (batchSize.equals(1)) {
-					log.error(e.getMessage());
-					saveErrorLog(e, conceptBatch.get(0));
+					saveError(e, conceptBatch.get(0), errorMessages);
 					conceptsProcessed += 1;
+					erroneousConcepts += 1;
 					batchSize = BATCH_MAX_SIZE;
 				} else {
 					batchSize = Math.max(batchSize / BATCH_SIZE_DIVIDER, 1);
@@ -71,11 +71,18 @@ public class UpdateSnomedConceptsByCsv {
 			}
 
         }
-		log.debug("Finished adding {} {} concepts", conceptsProcessed, eclKey);
+		UpdateConceptsResultBo result = new UpdateConceptsResultBo(eclKey,
+				conceptsProcessed - erroneousConcepts,
+				erroneousConcepts,
+				errorMessages);
+		log.debug("Finished loading snomed concepts");
+		log.debug("Output -> {}", result);
+		return result;
     }
 
-	private void saveErrorLog(Exception e, SnomedConceptBo snomedConceptBo) {
+	private void saveError(Exception e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
 		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), e.getCause().getCause().getMessage());
+		errorMessages.add(message);
 		snomedCacheLogRepository.save(new SnomedCacheLog(message, dateTimeProvider.nowDateTime()));
 	}
 

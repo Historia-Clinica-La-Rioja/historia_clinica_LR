@@ -6,7 +6,9 @@ import net.pladema.snowstorm.controller.dto.PreferredTermDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
+import net.pladema.snowstorm.controller.dto.UpdateConceptsResultDto;
 import net.pladema.snowstorm.services.SnowstormService;
+import net.pladema.snowstorm.services.loadCsv.UpdateConceptsResultBo;
 import net.pladema.snowstorm.services.loadCsv.UpdateSnomedConceptsByCsv;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
 import net.pladema.snowstorm.services.domain.SnomedSearchBo;
@@ -123,10 +125,20 @@ public class SnowstormController {
 
     @PostMapping("/load-concepts-csv")
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-	public void loadConceptsByCsv(@RequestParam("file") MultipartFile file,
+	public UpdateConceptsResultDto loadConceptsByCsv(@RequestParam("file") MultipartFile file,
 						   @RequestParam(value = "ecl") String eclKey) {
         LOG.debug("Input parameters -> file {}, eclKey {}", file.getOriginalFilename(), eclKey);
-        updateSnomedConceptsByCsv.run(file, eclKey);
+		UpdateConceptsResultDto result = mapToUpdateConceptsResultDto(updateSnomedConceptsByCsv.run(file, eclKey));
+		LOG.debug("Output -> {}", result);
+		return result;
     }
+
+	private UpdateConceptsResultDto mapToUpdateConceptsResultDto(UpdateConceptsResultBo updateConceptsResultBo) {
+		return new UpdateConceptsResultDto(
+				updateConceptsResultBo.getEclKey(),
+				updateConceptsResultBo.getConceptsLoaded(),
+				updateConceptsResultBo.getErroneousConcepts(),
+				updateConceptsResultBo.getErrorMessages());
+	}
 
 }

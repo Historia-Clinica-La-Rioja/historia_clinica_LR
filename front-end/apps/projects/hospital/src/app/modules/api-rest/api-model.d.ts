@@ -2392,6 +2392,13 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
+export interface UpdateConceptsResultDto {
+    conceptsLoaded: number;
+    eclKey: string;
+    erroneousConcepts: number;
+    errorMessages: string[];
+}
+
 export interface UserDataDto {
     enable?: boolean;
     id?: number;
