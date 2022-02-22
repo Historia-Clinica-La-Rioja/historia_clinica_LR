@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { MasterDataInterface, HealthConditionDto } from '@api-rest/api-model';
+import { MasterDataInterface, HealthConditionDto, DiagnosisDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
@@ -21,10 +21,11 @@ export const COVID_SNOMED = { sctid: '186747009', pt: 'infección por coronaviru
 	templateUrl: './diagnosis-summary.component.html',
 	styleUrls: ['./diagnosis-summary.component.scss']
 })
-export class DiagnosisSummaryComponent implements OnInit {
+export class DiagnosisSummaryComponent implements OnInit, OnChanges {
 
 	@Input() internmentEpisodeId: number;
 	@Input() editable = true;
+	@Input() diagnosis: DiagnosisDto[];
 
 	diagnosticosSummary = DIAGNOSTICOS;
 	verifications: MasterDataInterface<string>[];
@@ -50,6 +51,19 @@ export class DiagnosisSummaryComponent implements OnInit {
 				this.patientId = Number(params.get('idPaciente'));
 				this.loadDiagnosesGeneral();
 			});
+	}
+
+	ngOnChanges() {
+		const healthConditioDto: HealthConditionDto[] = this.diagnosis.map((diagnosis: DiagnosisDto) => {
+			return {
+				id: diagnosis.id,
+				statusId: diagnosis.statusId,
+				snomed: diagnosis.snomed,
+				verificationId: diagnosis.verificationId
+			}
+		});
+
+		this.tableModel = this.buildTable(healthConditioDto);
 	}
 
 	private loadClinicalStatus(): void {

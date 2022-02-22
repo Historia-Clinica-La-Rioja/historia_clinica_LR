@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -41,6 +41,7 @@ import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency
 import { HCEAllergyDto } from '@api-rest/api-model';
 import { ShowAllergiesComponent } from "@historia-clinica/modules/ambulatoria/dialogs/show-allergies/show-allergies.component";
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
+import { InternacionPacienteComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internacion-paciente/internacion-paciente.component";
 
 const RESUMEN_INDEX = 0;
 
@@ -89,7 +90,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	currentUserIsAllowedToDoAConsultation = false;
 	hasMedicalRole = false;
-
+	internmentAction: InternmentActions;
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -111,6 +112,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+		private readonly componentFactoryResolver: ComponentFactoryResolver,
+		private viewContainerRef: ViewContainerRef,
 
 		private readonly requestMasterDataService: RequestMasterDataService,
 
@@ -365,4 +368,20 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	setHasMedicalDischarge(hasMedicalDischarge: boolean) {
 		this.hasMedicalDischarge = hasMedicalDischarge;
 	}
+
+	openInternmentAction(internmentActionId: number) {
+		const component = this.componentFactoryResolver.resolveComponentFactory(InternacionPacienteComponent);
+		const internmentComponent = this.viewContainerRef.createComponent(component);
+		this.viewContainerRef.clear();
+		internmentComponent.instance.internmentEpisodeId = this.internmentEpisodeProcess.id;
+
+		if (InternmentActions.evolutionNote === internmentActionId) {
+			internmentComponent.instance.openEvolutionNote();
+			return;
+		}
+	}
+}
+
+export enum InternmentActions {
+	anamnesis, evolutionNote, epicrisis, medicalDischarge
 }

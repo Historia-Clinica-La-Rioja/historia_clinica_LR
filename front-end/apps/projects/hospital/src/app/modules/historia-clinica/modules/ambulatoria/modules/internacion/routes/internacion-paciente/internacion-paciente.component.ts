@@ -31,7 +31,10 @@ import { ProbableDischargeDialogComponent } from '../../../../../../dialogs/prob
 import { momentParseDateTime } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { ContextService } from '@core/services/context.service';
-import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { InternmentFields, InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { EvolutionNoteDockPopupComponent } from '../../dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
 
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 
@@ -59,6 +62,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
 	public readonly medicationsHeader = MEDICACION;
+	dialogRef: DockPopupRef;
 	private routePrefix;
 	private patientId: number;
 	@Input() internmentEpisodeId: number;
@@ -79,6 +83,7 @@ export class InternacionPacienteComponent implements OnInit {
 		public dialog: MatDialog,
 		private contextService: ContextService,
 		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly dockPopupService: DockPopupService,
 		) {
 	}
 
@@ -170,6 +175,26 @@ export class InternacionPacienteComponent implements OnInit {
 		this.router.navigate([url], {
 			queryParams: person
 		});
+	}
+
+	openEvolutionNote() {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(EvolutionNoteDockPopupComponent, {
+				internmentEpisodeId: this.internmentEpisodeId,
+				autoFocus: false,
+				disableClose: true,
+			});
+			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+				delete this.dialogRef;
+				if (fieldsToUpdate) {
+					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 
 }

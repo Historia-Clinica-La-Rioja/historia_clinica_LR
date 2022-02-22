@@ -113,7 +113,7 @@
 							</ng-container>
 							<ng-container
 								*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-								<button mat-menu-item class="actions">
+								<button mat-menu-item class="actions" (click)="openInternmentAction(1)">
 									{{'ambulatoria.paciente.card.buttons.actions.EVOLUTION_NOTE' | translate}}</button>
 							</ng-container>
 							<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
@@ -128,7 +128,6 @@
 					</div>
 
 					<ng-container *ngIf="hasNewConsultationEnabled$ | async">
-
 						<ng-container id="ambulatoria" *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" >
 							<mat-divider *ngIf="hasInternmentEpisodeInThisInstitution && !hasMedicalDischarge"></mat-divider>
 							<mat-label class="actions-labels color-grey">{{'ambulatoria.paciente.card.buttons.actions.AMBULATORY' | translate | uppercase }}</mat-label>
@@ -136,7 +135,6 @@
 								(click)="referenceNotificationService.hasReferenceNotification()">
 								{{ 'ambulatoria.paciente.card.buttons.actions.NUEVA_CONSULTA' | translate }}</button>
 						</ng-container>
-
 						<ng-container id="enfermeria" *appHasRole="['ENFERMERO']">
 							<mat-divider
 								*ngIf="CurrentUserIsAllowedToMakeBothQueries || hasInternmentEpisodeInThisInstitution">

@@ -12,7 +12,6 @@ import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
-import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 import { AlergiasComponent } from './components/alergias/alergias.component';
@@ -26,8 +25,8 @@ import { EpicrisisFormComponent } from './components/epicrisis-form/epicrisis-fo
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
-import { NotaEvolucionFormComponent } from './components/nota-evolucion-form/nota-evolucion-form.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
+import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 
 @NgModule({
 	declarations: [
@@ -38,7 +37,6 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 		EvaluacionClinicaDiagnosticosComponent,
 		InternacionesHomeComponent,
 		NewInternmentComponent,
-		NotaEvolucionComponent,
 		PatientBedRelocationComponent,
 		PatientDischargeComponent,
 		// components
@@ -52,8 +50,8 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 		InternacionesTableComponent,
 		MedicacionComponent,
 		MedicalDischargeComponent,
-		NotaEvolucionFormComponent,
 		VacunasComponent,
+		EvolutionNoteDockPopupComponent,
 	],
 	imports: [
 		CommonModule,

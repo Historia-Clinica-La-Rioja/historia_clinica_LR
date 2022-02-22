@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
 	MasterDataInterface,
 	DiagnosisDto,
@@ -6,29 +6,30 @@ import {
 	ImmunizationDto,
 	EvolutionNoteDto
 } from '@api-rest/api-model';
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from '@core/services/context.service';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { OVERLAY_DATA } from "@presentation/presentation-model";
+import { ProcedimientosService } from "@historia-clinica/services/procedimientos.service";
+import {
+	InternmentFields
+} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
-	selector: 'app-nota-evolucion-form',
-	templateUrl: './nota-evolucion-form.component.html',
-	styleUrls: ['./nota-evolucion-form.component.scss']
+	selector: 'app-evolution-note-dock-popup',
+	templateUrl: './evolution-note-dock-popup.component.html',
+	styleUrls: ['./evolution-note-dock-popup.component.scss']
 })
-export class NotaEvolucionFormComponent implements OnInit {
+export class EvolutionNoteDockPopupComponent implements OnInit {
 
-	private internmentEpisodeId: number;
-	private patientId: number;
 	apiErrors: string[] = [];
 
 	getError = getError;
@@ -47,12 +48,11 @@ export class NotaEvolucionFormComponent implements OnInit {
 	minDate = MIN_DATE;
 
 	constructor(
+		@Inject(OVERLAY_DATA) public data: any,
+		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
-		private readonly route: ActivatedRoute,
-		private readonly contextService: ContextService,
-		private readonly router: Router,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
@@ -60,13 +60,6 @@ export class NotaEvolucionFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.route.paramMap.subscribe(
-			(params: ParamMap) => {
-				this.internmentEpisodeId = Number(params.get('idInternacion'));
-				this.patientId = Number(params.get('idPaciente'));
-			}
-		);
-
 		this.form = this.formBuilder.group({
 			anthropometricData: this.formBuilder.group({
 				bloodType: [null],
@@ -117,10 +110,10 @@ export class NotaEvolucionFormComponent implements OnInit {
 		if (this.form.valid) {
 			this.apiErrors = [];
 			const evolutionNote = this.buildEvolutionNoteDto();
-			this.evolutionNoteService.createDocument(evolutionNote, this.internmentEpisodeId)
+			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId)
 				.subscribe(() => {
 					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
-					this.goToInternmentSummary();
+					this.dockPopupRef.close(setFieldsToUpdate(evolutionNote));
 				}, error => {
 					error.errors.forEach(val => {
 						this.apiErrors.push(val);
@@ -129,12 +122,19 @@ export class NotaEvolucionFormComponent implements OnInit {
 				});
 		} else {
 			this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+			this.form.markAllAsTouched();
 		}
-	}
 
-	private goToInternmentSummary(): void {
-		const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-		this.router.navigate([url]);
+		function setFieldsToUpdate(evolutionNoteDto: EvolutionNoteDto): InternmentFields {
+			return {
+				allergies: !!evolutionNoteDto.allergies,
+				anthropometricData: !!evolutionNoteDto.anthropometricData,
+				immunizations: !!evolutionNoteDto.immunizations,
+				riskFactors: !!evolutionNoteDto.riskFactors,
+				diagnosis: !!evolutionNoteDto.diagnosis,
+				evolutionClinical: !!evolutionNoteDto.diagnosis,
+			}
+		}
 	}
 
 	private buildEvolutionNoteDto(): EvolutionNoteDto {
@@ -179,10 +179,6 @@ export class NotaEvolucionFormComponent implements OnInit {
 
 	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
 		((this.form.controls.riskFactors as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
-	}
-
-	back(): void {
-		window.history.back();
 	}
 
 	clearBloodType(control): void {

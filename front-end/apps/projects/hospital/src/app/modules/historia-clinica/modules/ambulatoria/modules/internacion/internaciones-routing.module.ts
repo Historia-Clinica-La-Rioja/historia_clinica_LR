@@ -10,7 +10,6 @@ import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
-import { NotaEvolucionComponent } from './routes/nota-evolucion/nota-evolucion.component';
 import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 
@@ -40,12 +39,6 @@ const routes: Routes = [
 		component: AnamnesisComponent,
 		canActivate: [RoleGuard],
 		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO_ADULTO_MAYOR] }
-	},
-	{
-		path: 'internacion/:idInternacion/paciente/:idPaciente/nota-evolucion',
-		component: NotaEvolucionComponent,
-		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/eval-clinica-diagnosticos/:idDiagnostico',
