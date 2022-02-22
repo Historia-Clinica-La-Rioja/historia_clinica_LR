@@ -7,6 +7,7 @@ import { InternacionesHomeComponent } from './routes/home/internaciones-home.com
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
+import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internment-summary/internment-summary.component";
 
 
 
@@ -19,7 +20,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente',
-		component: InternacionPacienteComponent,
+		component: InternmentSummaryComponent,
 		canActivate: [RoleGuard],
 		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
 	},
