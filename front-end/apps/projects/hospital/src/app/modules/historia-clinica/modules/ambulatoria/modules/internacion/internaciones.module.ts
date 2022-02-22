@@ -21,7 +21,7 @@ import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.co
 import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
-import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
+import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";

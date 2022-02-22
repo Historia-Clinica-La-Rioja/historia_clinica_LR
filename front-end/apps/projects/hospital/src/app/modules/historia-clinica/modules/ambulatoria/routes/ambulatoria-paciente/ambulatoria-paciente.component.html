@@ -101,6 +101,7 @@
 						{{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
 					</button>
 				</ng-template>
+
 				<mat-menu #menu="matMenu">
 					<div id="internacion" *ngIf="(hasInternmentEpisodeInThisInstitution && !hasMedicalDischarge && hasMedicalRole) || (hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed && !hasMedicalRole)">
 					<mat-label class="actions-labels color-grey">
@@ -124,7 +125,8 @@
 							</ng-container>
 						</ng-container>
 						<ng-container *ngIf="epicrisisDoc?.confirmed && !hasMedicalDischarge">
-							<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions">
+							<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
+							(click)="openInternmentAction(3)">
 								{{'ambulatoria.paciente.card.buttons.actions.MEDICAL_DISCHARGE' | translate}}</button>
 						</ng-container>
 					</div>

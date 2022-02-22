@@ -39,6 +39,7 @@ import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulator
 import {
 	EpicrisisDockPopupComponent
 } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
+import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
 
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 
@@ -84,10 +85,10 @@ export class InternacionPacienteComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private internmentEpisodeService: InternmentEpisodeService,
-		public dialog: MatDialog,
 		private contextService: ContextService,
 		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly dockPopupService: DockPopupService,
+		private readonly dialog: MatDialog,
 	) {
 	}
 
@@ -248,4 +249,14 @@ export class InternacionPacienteComponent implements OnInit {
 		}
 	}
 
+	openMedicalDischarge() {
+		const dialogRef = this.dialog.open(MedicalDischargeComponent, {
+			data: {
+				patientId: this.patientId,
+				internmentEpisodeId: this.internmentEpisodeId,
+			},
+			autoFocus: false,
+			disableClose: true,
+		});
+	}
 }

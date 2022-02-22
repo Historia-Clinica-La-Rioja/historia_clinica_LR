@@ -13,24 +13,19 @@
 	margin-bottom: 15px;
 }
 
-.header{
-	display: flex;
-	justify-content: flex-end;
+.medical-discharge {
+	position: relative;
 }
 
-.section-container {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-
-	section{
-		width: 50%;
-	}
+.close{
+	transform: scale(1.0);
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }
 
-div.form-buttons {
-	margin: 20px 0;
-	button {
-		margin-right: 10px;
-	}
+.mat-dialog-actions{
+	margin-top: 15px;
+	margin-bottom: auto;
+	min-height: auto;
 }
