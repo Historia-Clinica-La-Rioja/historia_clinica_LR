@@ -31,7 +31,7 @@ SELECT ur.institution_id
 FROM users as u 
 JOIN user_role ur on u.id = ur.user_id 
 WHERE ur.role_id = 5 
-AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})` : ''}`,
+AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})` : `WHERE r.id IS NULL`}`,
   
   measures: {
     cant_referencia: {
