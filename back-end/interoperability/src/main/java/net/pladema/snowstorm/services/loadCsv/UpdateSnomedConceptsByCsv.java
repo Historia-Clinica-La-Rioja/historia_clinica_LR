@@ -5,8 +5,10 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.snowstorm.repository.SnomedCacheLogRepository;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
+import net.pladema.snowstorm.repository.entity.SnomedCacheLog;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
@@ -25,31 +27,57 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UpdateSnomedConceptsByCsv {
 
-    public static final int BATCH_MAX_SIZE = 10000;
-    private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
+    private static final int BATCH_MAX_SIZE = 10000;
+	private static final int BATCH_SIZE_DIVIDER = 10;
+	private static final int BATCH_SIZE_MULTIPLIER = 10;
+	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
     private final SnomedSemantics snomedSemantics;
     private final SnomedGroupRepository snomedGroupRepository;
     private final DateTimeProvider dateTimeProvider;
     private final SharedSnomedPort sharedSnomedPort;
+	private final SnomedCacheLogRepository snomedCacheLogRepository;
 
     public void run(MultipartFile csvFile, String eclKey) {
 		log.debug("Input parameters -> csvFile {}, eclKey {}", csvFile.getOriginalFilename(), eclKey);
 
         Integer conceptsProcessed = 0;
+		Integer batchSize = BATCH_MAX_SIZE;
         Integer totalConcepts = SnomedConceptsCsvReader.getTotalRecords(csvFile);
         LocalDate today = dateTimeProvider.nowDate();
         Integer snomedGroupId = saveSnomedGroup(eclKey, today);
         List<SnomedConceptBo> allConcepts = getAllConcepts(csvFile);
+		List<SnomedConceptBo> conceptBatch = null;
 
         while (conceptsProcessed < totalConcepts) {
-			List<SnomedConceptBo> conceptBatch = getNextBatch(conceptsProcessed, totalConcepts, allConcepts);
-			if (conceptBatch.isEmpty())
-                return;
-			conceptsProcessed = saveConcepts(conceptsProcessed, today, snomedGroupId, conceptBatch);
-			log.debug("Concepts processed -> {}", conceptsProcessed);
+			try {
+				conceptBatch = getNextBatch(batchSize, conceptsProcessed, totalConcepts, allConcepts);
+				if (conceptBatch.isEmpty())
+					return;
+				conceptsProcessed = saveConcepts(conceptsProcessed, today, snomedGroupId, conceptBatch);
+				// if the batch size had decreased before due to an error, it will increase again
+				batchSize = Math.min(batchSize * BATCH_SIZE_MULTIPLIER, BATCH_MAX_SIZE);
+				log.debug("Concepts processed -> {}", conceptsProcessed);
+			} catch (Exception e) {
+				// If the batch size is equal to 1, it means that that element is the one that can't be saved.
+				// So, it should be skipped to try to save the rest
+				if (batchSize.equals(1)) {
+					log.error(e.getMessage());
+					saveErrorLog(e, conceptBatch.get(0));
+					conceptsProcessed += 1;
+					batchSize = BATCH_MAX_SIZE;
+				} else {
+					batchSize = Math.max(batchSize / BATCH_SIZE_DIVIDER, 1);
+				}
+			}
+
         }
 		log.debug("Finished adding {} {} concepts", conceptsProcessed, eclKey);
     }
+
+	private void saveErrorLog(Exception e, SnomedConceptBo snomedConceptBo) {
+		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), e.getCause().getCause().getMessage());
+		snomedCacheLogRepository.save(new SnomedCacheLog(message, dateTimeProvider.nowDateTime()));
+	}
 
 	private Integer saveConcepts(Integer conceptsProcessed, LocalDate today, Integer snomedGroupId, List<SnomedConceptBo> conceptBatch) {
 		List<Integer> conceptIds = sharedSnomedPort.addSnomedConcepts(mapToDto(conceptBatch));
@@ -57,8 +85,8 @@ public class UpdateSnomedConceptsByCsv {
 		return conceptsProcessed;
 	}
 
-	private List<SnomedConceptBo> getNextBatch(Integer conceptsProcessed, Integer totalConcepts, List<SnomedConceptBo> allConcepts) {
-		int batchFinishIndex = Math.min(conceptsProcessed + BATCH_MAX_SIZE, totalConcepts);
+	private List<SnomedConceptBo> getNextBatch(Integer batchSize, Integer conceptsProcessed, Integer totalConcepts, List<SnomedConceptBo> allConcepts) {
+		int batchFinishIndex = Math.min(conceptsProcessed + batchSize, totalConcepts);
 		return allConcepts.subList(conceptsProcessed, batchFinishIndex);
 	}
 
