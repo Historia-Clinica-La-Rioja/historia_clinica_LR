@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject, forkJoin, Subject } from "rxjs";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { DocumentSearchFilterDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
+import { DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
 import { DocumentSearchService } from "@api-rest/services/document-search.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { momentParseDateTime } from "@core/utils/moment.utils";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 
 @Injectable({
 	providedIn: 'root'
@@ -53,6 +54,7 @@ export class InternmentSummaryFacadeService {
 		private readonly documentSearchService: DocumentSearchService,
 		private readonly internmentService: InternacionService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
+		private readonly  hceGeneralStateService: HceGeneralStateService
 	) { }
 
 	setInternmentEpisodeInformation(internmentEpisodeId: number) {
@@ -142,6 +144,41 @@ export class InternmentSummaryFacadeService {
 			.subscribe((patientDischarge: PatientDischargeDto) => {
 				this.hasMedicalDischargeSubject.next(patientDischarge.dischargeTypeId !== 0);
 			});
+	}
+
+	uniFyAllergiesAndFamilyHistories(patientId: number) {
+		forkJoin([this.internmentStateService.getAllergies(this.internmentEpisodeId), this.hceGeneralStateService.getAllergies(patientId)])
+			.subscribe(([allergiesI, allergiesHCE]) => {
+				allergiesHCE.forEach(e => allergiesI.push(this.mapToAllergyConditionDto(e)));
+				this.allergiesSubject.next(allergiesI)
+			});
+
+		forkJoin([this.internmentStateService.getFamilyHistories(this.internmentEpisodeId), this.hceGeneralStateService.getFamilyHistories(patientId)])
+			.subscribe(([familyHistoriesI, familyHistoriesHCE]) => {
+				familyHistoriesHCE.forEach(e => familyHistoriesI.push(this.mapToHealthHistoryConditionDto(e)));
+				this.familyHistoriesSubject.next(familyHistoriesI)
+			});
+	}
+
+	mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto) {
+		return {
+			date: familyHistory.startDate,
+			note: null,
+			id: familyHistory.id,
+			snomed: familyHistory.snomed,
+			statusId: familyHistory.statusId
+		}
+	}
+
+	mapToAllergyConditionDto(allergie: HCEAllergyDto) {
+		return {
+			categoryId: allergie.categoryId,
+			criticalityId: allergie.criticalityId,
+			date: null,
+			id: allergie.id,
+			snomed: allergie.snomed,
+			statusId: allergie.statusId
+		}
 	}
 }
 

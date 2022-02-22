@@ -200,8 +200,7 @@
 							<span>{{ 'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-internacion-paciente [internmentEpisodeId]="internmentEpisodeProcess.id">
-							</app-internacion-paciente>
+							<app-internacion-paciente [internmentEpisodeInfo]="internmentEpisodeProcess"></app-internacion-paciente>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_indications">

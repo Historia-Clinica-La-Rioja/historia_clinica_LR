@@ -148,6 +148,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
 							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id);
+							if (this.internmentEpisodeProcess.inProgress)
+								this.internmentSummaryFacadeService.uniFyAllergiesAndFamilyHistories(this.patientId);
 							this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
 							this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 							this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
@@ -245,6 +247,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
+				if (this.internmentEpisodeProcess?.inProgress && (fieldsToUpdate?.allergies || fieldsToUpdate?.familyHistories))
+					this.internmentSummaryFacadeService.uniFyAllergiesAndFamilyHistories(this.patientId);
 				this.patientAllergies.updateCriticalAllergies(this.patientId);
 			});
 		} else {

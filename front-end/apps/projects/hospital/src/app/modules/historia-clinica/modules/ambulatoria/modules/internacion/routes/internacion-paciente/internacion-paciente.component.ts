@@ -17,12 +17,16 @@ import {
 	InternmentSummaryDto,
 	AnamnesisSummaryDto,
 	EpicrisisSummaryDto,
-	PersonPhotoDto
+	PersonPhotoDto,
+	InternmentEpisodeProcessDto
 } from '@api-rest/api-model';
+
 import { AppFeature } from '@api-rest/api-model';
+
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION } from '../../../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../../internacion/constants/permissions';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { ProbableDischargeDialogComponent } from '../../../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { Moment } from 'moment';
 import { ContextService } from '@core/services/context.service';
@@ -65,7 +69,8 @@ export class InternacionPacienteComponent implements OnInit {
 	public readonly medicationsHeader = MEDICACION;
 	dialogRef: DockPopupRef;
 	private routePrefix;
-	@Input() internmentEpisodeId: number;
+	@Input() internmentEpisodeInfo: InternmentEpisodeProcessDto;
+	internmentEpisodeId: number;
 
 	constructor(
 		private patientService: PatientService,
@@ -77,6 +82,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private readonly permissionService: PermissionsService,
 		private contextService: ContextService,
 		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly internmentStateService: InternmentStateService,
 		private readonly dockPopupService: DockPopupService,
 		private readonly dialog: MatDialog,
 		private readonly patientAllergies: PatientAllergiesService,
@@ -90,6 +96,8 @@ export class InternacionPacienteComponent implements OnInit {
 				if (params.get('idInternacion')) {
 					this.internmentEpisodeId = Number(params.get('idInternacion'));
 					this.showPatientCard = true;
+				} else {
+					this.internmentEpisodeId = this.internmentEpisodeInfo?.id;
 				}
 				this.routePrefix = 'institucion/' + this.contextService.institutionId + '/internaciones/internacion/' + this.internmentEpisodeId + '/paciente/' + this.patientId;
 
@@ -172,13 +180,8 @@ export class InternacionPacienteComponent implements OnInit {
 			});
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
-				if (fieldsToUpdate) {
-					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-					this.internmentSummaryFacadeService.updateInternmentEpisode();
-					if (fieldsToUpdate?.allergies) {
-						this.patientAllergies.updateCriticalAllergies(this.patientId);
-					}
-				}
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -196,13 +199,8 @@ export class InternacionPacienteComponent implements OnInit {
 			});
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
-				if (fieldsToUpdate) {
-					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-				}
-				if (fieldsToUpdate?.allergies) {
-					this.patientAllergies.updateCriticalAllergies(this.patientId);
-				}
-				this.internmentSummaryFacadeService.updateInternmentEpisode();
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -223,19 +221,34 @@ export class InternacionPacienteComponent implements OnInit {
 			});
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
-				if (fieldsToUpdate) {
-					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-					this.internmentSummaryFacadeService.updateInternmentEpisode();
-					if (fieldsToUpdate?.allergies) {
-						this.patientAllergies.updateCriticalAllergies(this.patientId);
-					}
-				}
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
 				this.dialogRef.maximize();
 			}
 		}
+	}
+
+	updateInternmentSummary(fieldsToUpdate: InternmentFields) {
+		const fields = {
+			personalHistories: fieldsToUpdate?.personalHistories,
+			riskFactors: fieldsToUpdate?.riskFactors,
+			medications: fieldsToUpdate?.medications,
+			anthropometricData: fieldsToUpdate?.anthropometricData,
+			immunizations: fieldsToUpdate?.immunizations,
+			mainDiagnosis: fieldsToUpdate?.mainDiagnosis,
+			diagnosis: fieldsToUpdate?.diagnosis,
+			evolutionClinical: fieldsToUpdate?.evolutionClinical
+		}
+		this.internmentSummaryFacadeService.setFieldsToUpdate(fields);
+		if (fieldsToUpdate?.allergies || fieldsToUpdate?.familyHistories)
+			this.internmentSummaryFacadeService.uniFyAllergiesAndFamilyHistories(this.patientId);
+		if (fieldsToUpdate?.allergies) {
+			this.patientAllergies.updateCriticalAllergies(this.patientId);
+		}
+		this.internmentSummaryFacadeService.updateInternmentEpisode();
 	}
 
 	openMedicalDischarge() {
