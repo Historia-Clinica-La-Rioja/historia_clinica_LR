@@ -1,3 +1,14 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_34 
 
+    - changeSet:
+        id: fixData-vaccine_nomivac_rule
+        comment: Actualizacion de datos en vaccine_nomivac_rule
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE vaccine_nomivac_rule
+                SET maximum_threshold_days = minimum_threshold_days
+                WHERE minimum_threshold_days > maximum_threshold_days;
