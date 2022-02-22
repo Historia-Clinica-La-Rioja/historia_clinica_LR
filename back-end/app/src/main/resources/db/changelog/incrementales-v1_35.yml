@@ -420,3 +420,27 @@ databaseChangeLog:
           - sql:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_person_identification-number" ON person (identification_number);
+
+    - changeSet:
+        id: snomed_cache_log-createTable
+        author: tmedina
+        changes:
+          - createTable:
+              tableName: snomed_cache_log
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_snomed_cache_log
+                    name: id
+                    type: int
+                - column:
+                    name: message
+                    type: varchar(1024)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
