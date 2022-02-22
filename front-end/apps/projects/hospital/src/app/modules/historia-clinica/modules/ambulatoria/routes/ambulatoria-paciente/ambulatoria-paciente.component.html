@@ -108,7 +108,8 @@
 						<ng-container *ngIf="!epicrisisDoc">
 							<ng-container *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
 								<button mat-menu-item class="actions"
-									*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
+									*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']"
+									(click)="openInternmentAction(0)">
 									{{'ambulatoria.paciente.card.buttons.actions.ANAMNESIS' | translate}}</button>
 							</ng-container>
 							<ng-container

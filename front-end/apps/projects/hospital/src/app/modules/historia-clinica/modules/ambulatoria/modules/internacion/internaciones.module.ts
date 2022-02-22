@@ -6,7 +6,6 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { InternacionesRoutingModule } from './internaciones-routing.module';
-import { AnamnesisComponent } from './routes/anamnesis/anamnesis.component';
 import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
 import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
@@ -15,7 +14,6 @@ import { NewInternmentComponent } from './routes/new-internment/new-internment.c
 import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
 import { PatientDischargeComponent } from './routes/patient-discharge/patient-discharge.component';
 import { AlergiasComponent } from './components/alergias/alergias.component';
-import { AnamnesisFormComponent } from './components/anamnesis-form/anamnesis-form.component';
 // components
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
@@ -27,11 +25,11 @@ import { MedicacionComponent } from './components/medicacion/medicacion.componen
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
+import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 
 @NgModule({
 	declarations: [
 		// routing
-		AnamnesisComponent,
 		CambiarDiagnosticoPrincipalComponent,
 		EpicrisisComponent,
 		EvaluacionClinicaDiagnosticosComponent,
@@ -41,7 +39,7 @@ import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-p
 		PatientDischargeComponent,
 		// components
 		AlergiasComponent,
-		AnamnesisFormComponent,
+		AnamnesisDockPopupComponent,
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
 		DiagnosticoPrincipalComponent,

@@ -35,6 +35,7 @@ import { InternmentFields, InternmentSummaryFacadeService } from "@historia-clin
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { EvolutionNoteDockPopupComponent } from '../../dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 
@@ -67,7 +68,7 @@ export class InternacionPacienteComponent implements OnInit {
 	private patientId: number;
 	@Input() internmentEpisodeId: number;
 	@Output() anamnesisDocEmmiter = new EventEmitter<AnamnesisSummaryDto>();
-	@Output() epicrisisDocEmmiter= new EventEmitter<EpicrisisSummaryDto>();
+	@Output() epicrisisDocEmmiter = new EventEmitter<EpicrisisSummaryDto>();
 	@Output() lastEvolutionNoteDocEmmiter = new EventEmitter<EvaluationNoteSummaryDto>();
 	@Output() hasMedicalDischargeEmmiter = new EventEmitter<boolean>();
 
@@ -84,7 +85,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private contextService: ContextService,
 		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly dockPopupService: DockPopupService,
-		) {
+	) {
 	}
 
 	ngOnInit(): void {
@@ -175,6 +176,30 @@ export class InternacionPacienteComponent implements OnInit {
 		this.router.navigate([url], {
 			queryParams: person
 		});
+	}
+
+	openAnamnesis() {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(AnamnesisDockPopupComponent, {
+				patientInfo: {
+					patientId: this.patientId,
+					internmentEpisodeId: this.internmentEpisodeId,
+					anamnesisId: this.anamnesisDoc?.id
+				},
+				autoFocus: false,
+				disableClose: true,
+			});
+			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+				delete this.dialogRef;
+				if (fieldsToUpdate) {
+					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 
 	openEvolutionNote() {

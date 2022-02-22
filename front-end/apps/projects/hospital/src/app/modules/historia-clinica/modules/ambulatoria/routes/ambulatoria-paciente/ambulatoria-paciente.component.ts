@@ -375,6 +375,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.viewContainerRef.clear();
 		internmentComponent.instance.internmentEpisodeId = this.internmentEpisodeProcess.id;
 
+		if (InternmentActions.anamnesis === internmentActionId) {
+			internmentComponent.instance.openAnamnesis();
+			return;
+		}
+		
 		if (InternmentActions.evolutionNote === internmentActionId) {
 			internmentComponent.instance.openEvolutionNote();
 			return;

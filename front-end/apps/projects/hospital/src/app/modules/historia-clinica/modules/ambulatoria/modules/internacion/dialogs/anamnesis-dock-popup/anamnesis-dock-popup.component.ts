@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-	AllergyConditionDto, AnamnesisDto, DiagnosisDto,
-	HealthHistoryConditionDto, ImmunizationDto,
+	AllergyConditionDto,
+	AnamnesisDto,
+	DiagnosisDto,
+	HealthHistoryConditionDto,
+	ImmunizationDto,
 	MasterDataInterface,
-	MedicationDto, ResponseAnamnesisDto, HealthConditionDto
+	MedicationDto,
+	ResponseAnamnesisDto,
+	HealthConditionDto
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { forkJoin } from 'rxjs';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { newMoment } from '@core/utils/moment.utils';
@@ -18,16 +23,19 @@ import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { OVERLAY_DATA } from "@presentation/presentation-model";
+import { ViewChild } from "@angular/core";
+import { ElementRef } from "@angular/core";
 
 @Component({
-	selector: 'app-anamnesis-form',
-	templateUrl: './anamnesis-form.component.html',
-	styleUrls: ['./anamnesis-form.component.scss']
+	selector: 'app-anamnesis-dock-popup',
+	templateUrl: './anamnesis-dock-popup.component.html',
+	styleUrls: ['./anamnesis-dock-popup.component.scss']
 })
-export class AnamnesisFormComponent implements OnInit {
+export class AnamnesisDockPopupComponent implements OnInit {
 
-	private internmentEpisodeId: number;
-	private patientId: number;
 	anamnesisId: number;
 
 	getError = getError;
@@ -49,8 +57,11 @@ export class AnamnesisFormComponent implements OnInit {
 	procedimientosService: ProcedimientosService;
 
 	minDate = MIN_DATE;
+	@ViewChild('errorsView') errorsView: ElementRef;
 
 	constructor(
+		@Inject(OVERLAY_DATA) public data: any,
+		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly anamnesisService: AnamnesisService,
@@ -64,14 +75,6 @@ export class AnamnesisFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.route.paramMap.subscribe(
-			(params: ParamMap) => {
-				this.anamnesisId = Number(params.get('anamnesisId'));
-				this.internmentEpisodeId = Number(params.get('idInternacion'));
-				this.patientId = Number(params.get('idPaciente'));
-			}
-		);
-
 		this.form = this.formBuilder.group({
 			anthropometricData: this.formBuilder.group({
 				bloodType: [null],
@@ -113,11 +116,10 @@ export class AnamnesisFormComponent implements OnInit {
 				otherNote: [null]
 			})
 		});
-
-		const anamnesis$ = this.anamnesisService.getAnamnesis(this.anamnesisId, this.internmentEpisodeId);
+		const anamnesis$ = this.anamnesisService.getAnamnesis(this.data.patientInfo.anamnesisId, this.data.patientInfo.internmentEpisodeId);
 		const bloodTypes$ = this.internacionMasterDataService.getBloodTypes();
 
-		if (this.anamnesisId) {
+		if (this.data.patientInfo.anamnesisId) {
 			forkJoin([anamnesis$, bloodTypes$]).subscribe(results => {
 				const anamnesis = results[0];
 				this.bloodTypes = results[1];
@@ -165,19 +167,22 @@ export class AnamnesisFormComponent implements OnInit {
 		}
 	}
 
-	back(): void {
-		window.history.back();
-	}
-
 	save(): void {
+		this.apiErrors = [];
+		if (!this.mainDiagnosis) {
+			this.apiErrors.push("Diagnóstico principal obligatorio");
+			this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
+			setTimeout(() => {
+				this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}, 500);
+			return;
+		}
 		if (this.form.valid) {
-			console.warn('form valid');
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
-			this.apiErrors = [];
-			this.anamnesisService.createAnamnesis(anamnesis, this.internmentEpisodeId)
+			this.anamnesisService.createAnamnesis(anamnesis, this.data.patientInfo.internmentEpisodeId)
 				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
 					this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
-					this.goToInternmentSummary();
+					this.dockPopupRef.close(fieldsToUpdate(anamnesis));
 				}, responseErrors => {
 					this.apiErrorsProcess(responseErrors);
 					this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
@@ -185,11 +190,21 @@ export class AnamnesisFormComponent implements OnInit {
 		} else {
 			this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
 		}
-	}
 
-	private goToInternmentSummary(): void {
-		const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-		this.router.navigate([url]);
+		function fieldsToUpdate(anamnesisDto: AnamnesisDto): InternmentFields {
+			return {
+				allergies: !!anamnesisDto.allergies,
+				anthropometricData: !!anamnesisDto.anthropometricData,
+				mainDiagnosis: !!anamnesisDto.mainDiagnosis,
+				diagnosis: !!anamnesisDto.diagnosis,
+				riskFactors: !!anamnesisDto.riskFactors,
+				immunizations: !!anamnesisDto.immunizations,
+				medications: !!anamnesisDto.medications,
+				familyHistories: !!anamnesisDto.familyHistories,
+				personalHistories: !!anamnesisDto.personalHistories,
+				evolutionClinical: !!anamnesisDto.mainDiagnosis,
+			}
+		}
 	}
 
 	private buildAnamnesisDto(): AnamnesisDto {
