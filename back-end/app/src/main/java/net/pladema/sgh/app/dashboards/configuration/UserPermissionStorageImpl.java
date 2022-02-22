@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Order(1)
+@Primary
 public class UserPermissionStorageImpl implements UserPermissionStorage {
 
 	private final SharedPermissionPort permissionPort;
