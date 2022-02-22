@@ -1,0 +1,314 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'internaciones.epicrisis.TITLE'" *ngIf="waitToResponse">
+	<div body fxLayout="column" fxLayoutGap="20px">
+		<form id="epicrisis-form" (keydown.enter)="false" [formGroup]="form">
+			<div id="mainDiagnosis">
+				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
+				<mat-card>
+					<mat-card-content>
+						<app-concepts-search *ngIf="!snomedConcept else diagnosisForm"
+											 [label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
+											 (search)="openSearchDialog($event)">
+						</app-concepts-search>
+						<ng-template #diagnosisForm>
+							<form [formGroup]="formDiagnosis" (ngSubmit)="addToList()">
+								<mat-form-field appearance="outline">
+									<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+									</mat-label>
+									<input matInput type="text" formControlName="snomed" name="snomed" readonly
+										   matTooltip="{{ snomedConcept.pt }}">
+									<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+											(click)="resetForm()">
+										<mat-icon>close</mat-icon>
+									</button>
+								</mat-form-field>
+								<div align="end">
+									<button class="uppercase" mat-raised-button color="primary" type="submit">
+										<span [translate]="'internaciones.anamnesis.diagnosticos.ADD'"></span>
+									</button>
+								</div>
+							</form>
+						</ng-template>
+					</mat-card-content>
+				</mat-card>
+			</div>
+
+			<div id="diagnosticos">
+				<table mat-table [dataSource]="diagnosticsEpicrisisService?.getTable().data" class="secondary diagnosis-table">
+					<mat-radio-group formControlName="mainDiagnosis">
+
+						<ng-container matColumnDef="mainDiagnosis">
+							<th *matHeaderCellDef>Principal</th>
+							<td mat-cell *matCellDef="let row">
+								<mat-radio-button [value]="row"
+												  [disabled]="!diagnosticsEpicrisisService?.isSelectableAsMain(row)"
+												  (change)="diagnosticsEpicrisisService?.changeMainDiagnosis(row)">
+								</mat-radio-button>
+							</td>
+						</ng-container>
+
+						<ng-container *ngFor="let column of diagnosticsEpicrisisService?.getTable().columns"
+									  [matColumnDef]="column.def">
+							<th *matHeaderCellDef>{{ column.header | translate }}</th>
+							<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="diagnosticsEpicrisisService?.getTable().displayedColumns"></tr>
+						<tr mat-row
+							*matRowDef="let row; columns: diagnosticsEpicrisisService?.getTable().displayedColumns;"></tr>
+
+						<ng-container matColumnDef="select">
+							<th mat-header-cell class="actions" *matHeaderCellDef>
+								<mat-checkbox *ngIf="diagnosticsEpicrisisService?.getTable().data.length !== 0"
+											  (change)="$event ? diagnosticsEpicrisisService?.diagnosisMasterToggle() : null"
+											  [checked]="diagnosticsEpicrisisService?.selectionHasValue() && diagnosticsEpicrisisService?.isAllSelected()"
+											  [indeterminate]="diagnosticsEpicrisisService?.selectionHasValue() && !diagnosticsEpicrisisService?.isAllSelected()">
+								</mat-checkbox>
+							</th>
+							<td mat-cell class="actions" *matCellDef="let row">
+								<mat-checkbox (click)="$event.stopPropagation()"
+											  (change)="$event ? diagnosticsEpicrisisService?.toggle(row) : null"
+											  [checked]="diagnosticsEpicrisisService?.isSelected(row)"
+											  [disabled]="row.snomed.sctid === form.value.mainDiagnosis?.snomed.sctid">
+								</mat-checkbox>
+							</td>
+						</ng-container>
+					</mat-radio-group>
+
+				</table>
+				<app-no-data class="secondary"
+							 *ngIf="diagnosticsEpicrisisService?.getTable().data.length === 0"></app-no-data>
+
+			</div>
+
+			<div id="personalHistories">
+				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.antecedentes-personales.TITLE'"></h2>
+				<table mat-table [dataSource]="personalHistories.data" class="secondary" fxLayoutGap="20px">
+
+					<ng-container *ngFor="let column of personalHistories.columns" [matColumnDef]="column.def">
+						<th *matHeaderCellDef>{{ column.header | translate }}</th>
+						<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="personalHistories.displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: personalHistories.displayedColumns;"></tr>
+
+					<ng-container matColumnDef="select">
+						<th mat-header-cell class="actions" *matHeaderCellDef>
+							<mat-checkbox *ngIf="personalHistories.data.length !== 0"
+										  (change)="$event ? masterToggle(personalHistories.data, personalHistories.selection) : null"
+										  [checked]="personalHistories.selection.hasValue() && isAllSelected(personalHistories.data, personalHistories.selection)"
+										  [indeterminate]="personalHistories.selection.hasValue() && !isAllSelected(personalHistories.data, personalHistories.selection)">
+							</mat-checkbox>
+						</th>
+						<td mat-cell class="actions" *matCellDef="let row">
+							<mat-checkbox (click)="$event.stopPropagation()"
+										  (change)="$event ? personalHistories.selection.toggle(row) : null"
+										  [checked]="personalHistories.selection.isSelected(row)">
+							</mat-checkbox>
+						</td>
+					</ng-container>
+
+				</table>
+				<app-no-data class="secondary" *ngIf="personalHistories.data.length === 0"></app-no-data>
+
+			</div>
+
+			<div id="familyHistories">
+				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.antecedentes-familiares.TITLE'"></h2>
+				<table mat-table [dataSource]="familyHistories.data" class="secondary" fxLayoutGap="20px">
+
+					<ng-container *ngFor="let column of familyHistories.columns" [matColumnDef]="column.def">
+						<th *matHeaderCellDef>{{ column.header | translate }}</th>
+						<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="familyHistories.displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: familyHistories.displayedColumns;"></tr>
+
+					<ng-container matColumnDef="select">
+						<th mat-header-cell class="actions" *matHeaderCellDef>
+							<mat-checkbox *ngIf="familyHistories.data.length !== 0"
+										  (change)="$event ? masterToggle(familyHistories.data, familyHistories.selection) : null"
+										  [checked]="familyHistories.selection.hasValue() && isAllSelected(familyHistories.data, familyHistories.selection)"
+										  [indeterminate]="familyHistories.selection.hasValue() && !isAllSelected(familyHistories.data, familyHistories.selection)">
+							</mat-checkbox>
+						</th>
+						<td mat-cell class="actions" *matCellDef="let row">
+							<mat-checkbox (click)="$event.stopPropagation()"
+										  (change)="$event ? familyHistories.selection.toggle(row) : null"
+										  [checked]="familyHistories.selection.isSelected(row)">
+							</mat-checkbox>
+						</td>
+					</ng-container>
+
+				</table>
+				<app-no-data class="secondary" *ngIf="familyHistories.data.length === 0"></app-no-data>
+
+			</div>
+
+			<div id="allergies">
+				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.alergias.TITLE'"></h2>
+				<table mat-table [dataSource]="allergies.data" class="secondary" fxLayoutGap="20px">
+
+					<ng-container *ngFor="let column of allergies.columns" [matColumnDef]="column.def">
+						<th *matHeaderCellDef>{{ column.header | translate }}</th>
+						<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="allergies.displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: allergies.displayedColumns;"></tr>
+
+					<ng-container matColumnDef="select">
+						<th mat-header-cell class="actions" *matHeaderCellDef>
+							<mat-checkbox *ngIf="allergies.data.length !== 0"
+										  (change)="$event ? masterToggle(allergies.data, allergies.selection) : null"
+										  [checked]="allergies.selection.hasValue() && isAllSelected(allergies.data, allergies.selection)"
+										  [indeterminate]="allergies.selection.hasValue() && !isAllSelected(allergies.data, allergies.selection)">
+							</mat-checkbox>
+						</th>
+						<td mat-cell class="actions" *matCellDef="let row">
+							<mat-checkbox (click)="$event.stopPropagation()"
+										  (change)="$event ? allergies.selection.toggle(row) : null"
+										  [checked]="allergies.selection.isSelected(row)">
+							</mat-checkbox>
+						</td>
+					</ng-container>
+
+				</table>
+				<app-no-data class="secondary" *ngIf="allergies.data.length === 0"></app-no-data>
+
+			</div>
+
+			<div id="medication">
+				<app-medicacion [(medications)]="medications"
+								[hideSuspended]="true"
+								[title]="'internaciones.epicrisis.medicacion.TITLE'">
+				</app-medicacion>
+			</div>
+
+			<div id="immunizations">
+				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.vacunas.TITLE'"></h2>
+				<table mat-table [dataSource]="immunizations.data" class="secondary" fxLayoutGap="20px">
+
+					<ng-container *ngFor="let column of immunizations.columns" [matColumnDef]="column.def">
+						<th *matHeaderCellDef>{{ column.header | translate }}</th>
+						<td mat-cell *matCellDef="let element"> {{ column.display(element) }} </td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="immunizations.displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: immunizations.displayedColumns;"></tr>
+
+					<ng-container matColumnDef="select">
+						<th mat-header-cell class="actions" *matHeaderCellDef>
+							<mat-checkbox *ngIf="immunizations.data.length !== 0"
+										  (change)="$event ? masterToggle(immunizations.data, immunizations.selection) : null"
+										  [checked]="immunizations.selection.hasValue() && isAllSelected(immunizations.data, immunizations.selection)"
+										  [indeterminate]="immunizations.selection.hasValue() && !isAllSelected(immunizations.data, immunizations.selection)">
+							</mat-checkbox>
+						</th>
+						<td mat-cell class="actions" *matCellDef="let row">
+							<mat-checkbox (click)="$event.stopPropagation()"
+										  (change)="$event ? immunizations.selection.toggle(row) : null"
+										  [checked]="immunizations.selection.isSelected(row)">
+							</mat-checkbox>
+						</td>
+					</ng-container>
+
+				</table>
+				<app-no-data class="secondary" *ngIf="immunizations.data.length === 0"></app-no-data>
+
+			</div>
+
+			<div id="observations">
+				<h2 [translate]="'internaciones.epicrisis.observations.TITLE'"></h2>
+				<mat-card>
+					<mat-card-content>
+						<div>
+							<mat-label [translate]="'internaciones.epicrisis.observations.EVOLUTION_NOTE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
+										  formControlName="evolutionNote">
+								</textarea>
+								<mat-error *ngIf="hasError(form, 'required', 'evolutionNote')"
+										   [translate]="'forms.REQUIRED'">
+								</mat-error>
+								<mat-error *ngIf="hasError(form, 'maxlength', 'evolutionNote')"
+										   [translate]="'forms.MAX_LENGTH_ERROR'"
+										   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div>
+							<mat-label *ngIf="hasError(form, 'required', 'indicationsNote')"
+									   [translate]="'internaciones.epicrisis.observations.STUDIES_SUMMARY'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
+										  formControlName="studiesSummaryNote"
+								>
+								</textarea>
+								<mat-error *ngIf="hasError(form, 'required', 'studiesSummaryNote')"
+										   [translate]="'forms.REQUIRED'">
+								</mat-error>
+								<mat-error *ngIf="hasError(form, 'maxlength', 'studiesSummaryNote')"
+										   [translate]="'forms.MAX_LENGTH_ERROR'"
+										   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div>
+							<mat-label [translate]="'internaciones.epicrisis.observations.PHYSICAL_EXAMINATION'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
+										  formControlName="physicalExamNote"
+								>
+								</textarea>
+								<mat-error *ngIf="hasError(form, 'required', 'physicalExamNote')"
+										   [translate]="'forms.REQUIRED'">
+								</mat-error>
+								<mat-error *ngIf="hasError(form, 'maxlength', 'physicalExamNote')"
+										   [translate]="'forms.MAX_LENGTH_ERROR'"
+										   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div>
+							<mat-label [translate]="'internaciones.epicrisis.observations.INDICATIONS_NOTE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="indicationsNote" name="indicationsNote"
+										  formControlName="indicationsNote"
+								>
+								</textarea>
+								<mat-error *ngIf="hasError(form, 'required', 'indicationsNote')"
+										   [translate]="'forms.REQUIRED'">
+								</mat-error>
+								<mat-error *ngIf="hasError(form, 'maxlength', 'indicationsNote')"
+										   [translate]="'forms.MAX_LENGTH_ERROR'"
+										   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div>
+							<mat-label [translate]="'internaciones.epicrisis.observations.OTHERS'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote"
+								>
+								</textarea>
+								<mat-error *ngIf="hasError(form, 'maxlength', 'otherNote')"
+										   [translate]="'forms.MAX_LENGTH_ERROR'"
+										   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</form>
+	</div>
+	<div actions id="buttons" align="end">
+		<button id="sign-confirm" type="button" mat-raised-button color="primary"
+				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save()">
+			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
+		</button>
+	</div>
+</app-dock-popup>

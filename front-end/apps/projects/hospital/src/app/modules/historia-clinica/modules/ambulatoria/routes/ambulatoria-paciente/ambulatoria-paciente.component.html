@@ -118,7 +118,8 @@
 									{{'ambulatoria.paciente.card.buttons.actions.EVOLUTION_NOTE' | translate}}</button>
 							</ng-container>
 							<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
-								<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions">
+								<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
+										(click)="openInternmentAction(2)">
 									{{'ambulatoria.paciente.card.buttons.actions.EPICRISIS' | translate}}</button>
 							</ng-container>
 						</ng-container>

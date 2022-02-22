@@ -36,6 +36,9 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { EvolutionNoteDockPopupComponent } from '../../dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
+import {
+	EpicrisisDockPopupComponent
+} from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
 
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 
@@ -206,6 +209,29 @@ export class InternacionPacienteComponent implements OnInit {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(EvolutionNoteDockPopupComponent, {
 				internmentEpisodeId: this.internmentEpisodeId,
+				autoFocus: false,
+				disableClose: true,
+			});
+			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+				delete this.dialogRef;
+				if (fieldsToUpdate) {
+					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
+	}
+
+	openEpicrisis() {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(EpicrisisDockPopupComponent, {
+				patientInfo: {
+					patientId: this.patientId,
+					internmentEpisodeId: this.internmentEpisodeId,
+				},
 				autoFocus: false,
 				disableClose: true,
 			});

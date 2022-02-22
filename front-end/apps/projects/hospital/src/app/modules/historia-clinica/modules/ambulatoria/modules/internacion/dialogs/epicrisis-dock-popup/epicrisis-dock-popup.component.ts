@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
 	DiagnosisDto,
-	EpicrisisDto,
+	EpicrisisDto, EpicrisisObservationsDto,
 	HealthHistoryConditionDto,
 	ImmunizationDto,
 	MasterDataInterface,
@@ -27,16 +27,19 @@ import { DiagnosisEpicrisisService } from '../../services/diagnosis-epicrisis.se
 import { hasError } from '@core/utils/form.utils';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { OVERLAY_DATA } from "@presentation/presentation-model";
+import {
+	InternmentFields
+} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
-	selector: 'app-epicrisis-form',
-	templateUrl: './epicrisis-form.component.html',
-	styleUrls: ['./epicrisis-form.component.scss']
+	selector: 'app-epicrisis-dock-popup',
+	templateUrl: './epicrisis-dock-popup.component.html',
+	styleUrls: ['./epicrisis-dock-popup.component.scss']
 })
-export class EpicrisisFormComponent implements OnInit {
+export class EpicrisisDockPopupComponent implements OnInit {
 
-	private internmentEpisodeId: number;
-	private patientId: number;
 	private healthClinicalStatus;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
@@ -108,7 +111,11 @@ export class EpicrisisFormComponent implements OnInit {
 		selection: new SelectionModel<ImmunizationDto>(true, [])
 	};
 
+	waitToResponse = false;
+
 	constructor(
+		@Inject(OVERLAY_DATA) public data: any,
+		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: FormBuilder,
 		private readonly epicrisisService: EpicrisisService,
 		private readonly route: ActivatedRoute,
@@ -128,14 +135,9 @@ export class EpicrisisFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.route.paramMap.subscribe(
-			(params: ParamMap) => {
-				this.internmentEpisodeId = Number(params.get('idInternacion'));
-				this.patientId = Number(params.get('idPaciente'));
-				this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService,
-					this.internmentStateService, this.tableService, this.internmentEpisodeId);
-			}
-		);
+
+		this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService, this.internmentStateService, this.tableService, this.data.patientInfo.internmentEpisodeId);
+
 
 		this.formDiagnosis = this.formBuilder.group({
 			snomed: [null, Validators.required]
@@ -144,13 +146,11 @@ export class EpicrisisFormComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			mainDiagnosis: [null, Validators.required],
 			snomed: [null],
-			observations: this.formBuilder.group ({
-				evolutionNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				indicationsNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				otherNote: [null, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)],
-				physicalExamNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
-				studiesSummaryNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
-			}),
+			evolutionNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			indicationsNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			otherNote: [null, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)],
+			physicalExamNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			studiesSummaryNote: [null, [Validators.required, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
 		});
 
 		const healthClinicalMasterData$ = this.internacionMasterDataService.getHealthClinical();
@@ -163,9 +163,9 @@ export class EpicrisisFormComponent implements OnInit {
 			this.verifications = healthVerification;
 		});
 
-		const epicrisis$ = this.epicrisisService.getInternmentGeneralState(this.internmentEpisodeId);
+		const epicrisis$ = this.epicrisisService.getInternmentGeneralState(this.data.patientInfo.internmentEpisodeId);
 		epicrisis$.subscribe(response => {
-
+			this.waitToResponse = true;
 			this.form.controls.mainDiagnosis.setValue(response.mainDiagnosis);
 			this.diagnosticsEpicrisisService.setInternmentMainDiagnosis(response.mainDiagnosis);
 			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
@@ -182,7 +182,7 @@ export class EpicrisisFormComponent implements OnInit {
 		if (this.form.valid) {
 			const epicrisis: EpicrisisDto = {
 				confirmed: true,
-				notes: this.form.value.observations,
+				notes: epicrisisObservationsDto(this.form),
 				mainDiagnosis: this.form.value.mainDiagnosis,
 				diagnosis: this.diagnosticsEpicrisisService.getSelectedAlternativeDiagnostics(),
 				familyHistories: this.familyHistories.selection.selected,
@@ -191,18 +191,40 @@ export class EpicrisisFormComponent implements OnInit {
 				immunizations: this.immunizations.selection.selected,
 				allergies: this.allergies.selection.selected
 			};
-			this.epicrisisService.createDocument(epicrisis, this.internmentEpisodeId)
+			this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
 					this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
-					this.goToInternmentSummary();
+					this.dockPopupRef.close(fieldsToUpdate(epicrisis));
 				}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
 		} else {
 			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
-		}
-	}
+			this.form.markAllAsTouched();
 
-	back(): void {
-		window.history.back();
+		}
+
+		function fieldsToUpdate(epicrisis: EpicrisisDto): InternmentFields {
+			return {
+				mainDiagnosis: !!epicrisis.mainDiagnosis,
+				diagnosis: !!epicrisis.diagnosis,
+				familyHistories: !!epicrisis.familyHistories,
+				personalHistories: !!epicrisis.personalHistories,
+				medications: !!epicrisis.medications,
+				immunizations: !!epicrisis.immunizations,
+				allergies: !!epicrisis.allergies,
+				evolutionClinical: !!epicrisis.notes,
+			}
+		}
+
+		function epicrisisObservationsDto(form: FormGroup): EpicrisisObservationsDto {
+			return {
+				evolutionNote: form.value.evolutionNote,
+				indicationsNote: form.value.indicationsNote,
+				otherNote: form.value.otherNote,
+				physicalExamNote: form.value.physicalExamNote,
+				studiesSummaryNote: form.value.studiesSummaryNote
+			}
+
+		}
 	}
 
 	openSearchDialog(searchValue: string): void {
@@ -237,11 +259,6 @@ export class EpicrisisFormComponent implements OnInit {
 	resetForm(): void {
 		delete this.snomedConcept;
 		this.formDiagnosis.reset();
-	}
-
-	private goToInternmentSummary(): void {
-		const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-		this.router.navigate([url]);
 	}
 
 }

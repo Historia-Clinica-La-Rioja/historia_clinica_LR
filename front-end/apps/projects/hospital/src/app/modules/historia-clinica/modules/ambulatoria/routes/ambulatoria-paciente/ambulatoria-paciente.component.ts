@@ -379,9 +379,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			internmentComponent.instance.openAnamnesis();
 			return;
 		}
-		
+
 		if (InternmentActions.evolutionNote === internmentActionId) {
 			internmentComponent.instance.openEvolutionNote();
+			return;
+		}
+
+		if (InternmentActions.epicrisis === internmentActionId) {
+			internmentComponent.instance.openEpicrisis();
 			return;
 		}
 	}

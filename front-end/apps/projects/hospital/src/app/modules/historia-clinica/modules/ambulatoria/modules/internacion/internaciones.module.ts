@@ -7,7 +7,6 @@ import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { InternacionesRoutingModule } from './internaciones-routing.module';
 import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
-import { EpicrisisComponent } from './routes/epicrisis/epicrisis.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
@@ -19,7 +18,7 @@ import { AntecedentesFamiliaresComponent } from './components/antecedentes-famil
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
 import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
-import { EpicrisisFormComponent } from './components/epicrisis-form/epicrisis-form.component';
+import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { MedicalDischargeComponent } from './components/medical-discharge/medical-discharge.component';
@@ -31,7 +30,6 @@ import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulator
 	declarations: [
 		// routing
 		CambiarDiagnosticoPrincipalComponent,
-		EpicrisisComponent,
 		EvaluacionClinicaDiagnosticosComponent,
 		InternacionesHomeComponent,
 		NewInternmentComponent,
@@ -44,7 +42,7 @@ import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulator
 		AntecedentesPersonalesComponent,
 		DiagnosticoPrincipalComponent,
 		DiagnosticosComponent,
-		EpicrisisFormComponent,
+		EpicrisisDockPopupComponent,
 		InternacionesTableComponent,
 		MedicacionComponent,
 		MedicalDischargeComponent,
