@@ -9,7 +9,7 @@ public interface HealthcareProfessionalExternalService {
 
     Integer getProfessionalId(Integer userId);
 
-    ProfessionalDto findProfessionalById(Integer healthCareProfessionalId);
+    ProfessionalDto findActiveProfessionalById(Integer healthCareProfessionalId);
 
     ProfessionalDto findProfessionalByUserId(Integer userId);
 }

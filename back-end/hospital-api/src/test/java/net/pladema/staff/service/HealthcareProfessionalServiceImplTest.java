@@ -37,10 +37,10 @@ class HealthcareProfessionalServiceImplTest {
 	@Test
 	void existProfessional() {
 
-		when(healthcareProfessionalRepository.findProfessionalById(any()))
+		when(healthcareProfessionalRepository.findActiveProfessionalById(any()))
 				.thenReturn(Optional.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234",1)));
 
-		HealthcareProfessionalBo resultService = healthcareProfessionalService.findProfessionalById(1);
+		HealthcareProfessionalBo resultService = healthcareProfessionalService.findActiveProfessionalById(1);
 
 		Assertions.assertNotNull(resultService);
 
@@ -54,10 +54,10 @@ class HealthcareProfessionalServiceImplTest {
 	@Test
 	void notExistProfessional() {
 
-		when(healthcareProfessionalRepository.findProfessionalById(any()))
+		when(healthcareProfessionalRepository.findActiveProfessionalById(any()))
 				.thenReturn(Optional.empty());
 
-		Assertions.assertThrows(NotFoundException.class, () ->	healthcareProfessionalService.findProfessionalById(1));
+		Assertions.assertThrows(NotFoundException.class, () ->	healthcareProfessionalService.findActiveProfessionalById(1));
 
 	}
 

@@ -90,7 +90,7 @@ public class DailyAppointmentController {
         List<AttentionTypeReportBo> dailyAppointments = dailyAppointmentReport.execute(institutionId, diaryId, consultedDate);
         List<AttentionTypeReportDto> attentionTypeReportDtos = createPatientAssociatedReportList(dailyAppointments);
         Integer healthCareProfessionalId = diaryService.getDiary(diaryId).map(DiaryBo::getHealthcareProfessionalId).orElse(null);
-        ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalById(healthCareProfessionalId);
+        ProfessionalDto professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(healthCareProfessionalId);
         Map<String, Object> context = createContext(professionalDto, attentionTypeReportDtos, consultedDate, now);
         String outputFileName = createOutputFileName(professionalDto, consultedDate);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName);

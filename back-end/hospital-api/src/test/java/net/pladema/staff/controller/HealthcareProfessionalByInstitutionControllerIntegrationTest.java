@@ -43,7 +43,7 @@ class HealthcareProfessionalByInstitutionControllerIntegrationTest extends Integ
 	@WithMockUser
 	void test_not_exist_professional() throws Exception {
 
-		when(healthcareProfessionalService.findProfessionalById(any())).thenThrow(new NotFoundException("code", "test"));
+		when(healthcareProfessionalService.findActiveProfessionalById(any())).thenThrow(new NotFoundException("code", "test"));
 		final String GET = "/institution/1/healthcareprofessional/1";
 
 		this.mockMvc.perform(MockMvcRequestBuilders.get(GET))
@@ -64,7 +64,7 @@ class HealthcareProfessionalByInstitutionControllerIntegrationTest extends Integ
 		mock.setIdentificationNumber("1234");
 
 
-		when(healthcareProfessionalService.findProfessionalById(any())).thenReturn(null);
+		when(healthcareProfessionalService.findActiveProfessionalById(any())).thenReturn(null);
 		when(healthcareProfessionalMapper.fromProfessionalBo(any())).thenReturn(mock);
 		final String GET = "/institution/1/healthcareprofessional/1";
 

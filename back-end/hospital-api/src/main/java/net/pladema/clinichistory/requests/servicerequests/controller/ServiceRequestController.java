@@ -265,7 +265,7 @@ public class ServiceRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
         var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var professionalDto = healthcareProfessionalExternalService.findProfessionalById(serviceRequestBo.getDoctorId());
+        var professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(serviceRequestBo.getDoctorId());
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
         var context = createContext(serviceRequestBo, patientDto, professionalDto, patientCoverageDto);
 

@@ -19,7 +19,7 @@ public interface HealthcareProfessionalService {
 
     Integer getProfessionalId(Integer userId);
 
-    HealthcareProfessionalBo findProfessionalById(Integer healthcareProfessionalId);
+    HealthcareProfessionalBo findActiveProfessionalById(Integer healthcareProfessionalId);
 
     HealthcareProfessionalBo findProfessionalByPersonId(Integer personId);
 
