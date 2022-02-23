@@ -208,15 +208,17 @@
 											"actualmente internado" }}
 										</span>
 									</div>
-									<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-										mat-icon-button [matMenuTriggerFor]="menu">
-										<mat-icon>more_vert</mat-icon>
-									</button>
-									<mat-menu #menu="matMenu">
-										<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
-											<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+									<ng-container *ngIf="this.internmentInProcess.inProgress == false || (this.internmentInProcess.inProgress && this.internmentInProcess.id !== problem.sourceId)">
+										<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+												mat-icon-button [matMenuTriggerFor]="menu">
+											<mat-icon>more_vert</mat-icon>
 										</button>
-									</mat-menu>
+										<mat-menu #menu="matMenu">
+											<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
+												<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+											</button>
+										</mat-menu>
+									</ng-container>
 								</mat-list-item>
 								<mat-divider></mat-divider>
 							</div>

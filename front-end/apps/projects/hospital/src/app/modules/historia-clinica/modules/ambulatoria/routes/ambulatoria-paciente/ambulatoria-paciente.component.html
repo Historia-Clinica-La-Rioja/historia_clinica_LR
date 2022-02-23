@@ -233,7 +233,7 @@
 							<span>{{ 'ambulatoria.paciente.problemas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-problemas [nuevaConsultaRef]="dialogRef"></app-problemas>
+							<app-problemas [nuevaConsultaRef]="dialogRef" [internmentInProcess]="internmentEpisodeProcess"></app-problemas>
 						</ng-template>
 					</mat-tab>
 					<mat-tab *ngFor="let extensionTab of extensionTabs$ | async" [id]="extensionTab.head.id">
