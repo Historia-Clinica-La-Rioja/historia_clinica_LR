@@ -31,8 +31,10 @@ public class SnomedConceptsRepository {
     private List<SnomedSearchItemVo> searchConcepts(String term, String ecl) {
         String sqlString =
                 "SELECT s.id, s.sctid, s.pt " +
-                    ", ts_rank( to_tsvector('spanish', s.pt), plainto_tsquery('spanish', :term) ) as rank " +
-                "FROM Snomed s " +
+                    ", ts_rank( to_tsvector('spanish', s.pt), plainto_tsquery('spanish', :term), 2 ) as rank " +
+						// the parameter '2' makes the ts_rank function divide the rank by the document length
+						// there are other modes documented in PostgreSQL's doc "Controlling Text Search"
+				"FROM Snomed s " +
                 "JOIN SnomedRelatedGroup srg ON (s.id = srg.pk.snomedId) " +
                 "JOIN SnomedGroup sg ON (srg.pk.groupId = sg.id)  " +
                 "WHERE fts(s.pt, :term ) = true " +
