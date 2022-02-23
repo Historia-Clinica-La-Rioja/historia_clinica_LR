@@ -1,3 +1,5 @@
+<app-content width="full">
+
 <ng-template #noInfo>
 	<mat-divider></mat-divider>
     <app-no-data></app-no-data>
@@ -14,8 +16,7 @@
 	</div>
 
 	<div id="filter" *ngIf="hideFilterPanel" >
-		<form id="filter-form" [formGroup]="formFilter" fxLayout="column" style="margin: 15px" (ngSubmit)="filter()">
-
+		<form id="filter-form" [formGroup]="formFilter" (ngSubmit)="filter()" fxLayout="row wrap" fxLayoutGap="15px" style="margin: 15px" >
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
 				<mat-select id="statusId"
@@ -49,20 +50,6 @@
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.PROBLEM'"></mat-label>
-					<input matInput type="text"
-									id="healthCondition"
-									name="healthCondition"
-									formControlName="healthCondition">
-					<button id="clear-healthCondition-study" type="button" mat-button *ngIf="formFilter.controls.healthCondition.value" matSuffix
-							color="warn"
-							mat-icon-button
-							(click)="clearFilterField(formFilter.controls.healthCondition); $event.stopPropagation()">
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STUDY'"></mat-label>
 					<input matInput type="text"
@@ -76,8 +63,20 @@
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
-
-			<div align="end">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.PROBLEM'"></mat-label>
+					<input matInput type="text"
+									id="healthCondition"
+									name="healthCondition"
+									formControlName="healthCondition">
+					<button id="clear-healthCondition-study" type="button" mat-button *ngIf="formFilter.controls.healthCondition.value" matSuffix
+							color="warn"
+							mat-icon-button
+							(click)="clearFilterField(formFilter.controls.healthCondition); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			<div>
 				<button mat-flat-button color="primary" type="submit">
 					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.BUTTON_FILTER'"></span>
 				</button>
@@ -124,3 +123,4 @@
         </div>
     </mat-list>
 </app-summary-card>
+</app-content>

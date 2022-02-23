@@ -1,0 +1,17 @@
+@mixin app-item-prescripciones($theme) {
+	$palette-primary: map-get($theme, primary);
+	app-item-prescripciones {
+		.active {
+			background-color: #2687c533;
+			color: mat-color($palette-primary, 400); // previuos color 2687c5
+		}
+		.suspended {
+			background-color: #FDEDED;
+			color: #F04848;
+		}
+		.stopped {
+			background-color: #F4F4F4;
+			color: #A8A8A8;
+		}
+	}
+}
