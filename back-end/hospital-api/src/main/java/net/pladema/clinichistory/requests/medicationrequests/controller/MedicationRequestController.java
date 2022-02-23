@@ -190,7 +190,7 @@ public class MedicationRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, medicationRequestId {}", institutionId, patientId, medicationRequestId);
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(medicationRequestBo.getDoctorId());
+        var professionalDto = healthcareProfessionalExternalService.findFromAllProfessionalsById(medicationRequestBo.getDoctorId());
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
         var context = createContext(medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
 

@@ -95,7 +95,16 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         return result;
     }
 
-    @Override
+	@Override
+	public HealthcareProfessionalBo findFromAllProfessionalsById(Integer healthcareProfessionalId) {
+		LOG.debug("Input parameters -> id {}", healthcareProfessionalId);
+		HealthcareProfessionalBo result = healthcareProfessionalRepository.findFromAllProfessionalsById(healthcareProfessionalId)
+				.map(HealthcareProfessionalBo::new).orElseThrow(() -> new NotFoundException("id", "Professional " + healthcareProfessionalId + " does not exist"));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
     public HealthcareProfessionalBo findProfessionalByPersonId(Integer personId){
         LOG.debug("Input parameters -> personId {}", personId);
         return healthcareProfessionalRepository.findProfessionalByPersonId(personId)

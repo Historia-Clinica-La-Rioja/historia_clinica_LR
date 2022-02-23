@@ -21,6 +21,8 @@ public interface HealthcareProfessionalService {
 
     HealthcareProfessionalBo findActiveProfessionalById(Integer healthcareProfessionalId);
 
+	HealthcareProfessionalBo findFromAllProfessionalsById(Integer healthcareProfessionalId);
+
     HealthcareProfessionalBo findProfessionalByPersonId(Integer personId);
 
     Integer saveProfessional(HealthcareProfessionalCompleteBo professionalCompleteBo);

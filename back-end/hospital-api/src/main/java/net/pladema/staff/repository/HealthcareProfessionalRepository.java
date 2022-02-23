@@ -56,6 +56,14 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " AND hp.deleteable.deleted = false")
 	Optional<HealthcareProfessionalVo> findActiveProfessionalById(@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
+			+ " FROM  HealthcareProfessional hp "
+			+ " INNER JOIN Person p ON (hp.personId = p.id)"
+			+ " WHERE hp.id = :id")
+	Optional<HealthcareProfessionalVo> findFromAllProfessionalsById(@Param("id") Integer id);
+
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT hp.id FROM HealthcareProfessional hp WHERE hp.personId = :personId AND hp.deleteable.deleted = false")
