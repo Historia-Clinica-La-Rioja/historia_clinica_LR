@@ -134,7 +134,7 @@ export class CardMedicacionesComponent implements OnInit {
 							},
 							width: '35%'
 						});
-				} else {
+				} else if (newPrescription) {
 					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
 				}
 			this.getMedication();
