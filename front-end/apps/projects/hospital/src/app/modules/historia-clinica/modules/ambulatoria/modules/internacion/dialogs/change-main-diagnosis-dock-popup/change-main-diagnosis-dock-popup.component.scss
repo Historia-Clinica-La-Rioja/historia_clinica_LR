@@ -1,0 +1,15 @@
+::ng-deep .cdk-overlay-pane {
+	app-change-main-diagnosis-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
+.recomendado {
+	color: lightgray;
+	font-size: 13px;
+	font-weight: lighter;
+}

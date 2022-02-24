@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
-import { CambiarDiagnosticoPrincipalComponent } from './routes/cambiar-diagnostico-principal/cambiar-diagnostico-principal.component';
 import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
@@ -30,12 +29,6 @@ const routes: Routes = [
 		component: EvaluacionClinicaDiagnosticosComponent,
 		canActivate: [RoleGuard],
 		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
-	},
-	{
-		path: 'internacion/:idInternacion/paciente/:idPaciente/cambiar-diag-principal',
-		component: CambiarDiagnosticoPrincipalComponent,
-		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO] }
 	},
 	{
 		path: 'internacion/new',

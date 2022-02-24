@@ -5,6 +5,13 @@ import { HealthConditionDto } from '@api-rest/api-model';
 import { Observable, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
+import {
+	InternmentFields, 
+	InternmentSummaryFacadeService
+} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { DockPopupService } from "@presentation/services/dock-popup.service";
+import { ChangeMainDiagnosisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component";
 
 @Component({
 	selector: 'app-main-diagnosis-summary',
@@ -19,6 +26,7 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 
 	mainDiagnosticosSummary = DIAGNOSTICO_PRINCIPAL;
 	mainDiagnosis$: Observable<HealthConditionDto>;
+	dialogRef: DockPopupRef;
 	private routePrefix;
 
 	constructor(
@@ -26,6 +34,8 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 		private router: Router,
 		private contextService: ContextService,
 		private readonly route: ActivatedRoute,
+		private readonly dockPopupService: DockPopupService,
+		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -47,8 +57,24 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 		this.router.navigate([`${this.routePrefix}/eval-clinica-diagnosticos/${id}`]);
 	}
 
-	goToChangeMainDiagnosis(): void {
-		this.router.navigate([`${this.routePrefix}/cambiar-diag-principal`]);
+	openChangeMainDiagnosis(): void {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(ChangeMainDiagnosisDockPopupComponent, {
+				internmentEpisodeId: this.internmentEpisodeId,
+				autoFocus: false,
+				disableClose: true,
+			});
+			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+				delete this.dialogRef;
+				if (fieldsToUpdate) {
+					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 
 }

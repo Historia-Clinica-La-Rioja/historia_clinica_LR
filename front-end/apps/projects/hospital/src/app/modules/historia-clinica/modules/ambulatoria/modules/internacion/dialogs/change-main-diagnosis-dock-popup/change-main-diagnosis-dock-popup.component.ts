@@ -1,87 +1,66 @@
-import { MainDiagnosisDto, PersonPhotoDto, BasicPatientDto, InternmentSummaryDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
+import {
+	MainDiagnosisDto,
+	InternmentSummaryDto,
+	HealthConditionDto,
+	SnomedDto,
+} from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { MainDiagnosesService } from '@api-rest/services/main-diagnoses.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
-import { PatientService } from '@api-rest/services/patient.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { ContextService } from '@core/services/context.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { MatSelectionList } from '@angular/material/list';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { OVERLAY_DATA } from "@presentation/presentation-model";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
-	selector: 'app-cambiar-diagnostico-principal',
-	templateUrl: './cambiar-diagnostico-principal.component.html',
-	styleUrls: ['./cambiar-diagnostico-principal.component.scss']
+	selector: 'app-change-main-diagnosis-dock-popup',
+	templateUrl: './change-main-diagnosis-dock-popup.component.html',
+	styleUrls: ['./change-main-diagnosis-dock-popup.component.scss']
 })
-export class CambiarDiagnosticoPrincipalComponent implements OnInit {
+export class ChangeMainDiagnosisDockPopupComponent implements OnInit {
 
 	@ViewChild(MatSelectionList) selection: MatSelectionList;
-
-	private internmentEpisodeId: number;
-	private patientId: number;
 
 	newMainDiagnosis: HealthConditionDto;
 
 	panelOpenState = true;
 	form: FormGroup;
 	currentMainDiagnosis: HealthConditionDto;
-	patient$: Observable<PatientBasicData>;
-	public personPhoto: PersonPhotoDto;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	diagnostics$: Observable<HealthConditionDto[]>;
 
 	constructor(
-		private readonly patientService: PatientService,
+		@Inject(OVERLAY_DATA) public data: any,
+		public dockPopupRef: DockPopupRef,
 		private readonly internmentService: InternacionService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly snomedService: SnomedService,
 		private readonly mainDiagnosesService: MainDiagnosesService,
-		private readonly contextService: ContextService,
 		private readonly mapperService: MapperService,
 		private readonly formBuilder: FormBuilder,
 		private readonly snackBarService: SnackBarService,
-		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly dialog: MatDialog,
 	) { }
 
 	ngOnInit(): void {
-		this.route.paramMap.subscribe(
-			(params: ParamMap) => {
-
-				this.internmentEpisodeId = Number(params.get('idInternacion'));
-				this.patientId = Number(params.get('idPaciente'));
-
-				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
-					map(patient => this.mapperService.toPatientBasicData(patient))
-				);
-
-				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
-
-				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
-					map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
-				);
-
-				this.internmentStateService.getMainDiagnosis(this.internmentEpisodeId).subscribe(
-					mainDiagnosis => this.currentMainDiagnosis = mainDiagnosis
-				);
-
-				this.diagnostics$ = this.internmentStateService.getActiveAlternativeDiagnosesGeneralState(this.internmentEpisodeId);
-			}
+		this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.data.internmentEpisodeId).pipe(
+			map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
 		);
-
+		this.internmentStateService.getMainDiagnosis(this.data.internmentEpisodeId).subscribe(
+			mainDiagnosis => this.currentMainDiagnosis = mainDiagnosis
+		);
+		this.diagnostics$ = this.internmentStateService.getActiveAlternativeDiagnosesGeneralState(this.data.internmentEpisodeId);
 		this.form = this.formBuilder.group({
 			currentIllnessNote: [],
 			physicalExamNote: [],
@@ -90,7 +69,6 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 			clinicalImpressionNote: [],
 			otherNote: [],
 		});
-
 	}
 
 	save(): void {
@@ -101,19 +79,26 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 						mainDiagnosis: this.newMainDiagnosis,
 						notes: this.form.value
 					};
-					this.mainDiagnosesService.addMainDiagnosis(this.internmentEpisodeId, mainDiagnosisDto).subscribe(
+					this.mainDiagnosesService.addMainDiagnosis(this.data.internmentEpisodeId, mainDiagnosisDto).subscribe(
 						_ => {
 							this.snackBarService.showSuccess('internaciones.clinical-assessment-diagnosis.messages.SUCCESS');
-							const url = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}`;
-							this.router.navigate([url]);
+							this.dockPopupRef.close(setFieldsToUpdate(mainDiagnosisDto));
 						},
 						_ => this.snackBarService.showError('internaciones.clinical-assessment-diagnosis.messages.ERROR')
 					);
 				}
 			});
 		}
-		else{
+		else {
 			this.snackBarService.showError('internaciones.clinical-assessment-diagnosis.messages.WITHOUT_NEW_DIAGNOSIS');
+		}
+
+		function setFieldsToUpdate(mainDiagnosisDto: MainDiagnosisDto): InternmentFields {
+			return {
+				mainDiagnosis: !!mainDiagnosisDto.mainDiagnosis,
+				diagnosis: !!mainDiagnosisDto.mainDiagnosis,
+				evolutionClinical: !!mainDiagnosisDto.notes,
+			}
 		}
 	}
 
@@ -159,9 +144,4 @@ export class CambiarDiagnosticoPrincipalComponent implements OnInit {
 			this.selection.deselectAll();
 		}
 	}
-
-	back(): void {
-		window.history.back();
-	}
-
 }
