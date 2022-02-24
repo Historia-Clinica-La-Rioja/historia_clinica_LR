@@ -38,14 +38,14 @@
             "ONLY_NUMBERS": "Solo números",
             "OTHER_LAST_NAMES": "Otros apellidos",
             "PAMI_DOCTOR": "Médico de PAMI",
-			"PHONE_PREFIX": "Prefijo",
+            "PHONE_PREFIX": "Prefijo",
             "PHONE_NUMBER": "Teléfono",
             "RELIGION": "Religión",
             "REQUIRED": "El campo es requerido",
             "REQUIRED_GENDER": "Género requerido",
             "SELECT": "Seleccionar",
             "UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura",
-			"IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres"
+            "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres"
         },
         "home": {
             "TITLE": "Pacientes",
@@ -63,11 +63,11 @@
                         "SUCCESS": "Resultados encontrados."
                     }
                 },
-				"IDENTIFY_TYPE_LABEL": "Tipo",
-				"IDENTIFY_NUMBER_LABEL": "Nro. de documento",
-				"GENDER_LABEL": "Sexo documento",
-				"SELECT_REASON_LABEL": "Seleccione motivo",
-				"COMMENTS_LABEL": "Comentarios"
+                "IDENTIFY_TYPE_LABEL": "Tipo",
+                "IDENTIFY_NUMBER_LABEL": "Nro. de documento",
+                "GENDER_LABEL": "Sexo documento",
+                "SELECT_REASON_LABEL": "Seleccione motivo",
+                "COMMENTS_LABEL": "Comentarios"
             }
         },
         "new": {
@@ -138,57 +138,57 @@
             "PENDING_DATA": "Nombre de usuario y contraseña pendientes",
             "WITHOUT_USER": "Sin usuario",
             "NO_INFO": "Sin información",
-			"WITHOUT_PROFESSIONS":"Sin profesiones asignadas.",
-			"NOT_HAVE_PERMISSIONS":"No posee permisos suficientes para editar a este usuario. Consulte con su Administrador.",
-			"LICENCE": "Matrícula:",
-			"PROFESSION": "Profesión:",
-			"SPECIALTY": "Especialidad:",
+            "WITHOUT_PROFESSIONS": "Sin profesiones asignadas.",
+            "NOT_HAVE_PERMISSIONS": "No posee permisos suficientes para editar a este usuario. Consulte con su Administrador.",
+            "LICENCE": "Matrícula:",
+            "PROFESSION": "Profesión:",
+            "SPECIALTY": "Especialidad:",
             "buttons": {
                 "CREATE_USER": "CREAR USUARIO",
-				"SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
-				"RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO",
-				"EDIT_ROLES": "EDITAR ROLES",
-				"EDIT_PROFESSIONS": "EDITAR PROFESIONES"
+                "SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
+                "RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO",
+                "EDIT_ROLES": "EDITAR ROLES",
+                "EDIT_PROFESSIONS": "EDITAR PROFESIONES"
             },
             "messages": {
                 "SUCCESS": "El usuario se creó exitosamente",
                 "ERROR": "Error al crear el usuario",
-				"UPDATE_SUCCESS": "El usuario se actualizó exitosamente"
-			}
+                "UPDATE_SUCCESS": "El usuario se actualizó exitosamente"
+            }
         },
-		"edit_professions": {
+        "edit_professions": {
             "TITLE": "Editar profesión",
             "LICENCE": "Matrícula",
-			"ENTER_LICENCE": "Ingrese matrícula",
-			"LICENCE_REQUIRED":"El campo es requerido",
-			"SELECT_PROFESSION": "Seleccione profesión",
-			"SELECT_SPECIALTY": "Seleccione especialidad",
+            "ENTER_LICENCE": "Ingrese matrícula",
+            "LICENCE_REQUIRED": "El campo es requerido",
+            "SELECT_PROFESSION": "Seleccione profesión",
+            "SELECT_SPECIALTY": "Seleccione especialidad",
             "PROFESSION_SPECIALTY": "Profesión | Especialidad",
-			"ADD_ANOTHER_PROFESSION_AND_SPECIALTY": "Agregar otra profesión/especialidad",
-			"messages": {
+            "ADD_ANOTHER_PROFESSION_AND_SPECIALTY": "Agregar otra profesión/especialidad",
+            "messages": {
                 "SUCCESS": "Se guardaron correctamente los cambios en profesiones",
                 "ERROR": "Error al guardaron los cambios en profesiones"
-			}
+            }
         },
-		"edit_roles": {
-			"TITLE": "Editar roles",
-			"ADD_ANOTHER_ROLES": "Agregar otro rol",
-			"PROFESSION_REQUIRED": "Este rol requiere definir una profesión",
-			"messages": {
+        "edit_roles": {
+            "TITLE": "Editar roles",
+            "ADD_ANOTHER_ROLES": "Agregar otro rol",
+            "PROFESSION_REQUIRED": "Este rol requiere definir una profesión",
+            "messages": {
                 "SUCCESS": "Se guardaron correctamente los cambios",
                 "ERROR": "Error al guardaron los cambios de roles"
-			}
-		},
-		"card_roles": {
-			"ROL_COLUMN": "Rol",
-			"CLINIC_COLUMN": "Clínica",
-			"WITHOUT_ROLES": "Sin roles asignados."
-		},
-		"emergency_care_episode_sumamry": {
-			"TITLE": "Resumen de Guardia",
-			"buttons": {
-				"VIEW_EPISODE": "VER GUARDIA"
-			}
-		}
+            }
+        },
+        "card_roles": {
+            "ROL_COLUMN": "Rol",
+            "CLINIC_COLUMN": "Clínica",
+            "WITHOUT_ROLES": "Sin roles asignados."
+        },
+        "emergency_care_episode_sumamry": {
+            "TITLE": "Resumen de Guardia",
+            "buttons": {
+                "VIEW_EPISODE": "VER GUARDIA"
+            }
+        }
     }
 }

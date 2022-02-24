@@ -15,8 +15,8 @@
 		<div fxFlex="50">
 			<div class="profile-card">
 				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
-								  [internmentEpisodeProcess]="internmentEpisode"
-								  [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
+					[internmentEpisodeProcess]="internmentEpisode"
+					[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 						<ng-container>
@@ -81,8 +81,9 @@
 									</div>
 									<div fxLayout="row" fxLayoutGap="5px">
 										<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
-										<span *ngIf="userData.lastLogin else noInformation">{{userData.lastLogin | date :
-											'dd/MM/yyyy - HH:mm'}} hs</span>
+										<span *ngIf="userData.lastLogin else noInformation">
+											{{userData.lastLogin | date: 'dd/MM/yyyy - HH:mm'}} hs
+										</span>
 									</div>
 									<div fxLayout="row">
 										<form [formGroup]="form">
@@ -95,16 +96,18 @@
 									<ng-container>
 										<div content>
 											<button mat-stroked-button color="primary" (click)="goResetAccessData()">
-												<span class="uppercase" [translate]="'pacientes.user_data.buttons.RESET_ACCESS_DATA'"></span>
+												<span class="uppercase"
+													[translate]="'pacientes.user_data.buttons.RESET_ACCESS_DATA'"></span>
 											</button>
 										</div>
 									</ng-container>
 								</ng-container>
 								<ng-container *ngIf="!userData.username">
 									<div content>
-									<button mat-raised-button color="primary" (click)="goResetAccessData()">
-										<span [translate]="'pacientes.user_data.buttons.SET_ACCESS_DATA'" class="uppercase"></span>
-									</button>
+										<button mat-raised-button color="primary" (click)="goResetAccessData()">
+											<span [translate]="'pacientes.user_data.buttons.SET_ACCESS_DATA'"
+												class="uppercase"></span>
+										</button>
 									</div>
 								</ng-container>
 								<mat-divider inset></mat-divider>
@@ -115,118 +118,138 @@
 									</ng-container>
 								</div>
 								<div content>
-										<button  [disabled]="isInstitutionalAdministrator()" id="button-edit-roles" mat-stroked-button color="primary" (click)="editRoles()">
-											<span [translate]="'pacientes.user_data.buttons.EDIT_ROLES'"
-												class="uppercase"></span>
-										</button>
-									</div>
+									<button [disabled]="isInstitutionalAdministrator()" id="button-edit-roles"
+										mat-stroked-button color="primary" (click)="editRoles()">
+										<span [translate]="'pacientes.user_data.buttons.EDIT_ROLES'"
+											class="uppercase"></span>
+									</button>
 								</div>
-								<mat-divider inset></mat-divider>
-								<div fxLayout="column" fxLayoutGap="10px">
-									<div content>
-										<ng-container *ngIf="hasAssignedProfessions else noInfo">
-											<div fxLayout="column" fxLayoutGap="10px">
-												<div class="sub-title" fxLayout="column" fxLayoutGap="5px">
-													<strong [translate]="'pacientes.user_data.LICENCE'"></strong>
-													<div>{{license}}</div>
-												</div>
-												<div content>
-													<div fxLayout="row">
-														<div fxFlex="50%">
-															<div>
-																<strong [translate]="'pacientes.user_data.PROFESSION'"></strong>
-																<div id="profession" class="data" fxLayout="row" fxLayoutGap="16px" *ngFor="let profession of showProfessions">
-																	<mat-icon color="primary" fontSet="material-icons-outlined">
-																		medical_services</mat-icon>
-																	<span>{{profession}} </span>
-																</div>
+							</div>
+							<mat-divider inset></mat-divider>
+							<div fxLayout="column" fxLayoutGap="10px">
+								<div content>
+									<ng-container *ngIf="hasAssignedProfessions else noInfo">
+										<div fxLayout="column" fxLayoutGap="10px">
+											<div class="sub-title" fxLayout="column" fxLayoutGap="5px">
+												<strong [translate]="'pacientes.user_data.LICENCE'"></strong>
+												<div>{{license}}</div>
+											</div>
+											<div content>
+												<div fxLayout="row">
+													<div fxFlex="50%">
+														<div>
+															<strong
+																[translate]="'pacientes.user_data.PROFESSION'"></strong>
+															<div id="profession" class="data" fxLayout="row"
+																fxLayoutGap="16px"
+																*ngFor="let profession of showProfessions">
+																<mat-icon color="primary"
+																	fontSet="material-icons-outlined">
+																	medical_services
+																</mat-icon>
+																<span>{{profession}}</span>
 															</div>
 														</div>
-														<div fxFlex="50%">
-															<strong [translate]="'pacientes.user_data.SPECIALTY'"></strong>
-															<div id="specialty" class="data" fxLayout="row" fxLayoutGap="16px" *ngFor="let specialty of showSpecialties">
-																<span>{{specialty}}</span>
-															</div>
+													</div>
+													<div fxFlex="50%">
+														<strong [translate]="'pacientes.user_data.SPECIALTY'"></strong>
+														<div id="specialty" class="data" fxLayout="row"
+															fxLayoutGap="16px"
+															*ngFor="let specialty of showSpecialties">
+															<span>{{specialty}}</span>
 														</div>
 													</div>
 												</div>
 											</div>
-										</ng-container>
-									</div>
-									<div content>
-										<button id="button-edit-professions" mat-stroked-button color="primary" (click)="editProfessions()">
-										<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'" class="uppercase"></span>
-									</button>
-									</div>
+										</div>
+									</ng-container>
 								</div>
-							</mat-card-content>
-						</mat-card>
-					</div>
+								<div content>
+									<button id="button-edit-professions" mat-stroked-button color="primary"
+										(click)="editProfessions()">
+										<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'"
+											class="uppercase"></span>
+									</button>
+								</div>
+							</div>
+						</mat-card-content>
+					</mat-card>
+				</div>
 			</div>
-            <div *appHasRole="['ADMINISTRATIVO']">
-				<app-summary-card *ngIf="internmentEpisodeSummary"
-								  id="internment_summary_card" [header]="internacionSummary">
+			<div *appHasRole="['ADMINISTRATIVO']">
+				<app-summary-card *ngIf="internmentEpisodeSummary" id="internment_summary_card"
+					[header]="internacionSummary">
 					<mat-card-content>
-						<app-internment-episode-summary [canLoadProbableDischargeDate]="canLoadProbableDischargeDate" [hasEpicrisis]="epicrisisDoc" [internmentEpisode]="internmentEpisodeSummary" [patientId]="patientId" [showDischarge]="showDischarge">
+						<app-internment-episode-summary [canLoadProbableDischargeDate]="canLoadProbableDischargeDate"
+							[hasEpicrisis]="epicrisisDoc" [internmentEpisode]="internmentEpisodeSummary"
+							[patientId]="patientId" [showDischarge]="showDischarge">
 						</app-internment-episode-summary>
 					</mat-card-content>
 				</app-summary-card>
 				<mat-card class="box" *ngIf="emergencyCareEpisodeSummary" id="emergency-care-episode-summary-card">
-                    <mat-card-header>
-                        <mat-card-title>
-                            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
-                                <mat-icon fontSet="material-icons-outlined">local_hospital</mat-icon>
-                                <span [translate]="'pacientes.emergency_care_episode_sumamry.TITLE'"></span>
-                            </div>
-                        </mat-card-title>
-                        <ng-container *ngIf="emergencyCareEpisodeSummary?.id">
-                            <div fxLayout="row" fxLayoutAlign="center center">
-                                <button mat-raised-button color="primary" class="create-user" (click)="goToEmergencyCareEpisode()">
-									<span [translate]="'pacientes.emergency_care_episode_sumamry.buttons.VIEW_EPISODE'"></span>
+					<mat-card-header>
+						<mat-card-title>
+							<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+								<mat-icon fontSet="material-icons-outlined">local_hospital</mat-icon>
+								<span [translate]="'pacientes.emergency_care_episode_sumamry.TITLE'"></span>
+							</div>
+						</mat-card-title>
+						<ng-container *ngIf="emergencyCareEpisodeSummary?.id">
+							<div fxLayout="row" fxLayoutAlign="center center">
+								<button mat-raised-button color="primary" class="create-user"
+									(click)="goToEmergencyCareEpisode()">
+									<span
+										[translate]="'pacientes.emergency_care_episode_sumamry.buttons.VIEW_EPISODE'"></span>
 								</button>
-                            </div>
-                        </ng-container>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <div fxLayout="row" fxLayoutAlign="space-between">
-                            <div fxLayout="column">
-                                <div fxLayout="row" fxLayoutGap="15px">
-                                    <div fxLayout="column">
-                                        <div id="triage-chip" [ngStyle]="{'color':emergencyCareEpisodeSummary?.triage?.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }" [style.background-color]="emergencyCareEpisodeSummary?.triage?.color">{{ emergencyCareEpisodeSummary?.triage?.name }}
-                                        </div>
-                                    </div>
-                                    <div fxLayout="column" fxLayoutAlign="center center">
-                                        <span>{{ emergencyCareEpisodeSummary?.type?.description }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div fxLayout="column" fxLayoutGap="15px">
-                                <div fxLayout="row" fxLayoutGap="15px">
-                                    <div fxLayout="column">
-                                        <span *ngIf="emergencyCareEpisodeSummary?.state.id === episodeStates.EN_ESPERA else enAtencion">
-										{{ emergencyCareEpisodeSummary?.state.description }}
+							</div>
+						</ng-container>
+					</mat-card-header>
+					<mat-card-content>
+						<div fxLayout="row" fxLayoutAlign="space-between">
+							<div fxLayout="column">
+								<div fxLayout="row" fxLayoutGap="15px">
+									<div fxLayout="column">
+										<div id="triage-chip"
+											[ngStyle]="{'color':emergencyCareEpisodeSummary?.triage?.id === triages.AMARILLO_NIVEL_3 ? 'black' : 'white' }"
+											[style.background-color]="emergencyCareEpisodeSummary?.triage?.color">
+											{{ emergencyCareEpisodeSummary?.triage?.name }}
+										</div>
+									</div>
+									<div fxLayout="column" fxLayoutAlign="center center">
+										<span>{{ emergencyCareEpisodeSummary?.type?.description }}</span>
+									</div>
+								</div>
+							</div>
+							<div fxLayout="column" fxLayoutGap="15px">
+								<div fxLayout="row" fxLayoutGap="15px">
+									<div fxLayout="column">
+										<span
+											*ngIf="emergencyCareEpisodeSummary?.state.id === episodeStates.EN_ESPERA else enAtencion">
+											{{ emergencyCareEpisodeSummary?.state.description }}
+										</span>
+									</div>
+									<div fxLayout="column">
+										<span> {{ emergencyCareEpisodeSummary?.doctorsOffice?.description }} </span>
+									</div>
+								</div>
+								<ng-template #enAtencion>
+									<span id="episode-state">
+										{{ emergencyCareEpisodeSummary?.state.description | uppercase }}
 									</span>
-                                    </div>
-                                    <div fxLayout="column">
-                                        <span> {{ emergencyCareEpisodeSummary?.doctorsOffice?.description }} </span>
-                                    </div>
-                                </div>
-                                <ng-template #enAtencion>
-                                    <span id="episode-state">{{ emergencyCareEpisodeSummary?.state.description | uppercase }}</span>
-                                </ng-template>
-                            </div>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
-    </div>
+								</ng-template>
+							</div>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</div>
+	</div>
 </app-content>
 
 <ng-template #noInfo>
 	<span class="no-professions" [translate]="'pacientes.user_data.WITHOUT_PROFESSIONS'"></span>
- </ng-template>
+</ng-template>
 
- <ng-template #doesNotHavePermissions >
+<ng-template #doesNotHavePermissions>
 	<span class="no-professions" [translate]="'pacientes.user_data.NOT_HAVE_PERMISSIONS'"></span>
- </ng-template>
+</ng-template>
