@@ -6,7 +6,6 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { InternacionesRoutingModule } from './internaciones-routing.module';
-import { EvaluacionClinicaDiagnosticosComponent } from './routes/evaluacion-clinica-diagnosticos/evaluacion-clinica-diagnosticos.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
@@ -25,11 +24,11 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
+import { DiagnosisClinicalEvaluationDockPopupComponent } from './dialogs/diagnosis-clinical-evaluation-dock-popup/diagnosis-clinical-evaluation-dock-popup.component';
 
 @NgModule({
 	declarations: [
 		// routing
-		EvaluacionClinicaDiagnosticosComponent,
 		InternacionesHomeComponent,
 		NewInternmentComponent,
 		PatientBedRelocationComponent,
@@ -48,6 +47,7 @@ import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-dia
 		VacunasComponent,
 		EvolutionNoteDockPopupComponent,
 		ChangeMainDiagnosisDockPopupComponent,
+		DiagnosisClinicalEvaluationDockPopupComponent,
 	],
 	imports: [
 		CommonModule,

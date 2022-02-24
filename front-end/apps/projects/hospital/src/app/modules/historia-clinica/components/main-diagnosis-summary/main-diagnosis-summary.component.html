@@ -7,7 +7,7 @@
 		</mat-card-content>
 		<mat-card-actions fxLayout="row-reverse" *ngIf="editable">
 			<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
-				<button mat-raised-button id="add_clinical_assestment_button" color="primary" (click)="goToClinicalEvaluation(mainDiagnosis.id)">
+				<button mat-raised-button id="add_clinical_assestment_button" color="primary" (click)="openClinicalEvaluation(mainDiagnosis.id)">
 					<span [translate]="'internaciones.internacion-paciente.main-diagnosis.actions.ADD_CLINICAL_ASSESTMENT'"></span>
 				</button>
 				<button mat-raised-button id="change_main_diagnosis_button" color="primary" (click)="openChangeMainDiagnosis()">

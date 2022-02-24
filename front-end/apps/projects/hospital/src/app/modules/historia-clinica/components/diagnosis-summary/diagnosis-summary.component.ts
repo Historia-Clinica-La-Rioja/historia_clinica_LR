@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { MasterDataInterface, HealthConditionDto, DiagnosisDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -12,7 +12,10 @@ import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-
 import { ContextService } from '@core/services/context.service';
 
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
-import { InternmentSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
+import { InternmentFields, InternmentSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
+import { DiagnosisClinicalEvaluationDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-clinical-evaluation-dock-popup/diagnosis-clinical-evaluation-dock-popup.component";
+import { DockPopupRef } from "@presentation/services/dock-popup-ref";
+import { DockPopupService } from "@presentation/services/dock-popup.service";
 
 export const COVID_SNOMED = { sctid: '186747009', pt: 'infección por coronavirus' };
 
@@ -32,15 +35,16 @@ export class DiagnosisSummaryComponent implements OnInit, OnChanges {
 	clinicalStatus: MasterDataInterface<string>[];
 	tableModel: TableModel<HealthConditionDto>;
 	patientId: number;
+	dialogRef: DockPopupRef;
 
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly router: Router,
 		public dialog: MatDialog,
 		private readonly route: ActivatedRoute,
 		private readonly contextService: ContextService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly dockPopupService: DockPopupService,
 	) { }
 
 	ngOnInit(): void {
@@ -116,8 +120,7 @@ export class DiagnosisSummaryComponent implements OnInit, OnChanges {
 					display: 'note_add',
 					matColor: 'primary',
 					do: row => {
-						const url_prefix = `institucion/${this.contextService.institutionId}/internaciones/internacion/${this.internmentEpisodeId}/paciente/${this.patientId}/`;
-						this.router.navigate([url_prefix + `eval-clinica-diagnosticos/${row.id}`]);
+						this.openClinicalEvaluation(row.id);
 					},
 					hide: row => row.statusId !== HEALTH_CLINICAL_STATUS.ACTIVO
 				},
@@ -149,6 +152,29 @@ export class DiagnosisSummaryComponent implements OnInit, OnChanges {
 			});
 		}
 		return model;
+	}
+
+	openClinicalEvaluation(id: number): void {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(DiagnosisClinicalEvaluationDockPopupComponent, {
+				diagnosisInfo: {
+					internmentEpisodeId: this.internmentEpisodeId,
+					diagnosisId: id,
+				},
+				autoFocus: false,
+				disableClose: true,
+			});
+			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+				delete this.dialogRef;
+				if (fieldsToUpdate) {
+					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 
 }
