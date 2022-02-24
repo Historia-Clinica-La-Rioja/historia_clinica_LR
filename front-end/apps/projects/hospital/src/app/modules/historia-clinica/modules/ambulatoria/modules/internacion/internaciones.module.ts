@@ -16,15 +16,16 @@ import { AntecedentesFamiliaresComponent } from './components/antecedentes-famil
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
 import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
-import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
-import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
-import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
+// dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
 import { DiagnosisClinicalEvaluationDockPopupComponent } from './dialogs/diagnosis-clinical-evaluation-dock-popup/diagnosis-clinical-evaluation-dock-popup.component';
+import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component';
+import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
+import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
 
 @NgModule({
 	declarations: [
@@ -35,19 +36,20 @@ import { DiagnosisClinicalEvaluationDockPopupComponent } from './dialogs/diagnos
 		PatientDischargeComponent,
 		// components
 		AlergiasComponent,
-		AnamnesisDockPopupComponent,
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
 		DiagnosticoPrincipalComponent,
 		DiagnosticosComponent,
-		EpicrisisDockPopupComponent,
 		InternacionesTableComponent,
 		MedicacionComponent,
-		MedicalDischargeComponent,
 		VacunasComponent,
-		EvolutionNoteDockPopupComponent,
+		// dialogs
+		AnamnesisDockPopupComponent,
 		ChangeMainDiagnosisDockPopupComponent,
 		DiagnosisClinicalEvaluationDockPopupComponent,
+		EpicrisisDockPopupComponent,
+		EvolutionNoteDockPopupComponent,
+		MedicalDischargeComponent,
 	],
 	imports: [
 		CommonModule,
