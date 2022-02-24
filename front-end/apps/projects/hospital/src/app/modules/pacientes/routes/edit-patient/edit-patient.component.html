@@ -267,7 +267,7 @@
 						<div>
 							<span [translate]="'pacientes.form.PHONE_PREFIX'"></span>
 						</div>
-						<mat-form-field appearance="outline">
+						<mat-form-field class="prefix-field" appearance="outline">
 							<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()" formControlName="phonePrefix" maxlength="10"
 								   placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phonePrefix')">

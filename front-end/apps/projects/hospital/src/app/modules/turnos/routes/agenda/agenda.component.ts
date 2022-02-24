@@ -197,7 +197,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 					}
 				} else {
 					this.dialog.open(NewAppointmentComponent, {
-						width: '28%',
+						width: '35%',
 						data: {
 							date: clickedDate.format(DateFormat.API_DATE),
 							diaryId: this.agenda.id,
