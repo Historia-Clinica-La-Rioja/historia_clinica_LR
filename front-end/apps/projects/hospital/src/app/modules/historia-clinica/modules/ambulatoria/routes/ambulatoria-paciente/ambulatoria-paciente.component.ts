@@ -26,7 +26,7 @@ import { ExtensionPatientService } from '@extensions/services/extension-patient.
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
 import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
-import { anyMatch } from '@core/utils/array.utils';
+import { anyMatch, pushIfNotExists } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -57,7 +57,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	patient: PatientBasicData;
 	patientId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
-	criticalAllergies: HCEAllergyDto[];
+	criticalAllergies: HCEAllergyDto[] = [];
 	limitAllergies = 2;
 	public personInformation: AdditionalInfo[];
 	public personPhoto: PersonPhotoDto;
@@ -301,9 +301,17 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.isOpenOdontologyConsultation = isOpenOdontologyConsultation;
 	}
 
-	updateCriticalAllergies(): void{
+	updateCriticalAllergies(): void {
 		this.hceGeneralStateService.getCriticalAllergies(this.patientId)
-			.subscribe(allergies => this.criticalAllergies = allergies);
+			.subscribe(allergies => {
+				allergies.forEach(allergy => {
+					this.criticalAllergies = pushIfNotExists<HCEAllergyDto>(this.criticalAllergies, allergy, this.compareAllergy);
+				})
+			});
+	}
+
+	compareAllergy(data: HCEAllergyDto, data1: HCEAllergyDto): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	openAllergies() {
