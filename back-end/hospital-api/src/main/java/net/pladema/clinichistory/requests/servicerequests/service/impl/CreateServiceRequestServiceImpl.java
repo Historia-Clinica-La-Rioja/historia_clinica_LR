@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.shared.infrastructure.input.service.events.EventTopicDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;

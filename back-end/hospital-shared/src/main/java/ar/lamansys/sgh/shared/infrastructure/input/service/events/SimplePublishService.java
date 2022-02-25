@@ -3,27 +3,26 @@ package ar.lamansys.sgh.shared.infrastructure.input.service.events;
 import ar.lamansys.mqtt.infraestructure.input.MqttDtoUtils;
 import ar.lamansys.mqtt.infraestructure.input.rest.dto.MqttMetadataDto;
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
-import ar.lamansys.sgh.shared.infrastructure.input.service.events.EventTopicDto;
 
-import org.springframework.stereotype.Service;
-
-@Service
 public class SimplePublishService {
 
 	private final MqttCallExternalService mqttCallExternalService;
+	private final String namePrefix;
 
-	public SimplePublishService(MqttCallExternalService mqttCallExternalService) {
+	public SimplePublishService(MqttCallExternalService mqttCallExternalService, String namePrefix) {
 		this.mqttCallExternalService = mqttCallExternalService;
+		this.namePrefix = namePrefix;
 	}
 
-	public void publish(Integer patientId, EventTopicDto eventTopicDto) {
-		String message = getSimplePayload(patientId, eventTopicDto.getId());
-		MqttMetadataDto mqttMetadataDto = MqttDtoUtils.getMqtMetadataDto(eventTopicDto.getDescription(), message);
+	public void publish(Integer patientId, String topic) {
+		String fullTopic = namePrefix + "/" + topic;
+		String message = getSimplePayload(patientId, fullTopic);
+		MqttMetadataDto mqttMetadataDto = MqttDtoUtils.getMqtMetadataDto(fullTopic, message);
 		mqttCallExternalService.publish(mqttMetadataDto);
 	}
 
-	private String getSimplePayload(Integer patientId, Integer eventId) {
-		return String.format("\"description\":\"{\\\"patientId\\\":%d,\\\"eventId\\\":%d}\"", patientId, eventId);
+	private String getSimplePayload(Integer patientId, String topic) {
+		return String.format("\"description\":\"{\\\"patientId\\\":%d,\\\"topic\\\":\\\"%s\\\"}\"", patientId, topic);
 	}
 
 

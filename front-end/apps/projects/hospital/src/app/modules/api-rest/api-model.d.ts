@@ -2506,6 +2506,10 @@ export const enum EMedicalCoverageTypeDto {
     PREPAGA = "PREPAGA",
 }
 
+export const enum EOdontologyTopicDto {
+    NUEVA_CONSULTA = "NUEVA_CONSULTA",
+}
+
 export const enum ERole {
     ROOT = "ROOT",
     ADMINISTRADOR = "ADMINISTRADOR",

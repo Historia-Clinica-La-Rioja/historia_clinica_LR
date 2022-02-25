@@ -1,13 +1,13 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.events.EventTopicDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
@@ -79,9 +79,9 @@ public class InternmentEpisodeController {
 
 	private final LocalDateMapper localDateMapper;
 
-	private final SimplePublishService simplePublishService;
+	private final HospitalApiPublisher hospitalApiPublisher;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, SimplePublishService simplePublishService) {
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -92,7 +92,7 @@ public class InternmentEpisodeController {
 		this.patientDischargeService = patientDischargeService;
 		this.responsibleContactMapper = responsibleContactMapper;
 		this.localDateMapper = localDateMapper;
-		this.simplePublishService = simplePublishService;
+		this.hospitalApiPublisher = hospitalApiPublisher;
 	}
 
 	@InternmentValid
@@ -138,7 +138,7 @@ public class InternmentEpisodeController {
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
-				.ifPresent( patientId -> simplePublishService.publish(patientId, EventTopicDto.ALTA_MEDICA_INTERNACION) );
+				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, EHospitalApiTopicDto.ALTA_MEDICA) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

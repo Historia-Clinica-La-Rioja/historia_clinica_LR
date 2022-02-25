@@ -8,6 +8,7 @@ import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
+import ar.lamansys.odontology.domain.EOdontologyTopicDto;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.Publisher;
 import ar.lamansys.odontology.domain.ToothBo;
@@ -23,7 +24,6 @@ import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 import ar.lamansys.odontology.domain.consultation.AppointmentStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.events.EventTopicDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +123,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
         odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
         appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
-		publisher.run(consultationBo.getPatientId(), EventTopicDto.CONSULTA_ODONTOLOGICA_CREADA);
+		publisher.run(consultationBo.getPatientId(), EOdontologyTopicDto.NUEVA_CONSULTA);
         LOG.debug("Output -> encounterId {}", encounterId);
 
         return encounterId;
