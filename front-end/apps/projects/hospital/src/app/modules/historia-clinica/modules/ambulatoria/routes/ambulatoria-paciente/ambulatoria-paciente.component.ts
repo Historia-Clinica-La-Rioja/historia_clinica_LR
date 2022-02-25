@@ -302,6 +302,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	updateCriticalAllergies(): void {
+		this.criticalAllergies = [];
 		this.hceGeneralStateService.getCriticalAllergies(this.patientId)
 			.subscribe(allergies => {
 				allergies.forEach(allergy => {
