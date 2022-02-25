@@ -164,10 +164,6 @@ export class InternacionPacienteComponent implements OnInit {
 		this.router.navigate([`${this.router.url}/alta-medica`]);
 	}
 
-	goToPaseCama(): void {
-		this.router.navigate([`${this.router.url}/pase-cama`]);
-	}
-
 	initSummaries() {
 		this.allergies$ = this.internmentStateService.getAllergies(this.internmentEpisodeId);
 		this.familyHistories$ = this.internmentStateService.getFamilyHistories(this.internmentEpisodeId);

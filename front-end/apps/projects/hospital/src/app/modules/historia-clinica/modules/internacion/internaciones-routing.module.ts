@@ -30,7 +30,7 @@ const routes: Routes = [
 		path: 'internacion/:idInternacion/paciente/:idPaciente',
 		component: InternacionPacienteComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ADMINISTRATIVO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
+		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/anamnesis',

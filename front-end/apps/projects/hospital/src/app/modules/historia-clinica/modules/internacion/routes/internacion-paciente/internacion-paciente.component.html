@@ -28,13 +28,6 @@
 								[translate]="'internaciones.internacion-paciente.actions.ADD_EPICRISIS'"></span>
 						</button>
 					</ng-container>
-
-					<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button
-						color="primary" fxFlexFill.xs (click)="goToPaseCama()">
-						<span class="uppercase"
-							[translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
-					</button>
-
 				</ng-container>
 
 				<ng-container *ngIf="epicrisisDoc?.confirmed && !hasMedicalDischarge">
