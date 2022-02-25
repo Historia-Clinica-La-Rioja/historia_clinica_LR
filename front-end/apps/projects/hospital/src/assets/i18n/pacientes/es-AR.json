@@ -7,6 +7,11 @@
             "TITLE": "Turnos asignados",
             "WITHOUT_APPOINTMENTS_MESSAGE": "Sin turnos asignados"
         },
+        "profile": {
+            "INITIATE_INTERNMENT": "Iniciar internación",
+            "PATIENT_INTERNMENT_ANOTHER_INSTITUTION": "El paciente se encuentra internado en otra institución.",
+            "REPORTS": "Informes"
+        },
         "form": {
             "ADDRESS": "Domicilio",
             "ADDRESS_APARTMENT": "Departamento",

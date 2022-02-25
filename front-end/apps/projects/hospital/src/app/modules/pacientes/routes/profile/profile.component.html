@@ -8,7 +8,7 @@
 
 	<div *appHasRole="['ADMINISTRATIVO']">
 		<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary" (click)="goNewInternment()">
-			<span class="uppercase">Iniciar internación</span>
+			<span class="uppercase"> {{ 'pacientes.profile.INITIATE_INTERNMENT' | translate }} </span>
 		</button>
 	</div>
 	<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
@@ -29,7 +29,7 @@
 					<div content *appHasRole="['ADMINISTRATIVO']">
 						<button mat-stroked-button color="primary" class="reports" *ngIf="downloadReportIsEnabled"
 							(click)="reports()">
-							<span class="uppercase">INFORMES</span>
+							<span class="uppercase"> {{ 'pacientes.profile.REPORTS' | translate }} </span>
 						</button>
 					</div>
 					<div content>
@@ -39,9 +39,9 @@
 					</div>
 				</app-patient-card>
 			</div>
-			<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress">El paciente se encuentra internado en
-				otra
-				institución.</em>
+			<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress">
+				{{ 'pacientes.profile.PATIENT_INTERNMENT_ANOTHER_INSTITUTION' | translate }}
+			</em>
 		</div>
 		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
 			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
