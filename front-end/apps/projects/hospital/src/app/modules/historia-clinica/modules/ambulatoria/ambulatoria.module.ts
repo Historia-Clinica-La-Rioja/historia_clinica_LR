@@ -51,6 +51,9 @@ import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-a
 import { FactoresDeRiesgoNuevaConsultaComponent } from './components/factores-de-riesgo-nueva-consulta/factores-de-riesgo-nueva-consulta.component';
 import { ShowAllergiesComponent } from './dialogs/show-allergies/show-allergies.component';
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
+import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-summary.component';
+import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
+import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 
 @NgModule({
 	declarations: [
@@ -92,6 +95,9 @@ import { InternacionPacienteComponent } from './modules/internacion/routes/inter
 		FactoresDeRiesgoNuevaConsultaComponent,
 		ShowAllergiesComponent,
 		InternacionPacienteComponent,
+		VacunasSummaryComponent,
+		MainDiagnosisSummaryComponent,
+		DiagnosisSummaryComponent,
 	],
 	imports: [
 		CommonModule,

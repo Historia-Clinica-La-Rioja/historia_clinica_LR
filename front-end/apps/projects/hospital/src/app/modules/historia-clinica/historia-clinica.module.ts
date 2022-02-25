@@ -10,14 +10,11 @@ import { AntecedentesFamiliaresSummaryComponent } from './components/antecedente
 import { AntecedentesPersonalesSummaryComponent } from './components/antecedentes-personales-summary/antecedentes-personales-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
-import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
-import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
-import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-summary.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -37,14 +34,11 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		AntecedentesPersonalesSummaryComponent,
 		AntropometricosSummaryComponent,
 		ConceptsSearchComponent,
-		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
-		MainDiagnosisSummaryComponent,
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
-		VacunasSummaryComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -70,13 +64,10 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		AntecedentesPersonalesSummaryComponent,
 		AntropometricosSummaryComponent,
 		ConceptsSearchComponent,
-		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
-		MainDiagnosisSummaryComponent,
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
-		VacunasSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,

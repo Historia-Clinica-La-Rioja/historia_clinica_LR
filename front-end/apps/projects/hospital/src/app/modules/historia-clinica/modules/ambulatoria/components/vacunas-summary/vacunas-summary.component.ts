@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { VACUNAS } from '../../constants/summaries';
+import { VACUNAS } from '../../../../constants/summaries';
 import { TableModel } from '@presentation/components/table/table.component';
 import { ImmunizationDto, EvolutionNoteDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
-import { AddInmunizationComponent, Immunization } from '../../dialogs/add-inmunization/add-inmunization.component';
+import { AddInmunizationComponent, Immunization } from '../../../../dialogs/add-inmunization/add-inmunization.component';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 

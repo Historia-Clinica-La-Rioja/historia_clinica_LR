@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { DIAGNOSTICO_PRINCIPAL } from '../../constants/summaries';
+import { DIAGNOSTICO_PRINCIPAL } from '../../../../constants/summaries';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { HealthConditionDto } from '@api-rest/api-model';
 import { Observable, of } from 'rxjs';

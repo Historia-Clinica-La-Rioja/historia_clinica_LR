@@ -7,8 +7,8 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 
-import { DIAGNOSTICOS } from '../../constants/summaries';
-import { RemoveDiagnosisComponent } from '../../dialogs/remove-diagnosis/remove-diagnosis.component';
+import { DIAGNOSTICOS } from '../../../../constants/summaries';
+import { RemoveDiagnosisComponent } from '../../../../dialogs/remove-diagnosis/remove-diagnosis.component';
 import { ContextService } from '@core/services/context.service';
 
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
