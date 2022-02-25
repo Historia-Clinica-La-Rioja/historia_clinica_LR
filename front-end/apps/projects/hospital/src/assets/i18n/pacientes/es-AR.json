@@ -3,6 +3,10 @@
         "assigned-appointment": {
             "LICENSE_NUMBER_ACRONYM": "MN N°"
         },
+        "assigned-appointments": {
+            "TITLE": "Turnos asignados",
+            "WITHOUT_APPOINTMENTS_MESSAGE": "Sin turnos asignados"
+        },
         "form": {
             "ADDRESS": "Domicilio",
             "ADDRESS_APARTMENT": "Departamento",

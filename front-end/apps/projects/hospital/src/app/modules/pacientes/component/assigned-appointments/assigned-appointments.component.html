@@ -1,0 +1,16 @@
+<app-summary-card id="assigned-appointments-summary-card" [header]="assignedAppointmentsSummary">
+    <mat-card-content>
+        <ng-container *ngIf="appointmentsList.length else noAppointments">
+            <div *ngFor="let appointment of appointmentsList, let index = index">
+                <div class="padding">
+                    <app-assigned-appointment [appointment]="appointment"></app-assigned-appointment>
+                </div>
+                <mat-divider inset *ngIf="index < appointmentsList.length-1"></mat-divider>
+            </div>
+        </ng-container>
+    </mat-card-content>
+</app-summary-card>
+
+<ng-template #noAppointments>
+    <app-no-data message="pacientes.assigned-appointments.WITHOUT_APPOINTMENTS_MESSAGE"></app-no-data>
+</ng-template>

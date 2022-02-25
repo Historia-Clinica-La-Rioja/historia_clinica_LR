@@ -242,6 +242,9 @@
 					</mat-card-content>
 				</mat-card>
 			</div>
+			<div *appHasRole="['ADMINISTRATIVO']">
+				<app-assigned-appointments [patientId]="patientId"></app-assigned-appointments>
+			</div>
 		</div>
 	</div>
 </app-content>
