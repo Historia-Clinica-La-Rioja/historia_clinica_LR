@@ -424,7 +424,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 			(vaccineInformation: VaccineInformationDto) => {
 				this.disableDoses(form);
 				this.disableSchemes(form);
-				if (vaccineInformation.conditions.length > 0) {
+				if (vaccineInformation?.conditions.length > 0) {
 					this.conditions = vaccineInformation.conditions;
 					form.get("condition").enable();
 					form.get("condition").setValue(null);
