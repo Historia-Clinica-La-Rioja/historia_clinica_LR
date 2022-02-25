@@ -1,0 +1,36 @@
+<div fxLayout="column" fxLayoutGap="10px">
+
+    <div fxLayout="row" fxLayoutAlign="start start">
+        <div fxFlex="66.67" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+            <mat-icon color="primary"> person_outline </mat-icon>
+            <span class="mat-body-2"> {{ appointment.professionalName }} </span>
+            <span class="mat-caption">
+                {{ 'pacientes.assigned-appointment.LICENSE_NUMBER_ACRONYM' | translate }}
+                {{ appointment.license }}
+            </span>
+        </div>
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px"
+            [fxLayoutAlign]="appointment.specialties.length === 1 ? 'start center' : 'start'">
+            <mat-icon color="primary" fontSet="material-icons-outlined"> add_box </mat-icon>
+            <div fxLayout="column">
+                <span *ngFor="let specialty of appointment.specialties" class="mat-body"> {{ specialty }} </span>
+            </div>
+        </div>
+    </div>
+
+    <div fxLayout="row">
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+            <mat-icon color="primary" fontSet="material-icons-outlined"> event </mat-icon>
+            <span class="mat-body"> {{ appointment.date }} </span>
+        </div>
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+            <mat-icon color="primary"> query_builder </mat-icon>
+            <span class="mat-body"> {{ appointment.hour }} </span>
+        </div>
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+            <mat-icon color="primary" fontSet="material-icons-outlined"> meeting_room </mat-icon>
+            <span class="mat-body-2"> {{ appointment.office }} </span>
+        </div>
+    </div>
+
+</div>

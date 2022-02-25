@@ -1,5 +1,8 @@
 {
     "pacientes": {
+        "assigned-appointment": {
+            "LICENSE_NUMBER_ACRONYM": "MN N°"
+        },
         "form": {
             "ADDRESS": "Domicilio",
             "ADDRESS_APARTMENT": "Departamento",
