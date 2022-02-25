@@ -23,12 +23,12 @@ public class SnvsSnomedDto implements Serializable {
 
     @NotNull(message = "{value.mandatory}")
     @NotEmpty(message = "{value.mandatory}")
-    @Length(max = 255, message = "{snomed.pt.max.value}")
+    @Length(max = 400, message = "{snomed.pt.max.value}")
     @EqualsAndHashCode.Include
     private String pt;
 
     public SnvsSnomedDto(@NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 20, message = "{snomed.id.max.value}") String sctid,
-                         @NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 255, message = "{snomed.pt.max.value}") String pt) {
+                         @NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 400, message = "{snomed.pt.max.value}") String pt) {
         this.sctid = sctid;
         this.pt = pt;
     }

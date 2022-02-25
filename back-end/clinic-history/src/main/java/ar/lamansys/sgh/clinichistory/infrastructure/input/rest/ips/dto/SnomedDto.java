@@ -27,7 +27,7 @@ public class SnomedDto implements Serializable {
 
     @NotNull(message = "{value.mandatory}")
     @NotEmpty(message = "{value.mandatory}")
-    @Length(max = 255, message = "{snomed.pt.max.value}")
+    @Length(max = 400, message = "{snomed.pt.max.value}")
     private String pt;
 
     @Nullable
@@ -37,7 +37,7 @@ public class SnomedDto implements Serializable {
     private String parentFsn;
 
     public SnomedDto(@NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 20, message = "{snomed.id.max.value}") String sctid,
-                     @NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 255, message = "{snomed.pt.max.value}") String pt) {
+                     @NotNull(message = "{value.mandatory}") @NotEmpty @Length(max = 400, message = "{snomed.pt.max.value}") String pt) {
         this.sctid = sctid;
         this.pt = pt;
     }

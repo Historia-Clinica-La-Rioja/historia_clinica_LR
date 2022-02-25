@@ -28,7 +28,7 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
 
     @NotNull(message = "{value.mandatory}")
     @NotEmpty
-    @Length(max = 255, message = "{snomed.pt.max.value}")
+    @Length(max = 400, message = "{snomed.pt.max.value}")
     private String pt;
 
     private String parentId;
