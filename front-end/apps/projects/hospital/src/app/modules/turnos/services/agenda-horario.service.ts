@@ -115,26 +115,28 @@ export class AgendaHorarioService {
 	}
 
 	openEditDialogForEvent(event: CalendarEvent): void {
-		const dialogRef = this.dialog.open(NewAttentionComponent,
-			{
-				data: {
-					start: event.start,
-					end: event.end,
-					overturnCount: event.meta.overturnCount,
-					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
-					isEdit: true
+		if (event.meta) {
+			const dialogRef = this.dialog.open(NewAttentionComponent,
+				{
+					data: {
+						start: event.start,
+						end: event.end,
+						overturnCount: event.meta.overturnCount,
+						medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
+						isEdit: true
+					}
+				});
+			dialogRef.afterClosed().subscribe(dialogInfo => {
+				if (!dialogInfo) {
+					if (event.meta?.tmpEvent) {
+						this.removeTempEvent(event);
+					}
+				} else {
+					this.setNewEvent(event, dialogInfo);
 				}
+				this.refresh();
 			});
-		dialogRef.afterClosed().subscribe(dialogInfo => {
-			if (!dialogInfo) {
-				if (event.meta?.tmpEvent) {
-					this.removeTempEvent(event);
-				}
-			} else {
-				this.setNewEvent(event, dialogInfo);
-			}
-			this.refresh();
-		});
+		}
 	}
 
 	getMedicalAttentionColor(medicalAttentionTypeId: number): any {
