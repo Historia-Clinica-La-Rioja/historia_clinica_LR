@@ -1,5 +1,8 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -34,5 +37,8 @@ public interface AppointmentMapper {
 
     @Named("toAppointmentDailyAmountDto")
     AppointmentDailyAmountDto toAppointmentDailyAmountDto(AppointmentDailyAmountBo appointmentDailyAmountBo);
+
+	@Named("toAssignedAppointmentDto")
+	AssignedAppointmentDto toAssignedAppointmentDto(AppointmentAssignedBo appointmentAssignedBo);
 
 }

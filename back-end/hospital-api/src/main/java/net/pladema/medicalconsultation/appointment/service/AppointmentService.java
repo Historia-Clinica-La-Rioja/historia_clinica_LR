@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 public interface AppointmentService {
@@ -29,5 +30,7 @@ public interface AppointmentService {
     boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
 
     Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId, LocalDate currentDate);
+
+	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId);
 
 }
