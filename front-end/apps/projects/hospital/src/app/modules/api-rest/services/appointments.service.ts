@@ -12,6 +12,7 @@ import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
 import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { DownloadService } from "@core/services/download.service";
+import { AssignedAppointment } from '@pacientes/component/assigned-appointment/assigned-appointment.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -132,4 +133,25 @@ export class AppointmentsService {
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId });
 	}
 
+	getAssignedAppointmentsList(patientId: number): Observable<AssignedAppointment[]> {
+		const mock = [
+			{
+				professionalName: 'Tomas Lopez',
+				license: 123456,
+				specialties: ['Cardiología', 'Dermatología', 'Adolescencia'],
+				date: 'Lunes, 13 de Julio',
+				hour: '7:00hs',
+				office: 'Consultorio 1041'
+			},
+			{
+				professionalName: 'Romina Cisneros',
+				license: 123456,
+				specialties: ['Dermatología'],
+				date: 'Lunes, 20 de Julio',
+				hour: '11:00hs',
+				office: 'Consultorio 89'
+			}
+		];
+		return of(mock);
+	}
 }
