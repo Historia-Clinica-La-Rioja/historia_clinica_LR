@@ -123,7 +123,7 @@
                 <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${procedure.status}"></label></dd>
-                    <dd th:if="${procedure.performedDate  != null}"><strong>Fecha de realización: </strong><label th:text="${procedure.performedDate}"></label></dd>
+                    <dd th:if="${procedure.performedDate  != null}"><strong>Fecha de realización: </strong><label th:text="${#temporals.format(procedure.performedDate, 'dd/MM/yyyy')}"></label></dd>
                 </dl>
             </dl>
         </div>
@@ -143,8 +143,8 @@
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${problem.status}"></label></dd>
                     <dd><strong>Verificación: </strong><label  th:text="${problem.verification}"></label></dd>
-                    <dd><strong>Fecha de inicio: </strong><label th:text="${problem.startDate}"></label></dd>
-                    <dd th:if="${problem.endDate  != null}"><strong>Fecha de fin: </strong><label th:text="${problem.endDate}"></label></dd>
+                    <dd><strong>Fecha de inicio: </strong><label th:text="${#temporals.format(problem.startDate, 'dd/MM/yyyy')}"></label></dd>
+                    <dd th:if="${problem.endDate  != null}"><strong>Fecha de fin: </strong><label th:text="${#temporals.format(problem.endDate, 'dd/MM/yyyy')}"></label></dd>
                 </dl>
             </dl>
         </div>
@@ -521,7 +521,7 @@
     <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
     </div>
     <div class="col-12">
-        <strong>Fecha consulta: </strong><label  th:text="${#temporals.format(performedDate, 'dd-MM-yyyy')}"></label>
+        <strong>Fecha consulta: </strong><label  th:text="${#temporals.format(performedDate, 'dd/MM/yyyy HH:mm') + ' hs'}"></label>
     </div>
 </footer>
 </html>

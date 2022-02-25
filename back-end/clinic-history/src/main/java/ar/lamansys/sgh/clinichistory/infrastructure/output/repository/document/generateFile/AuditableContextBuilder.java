@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +87,7 @@ public class AuditableContextBuilder {
 		contextMap.put("notes", document.getNotes());
 		contextMap.put("author", authorFromDocumentFunction.apply(document.getId()));
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
-		contextMap.put("performedDate", document.getPerformedDate());
+		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {
