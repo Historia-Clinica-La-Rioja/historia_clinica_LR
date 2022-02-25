@@ -11,9 +11,9 @@
 			<span class="uppercase">Iniciar internación</span>
 		</button>
 	</div>
-	<div>
-		<div fxFlex="50">
-			<div class="profile-card">
+	<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+		<div fxFlex="50" fxFlex.lt-md="100">
+			<div>
 				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
 					[internmentEpisodeProcess]="internmentEpisode"
 					[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
@@ -43,7 +43,7 @@
 				otra
 				institución.</em>
 		</div>
-		<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
 			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
 				<div *ngIf="createUsersIsEnable">
 					<mat-card class="box user-data">
@@ -176,7 +176,7 @@
 					</mat-card>
 				</div>
 			</div>
-			<div *appHasRole="['ADMINISTRATIVO']">
+			<div *appHasRole="['ADMINISTRATIVO']" fxLayout="column" fxLayoutGap="20px">
 				<app-summary-card *ngIf="internmentEpisodeSummary" id="internment_summary_card"
 					[header]="internacionSummary">
 					<mat-card-content>
@@ -241,8 +241,6 @@
 						</div>
 					</mat-card-content>
 				</mat-card>
-			</div>
-			<div *appHasRole="['ADMINISTRATIVO']">
 				<app-assigned-appointments [patientId]="patientId"></app-assigned-appointments>
 			</div>
 		</div>
