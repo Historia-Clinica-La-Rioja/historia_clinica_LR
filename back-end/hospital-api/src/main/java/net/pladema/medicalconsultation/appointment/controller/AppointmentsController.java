@@ -11,6 +11,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,14 +93,14 @@ public class AppointmentsController {
     private boolean enableNewConsultation;
 
     public AppointmentsController(AppointmentDailyAmountService appointmentDailyAmountService,
-                                  AppointmentService appointmentService,
-                                  AppointmentValidatorService appointmentValidatorService,
-                                  CreateAppointmentService createAppointmentService,
-                                  AppointmentMapper appointmentMapper,
-                                  PatientExternalService patientExternalService,
-                                  HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                                  DateTimeProvider dateTimeProvider,
-                                  NotifyPatient notifyPatient) {
+    AppointmentService appointmentService,
+    AppointmentValidatorService appointmentValidatorService,
+    CreateAppointmentService createAppointmentService,
+    AppointmentMapper appointmentMapper,
+    PatientExternalService patientExternalService,
+    HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+    DateTimeProvider dateTimeProvider,
+    NotifyPatient notifyPatient) {
         super();
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
@@ -107,7 +111,7 @@ public class AppointmentsController {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.dateTimeProvider = dateTimeProvider;
         this.notifyPatient = notifyPatient;
-    }
+	}
 
     @Transactional
     @PostMapping
@@ -224,14 +228,14 @@ public class AppointmentsController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
-
+ 
     @GetMapping("/getDailyAmounts")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam(name = "diaryId") String diaryId) {
         LOG.debug("Input parameters -> diaryId {}", diaryId);
-
+        
         Integer diaryIdParam = Integer.parseInt(diaryId);
 
         Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
@@ -257,6 +261,20 @@ public class AppointmentsController {
 		BasicDataPersonDto basicPatientDto = basicData.getPerson();
 		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(basicPatientDto.getFirstName(), basicPatientDto.getLastName(), basicPatientDto.getIdentificationNumber(), basicPatientDto.getIdentificationTypeId(), phonePrefix, phoneNumber, basicPatientDto.getGender().getId(), basicPatientDto.getNameSelfDetermination());
 		return new AppointmentBasicPatientDto(basicData.getId(), basicPersonalDataDto, basicData.getTypeId());
+	}
+
+	@GetMapping("/{patientId}/get-assigned-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<Collection<AssignedAppointmentDto>> getAssignedAppointmentsList(@PathVariable(name = "institutionId")  Integer institutionId,
+																						  @PathVariable(name = "patientId") Integer patientId){
+		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId).stream()
+				.map(appointmentAssigned ->
+						(appointmentMapper.toAssignedAppointmentDto(appointmentAssigned)))
+				.collect(Collectors.toList());
+		LOG.debug("Result size {}", result.size());
+		LOG.trace(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 }

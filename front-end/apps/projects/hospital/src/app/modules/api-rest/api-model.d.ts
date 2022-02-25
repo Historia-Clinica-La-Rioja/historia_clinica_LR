@@ -228,6 +228,15 @@ export interface AppointmentListDto {
     phonePrefix: string;
 }
 
+export interface AssignedAppointmentDto {
+    date: DateDto;
+    hour: TimeDto;
+    license: string;
+    office: string;
+    professionalName: string;
+    specialties: string[];
+}
+
 export interface AttentionTypeReportDto {
     appointments: AttentionTypeReportItemDto[];
     medicalAttentionTypeId: number;
