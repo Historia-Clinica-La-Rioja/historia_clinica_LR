@@ -171,7 +171,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			return {
 				...problema,
 				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
-				inactivationDate: momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE)
+				inactivationDate: problema.inactivationDate ? momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE) : undefined
 			};
 		});
 	}
