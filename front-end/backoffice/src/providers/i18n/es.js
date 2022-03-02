@@ -385,6 +385,16 @@ const messages = {
             },
             addRelated: 'Agregar plan',
         },
+        snomedgroups: {
+            name: 'Grupo de Snomed |||| Grupos de Snomed',
+            fields: {
+                id: 'ID',
+                description: 'Descripción',
+                ecl: 'ECL',
+                customId: 'ID custom',
+                lastUpdate: 'Última actualización',
+            },
+        },
         "properties": {
             name: 'Propiedades del sistema |||| Propiedades del sistema',
             fields: {
