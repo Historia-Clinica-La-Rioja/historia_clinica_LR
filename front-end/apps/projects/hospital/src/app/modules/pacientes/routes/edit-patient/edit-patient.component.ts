@@ -71,6 +71,8 @@ export class EditPatientComponent implements OnInit {
 	public ethnicities: EthnicityDto[];
 	public occupations: PersonOccupationDto[];
 	public educationLevels: EducationLevelDto[];
+	currentEducationLevelDescription: string;
+	currentOccupationDescription: string;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -132,7 +134,7 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('email', new FormControl(personInformationData.email, Validators.email));
 								this.form.setControl('phonePrefix', new FormControl(personInformationData.phonePrefix));
 								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
-								if(personInformationData.phoneNumber){
+								if (personInformationData.phoneNumber) {
 									updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
 									updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
 								}
@@ -216,6 +218,10 @@ export class EditPatientComponent implements OnInit {
 											this.clear(this.form.controls.addressPostcode);
 									}
 								);
+
+								//Tooltips
+								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId).description;
+								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId).description;
 							});
 					});
 				this.setPatientMedicalCoverages();
@@ -258,8 +264,8 @@ export class EditPatientComponent implements OnInit {
 
 	}
 
-	updatePhoneValidators(){
-		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+	updatePhoneValidators() {
+		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
 			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
 			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
 		} else {
