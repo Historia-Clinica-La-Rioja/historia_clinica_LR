@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MasterDataInterface, HealthConditionDto } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -31,6 +31,7 @@ export class DiagnosisSummaryComponent implements OnInit {
 	verifications: MasterDataInterface<string>[];
 	clinicalStatus: MasterDataInterface<string>[];
 	tableModel: TableModel<HealthConditionDto>;
+	patientId: number;
 
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
@@ -38,12 +39,18 @@ export class DiagnosisSummaryComponent implements OnInit {
 		private readonly router: Router,
 		public dialog: MatDialog,
 		private evolutionNotesListenerService: EvolutionNotesListenerService,
+		private readonly route: ActivatedRoute,
+		private readonly contextService: ContextService,
 	) { }
 
 	ngOnInit(): void {
 		this.loadClinicalStatus();
 		this.loadVerifications();
-		this.loadDiagnosesGeneral();
+		this.route.paramMap.subscribe(
+			(params) => {
+				this.patientId = Number(params.get('idPaciente'));
+				this.loadDiagnosesGeneral();
+			});
 	}
 
 	private loadClinicalStatus(): void {

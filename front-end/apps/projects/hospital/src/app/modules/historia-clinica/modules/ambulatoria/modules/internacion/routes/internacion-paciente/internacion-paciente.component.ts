@@ -26,7 +26,6 @@ import {
 	Last2RiskFactorsDto,
 	AnthropometricDataDto,
 	PersonPhotoDto,
-
 } from '@api-rest/api-model';
 
 import {
@@ -77,7 +76,7 @@ export class InternacionPacienteComponent implements OnInit {
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
 	public readonly medicationsHeader = MEDICACION;
-	private readonly routePrefix;
+	private routePrefix;
 	private patientId: number;
 	@Input() internmentEpisodeId: number;
 
@@ -92,9 +91,8 @@ export class InternacionPacienteComponent implements OnInit {
 		private internmentEpisodeService: InternmentEpisodeService,
 		private readonly internmentStateService: InternmentStateService,
 		public dialog: MatDialog,
-		private contextService: ContextService) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
-	}
+		private contextService: ContextService ) {
+		}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
@@ -104,6 +102,7 @@ export class InternacionPacienteComponent implements OnInit {
 					this.internmentEpisodeId = Number(params.get('idInternacion'));
 					this.showPatientCard = true;
 				}
+				this.routePrefix = 'institucion/' + this.contextService.institutionId + '/internaciones/internacion/' + this.internmentEpisodeId + '/paciente/' + this.patientId;
 
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
@@ -146,26 +145,26 @@ export class InternacionPacienteComponent implements OnInit {
 
 	goToAnamnesis(): void {
 		if (this.anamnesisDoc?.id) {
-			this.router.navigate([`${this.router.url}/anamnesis/${this.anamnesisDoc?.id}`]);
+			this.router.navigate([`${this.routePrefix}/anamnesis/${this.anamnesisDoc?.id}`]);
 		} else {
-			this.router.navigate([`${this.router.url}/anamnesis`]);
+			this.router.navigate([`${this.routePrefix}/anamnesis`]);
 		}
 	}
 
 	goToNotaEvolucion(): void {
-		this.router.navigate([`${this.router.url}/nota-evolucion`]);
+		this.router.navigate([`${this.routePrefix}/nota-evolucion`]);
 	}
 
 	goToEpicrisis(): void {
-		this.router.navigate([`${this.router.url}/epicrisis`]);
+		this.router.navigate([`${this.routePrefix}/epicrisis`]);
 	}
 
 	goToAdministrativeDischarge(): void {
-		this.router.navigate([`${this.router.url}/alta`]);
+		this.router.navigate([`${this.routePrefix}/alta`]);
 	}
 
 	goToMedicalDischarge(): void {
-		this.router.navigate([`${this.router.url}/alta-medica`]);
+		this.router.navigate([`${this.routePrefix}/alta-medica`]);
 	}
 
 	initSummaries() {
@@ -202,7 +201,8 @@ export class InternacionPacienteComponent implements OnInit {
 		const person = {
 			id: this.patientId,
 		};
-		this.router.navigate([this.routePrefix + ROUTE_EDIT_PATIENT], {
+		const url = 'institucion/' + this.contextService.institutionId + '/'+ ROUTE_EDIT_PATIENT
+		this.router.navigate([url], {
 			queryParams: person
 		});
 	}

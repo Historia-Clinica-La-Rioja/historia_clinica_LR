@@ -4,6 +4,7 @@ import { InternmentEpisodeDto } from '@api-rest/api-model';
 import { Router } from '@angular/router';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-internaciones-table',
@@ -18,6 +19,7 @@ export class InternacionesTableComponent implements OnInit {
 		private internacionService: InternacionService,
 		private router: Router,
 		private readonly patientNameService: PatientNameService,
+		private readonly contextService: ContextService,
 	) { }
 
 	private buildTable(data: InternmentEpisodeDto[]): TableModel<InternmentEpisodeDto> {
@@ -60,7 +62,7 @@ export class InternacionesTableComponent implements OnInit {
 						display: 'Ver',
 						matColor: 'primary',
 						do: (internacion) => {
-							const url = `${this.router.url}/internacion/${internacion.id}/paciente/${internacion.patient.id}`;
+							const url = `/institucion/${this.contextService.institutionId}/ambulatoria/paciente/${internacion.patient.id}`;
 							this.router.navigate([url]);
 						}
 					}
