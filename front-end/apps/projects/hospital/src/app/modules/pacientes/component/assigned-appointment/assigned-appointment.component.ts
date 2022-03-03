@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { AssignedAppointmentDto } from '@api-rest/api-model';
 
 @Component({
   selector: 'app-assigned-appointment',
@@ -7,17 +8,8 @@ import { Component, Input } from '@angular/core';
 })
 export class AssignedAppointmentComponent {
 
-  @Input() appointment: AssignedAppointment;
+  @Input() appointment: AssignedAppointmentDto;
 
   constructor() { }
 
-}
-
-export interface AssignedAppointment {
-  professionalName: string;
-  license: number;
-  specialties: string[];
-  date: string;
-  hour: string;
-  office: string;
 }
