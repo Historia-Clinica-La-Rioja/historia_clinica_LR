@@ -98,4 +98,9 @@ export class AntropometricosSummaryComponent implements OnInit {
 		return floatValue;
 	}
 
+	public getIdentificator(name : DetailBox) : string{
+		return name.description.split(' (')[0]
+			.split(" ").join('-').toLowerCase();
+	}
+
 }
