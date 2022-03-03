@@ -82,4 +82,10 @@ public class APersonDto {
 
     private String postcode;
 
+	private Short countryId;
+
+	private Short provinceId;
+
+	private Short departmentId;
+
 }

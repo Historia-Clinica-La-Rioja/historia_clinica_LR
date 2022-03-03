@@ -179,8 +179,7 @@
 				<div class="form-row">
 					<mat-form-field appearance="outline">
 						<mat-select id="addressCountryId" name="addressCountryId" formControlName="addressCountryId"
-							placeholder="{{'pacientes.form.ADDRESS_COUNTRY' | translate}}"
-							(selectionChange)="setProvinces()">
+							placeholder="{{'pacientes.form.ADDRESS_COUNTRY' | translate}}">
 							<mat-option *ngFor="let country of countries" [value]="country.id">
 								{{country.description}}
 							</mat-option>
@@ -193,8 +192,7 @@
 
 					<mat-form-field appearance="outline">
 						<mat-select id="addressProvinceId" name="addressProvinceId" formControlName="addressProvinceId"
-							placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}"
-							(selectionChange)="setDepartments()">
+							placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}">
 							<mat-option *ngFor="let province of provinces" [value]="province.id">
 								{{province.description}}
 							</mat-option>
@@ -208,8 +206,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="addressDepartmentId" name="addressDepartmentId"
 							formControlName="addressDepartmentId"
-							placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}"
-							(selectionChange)="setCities()">
+							placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}">
 							<mat-option *ngFor="let department of departments" [value]="department.id">
 								{{department.description}}
 							</mat-option>

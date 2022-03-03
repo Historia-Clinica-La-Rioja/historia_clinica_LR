@@ -49,7 +49,16 @@ public class Address implements Serializable {
 
     @Column(name = "longitude")
     private Double longitude;
-    
+
+	@Column(name = "country_id")
+	private Short countryId;
+
+	@Column(name = "province_id")
+	private Short provinceId;
+
+	@Column(name = "department_id")
+	private Short departmentId;
+
     public static Address buildDummy() {
 		Address newAddress = new Address();
 		newAddress.setStreet("");

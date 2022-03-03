@@ -89,8 +89,9 @@ public interface PersonMapper {
     @Mapping(target = "quarter", source = "address.quarter")
     @Mapping(target = "postcode", source = "address.postcode")
     @Mapping(target = "cityId", source = "city.id")
-    @Mapping(target = "province", source = "province", qualifiedByName = "fromProvince")
-    @Mapping(target = "department", source = "department", qualifiedByName = "fromDepartment")
+    @Mapping(target = "provinceId", source = "address.provinceId")
+    @Mapping(target = "departmentId", source = "address.departmentId")
+	@Mapping(target = "countryId", source = "address.countryId")
     BMPersonDto fromCompletePersonVo(CompletePersonVo completePersonVo);
 
     @Named("basicPersonalDataDto")

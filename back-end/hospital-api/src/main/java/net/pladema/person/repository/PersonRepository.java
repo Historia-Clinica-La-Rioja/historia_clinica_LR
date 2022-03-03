@@ -47,13 +47,14 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     Optional<PersonalInformation> getPersonalInformation(@Param("personId") Integer personId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonVo( p, pe, a, c, pr, d) " +
+    @Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonVo( p, pe, a, c, pr, d, co) " +
             "FROM Person as p " +
             "LEFT JOIN PersonExtended as pe ON (pe.id = p.id) " +
             "LEFT JOIN Address as a ON (a.id = pe.addressId) " +
             "LEFT JOIN City as c ON (c.id = a.cityId) " +
-            "LEFT JOIN Department as d ON (d.id = c.departmentId) " +
-            "LEFT JOIN Province as pr ON (pr.id = d.provinceId) " +
+            "LEFT JOIN Department as d ON (d.id = a.departmentId) " +
+            "LEFT JOIN Province as pr ON (pr.id = a.provinceId) " +
+			"LEFT JOIN Country as co ON (co.id = a.countryId) " +
             "WHERE p.id = :personId ")
     Optional<CompletePersonVo> getCompletePerson(@Param("personId") Integer personId);
 

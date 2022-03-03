@@ -63,4 +63,19 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 		return cityRepository.findByDepartment(departmentId, Sort.by(Order.asc(DESCRIPTION)), clazz);
 	}
 
+	@Override
+	public boolean existProvinceInCountry(Short countryId, Short provinceId) {
+		return provinceRepository.existProvinceInCountry(countryId, provinceId);
+	}
+
+	@Override
+	public boolean existDepartmentInProvince(Short provinceId, Short departmentId) {
+		return departmentRepository.existDepartmentInProvince(provinceId, departmentId);
+	}
+
+	@Override
+	public boolean existCityInDepartment(Short departmentId, Integer cityId) {
+		return cityRepository.existCityInDepartment(departmentId, cityId);
+	}
+
 }

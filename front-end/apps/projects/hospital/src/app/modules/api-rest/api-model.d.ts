@@ -40,7 +40,9 @@ export interface APersonDto {
     apartment: string;
     birthDate: Date;
     cityId: number;
+    countryId: number;
     cuil: string;
+    departmentId: number;
     educationLevelId: number;
     email: string;
     ethnicityId: number;
@@ -61,6 +63,7 @@ export interface APersonDto {
     phoneNumber: string;
     phonePrefix: string;
     postcode: string;
+    provinceId: number;
     quarter: string;
     religion: string;
     street: string;
@@ -83,6 +86,7 @@ export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;
     cityId: number;
+    countryId: number;
     departmentId: number;
     floor: string;
     id: number;
@@ -258,9 +262,7 @@ export interface BMPatientDto extends APatientDto {
 }
 
 export interface BMPersonDto extends APersonDto {
-    department: DepartmentDto;
     id: number;
-    province: ProvinceDto;
 }
 
 export interface BackofficeCoverageDto extends Serializable {

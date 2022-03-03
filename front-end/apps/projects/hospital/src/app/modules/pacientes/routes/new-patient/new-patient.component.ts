@@ -141,6 +141,57 @@ export class NewPatientComponent implements OnInit {
 				this.lockFormField(params);
 				this.patientType = params.typeId;
 				this.personPhoto = { imageData: params.photo ? params.photo : null };
+
+				this.form.get("addressCountryId").valueChanges.subscribe(
+					countryId => {
+						this.clear(this.form.controls.addressProvinceId);
+						delete this.provinces;
+						if (countryId) {
+							this.addressMasterDataService.getByCountry(countryId)
+								.subscribe(provinces => {
+									this.provinces = provinces;
+								});
+						}
+					}
+				);
+
+				this.form.get("addressProvinceId").valueChanges.subscribe(
+					provinceId => {
+						this.clear(this.form.controls.addressDepartmentId);
+						delete this.departments;
+						if (provinceId) {
+							this.addressMasterDataService.getDepartmentsByProvince(provinceId)
+								.subscribe(departments => {
+									this.departments = departments;
+								});
+						}
+					}
+				);
+
+				this.form.get("addressDepartmentId").valueChanges.subscribe(
+					departmentId => {
+						this.clear(this.form.controls.addressCityId);
+						delete this.cities;
+						if (departmentId) {
+							this.addressMasterDataService.getCitiesByDepartment(departmentId)
+								.subscribe(cities => {
+									this.cities = cities;
+								});
+						}
+					}
+				);
+
+				this.form.get("addressCityId").valueChanges.subscribe(
+					_ => {
+						this.clear(this.form.controls.addressNumber);
+						this.clear(this.form.controls.addressFloor);
+						this.clear(this.form.controls.addressApartment);
+						this.clear(this.form.controls.addressQuarter);
+						this.clear(this.form.controls.addressStreet);
+						this.clear(this.form.controls.addressPostcode);
+					}
+				);
+
 			});
 
 		this.personMasterDataService.getGenders()
@@ -271,6 +322,9 @@ export class NewPatientComponent implements OnInit {
 			postcode: this.form.controls.addressPostcode.value,
 			quarter: this.form.controls.addressQuarter.value,
 			street: this.form.controls.addressStreet.value,
+			countryId: this.form.controls.addressCountryId.value,
+			departmentId: this.form.controls.addressDepartmentId.value,
+			provinceId: this.form.controls.addressProvinceId.value,
 			// Patient
 			typeId: this.patientType,
 			comments: null,

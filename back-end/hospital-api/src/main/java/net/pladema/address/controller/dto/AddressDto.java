@@ -43,4 +43,6 @@ public class AddressDto implements Serializable {
 
     private Double longitude;
 
+	private Short countryId;
+
 }

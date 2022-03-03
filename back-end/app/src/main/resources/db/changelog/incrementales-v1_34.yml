@@ -72,3 +72,63 @@ databaseChangeLog:
                 UPDATE vaccine_nomivac_rule
                 SET maximum_threshold_days = minimum_threshold_days
                 WHERE minimum_threshold_days > maximum_threshold_days;
+
+    - changeSet:
+        id: add-country_id-column-address
+        author: flizalde
+        changes:
+          - addColumn:
+              tableName: address
+              columns:
+                - column:
+                    name: country_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: country_id
+              baseTableName: address
+              constraintName: FK_address_country_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: country
+              validate: true
+
+    - changeSet:
+        id: add-province_id-column-address
+        author: flizalde
+        changes:
+          - addColumn:
+              tableName: address
+              columns:
+                - column:
+                    name: province_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: province_id
+              baseTableName: address
+              constraintName: FK_address_province_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: province
+              validate: true
+
+    - changeSet:
+        id: add-department_id-column-address
+        author: flizalde
+        changes:
+          - addColumn:
+              tableName: address
+              columns:
+                - column:
+                    name: department_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: department_id
+              baseTableName: address
+              constraintName: FK_address_department_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: department
+              validate: true
