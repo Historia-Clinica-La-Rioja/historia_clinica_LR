@@ -42,6 +42,7 @@ import { HCEAllergyDto } from '@api-rest/api-model';
 import { ShowAllergiesComponent } from "@historia-clinica/modules/ambulatoria/dialogs/show-allergies/show-allergies.component";
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { InternacionPacienteComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internacion-paciente/internacion-paciente.component";
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 const RESUMEN_INDEX = 0;
 
@@ -114,6 +115,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 		private readonly componentFactoryResolver: ComponentFactoryResolver,
 		private viewContainerRef: ViewContainerRef,
+		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 
 		private readonly requestMasterDataService: RequestMasterDataService,
 
@@ -147,6 +149,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 						if (this.internmentEpisodeProcess.id && this.internmentEpisodeProcess.inProgress) {
 							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
+							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id);
+							this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
+							this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
+							this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
+							this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
 						}
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
 					})
@@ -351,22 +358,6 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				allergies: this.criticalAllergies
 			}
 		});
-	}
-
-	setAnamnesisDoc(anamnesisDoc: AnamnesisSummaryDto) {
-		this.anamnesisDoc = anamnesisDoc;
-	}
-
-	setEpicrisisDoc(epicrisisDoc: EpicrisisSummaryDto) {
-		this.epicrisisDoc = epicrisisDoc;
-	}
-
-	setLastEvolutionNoteDoc(lastEvolutionNoteDoc: EvaluationNoteSummaryDto) {
-		this.lastEvolutionNoteDoc = lastEvolutionNoteDoc;
-	}
-
-	setHasMedicalDischarge(hasMedicalDischarge: boolean) {
-		this.hasMedicalDischarge = hasMedicalDischarge;
 	}
 
 	openInternmentAction(internmentActionId: number) {

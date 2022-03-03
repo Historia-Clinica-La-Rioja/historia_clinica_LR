@@ -96,7 +96,7 @@ export class MedicalDischargeComponent implements OnInit {
 			this.intermentEpisodeService.medicalDischargeInternmentEpisode(request, this.data.internmentEpisodeId)
 				.subscribe(response => {
 					this.snackBarService.showSuccess('internaciones.discharge.messages.MEDICAL_DISCHARGE_SUCCESS');
-					this.dialogRef.close();
+					this.dialogRef.close(true);
 				}, _ => this.snackBarService.showError('internaciones.discharge.messages.MEDICAL_DISCHARGE_ERROR')
 				);
 		}

@@ -107,7 +107,7 @@
 					<mat-label class="actions-labels color-grey">
 							{{'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</mat-label>
 						<ng-container *ngIf="!epicrisisDoc">
-							<ng-container *ngIf="!anamnesisDoc || !anamnesisDoc.confirmed">
+							<ng-container *ngIf="!anamnesisDoc?.confirmed">
 								<button mat-menu-item class="actions"
 									*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']"
 									(click)="openInternmentAction(0)">
@@ -200,11 +200,7 @@
 							<span>{{ 'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-internacion-paciente [internmentEpisodeId]="internmentEpisodeProcess.id"
-								(anamnesisDocEmmiter)="setAnamnesisDoc($event)"
-								(epicrisisDocEmmiter)="setEpicrisisDoc($event)"
-								(lastEvolutionNoteDocEmmiter)="setLastEvolutionNoteDoc($event)"
-								(hasMedicalDischargeEmmiter)="setHasMedicalDischarge($event)">
+							<app-internacion-paciente [internmentEpisodeId]="internmentEpisodeProcess.id">
 							</app-internacion-paciente>
 						</ng-template>
 					</mat-tab>

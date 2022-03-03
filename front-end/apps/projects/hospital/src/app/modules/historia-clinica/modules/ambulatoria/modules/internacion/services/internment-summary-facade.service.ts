@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from "rxjs";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { DocumentSearchFilterDto } from "@api-rest/api-model";
+import { DocumentSearchFilterDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
 import { DocumentSearchService } from "@api-rest/services/document-search.service";
+import { InternacionService } from "@api-rest/services/internacion.service";
+import { momentParseDateTime } from "@core/utils/moment.utils";
+import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 
 @Injectable({
 	providedIn: 'root'
@@ -22,6 +25,12 @@ export class InternmentSummaryFacadeService {
 	private diagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private clinicalEvaluationSubject: Subject<any> = new BehaviorSubject<any>([]);
 
+	private anamnesisSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private epicrisisSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private evolutionNoteSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private hasMedicalDischargeSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private lastProbableDischargeDateSubject: Subject<any> = new BehaviorSubject<any>([]);
+
 	searchFilter: DocumentSearchFilterDto;
 	readonly allergies$ = this.allergiesSubject.asObservable();
 	readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
@@ -33,15 +42,22 @@ export class InternmentSummaryFacadeService {
 	readonly mainDiagnosis$ = this.mainDiagnosisSubject.asObservable();
 	readonly diagnosis$ = this.diagnosisSubject.asObservable();
 	readonly clinicalEvaluation$ = this.clinicalEvaluationSubject.asObservable();
+	readonly anamnesis$ = this.anamnesisSubject.asObservable();
+	readonly epicrisis$ = this.epicrisisSubject.asObservable();
+	readonly evolutionNote$ = this.evolutionNoteSubject.asObservable();
+	readonly hasMedicalDischarge$ = this.hasMedicalDischargeSubject.asObservable();
+	readonly lastProbableDischargeDate$ = this.lastProbableDischargeDateSubject.asObservable();
 
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
-		private readonly documentSearchService: DocumentSearchService
-	) {
-	}
+		private readonly documentSearchService: DocumentSearchService,
+		private readonly internmentService: InternacionService,
+		private readonly internmentEpisodeService: InternmentEpisodeService,
+	) { }
 
-	setInternmentEpisodeId(internmentEpisodeId: number) {
+	setInternmentEpisodeInformation(internmentEpisodeId: number) {
 		this.internmentEpisodeId = internmentEpisodeId;
+		this.updateInternmentEpisode();
 		this.setFieldsToUpdate({
 			allergies: true,
 			familyHistories: true,
@@ -112,6 +128,20 @@ export class InternmentSummaryFacadeService {
 
 	private loadHistoric(): void {
 		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter).subscribe(historicalData => this.clinicalEvaluationSubject.next(historicalData));
+	}
+
+	updateInternmentEpisode() {
+		this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).subscribe(
+			(internmentEpisode: InternmentSummaryDto) => {
+				this.anamnesisSubject.next(internmentEpisode.documents?.anamnesis);
+				this.epicrisisSubject.next(internmentEpisode.documents?.epicrisis);
+				this.evolutionNoteSubject.next(internmentEpisode.documents?.lastEvaluationNote);
+				this.lastProbableDischargeDateSubject.next(internmentEpisode.probableDischargeDate ? momentParseDateTime(internmentEpisode.probableDischargeDate) : undefined);
+			});
+		this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
+			.subscribe((patientDischarge: PatientDischargeDto) => {
+				this.hasMedicalDischargeSubject.next(patientDischarge.dischargeTypeId !== 0);
+			});
 	}
 }
 

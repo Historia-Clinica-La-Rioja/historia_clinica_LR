@@ -56,7 +56,6 @@ export class InternacionPacienteComponent implements OnInit {
 	public internacionSummary = INTERNACION;
 	public anamnesisDoc: AnamnesisSummaryDto;
 	public epicrisisDoc: EpicrisisSummaryDto;
-	public lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	public lastProbableDischargeDate: Moment;
 	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	public showDischarge: boolean;
@@ -71,10 +70,6 @@ export class InternacionPacienteComponent implements OnInit {
 	private routePrefix;
 	private patientId: number;
 	@Input() internmentEpisodeId: number;
-	@Output() anamnesisDocEmmiter = new EventEmitter<AnamnesisSummaryDto>();
-	@Output() epicrisisDocEmmiter = new EventEmitter<EpicrisisSummaryDto>();
-	@Output() lastEvolutionNoteDocEmmiter = new EventEmitter<EvaluationNoteSummaryDto>();
-	@Output() hasMedicalDischargeEmmiter = new EventEmitter<boolean>();
 
 	constructor(
 		private patientService: PatientService,
@@ -84,7 +79,6 @@ export class InternacionPacienteComponent implements OnInit {
 		private router: Router,
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
-		private internmentEpisodeService: InternmentEpisodeService,
 		private contextService: ContextService,
 		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly dockPopupService: DockPopupService,
@@ -108,43 +102,29 @@ export class InternacionPacienteComponent implements OnInit {
 
 				this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
+			});
 
-				this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
-					tap((internmentEpisode: InternmentSummaryDto) => {
-						this.anamnesisDoc = internmentEpisode.documents?.anamnesis;
-						this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
-						this.lastEvolutionNoteDoc = internmentEpisode.documents?.lastEvaluationNote;
-						this.anamnesisDocEmmiter.emit(this.anamnesisDoc);
-						this.epicrisisDocEmmiter.emit(this.epicrisisDoc);
-						this.lastEvolutionNoteDocEmmiter.emit(this.lastEvolutionNoteDoc);
-						this.lastProbableDischargeDate = internmentEpisode.probableDischargeDate ? momentParseDateTime(internmentEpisode.probableDischargeDate) : undefined;
-						// La alta administrativa está disponible cuando existe el alta medica
-						// o el flag de alta sin epicrisis está activa
-						this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
-							this.showDischarge = isOn || (this.hasMedicalDischarge === true);
-						});
+		this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
+		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
+		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => {
+			// La alta administrativa está disponible cuando existe el alta medica
+			// o el flag de alta sin epicrisis está activa
+			this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
+				this.showDischarge = isOn || (h === true);
+			});
+		});
+		this.internmentSummaryFacadeService.lastProbableDischargeDate$.subscribe(l => this.lastProbableDischargeDate = l);
 
-					}),
-					map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
-				);
-
-				this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
-					.subscribe((patientDischarge: PatientDischargeDto) => {
-						this.hasMedicalDischarge = patientDischarge.dischargeTypeId !== 0;
-						this.hasMedicalDischargeEmmiter.emit(this.hasMedicalDischarge);
-					});
-
-				this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
-					this.canLoadProbableDischargeDate = isOn;
-				});
-
-			}
+		this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
+			map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
 		);
 		this.permissionService.hasContextAssignments$(ROLES_FOR_EDIT_DIAGNOSIS).subscribe(
 			hasRole => this.editDiagnosisSummary$ = hasRole
 		);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
+			this.canLoadProbableDischargeDate = isOn;
+		});
 
-		this.internmentSummaryFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
 	}
 
 
@@ -197,6 +177,7 @@ export class InternacionPacienteComponent implements OnInit {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+					this.internmentSummaryFacadeService.updateInternmentEpisode();
 				}
 			});
 		} else {
@@ -218,6 +199,7 @@ export class InternacionPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
+				this.internmentSummaryFacadeService.updateInternmentEpisode();
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -240,6 +222,7 @@ export class InternacionPacienteComponent implements OnInit {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+					this.internmentSummaryFacadeService.updateInternmentEpisode();
 				}
 			});
 		} else {
@@ -257,6 +240,11 @@ export class InternacionPacienteComponent implements OnInit {
 			},
 			autoFocus: false,
 			disableClose: true,
+		});
+		dialogRef.afterClosed().subscribe(medicalDischarge => {
+			if (medicalDischarge) {
+				this.internmentSummaryFacadeService.updateInternmentEpisode();
+			}
 		});
 	}
 }
