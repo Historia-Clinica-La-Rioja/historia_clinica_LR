@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     List,
     Datagrid,
@@ -8,7 +7,7 @@ import SgxDateField from "../../dateComponents/sgxDateField";
 
 const SnomedGroupList = props => (
     <List {...props} bulkActionButtons={false}>
-        <Datagrid>
+        <Datagrid rowClick="show">
             <TextField source="id" />
             <TextField source="description" />
             <TextField source="customId" />

@@ -393,6 +393,21 @@ const messages = {
                 ecl: 'ECL',
                 customId: 'ID custom',
                 lastUpdate: 'Última actualización',
+                snomedConcepts: "Conceptos de Snomed"
+            },
+        },
+        snomedrelatedgroups: {
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+            },
+        },
+        snomedconcepts: {
+            name: 'Concepto de Snomed |||| Conceptos de Snomed',
+            fields: {
+                id: 'ID',
+                sctid: 'Snomed CT ID',
+                pt: 'Preferred Term'
             },
         },
         "properties": {
