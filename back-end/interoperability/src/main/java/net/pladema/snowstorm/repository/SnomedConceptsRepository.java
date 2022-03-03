@@ -34,9 +34,9 @@ public class SnomedConceptsRepository {
                     ", ts_rank( to_tsvector('spanish', s.pt), plainto_tsquery('spanish', :term), 2 ) as rank " +
 						// the parameter '2' makes the ts_rank function divide the rank by the document length
 						// there are other modes documented in PostgreSQL's doc "Controlling Text Search"
-				"FROM Snomed s " +
-                "JOIN SnomedRelatedGroup srg ON (s.id = srg.pk.snomedId) " +
-                "JOIN SnomedGroup sg ON (srg.pk.groupId = sg.id)  " +
+                "FROM Snomed s " +
+                "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
+                "JOIN SnomedGroup sg ON (srg.groupId = sg.id)  " +
                 "WHERE fts(s.pt, :term ) = true " +
                     "AND (sg.ecl = :ecl ) " +
                     "AND (srg.lastUpdate >= sg.lastUpdate ) " +
@@ -62,8 +62,8 @@ public class SnomedConceptsRepository {
         String sqlString =
                 "SELECT COUNT(s.id) " +
                 "FROM Snomed s " +
-                "JOIN SnomedRelatedGroup srg ON (s.id = srg.pk.snomedId) " +
-                "JOIN SnomedGroup sg ON (srg.pk.groupId = sg.id)  " +
+                "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
+                "JOIN SnomedGroup sg ON (srg.groupId = sg.id)  " +
                 "WHERE fts(s.pt, :term ) = true " +
                     "AND (sg.ecl = :ecl ) " +
                     "AND (srg.lastUpdate >= sg.lastUpdate ) "

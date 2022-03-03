@@ -510,3 +510,108 @@ databaseChangeLog:
               columnName: file_name
               newDataType: varchar(50)
               tableName: document_file
+
+    - changeSet:
+        id: snomed_related_group-addColumn-id
+        author: tmedina
+        dbms: postgresql
+        changes:
+          - addColumn:
+              tableName: snomed_related_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: snomed_related_group-addColumn-id
+        author: tmedina
+        dbms: mssql
+        changes:
+          - addColumn:
+              tableName: snomed_related_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+
+    - changeSet:
+        id: snomed_related_group-addColumn-id
+        author: tmedina
+        dbms: db2
+        changes:
+          - addColumn:
+              tableName: snomed_related_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: dropDefaultValue-snomed_related_group-id
+        author: tmedina
+        dbms: db2
+        changes:
+          - dropDefaultValue:
+              columnName: id
+              tableName: snomed_related_group
+
+    - changeSet:
+        id: snomed_related_group-addAutoIncrement-id
+        author: tmedina
+        dbms: "!mssql"
+        changes:
+          - addAutoIncrement:
+              columnDataType: int
+              columnName: id
+              generationType: ALWAYS
+              incrementBy: 1
+              startWith: 1
+              tableName: snomed_related_group
+
+    - changeSet:
+        id: snomed_related_group-update-autoincremental-value-id
+        author: tmedina
+        dbms: "!mssql"
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE snomed_related_group
+                SET id = default;
+
+    - changeSet:
+        id: snomed_related_group-dropPrimaryKey
+        author: tmedina
+        dbms: "!db2"
+        changes:
+          - dropPrimaryKey:
+              constraintName: PK_snomed_related_group
+              dropIndex: true
+              tableName: snomed_related_group
+
+    - changeSet:
+        id: snomed_related_group-addPrimaryKey
+        author: tmedina
+        changes:
+          - addPrimaryKey:
+              columnNames: id
+              constraintName: PK_snomed_related_group
+              tableName: snomed_related_group
+              validate: true
+
+    - changeSet:
+        id: snomed_related_group-addUniqueConstraint-snomed_id-group_id
+        author: tmedina
+        changes:
+          - addUniqueConstraint:
+              columnNames: snomed_id, group_id
+              constraintName: UQ_snomed_id_group_id
+              tableName: snomed_related_group

@@ -76,7 +76,10 @@ public class UpdateSnomedGroup {
 
     private Integer associateConceptIdsWithSnomedGroup(Integer snomedGroupId, List<Integer> conceptIds, Integer orden, LocalDate date) {
         for (Integer snomedId : conceptIds) {
-            SnomedRelatedGroup snomedRelatedGroup = new SnomedRelatedGroup(snomedId, snomedGroupId, orden, date);
+			SnomedRelatedGroup snomedRelatedGroup = snomedRelatedGroupRepository.getByGroupIdAndSnomedId(snomedGroupId, snomedId)
+					.orElse(new SnomedRelatedGroup(snomedId, snomedGroupId));
+            snomedRelatedGroup.setOrden(orden);
+			snomedRelatedGroup.setLastUpdate(date);
             snomedRelatedGroupRepository.save(snomedRelatedGroup);
             orden = orden + 1;
         }
