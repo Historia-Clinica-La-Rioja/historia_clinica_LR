@@ -26,7 +26,7 @@ public class MqttMetadataBo {
     }
 
     public byte[] getMessage() {
-        return String.format("{\"type\":\"%s\",\"%s}",type.getId(),message).getBytes();
+        return String.format("{\"type\":\"%s\",%s}",type.getId(),message).getBytes();
     }
 
 }

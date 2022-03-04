@@ -34,7 +34,7 @@ public class SendAppointmentNotificationImpl implements SendAppointmentNotificat
 
     protected String getMessage(NotifyPatientBo notifyPatientBo) {
             return String.format(
-                    "data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}",
+                    "\"data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}",
                     notifyPatientBo.getAppointmentId(),
                     notifyPatientBo.getPatientName(),
                     notifyPatientBo.getSectorId(),
