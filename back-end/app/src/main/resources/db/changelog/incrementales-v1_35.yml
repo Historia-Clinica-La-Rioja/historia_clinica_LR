@@ -221,3 +221,68 @@ databaseChangeLog:
               referencedTableName: dosage
               validate: true
 
+    - changeSet:
+        id: pharmaco-createTable
+        comment: Create table pharmaco
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: pharmaco
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_pharmaco
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: health_condition_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: dosage_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: food_relation_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_provided
+                    type: boolean
+                - column:
+                    name: via
+                    type: varchar(100)
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: pharmaco
+              constraintName: FK_pharmaco_snomed_id
+              referencedColumnNames: id
+              referencedTableName: snomed
+          - addForeignKeyConstraint:
+              baseColumnNames: health_condition_id
+              baseTableName: pharmaco
+              constraintName: FK_pharmaco_health_condition_id
+              referencedColumnNames: id
+              referencedTableName: health_condition
+          - addForeignKeyConstraint:
+              baseColumnNames: dosage_id
+              baseTableName: pharmaco
+              constraintName: FK_pharmaco_dosage_id
+              referencedColumnNames: id
+              referencedTableName: dosage
+              validate: true
+
