@@ -155,3 +155,69 @@ databaseChangeLog:
                     name: event
                     type: varchar(100)
 
+    - changeSet:
+        id: other_indication_type-createTable
+        comment: Create table other_indication_type
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: other_indication_type
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_other_indication_type
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: other_indication-createTable
+        comment: Create table other_indication
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: other_indication
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_other_indication
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: other_indication_type_id
+                    type: smallint
+                - column:
+                    name: description
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: dosage_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: other_indication_type_id
+              baseTableName: other_indication
+              constraintName: FK_other_indication_type_id
+              referencedColumnNames: id
+              referencedTableName: other_indication_type
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: dosage_id
+              baseTableName: other_indication
+              constraintName: FK_other_indication_dosage_id
+              referencedColumnNames: id
+              referencedTableName: dosage
+              validate: true
+
