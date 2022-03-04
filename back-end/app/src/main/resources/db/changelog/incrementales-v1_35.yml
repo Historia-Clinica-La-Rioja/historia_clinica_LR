@@ -286,3 +286,50 @@ databaseChangeLog:
               referencedTableName: dosage
               validate: true
 
+    - changeSet:
+        id: parenteral_plan-createTable
+        comment: Create table parenteral_plan
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: parenteral_plan
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parenteral_plan
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: dosage_id
+                    type: int
+                - column:
+                    name: frequency
+                    type: text
+                - column:
+                    name: via
+                    type: varchar(100)
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: parenteral_plan
+              constraintName: FK_parenteral_plan_snomed_id
+              referencedColumnNames: id
+              referencedTableName: snomed
+          - addForeignKeyConstraint:
+              baseColumnNames: dosage_id
+              baseTableName: parenteral_plan
+              constraintName: FK_parenteral_plan_dosage_id
+              referencedColumnNames: id
+              referencedTableName: dosage
+              validate: true
+
