@@ -5,8 +5,10 @@ import lombok.Getter;
 @Getter
 public enum EventTopicDto {
 
+	ALTA_MEDICA_INTERNACION(1,"internacion/altaMedica"),
 	ALTA_MEDICA_GUARDIA(2,"guardia/altaMedica"),
-	CONSULTA_ODONTOLOGICA_CREADA(3,"odontologia/nuevaConsulta");
+	CONSULTA_ODONTOLOGICA_CREADA(3,"odontologia/nuevaConsulta"),
+	SOLICITUD_ESTUDIO(4,"solicitud/estudio");
 
 	private Integer id;
 	private String description;

@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
-import ar.lamansys.sgh.shared.SimplePublishService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.IntegrationController;

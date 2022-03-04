@@ -60,17 +60,14 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private final DocumentService documentService;
 
-    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
-                                        DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
-                                        PatientDischargeRepository patientDischargeRepository, DocumentService documentService,
-										PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
+    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
         this.patientDischargeRepository = patientDischargeRepository;
         this.documentService = documentService;
 		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
-    }
+	}
 
     @Override
     public void updateAnamnesisDocumentId(Integer internmentEpisodeId, Long anamnesisDocumentId) {

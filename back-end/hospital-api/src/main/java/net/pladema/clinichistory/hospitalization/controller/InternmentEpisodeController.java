@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.events.EventTopicDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -77,15 +79,9 @@ public class InternmentEpisodeController {
 
 	private final LocalDateMapper localDateMapper;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
-									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-									   InternmentEpisodeMapper internmentEpisodeMapper,
-									   BedExternalService bedExternalService,
-									   PatientDischargeMapper patientDischargeMapper,
-									   ResponsibleContactService responsibleContactService,
-									   FeatureFlagsService featureFlagsService,
-									   PatientDischargeService patientDischargeService,
-									   ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper) {
+	private final SimplePublishService simplePublishService;
+
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, SimplePublishService simplePublishService) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -96,6 +92,7 @@ public class InternmentEpisodeController {
 		this.patientDischargeService = patientDischargeService;
 		this.responsibleContactMapper = responsibleContactMapper;
 		this.localDateMapper = localDateMapper;
+		this.simplePublishService = simplePublishService;
 	}
 
 	@InternmentValid
@@ -140,6 +137,8 @@ public class InternmentEpisodeController {
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
+		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
+				.ifPresent( patientId -> simplePublishService.publish(patientId, EventTopicDto.ALTA_MEDICA_INTERNACION) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

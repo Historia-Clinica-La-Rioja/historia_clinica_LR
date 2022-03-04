@@ -68,6 +68,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Mock
     private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
