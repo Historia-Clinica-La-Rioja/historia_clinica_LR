@@ -144,3 +144,14 @@ databaseChangeLog:
                     name: description
                     type: text
 
+    - changeSet:
+        id: add-column-event-dosage
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: dosage
+              columns:
+                - column:
+                    name: event
+                    type: varchar(100)
+
