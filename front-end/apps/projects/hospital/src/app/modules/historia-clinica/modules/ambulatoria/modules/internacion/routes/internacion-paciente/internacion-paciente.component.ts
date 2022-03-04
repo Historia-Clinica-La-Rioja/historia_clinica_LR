@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -17,18 +17,13 @@ import {
 	InternmentSummaryDto,
 	AnamnesisSummaryDto,
 	EpicrisisSummaryDto,
-	EvaluationNoteSummaryDto,
-	PatientDischargeDto,
 	PersonPhotoDto
 } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { InternacionService } from '@api-rest/services/internacion.service';
-import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
-
 import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION } from '../../../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../../internacion/constants/permissions';
 import { ProbableDischargeDialogComponent } from '../../../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
-import { momentParseDateTime } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { ContextService } from '@core/services/context.service';
 import { InternmentFields, InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
@@ -40,6 +35,7 @@ import {
 	EpicrisisDockPopupComponent
 } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
 import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
+import { PatientAllergiesService } from "@historia-clinica/modules/ambulatoria/services/patient-allergies.service";
 
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 
@@ -63,12 +59,12 @@ export class InternacionPacienteComponent implements OnInit {
 	public hasMedicalDischarge: boolean;
 	public canLoadProbableDischargeDate: boolean;
 	public showPatientCard = false;
+	patientId: number;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
 	public readonly medicationsHeader = MEDICACION;
 	dialogRef: DockPopupRef;
 	private routePrefix;
-	private patientId: number;
 	@Input() internmentEpisodeId: number;
 
 	constructor(
@@ -83,6 +79,7 @@ export class InternacionPacienteComponent implements OnInit {
 		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly dockPopupService: DockPopupService,
 		private readonly dialog: MatDialog,
+		private readonly patientAllergies: PatientAllergiesService,
 	) {
 	}
 
@@ -178,6 +175,9 @@ export class InternacionPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 					this.internmentSummaryFacadeService.updateInternmentEpisode();
+					if (fieldsToUpdate?.allergies) {
+						this.patientAllergies.updateCriticalAllergies(this.patientId);
+					}
 				}
 			});
 		} else {
@@ -198,6 +198,9 @@ export class InternacionPacienteComponent implements OnInit {
 				delete this.dialogRef;
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+				}
+				if (fieldsToUpdate?.allergies) {
+					this.patientAllergies.updateCriticalAllergies(this.patientId);
 				}
 				this.internmentSummaryFacadeService.updateInternmentEpisode();
 			});
@@ -223,6 +226,9 @@ export class InternacionPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 					this.internmentSummaryFacadeService.updateInternmentEpisode();
+					if (fieldsToUpdate?.allergies) {
+						this.patientAllergies.updateCriticalAllergies(this.patientId);
+					}
 				}
 			});
 		} else {

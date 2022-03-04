@@ -18,8 +18,8 @@
 					</div>
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
 					<div id="allergy-container" fxLayout="row" fxLayoutAlign="center center">
-						<div *ngIf="criticalAllergies?.length>0">
-							<div fxLayout="row" *ngFor="let allergy of criticalAllergies.slice(0,limitAllergies)">
+						<div *ngIf="patientAllergies.criticalAllergies?.length>0">
+							<div fxLayout="row" *ngFor="let allergy of patientAllergies.criticalAllergies.slice(0,patientAllergies.limitAllergies)">
 								<div fxLayout="column">
 									<mat-icon class="color-warn allergy-icon" fontSet="material-icons-outlined">block</mat-icon>
 								</div>
@@ -29,14 +29,14 @@
 									</div>
 								</div>
 							</div>
-							<div *ngIf="criticalAllergies?.length>limitAllergies">
-								<button class="allergies-button" (click)="openAllergies()" mat-button type="button" color="primary">
+							<div *ngIf="patientAllergies.criticalAllergies?.length > patientAllergies.limitAllergies">
+								<button class="allergies-button" (click)="patientAllergies.openAllergies()" mat-button type="button" color="primary">
 							<span [translate]="'ambulatoria.paciente.card.MORE_CRITICAL_ALLERGIES'"
-							[translateParams]="{allergies: criticalAllergies?.length-limitAllergies}"></span>
+							[translateParams]="{allergies: patientAllergies.criticalAllergies?.length-patientAllergies.limitAllergies}"></span>
 								</button>
 							</div>
 						</div>
-						<div *ngIf="criticalAllergies?.length==0">
+						<div *ngIf="patientAllergies.criticalAllergies?.length==0">
 							<div fxLayout="row">
 								<div fxLayout="column">
 									<mat-icon class="color-disabled allergy-icon" fontSet="material-icons-outlined">block</mat-icon>

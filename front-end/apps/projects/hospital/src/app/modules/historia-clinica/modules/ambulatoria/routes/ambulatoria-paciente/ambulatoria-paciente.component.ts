@@ -38,11 +38,10 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
-import { HCEAllergyDto } from '@api-rest/api-model';
-import { ShowAllergiesComponent } from "@historia-clinica/modules/ambulatoria/dialogs/show-allergies/show-allergies.component";
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { InternacionPacienteComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internacion-paciente/internacion-paciente.component";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { PatientAllergiesService } from '../../services/patient-allergies.service';
 
 const RESUMEN_INDEX = 0;
 
@@ -59,8 +58,6 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	patient: PatientBasicData;
 	patientId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
-	criticalAllergies: HCEAllergyDto[] = [];
-	limitAllergies = 2;
 	medicamentStatus$: Observable<any>;
 	studyCategories$: Observable<any>;
 	diagnosticReportsStatus$: Observable<any>;
@@ -116,6 +113,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly componentFactoryResolver: ComponentFactoryResolver,
 		private viewContainerRef: ViewContainerRef,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		readonly patientAllergies: PatientAllergiesService,
 
 		private readonly requestMasterDataService: RequestMasterDataService,
 
@@ -130,7 +128,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					}
 				);
 				this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
-				this.updateCriticalAllergies();
+				this.patientAllergies.updateCriticalAllergies(this.patientId);
 				this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 				this.patientService.getPatientPhoto(this.patientId)
 					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
@@ -247,7 +245,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
-				this.updateCriticalAllergies();
+				this.patientAllergies.updateCriticalAllergies(this.patientId);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -266,7 +264,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 				if (fieldsToUpdate) {
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				}
-				this.updateCriticalAllergies();
+				this.patientAllergies.updateCriticalAllergies(this.patientId);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -335,36 +333,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.isOpenOdontologyConsultation = isOpenOdontologyConsultation;
 	}
 
-	updateCriticalAllergies(): void {
-		this.criticalAllergies = [];
-		this.hceGeneralStateService.getCriticalAllergies(this.patientId)
-			.subscribe(allergies => {
-				allergies.forEach(allergy => {
-					this.criticalAllergies = pushIfNotExists<HCEAllergyDto>(this.criticalAllergies, allergy, this.compareAllergy);
-				})
-			});
-	}
-
-	compareAllergy(data: HCEAllergyDto, data1: HCEAllergyDto): boolean {
-		return data.snomed.sctid === data1.snomed.sctid;
-	}
-
-	openAllergies() {
-		this.dialog.open(ShowAllergiesComponent, {
-			disableClose: true,
-			autoFocus: false,
-			width: '35%',
-			data: {
-				allergies: this.criticalAllergies
-			}
-		});
-	}
-
 	openInternmentAction(internmentActionId: number) {
 		const component = this.componentFactoryResolver.resolveComponentFactory(InternacionPacienteComponent);
 		const internmentComponent = this.viewContainerRef.createComponent(component);
 		this.viewContainerRef.clear();
 		internmentComponent.instance.internmentEpisodeId = this.internmentEpisodeProcess.id;
+		internmentComponent.instance.patientId = this.patientId;
 
 		if (InternmentActions.anamnesis === internmentActionId) {
 			internmentComponent.instance.openAnamnesis();
