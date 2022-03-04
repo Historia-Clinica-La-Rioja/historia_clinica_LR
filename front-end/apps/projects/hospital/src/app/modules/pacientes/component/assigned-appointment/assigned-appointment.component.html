@@ -21,11 +21,15 @@
     <div fxLayout="row">
         <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
             <mat-icon color="primary" fontSet="material-icons-outlined"> event </mat-icon>
-            <span class="mat-body"> {{ appointment.date }} </span>
+            <span class="mat-body capitalize-first-letter">
+                {{ getViewDate() }}
+            </span>
         </div>
         <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
             <mat-icon color="primary"> query_builder </mat-icon>
-            <span class="mat-body"> {{ appointment.hour }} </span>
+            <span class="mat-body">
+                {{ getViewTime() }}hs
+            </span>
         </div>
         <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
             <mat-icon color="primary" fontSet="material-icons-outlined"> meeting_room </mat-icon>
