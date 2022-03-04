@@ -121,3 +121,26 @@ databaseChangeLog:
               referencedTableName: indication
               validate: true
 
+    - changeSet:
+        id: diet-createTable
+        comment: Create table diet
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: diet
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diet
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text
+
