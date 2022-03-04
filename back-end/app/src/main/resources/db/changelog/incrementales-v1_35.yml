@@ -1,3 +1,82 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_35 
+    - logicalFilePath: incrementales-v1_35
+    - changeSet:
+        id: indication-createTable
+        author: mvenere
+        comment: Create table indication
+        changes:
+          - createTable:
+              tableName: indication
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_indication
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    name: status_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: indication_date
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: patient_id
+              baseTableName: indication
+              constraintName: FK_indication_patient_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: patient
+              validate: true
+
 
