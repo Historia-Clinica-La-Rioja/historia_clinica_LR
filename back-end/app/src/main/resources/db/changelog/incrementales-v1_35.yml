@@ -79,4 +79,45 @@ databaseChangeLog:
               referencedTableName: patient
               validate: true
 
+    - changeSet:
+        id: document_indication-createTable
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_indication
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: indication_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, indication_id
+              constraintName: PK_document_indication
+              tableName: document_indication
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_indication
+              constraintName: FK_document_indication_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: indication_id
+              baseTableName: document_indication
+              constraintName: FK_document_indication_indication_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: indication
+              validate: true
 
