@@ -1,37 +1,38 @@
-<div fxLayout="column" fxLayoutGap="10px">
+<div fxLayout="column" fxLayoutGap="15px">
 
-    <div fxLayout="row" fxLayoutAlign="start start">
-        <div fxFlex="66.67" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+    <div fxLayout="row">
+        <div fxFlex="66.67" fxLayout="row" fxLayoutGap="5px">
             <mat-icon color="primary"> person_outline </mat-icon>
             <span class="mat-body-2"> {{ appointment.professionalName }} </span>
-            <span class="mat-caption">
+            <span class="mat-caption line-height">
                 {{ 'pacientes.assigned-appointment.LICENSE_NUMBER_ACRONYM' | translate }}
                 {{ appointment.license }}
             </span>
         </div>
-        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px"
-            [fxLayoutAlign]="appointment.specialties.length === 1 ? 'start center' : 'start'">
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="5px">
             <mat-icon color="primary" fontSet="material-icons-outlined"> add_box </mat-icon>
             <div fxLayout="column">
-                <span *ngFor="let specialty of appointment.specialties" class="mat-body"> {{ specialty }} </span>
+                <span *ngFor="let specialty of appointment.specialties" class="mat-body line-height">
+                    {{ specialty }}
+                </span>
             </div>
         </div>
     </div>
 
     <div fxLayout="row">
-        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="5px">
             <mat-icon color="primary" fontSet="material-icons-outlined"> event </mat-icon>
-            <span class="mat-body capitalize-first-letter">
+            <span class="mat-body capitalize-first-letter line-height">
                 {{ getViewDate() }}
             </span>
         </div>
-        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center start">
             <mat-icon color="primary"> query_builder </mat-icon>
-            <span class="mat-body">
+            <span class="mat-body line-height">
                 {{ getViewTime() }}hs
             </span>
         </div>
-        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+        <div fxFlex="33.33" fxLayout="row" fxLayoutGap="5px">
             <mat-icon color="primary" fontSet="material-icons-outlined"> meeting_room </mat-icon>
             <span class="mat-body-2"> {{ appointment.office }} </span>
         </div>
