@@ -58,7 +58,7 @@
 		<button
 			[ngClass]="{'activate-button': (!showActionsService?.getIsNotPreviousProcedureSet() && !selectedSurfaces.length), 'disable-button': (showActionsService?.getIsNotPreviousProcedureSet() || selectedSurfaces.length)}"
 			mat-button type="button" onclick="this.blur()" (click)="addTypeaheadProcedure()" color="primary"
-			style="font-size: 14px;">
+			class="text-button">
 			+ Agregar otro procedimiento:
 		</button>
 	</div>
