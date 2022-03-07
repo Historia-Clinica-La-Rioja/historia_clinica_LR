@@ -1,37 +1,37 @@
 <mat-card id="patient_card" [class]="size">
-    <ng-content select="[header]"></ng-content>
-    <div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayout.lt-md="column">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-            <mat-card-header>
-                <img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
-                <mat-card-title class="card-style-1">
-                    <span id="title" class="capitalize">
-                        {{viewPatientName()}} {{patient?.lastName}} {{patient?.otherLastNames}}
-                    </span>
-                </mat-card-title>
-                <mat-card-title class="card-style-2">
-                    <span id="patient_id">{{viewIDAndIdentificationTypeAndNumber()}}</span>
-                </mat-card-title>
-                <mat-card-subtitle>
-                    <span id="gender_age" [translate]=viewGenderAge()></span>
-                </mat-card-subtitle>
-				<mat-card-subtitle *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress">
-                    <div class="label-episodes label-internment-episode uppercase">
-                        <strong class="uppercase" [translate]="'ambulatoria.paciente.card.INTERNMENT_EPISODE_ACTIVE'"></strong>
-                    </div>
-                </mat-card-subtitle>
+	<ng-content select="[header]"></ng-content>
+	<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayout.lt-md="column">
+		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+			<mat-card-header>
+				<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
+				<mat-card-title class="card-style-1">
+					<span id="title" class="mat-card-patient-name">
+						{{viewPatientName()}} {{patient?.lastName}} {{patient?.otherLastNames}}
+					</span>
+				</mat-card-title>
+				<mat-card-title class="card-style-2">
+					<span id="patient_id">{{viewIDAndIdentificationTypeAndNumber()}}</span>
+				</mat-card-title>
+				<mat-card-subtitle>
+					<span id="gender_age" [translate]=viewGenderAge()></span>
+				</mat-card-subtitle>
+				<mat-card-subtitle class="interment-episode" *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress">
+					<div class="label-episodes label-internment-episode uppercase">
+						<span class="uppercase" [translate]="'ambulatoria.paciente.card.INTERNMENT_EPISODE_ACTIVE'"></span>
+					</div>
+				</mat-card-subtitle>
 				<mat-card-subtitle *ngIf="emergencyCareEpisodeInProgress">
 					<div class="label-episodes label-emergency-care-episode">
 						<strong class="uppercase"
-								[translate]="'ambulatoria.paciente.card.EMERGENCY_CARE_EPISODE_ACTIVE'"></strong>
+							[translate]="'ambulatoria.paciente.card.EMERGENCY_CARE_EPISODE_ACTIVE'"></strong>
 					</div>
 				</mat-card-subtitle>
-            </mat-card-header>
-        </div>
+			</mat-card-header>
+		</div>
 		<ng-content id="info-content" select="[info-content]"></ng-content>
-        <ng-content id="buttons-content" select="[buttons-content]"></ng-content>
-    </div>
-    <mat-card-content>
-        <ng-content id="vertical_content" select="[content]"></ng-content>
-    </mat-card-content>
+		<ng-content id="buttons-content" select="[buttons-content]"></ng-content>
+	</div>
+	<mat-card-content>
+		<ng-content id="vertical_content" select="[content]"></ng-content>
+	</mat-card-content>
 </mat-card>
