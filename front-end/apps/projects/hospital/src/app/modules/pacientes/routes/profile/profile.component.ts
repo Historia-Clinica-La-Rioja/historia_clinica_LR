@@ -15,7 +15,8 @@ import {
 	EpicrisisSummaryDto,
 	InstitutionDto,
 	EmergencyCareEpisodeInProgressDto,
-	EmergencyCareListDto
+	EmergencyCareListDto,
+	HealthcareProfessionalCompleteDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -57,6 +58,14 @@ const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 const ROUTE_EMERGENCY_CARE_EPISODE_PREFIX = 'guardia/episodio/';
 const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
+const DIALOG_SIZE = '30%';
+
+export interface ProfessionAndSpecialtyDto {
+	professionDescription: string,
+	professionId: number,
+	specialtyId: number,
+	specialtyName: string,
+}
 
 @Component({
 	selector: 'app-profile',
@@ -72,7 +81,12 @@ export class ProfileComponent implements OnInit {
 	showDischarge = false;
 	epicrisisDoc: EpicrisisSummaryDto;
 	canLoadProbableDischargeDate: boolean;
-	public institutionName: string;
+	allProfessions: ProfessionDto[] = [];
+	allSpecialties: ClinicalSpecialtyDto[] = [];
+	ownProfessionsAndSpecialties: ProfessionAndSpecialtyDto[] = [];
+	isProfessional = false;
+	institutionName: string;
+	license: string = '';
 	private institution: number[] = [];
 	private rolesAdmin = false;
 	public patientBasicData: PatientBasicData;
@@ -89,13 +103,7 @@ export class ProfileComponent implements OnInit {
 	public userData: UserDataDto;
 	public personId: number;
 	private professionalId: number;
-	license: string = '';
-	private specialties: number[] = [];
-	private professions: number[] = [];
 	private professionalSpecialtyId: number[] = [];
-	showProfessions: string[] = [];
-	showSpecialties: string[] = [];
-	public hasAssignedProfessions = false;
 	public form: FormGroup;
 
 	public downloadReportIsEnabled: boolean;
@@ -166,7 +174,7 @@ export class ProfileComponent implements OnInit {
 						this.userService.getUserData(completeData.person.id).subscribe((userData: UserDataDto) => {
 							this.userData = userData;
 							if (userData?.id) {
-								this.rolesService.getRolesByUser(userData?.id).subscribe((roles: UserRoleDto[]) => {
+								this.rolesService.getRolesByUser(this.userData?.id).subscribe((roles: UserRoleDto[]) => {
 									this.rolesByUser = roles;
 									roles.forEach(e => this.userRoles.push(e.roleDescription));
 								})
@@ -185,6 +193,9 @@ export class ProfileComponent implements OnInit {
 							this.institutionName = institutions[0].name;
 						});
 
+						this.professionalService.getList().subscribe((allProfessions: ProfessionDto[]) => { this.allProfessions = allProfessions; });
+
+						this.specialtyService.getAll().subscribe((allSpecialties: ClinicalSpecialtyDto[]) => { this.allSpecialties = allSpecialties; });
 					});
 				this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
 					this.canLoadProbableDischargeDate = isOn;
@@ -238,8 +249,8 @@ export class ProfileComponent implements OnInit {
 			if (profession) {
 				this.license = profession.licenceNumber;
 				this.professionalId = profession.id;
+				this.isProfessional = true;
 				this.setProfessionsAndSpecialties();
-				this.hasAssignedProfessions = true;
 			}
 		})
 	}
@@ -248,34 +259,22 @@ export class ProfileComponent implements OnInit {
 		this.professionalService.getProfessionsByProfessional(this.professionalId).subscribe(
 			(professionalsByClinicalSpecialty: HealthcareProfessionalSpecialtyDto[]) => {
 				professionalsByClinicalSpecialty.forEach((index: HealthcareProfessionalSpecialtyDto) => {
-					this.specialties.push(index.clinicalSpecialtyId);
-					this.professions.push(index.professionalSpecialtyId);
 					this.professionalSpecialtyId.push(index.id);
+					this.ownProfessionsAndSpecialties.push(
+						{
+							professionDescription: (this.allProfessions.find(element =>
+								element.id === index.professionalSpecialtyId
+							).description),
+							professionId: index.professionalSpecialtyId,
+							specialtyId: index.clinicalSpecialtyId,
+							specialtyName: (this.allSpecialties.find(element =>
+								element.id === index.clinicalSpecialtyId
+							).name)
+						})
 				})
-				this.setProfessions();
-				this.setSpecialties();
+
 			})
 
-	}
-
-	setProfessions(): void {
-		this.professionalService.getList().subscribe((allProfessions: ProfessionDto[]) => {
-			this.professions.forEach(profession => {
-				allProfessions.find(element => {
-					(element.id === profession) ? (this.showProfessions.push(element.description)) : null;
-				});
-			})
-		});
-	}
-
-	setSpecialties(): void {
-		this.specialtyService.getAll().subscribe((allSpecialties: ClinicalSpecialtyDto[]) => {
-			this.specialties.forEach(specialty => {
-				allSpecialties.find(element => {
-					(element.id === specialty) ? (this.showSpecialties.push(element.name)) : null
-				});
-			})
-		});
 	}
 
 	goNewInternment(): void {
@@ -300,10 +299,11 @@ export class ProfileComponent implements OnInit {
 
 	editRoles(): void {
 		const dialog = this.dialog.open(EditRolesComponent, {
-			width: '25%',
+			width: DIALOG_SIZE,
 			disableClose: true,
 			data: {
-				professionalId: this.professionalId,
+				personId: this.personId,
+				isProfessional: this.isProfessional,
 				roles: this.roles,
 				userId: this.userData.id,
 				rolesByUser: this.rolesByUser
@@ -327,28 +327,63 @@ export class ProfileComponent implements OnInit {
 						error?.text ?
 							this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_roles.messages.ERROR');
 					});
-
-
-
 			}
 		});
 	}
+	toUpdateProfessionsAndSpecialties(professional: HealthcareProfessionalCompleteDto): void {
+		this.ownProfessionsAndSpecialties = [];
+		this.isProfessional = true;
+		professional.professionalSpecialtyDtos.forEach((e: HealthcareProfessionalSpecialtyDto) => {
+			this.ownProfessionsAndSpecialties.push(
+				{
+					professionDescription: (this.allProfessions.find(element =>
+						element.id === e.professionalSpecialtyId,
+					).description),
+					professionId: e.professionalSpecialtyId,
+					specialtyId: e.clinicalSpecialtyId,
+					specialtyName: (this.allSpecialties.find(element =>
+						element.id === e.clinicalSpecialtyId
+					).name)
+				})
+		})
+	}
 	editProfessions(): void {
+
 		const dialog = this.dialog.open(EditProfessionsComponent, {
-			width: '350px',
+			width: DIALOG_SIZE,
 			data: {
 				personId: this.personId, professionalId: this.professionalId, ownLicense: this.license,
-				ownSpecialties: this.specialties, ownProfessions: this.professions, id: this.professionalSpecialtyId
+				id: this.professionalSpecialtyId, allSpecialties: this.allSpecialties, allProfessions: this.allProfessions, ownProfessionsAndSpecialties: this.ownProfessionsAndSpecialties
 			}
 		});
-		dialog.afterClosed().subscribe(closed => {
-			if (closed) {
-				this.specialties = [];
-				this.professions = [];
-				this.professionalSpecialtyId = [];
-				this.showProfessions = [];
-				this.showSpecialties = [];
-				this.checkIfProfessional();
+		dialog.afterClosed().subscribe((professional: HealthcareProfessionalCompleteDto) => {
+			if (professional) {
+				this.license = professional.licenseNumber;
+				if (this.professionalId === undefined) {
+					this.professionalService.addProfessional(professional).subscribe(_ => {
+						this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
+						this.toUpdateProfessionsAndSpecialties(professional);
+						this.professionalService.get(this.personId).subscribe((profession: ProfessionalDto) => {
+							if (profession)
+								this.professionalId = profession.id;
+						});
+					},
+						error => {
+							error?.text ?
+								this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
+						})
+				}
+				else {
+					this.professionalService.editProfessional(this.professionalId, professional).subscribe(_ => {
+						this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
+						this.toUpdateProfessionsAndSpecialties(professional);
+					},
+						error => {
+							error?.text ?
+								this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
+						}
+					);
+				}
 			}
 		})
 	}

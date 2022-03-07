@@ -16,6 +16,7 @@ import { PacientesTableComponent } from './component/pacientes-table/pacientes-t
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
+import { CardProfessionsComponent } from './component/card-professions/card-professions.component';
 // dialogs
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
@@ -45,6 +46,7 @@ import { AssignedAppointmentComponent } from './component/assigned-appointment/a
 		ReportsComponent,
 		EditRolesComponent,
 		CardRolesComponent,
+		CardProfessionsComponent,
 		ScanPatientComponent,
 		AssignedAppointmentComponent,
 	],
