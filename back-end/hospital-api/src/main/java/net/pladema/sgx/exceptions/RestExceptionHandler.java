@@ -6,6 +6,8 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgx.shared.strings.StringValidatorException;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +64,20 @@ public class RestExceptionHandler {
 	@ExceptionHandler({ ConstraintViolationException.class })
 	public ApiErrorDto handleValidationExceptions(ConstraintViolationException ex, WebRequest request) {
 		List<String> errors = new ArrayList<>();
-		for (ConstraintViolation<?> violation : ex.getConstraintViolations()){
+
+		if (ex.getConstraintViolations().isEmpty()) {
+			String msg = ex.getMessage();
+			try {
+				String property = msg.substring(0, msg.indexOf(":"));
+				msg = property + ": " + messageSource.getMessage(StringUtils.substringBetween(msg, "{", "}"), null, null);
+			} catch (Exception e) {
+				LOG.error("No se tiene un mensaje para la siguiente clave -> {}", msg);
+			}
+			LOG.debug("Constraint validation error -> {}", msg);
+			return new ApiErrorDto("Constraint violation", List.of(msg));
+		}
+
+		for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
 
 			if(violation.getPropertyPath().toString().contains("<cross-parameter>"))
 				errors.add(violation.getMessage());
