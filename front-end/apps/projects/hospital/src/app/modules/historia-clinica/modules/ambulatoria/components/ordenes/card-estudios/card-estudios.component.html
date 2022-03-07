@@ -16,7 +16,7 @@
 	</div>
 
 	<div id="filter" *ngIf="hideFilterPanel" >
-		<form id="filter-form" [formGroup]="formFilter" (ngSubmit)="filter()" fxLayout="row wrap" fxLayoutGap="15px" style="margin: 15px" >
+		<form id="filter-form" [formGroup]="formFilter" (ngSubmit)="filter()" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="15px" style="margin: 15px" >
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
 				<mat-select id="statusId"
@@ -76,7 +76,7 @@
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
-			<div>
+			<div class="filter-button">
 				<button mat-flat-button color="primary" type="submit">
 					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.BUTTON_FILTER'"></span>
 				</button>
