@@ -634,6 +634,10 @@ export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> 
     overturnCount?: number;
 }
 
+export interface DietDto extends IndicationDto {
+    description: string;
+}
+
 export interface DoctorInfoDto {
     firstName: string;
     id: number;
