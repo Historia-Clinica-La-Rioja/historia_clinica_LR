@@ -1,19 +1,5 @@
 package ar.lamansys.sgx.shared.actuator.infrastructure.configuration;
 
-import ar.lamansys.sgx.shared.actuator.domain.PropertyBo;
-import ar.lamansys.sgx.shared.actuator.infrastructure.output.repository.SystemProperty;
-import ar.lamansys.sgx.shared.actuator.infrastructure.output.repository.SystemPropertyRepository;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.ToggleConfiguration;
-import ar.lamansys.sgx.shared.flavor.FlavorService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.actuate.env.EnvironmentEndpoint;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
-
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,6 +9,21 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.env.EnvironmentEndpoint;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import ar.lamansys.sgx.shared.actuator.domain.PropertyBo;
+import ar.lamansys.sgx.shared.actuator.infrastructure.output.repository.SystemProperty;
+import ar.lamansys.sgx.shared.actuator.infrastructure.output.repository.SystemPropertyRepository;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.ToggleConfiguration;
+import ar.lamansys.sgx.shared.flavor.FlavorService;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Configuration
@@ -70,6 +71,7 @@ public class SystemPropertiesConfiguration {
 
 	@Scheduled(cron = "${app.system.properties.cron.config:-}")
     public void loadProperties() {
+		log.info("Loading properties");
         systemPropertyRepository.deleteByIpNodeId(nodeId);
         systemPropertyRepository.saveAll(environ.map(env -> env.environment(include))
                 .map(environmentDescriptor -> generateSource(environmentDescriptor.getPropertySources()))
