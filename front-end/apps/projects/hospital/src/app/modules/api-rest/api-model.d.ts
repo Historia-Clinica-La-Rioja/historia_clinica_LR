@@ -1238,6 +1238,15 @@ export interface ImmunizePatientDto {
     immunizations: ImmunizationDto[];
 }
 
+export interface IndicationDto {
+    createdBy: number;
+    id: number;
+    indicationDate: Date;
+    patientId: number;
+    status: EIndicationStatus;
+    type: EIndicationType;
+}
+
 export interface InstitutionAddressDto extends Serializable {
     addressId: number;
     apartment: string;
@@ -2518,6 +2527,18 @@ export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
+}
+
+export const enum EIndicationStatus {
+    INDICATED = "INDICATED",
+    SUSPENDED = "SUSPENDED",
+}
+
+export const enum EIndicationType {
+    PHARMACO = "PHARMACO",
+    DIET = "DIET",
+    PARENTERAL_PLAN = "PARENTERAL_PLAN",
+    OTHER_INDICATION = "OTHER_INDICATION",
 }
 
 export const enum EMedicalCoverageTypeDto {
