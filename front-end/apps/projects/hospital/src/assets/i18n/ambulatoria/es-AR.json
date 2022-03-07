@@ -35,6 +35,7 @@
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
                 "SANGUINEOUS": "sanguíneo",
+				"WITHOUT_BLOOD_DATA": "Sin grupo y factor sanguíneo registrado",
                 "internment": {
                     "COVERAGE_TITLE": "Cobertura del episodio",
                     "AFFILIATE_NUMBER": "Afiliado N°:",
