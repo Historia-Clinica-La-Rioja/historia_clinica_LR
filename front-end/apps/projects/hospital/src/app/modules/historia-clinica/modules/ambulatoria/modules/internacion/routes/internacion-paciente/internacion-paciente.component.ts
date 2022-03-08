@@ -41,8 +41,6 @@ import {
 import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
 import { PatientAllergiesService } from "@historia-clinica/modules/ambulatoria/services/patient-allergies.service";
 
-const ROUTE_EDIT_PATIENT = 'pacientes/edit';
-
 @Component({
 	selector: 'app-internacion-paciente',
 	templateUrl: './internacion-paciente.component.html',
@@ -133,11 +131,6 @@ export class InternacionPacienteComponent implements OnInit {
 
 	}
 
-
-	goToAdministrativeDischarge(): void {
-		this.router.navigate([`${this.routePrefix}/alta`]);
-	}
-
 	openDialog() {
 		const dialogRef = this.dialog.open(ProbableDischargeDialogComponent, {
 			disableClose: true,
@@ -156,16 +149,6 @@ export class InternacionPacienteComponent implements OnInit {
 			}
 		}
 		);
-	}
-
-	goToEditPatient(): void {
-		const person = {
-			id: this.patientId,
-		};
-		const url = 'institucion/' + this.contextService.institutionId + '/' + ROUTE_EDIT_PATIENT
-		this.router.navigate([url], {
-			queryParams: person
-		});
 	}
 
 	openAnamnesis() {

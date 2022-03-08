@@ -3,22 +3,6 @@
 		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
 		<div *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary" fxLayout="column"
 			fxLayoutGap="20px">
-			<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
-
-				<ng-container *ngIf="showDischarge">
-					<button mat-flat-button id="administrative_discharge_button" color="primary"
-						*appHasRole="['ADMINISTRATIVO']" (click)="goToAdministrativeDischarge()">
-						<span class="uppercase"
-							[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
-					</button>
-				</ng-container>
-
-				<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button
-					color="primary" fxFlexFill.xs (click)="goToEditPatient()">
-					<span class="uppercase"
-						[translate]="'internaciones.internacion-paciente.actions.EDIT_PATIENT'"></span>
-				</button>
-			</div>
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<div *ngIf="showPatientCard">
@@ -61,7 +45,7 @@
 							(openInNew)="openDialog()">
 							<mat-card-content>
 								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary"
-									[canLoadProbableDischargeDate]="canLoadProbableDischargeDate">
+									[canLoadProbableDischargeDate]="canLoadProbableDischargeDate" [hasEpicrisis]="epicrisisDoc?.confirmed" [showDischarge]="showDischarge">
 								</app-internment-episode-summary>
 							</mat-card-content>
 						</app-summary-card>
