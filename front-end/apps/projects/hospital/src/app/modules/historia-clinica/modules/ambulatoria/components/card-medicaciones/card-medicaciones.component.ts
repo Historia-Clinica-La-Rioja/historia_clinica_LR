@@ -4,19 +4,19 @@ import { MedicationInfoDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ORDENES_MEDICACION } from '@historia-clinica/constants/summaries';
-import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import {
 	NewPrescription,
 	NuevaPrescripcionComponent
-} from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
-import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
-import { MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
-import { SuspenderMedicacionComponent } from '../../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
+} from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
+import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
+import { MedicationStatusChange } from '../../constants/prescripciones-masterdata';
+import { SuspenderMedicacionComponent } from '../../dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
 import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
-import { MEDICATION_STATUS } from './../../../constants/prescripciones-masterdata';
+import { MEDICATION_STATUS } from '../../constants/prescripciones-masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
-import { MedicacionesService } from '../../../services/medicaciones.service';
+import { MedicacionesService } from '../../services/medicaciones.service';
 import { ERole } from '@api-rest/api-model';
 
 const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO];

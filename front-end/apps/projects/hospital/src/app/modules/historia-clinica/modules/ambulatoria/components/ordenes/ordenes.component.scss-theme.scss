@@ -1,8 +1,0 @@
-@import "./item-prescripciones/item-prescripciones.component.scss-theme.scss";
-@import "./card-estudios/card-estudios.component.scss-theme.scss";
-
-@mixin ordenes-mixins($theme) {
-	@include app-item-prescripciones($theme);
-	@include app-card-estudios($theme);
-
-}

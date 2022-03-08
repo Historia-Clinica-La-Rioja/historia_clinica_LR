@@ -6,16 +6,16 @@ import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from '@historia-clinica/constants/summaries';
-import { STUDY_STATUS } from '../../../constants/prescripciones-masterdata';
-import { ConfirmarPrescripcionComponent } from '../../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { STUDY_STATUS } from '../../constants/prescripciones-masterdata';
+import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import {
 	NewPrescription,
 	NuevaPrescripcionComponent
-} from '../../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
-import { VerResultadosEstudioComponent } from '../../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
-import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
+} from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
+import { VerResultadosEstudioComponent } from '../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
+import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
 import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
-import { CompletarEstudioComponent } from './../../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
+import { CompletarEstudioComponent } from '../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 
 @Component({
   selector: 'app-card-estudios',

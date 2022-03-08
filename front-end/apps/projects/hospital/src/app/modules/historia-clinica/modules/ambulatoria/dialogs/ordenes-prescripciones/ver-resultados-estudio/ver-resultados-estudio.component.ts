@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, FileDto } from '@api-rest/api-model';
-import { PrescriptionItemData } from '../../../components/ordenes/item-prescripciones/item-prescripciones.component';
+import { PrescriptionItemData } from '../../../components/item-prescripciones/item-prescripciones.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { CompletarEstudioComponent } from '../completar-estudio/completar-estudio.component';
 
