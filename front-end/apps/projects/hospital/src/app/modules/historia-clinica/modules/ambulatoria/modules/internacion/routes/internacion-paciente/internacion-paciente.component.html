@@ -45,7 +45,7 @@
 							(openInNew)="openDialog()">
 							<mat-card-content>
 								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary"
-									[canLoadProbableDischargeDate]="canLoadProbableDischargeDate" [hasEpicrisis]="epicrisisDoc?.confirmed" [showDischarge]="showDischarge">
+									[canLoadProbableDischargeDate]="canLoadProbableDischargeDate" [patientId]="patientId" [hasEpicrisis]="epicrisisDoc?.confirmed" [showDischarge]="showDischarge">
 								</app-internment-episode-summary>
 							</mat-card-content>
 						</app-summary-card>
