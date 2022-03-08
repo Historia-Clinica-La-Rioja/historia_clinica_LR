@@ -615,3 +615,81 @@ databaseChangeLog:
               columnNames: snomed_id, group_id
               constraintName: UQ_snomed_id_group_id
               tableName: snomed_related_group
+              
+    - changeSet:
+        id: add-institution_id-column-snomed_group
+        comment: Add column institution_id to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: institution_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+
+    - changeSet:
+        id: add-user_id-column-snomed_group
+        comment: Add column user_id to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: user_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+
+    - changeSet:
+        id: add-group_id-column-snomed_group
+        comment: Add column group_id to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: group_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: group_id
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_group_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed_group
+              validate: true
+
+    - changeSet:
+        id: add-template-column-snomed_group
+        comment: Add column template to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: template
+                    type: boolean
+                    defaultValue: false
+                    constraints:
+                      nullable: false
