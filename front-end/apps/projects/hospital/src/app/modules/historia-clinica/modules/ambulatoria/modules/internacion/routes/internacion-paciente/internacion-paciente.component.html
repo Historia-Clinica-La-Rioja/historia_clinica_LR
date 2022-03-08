@@ -81,7 +81,8 @@
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-alergias-summary [internmentEpisodeId]="internmentEpisodeId"
-							[editable]="!epicrisisDoc?.confirmed" [allergies]="internmentSummaryFacadeService.allergies$ | async">
+											  [editable]="!epicrisisDoc?.confirmed" [allergies]="internmentSummaryFacadeService.allergies$ | async"
+											  [patientId]="patientId">
 						</app-alergias-summary>
 					</ng-container>
 					<ng-container

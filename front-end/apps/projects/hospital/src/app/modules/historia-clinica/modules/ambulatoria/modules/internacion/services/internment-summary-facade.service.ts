@@ -146,13 +146,15 @@ export class InternmentSummaryFacadeService {
 			});
 	}
 
-	uniFyAllergiesAndFamilyHistories(patientId: number) {
+	unifyAllergies(patientId: number) {
 		forkJoin([this.internmentStateService.getAllergies(this.internmentEpisodeId), this.hceGeneralStateService.getAllergies(patientId)])
 			.subscribe(([allergiesI, allergiesHCE]) => {
 				allergiesHCE.forEach(e => allergiesI.push(this.mapToAllergyConditionDto(e)));
 				this.allergiesSubject.next(allergiesI)
 			});
+	}
 
+	unifyFamilyHistories(patientId: number) {
 		forkJoin([this.internmentStateService.getFamilyHistories(this.internmentEpisodeId), this.hceGeneralStateService.getFamilyHistories(patientId)])
 			.subscribe(([familyHistoriesI, familyHistoriesHCE]) => {
 				familyHistoriesHCE.forEach(e => familyHistoriesI.push(this.mapToHealthHistoryConditionDto(e)));

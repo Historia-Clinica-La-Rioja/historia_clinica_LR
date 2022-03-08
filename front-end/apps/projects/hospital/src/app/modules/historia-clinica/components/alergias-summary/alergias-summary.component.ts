@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.component';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { PatientAllergiesService } from '@historia-clinica/modules/ambulatoria/services/patient-allergies.service';
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
 	selector: 'app-alergias-summary',
@@ -54,6 +55,7 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		public dialog: MatDialog,
 		private readonly patientAllergies: PatientAllergiesService,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 	}
 
@@ -93,6 +95,8 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 				this.internmentStateService.getAllergies(this.internmentEpisodeId)
 					.subscribe(data => this.tableModel = this.buildTable(data));
 				this.patientAllergies.updateCriticalAllergies(this.patientId);
+				if (this.internmentEpisodeId)
+					this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 			}
 		}
 		);

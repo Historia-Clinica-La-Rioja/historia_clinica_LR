@@ -244,10 +244,11 @@ export class InternacionPacienteComponent implements OnInit {
 			evolutionClinical: fieldsToUpdate?.evolutionClinical
 		}
 		this.internmentSummaryFacadeService.setFieldsToUpdate(fields);
-		if (fieldsToUpdate?.allergies || fieldsToUpdate?.familyHistories)
-			this.internmentSummaryFacadeService.uniFyAllergiesAndFamilyHistories(this.patientId);
+		if (fieldsToUpdate?.familyHistories)
+			this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
 		if (fieldsToUpdate?.allergies) {
 			this.patientAllergies.updateCriticalAllergies(this.patientId);
+			this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 		}
 		this.internmentSummaryFacadeService.updateInternmentEpisode();
 	}
