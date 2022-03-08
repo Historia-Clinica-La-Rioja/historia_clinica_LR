@@ -1,14 +1,8 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
+package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotNull;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.EIndicationStatus;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.EIndicationType;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

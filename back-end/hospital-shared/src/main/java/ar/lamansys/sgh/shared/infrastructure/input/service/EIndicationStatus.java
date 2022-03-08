@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce;
+package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
