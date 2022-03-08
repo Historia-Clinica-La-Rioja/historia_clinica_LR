@@ -126,7 +126,7 @@
 				</ng-template>
 
 				<ng-template #headerTemplate let-days="days" let-locale="locale">
-					<div class="cal-day-headers">
+					<div class="cal-day-headers fixed-header">
 						<div class="cal-header" *ngFor="let day of days">
 							<strong>
 								{{ day.date | calendarDate:'weekViewColumnHeader':locale | titlecase}}

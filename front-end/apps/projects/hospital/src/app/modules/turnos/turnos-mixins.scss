@@ -13,3 +13,10 @@
 .turnos div.calendar-event-grey-text .cal-event-title {
     color: #7D807D;
 }
+
+@mixin fixed-header {
+	position: sticky;
+  	top: 0;
+	z-index: 3;
+	background-color:white;
+}

@@ -102,7 +102,7 @@
 		</ng-template>
 
 		<ng-template #headerTemplate let-days="days" let-locale="locale">
-			<div class="cal-day-headers">
+			<div class="cal-day-headers fixed-header">
 				<div style="cursor: pointer" class="cal-header" (click)="goToDayViewOn(day.date)"
 					 *ngFor="let day of days">
 					<strong>

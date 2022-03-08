@@ -1,5 +1,6 @@
 @import "../../../../../assets/styles/mixins";
 @import "../../../../../assets/styles/mat-mixins";
+@import "../../turnos-mixins";
 
 form {
 
@@ -29,4 +30,8 @@ form {
 	mwl-calendar-week-view ::ng-deep .cal-week-view .cal-event {
 		color: #000000;
 	}
+}
+
+.fixed-header {
+    @include fixed-header;
 }
