@@ -386,15 +386,20 @@ const messages = {
             addRelated: 'Agregar plan',
         },
         snomedgroups: {
-            name: 'Grupo de Snomed |||| Grupos de Snomed',
+            name: 'Grupo de terminología |||| Grupos de terminología',
             fields: {
                 id: 'ID',
                 description: 'Descripción',
                 ecl: 'ECL',
                 customId: 'ID custom',
+                groupId: 'Grupo padre',
+                institutionId: 'Institución',
+                userId: 'Usuario',
+                template: 'Plantilla',
                 lastUpdate: 'Última actualización',
                 snomedConcepts: "Conceptos de Snomed"
             },
+            noInfo: 'Sin información',
         },
         snomedrelatedgroups: {
             fields: {
