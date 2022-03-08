@@ -31,6 +31,6 @@ public class IndicationDto {
 	private Integer createdBy;
 
 	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
-	private LocalDateTime indicationDate;
+	private String indicationDate;
 	
 }

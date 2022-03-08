@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -18,7 +16,7 @@ public class DietDto extends IndicationDto {
 	@NotNull(message = "{value.mandatory}")
 	private String description;
 
-	public DietDto(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, LocalDateTime indicationDate, String description) {
+	public DietDto(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, String indicationDate, String description) {
 		super(id, patientId, EIndicationType.map(typeId), EIndicationStatus.map(statusId), createdBy, indicationDate);
 		this.description = description;
 	}

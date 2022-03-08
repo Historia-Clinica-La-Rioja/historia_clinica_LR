@@ -75,11 +75,4 @@ public interface HCEGeneralStateMapper {
     @IterableMapping(qualifiedByName = "fromOutpatientEvolutionSummaryBo")
     List<HCEEvolutionSummaryDto> fromListOutpatientEvolutionSummaryBo(List<EvolutionSummaryBo> evolutionSummaryBos);
 
-	@Named("fromDietBo")
-	DietDto toDietDto(DietBo dietBo);
-
-	@Named("fromListDietBo")
-	@IterableMapping(qualifiedByName = "fromDietBo")
-	List<DietDto> toListDietDto(List<DietBo> dietsBo);
-
 }

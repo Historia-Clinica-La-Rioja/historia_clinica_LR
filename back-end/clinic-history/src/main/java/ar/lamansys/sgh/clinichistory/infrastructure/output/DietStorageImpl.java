@@ -31,6 +31,25 @@ public class DietStorageImpl implements DietStorage {
 		return result;
 	}
 
+	@Override
+	public Integer createDiet(DietBo dietBo) {
+		log.debug("Input parameter -> dietBo {}", dietBo);
+		Integer result = repository.save(mapToEntity(dietBo)).getId();
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	private Diet mapToEntity(DietBo bo) {
+		Diet result = new Diet();
+		result.setId(bo.getId());
+		result.setPatientId(bo.getPatientId());
+		result.setTypeId(bo.getTypeId());
+		result.setStatusId(bo.getStatusId());
+		result.setIndicationDate(bo.getIndicationDate());
+		result.setDescription(bo.getDescription());
+		return result;
+	}
+
 	private DietBo mapToBo(Diet entity){
 		return new DietBo(entity.getId(),
 				entity.getPatientId(),

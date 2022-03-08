@@ -10,4 +10,3 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 public interface DocumentIndicationRepository extends JpaRepository<DocumentIndication, DocumentIndicationPK> {
 
 }
-
