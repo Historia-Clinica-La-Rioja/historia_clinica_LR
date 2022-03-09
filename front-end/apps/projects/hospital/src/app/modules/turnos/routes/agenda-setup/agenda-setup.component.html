@@ -95,7 +95,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="appointmentDuration" name="appointmentDuration"
 							formControlName="appointmentDuration" placeholder="{{'pacientes.form.SELECT' | translate}}"
-							(selectionChange)="agendaHorarioService.setAppointmentDuration(form.getRawValue().appointmentDuration)">
+							(selectionChange)="scrollToDefaultStartingHour()">
 							<mat-option *ngFor="let appointmentDuration of appointmentDurations"
 								[value]="appointmentDuration.id">
 								{{appointmentDuration.description}}

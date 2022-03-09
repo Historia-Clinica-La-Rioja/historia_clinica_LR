@@ -30,6 +30,19 @@ form {
 	mwl-calendar-week-view ::ng-deep .cal-week-view .cal-event {
 		color: #000000;
 	}
+
+	mwl-calendar-week-view ::ng-deep .cal-week-view .cal-time-events {
+		max-height: 700px;
+		overflow-y: scroll;
+	}
+
+	mwl-calendar-week-view ::ng-deep .cal-day-headers {
+		margin-right: 14.5px;
+	}
+
+	mwl-calendar-week-view ::ng-deep .cal-day-columns {
+		height: 100%;
+	}
 }
 
 .fixed-header {
