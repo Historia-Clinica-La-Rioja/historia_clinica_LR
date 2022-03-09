@@ -54,10 +54,13 @@ export class InternmentSummaryFacadeService {
 		private readonly documentSearchService: DocumentSearchService,
 		private readonly internmentService: InternacionService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
-		private readonly  hceGeneralStateService: HceGeneralStateService
+		private readonly hceGeneralStateService: HceGeneralStateService
 	) { }
 
-	setInternmentEpisodeInformation(internmentEpisodeId: number) {
+	setInternmentEpisodeInformation(internmentEpisodeId: number, anthropometricData: boolean) {
+		if (!anthropometricData) {
+			this.anthropometricDataSubject.next();
+		}
 		this.internmentEpisodeId = internmentEpisodeId;
 		this.updateInternmentEpisode();
 		this.setFieldsToUpdate({
@@ -66,7 +69,7 @@ export class InternmentSummaryFacadeService {
 			personalHistories: true,
 			riskFactors: true,
 			medications: true,
-			anthropometricData: true,
+			anthropometricData: anthropometricData,
 			immunizations: true,
 			evolutionClinical: true,
 		});

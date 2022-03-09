@@ -17,18 +17,19 @@ export class InternmentSummaryComponent implements OnInit {
 	internmentEpisodeInfo: InternmentEpisodeProcessDto;
 	patientId: number;
 
-	constructor(private readonly route: ActivatedRoute,
-				private readonly router: Router,
-				private readonly contextService: ContextService,
-				private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+	constructor(
+		private readonly route: ActivatedRoute,
+		private readonly router: Router,
+		private readonly contextService: ContextService,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 	}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(params => {
-			this.internmentEpisodeInfo = {id: Number(params.get('idInternacion')), inProgress: false};
+			this.internmentEpisodeInfo = { id: Number(params.get('idInternacion')), inProgress: false };
 			this.patientId = Number(params.get('idPaciente'));
-			this.internmentSummaryFacadeService.setInternmentEpisodeInformation(this.internmentEpisodeInfo.id);
+			this.internmentSummaryFacadeService.setInternmentEpisodeInformation(this.internmentEpisodeInfo.id, true);
 		})
 	}
 

@@ -147,7 +147,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 						if (this.internmentEpisodeProcess.id && this.internmentEpisodeProcess.inProgress) {
 							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
-							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id);
+							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id, false);
 							if (this.internmentEpisodeProcess.inProgress) {
 								this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 								this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
@@ -156,6 +156,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 							this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 							this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
 							this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
+							this.internmentSummaryFacadeService.anthropometricData$.subscribe(
+								(data: HCEAnthropometricDataDto) => {
+									if (data?.bloodType?.value)
+										this.bloodType = data?.bloodType?.value
+								});
 						}
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
 					})
@@ -318,7 +323,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	goToPatient() {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}/${HomeRoutes.Profile}`;
 
-		if (this.dialogRef || this.isOpenOdontologyConsultation ||  this.odontogramService.existActionedTeeth()) {
+		if (this.dialogRef || this.isOpenOdontologyConsultation || this.odontogramService.existActionedTeeth()) {
 			const dialog = this.dialog.open(DiscardWarningComponent,
 				{
 					data: {
