@@ -40,6 +40,7 @@ import {
 } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
 import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
 import { PatientAllergiesService } from "@historia-clinica/modules/ambulatoria/services/patient-allergies.service";
+import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -78,6 +79,7 @@ export class InternacionPacienteComponent implements OnInit {
 		private router: Router,
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
+		private readonly internmentPatientService: InternmentPatientService,
 		private contextService: ContextService,
 		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly internmentStateService: InternmentStateService,
@@ -109,13 +111,15 @@ export class InternacionPacienteComponent implements OnInit {
 
 		this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
-		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => {
-			this.hasMedicalDischarge = h
-			// La alta administrativa está disponible cuando existe el alta medica
-			// o el flag de alta sin epicrisis está activa
-			this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
-				this.showDischarge = isOn || (h === true);
-			});
+		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisode =>{
+			this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => {
+				this.hasMedicalDischarge = h
+				// La alta administrativa está disponible cuando existe el alta medica
+				// o el flag de alta sin epicrisis está activa
+				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
+					this.showDischarge = (isOn || (h === true))&& internmentEpisode?.inProgress;
+				});
+			})
 		});
 		this.internmentSummaryFacadeService.lastProbableDischargeDate$.subscribe(l => this.lastProbableDischargeDate = l);
 
