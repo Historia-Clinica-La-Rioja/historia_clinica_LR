@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenu } from '@angular/material/menu';
 import { ERole } from '@api-rest/api-model';
 
 @Component({
@@ -13,6 +14,8 @@ export class SummaryCardComponent {
 	@Input() tooltip: string;
 	@Input() canEdit: ERole[] = [];
 	@Input() editable = false;
+	@Input() menu: false;
+	@Input() matMenu: MatMenu;
 	@Output() openInNew = new EventEmitter();
 
 	constructor(
