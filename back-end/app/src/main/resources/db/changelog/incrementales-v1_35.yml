@@ -382,3 +382,13 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: dosage
               validate: true
+
+    - changeSet:
+        id: add-new-document-type
+        comment: Agregar nuevo tipo de documento
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type (id, description) VALUES(12, 'Indicación');
