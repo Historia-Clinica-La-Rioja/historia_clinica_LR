@@ -42,7 +42,8 @@ export class TableComponent implements OnChanges {
 		this.pageSizeOptions = [];
 		if (this.model) {
 			const unrepeatedSizeOptions = [...new Set([...PAGE_SIZE_OPTIONS, this.model.data.length])];
-			this.pageSizeOptions = unrepeatedSizeOptions.filter(opt => this.betweenLimits(opt));
+			const pageSizeOptions = unrepeatedSizeOptions.filter(opt => this.betweenLimits(opt));
+			pageSizeOptions.forEach(e => (e < 5) ? this.pageSizeOptions.push(5) : this.pageSizeOptions.push(e));
 			this.columns = this.model.columns;
 			this.dataSource.data = this.model.data;
 			this.displayedColumns = this.columns?.map(c => c.columnDef);
@@ -117,6 +118,7 @@ export class MatPaginatorIntlAR extends MatPaginatorIntl {
 	firstPageLabel = 'Primera página';
 
 	getRangeLabel = (page, pageSize, length) => {
+		if (pageSize < 5) pageSize = 5;
 		if (length === 0 || pageSize === 0) {
 			return '0 de ' + length;
 		}

@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ROLES_USER_SIDEBAR_MENU, NO_ROLES_USER_SIDEBAR_MENU } from '../portal-paciente/constants/menu';
-import { RoleAssignment } from '@api-rest/api-model';
-import { LoggedUserService } from '../auth/services/logged-user.service';
-import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { AccountService } from '@api-rest/services/account.service';
-import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
-import { UserInfo } from '@presentation/components/main-layout/main-layout.component';
+import { RoleAssignmentDto } from '@api-rest/api-model';
 
+import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
+import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
+import { mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
+
+import { ROLES_USER_SIDEBAR_MENU, NO_ROLES_USER_SIDEBAR_MENU } from '../portal-paciente/constants/menu';
+import { LoggedUserService } from '../auth/services/logged-user.service';
+import { HomeRoutes } from '../home/home-routing.module';
+import { AppRoutes } from '../../app-routing.module';
 
 @Component({
 	selector: 'app-portal-paciente',
@@ -14,9 +17,9 @@ import { UserInfo } from '@presentation/components/main-layout/main-layout.compo
 	styleUrls: ['./portal-paciente.component.scss']
 })
 export class PortalPacienteComponent implements OnInit {
-
+	userProfileLink = ['/', AppRoutes.Home, HomeRoutes.Profile];
 	menuItems: MenuItem[];
-	userInfo: UserInfo = {};
+	userInfo: UserInfo;
 
 	constructor(
 		private readonly loggedUserService: LoggedUserService,
@@ -30,14 +33,12 @@ export class PortalPacienteComponent implements OnInit {
 			this.menuItems = menuItemDefs.map(defToMenuItem);
 		});
 		this.accountService.getInfo()
-			.subscribe(userInfo => {
-				this.userInfo.userName = userInfo.email;
-				this.userInfo.fullName = mapToFullName(userInfo.personDto);
-			}
+			.subscribe(userInfo =>
+				this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto)
 			);
 	}
 
-	private userHasAnyRole(roleAssignments: RoleAssignment[]): boolean {
+	private userHasAnyRole(roleAssignments: RoleAssignmentDto[]): boolean {
 		return (roleAssignments.length > 0);
 	}
 

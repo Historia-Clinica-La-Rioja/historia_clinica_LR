@@ -38,7 +38,7 @@ public class BackofficePrivateHealthInsurancePlanValidator implements Backoffice
     @Override
     @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
     public void assertCreate(PrivateHealthInsurancePlan entity) {
-        PrivateHealthInsurancePlan privateHealthInsurancePlan = this.repository.findByIdAndPlan(entity.getPrivateHealthInsuranceId(), entity.getPlan());
+        PrivateHealthInsurancePlan privateHealthInsurancePlan = this.repository.findByIdAndPlan(entity.getPrivateHealthInsuranceId(), entity.getPlan().toLowerCase());
         if (privateHealthInsurancePlan != null)
             throw new BackofficeValidationException("medical-coverage.plan-exists");
     }

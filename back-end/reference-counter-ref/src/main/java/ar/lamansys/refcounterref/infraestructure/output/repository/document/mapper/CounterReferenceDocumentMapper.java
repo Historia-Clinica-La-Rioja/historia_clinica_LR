@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.document.map
 
 import ar.lamansys.refcounterref.domain.document.CounterReferenceDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,7 +11,7 @@ import org.mapstruct.Named;
 
 import java.util.ArrayList;
 
-@Mapper
+@Mapper(uses = {LocalDateMapper.class})
 public interface CounterReferenceDocumentMapper {
 
     @Named("fromCounterReferenceDocumentBo")

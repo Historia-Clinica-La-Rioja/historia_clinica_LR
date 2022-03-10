@@ -5,8 +5,8 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
+import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -24,6 +24,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
+import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -59,6 +60,7 @@ export class AppointmentComponent implements OnInit {
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
+	identificationType: IdentificationTypeDto;
 
 	public hideFilterPanel = false;
 
@@ -81,6 +83,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientNameService: PatientNameService,
+		private readonly personMasterDataService: PersonMasterDataService,
 
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -110,14 +113,9 @@ export class AppointmentComponent implements OnInit {
 				}
 				if (this.appointment.patientMedicalCoverageId) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
-						.pipe(
-							map(
-								s => this.patientMedicalCoverages.find(mc => mc.id === s.id)
-							)
-						)
 						.subscribe(coverageData => {
 							if (coverageData) {
-								this.coverageData = coverageData;
+								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
 								this.formEdit.controls.newCoverageData.setValue(coverageData);
 								this.setCoverageText(this.formEdit.controls.newCoverageData.value);
 							}
@@ -130,6 +128,11 @@ export class AppointmentComponent implements OnInit {
 		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
+
+		this.personMasterDataService.getIdentificationTypes()
+			.subscribe(identificationTypes => {
+				this.identificationType = identificationTypes.find(identificationType => identificationType.id==this.params.appointmentData.patient.identificationTypeId);
+			});
 	}
 
 	private setMedicalCoverages(): void {
@@ -179,13 +182,16 @@ export class AppointmentComponent implements OnInit {
 
 	edit(): void {
 		if (this.formEdit.valid) {
-			if (this.isAssigned()
-				&& this.formEdit.controls.newCoverageData.dirty
-				&& this.formEdit.controls.newCoverageData.value) {
-				const patientMedicalCoverageId = this.formEdit.controls.newCoverageData.value.id;
-				this.coverageData = this.formEdit.controls.newCoverageData.value
-				this.updateCoverageData(patientMedicalCoverageId);
-				this.setCoverageText(this.formEdit.controls.newCoverageData.value);
+			if (this.isAssigned()) {
+				if (this.formEdit.controls.newCoverageData.value) {
+					this.coverageData = this.formEdit.controls.newCoverageData.value;
+					this.updateCoverageData(this.coverageData.id);
+					this.setCoverageText(this.coverageData);
+				} else {
+					this.coverageData = null;
+					this.coverageNumber = null;
+					this.updateCoverageData(null);
+				}
 			}
 			if (this.formEdit.controls.phoneNumber.dirty){
 				this.updatePhoneNumber(this.formEdit.controls.phoneNumber.value);
@@ -257,9 +263,12 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	openMedicalCoverageDialog(): void {
+		this.formEdit.controls.newCoverageData.setValue(null);
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {
+				identificationTypeId: this.params.appointmentData.patient.identificationTypeId,
 				identificationNumber: this.params.appointmentData.patient.identificationNumber,
+				genderId: this.params.appointmentData.patient.genderId,
 				initValues: this.patientMedicalCoverages,
 			}
 		});
@@ -323,6 +332,9 @@ export class AppointmentComponent implements OnInit {
 		return this.patientNameService.getPatientName(appointmentInformation.patient.fullName, appointmentInformation.patient.fullNameWithNameSelfDetermination);
 	}
 
+	clear(): void {
+		this.formEdit.controls.newCoverageData.setValue(null);
+	}
 }
 
 export interface PatientAppointmentInformation {
@@ -330,8 +342,10 @@ export interface PatientAppointmentInformation {
 		id: number,
 		fullName?: string
 		identificationNumber?: string,
+		identificationTypeId?: number,
 		typeId: number,
-		fullNameWithNameSelfDetermination?: string
+		fullNameWithNameSelfDetermination?: string,
+		genderId?: number,
 	};
 	appointmentId: number;
 	appointmentStateId: number;

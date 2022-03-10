@@ -1,9 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AllergyConditionDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;

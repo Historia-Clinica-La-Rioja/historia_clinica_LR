@@ -11,7 +11,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OauthConfigDto {
 
-	private String loginUrl;
+	private String issuerUrl;
+
+	private String clientId;
+
+	private String logoutUrl;
 
 	private Boolean enabled;
 

@@ -4,8 +4,9 @@ import {
     Datagrid,
     TextField,
     Filter,
-    TextInput, 
-    ReferenceField
+    TextInput,
+    ReferenceField,
+    FunctionField
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
 
@@ -31,12 +32,18 @@ const SnvsList = props => (
             <TextField source="groupEventId" />
             <TextField source="eventId" />
             <TextField source="manualClassificationId" />
-            <TextField source="patientId" />
+            <ReferenceField source="patientId" reference="person" link={false}>
+                <FunctionField render={patient => `${patient.firstName} ${patient.lastName}`} />
+            </ReferenceField>
             <TextField source="snomedSctid" />
             <TextField source="snomedPt" />
             <TextField source="status" />
             <TextField source="responseCode" />
-            <TextField source="professionalId" />
+            <ReferenceField source="professionalId" reference="healthcareprofessionals" link={false}>
+                <ReferenceField source="personId" reference="person" link={false}>
+                    <FunctionField render={professional => `${professional.firstName} ${professional.lastName}`} />
+                </ReferenceField>
+            </ReferenceField>
             <ReferenceField source="institutionId" reference="institutions" link={false}>
                 <TextField source="name" />
             </ReferenceField>

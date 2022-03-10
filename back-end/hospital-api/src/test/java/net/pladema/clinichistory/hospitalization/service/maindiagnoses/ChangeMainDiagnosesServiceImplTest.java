@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -38,6 +39,9 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     @Autowired
     private PatientDischargeRepository patientDischargeRepository;
 
+	@Mock
+	private DateTimeProvider dateTimeProvider;
+
     @Mock
     private DocumentService documentService;
 
@@ -51,7 +55,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
-                evolutionNoteDocumentRepository,
+                dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService
         );

@@ -3,10 +3,16 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { LoggedUserService } from '../../auth/services/logged-user.service';
 import { ContextService } from './context.service';
-import { ERole, RoleAssignment } from '@api-rest/api-model';
+import { ERole, RoleAssignmentDto } from '@api-rest/api-model';
 import { anyMatch } from '@core/utils/array.utils';
 
 const itemHasAnyRole = (itemRoles: ERole[], userRoles: ERole[]) => itemRoles.some(role => userRoles.includes(role));
+
+const filterRoleAssignment = (institutionId: number) =>
+	(assignments: RoleAssignmentDto[]) =>
+	assignments.filter(assignment => assignment.institutionId === institutionId);
+
+const mapToRole = (assignments: RoleAssignmentDto[]) => assignments.map(assignment => assignment.role);
 
 @Injectable({
 	providedIn: 'root'
@@ -18,13 +24,21 @@ export class PermissionsService {
 		private contextService: ContextService,
 	) { }
 
+	get contextRoleAssignments$(): Observable<RoleAssignmentDto[]> {
+		return this.contextService.institutionId$.pipe(
+			switchMap(() => this.loggedUserService.assignments$),
+			map(filterRoleAssignment(this.contextService.institutionId)),
+		);
+	}
+
 	/**
 	 * Permite obtener las asignaciones del usuario en el contexto actual.
 	 */
 	public contextAssignments$(): Observable<ERole[]> {
 		return this.contextService.institutionId$.pipe(
 			switchMap(() => this.loggedUserService.assignments$),
-			map(assignments => this._mapAssignments(assignments, this.contextService.institutionId))
+			map(filterRoleAssignment(this.contextService.institutionId)),
+			map(mapToRole)
 		);
 	}
 
@@ -33,7 +47,8 @@ export class PermissionsService {
 	 */
 	public filterAssignments$(institutionId: number): Observable<ERole[]> {
 		return this.loggedUserService.assignments$.pipe(
-			map(assignments => this._mapAssignments(assignments, institutionId))
+			map(filterRoleAssignment(institutionId)),
+			map(mapToRole)
 		);
 	}
 
@@ -45,12 +60,6 @@ export class PermissionsService {
 		return this.contextAssignments$().pipe(
 			map(contextAssignments => items.filter(item => item.permissions ? itemHasAnyRole(item.permissions, contextAssignments) : true)),
 		);
-	}
-
-	private _mapAssignments(assignments: RoleAssignment[], institutionId: number): ERole[] {
-		return assignments
-			.filter(assignment => assignment.institutionId === institutionId)
-			.map(assignment => assignment.role);
 	}
 
 	public hasContextAssignments$(assignments: ERole[]): Observable<boolean> {

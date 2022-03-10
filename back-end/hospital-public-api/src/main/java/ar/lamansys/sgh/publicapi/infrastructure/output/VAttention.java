@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "v_attention")
@@ -33,7 +33,7 @@ public class VAttention extends SGXAuditableEntity<Long> {
     private Integer clinicalSpecialityId;
 
     @Column(name = "performed_date")
-    private LocalDate performedDate;
+    private LocalDateTime performedDate;
 
     @Column(name = "scope_id")
     private Short scopeId;

@@ -1,0 +1,45 @@
+version: '3'
+services:
+  hsi-db:
+    image: postgres:11
+    container_name: hsi-db
+    environment:
+      POSTGRES_PASSWORD: Local123
+      POSTGRES_DB: hospitalDB
+    volumes:
+      - ./ci/dbapgsql/:/app/pg/
+      - ./.docker-data/postgres/:/data/
+    ports:
+      - "5432:5432"
+    restart: always
+
+  hsi-cubejs:
+    build: ./cubejs
+    container_name: hsi-cubejs
+    ports:
+        - 4000:4000
+    environment:
+      CUBEJS_DB_HOST: hsi-db
+
+  hsi-backend:
+    build: ./back-end
+    container_name: hsi-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DATABASE_IP_PORT: hsi-db:5432
+      DOCUMENT_ROOT_DIRECTORY: /var/hsi/documents
+      CUBEJS_URL: http://hsi-cubejs:4000/cubejs-api/v1
+    volumes:
+      - ./.docker-data/documents/:/var/hsi/documents
+    ports:
+      - "8080:8080"
+
+  hsi-frontend:
+    build: ./front-end
+    container_name: hsi-frontend
+    environment:
+      API_IP_PORT: hsi-backend:8080
+    ports:
+      - "4200:8280"
+
+  # hsi-mqtt:

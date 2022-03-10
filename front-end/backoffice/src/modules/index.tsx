@@ -30,6 +30,7 @@ import careLines from "./carelines";
 import clinicalspecialtycarelines from "./clinicalspecialtycarelines";
 import documenttypes from "./documenttypes";
 import documentfiles from "./documentfiles";
+import properties from "./properties";
 import restClientMeasures from "./rest-client-measures";
 import medicalCoverage from "./medicalcoverage";
 import privatehealthinsuranceplans from "./privatehealthinsuranceplans";
@@ -54,7 +55,7 @@ const resourcesAdminInstitucional = [
     <Resource name="departments" />,
 ];
 
-const resourcesAdminRoot = [
+const resourcesAdminRoot = (permissions: SGXPermissions) => [
     
     <Resource name="professionalspecialties" {...professionalspecialties} />,
     <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
@@ -81,7 +82,8 @@ const resourcesAdminRoot = [
     <Resource name="medicalcoverages" {...medicalCoverage} />,
     <Resource name="medicalcoveragetypes" />,
     <Resource name="privatehealthinsuranceplans" {...privatehealthinsuranceplans} />,
-
+    <Resource name="medicalcoveragesmerge" />,
+    <Resource name="properties" {...properties(permissions)} />
 
     // Ampliación
     // 
@@ -90,7 +92,7 @@ const resourcesAdminRoot = [
 const resourcesFor = (permissions: SGXPermissions) =>
     permissions.hasAnyAssignment(
         ROOT, ADMINISTRADOR
-    ) ? resourcesAdminRoot : resourcesAdminInstitucional;
+    ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional;
 
 const resources = (permissions: SGXPermissions) => [
     <Resource name="person" {...person(permissions)} />,

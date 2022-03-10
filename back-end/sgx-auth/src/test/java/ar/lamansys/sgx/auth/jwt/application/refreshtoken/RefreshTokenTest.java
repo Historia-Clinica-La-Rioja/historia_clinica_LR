@@ -5,6 +5,7 @@ import ar.lamansys.sgx.auth.jwt.application.refreshtoken.exceptions.BadRefreshTo
 import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
 import ar.lamansys.sgx.auth.jwt.domain.user.UserInfoBo;
 import ar.lamansys.sgx.auth.jwt.domain.user.UserInfoStorage;
+import ar.lamansys.sgx.auth.oauth.application.RefreshOAuthToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -27,11 +28,14 @@ class RefreshTokenTest {
     private UserInfoStorage userInfoStorage;
 
     @Mock
+    private RefreshOAuthToken refreshOAuthToken;
+
+    @Mock
     private GenerateToken generateToken;
 
     @BeforeEach
     void setUp(){
-        refreshToken = new RefreshTokenImpl("test_secret", userInfoStorage, generateToken);
+        refreshToken = new RefreshTokenImpl("test_secret", userInfoStorage, generateToken, refreshOAuthToken);
     }
 
     @Test

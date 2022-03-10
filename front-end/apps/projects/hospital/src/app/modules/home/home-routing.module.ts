@@ -10,16 +10,24 @@ import { InstitucionesComponent } from './routes/instituciones/instituciones.com
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SettingsComponent } from './routes/settings/settings.component';
 
+export enum HomeRoutes {
+	Home = '',						// pantalla inicial
+	Profile = 'profile',			// Perfil del usuario
+	Settings = 'settings',			// Configuración
+	Extension = 'extension', 		// Extensión
+
+}
+
 const routes: Routes = [
 	{
 		path: '',
 		component: HomeComponent,
 		children: [
 			{ path: '', pathMatch: 'full', component: InstitucionesComponent },
-			{ path: 'profile', component: ProfileComponent },
-			{ path: 'extension/:menuItemId', component: SystemExtensionComponent },
+			{ path: HomeRoutes.Profile, component: ProfileComponent },
+			{ path: `${HomeRoutes.Extension}/:menuItemId`, component: SystemExtensionComponent },
 			{
-				path: 'settings',
+				path: HomeRoutes.Settings,
 				component: SettingsComponent,
 				canActivate: [FeatureFlagGuard, RoleGuard],
 				data: { featureFlag: AppFeature.HABILITAR_CONFIGURACION,

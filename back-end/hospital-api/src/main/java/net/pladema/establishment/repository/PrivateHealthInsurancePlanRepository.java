@@ -15,7 +15,7 @@ public interface PrivateHealthInsurancePlanRepository extends JpaRepository<Priv
     @Transactional(readOnly = true)
     @Query("SELECT phip FROM PrivateHealthInsurancePlan as phip " +
             "WHERE phip.privateHealthInsuranceId = :privateHealthInsuranceId " +
-            "AND phip.plan = :plan ")
+            "AND LOWER(phip.plan) = :plan ")
     PrivateHealthInsurancePlan findByIdAndPlan(@Param("privateHealthInsuranceId") Integer privateHealthInsuranceId, @Param("plan") String plan);
 
     @Transactional(readOnly = true)

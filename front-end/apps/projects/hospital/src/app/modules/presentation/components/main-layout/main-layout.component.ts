@@ -3,6 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 
 import { AuthenticationService } from '../../../auth/services/authentication.service';
 import { MenuItem } from '../menu/menu.component';
+import { OauthAuthenticationService } from "../../../auth/services/oauth-authentication.service";
 
 @Component({
 	selector: 'app-main-layout',
@@ -14,9 +15,11 @@ export class MainLayoutComponent implements OnDestroy {
 	mobileQuery: MediaQueryList;
 	private _mobileQueryListener: () => void;
 	private _menuItems: MenuItem[];
-	@Input() userInfo: UserInfo;
 
-	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, ) {
+	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+				private authenticationService: AuthenticationService,
+				private oauthAuthenticationService: OauthAuthenticationService,
+	) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
 		this.mobileQuery.addEventListener('change', this._mobileQueryListener);
@@ -37,10 +40,6 @@ export class MainLayoutComponent implements OnDestroy {
 
 	logout(): void {
 		this.authenticationService.logout();
+		this.oauthAuthenticationService.logout();
 	}
-}
-
-export class UserInfo {
-	fullName?: string;
-	userName?: string;
 }

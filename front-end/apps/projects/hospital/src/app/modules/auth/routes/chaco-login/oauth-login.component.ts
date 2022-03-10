@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../services/authentication.service';
-import { JWTokenDto } from '@api-rest/api-model';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '@api-rest/services/auth.service';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { OauthAuthenticationService } from "../../services/oauth-authentication.service";
+import { AppRoutes } from "../../../../app-routing.module";
 
 @Component({
 	selector: 'app-oauth-login',
@@ -11,29 +9,30 @@ import { Observable } from 'rxjs';
 	styleUrls: ['./oauth-login.component.scss']
 })
 export class OauthLoginComponent implements OnInit {
+
 	constructor(
-		private readonly authService: AuthService,
-		private readonly route: ActivatedRoute,
-		private readonly authenticationService: AuthenticationService,
+		private readonly oauthAuthenticationService: OauthAuthenticationService,
+		private router: Router,
 	) { }
 
-	isLoading = true;
+	private timeout = 3000;
+	private isLoading = true;
 
 	ngOnInit(): void {
-		const code = this.route.snapshot.queryParamMap.get('code');
-		this.getOauthUrl(code).subscribe(value => {
-			this.isLoading = false;
-			localStorage.setItem('token', value.token);
-			this.authenticationService.go();
+
+		this.oauthAuthenticationService.getUserAuthenticated$().subscribe(() => {
+			this.router.navigate([AppRoutes.Home]);
 		});
+
+		setTimeout(() => {
+			this.isLoading = false;
+			this.router.navigate([AppRoutes.Home]);
+		}, this.timeout);
+
 	}
 
 	loading() {
 		return this.isLoading;
-	}
-
-	getOauthUrl(code): Observable<JWTokenDto> {
-		return this.authService.loginOauth(code);
 	}
 
 }

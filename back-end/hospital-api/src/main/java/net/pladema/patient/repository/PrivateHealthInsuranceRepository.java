@@ -16,6 +16,7 @@ public interface PrivateHealthInsuranceRepository extends JpaRepository<PrivateH
     @Transactional(readOnly = true)
     @Query("SELECT new net.pladema.patient.repository.domain.PrivateHealthInsuranceVo(mc.id, mc.name, mc.cuit) " +
             "FROM MedicalCoverage as mc " +
-            "JOIN PrivateHealthInsurance as phi ON (phi.id = mc.id) ")
+            "JOIN PrivateHealthInsurance as phi ON (phi.id = mc.id) " +
+            "WHERE mc.deleteable.deleted = false")
     List<PrivateHealthInsuranceVo> getAllWithNames(Sort sort);
 }

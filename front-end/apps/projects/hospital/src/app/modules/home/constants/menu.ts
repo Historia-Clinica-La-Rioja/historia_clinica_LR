@@ -10,12 +10,6 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		options: {exact: true},
 	},
 	{
-		text: 'app.menu.PERFIL',
-		icon: 'account_circle',
-		id: 'home_profile',
-		url: '/home/profile',
-	},
-	{
 		text: 'app.menu.CONFIGURACION',
 		icon: 'settings',
 		id: 'home_settings',

@@ -16,16 +16,18 @@ export class AntropometricosSummaryComponent implements OnInit {
 	@Input() internmentEpisodeId: number;
 	@Input() anthropometricData$: Observable<AnthropometricDataDto>;
 	@Input() editable = false;
+	@Input() hideBloodType = false;
 
 	antropometricosSummary = ANTROPOMETRICOS;
 
 	details: DetailBox[] = [];
 
-	private readonly LABELS = {
+	private LABELS = {
 		bloodType: 'Grupo sanguíneo',
 		height: 'Talla (cm)',
 		weight: 'Peso (kg)',
 		bmi: 'IMC',
+		headCircumference: 'Perímetro cefálico (cm)',
 	};
 
 	constructor(
@@ -33,6 +35,9 @@ export class AntropometricosSummaryComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		if (this.hideBloodType) {
+			delete this.LABELS.bloodType;
+		}
 		this.updateAnthropometricData();
 	}
 
@@ -40,14 +45,17 @@ export class AntropometricosSummaryComponent implements OnInit {
 		this.anthropometricData$.subscribe(
 			(anthropometricData: AnthropometricDataDto) => {
 				if (anthropometricData) {
+					if (anthropometricData.bmi?.value) {
+						anthropometricData.bmi.value = this.truncateIfNecessary(anthropometricData.bmi?.value);
+					}
 					this.details = [];
-					Object.keys(anthropometricData).forEach(
+					Object.keys(this.LABELS).forEach(
 						key => {
-							if (Object.keys(this.LABELS).includes(key))
+							if (anthropometricData[key]?.value)
 								this.details.push(
 									{
 										description: this.LABELS[key],
-										value: anthropometricData[key]?.value
+										value: anthropometricData[key].value
 									}
 								);
 						}
@@ -73,4 +81,21 @@ export class AntropometricosSummaryComponent implements OnInit {
 		}
 		);
 	}
+
+	private truncateIfNecessary(floatValue: string): string {
+		if (!floatValue)
+			return undefined;
+
+		const lastPartValue = floatValue.substring(floatValue.length - 3);
+		if (lastPartValue === '.00') {
+			return floatValue.substring(0, floatValue.length - 3);
+		}
+
+		if (lastPartValue[2] === '0') {
+			return floatValue.substring(0, floatValue.length - 1);
+		}
+
+		return floatValue;
+	}
+
 }

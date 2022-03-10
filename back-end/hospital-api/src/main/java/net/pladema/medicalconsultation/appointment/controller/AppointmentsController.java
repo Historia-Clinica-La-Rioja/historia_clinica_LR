@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBasicPatientDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
@@ -20,6 +21,8 @@ import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.person.controller.dto.BasicDataPersonDto;
+import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,7 +139,8 @@ public class AppointmentsController {
     }
 
     private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
-        AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, patientData.get(appointmentBo.getPatientId()));
+		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(appointmentBo.getPatientId()),appointmentBo.getPhoneNumber());
+		AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, appointmentBasicPatientDto);
         LOG.debug("AppointmentListDto id result {}", result.getId());
         LOG.trace(OUTPUT, result);
         return result;
@@ -196,7 +200,7 @@ public class AppointmentsController {
     public ResponseEntity<Boolean> updateMedicalCoverage(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "appointmentId") Integer appointmentId,
-            @RequestParam(name = "patientMedicalCoverageId") Integer patientMedicalCoverageId) {
+            @RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
         LOG.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}",
                 institutionId, appointmentId, patientMedicalCoverageId);
         boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);
@@ -231,5 +235,11 @@ public class AppointmentsController {
             @PathVariable(name = "appointmentId") Integer appointmentId) {
         notifyPatient.run(institutionId, appointmentId);
     }
+
+	private AppointmentBasicPatientDto toAppointmentBasicPatientDto(BasicPatientDto basicData, String phoneNumber) {
+		BasicDataPersonDto basicPatientDto = basicData.getPerson();
+		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(basicPatientDto.getFirstName(), basicPatientDto.getLastName(), basicPatientDto.getIdentificationNumber(), basicPatientDto.getIdentificationTypeId(), phoneNumber, basicPatientDto.getGender().getId(), basicPatientDto.getNameSelfDetermination());
+		return new AppointmentBasicPatientDto(basicData.getId(), basicPersonalDataDto, basicData.getTypeId());
+	}
 
 }

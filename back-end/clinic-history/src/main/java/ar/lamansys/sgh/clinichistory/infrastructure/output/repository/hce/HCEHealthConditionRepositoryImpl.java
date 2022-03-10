@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -185,7 +186,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                                 (String)h[3],
                                 (boolean)h[4],
                                 (Integer)h[5],
-                                h[6] != null ? ((Date)h[6]).toLocalDate() : null,
+                                h[6] != null ? ((Timestamp)h[6]).toLocalDateTime().toLocalDate() : null,
                                 h[7] != null ? ((Date)h[7]).toLocalDate() : null,
                                 (Integer) h[8]))
 

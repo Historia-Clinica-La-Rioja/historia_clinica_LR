@@ -22,7 +22,7 @@ public class PersonMedicalCoverageBo {
 	
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public PersonMedicalCoverageBo(@JsonProperty("id") Integer id, @JsonProperty("rnos") String rnos, @JsonProperty("cobertura") String cobertura,
-								   String cuit, @JsonProperty("servicio")  String servicio, @JsonProperty("fechaConsulta") String fechaConsulta) {
+								   @JsonProperty("cuit") String cuit, @JsonProperty("servicio")  String servicio, @JsonProperty("fechaConsulta") String fechaConsulta) {
 		this.id = id;
 		this.rnos = rnos;
 		this.name = cobertura;

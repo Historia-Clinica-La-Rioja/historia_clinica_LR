@@ -160,6 +160,7 @@ export interface AnnexIIDto {
 export interface AnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;
+    headCircumference?: ClinicalObservationDto;
     height?: ClinicalObservationDto;
     weight?: ClinicalObservationDto;
 }
@@ -256,6 +257,7 @@ export interface BMPersonDto extends APersonDto {
 export interface BackofficeCoverageDto extends Serializable {
     acronym?: string;
     cuit: string;
+    enabled: boolean;
     id: number;
     name: string;
     rnos?: number;
@@ -622,6 +624,7 @@ export interface DocumentDto {
     medications: MedicationDto[];
     notes: DocumentObservationsDto;
     patientId: number;
+    performedDate: DateDto;
     personalHistories: HealthHistoryConditionDto[];
     problems: ProblemDto[];
     procedures: ProcedureDto[];
@@ -886,7 +889,7 @@ export interface HCEAllergyDto extends ClinicalTermDto {
 
 export interface HCEAnthropometricDataDto extends Serializable {
     bloodType?: HCEEffectiveClinicalObservationDto;
-    bmi?: HCEClinicalObservationDto;
+    bmi?: HCEEffectiveClinicalObservationDto;
     headCircumference?: HCEEffectiveClinicalObservationDto;
     height?: HCEEffectiveClinicalObservationDto;
     weight?: HCEEffectiveClinicalObservationDto;
@@ -1189,6 +1192,7 @@ export interface InternmentEpisodeADto {
     institutionId: number;
     noteId: number;
     patientId: number;
+    patientMedicalCoverageId: number;
     responsibleContact?: ResponsibleContactDto;
     responsibleDoctorId: number;
 }
@@ -1260,7 +1264,8 @@ export interface LimitedPatientSearchDto {
     patientList: PatientSearchDto[];
 }
 
-export interface LoggedPersonDto extends Serializable {
+export interface LoggedPersonDto {
+    avatar?: string;
     firstName: string;
     lastName: string;
 }
@@ -1455,9 +1460,21 @@ export interface NursingVitalSignDto extends Serializable {
     temperature?: EffectiveClinicalObservationDto;
 }
 
+export interface OAuthUserInfoDto {
+    email: string;
+    email_verified: boolean;
+    family_name: string;
+    given_name: string;
+    name: string;
+    preferred_username: string;
+    sub: string;
+}
+
 export interface OauthConfigDto {
+    clientId: string;
     enabled: boolean;
-    loginUrl: string;
+    issuerUrl: string;
+    logoutUrl: string;
 }
 
 export interface OccupationDto {
@@ -1782,7 +1799,7 @@ export interface PatientType extends Serializable {
 }
 
 export interface PermissionsDto {
-    roleAssignments: RoleAssignment[];
+    roleAssignments: RoleAssignmentDto[];
 }
 
 export interface PersonBasicDataResponseDto extends Serializable {
@@ -2020,9 +2037,10 @@ export interface ResponsibleDoctorDto extends Serializable {
     licence: string;
 }
 
-export interface RoleAssignment extends Serializable {
+export interface RoleAssignmentDto {
     institutionId: number;
     role: ERole;
+    roleDescription: string;
 }
 
 export interface RoleDto {
@@ -2304,8 +2322,11 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
 }
 
 export interface VitalSignDto extends Serializable {
+    bloodGlucose?: EffectiveClinicalObservationDto;
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
+    cardiovascularRisk?: EffectiveClinicalObservationDto;
     diastolicBloodPressure?: EffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
     heartRate?: EffectiveClinicalObservationDto;
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure?: EffectiveClinicalObservationDto;
@@ -2318,8 +2339,11 @@ export interface VitalSignObservationDto extends Serializable {
 }
 
 export interface VitalSignsReportDto extends Serializable {
+    bloodGlucose?: ReportClinicalObservationDto;
     bloodOxygenSaturation?: ReportClinicalObservationDto;
+    cardiovascularRisk?: ReportClinicalObservationDto;
     diastolicBloodPressure?: ReportClinicalObservationDto;
+    glycosylatedHemoglobin?: ReportClinicalObservationDto;
     heartRate?: ReportClinicalObservationDto;
     respiratoryRate?: ReportClinicalObservationDto;
     systolicBloodPressure?: ReportClinicalObservationDto;
@@ -2354,6 +2378,7 @@ export const enum AppFeature {
     AGREGAR_MEDICOS_ADICIONALES = "AGREGAR_MEDICOS_ADICIONALES",
     HABILITAR_DESCARGA_DOCUMENTOS_PDF = "HABILITAR_DESCARGA_DOCUMENTOS_PDF",
     HABILITAR_NOMBRE_AUTOPERCIBIDO = "HABILITAR_NOMBRE_AUTOPERCIBIDO",
+    HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA = "HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA",
 }
 
 export const enum EDocumentSearch {

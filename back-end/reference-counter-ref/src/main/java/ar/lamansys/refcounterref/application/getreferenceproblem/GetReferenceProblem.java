@@ -1,9 +1,6 @@
 package ar.lamansys.refcounterref.application.getreferenceproblem;
 
-import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
-import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceExceptionEnum;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
-import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -16,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -57,6 +58,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Autowired
     private DocumentRepository documentRepository;
 
+	@Mock
+	private DateTimeProvider dateTimeProvider;
+
     @Mock
     private DocumentService documentService;
 
@@ -67,13 +71,14 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
-                evolutionNoteDocumentRepository,
+                dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService
         );
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
-                internmentEpisodeService);
+                internmentEpisodeService,
+                dateTimeProvider);
     }
 
     @Test
@@ -146,7 +151,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidDiagnosis() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -175,7 +180,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidImmunizations() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -194,7 +199,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidAnthropometricData() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -219,7 +224,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidVitalSign() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -242,7 +247,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidPersonalHistories() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -274,7 +279,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocument_withInvalidFamilyHistories() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
@@ -305,7 +310,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidMedications() {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
 
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RoleAssignment, InstitutionDto } from '@api-rest/api-model';
+import { RoleAssignmentDto, InstitutionDto } from '@api-rest/api-model';
 
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { map, mergeMap } from 'rxjs/operators';
@@ -19,7 +19,7 @@ export class ProfileComponent {
 		loggedUserService: LoggedUserService,
 	) {
 		this.roleAssignments$ = loggedUserService.assignments$.pipe(
-			mergeMap((roleAssignments: RoleAssignment[]) =>
+			mergeMap((roleAssignments: RoleAssignmentDto[]) =>
 				institutionService.getInstitutions(roleAssignments.map(roleAssignment => roleAssignment.institutionId))
 					.pipe(
 						map((institutions: InstitutionDto[]) => roleAssignments.map(roleAssignment => ({

@@ -32,6 +32,7 @@ import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-cur
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
+import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -78,6 +79,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,
+		UserBadgeComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -133,6 +135,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,
+		UserBadgeComponent,
 		// dialogs
 		MedicalCoverageComponent,
 		// directives

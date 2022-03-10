@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
-import net.pladema.user.application.hasbackofficerole.HasBackofficeRoleImpl;
+import net.pladema.user.application.hasbackofficerole.HasBackofficeRole;
 import net.pladema.user.application.updateuserrole.UpdateUserRole;
 import net.pladema.user.infrastructure.input.rest.dto.UserRoleDto;
 import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
@@ -32,7 +32,7 @@ public class UserRoleController {
 
     private final UpdateUserRole updateUserRole;
 
-    private final HasBackofficeRoleImpl hasBackofficeRole;
+    private final HasBackofficeRole hasBackofficeRole;
 
     @GetMapping()
     public ResponseEntity<List<UserRoleDto>> getRolesByUser(

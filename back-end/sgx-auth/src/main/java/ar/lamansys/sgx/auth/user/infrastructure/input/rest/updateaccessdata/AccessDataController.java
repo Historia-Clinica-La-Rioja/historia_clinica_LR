@@ -1,7 +1,6 @@
 package ar.lamansys.sgx.auth.user.infrastructure.input.rest.updateaccessdata;
 
-import ar.lamansys.sgx.auth.user.application.resetpassword.ResetPassword;
-import ar.lamansys.sgx.auth.user.application.updateusername.UpdateUsername;
+import ar.lamansys.sgx.auth.user.application.updateUsernameAndPassword.UpdateUsernameAndPassword;
 import ar.lamansys.sgx.auth.user.infrastructure.input.rest.updateaccessdata.dto.AccessDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +17,10 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("auth/access-data")
 public class AccessDataController {
     private final Logger logger;
-    private final ResetPassword resetPassword;
-    private final UpdateUsername updateUsername;
+    private final UpdateUsernameAndPassword updateUsernameAndPassword;
 
-    public AccessDataController(ResetPassword resetPassword,
-                                UpdateUsername updateUsername) {
-        this.resetPassword = resetPassword;
-        this.updateUsername = updateUsername;
+    public AccessDataController(UpdateUsernameAndPassword updateUsernameAndPassword) {
+        this.updateUsernameAndPassword = updateUsernameAndPassword;
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
@@ -32,7 +28,6 @@ public class AccessDataController {
     @ResponseStatus(HttpStatus.OK)
     public void updateAccessData(@NotNull @RequestBody AccessDataDto accessDataDto) {
         logger.debug("Input -> set access data to user {}", accessDataDto.getUsername());
-        updateUsername.execute(accessDataDto.getUserId(), accessDataDto.getUsername());
-        resetPassword.execute(accessDataDto.getToken(), accessDataDto.getPassword());
+        updateUsernameAndPassword.run(accessDataDto.getToken(), accessDataDto.getUsername(), accessDataDto.getPassword());
     }
 }

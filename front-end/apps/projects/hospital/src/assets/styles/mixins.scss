@@ -68,10 +68,20 @@
 	@include turnos-mixins($theme);
 	@include historia-clinica-mixins($theme);
 	$palette-primary: map-get($theme, primary);
+	$palette-warn: map-get($theme, warn);
 
-    .primary{
+    .primary {
         color: mat-color($palette-primary);
     }
+
+	.warn-background {
+        background-color: mat-color($palette-warn);
+		color: mat-color($palette-warn, 50);
+	}
+
+	.headers-card-background {
+		background-color: mat-color($palette-primary, 50);
+	}
 }
 
 @mixin font-weight-regular {

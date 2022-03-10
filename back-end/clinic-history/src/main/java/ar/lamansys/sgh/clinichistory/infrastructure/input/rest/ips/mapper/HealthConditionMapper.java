@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
 import jdk.jfr.Name;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;

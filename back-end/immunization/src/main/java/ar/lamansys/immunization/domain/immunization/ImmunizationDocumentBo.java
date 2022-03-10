@@ -2,6 +2,7 @@ package ar.lamansys.immunization.domain.immunization;
 
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -21,12 +22,15 @@ public class ImmunizationDocumentBo {
 
     private final List<ImmunizationInfoBo> immunizations;
 
+    private final LocalDate performedDate;
+
     public ImmunizationDocumentBo(Long id, Integer patientId,
                                   Integer encounterId,
                                   Integer institutionId,
                                   Integer doctorId,
                                   Integer clinicalSpecialtyId,
-                                  List<ImmunizationInfoBo> immunizations) {
+                                  List<ImmunizationInfoBo> immunizations,
+                                  LocalDate performedDate) {
         this.id = id;
         this.patientId = patientId;
         this.encounterId = encounterId;
@@ -34,5 +38,6 @@ public class ImmunizationDocumentBo {
         this.doctorId = doctorId;
         this.clinicalSpecialtyId = clinicalSpecialtyId;
         this.immunizations = immunizations;
+        this.performedDate = performedDate;
     }
 }

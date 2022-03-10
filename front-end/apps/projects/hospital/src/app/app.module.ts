@@ -22,6 +22,7 @@ import { ApiRestModule } from '@api-rest/api-rest.module';
 import { CoreModule } from '@core/core.module';
 //
 import { environment } from '@environments/environment';
+import { OAuthModule } from "angular-oauth2-oidc";
 
 registerLocaleData(localeEsAr, localeEsArExtras);
 
@@ -51,6 +52,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		ServiceWorkerModule.register('ngsw-worker.js', {
 			enabled: environment.production,
 		}),
+		OAuthModule.forRoot(),
 	],
 	providers: [
 		httpInterceptorProviders,

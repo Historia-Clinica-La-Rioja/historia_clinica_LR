@@ -14,7 +14,8 @@
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta",
 			"TURNOS": "Gestión de turnos",
-			"REPORTES": "Reportes"
+			"REPORTES": "Reportes",
+			"LOGOUT": "Cerrar sesión"
 		}
 	},
 	"buttons": {
@@ -78,6 +79,9 @@
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"
+	},
+	"profile": {
+		"PICTURE": "Foto de perfil"
 	},
 	"version": {
 		"SHORTENED": "V. {{versionNumber}}"

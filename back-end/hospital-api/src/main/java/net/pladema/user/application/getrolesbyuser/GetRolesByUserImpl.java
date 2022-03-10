@@ -2,7 +2,6 @@ package net.pladema.user.application.getrolesbyuser;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.user.application.port.UserRoleStorage;
 import net.pladema.user.domain.UserRoleBo;
 import org.springframework.stereotype.Service;

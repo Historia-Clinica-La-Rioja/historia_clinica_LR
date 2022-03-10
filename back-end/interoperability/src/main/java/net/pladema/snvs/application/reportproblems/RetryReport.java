@@ -38,6 +38,7 @@ public class RetryReport {
 		ReportCommandBo toRun = new ReportCommandBo(queryResult);
 		SnvsReportBo response = reportPort.run(reportBuilder.buildReport(toRun));
 		response.setProblemBo(toRun.getProblemBo());
+		response.setId(snvsReportId);
 		response = reportStorage.save(response);
 		return response;
 	}

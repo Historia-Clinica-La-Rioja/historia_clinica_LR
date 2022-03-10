@@ -7,6 +7,7 @@ import ar.lamansys.nursing.domain.NursingProcedureBo;
 import ar.lamansys.nursing.domain.NursingVitalSignBo;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +38,13 @@ public class NursingDocumentBo {
 
     private final List<NursingProblemBo> problems;
 
+    private final LocalDate performedDate;
+
     public NursingDocumentBo(Long id,
                              NursingConsultationBo nursingConsultationBo,
                              Integer encounterId,
-                             Integer doctorId) {
+                             Integer doctorId,
+                             LocalDate performedDate) {
 
         List <NursingProblemBo> problems = new ArrayList<>();
         problems.add(nursingConsultationBo.getProblem());
@@ -57,6 +61,7 @@ public class NursingDocumentBo {
         this.procedures = nursingConsultationBo.getProcedures();
         this.evolutionNote = nursingConsultationBo.getEvolutionNote();
         this.patientMedicalCoverage = nursingConsultationBo.getPatientMedicalCoverageId();
+        this.performedDate = performedDate;
     }
 
 }

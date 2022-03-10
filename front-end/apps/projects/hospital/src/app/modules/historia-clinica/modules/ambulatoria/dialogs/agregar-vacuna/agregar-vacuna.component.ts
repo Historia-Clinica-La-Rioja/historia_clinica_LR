@@ -52,6 +52,16 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	conceptsResultsTablePreviousForm: TableModel<any>;
 	tryToSubmitPrevious: boolean = false;
 
+	private CLEAR_CASES = {
+		condition: (form) => {
+			this.disableSchemes(form);
+			this.disableDoses(form);
+		},
+		scheme: (form) => {
+			this.disableDoses(form)
+		},
+	};
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data:
 			{
@@ -76,7 +86,6 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	}
 
 	ngOnInit(): void {
-
 
 		this.previousForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
@@ -462,20 +471,10 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	}
 
 	clear(control: AbstractControl, value: string, form: FormGroup): void {
-		switch (value) {
-			case 'condition':
-				this.disableSchemes(form);
-				this.disableDoses(form);
-				control.reset();
-				break;
-			case 'scheme':
-				this.disableDoses(form);
-				control.reset();
-				break;
-			case 'dose':
-				control.reset();
-				break;
+		if (this.CLEAR_CASES[value]) {
+			this.CLEAR_CASES[value](form);
 		}
+		control.reset();
 	}
 
 }

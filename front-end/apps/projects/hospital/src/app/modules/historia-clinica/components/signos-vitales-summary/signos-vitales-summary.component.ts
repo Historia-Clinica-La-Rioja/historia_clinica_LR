@@ -44,6 +44,9 @@ export class SignosVitalesSummaryComponent implements OnInit {
 			respiratoryRate: 'Frecuencia respiratoria',
 			temperature: 'Temperatura',
 			bloodOxygenSaturation: 'Saturación de oxígeno',
+			bloodGlucose: 'Glucemia (mg/dl)',
+			glycosylatedHemoglobin: 'Hemoglobina glicosilada (%)',
+			cardiovascularRisk: 'Riesgo cardiovascular (%)'
 		};
 		return (vitalSigns: Last2VitalSignsDto) => {
 			this.signosVitales = [];

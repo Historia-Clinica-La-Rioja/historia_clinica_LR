@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -34,12 +36,16 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
     private final FeatureFlagsService featureFlagsService;
 
+    private final DateTimeProvider dateTimeProvider;
+
     public CreateAnamnesisServiceImpl(DocumentFactory documentFactory,
                                       InternmentEpisodeService internmentEpisodeService,
-                                      FeatureFlagsService featureFlagsService) {
+                                      FeatureFlagsService featureFlagsService,
+                                      DateTimeProvider dateTimeProvider) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
         this.featureFlagsService = featureFlagsService;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
@@ -50,6 +56,9 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         assertContextValid(anamnesis);
         var internmentEpisode = internmentEpisodeService
                 .getInternmentEpisode(anamnesis.getEncounterId(), anamnesis.getInstitutionId());
+
+        LocalDateTime now = dateTimeProvider.nowDateTime();
+        anamnesis.setPerformedDate(now);
 
         anamnesis.setPatientId(internmentEpisode.getPatientId());
 
@@ -87,7 +96,7 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
             throw new ConstraintViolationException("Procedimientos repetidos", Collections.emptySet());
     }
 
-    private void assertEffectiveVitalSignTimeValid(AnamnesisBo anamnesis, LocalDate entryDate) {
+    private void assertEffectiveVitalSignTimeValid(AnamnesisBo anamnesis, LocalDateTime entryDate) {
         var validator = new EffectiveVitalSignTimeValidator();
         validator.isValid(anamnesis, entryDate);
     }

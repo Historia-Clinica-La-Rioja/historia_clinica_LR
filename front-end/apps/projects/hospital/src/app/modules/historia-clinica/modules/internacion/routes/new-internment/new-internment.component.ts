@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { scrollIntoError } from '@core/utils/form.utils';
+import { futureTimeValidation, hasError, scrollIntoError, TIME_PATTERN } from '@core/utils/form.utils';
 
 import { PersonService } from '@api-rest/services/person.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
@@ -19,7 +19,7 @@ import {
 	HealthcareProfessionalDto,
 	PersonalInformationDto,
 	PersonPhotoDto,
-	BedInfoDto, PatientMedicalCoverageDto,
+	BedInfoDto, PatientMedicalCoverageDto, BasicPatientDto,
 } from '@api-rest/api-model';
 
 import {
@@ -30,11 +30,26 @@ import { PatientBasicData } from '@presentation/components/patient-card/patient-
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { MapperService } from '@presentation/services/mapper.service';
+import { MapperService as CoreMapperService } from '@core/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BedAssignmentComponent } from './../../../../dialogs/bed-assignment/bed-assignment.component';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+import { DatePipe } from '@angular/common';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { newMoment } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
+import { map } from 'rxjs/internal/operators/map';
 const ROUTE_INTERNMENT = 'internaciones/internacion/';
+
+const MIN_YEAR = 1900;
+const MIN_MONTH = 0;
+const MIN_DAY = 1;
+
+const MIDDLE_DASH_SYMBOL = '-';
+const SLASH_SYMBOL = '/	';
+export const MIN_DATE = new Date(MIN_YEAR, MIN_MONTH, MIN_DAY);
 
 @Component({
 	selector: 'app-new-internment',
@@ -42,7 +57,11 @@ const ROUTE_INTERNMENT = 'internaciones/internacion/';
 	styleUrls: ['./new-internment.component.scss']
 })
 export class NewInternmentComponent implements OnInit {
-
+	TIME_PATTERN = TIME_PATTERN;
+	today = new Date();
+	validPreviousDays = new Date(this.today);
+	patientMedicalCoverages: PatientMedicalCoverage[] = [];
+	hasError = hasError;
 	public form: FormGroup;
 	public specialties;
 	public doctors: HealthcareProfessionalDto[];
@@ -54,7 +73,7 @@ export class NewInternmentComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 	public selectedBedInfo: BedInfoDto;
 	private readonly routePrefix;
-
+	private patientData: BasicPatientDto;
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly el: ElementRef,
@@ -64,6 +83,7 @@ export class NewInternmentComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly personService: PersonService,
 		private readonly mapperService: MapperService,
+		private readonly coreMapperService: CoreMapperService,
 		private readonly route: ActivatedRoute,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
 		public dialog: MatDialog,
@@ -71,11 +91,13 @@ export class NewInternmentComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly contextService: ContextService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly datePipe: DatePipe,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
 	ngOnInit(): void {
+		this.validPreviousDays.setDate(this.validPreviousDays.getDate() - 1);
 
 		this.route.queryParams.subscribe(params => {
 			this.patientId = Number(params.patientId);
@@ -90,18 +112,34 @@ export class NewInternmentComponent implements OnInit {
 						});
 				});
 			this.patientService.getPatientPhoto(this.patientId)
-				.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto; });
+				.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 
-			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
-				.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
+
+			this.setMedicalCoverages();
 		});
 
 		this.form = this.formBuilder.group({
+			dateTime: this.formBuilder.group({
+				date: [newMoment(), [Validators.required]],
+				time: [this.datePipe.transform(this.today, DatePipeFormat.SHORT_TIME), [Validators.required, futureTimeValidation,
+				Validators.pattern(TIME_PATTERN)]]
+			}),
+			patientMedicalCoverage: [null, [Validators.required]],
 			specialtyId: [null, [Validators.required]],
 			doctorId: [null, [Validators.required]],
 			contactName: [null],
 			contactPhoneNumber: [null],
 			contactRelationship: [null],
+		});
+
+		this.form.controls.dateTime.get('date').valueChanges.subscribe((value: Moment) => {
+			if (value?.isSame(newMoment(), 'day')) {
+				this.form.controls.dateTime.get('time').setValidators([Validators.required, futureTimeValidation,
+					Validators.pattern(TIME_PATTERN)]);
+			} else {
+				this.form.controls.dateTime.get('time').removeValidators(futureTimeValidation);
+			}
+			this.form.controls.dateTime.get('time').updateValueAndValidity();
 		});
 
 		this.internacionMasterDataService.getClinicalSpecialty().subscribe(data => {
@@ -119,9 +157,13 @@ export class NewInternmentComponent implements OnInit {
 			}
 		});
 
+		this.patientService.getPatientBasicData(Number(this.patientId)).subscribe((basicData: BasicPatientDto) => {
+			this.patientData = basicData;
+		});
 	}
 
 	save(): void {
+
 		if (this.form.valid && this.selectedBedInfo) {
 			this.openDialog();
 		} else {
@@ -175,10 +217,17 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	private mapToPersonInternmentEpisodeRequest() {
+		const newTime: string = this.form.controls.dateTime.value.time;
+		const newDatetime = new Date(this.form.controls.dateTime.value.date);
+		const medicalCoverageId = (this.form.controls?.patientMedicalCoverage?.value?.medicalCoverage?.id) ? this.form.controls.patientMedicalCoverage.value.medicalCoverage.id : null;
+		newDatetime.setHours(+newTime.substr(0, 2), +newTime.substr(3, 2), 0, 0);
+
 		const response = {
 			patientId: this.patientId,
 			bedId: this.selectedBedInfo.bed.id,
 			clinicalSpecialtyId: this.form.controls.specialtyId.value,
+			entryDate: newDatetime.toISOString(),
+			patientMedicalCoverageId: medicalCoverageId,
 			responsibleDoctorId: this.form.controls.doctorId.value,
 			responsibleContact: null
 		};
@@ -200,4 +249,52 @@ export class NewInternmentComponent implements OnInit {
 		}
 		return response;
 	}
+
+	getFullMedicalCoverageText(patientMedicalCoverage): string {
+		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
+			.filter(Boolean).join(MIDDLE_DASH_SYMBOL);
+		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber].filter(Boolean).join(SLASH_SYMBOL);
+	}
+
+	private setMedicalCoverages(): void {
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
+			.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.patientId))
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.coreMapperService.toPatientMedicalCoverage(s))
+				)
+			)
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.patientData.person.gender.id,
+				identificationNumber: this.patientData.person.identificationNumber,
+				identificationTypeId: this.patientData.person.identificationTypeId,
+				initValues: this.patientMedicalCoverages,
+			}
+
+		});
+
+		dialogRef.afterClosed().subscribe(
+			values => {
+				if (values) {
+					const patientCoverages: PatientMedicalCoverageDto[] =
+						values.patientMedicalCoverages.map(s => this.coreMapperService.toPatientMedicalCoverageDto(s));
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.patientId), patientCoverages).subscribe(
+						_ => {
+							this.setMedicalCoverages();
+							this.snackBarService.showSuccess('internaciones.new-internment.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
+						},
+						_ => this.snackBarService.showError('internaciones.new-internment.toast_messages.POST_UPDATE_COVERAGE_ERROR')
+					);
+				}
+			}
+		);
+	}
+
 }

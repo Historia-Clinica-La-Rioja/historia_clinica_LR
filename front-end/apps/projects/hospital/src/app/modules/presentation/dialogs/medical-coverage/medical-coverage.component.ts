@@ -64,7 +64,7 @@ export class MedicalCoverageComponent implements OnInit {
 			this.healthInsuranceFilteredMasterData = values;
 			this.healthInsuranceMasterData = values;
 
-			if (this.personInfo.identificationTypeId === DNI_TYPE_ID) {
+			if (this.personInfo.identificationTypeId === DNI_TYPE_ID && this.personInfo.genderId) {
 				this.renaperService.getHealthInsurance
 					({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
 					.subscribe((healthInsurances: MedicalCoverageDto[]) => {
@@ -261,6 +261,14 @@ export class MedicalCoverageComponent implements OnInit {
 			.map(s => s.id)[0];
 		const medicalCoverage = new HealthInsurance(healthInsurance.rnos, healthInsurance.acronym,
 			healthInsuranceId, healthInsurance.name, 'HealthInsuranceDto');
+
+		if(medicalCoverage.id === undefined) {
+			this.healthInsuranceService.get(parseInt(healthInsurance.rnos))
+				.subscribe(data => {
+					medicalCoverage.id = data.id;
+				})
+		}
+
 		return {
 			affiliateNumber: null,
 			medicalCoverage,

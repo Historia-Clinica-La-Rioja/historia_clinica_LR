@@ -53,13 +53,16 @@ public class InternmentEpisode extends SGXAuditableEntity<Integer> {
 	private Long epicrisisDocId;
 
 	@Column(name = "entry_date")
-	private LocalDate entryDate;
+	private LocalDateTime entryDate;
 
 	@Column(name = "institution_id")
 	private Integer institutionId;
 
 	@Column(name = "probable_discharge_date")
 	private LocalDateTime probableDischargeDate;
+
+	@Column(name = "patient_medical_coverage_id")
+	private Integer patientMedicalCoverageId;
 
 	@Override
 	public boolean equals(Object o) {

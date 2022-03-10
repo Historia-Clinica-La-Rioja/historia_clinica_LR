@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from '@api-rest/services/account.service';
 import { ReplaySubject, Observable, EMPTY } from 'rxjs';
-import { RoleAssignment, PermissionsDto } from '@api-rest/api-model';
+import { RoleAssignmentDto, PermissionsDto } from '@api-rest/api-model';
 import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class LoggedUserService {
-	private assignmentsSource = new ReplaySubject<RoleAssignment[]>(1);
-	private _assignments$: Observable<RoleAssignment[]>;
+	private assignmentsSource = new ReplaySubject<RoleAssignmentDto[]>(1);
+	private _assignments$: Observable<RoleAssignmentDto[]>;
 
 	constructor(
 		private accountService: AccountService,
 	) { }
 
-	get assignments$(): Observable<RoleAssignment[]> {
+	get assignments$(): Observable<RoleAssignmentDto[]> {
 		if (!this._assignments$) {
 			this._assignments$ = this.assignmentsSource.asObservable();
 			this.load().subscribe();

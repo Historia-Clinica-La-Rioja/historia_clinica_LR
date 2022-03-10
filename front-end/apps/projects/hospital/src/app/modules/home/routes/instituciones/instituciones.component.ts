@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AppRoutes } from '../../../../app-routing.module';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 
-import { RoleAssignment } from '@api-rest/api-model';
+import { RoleAssignmentDto } from '@api-rest/api-model';
 import { ERole, AppFeature } from '@api-rest/api-model';
 
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -28,7 +28,7 @@ export class InstitucionesComponent {
 		private featureFlagService: FeatureFlagService,
 		private router: Router,
 	) {
-		loggedUserService.assignments$.subscribe((allRoles: RoleAssignment[]) => {
+		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
 			const institutionIds = allRoles
 				.filter((ra) => ra.institutionId >= 0)
 				.map(r => r.institutionId);
@@ -65,20 +65,20 @@ export class InstitucionesComponent {
 		this.router.navigate([AppRoutes.PortalPaciente]);
 	}
 
-	hasAccessToBackoffice(allRoles: RoleAssignment[]) {
+	hasAccessToBackoffice(allRoles: RoleAssignmentDto[]) {
 		return allRoles
 			.filter((ra) => ra.role === ERole.ROOT ||
 				ra.role === ERole.ADMINISTRADOR ||
 				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE).length > 0;
 	}
 
-	hasAccessToWebappInstitutions(allRoles: RoleAssignment[]) {
+	hasAccessToWebappInstitutions(allRoles: RoleAssignmentDto[]) {
 		return allRoles
 			.filter((ra) => ra.role !== ERole.ROOT &&
 				ra.role !== ERole.ADMINISTRADOR).length > 0;
 	}
 
-	hasAccessToPatientPortal(allRoles: RoleAssignment[]): boolean {
+	hasAccessToPatientPortal(allRoles: RoleAssignmentDto[]): boolean {
 		return !(allRoles.some(ra => ra.role === ERole.ROOT));
 	}
 }

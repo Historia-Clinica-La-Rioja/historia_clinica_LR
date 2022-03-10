@@ -1,5 +1,7 @@
 <ng-container *ngIf="menuItems; else loading">
-	<app-main-layout [menuItems]="menuItems" [userInfo]="userInfo"></app-main-layout>
+	<app-main-layout [menuItems]="menuItems" >
+		<app-user-badge account-info [userInfo]="userInfo" [routerLink]="userProfileLink"></app-user-badge>
+	</app-main-layout>
 </ng-container>
 <ng-template #loading>
 	<mat-progress-bar mode="indeterminate"></mat-progress-bar>

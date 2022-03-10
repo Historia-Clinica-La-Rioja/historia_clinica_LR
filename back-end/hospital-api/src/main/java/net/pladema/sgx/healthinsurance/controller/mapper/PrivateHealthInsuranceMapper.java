@@ -4,8 +4,7 @@ import net.pladema.patient.controller.dto.PrivateHealthInsuranceDto;
 import net.pladema.patient.controller.dto.PrivateHealthInsurancePlanDto;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
 import net.pladema.patient.service.domain.PrivateHealthInsurancePlanBo;
-import net.pladema.renaper.controller.dto.MedicalCoverageDto;
-import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
