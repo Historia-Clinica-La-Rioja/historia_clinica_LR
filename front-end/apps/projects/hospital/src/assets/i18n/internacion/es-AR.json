@@ -278,9 +278,12 @@
 		"documents-summary": {
 			"search-fields": {
 				"DIAGNOSIS": "Diagnóstico",
-				"DOCTOR": "Médico",
+				"PROFESSIONAL": "Profesional",
 				"CREATEDON": "Fecha",
 				"ALL": "Todos"
+			},
+			"info": {
+				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			}
 		},
 		"nota-evolucion": {

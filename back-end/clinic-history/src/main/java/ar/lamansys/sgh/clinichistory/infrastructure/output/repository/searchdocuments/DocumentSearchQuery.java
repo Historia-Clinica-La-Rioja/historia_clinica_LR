@@ -37,6 +37,8 @@ public class DocumentSearchQuery {
                 "creator.lastName, \n" +
                 "snomed.pt as diagnosis, \n" +
                 "hc.main, \n" +
+				"hc.problemId, \n" +
+				"hc.verificationStatusId, \n" +
                 "othernote.description as otherNote, " +
                 "physicalnote.description as physicalNote, \n" +
                 "studiesnote.description as studiesNote, \n" +
@@ -47,8 +49,8 @@ public class DocumentSearchQuery {
     }
 
     public QueryPart from() {
-        return new QueryPart("DocumentHealthCondition as dhc \n" +
-                "join Document as document on (dhc.pk.documentId = document.id) \n" +
+        return new QueryPart("Document as document \n" +
+                "left join DocumentHealthCondition as dhc on (document.id = dhc.pk.documentId) \n" +
         //Creator
                 "join UserPerson as userperson on (document.creationable.createdBy = userperson.pk.userId) \n" +
                 "join Person as creator on (userperson.pk.personId = creator.id) \n" +
@@ -61,17 +63,20 @@ public class DocumentSearchQuery {
                 "left join Note illnessnote on (document.currentIllnessNoteId = illnessnote.id) \n" +
                 "left join Note indicationnote on (document.indicationsNoteId = indicationnote.id) \n" +
          //Diagnosis
-                "join HealthCondition as hc on (dhc.pk.healthConditionId = hc.id ) \n" +
-                "join Snomed as snomed on (hc.snomedId = snomed.id ) \n"
+                "left join HealthCondition as hc on (dhc.pk.healthConditionId = hc.id ) \n" +
+                "left join Snomed as snomed on (hc.snomedId = snomed.id ) \n" +
         );
     }
 
     public QueryPart where() {
         return new QueryPart("document.sourceId = :internmentEpisodeId \n" +
                 "and document.sourceTypeId = " + SourceType.HOSPITALIZATION +" \n"+
-                "and not hc.problemId = '" + ProblemType.HISTORY +"' \n"+
-                "and not hc.problemId = '" + ProblemType.PROBLEM +"' \n"+
-                "and not hc.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n");
+				"and not exists (select 1 \n" +
+				"					from HealthCondition hc2 \n" +
+				"					where hc.id = hc2.id \n" +
+				"					and (hc2.problemId = '" + ProblemType.HISTORY +"' \n"+
+				"					or hc2.problemId = '" + ProblemType.PROBLEM +"' \n"+
+				"					or hc2.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n))");
     }
 
     public QueryPart orderBy(){
@@ -100,13 +105,13 @@ public class DocumentSearchQuery {
                     (String)tuple[2],
                     (String)tuple[3],
                     mapDiagnosis(v),
-                    mapMainDiagnosis(v)));
+                    mapMainDiagnosis(v));
         });
         return result;
     }
 
     private DocumentObservationsVo mapNotes(Object[] tuple){
-        int index = 6;
+        int index = 8;
         String otherNote = (String) tuple[index++];
         String physicalExam = (String)tuple[index++];
         String studiesSummary = (String)tuple[index++];
@@ -130,13 +135,13 @@ public class DocumentSearchQuery {
 
     private String mapMainDiagnosis(List<Object[]> tuples){
         return tuples.stream()
-                .filter((Object[]t) -> (Boolean)t[5])
+                .filter((Object[]t) -> t[5] != null && (Boolean)t[5])
                 .map((Object[]t) -> (String)t[4]).collect(Collectors.joining());
     }
 
     private List<String> mapDiagnosis(List<Object[]> tuples){
         return tuples.stream()
-                .filter((Object[]t) -> !(Boolean)t[5])
+                .filter((Object[]t) -> t[5] != null && !(Boolean)t[5])
                 .map((Object[]t) -> (String)t[4]).collect(Collectors.toList());
     }
 }

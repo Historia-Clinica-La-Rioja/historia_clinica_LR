@@ -50,7 +50,7 @@ public class FetchHospitalizationHealthConditionState {
         LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis();
+		List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis();
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -59,7 +59,7 @@ public class FetchHospitalizationHealthConditionState {
         LOG.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis().stream().filter(DiagnosisBo::isActive).collect(Collectors.toList());
+		List<DiagnosisBo> result =  generalHealthConditionBo.getDiagnosis().stream().filter(DiagnosisBo::isActive).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -99,6 +99,5 @@ public class FetchHospitalizationHealthConditionState {
     private List<HealthConditionVo> getGeneralStateData(Integer internmentEpisodeId) {
         return hchHealthConditionRepository.findGeneralState(internmentEpisodeId);
     }
-
 
 }

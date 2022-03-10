@@ -55,25 +55,34 @@
 					</ng-template>
 				</div>
 				<div class="main-diagnosis-toggle">
-					<mat-label>Diagnóstico principal</mat-label>
-					<mat-slide-toggle formControlName="mainDiagnosisOnly" (change)="updateDocuments()">
-					</mat-slide-toggle>
+					<mat-label>Diagnóstico principal
+						<mat-slide-toggle formControlName="mainDiagnosisOnly" (change)="updateDocuments()">
+						</mat-slide-toggle>
+					</mat-label>
 				</div>
 			</form>
 		</div>
 		<div class="documents" id="documents" fxLayout="row">
-			<mat-selection-list color="accent" [multiple]=false>
+			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
 				<mat-list-option (click)="setActive(document)"
 								 *ngFor="let document of documentsToShow">
-					<span id="main-diagnosis" mat-line class="capitalize-first-letter" *ngIf="document.mainDiagnosis">
-						{{document.mainDiagnosis}}
+					<mat-icon *ngIf="document.documentType != 'Epicrisis' && document.documentType != 'Anamnesis'"mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
+					<mat-icon *ngIf="document.documentType == 'Anamnesis'" mat-list-icon fontSet="material-icons-outlined" color="primary" svgIcon="assignment_return"></mat-icon>
+					<mat-icon *ngIf="document.documentType == 'Epicrisis'" mat-list-icon fontSet="material-icons-outlined" color="primary">assignment_turned_in</mat-icon>
+					<span id="document-type" bold mat-line>{{document.documentType}}</span>
+					<span id="main-diagnosis" class="capitalize-first-letter">
+						<ng-container *ngIf="document.mainDiagnosis">
+							<span mat-line>{{document.mainDiagnosis}}</span>
+						</ng-container>
+						<ng-container *ngIf="!document.mainDiagnosis && !document.diagnosis.length">
+							<span mat-line [translate]="'internaciones.documents-summary.info.WITHOUT_DIAGNOSIS'"></span>
+						</ng-container>
 					</span>
 					<span *ngIf="document.diagnosis.length && !document.mainDiagnosis" mat-line></span>
 					<span id="other-diagnosis" *ngFor="let diagnosis of document.diagnosis"
 						  mat-line class="capitalize-first-letter">
 						{{diagnosis}}
 					</span>
-					<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
 					<span mat-line>{{document.createdOn | date : 'dd/MM/yyyy'}}</span>
 					<span mat-line>{{document.creator.firstName}} {{document.creator.lastName}}</span>
 					<mat-divider></mat-divider>
