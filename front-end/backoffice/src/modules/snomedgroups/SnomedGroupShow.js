@@ -6,53 +6,92 @@ import {
     ReferenceManyField,
     Show,
     SimpleShowLayout,
-    TextField, useTranslate,
+    TextField, 
+    useTranslate,
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
 import React from "react";
+import { Link } from 'react-router-dom';
+import Button from "@material-ui/core/Button";
+import SectionTitle from "../components/SectionTitle";
+
+const CreateRelatedButton = ({ record, reference, label}) => {
+    const newRecord = {groupId: record.id, parentGroupId: record.groupId};
+    const translate = useTranslate();
+    return (
+        <Button
+            component={Link}
+            to={{
+                pathname: `/${reference}/create`,
+                state: { record: newRecord },
+            }}
+        >{translate(label)}</Button>
+    );
+};
 
 const SnomedGroupShow = props => {
-
     const translate = useTranslate();
     return (
         <Show {...props}>
             <SimpleShowLayout>
+
+                {/* ID */}
                 <TextField source="id"/>
+
+                {/* Description */}
                 <TextField source="description"/>
+
+                {/* ECL */}
                 <TextField source="ecl"/>
+
+                {/* Custom ID */}
                 <TextField source="customId"/>
-                <ReferenceField source="groupId" reference="snomedgroups" link={true} linkType={"show"} emptyText={translate('resources.snomedgroups.noInfo')} >
+
+                {/* Group parent */}
+                <ReferenceField source="groupId" reference="snomedgroups" link="show" emptyText={translate('resources.snomedgroups.noInfo')} >
                     <TextField source="description"/>
                 </ReferenceField>
+
+                {/* Is template */}
                 <BooleanField source="template"/>
-                <ReferenceField source="institutionId" reference="institutions" link={true} linkType={"show"} emptyText={translate('resources.snomedgroups.noInfo')} >
+
+                {/* Institution */}
+                <ReferenceField source="institutionId" reference="institutions" link="show" emptyText={translate('resources.snomedgroups.noInfo')} >
                     <TextField source="name"/>
                 </ReferenceField>
+
+                {/* User */}
                 <ReferenceField source="userId" reference="users" link={false} emptyText={translate('resources.snomedgroups.noInfo')} >
                     <TextField source="username"/>
                 </ReferenceField>
+
+                {/* Last update */}
                 <SgxDateField source="lastUpdate"/>
-                <ReferenceManyField
+
+                {/* Snomed concepts */}
+                <SectionTitle label="resources.snomedgroups.fields.snomedConcepts"/>
+
+                <CreateRelatedButton
                     reference="snomedrelatedgroups"
+                    label="resources.snomedgroups.createRelated"
+                />
+
+                <ReferenceManyField
+                    reference="snomedgroupconcepts"
                     target="groupId"
-                    sort={{field: 'orden', order: 'ASC'}}
+                    sort={{field: 'conceptPt', order: 'ASC'}}
                     perPage={10}
                     pagination={<Pagination rowsPerPageOptions={[10, 25, 50]}/>}
-                    label="resources.snomedgroups.fields.snomedConcepts"
+                    addLabel={false}
                 >
                     <Datagrid>
-                        <ReferenceField source="snomedId" reference="snomedconcepts"
-                                        label="resources.snomedconcepts.fields.sctid" sortable={false} link="show">
-                            <TextField source="sctid"/>
-                        </ReferenceField>
-                        <ReferenceField source="snomedId" reference="snomedconcepts"
-                                        label="resources.snomedconcepts.fields.pt" sortable={false} link={false}>
-                            <TextField source="pt"/>
-                        </ReferenceField>
+                        <TextField source="conceptSctid"/>
+                        <TextField source="conceptPt"/>
                         <TextField source="orden"/>
                         <SgxDateField source="lastUpdate"/>
                     </Datagrid>
                 </ReferenceManyField>
+
             </SimpleShowLayout>
         </Show>
     );

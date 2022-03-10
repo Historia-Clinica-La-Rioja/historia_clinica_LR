@@ -399,12 +399,27 @@ const messages = {
                 lastUpdate: 'Última actualización',
                 snomedConcepts: "Conceptos de Snomed"
             },
+            createRelated: 'Agregar concepto Snomed',
             noInfo: 'Sin información',
         },
         snomedrelatedgroups: {
+            name: 'Snomed | Grupo de terminología',
             fields: {
                 orden: 'Orden',
                 lastUpdate: 'Última actualización',
+                groupId: 'Grupo de terminología',
+                snomedId: 'Concepto Snomed'
+            },
+        },
+        snomedgroupconcepts: {
+            name: 'Snomed | Grupo de terminología',
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+                groupId: 'Grupo de terminología',
+                snomedId: 'Concepto Snomed',
+                conceptSctid: 'Snomed CT ID',
+                conceptPt: 'Término'
             },
         },
         snomedconcepts: {

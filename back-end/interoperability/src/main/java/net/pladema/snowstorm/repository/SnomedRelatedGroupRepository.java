@@ -19,4 +19,10 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 			"AND srg.snomedId = :snomedId ")
 	Optional<SnomedRelatedGroup> getByGroupIdAndSnomedId(@Param("groupId") Integer groupId, @Param("snomedId") Integer snomedId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT MAX(srg.orden) " +
+			"FROM SnomedRelatedGroup srg " +
+			"WHERE srg.groupId = :groupId ")
+	Optional<Integer> getLastOrdenByGroupId(@Param("groupId") Integer groupId);
+
 }
