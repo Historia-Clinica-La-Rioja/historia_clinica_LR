@@ -218,7 +218,7 @@
 						</ng-template>
 						<ng-template matTabContent>
 							<div *ngIf="hasInternmentEpisodeInThisInstitution">
-								<app-internment-indications-card [internmentEpisodeId]="internmentEpisodeProcess.id" [epicrisisConfirmed]="epicrisisDoc?.confirmed"></app-internment-indications-card>
+								<app-internment-indications-card [patientId]="patientId" [epicrisisConfirmed]="epicrisisDoc?.confirmed" [internmentEpisodeId]="internmentEpisodeProcess.id"></app-internment-indications-card>
 							</div>
 							<app-card-medicaciones [patientId]="patientId" [medicamentStatus]="medicamentStatus$ | async" ></app-card-medicaciones>
 						</ng-template>

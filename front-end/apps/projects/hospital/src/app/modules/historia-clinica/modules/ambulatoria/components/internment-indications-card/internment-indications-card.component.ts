@@ -1,9 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
-import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays } from "date-fns";
+import { getDay, getMonth, getYear, isTomorrow, isYesterday, isToday, differenceInCalendarDays } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/constants/internment-indications";
 import { BehaviorSubject } from "rxjs";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
+import { DietDto } from "@api-rest/api-model";
+import { DateTimeDto } from "@api-rest/api-model";
+import { DietComponent } from '../../dialogs/diet/diet.component';
+import { MatDialog } from '@angular/material/dialog';
+import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+
+const DIALOG_SIZE = '35%';
 
 @Component({
 	selector: 'app-internment-indications-card',
@@ -20,11 +30,22 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	actualDate: Date = new Date();
 	entryDate: Date;
 	currentViewIsEntryDate = false;
+	dateTime: DateTimeDto;
+	professionalId: number;
+
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
+	@Input() patientId: number;
 
 	constructor(
+		private readonly dialog: MatDialog,
+
+		private readonly snackBarService: SnackBarService,
+
+		private readonly internmentIndicationService: InternmentIndicationService,
 		private readonly internmentEpisode: InternmentEpisodeService,
+		private readonly healthcareProfessionalService: HealthcareProfessionalService
+
 	) { }
 
 	ngOnInit(): void {
@@ -41,6 +62,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 					this.currentViewIsEntryDate = true;
 			}
 		);
+		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
 	}
 
 	viewAnotherDay(daysToMove: number) {
@@ -64,6 +86,46 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		if (differenceInDays <= 0)
 			this.currentViewIsEntryDate = true;
 	}
+	private dietIndications(submitted: string): DietDto {
+		const today = new Date();
+		return {
+			id: 0,
+			patientId: this.patientId,
+			type: EIndicationType.DIET,
+			status: EIndicationStatus.INDICATED,
+			professionalId: this.professionalId,
+			createdBy: null,
+			indicationDate: {
+				year: getYear(this.actualDate),
+				month:	getMonth(this.actualDate) + 1,
+				day: this.actualDate.getDate()
+			},
+			createdOn: null,
+			description: submitted
+		}
+	}
+
+	openDietDialog() {
+		const dialogRef = this.dialog.open(DietComponent, {
+			disableClose: false,
+			width: DIALOG_SIZE
+		});
+
+		dialogRef.afterClosed().subscribe(submitted => {
+			if (submitted) {
+				this.internmentIndicationService.addDiet(this.dietIndications(submitted), this.internmentEpisodeId).subscribe(_ => {
+					this.snackBarService.showSuccess('ambulatoria.dialogs.diet.messages.SUCCESS')
+				},
+					error => {
+						error?.text ?
+							this.snackBarService.showError(error.text) : this.snackBarService.showError('ambulatoria.dialogs.diet.messages.ERROR');
+					}
+				);
+			}
+		});
+	}
+
+
 }
 
 interface ViewDate {

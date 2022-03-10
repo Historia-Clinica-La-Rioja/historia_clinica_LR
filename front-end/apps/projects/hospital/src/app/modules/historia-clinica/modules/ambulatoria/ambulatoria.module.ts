@@ -54,6 +54,7 @@ import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-su
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { InternmentIndicationsCardComponent } from './components/internment-indications-card/internment-indications-card.component';
+import { DietComponent } from './dialogs/diet/diet.component';
 
 @NgModule({
 	declarations: [
@@ -97,6 +98,7 @@ import { InternmentIndicationsCardComponent } from './components/internment-indi
 		MainDiagnosisSummaryComponent,
 		DiagnosisSummaryComponent,
 		InternmentSummaryComponent,
+		DietComponent,
 		InternmentIndicationsCardComponent
 	],
 	imports: [

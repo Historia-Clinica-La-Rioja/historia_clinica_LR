@@ -1,0 +1,28 @@
+<div class="dialog">
+	<div fxLayout="row" fxLayoutAlign="end end">
+		<button matSuffix mat-icon-button [mat-dialog-close]>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<div mat-dialog-title fxLayout="row">
+		<div class="title" class="capitalize-first-letter" [translate]="'ambulatoria.dialogs.diet.TITLE'"></div>
+	</div>
+
+	<div id="note">
+		<ng-container concept-form>
+			<form [formGroup]="form">
+				<mat-form-field appearance="outline">
+					<textarea matInput type="text" id="note-input" formControlName="description"
+						placeholder="{{'ambulatoria.dialogs.diet.DESCRIPTION' | translate }}">
+					</textarea>
+				</mat-form-field>
+			</form>
+		</ng-container>
+	</div>
+
+	<div actions id="buttons" fxLayoutAlign="end end">
+		<button class="uppercase" mat-raised-button color="primary" (click)="save()">
+			<span [translate]="'buttons.CONFIRM'"></span>
+		</button>
+	</div>
+</div>

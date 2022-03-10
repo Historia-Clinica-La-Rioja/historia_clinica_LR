@@ -25,4 +25,8 @@ export class InternmentIndicationService {
 			}
 		});
 	}
+	addDiet(indication: DietDto, internmentEpisodeId: number): Observable<DietDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/diet`;
+		return this.http.post<DietDto>(url, indication);
+	}
 }
