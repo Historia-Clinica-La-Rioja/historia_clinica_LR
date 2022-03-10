@@ -1,0 +1,16 @@
+<app-content width="narrow" fxLayoutAlign="center center">
+
+	<mat-card>
+		<mat-card-header fxLayoutAlign="center center" style="padding: 15px;">
+			<mat-card-title>
+				<span translate="auth.login.form.TITLE"></span>
+			</mat-card-title>
+		</mat-card-header>
+		<mat-card-content fxLayoutAlign="center">
+			<button mat-raised-button color="primary" (click)="redirectToOAuthLogin()">
+				<span [translate]="'auth.login.external.GO_TO_EXTERNAL_LOGIN'"></span>
+			</button>
+		</mat-card-content>
+	</mat-card>
+
+</app-content>

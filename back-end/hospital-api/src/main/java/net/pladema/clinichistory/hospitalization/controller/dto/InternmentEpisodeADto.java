@@ -9,6 +9,7 @@ import net.pladema.featureflags.controller.constraints.SGHNotNull;
 
 import javax.annotation.Nullable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,11 +24,13 @@ public class InternmentEpisodeADto {
 
     private Long noteId;
 
-    private LocalDate entryDate;
+    private LocalDateTime entryDate;
 
     private LocalDate dischargeDate;
 
     private Integer institutionId;
+
+    private Integer patientMedicalCoverageId;
 
     @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {RESPONSIBLE_DOCTOR_REQUIRED})
     private Integer responsibleDoctorId;

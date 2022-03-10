@@ -19,6 +19,7 @@ import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationStorag
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,7 @@ public class ImmunizePatient {
                         doctorInfoBo.getId(),
                         now,
                         isBillable(immunizePatientBo)));
-        immunizationDocumentStorage.save(mapTo(immunizePatientBo, encounterId, doctorInfoBo));
+        immunizationDocumentStorage.save(mapTo(immunizePatientBo, encounterId, doctorInfoBo, now));
 
         if (gettingVaccine(immunizePatientBo.getImmunizations()))
             appointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
@@ -107,7 +108,8 @@ public class ImmunizePatient {
         return immunizePatientBo.getImmunizations().stream().anyMatch(ImmunizationInfoBo::isBillable);
     }
 
-    private ImmunizationDocumentBo mapTo(ImmunizePatientBo immunizePatientBo, Integer encounterId, DoctorInfoBo doctorInfoBo) {
+    private ImmunizationDocumentBo mapTo(ImmunizePatientBo immunizePatientBo, Integer encounterId,
+                                         DoctorInfoBo doctorInfoBo, LocalDate now) {
         return new ImmunizationDocumentBo(
                 null,
                 immunizePatientBo.getPatientId(),
@@ -115,7 +117,8 @@ public class ImmunizePatient {
                 immunizePatientBo.getInstitutionId(),
                 doctorInfoBo.getId(),
                 immunizePatientBo.getClinicalSpecialtyId(),
-                immunizePatientBo.getImmunizations());
+                immunizePatientBo.getImmunizations(),
+                now);
     }
 
     private void assertContextValid(ImmunizePatientBo immunizePatientBo, DoctorInfoBo doctorInfoBo) {

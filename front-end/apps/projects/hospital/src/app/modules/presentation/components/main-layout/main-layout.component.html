@@ -4,8 +4,7 @@
 			<mat-icon color="primary">menu</mat-icon>
 		</button>
 	</app-bar>
-	<mat-sidenav-container class="layout-sidenav-container"
-	                       [style.marginTop.px]="mobileQuery.matches ? 57 : 0">
+	<mat-sidenav-container class="layout-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 57 : 0">
 		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
 		             [fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
 			<div class="custom-container">
@@ -16,13 +15,11 @@
 				<div class="bottom">
 
 					<div class="informative-items">
-						<span *ngIf="userInfo?.fullName; else userName">
-							{{userInfo.fullName}}
-						</span>
-						<ng-template #userName>{{userInfo?.userName}}</ng-template>
+						<ng-content select="[account-info]"></ng-content>
 						<mat-divider></mat-divider>
-						<button mat-icon-button id="logout" (click)="logout()">
-							<mat-icon>power_settings_new</mat-icon>
+						<button mat-button id="logout" (click)="logout()">
+							<mat-icon>logout</mat-icon>
+							<span translate="app.menu.LOGOUT"></span>
 						</button>
 					</div>
 				</div>

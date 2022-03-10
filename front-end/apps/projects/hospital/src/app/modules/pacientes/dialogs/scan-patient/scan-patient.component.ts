@@ -8,6 +8,23 @@ import { isValid, parse } from 'date-fns';
 const DATA_SPLIT_ENGLISH = '@';
 const DATA_SPLIT_SPANISH = '"';
 const MIN_AMOUNT_DATA_FROM_VALID_SCAN = 8;
+const AMOUNT_DATA_DNI_V1 = 15;
+const AMOUNT_DATA_DNI_V2 = 9;
+const enum DNI_V1 {
+	IDENTIFICATION_NUMBER = 1,
+	GENDER = 8,
+	NAMES = 5,
+	LAST_NAMES = 4,
+	BIRTH_DATE = 7,
+}
+const enum DNI_V2 {
+	IDENTIFICATION_NUMBER = 4,
+	GENDER = 3,
+	NAMES = 2,
+	LAST_NAMES = 1,
+	BIRTH_DATE = 6,
+}
+
 export const INVALID_INPUT = 'invalid_input';
 @Component({
 	selector: 'app-scan-patient',
@@ -41,9 +58,9 @@ export class ScanPatientComponent implements OnInit {
 		return ((REG_EXP.test(identificationWithoutBlankSpaces)) && (identificationWithoutBlankSpaces.length <= 9) && (identificationWithoutBlankSpaces.length > 6));
 	}
 
-	private getGenderId(gender: string): number {
+	private getGenderId(gender: string): number | undefined {
 		const genderOption = this.data.genderOptions.find(option => option.description.includes(gender));
-		return genderOption ? genderOption.id : -1;
+		return genderOption ? genderOption.id : undefined;
 	}
 
 	public captureInformation(valueForm): void {
@@ -55,47 +72,25 @@ export class ScanPatientComponent implements OnInit {
 			valueFormArray = valueForm.target.value.split(DATA_SPLIT_ENGLISH);
 
 		if (valueFormArray?.length >= MIN_AMOUNT_DATA_FROM_VALID_SCAN) {
-			let identifType = this.getIdentifTypeID('DNI');
-			let identifNumber: string;
-			let gender: number;
-			let birthDate: string;
-			let dateFound = false;
-			let firstName: string;
-			let middleNames: string;
-			let namesFound = false;
-			let lastName: string;
-			let otherLastNames: string;
-			let lastNameFound = false;
-			for (let valueStr of valueFormArray) {
-				if (this.isAnIdentificationNumber(valueStr))
-					identifNumber = valueStr.trim();
-				else if (valueStr.length === 1) {
-					let genderId = this.getGenderId(valueStr);
-					if (genderId !== -1) gender = genderId;
-				}
-				else if (valueStr.length > 1) {
-					if (!dateFound && this.isDate(valueStr)) {
-						dateFound = true;
-						birthDate = valueStr.split('/').join('-');
-					}
-					else {
-						const canBeAName = this.canBeAName(valueStr);
-						if (!lastNameFound && canBeAName) {
-							lastNameFound = true;
-							const lastNames = this.splitNames(valueStr);
-							lastName = lastNames.first;
-							otherLastNames = lastNames.second;
-						}
-						else if (lastNameFound && !namesFound && canBeAName) {
-							namesFound = true;
-							const names = this.splitNames(valueStr);
-							firstName = names.first;
-							middleNames = names.second;
-						}
-					}
-				}
+			if (valueFormArray?.length <= AMOUNT_DATA_DNI_V2) {
+				this.loadPatientInformationScan(
+					valueFormArray[DNI_V2.IDENTIFICATION_NUMBER],
+					valueFormArray[DNI_V2.GENDER],
+					valueFormArray[DNI_V2.NAMES],
+					valueFormArray[DNI_V2.LAST_NAMES],
+					valueFormArray[DNI_V2.BIRTH_DATE]
+				);
 			}
-			this.patientInformationScan = { identifType, identifNumber, gender, birthDate, firstName, middleNames, lastName, otherLastNames };
+			else if (valueFormArray?.length === AMOUNT_DATA_DNI_V1) {
+				this.loadPatientInformationScan(
+					valueFormArray[DNI_V1.IDENTIFICATION_NUMBER],
+					valueFormArray[DNI_V1.GENDER],
+					valueFormArray[DNI_V1.NAMES],
+					valueFormArray[DNI_V1.LAST_NAMES],
+					valueFormArray[DNI_V1.BIRTH_DATE]
+				);
+			}
+
 			this.dialogRef.close(this.patientInformationScan);
 		}
 		else {
@@ -137,6 +132,25 @@ export class ScanPatientComponent implements OnInit {
 	private getIdentifTypeID(typeDesc: string): number | undefined {
 		const IDENTIF_TYPE = this.data.identifyTypeArray.find(identifType => identifType.description.toUpperCase() === typeDesc.toUpperCase());
 		return IDENTIF_TYPE ? IDENTIF_TYPE.id : undefined;
+	}
+
+	private loadPatientInformationScan(identifNumber: string, gender: string, allNames: string, allLastNames: string, birthDate: string): void {
+		let names: Names;
+		if (this.canBeAName(allNames))
+			names = this.splitNames(allNames);
+		let lastNames: Names;
+		if (this.canBeAName(allLastNames))
+			lastNames = this.splitNames(allLastNames);
+		this.patientInformationScan = {
+			identifType: this.getIdentifTypeID('DNI'),
+			identifNumber: this.isAnIdentificationNumber(identifNumber) ? identifNumber.trim() : undefined,
+			gender: this.getGenderId(gender),
+			birthDate: this.isDate(birthDate) ? birthDate.split('/').join('-') : undefined,
+			firstName: names?.first,
+			middleNames: names?.second,
+			lastName: lastNames?.first,
+			otherLastNames: lastNames?.second
+		}
 	}
 }
 

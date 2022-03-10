@@ -376,18 +376,35 @@
 			}
 		},
 		"new-internment": {
+			"DATE": "Fecha",
+			"DATE_TIME": "Fecha y hora de ingreso",
 			"TITLE": "Nueva internación",
 			"SUBTITLE": "Complete los siguientes datos",
 			"SECTION_SERVICE": "Especialidad / Servicio",
 			"SECTION_BED": "Asignación de cama",
 			"SECTION_CONTACT": "Contacto responsable",
 			"SECTION_DOCTOR": "Médico responsable",
+			"SELECT": "Seleccionar",
+			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
 			"BED_ASSIGNMENT": "Asigne una cama para la nueva internación",
 			"BED_ASSIGNMENT_BUTTON": "ASIGNAR CAMA",
+			"INVALID_TIME": "La hora debe ser posterior a la de creación del episodio",
+			"INVALID_DATE": "La fecha ingresada no es válida",
+			"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
+			"MEDICAL_CONVERGE": "Cobertura médica",
+			"REQUIRED": "El campo es requerido",
+			"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
+			"TIME": "Hora",
+			"UPDATE_COVERAGE": "Actualizar cobertura",
+			"NO_MEDICAL_CONVERGE": "Sin cobertura",
 			"messages": {
 				"ERROR": "Error al crear una nueva internacion",
 				"ERROR_BED_ASSIGNMENT": "Asigne una cama para continuar",
 				"SUCCESS": "La internación se guardó exitosamente"
+			},
+			"toast_messages": {
+				"POST_UPDATE_COVERAGE_SUCCESS": "Las coberturas fueron actualizadas correctamente",
+				"POST_UPDATE_COVERAGE_ERROR": "Ocurrió un error al actualizar las coberturas"
 			}
 		},
 		"snomed-search": {

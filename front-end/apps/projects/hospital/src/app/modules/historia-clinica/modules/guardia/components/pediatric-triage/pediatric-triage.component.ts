@@ -33,6 +33,13 @@ export class PediatricTriageComponent implements OnInit {
 	hasError = hasError;
 	getError = getError;
 
+	private CLEAR_CASES = {
+		bodyTemperatureId: (control) => control.controls.bodyTemperatureId.reset(),
+		muscleHypertoniaId: (control) => control.controls.muscleHypertoniaId.reset(),
+		respiratoryRetractionId: (control) => control.controls.respiratoryRetractionId.reset(),
+		perfusionId: (control) => control.controls.perfusionId.reset(),
+	}
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
@@ -126,20 +133,7 @@ export class PediatricTriageComponent implements OnInit {
 	}
 
 	clear(control: any, value: string): void {
-		switch (value) {
-			case "bodyTemperatureId":
-				control.controls.bodyTemperatureId.reset();
-				break;
-			case "muscleHypertoniaId":
-				control.controls.muscleHypertoniaId.reset();
-				break;
-			case "respiratoryRetractionId":
-				control.controls.respiratoryRetractionId.reset();
-				break;
-			case "perfusionId":
-				control.controls.perfusionId.reset();
-				break;
-		}
+		this.CLEAR_CASES[value](control);
 	}
 
 }

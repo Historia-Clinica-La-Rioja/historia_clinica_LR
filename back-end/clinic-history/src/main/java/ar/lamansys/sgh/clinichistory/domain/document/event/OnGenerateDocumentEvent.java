@@ -11,6 +11,7 @@ import lombok.ToString;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import org.springframework.context.ApplicationEvent;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -98,5 +99,7 @@ public class OnGenerateDocumentEvent extends ApplicationEvent {
     public Integer getEncounterId(){
         return documentBo.getEncounterId();
     }
+
+    public LocalDateTime getPerformedDate() { return documentBo.getPerformedDate(); }
 }
 

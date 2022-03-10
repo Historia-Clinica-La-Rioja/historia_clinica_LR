@@ -48,6 +48,9 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
                 .collect(Collectors.toList());
         if(coverage.getType()!=null)
             result = result.stream().filter(backofficeCoverage -> backofficeCoverage.getType().equals(coverage.getType())).collect(Collectors.toList());
+        if(coverage.getEnabled()!=null)
+            result = result.stream().filter(backofficeCoverage -> backofficeCoverage.getEnabled().equals(coverage.getEnabled())).collect(Collectors.toList());
+
         int minIndex = pageable.getPageNumber() * pageable.getPageSize();
         int maxIndex = minIndex + pageable.getPageSize();
         return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
@@ -135,10 +138,10 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     }
 
     private BackofficeCoverageDto mapToDto(MedicalCoverage entity) {
-        return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.PREPAGA.getId(), null, null))
+        return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.PREPAGA.getId(), null, null, !insurance.isDeleted()))
                 .orElseGet(() -> healthInsuranceRepository.findById(entity.getId())
-                        .map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), healthInsurance.getRnos(), healthInsurance.getAcronym()))
-                        .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null)));
+                        .map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), healthInsurance.getRnos(), healthInsurance.getAcronym(), !healthInsurance.isDeleted()))
+                        .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null, true)));
     }
 
 }

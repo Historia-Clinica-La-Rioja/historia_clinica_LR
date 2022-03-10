@@ -1,0 +1,59 @@
+<app-content>
+	<form [formGroup]="form" (ngSubmit)="submit()">
+		<mat-card>
+			<mat-card-header fxLayoutAlign="center center" style="padding: 15px;">
+				<mat-card-title>
+					<span translate="auth.login.form.TITLE"></span>
+				</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				<app-form-input label="auth.login.form.USERNAME_LABEL">
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input formControlName="username" autocomplete="username"
+							   type="text"
+							   placeholder="{{'auth.login.form.USERNAME_PLACEHOLDER' | translate }}"
+							   matInput
+						>
+						<mat-error *ngIf="hasError('required', 'username')">
+							<span translate="auth.login.form.USERNAME_REQUIRED"></span>
+						</mat-error>
+					</mat-form-field>
+				</app-form-input>
+				<app-form-input label="auth.login.form.PASSWORD_LABEL">
+					<mat-form-field [floatLabel]="'never'" appearance="outline">
+						<input formControlName="password" autocomplete="current-password"
+							   type="password"
+							   placeholder="{{'auth.login.form.PASSWORD_PLACEHOLDER' | translate }}"
+							   matInput
+						>
+						<mat-error *ngIf="hasError('required', 'password')">
+							<span translate="auth.login.form.PASSWORD_REQUIRED"></span>
+						</mat-error>
+					</mat-form-field>
+				</app-form-input>
+
+				<div *ngIf="apiError">
+					<div class="container" [ngSwitch]="apiError.code">
+						<p class="mat-body" *ngSwitchCase="'invalid.credentials'">Nombre de usuario o clave inválidos</p>
+						<p class="mat-body" *ngSwitchCase="'disabled.username'">Usuario bloqueado</p>
+						<p class="mat-body" *ngSwitchDefault>{{apiError.text || 'Error de acceso'}}</p>
+					</div>
+				</div>
+
+				<app-form-input *ngIf="recaptchaEnable" fxLayout="row" fxLayoutAlign="center">
+					<div class="re-captcha-container">
+						<re-captcha formControlName="recaptchaReactive" (resolved)="reCaptchaResolved($event)"
+									[siteKey]="recaptchaSiteKey">
+						</re-captcha>
+						<mat-error *ngIf="form.touched && hasError('required', 'recaptchaReactive')">
+							Verificación recaptcha requerida
+						</mat-error>
+					</div>
+				</app-form-input>
+			</mat-card-content>
+			<mat-card-actions align="end">
+				<button mat-raised-button color="primary" type="submit" [disabled]="!form.valid" translate="auth.login.form.SUBMIT"></button>
+			</mat-card-actions>
+		</mat-card>
+	</form>
+</app-content>

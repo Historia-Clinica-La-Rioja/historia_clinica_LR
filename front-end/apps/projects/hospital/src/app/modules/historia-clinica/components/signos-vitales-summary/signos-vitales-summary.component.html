@@ -4,7 +4,7 @@
 				  [editable]="editable"
 				  (openInNew)="openDialog()">
 	<mat-card-content>
-		<div fxLayout="row wrap" fxLayoutAlign="space-evenly" fxLayoutAlign.xs="center center" fxLayout.xs="column">
+		<div fxLayout="row wrap" fxLayoutAlign="start" fxLayoutAlign.xs="center center" fxLayout.xs="column">
 			<app-signo-vital-current-previous
 				*ngFor="let vitalSign of signosVitales"
 				[vitalSign]="vitalSign">

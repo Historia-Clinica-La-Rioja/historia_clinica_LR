@@ -1,0 +1,54 @@
+.badge {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	text-align: center;
+	padding: 20px;
+
+	.picture {
+		width: 41px;
+		height: 41px;
+		margin: 0 auto;
+		display: block;
+
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	.fullName {
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 16px;
+		letter-spacing: 0em;
+		text-align: center;
+		margin: 0;
+
+		display: block;
+	}
+
+	.userName {
+		font-size: 12px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 16px;
+		letter-spacing: 0em;
+		text-align: center;
+		margin: 0;
+
+		display: block;
+	}
+
+	.info {
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 200;
+		line-height: 12px;
+		margin: 0;
+
+		text-align: center;
+
+		display: block;
+	}
+}
+

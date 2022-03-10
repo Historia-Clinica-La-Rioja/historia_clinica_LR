@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Locale;
-
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "net.pladema.user")
 @Slf4j
@@ -19,7 +17,7 @@ public class UserRoleExceptionHandler {
 
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     @ExceptionHandler({UserRoleStorageException.class})
-    protected ApiErrorMessageDto handleUserRoleStorageException(UserRoleStorageException ex, Locale locale) {
+    protected ApiErrorMessageDto handleUserRoleStorageException(UserRoleStorageException ex) {
         log.debug("RegisterUserException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
     }

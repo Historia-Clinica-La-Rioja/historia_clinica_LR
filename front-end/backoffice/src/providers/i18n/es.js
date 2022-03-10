@@ -73,6 +73,11 @@ const messages = {
     files: {
         cant_download: 'No se pudo descargar el archivo'
     },
+    mergeMedicalCoverage: {
+        merge_success: 'La cobertura se unificó correctamente',
+        cant_merge: 'No se pudo unificar la cobertura médica',
+        dialog_title: 'Unificar coberturas médicas',
+    },
     resources: {
         beds: {
             name: 'Cama |||| Camas',
@@ -365,7 +370,9 @@ const messages = {
                 plan: 'Plan',
                 rnos: 'Rnos',
                 acronym: 'Acrónimo',
-                plans: 'Planes'
+                plans: 'Planes',
+                enabled: 'Habilitada',
+                merge: 'Coberturas a unificar'
             },
             createRelated: 'Crear Cobertura médica'
 
@@ -377,6 +384,16 @@ const messages = {
                 plan: 'Plan',
             },
             addRelated: 'Agregar plan',
+        },
+        "properties": {
+            name: 'Propiedades del sistema |||| Propiedades del sistema',
+            fields: {
+                property: 'Propiedad',
+                value: 'Valor',
+                origin: 'Fuente de datos',
+                nodeId: 'Nodo',
+                updatedOn: 'Última actualización',
+            }
         },
     },
 };

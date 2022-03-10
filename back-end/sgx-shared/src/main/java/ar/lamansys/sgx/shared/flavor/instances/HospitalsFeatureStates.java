@@ -4,13 +4,14 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
 
 import java.util.EnumMap;
+import java.util.Optional;
 
 public class HospitalsFeatureStates implements InitialFeatureStates {
 
-	@Override
-	public EnumMap<AppFeature, Boolean> getStates() {
-		EnumMap<AppFeature, Boolean> map = new EnumMap<>(AppFeature.class);
+	private final EnumMap<AppFeature, Boolean> map;
 
+	public HospitalsFeatureStates() {
+		map = new EnumMap<>(AppFeature.class);
 		map.put(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS, false);
 		map.put(AppFeature.MAIN_DIAGNOSIS_REQUIRED, true);
 		map.put(AppFeature.RESPONSIBLE_DOCTOR_REQUIRED, true);
@@ -36,7 +37,21 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.AGREGAR_MEDICOS_ADICIONALES, false);
 		map.put(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF, false);
 		map.put(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO, false);
+		map.put(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA, true);
+	}
+
+	@Override
+	public EnumMap<AppFeature, Boolean> getStates() {
 		return map;
+	}
+
+	@Override
+	public Optional<AppFeature> getAppFeatureByPropertyKey(String propertyKey) {
+		if (propertyKey == null)
+			return Optional.empty();
+		return map.keySet().stream()
+				.filter(appFeature -> appFeature.propertyNameFor().equals(propertyKey))
+				.findFirst();
 	}
 
 }

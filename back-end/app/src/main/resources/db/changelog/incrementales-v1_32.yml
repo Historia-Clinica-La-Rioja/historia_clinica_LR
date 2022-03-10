@@ -1,0 +1,117 @@
+databaseChangeLog:
+    - logicalFilePath: incrementales-v1_32
+
+    - changeSet:
+          id: system_property-createTable
+          comment: Create table system_property
+          author: etrapani
+          changes:
+              - createTable:
+                    tableName: system_property
+                    columns:
+                        - column:
+                            autoIncrement: true
+                            constraints:
+                              primaryKey: true
+                              primaryKeyName: PK_system_property
+                            name: id
+                            type: int
+                        - column:
+                              constraints:
+                                nullable: false
+                              name: property
+                              type: varchar(255)
+                        - column:
+                              name: value
+                              type: varchar(255)
+                        - column:
+                              name: origin
+                              type: varchar(255)
+                        - column:
+                              constraints:
+                                nullable: false
+                              name: node_id
+                              type: varchar(255)
+                        - column:
+                            name: description
+                            type: varchar(255)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: updated_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+              - addUniqueConstraint:
+                  tableName: system_property
+                  columnNames: id, node_id
+                  constraintName: UQ_system_property
+
+    - changeSet:
+          id:  dropView-v-attention
+          author: flizalde
+          dbms: "postgresql"
+          changes:
+              - dropView:
+                    viewName: v_attention
+
+    - changeSet:
+          id: update-type-field
+          author: flizalde
+          changes:
+              - modifyDataType:
+                    columnName: entry_date
+                    newDataType: datetime
+                    tableName: internment_episode
+
+    - changeSet:
+          id: v_attention-createView
+          comment: Update v_attention view
+          author: flizalde
+          changes:
+              - createView:
+                    viewName: v_attention
+                    fullDefinition: false
+                    replaceIfExists: true
+                    selectQuery: |-
+                      SELECT d.id as id, oc.patient_id as patient_id, oc.institution_id as institution_id, oc.clinical_specialty_id as clinical_speciality_id,
+                              oc.start_date as performed_date, d.source_id as encounter_id, d.source_type_id as scope_id, oc.doctor_id as doctor_id,
+                              oc.created_by as created_by, oc.created_on as created_on, oc.updated_by as updated_by, oc.updated_on as updated_on,
+                              oc.deleted_by as deleted_by, oc.deleted_on as deleted_on, oc.deleted as deleted
+                      FROM outpatient_consultation as oc
+                      JOIN document as d ON (oc.id = d.source_id and d.source_type_id = 1)
+                          UNION ALL
+                      SELECT d.id as id, ie.patient_id, ie.institution_id , ie.clinical_specialty_id , ie.entry_date, d.source_id, d.source_type_id, hpg.healthcare_professional_id,
+                              ie.created_by, ie.created_on, ie.updated_by, ie.updated_on, ie.deleted_by, ie.deleted_on, ie.deleted
+                      FROM internment_episode as ie
+                      JOIN document AS d ON (ie.id = d.source_id and d.source_type_id = 0)
+                      JOIN healthcare_professional_group AS hpg ON (ie.id = hpg.internment_episode_id and hpg.responsible)
+                          UNION ALL
+                      SELECT d.id as id, dc.patient_id, dc.institution_id , dc.clinical_specialty_id , dc.performed_date, d.source_id, d.source_type_id, dc.doctor_id,
+                              dc.created_by, dc.created_on, dc.updated_by, dc.updated_on, dc.deleted_by, dc.deleted_on, dc.deleted
+                      FROM odontology_consultation as dc
+                      JOIN document as d ON (dc.id = d.source_id and d.source_type_id = 6)
+                          UNION ALL
+                      SELECT d.id as id, vc.patient_id, vc.institution_id , vc.clinical_specialty_id , vc.performed_date, d.source_id, d.source_type_id, vc.doctor_id,
+                              vc.created_by, vc.created_on, vc.updated_by, vc.updated_on, vc.deleted_by, vc.deleted_on, vc.deleted
+                      FROM vaccine_consultation as vc
+                      JOIN document as d ON (vc.id = d.source_id and d.source_type_id = 5)
+
+    - changeSet:
+          id: add-patient_medical_coverage_id-column-internment_episode
+          author: flizalde
+          changes:
+              - addColumn:
+                    tableName: internment_episode
+                    columns:
+                        - column:
+                              name: patient_medical_coverage_id
+                              type: int
+              - addForeignKeyConstraint:
+                    baseColumnNames: patient_medical_coverage_id
+                    baseTableName: internment_episode
+                    constraintName: FK_internment_episode_patient_medical_coverage_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: patient_medical_coverage
+                    validate: true

@@ -9,6 +9,7 @@ import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 
 
 public class DemoExtensionService implements ExtensionService {
+	public static final String[] PUBLIC_MENU_LIST = {"manuales", "components"};
 	private static final UIMenuItemDto[] NO_MENU = {};
 	private static final UIPageDto INVALID_PAGE = UIPageDto.pageMessage("La página no está disponible");
 	@Override

@@ -22,7 +22,9 @@
 			"card": {
 				"buttons": {
 					"NUEVA_CONSULTA": "Nueva consulta"
-				}
+				},
+				"GROUP_AND_FACTOR": "Grupo y factor",
+				"SANGUINEOUS": "sanguíneo"
 			},
 			"new-nursing-consultation": {
 				"TITLE": "Nueva consulta de enfermería",
@@ -66,7 +68,7 @@
 					"PESO_MAX": "El peso máximo debe ser 1000 kg",
 					"PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
 					"MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
-					"HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 0 y 100 cm",
+					"HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
 					"BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
 					"GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
 					"CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",

@@ -2,7 +2,6 @@ package net.pladema.sgx.healthinsurance.service.impl;
 
 import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
 import net.pladema.establishment.repository.entity.PrivateHealthInsurancePlan;
-import net.pladema.patient.repository.MedicalCoverageRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceRepository;
 import net.pladema.patient.repository.domain.PrivateHealthInsuranceVo;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;

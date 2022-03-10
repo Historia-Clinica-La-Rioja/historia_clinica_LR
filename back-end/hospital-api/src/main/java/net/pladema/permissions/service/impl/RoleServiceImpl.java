@@ -1,10 +1,11 @@
 package net.pladema.permissions.service.impl;
 
+import net.pladema.authorization.infrastructure.input.rest.mapper.RoleNameMapper;
 import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -13,9 +14,11 @@ import java.util.Optional;
 @Service
 public class RoleServiceImpl implements RoleService {
 	private final RoleRepository roleRepository;
+	private final RoleNameMapper roleNameMapper;
 
-	public RoleServiceImpl(RoleRepository roleRepository) {
+	public RoleServiceImpl(RoleRepository roleRepository, RoleNameMapper roleNameMapper) {
 		this.roleRepository = roleRepository;
+		this.roleNameMapper = roleNameMapper;
 	}
 
 
@@ -35,28 +38,9 @@ public class RoleServiceImpl implements RoleService {
 		}
 	}
 
-	/**
-	 * Se usa la descripción user-friendly del rol para mostrar en pantalla.
-	 * Podría usarse el ERole para obtener una traducción.
-	 *
-	 * @param eRole
-	 * @return
-	 */
 	@Override
 	public String getRoleDescription(ERole eRole) {
-		switch (eRole) {
-			case ROOT: return "ROOT";
-			case ADMINISTRADOR: return "Administrador";
-			case ESPECIALISTA_MEDICO: return "Especialista Médico";
-			case PROFESIONAL_DE_SALUD: return "Profesional de la salud";
-			case ADMINISTRATIVO: return "Administrativo";
-			case ENFERMERO_ADULTO_MAYOR: return "Enfermero adulto mayor";
-			case ENFERMERO: return "Enfermero";
-			case ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE:  return "Administrador institucional";
-			case ADMINISTRADOR_AGENDA:  return "Administrador agenda";
-			case API_CONSUMER:  return "Api consumer";
-			case ESPECIALISTA_EN_ODONTOLOGIA:  return "Especialista en odontología";
-		}
-		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
+		return roleNameMapper.getRoleDescription(eRole);
 	}
+
 }

@@ -122,8 +122,6 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setReasons(reasons);
         outpatientReasonService.addReasons(newOutPatient.getId(), reasons);
 
-        outpatient.setGetClinicalSpecialtyId(createOutpatientDto.getClinicalSpecialtyId());
-
         createOutpatientDocumentService.execute(outpatient);
 
         if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
@@ -160,7 +158,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setEvolutionNote(extractNotes(vaccineDto));
         outpatient.setImmunizations(extractImmunizations(vaccineDto,institutionId));
 
-        outpatient.setGetClinicalSpecialtyId(clinicalSpecialtyId);
+        outpatient.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         createOutpatientDocumentService.execute(outpatient);
 

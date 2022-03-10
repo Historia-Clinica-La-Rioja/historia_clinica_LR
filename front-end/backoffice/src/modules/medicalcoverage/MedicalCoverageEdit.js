@@ -4,18 +4,19 @@ import {
     DeleteButton,
     Edit,
     FormDataConsumer,
-    maxLength, number,
+    maxLength, number, Pagination,
     ReferenceInput,
     ReferenceManyField,
     required,
     SelectInput,
     SimpleForm,
     TextField,
-    TextInput,
+    TextInput, useRecordContext,
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
+import MergeButton from "../../libs/sgx/components/MergeButton";
 
 const PREPAGA = 1;
 const OBRA_SOCIAL = 2;
@@ -56,6 +57,28 @@ const PrivateHealthInsurancePlanComponent = ({formData}) => {
     ) : null
 }
 
+
+const MedicalCoverageMergeComponent = (props) => {
+    const record = useRecordContext(props);
+    return record && record.cuit && record.enabled
+        ?
+        <Fragment>
+            <SectionTitle label="resources.medicalcoverages.fields.merge"/>
+            <ReferenceManyField filter={{ type: record.type}}
+                                reference="medicalcoveragesmerge"
+                                target="referenceId"
+                                pagination={<Pagination />}
+                                perPage={10}>
+                <Datagrid>
+                    <TextField  source="name" label="resources.medicalcoverages.fields.name"/>
+                    <MergeButton baseMedicalCoverage={record.id}></MergeButton>
+                </Datagrid>
+            </ReferenceManyField>
+
+        </Fragment>
+        : null;
+}
+
 const MedicalCoverageEdit = props => (
     <Edit {...props}>
             <SimpleForm toolbar={<CustomToolbar isEdit={true}/>}>
@@ -80,6 +103,8 @@ const MedicalCoverageEdit = props => (
                 <FormDataConsumer>
                     {formDataProps => (<PrivateHealthInsurancePlanComponent {...formDataProps}/>)}
                 </FormDataConsumer>
+                <div className="height-30" />
+                <MedicalCoverageMergeComponent  />
 
             </SimpleForm>
     </Edit>

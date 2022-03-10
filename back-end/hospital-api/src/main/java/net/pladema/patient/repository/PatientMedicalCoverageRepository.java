@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,5 +28,10 @@ public interface PatientMedicalCoverageRepository extends JpaRepository<PatientM
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT pmc FROM PatientMedicalCoverageAssn pmc WHERE pmc.patientId=:patientId AND pmc.medicalCoverageId =:medicalCoverageId")
 	Optional<PatientMedicalCoverageAssn> getByPatientAndMedicalCoverage(@Param("patientId") Integer patientId, @Param("medicalCoverageId") Integer medicalCoverageId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT pmc FROM PatientMedicalCoverageAssn pmc WHERE pmc.medicalCoverageId =:medicalCoverageId")
+	List<PatientMedicalCoverageAssn> getByMedicalCoverageId(@Param("medicalCoverageId") Integer medicalCoverageId);
+
 
 }

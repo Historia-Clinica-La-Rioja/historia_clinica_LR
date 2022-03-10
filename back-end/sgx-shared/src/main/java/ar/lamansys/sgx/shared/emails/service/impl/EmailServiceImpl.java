@@ -1,12 +1,7 @@
 package ar.lamansys.sgx.shared.emails.service.impl;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import ar.lamansys.sgx.shared.emails.domain.Mail;
+import ar.lamansys.sgx.shared.emails.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +12,11 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import ar.lamansys.sgx.shared.emails.domain.Mail;
-import ar.lamansys.sgx.shared.emails.service.EmailService;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -28,7 +26,7 @@ public class EmailServiceImpl implements EmailService {
 	@Value("${mail.from}")
 	protected String mainMail;
 
-	@Value("${api.domain}")
+	@Value("${server.servlet.context-path}")
 	protected String apiDomain;
 
 	@Value("${server.port}")
@@ -36,18 +34,6 @@ public class EmailServiceImpl implements EmailService {
 
 	@Value("${server.servlet.context-path}")
 	protected String apiContext;
-
-	@Value("${api.user}")
-	protected String apiUser;
-
-	@Value("${api.password}")
-	protected String apiPassword;
-
-	@Value("${api.user.activateUser}")
-	protected String activateUserPath;
-
-	@Value("${api.password.reset}")
-	protected String apiPasswordReset;
 
 	@Value("${app.mail.activate}")
 	private boolean activatedEmailSending;
@@ -65,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
 	@Override
 	public void sendActivationAccountMail(String to, String verificationToken, Integer userId) {
 		String subject = "Registration Confirmation";
-		String verificationLink = apiDomain + ":" + apiPort + apiContext + apiUser + "/" + userId + activateUserPath
+		String verificationLink = apiDomain + ":" + apiPort + apiContext + "/users/" + userId + "/enable"
 				+ "?token=" + verificationToken;
 		sendEmail(to, subject, verificationLink, "email-activation");
 	}
@@ -73,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
 	@Override
 	public void sendResetPasswordMail(String to, String verificationToken, Integer userId) {
 		String subject = "Reset password";
-		String verificationLink = apiDomain + ":" + apiPort + apiContext + apiPassword + apiPasswordReset + "?token="
+		String verificationLink = apiDomain + ":" + apiPort + apiContext + "/passwords/reset" + "?token="
 				+ verificationToken;
 		sendEmail(to, subject, verificationLink, "email-resetpassword");
 

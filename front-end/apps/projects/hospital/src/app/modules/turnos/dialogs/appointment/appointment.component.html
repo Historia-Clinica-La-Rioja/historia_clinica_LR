@@ -8,7 +8,9 @@
 					<span class="mat-body-strong capitalize patient-name-title" *ngIf="params.appointmentData.patient.fullName"> {{ viewPatientName(params.appointmentData) | uppercase }}</span>
 					<div>
 						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID {{params.appointmentData.patient.id}}</span> •
-						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="params.appointmentData.patient.identificationNumber">DNI {{params.appointmentData.patient.identificationNumber}}</span>
+						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="params.appointmentData.patient.identificationNumber">
+							{{identificationType?.description}}
+							{{params.appointmentData.patient.identificationNumber}}</span>
 					</div>
 					<div>
 						<a class="mat-body" *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
@@ -40,6 +42,10 @@
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
 					<mat-form-field appearance="outline" *ngIf="isAssigned()">
+						<button type="button" mat-button matSuffix color="warn" mat-icon-button
+								*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
 						<mat-select formControlName="newCoverageData">
 							<mat-option

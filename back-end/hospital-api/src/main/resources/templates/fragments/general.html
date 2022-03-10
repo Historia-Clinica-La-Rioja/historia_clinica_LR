@@ -160,10 +160,25 @@
             </dl>
         </div>
         <div th:if="${anthropometricData  != null}">
-            - Factor sanguíneo: <strong><label  th:if="${anthropometricData.bloodType  != null}" th:text="${anthropometricData.bloodType.value}"></label></strong><br/>
-            - Talla: <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong><br/>
-            - Peso: <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong><br/>
-            - IMC: <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong><br/>
+            - Factor sanguíneo:
+            <strong><label  th:if="${anthropometricData.bloodType  != null}" th:text="${anthropometricData.bloodType.value}"></label></strong>
+            <strong><span  th:if="${anthropometricData.bloodType  == null}">Sin cambios registrados</span></strong><br/>
+
+            - Talla:
+            <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong>
+            <strong><span  th:if="${anthropometricData.height  == null}">Sin cambios registrados</span></strong><br/>
+
+            - Peso:
+            <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong>
+            <strong><span  th:if="${anthropometricData.weight  == null}">Sin cambios registrados</span></strong><br/>
+
+            - IMC:
+            <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong>
+            <strong><span  th:if="${anthropometricData.BMI  == null}">Sin cambios registrados</span></strong><br/>
+
+            - Perímetro cefálico:
+            <strong><label  th:if="${anthropometricData.headCircumference  != null}" th:text="${anthropometricData.headCircumference.value + 'cm'}"></label></strong>
+            <strong><span  th:if="${anthropometricData.headCircumference  == null}">Sin cambios registrados</span></strong><br/>
         </div>
     </div>
 
@@ -324,7 +339,7 @@
     <!-- Signos vitales -->
 
     <div th:fragment="vitalSigns">
-        <h3 >Signos vitales</h3>
+        <h3 >Factores de riesgo</h3>
         <div  th:if="${vitalSigns  == null}">
             <dl>
                 <dd><p>Sin cambios registrados</p></dd>
@@ -368,6 +383,24 @@
             <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${vitalSigns.bloodOxygenSaturation.value+ '%' + 'Hs'}"></span></strong>
             &nbsp;<span th:if="${vitalSigns.bloodOxygenSaturation != null}" >Fecha de medición: </span>
             <strong><span  th:if="${vitalSigns.bloodOxygenSaturation != null}" th:text="${#temporals.format(vitalSigns.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+
+            - Glucemia:
+            <strong><span  th:if="${vitalSigns.bloodGlucose  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.bloodGlucose != null}" th:text="${vitalSigns.bloodGlucose.value + 'Mg/dl'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.bloodGlucose != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.bloodGlucose != null}" th:text="${#temporals.format(vitalSigns.bloodGlucose.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+
+            - Hemoglobina glicosilada:
+            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin != null}" th:text="${vitalSigns.glycosylatedHemoglobin.value+ '%'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.glycosylatedHemoglobin != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.glycosylatedHemoglobin != null}" th:text="${#temporals.format(vitalSigns.glycosylatedHemoglobin.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+
+            - Riesgo cardiovascular:
+            <strong><span  th:if="${vitalSigns.cardiovascularRisk  == null}">Sin cambios registrados</span></strong>
+            <strong><span  th:if="${vitalSigns.cardiovascularRisk != null}" th:text="${vitalSigns.cardiovascularRisk.value+ '%'}"></span></strong>
+            &nbsp;<span th:if="${vitalSigns.cardiovascularRisk != null}" >Fecha de medición: </span>
+            <strong><span  th:if="${vitalSigns.cardiovascularRisk != null}" th:text="${#temporals.format(vitalSigns.cardiovascularRisk.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
         </div>
     </div>
 
@@ -478,7 +511,7 @@
         </div>
         <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.evolutionNote}">
-                <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+                <label th:text="${notes.evolutionNote}"></label>
             </div>
         </div>
     </div>
@@ -486,6 +519,9 @@
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
     <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
+    </div>
+    <div class="col-12">
+        <strong>Fecha consulta: </strong><label  th:text="${#temporals.format(performedDate, 'dd-MM-yyyy')}"></label>
     </div>
 </footer>
 </html>

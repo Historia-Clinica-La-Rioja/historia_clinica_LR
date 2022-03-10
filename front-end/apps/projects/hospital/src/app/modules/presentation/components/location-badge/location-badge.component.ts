@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class LocationBadgeComponent {
 	@Input() location: LocationInfo;
+	@Input() roles = [];
 
 	constructor() { }
 

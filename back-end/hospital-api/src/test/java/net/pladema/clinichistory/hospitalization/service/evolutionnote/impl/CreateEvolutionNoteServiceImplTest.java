@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -50,6 +51,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Autowired
     private PatientDischargeRepository patientDischargeRepository;
 
+	@Mock
+	DateTimeProvider dateTimeProvider;
+
     @Mock
     private DocumentService documentService;
 
@@ -63,14 +67,16 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
-                evolutionNoteDocumentRepository,
+                dateTimeProvider,
+				evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService
         );
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                fetchHospitalizationHealthConditionState);
+                fetchHospitalizationHealthConditionState,
+                dateTimeProvider);
     }
 
 
@@ -146,7 +152,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidDiagnosis() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -175,7 +181,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidImmunizations() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -194,7 +200,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidProcedures() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -215,7 +221,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidAnthropometricData() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
@@ -240,7 +246,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidVitalSign() {
         var internmentEpisode = newInternmentEpisodeWithEpicrisis(null);
-        internmentEpisode.setEntryDate(LocalDate.of(2020,10,10));
+        internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         internmentEpisode = save(internmentEpisode);
 
         var evolutionNote = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());

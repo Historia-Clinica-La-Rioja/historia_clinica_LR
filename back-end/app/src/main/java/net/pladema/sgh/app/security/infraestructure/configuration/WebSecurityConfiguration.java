@@ -1,11 +1,11 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter.AuthenticationTokenFilter;
-import ar.lamansys.sgx.shared.configuration.ActuatorConfiguration;
+import ar.lamansys.sgx.auth.oauth.infrastructure.input.OAuth2AuthenticationFilter;
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.ActuatorConfiguration;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgh.app.security.infraestructure.filters.AuthorizationFilter;
 import net.pladema.sgh.app.security.infraestructure.filters.PublicApiAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -31,21 +31,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			"/swagger-ui/**"
 	};
 
-	@Value("${api.user}")
-	protected String apiUser;
-
-	@Value("${api.password}")
-	protected String apiPassword;
-
-	@Value("${api.user.activateUser}")
-	protected String activateApiUser;
-
-	@Value("${api.password.reset}")
-	protected String apiPasswordReset;
-
-	@Value("${api.auth}")
-	protected String apiAuth;
-
 	private final AuthenticationTokenFilter authenticationTokenFilter;
 
 	private final ActuatorConfiguration actuatorConfiguration;
@@ -54,14 +39,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private final PublicApiAuthenticationFilter publicApiAuthenticationFilter;
 
+	private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
+
 	public WebSecurityConfiguration(AuthenticationTokenFilter authenticationTokenFilter,
 									ActuatorConfiguration actuatorConfiguration,
 									AuthorizationFilter authorizationFilter,
-									PublicApiAuthenticationFilter publicApiAuthenticationFilter) {
+									PublicApiAuthenticationFilter publicApiAuthenticationFilter,
+									OAuth2AuthenticationFilter oAuth2AuthenticationFilter) {
 		this.authenticationTokenFilter = authenticationTokenFilter;
 		this.actuatorConfiguration = actuatorConfiguration;
 		this.authorizationFilter = authorizationFilter;
 		this.publicApiAuthenticationFilter = publicApiAuthenticationFilter;
+		this.oAuth2AuthenticationFilter = oAuth2AuthenticationFilter;
 	}
 
 	@Override
@@ -73,13 +62,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.authorizeRequests()
-				.antMatchers(HttpMethod.GET, apiUser + "/{id}" + activateApiUser).permitAll()
-				.antMatchers(HttpMethod.POST, apiUser + "/activationlink/resend").permitAll()
-				.antMatchers(apiPassword + apiPasswordReset ).permitAll()
+				.antMatchers(HttpMethod.GET,  "/users/{id}/enable").permitAll()
+				.antMatchers(HttpMethod.POST, "/users/activationlink/resend").permitAll()
+				.antMatchers("/passwords/reset" ).permitAll()
 				.antMatchers("/actuator/health").permitAll()
+				.antMatchers("/actuator/env/**").hasAnyAuthority(
+						ERole.ROOT.getValue(),
+						ERole.ADMINISTRADOR.getValue())
 				.antMatchers("/actuator/**").access(actuatorConfiguration.getAccessInfo())
-				.antMatchers(apiAuth + "/**").permitAll()
+				.antMatchers( "/auth/**").permitAll()
 				.antMatchers(SWAGGER_RESOURCES).permitAll()
+				.antMatchers(BACKOFFICE + "/properties").hasAnyAuthority(
+						ERole.ROOT.getValue(),
+						ERole.ADMINISTRADOR.getValue())
 				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
 					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),
@@ -98,7 +93,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// @formatter:on
 		httpSecurity.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 		httpSecurity.addFilterAfter(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-		httpSecurity.addFilterAfter(publicApiAuthenticationFilter, AuthenticationTokenFilter.class);
+		httpSecurity.addFilterAfter(oAuth2AuthenticationFilter, AuthenticationTokenFilter.class);
+		httpSecurity.addFilterAfter(publicApiAuthenticationFilter, OAuth2AuthenticationFilter.class);
 		httpSecurity.addFilterAfter(authorizationFilter, PublicApiAuthenticationFilter.class);
 	}
 

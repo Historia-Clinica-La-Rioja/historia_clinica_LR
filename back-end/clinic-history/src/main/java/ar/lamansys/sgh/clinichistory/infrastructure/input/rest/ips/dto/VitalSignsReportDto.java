@@ -37,4 +37,16 @@ public class VitalSignsReportDto implements Serializable {
     @Nullable
     private ReportClinicalObservationDto bloodOxygenSaturation;
 
+	@Valid
+	@Nullable
+	private ReportClinicalObservationDto bloodGlucose;
+
+	@Valid
+	@Nullable
+	private ReportClinicalObservationDto glycosylatedHemoglobin;
+
+	@Valid
+	@Nullable
+	private ReportClinicalObservationDto cardiovascularRisk;
+
 }

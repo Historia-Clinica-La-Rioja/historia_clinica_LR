@@ -5,7 +5,7 @@ import org.togglz.core.annotation.Label;
 import org.togglz.core.context.FeatureContext;
 
 public enum AppFeature implements Feature {
- 
+
     @Label("Indica si se puede dar de alta una internación sin tener una epicrisis asociada")
     HABILITAR_ALTA_SIN_EPICRISIS,
 
@@ -80,9 +80,22 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si esta habilitada la opción para visualizar el nombre autopercibido del paciente en lugar del nombre del documento")
     HABILITAR_NOMBRE_AUTOPERCIBIDO,
+
+    @Label("Indica si esta habilitada la opción para visualizar las propiedades configuradas en el sistema ")
+    HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA,
     ;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
     }
+
+    public String getLabel() {
+        return FeatureContext.getFeatureManager().getMetaData(this).getLabel();
+    }
+
+    public String propertyNameFor() {
+        return String.format("%s%s", ToggleConfiguration.PREFIX_APP_FEATURE_PROPERTY, this);
+    }
+
+
 }

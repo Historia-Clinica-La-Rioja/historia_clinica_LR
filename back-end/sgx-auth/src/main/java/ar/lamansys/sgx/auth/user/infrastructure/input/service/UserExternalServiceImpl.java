@@ -6,9 +6,9 @@ import ar.lamansys.sgx.auth.user.application.enableuser.EnableUser;
 import ar.lamansys.sgx.auth.user.application.getuseridbytoken.GetUserIdByToken;
 import ar.lamansys.sgx.auth.user.application.registeruser.RegisterUser;
 import ar.lamansys.sgx.auth.user.application.updatelogindate.UpdateLoginDate;
-import ar.lamansys.sgx.auth.user.application.updatepassword.UpdatePassword;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
+import ar.lamansys.sgx.auth.user.domain.userpassword.UpdateUserPassword;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class UserExternalServiceImpl implements UserExternalService {
 
     private final RegisterUser registerUser;
 
-    private final UpdatePassword updatePassword;
+    private final UpdateUserPassword updateUserPassword;
 
     private final UserStorage userStorage;
 
@@ -34,7 +34,7 @@ public class UserExternalServiceImpl implements UserExternalService {
     private final GetUserIdByToken getUserIdByToken;
 
     public UserExternalServiceImpl(RegisterUser registerUser,
-                                   UpdatePassword updatePassword,
+                                   UpdateUserPassword updateUserPassword,
                                    UserStorage userStorage,
                                    EnableUser enableUser,
                                    UpdateLoginDate updateLoginDate,
@@ -42,7 +42,7 @@ public class UserExternalServiceImpl implements UserExternalService {
                                    CreateTokenPasswordReset createTokenPasswordReset,
                                    GetUserIdByToken getUserIdByToken) {
         this.registerUser = registerUser;
-        this.updatePassword = updatePassword;
+        this.updateUserPassword = updateUserPassword;
         this.userStorage = userStorage;
         this.enableUser = enableUser;
         this.updateLoginDate = updateLoginDate;
@@ -87,7 +87,7 @@ public class UserExternalServiceImpl implements UserExternalService {
 
     @Override
     public void updatePassword(String username, String password) {
-        updatePassword.execute(username, password);
+        updateUserPassword.run(new UserBo(username), password);
     }
 
     @Override

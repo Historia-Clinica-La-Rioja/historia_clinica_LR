@@ -30,6 +30,9 @@
 			"@presentation/*": [
 				"projects/hospital/src/app/modules/presentation/*"
 			],
+			"@api-presentation/*": [
+				"projects/hospital/src/app/modules/api-presentation/*"
+			],
 			"@historia-clinica/*": [
 				"projects/hospital/src/app/modules/historia-clinica/*"
 			],

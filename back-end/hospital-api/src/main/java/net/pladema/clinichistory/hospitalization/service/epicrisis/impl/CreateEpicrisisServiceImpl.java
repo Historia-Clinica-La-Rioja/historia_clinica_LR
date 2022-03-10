@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -27,10 +28,14 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
     private final InternmentEpisodeService internmentEpisodeService;
 
+    private final DateTimeProvider dateTimeProvider;
+
     public CreateEpicrisisServiceImpl(DocumentFactory documentFactory,
-                                      InternmentEpisodeService internmentEpisodeService) {
+                                      InternmentEpisodeService internmentEpisodeService,
+                                      DateTimeProvider dateTimeProvider) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
@@ -45,6 +50,9 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         assertEpicrisisValid(epicrisis);
         assertEffectiveVitalSignTimeValid(epicrisis, internmentEpisode.getEntryDate());
         assertAnthropometricData(epicrisis);
+
+        LocalDateTime now = dateTimeProvider.nowDateTime();
+        epicrisis.setPerformedDate(now);
 
         epicrisis.setId(documentFactory.run(epicrisis, true));
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisode.getId(), epicrisis.getId());
@@ -71,7 +79,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
             throw new ConstraintViolationException("Antecedentes familiares repetidos", Collections.emptySet());
     }
 
-    private void assertEffectiveVitalSignTimeValid(EpicrisisBo epicrisis, LocalDate entryDate) {
+    private void assertEffectiveVitalSignTimeValid(EpicrisisBo epicrisis, LocalDateTime entryDate) {
         var validator = new EffectiveVitalSignTimeValidator();
         validator.isValid(epicrisis, entryDate);
     }

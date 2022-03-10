@@ -40,19 +40,30 @@ app-bar {
 		.informative-items {
 			text-align: center;
 
-			button {
+			button#logout {
 				width: auto;
-				color: red;
-				border-radius: 4px;
+				margin: 15px;
+
+				mat-icon {
+					color: red;
+					transform: rotate(180deg);
+				}
+				span {
+					padding: 0 5px;
+					font-weight: normal;
+					font-size: 12px;
+				}
 			}
-		}
-		.mat-divider {
-			margin: 0.5vh 18px;
+
+			button#logout:hover {
+				background: rgba(0, 0, 0, 0.04);
+			}
 		}
 	}
 }
 
 mat-sidenav {
+	min-width: 196px;
 	max-width: 204px;
 }
 

@@ -15,6 +15,9 @@
 
     <properties>
         <packaging.type>jar</packaging.type>
+        <jacoco-plugin.version>0.8.2</jacoco-plugin.version>
+        <maven-surefire-version>2.22.0</maven-surefire-version>
+        <maven-failsafe-version>2.22.0</maven-failsafe-version>
     </properties>
 
     <dependencies>
@@ -81,6 +84,66 @@
                         </compilerArg>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-version}</version>
+                <configuration combine.self="override">
+                    <includes>
+                        <include>**/*IntegrationTest.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <append>true</append>
+                    <excludes>
+                        <exclude>**/exception/*</exclude>
+                        <exclude>**/security/*</exclude>
+                        <exclude>**/data/*</exclude>
+                        <exclude>**/data/repository/*</exclude>
+                        <exclude>**/dto/*</exclude>
+                        <exclude>**/config/*</exclude>
+                        <exclude>**/sgx/**/*</exclude>
+                        <exclude>**/entity/*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                    </execution>
+                </executions>
+                <groupId>org.jacoco</groupId>
+                <version>${jacoco-plugin.version}</version>
             </plugin>
         </plugins>
     </build>

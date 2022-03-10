@@ -2,7 +2,7 @@ import { AuthProvider } from 'react-admin';
 import SGXPermissions from '../auth/SGXPermissions';
 import roleAssignments from './role-assignments'
 import { sgxFetchApi, sgxFetchApiWithToken, jsonPayload, withHeader } from './fetch';
-import { LoggedUserDto, PermissionsDto, PublicInfoDto } from './model';
+import { LoggedUserDto, OauthConfigDto, PermissionsDto, PublicInfoDto } from './model';
 import { clearTokens, retrieveToken, saveTokens } from './tokenStorage';
 
 const getPermissions = (): Promise<SGXPermissions> =>
@@ -13,6 +13,18 @@ const getPermissions = (): Promise<SGXPermissions> =>
             .then(([roleAssignments, { features }]) => {
                 return new SGXPermissions(roleAssignments, features)
             })
+
+function logoutFromOAuthServer(oAuthConfig: OauthConfigDto, refreshToken: string) {
+    const options = jsonPayload('POST', {
+        client_id: oAuthConfig.clientId,
+        refresh_token: refreshToken
+    });
+    const optionsWithAccept = withHeader(options, 'Accept', 'application/json');
+    const optionsWithContentType = withHeader(optionsWithAccept, 'Content-Type', 'application/x-www-form-urlencoded');
+
+    fetch(oAuthConfig.logoutUrl, optionsWithContentType).then(r => {
+    });
+}
 
 const authProvider: AuthProvider = {
     login: ({ username, password, raToken }) => {
@@ -34,10 +46,19 @@ const authProvider: AuthProvider = {
     },
     checkAuth: () => retrieveToken() ? Promise.resolve() : Promise.reject(),
     logout: () => {
+        let refreshToken = localStorage.getItem("refreshtoken");
+        sgxFetchApi<OauthConfigDto>('oauth/config').then(
+            oAuthConfig => {
+                if (oAuthConfig.enabled && refreshToken) {
+                    logoutFromOAuthServer(oAuthConfig, refreshToken);
+                }
+
+            }
+        );
         clearTokens();
         return Promise.resolve();
     },
-    getIdentity: 
+    getIdentity:
         () => sgxFetchApiWithToken<LoggedUserDto>('account/info')
             .then(({id, email}) => ({id, fullName: email})),
     getPermissions,

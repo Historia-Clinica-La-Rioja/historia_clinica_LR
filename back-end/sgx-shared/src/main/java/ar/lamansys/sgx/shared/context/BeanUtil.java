@@ -21,7 +21,8 @@ public class BeanUtil implements ApplicationContextAware {
     }
 
     public static void publishEvent(ApplicationEvent event) {
-        context.publishEvent(event);
+        if (context != null)
+            context.publishEvent(event);
     }
 
 }

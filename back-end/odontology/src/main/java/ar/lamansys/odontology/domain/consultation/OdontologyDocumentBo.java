@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -41,10 +42,13 @@ public class OdontologyDocumentBo {
 
     private String evolutionNote;
 
+    private LocalDate performedDate;
+
     public OdontologyDocumentBo(Long id,
                                 ConsultationBo consultation,
                                 Integer encounterId,
-                                Integer doctorId) {
+                                Integer doctorId,
+                                LocalDate performedDate) {
         this.id = id;
         this.patientId = consultation.getPatientId();
         this.encounterId = encounterId;
@@ -59,6 +63,7 @@ public class OdontologyDocumentBo {
         this.allergies = consultation.getAllergies();
         this.medications = consultation.getMedications();
         this.evolutionNote = consultation.getEvolutionNote();
+        this.performedDate = performedDate;
     }
 
 }

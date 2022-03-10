@@ -4,6 +4,7 @@ import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +13,7 @@ import org.mapstruct.Named;
 
 import java.util.ArrayList;
 
-@Mapper
+@Mapper(uses = {LocalDateMapper.class})
 public interface OdontologyDocumentMapper {
 
     @Named("fromOdontologyDocumentBo")

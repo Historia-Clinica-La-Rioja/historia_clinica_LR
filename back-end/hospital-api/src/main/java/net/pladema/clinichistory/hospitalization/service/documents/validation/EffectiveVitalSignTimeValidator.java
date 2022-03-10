@@ -15,7 +15,7 @@ public class EffectiveVitalSignTimeValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(EffectiveVitalSignTimeValidator.class);
 
-    public boolean isValid(IDocumentBo IDocumentBo, LocalDate entryDate) {
+    public boolean isValid(IDocumentBo IDocumentBo, LocalDateTime entryDate) {
         LOG.debug("Input parameters -> document {}", IDocumentBo);
 
         if (IDocumentBo == null) {
@@ -31,7 +31,7 @@ public class EffectiveVitalSignTimeValidator {
         return true;
     }
 
-    private void validEffectiveClinicalObservation(VitalSignBo vitalSigns, LocalDate entryDate){
+    private void validEffectiveClinicalObservation(VitalSignBo vitalSigns, LocalDateTime entryDate){
         validEffectiveClinicalObservation("Saturación de oxigeno", vitalSigns.getBloodOxygenSaturation(), entryDate);
 
         validEffectiveClinicalObservation("Tensión diastólica", vitalSigns.getDiastolicBloodPressure(), entryDate);
@@ -45,7 +45,7 @@ public class EffectiveVitalSignTimeValidator {
         validEffectiveClinicalObservation("Temperatura corporal", vitalSigns.getTemperature(), entryDate);
     }
 
-    private void validEffectiveClinicalObservation(String property, ClinicalObservationBo effectiveClinicalObservationDto, LocalDate entryDate){
+    private void validEffectiveClinicalObservation(String property, ClinicalObservationBo effectiveClinicalObservationDto, LocalDateTime entryDate){
         if (effectiveClinicalObservationDto == null)
             return;
         if (effectiveClinicalObservationDto.getEffectiveTime() == null)
@@ -53,7 +53,7 @@ public class EffectiveVitalSignTimeValidator {
         LocalDateTime datetime = effectiveClinicalObservationDto.getEffectiveTime();
         if (datetime.isAfter(LocalDateTime.now()))
             throw new ConstraintViolationException(property + ": La fecha de medición debe ser anterior o igual a la fecha y hora actual", Collections.emptySet());
-        if (datetime.isBefore(entryDate.atStartOfDay()))
+        if (datetime.isBefore(entryDate))
             throw new ConstraintViolationException(property + ": La fecha de medición debe ser posterior a la fecha de internación", Collections.emptySet());
     }
 }

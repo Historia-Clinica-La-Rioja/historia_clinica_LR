@@ -11,7 +11,8 @@ import {
     TextField,
     TopToolbar,
     useRecordContext,
-    Labeled
+    BooleanField,
+    Labeled,
 } from 'react-admin';
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
@@ -84,6 +85,7 @@ const MedicalCoverageShow = props => (
             </ReferenceField>
             <MedicalCoverageRnosField/>
             <MedicalCoverageAcronymField/>
+            <BooleanField source="enabled" />
             <PrivateHealthInsurancePlanComponent/>
         </SimpleShowLayout>
     </Show>

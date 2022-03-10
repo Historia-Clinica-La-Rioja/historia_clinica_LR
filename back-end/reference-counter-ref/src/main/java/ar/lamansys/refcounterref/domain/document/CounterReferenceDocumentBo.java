@@ -6,6 +6,7 @@ import ar.lamansys.refcounterref.domain.medication.CounterReferenceMedicationBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -33,10 +34,13 @@ public class CounterReferenceDocumentBo {
 
     private final List<CounterReferenceAllergyBo> allergies;
 
+    private final LocalDate performedDate;
+
     public CounterReferenceDocumentBo(Long id,
                                       CounterReferenceBo counterReferenceBo,
                                       Integer encounterId,
-                                      Integer doctorId) {
+                                      Integer doctorId,
+                                      LocalDate performedDate) {
         this.id = id;
         this.patientId = counterReferenceBo.getPatientId();
         this.encounterId = encounterId;
@@ -48,6 +52,7 @@ public class CounterReferenceDocumentBo {
         this.procedures = counterReferenceBo.getProcedures();
         this.medications = counterReferenceBo.getMedications();
         this.allergies = counterReferenceBo.getAllergies();
+        this.performedDate = performedDate;
     }
 
 }

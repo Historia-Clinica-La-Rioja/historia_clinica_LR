@@ -25,7 +25,7 @@ Buildear el proyecto por línea de comandos desde la carpeta `/back-end`:
 - Correr la aplicación por línea de comandos desde la carpeta `/back-end/app`: 
 > `java -Dspring.profiles.active=dev -jar target/app*.jar`
 
-- Desde un IDE de preferencia: 
+## Desde un IDE de preferencia
 
 1. Importar el módulo **backend** en el IDE.
 

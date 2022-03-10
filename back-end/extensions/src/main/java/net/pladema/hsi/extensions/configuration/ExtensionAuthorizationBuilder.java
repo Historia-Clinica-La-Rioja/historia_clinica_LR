@@ -1,5 +1,6 @@
 package net.pladema.hsi.extensions.configuration;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -54,6 +55,11 @@ public class ExtensionAuthorizationBuilder {
 
 	public ExtensionAuthorizationBuilder isInstitutionMenuAllowed(String menuId, Function<Integer, Boolean> isAllow) {
 		ruleByInstitutionMenu.put(menuId, isAllow);
+		return this;
+	}
+
+	public ExtensionAuthorizationBuilder systemMenu(String[] menuIds, Supplier<Boolean> isAllow) {
+		Arrays.stream(menuIds).forEach((menuId -> systemMenu(menuId, isAllow)));
 		return this;
 	}
 }

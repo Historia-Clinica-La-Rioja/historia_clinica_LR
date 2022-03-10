@@ -12,6 +12,8 @@ import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -57,6 +59,8 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 
     @Valid
     private VitalSignBo vitalSigns;
+
+    private LocalDateTime performedDate;
 
     @Override
     public Integer getPatientId() {

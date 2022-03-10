@@ -36,7 +36,7 @@ export class DatosAntropometricosNuevaConsultaService {
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
-			headCircumference: [null, [Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]+$')]],
+			headCircumference: [null, [Validators.min(1), Validators.max(100), Validators.pattern('^[0-9]+$')]],
 			height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
 			weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
 		});

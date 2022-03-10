@@ -5,15 +5,17 @@
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]="personInformation"
-			[personPhoto]="personPhoto" [showAdditionalInformation]="true">
+			[personPhoto]="personPhoto" [showAdditionalInformation]="true" [bloodType]="bloodType">
 			<div horizontal-content>
 				<ng-container *ngIf="hasNewConsultationEnabled$ | async">
-					<ng-container *ngIf="CurrentUserIsAllowedToMakeBothQueries; else currentUserIsNotAllowedToMakeBothQueries">
+					<ng-container
+						*ngIf="CurrentUserIsAllowedToMakeBothQueries; else currentUserIsNotAllowedToMakeBothQueries">
 						<button id="nueva_consulta" mat-flat-button color="primary" mat-button
 							[matMenuTriggerFor]="menu">
 							{{ 'ambulatoria.paciente.card.buttons.NUEVA_CONSULTA' | translate | uppercase }}</button>
 						<mat-menu #menu="matMenu">
-							<button mat-menu-item (click)="referenceNotificationService.hasReferenceNotification()">Ambulatoria</button>
+							<button mat-menu-item
+								(click)="referenceNotificationService.hasReferenceNotification()">Ambulatoria</button>
 							<button mat-menu-item (click)="openNuevaConsultaEnfermeria()">Enfermeria</button>
 						</mat-menu>
 					</ng-container>

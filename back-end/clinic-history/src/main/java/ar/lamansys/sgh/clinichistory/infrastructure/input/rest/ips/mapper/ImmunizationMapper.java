@@ -1,9 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

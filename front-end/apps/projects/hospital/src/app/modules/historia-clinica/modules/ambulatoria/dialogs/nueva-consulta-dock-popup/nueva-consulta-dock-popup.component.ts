@@ -236,8 +236,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					}
 				} else {
 					this.disableConfirmButton = false;
-					if (!this.isValidConsultation())
-						this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					if (!this.isValidConsultation()) {
+						setTimeout(() => {
+							this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}, 500);
+					}
 
 				}
 			}
@@ -368,7 +371,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 
-		if ((parseInt(consulta.anthropometricData?.headCircumference?.value, 10) < 0) || (parseInt(consulta.anthropometricData?.headCircumference?.value, 10) > 100)) {
+		if ((parseInt(consulta.anthropometricData?.headCircumference?.value, 10) < 1) || (parseInt(consulta.anthropometricData?.headCircumference?.value, 10) > 100)) {
 			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
 		}
 

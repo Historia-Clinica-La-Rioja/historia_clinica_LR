@@ -1,17 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants/menu';
+import { map, switchMap } from 'rxjs/operators';
+
 import { PermissionsService } from '@core/services/permissions.service';
-import { AccountService } from '@api-rest/services/account.service';
-import { mapToFullName } from '@api-rest/mapper/user-person-dto.mapper';
 import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { map, switchMap } from 'rxjs/operators';
-import { LoggedUserService } from '../auth/services/logged-user.service';
-import { RoleAssignment } from '@api-rest/api-model';
+import { AccountService } from '@api-rest/services/account.service';
+import { RoleAssignmentDto } from '@api-rest/api-model';
+
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
+import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
+import { mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
+
 import { MenuService } from '@extensions/services/menu.service';
-import { UserInfo } from '@presentation/components/main-layout/main-layout.component';
+
+import { LoggedUserService } from '../auth/services/logged-user.service';
+import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants/menu';
+
+import { HomeRoutes } from '../home/home-routing.module';
+import { AppRoutes } from '../../app-routing.module';
 
 @Component({
 	selector: 'app-home',
@@ -19,8 +26,9 @@ import { UserInfo } from '@presentation/components/main-layout/main-layout.compo
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+	userProfileLink = ['/', AppRoutes.Home, HomeRoutes.Profile];
 	menuItems$: Observable<MenuItem[]>;
-	userInfo: UserInfo = {};
+	userInfo: UserInfo;
 
 	private readonly NO_INSTITUTION = -1;
 
@@ -50,16 +58,13 @@ export class HomeComponent implements OnInit {
 		});
 
 		this.accountService.getInfo()
-			.subscribe(userInfo => {
-				this.userInfo = {
-					userName: userInfo.email,
-					fullName: mapToFullName(userInfo.personDto)
-				};
-			}
+			.subscribe(
+				userInfo => this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto)
 			);
 	}
 
-	private userHasAnyRole(roleAssignments: RoleAssignment[]): boolean {
+	private userHasAnyRole(roleAssignments: RoleAssignmentDto[]): boolean {
 		return (roleAssignments.length > 0);
 	}
+
 }

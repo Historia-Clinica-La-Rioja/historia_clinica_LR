@@ -2,7 +2,7 @@ package net.pladema.patient.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.patient.repository.entity.MedicalCoverage;
-import org.springframework.data.jpa.repository.JpaRepository;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +34,10 @@ public interface MedicalCoverageRepository extends SGXAuditableEntityJPAReposito
     @Transactional(readOnly = true)
     @Query(value = "SELECT mc FROM MedicalCoverage mc WHERE mc.cuit = :cuit")
     Optional<MedicalCoverage> findByCUIT(@Param("cuit") String cuit);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM MedicalCoverage mc "+
+            "WHERE mc.id = :id ")
+    void deleteMergedCoverage(@Param("id") Integer id);
 }

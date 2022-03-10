@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ContextService } from '@core/services/context.service';
-import { Observable } from 'rxjs';
 import { InstitutionDto } from '@api-rest/api-model';
 import { InstitutionService } from '@api-rest/services/institution.service';
-import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
-import { mapToAddress } from '@api-rest/mapper/institution-dto.mapper';
+import { AppRoutes } from '../../../../app-routing.module';
+import { mapToAddress } from '@api-presentation/mappers/institution-dto.mapper';
 
 @Component({
 	selector: 'app-home',
