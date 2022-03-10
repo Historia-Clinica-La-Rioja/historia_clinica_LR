@@ -82,7 +82,7 @@ export class AgendaSetupComponent implements OnInit {
 	) {
 		this.route.paramMap.subscribe(params => this.professionalId = params.get("idProfessional"));
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY);
+		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
 	}
 
 	ngOnInit(): void {

@@ -1,3 +1,4 @@
+import { SnackBarService } from './../../presentation/services/snack-bar.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable } from 'rxjs';
@@ -44,7 +45,8 @@ export class AgendaHorarioService {
 		private readonly dialog: MatDialog,
 		private readonly cdr: ChangeDetectorRef,
 		private readonly viewDate: Date,
-		private readonly weekStartsOn: DAYS_OF_WEEK
+		private readonly weekStartsOn: DAYS_OF_WEEK,
+		private readonly snackBarService: SnackBarService
 	) {
 		currentWeek().forEach(day => {
 			this.mappedCurrentWeek[day.day()] = day;
@@ -108,10 +110,31 @@ export class AgendaHorarioService {
 					this.removeTempEvent(event);
 				}
 			} else {
-				this.setNewEvent(event, dialogInfo);
+				if (this.thereIsValidTurnAvailability(event))
+					this.setNewEvent(event, dialogInfo);
+				else{
+					this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
+					this.removeTempEvent(event);
+				}
 			}
 			this.refresh();
 		});
+	}
+
+	private thereIsValidTurnAvailability(event: CalendarEvent): boolean {
+		return this.occupiedOpeningHours
+					.filter(occupiedTurn => event.start.getDay() === occupiedTurn.start.getDay())
+					.every(occupiedTurn => this.compareTurnHourThreshold(event, occupiedTurn));
+	}
+
+	private compareTurnHourThreshold(event, occupiedTurn: CalendarEvent): boolean{
+		const eventStartHour = event.start.getTime();
+		const eventEndHour = event.end.getTime();
+		const occupiedTurnStartHour = occupiedTurn.start.getTime();
+		const occupiedTurnEndHour = occupiedTurn.end.getTime();
+
+		return (eventStartHour >= occupiedTurnEndHour ||
+			(eventStartHour < occupiedTurnStartHour && eventEndHour <= occupiedTurnStartHour));
 	}
 
 	openEditDialogForEvent(event: CalendarEvent): void {
