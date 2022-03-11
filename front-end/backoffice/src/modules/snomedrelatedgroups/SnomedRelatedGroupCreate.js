@@ -20,7 +20,7 @@ const SnomedRelatedGroupCreate = props => {
                     source="groupId"
                     reference="snomedgroups"
                 >
-                    <SelectInput optionText="description" optionValue="id" options={{ disabled: true }}/>
+                    <SelectInput optionText="description" optionValue="id" validate={[required()]} options={{ disabled: true }}/>
                 </ReferenceInput>
 
                 <ReferenceInput

@@ -1,13 +1,15 @@
 import {
     BooleanField,
     Datagrid,
+    DeleteButton,
     Pagination,
     ReferenceField,
     ReferenceManyField,
-    Show,
     SimpleShowLayout,
-    TextField, 
+    TextField,
     useTranslate,
+    ShowController,
+    ShowView,
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
 import React from "react";
@@ -17,6 +19,7 @@ import SectionTitle from "../components/SectionTitle";
 
 const CreateRelatedButton = ({ record, reference, label}) => {
     const newRecord = {groupId: record.id, parentGroupId: record.groupId};
+    const parentGroupId = record.groupId;
     const translate = useTranslate();
     return (
         <Button
@@ -25,6 +28,7 @@ const CreateRelatedButton = ({ record, reference, label}) => {
                 pathname: `/${reference}/create`,
                 state: { record: newRecord },
             }}
+            disabled={!parentGroupId}
         >{translate(label)}</Button>
     );
 };
@@ -32,68 +36,73 @@ const CreateRelatedButton = ({ record, reference, label}) => {
 const SnomedGroupShow = props => {
     const translate = useTranslate();
     return (
-        <Show {...props}>
-            <SimpleShowLayout>
+        <ShowController {...props}>
+            {controllerProps =>
+                <ShowView {...props} {...controllerProps}>
+                    <SimpleShowLayout>
 
-                {/* ID */}
-                <TextField source="id"/>
+                        {/* ID */}
+                        <TextField source="id"/>
 
-                {/* Description */}
-                <TextField source="description"/>
+                        {/* Description */}
+                        <TextField source="description"/>
 
-                {/* ECL */}
-                <TextField source="ecl"/>
+                        {/* ECL */}
+                        <TextField source="ecl"/>
 
-                {/* Custom ID */}
-                <TextField source="customId"/>
+                        {/* Custom ID */}
+                        <TextField source="customId"/>
 
-                {/* Group parent */}
-                <ReferenceField source="groupId" reference="snomedgroups" link="show" emptyText={translate('resources.snomedgroups.noInfo')} >
-                    <TextField source="description"/>
-                </ReferenceField>
+                        {/* Group parent */}
+                        <ReferenceField source="groupId" reference="snomedgroups" link="show" emptyText={translate('resources.snomedgroups.noInfo')} >
+                            <TextField source="description"/>
+                        </ReferenceField>
 
-                {/* Is template */}
-                <BooleanField source="template"/>
+                        {/* Is template */}
+                        <BooleanField source="template"/>
 
-                {/* Institution */}
-                <ReferenceField source="institutionId" reference="institutions" link="show" emptyText={translate('resources.snomedgroups.noInfo')} >
-                    <TextField source="name"/>
-                </ReferenceField>
+                        {/* Institution */}
+                        <ReferenceField source="institutionId" reference="institutions" link="show" emptyText={translate('resources.snomedgroups.noInfo')} >
+                            <TextField source="name"/>
+                        </ReferenceField>
 
-                {/* User */}
-                <ReferenceField source="userId" reference="users" link={false} emptyText={translate('resources.snomedgroups.noInfo')} >
-                    <TextField source="username"/>
-                </ReferenceField>
+                        {/* User */}
+                        <ReferenceField source="userId" reference="users" link={false} emptyText={translate('resources.snomedgroups.noInfo')} >
+                            <TextField source="username"/>
+                        </ReferenceField>
 
-                {/* Last update */}
-                <SgxDateField source="lastUpdate"/>
-
-                {/* Snomed concepts */}
-                <SectionTitle label="resources.snomedgroups.fields.snomedConcepts"/>
-
-                <CreateRelatedButton
-                    reference="snomedrelatedgroups"
-                    label="resources.snomedgroups.createRelated"
-                />
-
-                <ReferenceManyField
-                    reference="snomedgroupconcepts"
-                    target="groupId"
-                    sort={{field: 'conceptPt', order: 'ASC'}}
-                    perPage={10}
-                    pagination={<Pagination rowsPerPageOptions={[10, 25, 50]}/>}
-                    addLabel={false}
-                >
-                    <Datagrid>
-                        <TextField source="conceptSctid"/>
-                        <TextField source="conceptPt"/>
-                        <TextField source="orden"/>
+                        {/* Last update */}
                         <SgxDateField source="lastUpdate"/>
-                    </Datagrid>
-                </ReferenceManyField>
 
-            </SimpleShowLayout>
-        </Show>
+                        {/* Snomed concepts */}
+                        <SectionTitle label="resources.snomedgroups.fields.snomedConcepts"/>
+
+                        <CreateRelatedButton
+                            reference="snomedrelatedgroups"
+                            label="resources.snomedgroups.createRelated"
+                        />
+
+                        <ReferenceManyField
+                            reference="snomedgroupconcepts"
+                            target="groupId"
+                            sort={{field: 'conceptPt', order: 'ASC'}}
+                            perPage={10}
+                            pagination={<Pagination rowsPerPageOptions={[10, 25, 50]}/>}
+                            addLabel={false}
+                        >
+                            <Datagrid>
+                                <TextField source="conceptSctid"/>
+                                <TextField source="conceptPt"/>
+                                <TextField source="orden"/>
+                                <SgxDateField source="lastUpdate"/>
+                                <DeleteButton redirect={false} disabled={!controllerProps?.record?.groupId} />
+                            </Datagrid>
+                        </ReferenceManyField>
+
+                    </SimpleShowLayout>
+                </ShowView>
+            }
+        </ShowController>
     );
 }
 
