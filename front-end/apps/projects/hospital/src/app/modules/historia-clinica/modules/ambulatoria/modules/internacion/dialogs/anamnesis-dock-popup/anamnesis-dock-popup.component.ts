@@ -194,7 +194,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		function fieldsToUpdate(anamnesisDto: AnamnesisDto): InternmentFields {
 			return {
 				allergies: !!anamnesisDto.allergies,
-				anthropometricData: !!anamnesisDto.anthropometricData,
+				heightAndWeight: !!anamnesisDto.anthropometricData?.weight || !!anamnesisDto.anthropometricData?.height,
+				bloodType: !!anamnesisDto.anthropometricData?.bloodType,
 				mainDiagnosis: !!anamnesisDto.mainDiagnosis,
 				diagnosis: !!anamnesisDto.diagnosis,
 				riskFactors: !!anamnesisDto.riskFactors,

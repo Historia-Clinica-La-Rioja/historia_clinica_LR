@@ -156,10 +156,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 							this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 							this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
 							this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
-							this.internmentSummaryFacadeService.anthropometricData$.subscribe(
-								(data: HCEAnthropometricDataDto) => {
-									if (data?.bloodType?.value)
-										this.bloodType = data?.bloodType?.value
+							this.internmentSummaryFacadeService.bloodTypeData$.subscribe(
+								bloodType => {
+									if (bloodType?.value)
+										this.bloodType = bloodType.value
 								});
 						}
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
