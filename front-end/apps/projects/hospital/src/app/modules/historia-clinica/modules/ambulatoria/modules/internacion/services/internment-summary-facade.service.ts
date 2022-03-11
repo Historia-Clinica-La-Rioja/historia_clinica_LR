@@ -20,7 +20,8 @@ export class InternmentSummaryFacadeService {
 	private personalHistorySubject: Subject<any> = new BehaviorSubject<any>([]);
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private anthropometricDataSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private heightAndWeightDataSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private bloodTypeDataSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private immunizationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private mainDiagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private diagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
@@ -38,7 +39,9 @@ export class InternmentSummaryFacadeService {
 	readonly personalHistory$ = this.personalHistorySubject.asObservable();
 	readonly medications$ = this.medicationsSubject.asObservable();
 	readonly riskFactors$ = this.riskFactorsSubject.asObservable();
-	readonly anthropometricData$ = this.anthropometricDataSubject.asObservable();
+	readonly heightAndWeightData$ = this.heightAndWeightDataSubject.asObservable();
+
+	readonly bloodTypeData$ = this.bloodTypeDataSubject.asObservable();
 	readonly immunizations$ = this.immunizationsSubject.asObservable();
 	readonly mainDiagnosis$ = this.mainDiagnosisSubject.asObservable();
 	readonly diagnosis$ = this.diagnosisSubject.asObservable();
@@ -57,9 +60,9 @@ export class InternmentSummaryFacadeService {
 		private readonly hceGeneralStateService: HceGeneralStateService
 	) { }
 
-	setInternmentEpisodeInformation(internmentEpisodeId: number, anthropometricData: boolean) {
-		if (!anthropometricData) {
-			this.anthropometricDataSubject.next();
+	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean) {
+		if (!bloodType) {
+			this.bloodTypeDataSubject.next();
 		}
 		this.internmentEpisodeId = internmentEpisodeId;
 		this.updateInternmentEpisode();
@@ -69,7 +72,8 @@ export class InternmentSummaryFacadeService {
 			personalHistories: true,
 			riskFactors: true,
 			medications: true,
-			anthropometricData: anthropometricData,
+			heightAndWeight: true,
+			bloodType: bloodType,
 			immunizations: true,
 			evolutionClinical: true,
 		});
@@ -96,8 +100,17 @@ export class InternmentSummaryFacadeService {
 
 		}
 
-		if (fieldsToUpdate.anthropometricData) {
-			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(a => this.anthropometricDataSubject.next(a));
+		if (fieldsToUpdate.heightAndWeight) {
+			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(a => {
+				const heightAndWeight = { height: a?.height, weight: a?.weight }
+				this.heightAndWeightDataSubject.next(heightAndWeight);
+			});
+		}
+
+		if (fieldsToUpdate.bloodType) {
+			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(a => {
+				this.bloodTypeDataSubject.next(a?.bloodType);
+			});
 		}
 
 		if (fieldsToUpdate.immunizations) {
@@ -193,7 +206,8 @@ export interface InternmentFields {
 	personalHistories?: boolean;
 	riskFactors?: boolean;
 	medications?: boolean;
-	anthropometricData?: boolean;
+	heightAndWeight?: boolean;
+	bloodType?: boolean;
 	immunizations?: boolean;
 	mainDiagnosis?: boolean;
 	diagnosis?: boolean;

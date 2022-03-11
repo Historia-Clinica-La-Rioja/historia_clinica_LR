@@ -76,7 +76,6 @@ export class InternacionPacienteComponent implements OnInit {
 		private internmentService: InternacionService,
 		private mapperService: MapperService,
 		private route: ActivatedRoute,
-		private router: Router,
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private readonly internmentPatientService: InternmentPatientService,
@@ -111,13 +110,13 @@ export class InternacionPacienteComponent implements OnInit {
 
 		this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
-		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisode =>{
+		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisode => {
 			this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => {
 				this.hasMedicalDischarge = h
 				// La alta administrativa está disponible cuando existe el alta medica
 				// o el flag de alta sin epicrisis está activa
 				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
-					this.showDischarge = (isOn || (h === true))&& internmentEpisode?.inProgress;
+					this.showDischarge = (isOn || (h === true)) && internmentEpisode?.inProgress;
 				});
 			})
 		});
@@ -224,7 +223,8 @@ export class InternacionPacienteComponent implements OnInit {
 			personalHistories: fieldsToUpdate?.personalHistories,
 			riskFactors: fieldsToUpdate?.riskFactors,
 			medications: fieldsToUpdate?.medications,
-			anthropometricData: fieldsToUpdate?.anthropometricData,
+			heightAndWeight: fieldsToUpdate?.heightAndWeight,
+			bloodType: fieldsToUpdate?.bloodType,
 			immunizations: fieldsToUpdate?.immunizations,
 			mainDiagnosis: fieldsToUpdate?.mainDiagnosis,
 			diagnosis: fieldsToUpdate?.diagnosis,

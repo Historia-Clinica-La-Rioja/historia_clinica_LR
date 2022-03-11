@@ -128,7 +128,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		function setFieldsToUpdate(evolutionNoteDto: EvolutionNoteDto): InternmentFields {
 			return {
 				allergies: !!evolutionNoteDto.allergies,
-				anthropometricData: !!evolutionNoteDto.anthropometricData,
+				heightAndWeight: !!evolutionNoteDto.anthropometricData?.weight || !!evolutionNoteDto.anthropometricData?.height,
+				bloodType: !!evolutionNoteDto.anthropometricData?.bloodType,
 				immunizations: !!evolutionNoteDto.immunizations,
 				riskFactors: !!evolutionNoteDto.riskFactors,
 				diagnosis: !!evolutionNoteDto.diagnosis,

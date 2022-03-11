@@ -15,7 +15,7 @@ import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambula
 export class AntropometricosSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
-	@Input() anthropometricData$: Observable<AnthropometricDataDto>;
+	@Input() anthropometricData$: Observable<any>;
 	@Input() editable = false;
 	@Input() hideBloodType = false;
 
@@ -45,7 +45,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	private updateAnthropometricData() {
 		this.anthropometricData$.subscribe(
-			(anthropometricData: AnthropometricDataDto) => {
+			anthropometricData => {
 				if (anthropometricData) {
 					if (anthropometricData.bmi?.value) {
 						anthropometricData.bmi.value = this.truncateIfNecessary(anthropometricData.bmi?.value);
@@ -76,10 +76,10 @@ export class AntropometricosSummaryComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(submitted => {
-			if (submitted) {
+		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate) {
 				this.updateAnthropometricData();
-				this.internmentSummaryFacadeService.setFieldsToUpdate({ anthropometricData: true });
+				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight, bloodType: fieldsToUpdate.bloodType });
 			}
 		}
 		);
@@ -101,7 +101,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 		return floatValue;
 	}
 
-	public getIdentificator(name : DetailBox) : string{
+	public getIdentificator(name: DetailBox): string {
 		return name.description.split(' (')[0]
 			.split(" ").join('-').toLowerCase();
 	}
