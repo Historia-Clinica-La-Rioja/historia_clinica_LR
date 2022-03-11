@@ -15,6 +15,7 @@ import { EffectiveTimeComponent } from './components/effective-time/effective-ti
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
+import { FactoresDeRiesgoNuevaConsultaComponent } from './components/factores-de-riesgo-nueva-consulta/factores-de-riesgo-nueva-consulta.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -39,6 +40,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		InternacionAntecedentesPersonalesSummaryComponent,
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
+		FactoresDeRiesgoNuevaConsultaComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -69,6 +71,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
+		FactoresDeRiesgoNuevaConsultaComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 	]

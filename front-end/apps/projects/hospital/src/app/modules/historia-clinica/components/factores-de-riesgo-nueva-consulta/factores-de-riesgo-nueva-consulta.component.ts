@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
-import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
+import { FactoresDeRiesgoNuevaConsultaService } from '../../modules/ambulatoria/services/factores-de-riesgo-nueva-consulta.service';
 
 @Component({
   selector: 'app-factores-de-riesgo-nueva-consulta',

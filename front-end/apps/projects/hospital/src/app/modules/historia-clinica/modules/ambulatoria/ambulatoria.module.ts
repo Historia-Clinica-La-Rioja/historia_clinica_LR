@@ -47,7 +47,6 @@ import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-d
 import { SnvsReportsResultComponent } from './dialogs/snvs-reports-result/snvs-reports-result.component';
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
-import { FactoresDeRiesgoNuevaConsultaComponent } from './components/factores-de-riesgo-nueva-consulta/factores-de-riesgo-nueva-consulta.component';
 import { ShowAllergiesComponent } from './dialogs/show-allergies/show-allergies.component';
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
 import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internment-summary/internment-summary.component";
@@ -91,7 +90,6 @@ import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagno
 		CounterreferenceDockPopupComponent,
 		SnvsReportsResultComponent,
 		DatosAntropometricosNuevaConsultaComponent,
-		FactoresDeRiesgoNuevaConsultaComponent,
 		ShowAllergiesComponent,
 		InternacionPacienteComponent,
 		VacunasSummaryComponent,
