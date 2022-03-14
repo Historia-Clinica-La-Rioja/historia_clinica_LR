@@ -84,8 +84,9 @@ public class PatientServiceImpl implements PatientService {
 	public LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
 		LOG.debug(INPUT_DATA, searchFilter);
 		boolean filterByNameSelfDetermination = searchFilter.getFirstName() != null && featureFlagsService.isOn(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO);
-		Integer actualPatientListSize = patientRepository.getCountByOptionalFilter(searchFilter, filterByNameSelfDetermination).intValue();
-		List<PatientSearch> patientList = patientRepository.getAllByOptionalFilter(searchFilter, MAX_RESULT_SIZE, filterByNameSelfDetermination);
+		searchFilter.setFilterByNameSelfDetermination(filterByNameSelfDetermination);
+		Integer actualPatientListSize = patientRepository.getCountByOptionalFilter(searchFilter);
+		List<PatientSearch> patientList = patientRepository.getAllByOptionalFilter(searchFilter, MAX_RESULT_SIZE);
 		LimitedPatientSearchBo result = new LimitedPatientSearchBo(patientList, actualPatientListSize);
 		LOG.trace(OUTPUT, result);
 		return result;

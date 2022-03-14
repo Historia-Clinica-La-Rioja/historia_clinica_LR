@@ -392,3 +392,31 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO document_type (id, description) VALUES(12, 'Indicación');
+
+
+    - changeSet:
+        id: createIndexFirstName-person
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_person_first-name" ON person (UPPER(first_name));
+                        
+    - changeSet:
+        id: createIndexLastName-person
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_person_last-name" ON person (UPPER(last_name));
+                          
+    - changeSet:
+        id: createIndexIdentificationNumber-person
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_person_identification-number" ON person (identification_number);
