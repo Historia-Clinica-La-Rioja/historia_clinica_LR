@@ -48,6 +48,8 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { ViewFullHourPipe } from './pipes/view-full-hour.pipe';
+import { ViewFullDayOfWeekPipe } from './pipes/view-full-day-of-week.pipe';
 
 
 @NgModule({
@@ -96,6 +98,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+  		ViewFullHourPipe,
+    	ViewFullDayOfWeekPipe,
 	],
 	imports: [
 		CommonModule,
@@ -149,6 +153,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		ViewFullHourPipe,
+		ViewFullDayOfWeekPipe
 	],
 	entryComponents: [
 		DockPopupComponent

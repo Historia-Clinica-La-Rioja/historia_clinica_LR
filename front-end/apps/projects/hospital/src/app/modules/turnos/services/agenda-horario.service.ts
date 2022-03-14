@@ -14,6 +14,7 @@ import { DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api
 
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { NewAttentionComponent } from '../dialogs/new-attention/new-attention.component';
+import { obtainAppointmentRangeDates } from '@core/utils/date.utils';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;
@@ -101,17 +102,20 @@ export class AgendaHorarioService {
 					start: event.start,
 					end: event.end,
 					overturnCount: event.meta.overturnCount,
-					medicalAttentionTypeId: event.meta.medicalAttentionType?.id
+					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
+					possibleScheduleHours: obtainAppointmentRangeDates(event.start, this.appointmentDuration)
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
-			if (!dialogInfo) {
+			if (!dialogInfo || !dialogInfo[0]) {
 				if (event.meta?.tmpEvent) {
 					this.removeTempEvent(event);
 				}
 			} else {
+				event.start = dialogInfo[1];
+				event.end = dialogInfo[2];
 				if (this.thereIsValidTurnAvailability(event))
-					this.setNewEvent(event, dialogInfo);
+					this.setNewEvent(event, dialogInfo[0]);
 				else{
 					this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
 					this.removeTempEvent(event);
@@ -146,16 +150,24 @@ export class AgendaHorarioService {
 						end: event.end,
 						overturnCount: event.meta.overturnCount,
 						medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
-						isEdit: true
+						isEdit: true,
+						possibleScheduleHours: obtainAppointmentRangeDates(event.start, this.appointmentDuration)
 					}
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
-				if (!dialogInfo) {
+				if (!dialogInfo || !dialogInfo[0]) {
 					if (event.meta?.tmpEvent) {
 						this.removeTempEvent(event);
 					}
 				} else {
-					this.setNewEvent(event, dialogInfo);
+					event.start = dialogInfo[1];
+					event.end = dialogInfo[2];
+					if (this.thereIsValidTurnAvailability(event))
+						this.setNewEvent(event, dialogInfo[0]);
+					else{
+						this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
+						this.removeTempEvent(event);
+					}
 				}
 				this.refresh();
 			});

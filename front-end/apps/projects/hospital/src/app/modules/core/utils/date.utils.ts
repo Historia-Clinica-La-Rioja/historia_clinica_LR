@@ -1,4 +1,7 @@
+import { DatePipe } from '@angular/common';
+import { DEFAULT_LANG } from '../../../app.component';
 import {
+	addMinutes,
 	formatISO,
 } from 'date-fns'
 
@@ -33,4 +36,27 @@ export function formatDateOnlyISO(date: Date) {
 
 export function formatTimeOnlyISO(date: Date) {
 	return formatISO(date, { representation: 'time' });
+}
+
+export function formatDayOfWeek(date: Date): string{
+	const datePipe = new DatePipe(DEFAULT_LANG);
+	return datePipe.transform(date, 'EEEE');
+}
+
+export function formatHour(date: Date): string{
+	const datePipe = new DatePipe(DEFAULT_LANG);
+	return datePipe.transform(date, DatePipeFormat.SHORT_TIME);
+}
+
+export function obtainAppointmentRangeDates(date: Date, timeRange: number): Date[]{
+	var dividedDate = [];
+	var dateToDivide = new Date(date);
+	dateToDivide.setHours(0,0,0,0);
+
+	for (let currentRangeValue = 0; currentRangeValue <= (60/timeRange)*23; currentRangeValue++){
+		dividedDate[currentRangeValue] = new Date(dateToDivide);
+		dateToDivide = addMinutes(dateToDivide, timeRange);
+	}
+
+	return dividedDate;
 }

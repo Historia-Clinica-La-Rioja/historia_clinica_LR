@@ -16,19 +16,20 @@ export class NewAttentionComponent implements OnInit {
 	form: FormGroup;
 	public readonly SPONTANEOUS = MEDICAL_ATTENTION.SPONTANEOUS;
 	public medicalAttentionTypes: MasterDataInterface<number>[];
+	private _possibleStartingScheduleHours;
+	private _possibleEndingScheduleHours;
+	private _selectedStartingHour = this.data.start;
+	private _selectedEndingHour = this.data.end;
 
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
-		@Inject(MAT_DIALOG_DATA) public data: {
-			start: Date,
-			end: Date,
-			overturnCount?: number,
-			medicalAttentionTypeId?: number,
-			isEdit?: boolean,
-		}
-	) { }
+		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements
+	) {
+		this._possibleStartingScheduleHours = data.possibleScheduleHours.slice(0, data.possibleScheduleHours.length - 1);
+		this.filterAppointmentEndingHours(this.selectedStartingHour);
+	}
 
 
 	ngOnInit(): void {
@@ -59,16 +60,62 @@ export class NewAttentionComponent implements OnInit {
 
 	submit() {
 		if (this.form.valid) {
-			this.dialogRef.close(this.form.value);
+			this.dialogRef.close([this.form.value, this.selectedStartingHour, this.selectedEndingHour]);
 		}
 	}
 
 	closeDialog() {
-		this.dialogRef.close();
+		this.dialogRef.close([null, this.selectedStartingHour, this.selectedEndingHour]);
 	}
 
 	removeAttention() {
-		this.dialogRef.close(REMOVEATTENTION);
+		this.dialogRef.close([REMOVEATTENTION, this.selectedStartingHour, this.selectedEndingHour]);
 	}
 
+	filterAppointmentEndingHours(selectedStartingHour: Date){
+		this.selectedStartingHour = selectedStartingHour;
+		this._possibleEndingScheduleHours = this.data.possibleScheduleHours.filter(appointmentDate => appointmentDate > this.selectedStartingHour);
+	}
+
+	set possibleStartingScheduleHours(possibleStartingScheduleHours: Date[]){
+		this.possibleStartingScheduleHours = possibleStartingScheduleHours;
+	}
+
+	get possibleStartingScheduleHours(): Date[]{
+		return this._possibleStartingScheduleHours;
+	}
+
+	set possibleEndingScheduleHours(possibleEndingScheduleHours: Date[]){
+		this.possibleEndingScheduleHours = possibleEndingScheduleHours;
+	}
+
+	get possibleEndingScheduleHours(): Date[]{
+		return this._possibleEndingScheduleHours;
+	}
+
+	set selectedStartingHour(startingHour: Date){
+		this._selectedStartingHour = startingHour;
+	}
+
+	get selectedStartingHour(): Date{
+		return this._selectedStartingHour;
+	}
+
+	set selectedEndingHour(endingHour: Date){
+		this._selectedEndingHour = endingHour;
+	}
+
+	get selectedEndingHour(): Date{
+		return this._selectedEndingHour;
+	}
+
+}
+
+export interface NewAttentionElements{
+	start: Date,
+	end: Date,
+	overturnCount?: number,
+	medicalAttentionTypeId?: number,
+	isEdit?: boolean,
+	possibleScheduleHours: Date[]
 }

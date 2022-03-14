@@ -14,9 +14,36 @@
 	</div>
 </ng-template>
 
-<div>{{data.start | dayTimeRange: data.end }}</div>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
+
+	<div fxLayout="column" fxLayoutAlign="start start">
+		<div fxLayout="row" fxLayoutAlign="space-around center">
+			<mat-icon class="detail_icon">event</mat-icon>
+			<span class="day_text">Todos los {{ data.start | viewFullDayOfWeek }}</span>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="space-evenly center">
+			<mat-icon class="detail_icon">access_time</mat-icon>
+			<mat-form-field appearance="outline" class="hour_selector">
+				<mat-select [value]="selectedStartingHour | viewFullHour">
+					<mat-option [value]="possibleScheduleHour | viewFullHour" *ngFor="let possibleScheduleHour of possibleStartingScheduleHours" (click)="filterAppointmentEndingHours(possibleScheduleHour)">
+						{{ possibleScheduleHour | viewFullHour }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<span>hs. a</span>
+			<mat-form-field appearance="outline" class="hour_selector">
+				<mat-select [value]="selectedEndingHour | viewFullHour">
+					<mat-option [value]="possibleScheduleHour | viewFullHour" *ngFor="let possibleScheduleHour of possibleEndingScheduleHours" (click)="selectedEndingHour = possibleScheduleHour">
+						{{ possibleScheduleHour | viewFullHour }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<span>hs.</span>
+		</div>
+	</div>
+
 	<div fxLayout="column">
 		<div>
 			<mat-form-field appearance="outline">
