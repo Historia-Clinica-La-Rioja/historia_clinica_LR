@@ -4,26 +4,30 @@ import {
     Edit,
     SimpleForm,
     required,
-    number,
     maxLength,
     FormDataConsumer,
     BooleanInput,
     ReferenceInput,
     AutocompleteInput,
     SelectInput,
+    usePermissions,
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import UserReferenceInput from "../users/UserReferenceInput";
+import { ADMINISTRADOR } from "../roles";
 
 const InstitutionSelect = ({ formData, ...rest }) => {
+    const { permissions } = usePermissions();
+    const userIsAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role)).length > 0;
     return (
         <ReferenceInput
             {...rest}
             reference="institutions"
             sort={{ field: 'name', order: 'ASC' }}
             filter={{ institutionId: formData.institutionId }}
+            validate={!userIsAdmin ? [required()] : []}
         >
-            <AutocompleteInput optionText="name" optionValue="id"/>
+            <AutocompleteInput optionText="name" optionValue="id" resettable />
         </ReferenceInput>);
 };
 
@@ -40,8 +44,8 @@ const SnomedGroupSelect = ({ formData, ...rest }) => {
         </ReferenceInput>);
 };
 
-const SnomedGroupEdit = props => (
-    <Edit {...props}>
+const SnomedGroupEdit = props => {
+    return (<Edit {...props}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar/>}>
 
             {/* Description */}
@@ -63,7 +67,7 @@ const SnomedGroupEdit = props => (
 
             {/* Parent Snomed Group */}
             <FormDataConsumer>
-                {formDataProps => ( <SnomedGroupSelect {...formDataProps} source="groupId" />)}
+                {formDataProps => (<SnomedGroupSelect {...formDataProps} source="groupId"/>)}
             </FormDataConsumer>
 
             {/* Is template */}
@@ -71,14 +75,14 @@ const SnomedGroupEdit = props => (
 
             {/* Institution */}
             <FormDataConsumer>
-                {formDataProps => ( <InstitutionSelect {...formDataProps} source="institutionId" />)}
+                {formDataProps => (<InstitutionSelect {...formDataProps} source="institutionId"/>)}
             </FormDataConsumer>
 
             {/* User */}
-            <UserReferenceInput source="userId" />
+            <UserReferenceInput source="userId"/>
 
         </SimpleForm>
-    </Edit>
-);
+    </Edit>)
+};
 
 export default SnomedGroupEdit;

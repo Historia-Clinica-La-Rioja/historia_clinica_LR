@@ -4,26 +4,30 @@ import {
     Create,
     SimpleForm,
     required,
-    number,
     maxLength,
     ReferenceInput,
     AutocompleteInput,
     SelectInput,
     FormDataConsumer,
-    BooleanInput
+    BooleanInput,
+    usePermissions,
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import UserReferenceInput from "../users/UserReferenceInput";
+import { ADMINISTRADOR } from "../roles";
 
 const InstitutionSelect = ({ formData, ...rest }) => {
+    const { permissions } = usePermissions();
+    const userIsAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role)).length > 0;
     return (
         <ReferenceInput
             {...rest}
             reference="institutions"
             sort={{ field: 'name', order: 'ASC' }}
             filter={{ institutionId: formData.institutionId }}
+            validate={!userIsAdmin ? [required()] : []}
         >
-            <AutocompleteInput optionText="name" optionValue="id"/>
+            <AutocompleteInput optionText="name" optionValue="id" resettable />
         </ReferenceInput>);
 };
 

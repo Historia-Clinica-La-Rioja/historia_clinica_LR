@@ -55,6 +55,7 @@ const resourcesAdminInstitucional = [
     <Resource name="rooms" {...rooms} />,
     <Resource name="beds" {...beds} />,
     <Resource name="cities" />,
+    <Resource name="users" />,
     <Resource name="snomedgroups"   {...snomedgroups} />,
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups" {...snomedrelatedgroups} />,
