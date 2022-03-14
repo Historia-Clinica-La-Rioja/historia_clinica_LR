@@ -26,7 +26,7 @@ public class PatientRepositorySearchImpl implements PatientRepositorySearch {
     public List<PatientSearch> getAllByFilter(PatientSearchFilter searchFilter) {
         PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
         QueryPart queryPart = buildQuery(patientSearchQuery, searchFilter);
-        Query query = entityManager.createQuery(queryPart.toString());
+        Query query = entityManager.createNativeQuery(queryPart.toString());
         queryPart.configParams(query);
         return patientSearchQuery.construct(query.getResultList());
     }
@@ -39,7 +39,7 @@ public class PatientRepositorySearchImpl implements PatientRepositorySearch {
                 .concatPart(patientSearchQuery.from());
         if (hasBasicSearchAttributes(searchFilter))
                 queryPart.concat("WHERE ")
-                .concatPart(patientSearchQuery.whereWithBasicAttributes(OR_JOINING_OPERATOR, EQUAL_COMPARATOR));
+                .concatPart(patientSearchQuery.whereWithBasicAttributes(OR_JOINING_OPERATOR));
         return queryPart;
     }
 
