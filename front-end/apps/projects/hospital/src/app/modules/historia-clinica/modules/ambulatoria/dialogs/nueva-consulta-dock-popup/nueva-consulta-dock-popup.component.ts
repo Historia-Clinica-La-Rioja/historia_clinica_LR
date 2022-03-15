@@ -1,3 +1,4 @@
+import { PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from './../../../../../core/utils/pattern.utils';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnomedService } from '../../../../services/snomed.service';
@@ -381,8 +382,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 
 		value = consulta.anthropometricData?.headCircumference?.value;
-		if (value && !PATTERN_INTEGER_NUMBER.test(value)) {
-			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_NOT_INTEGER');
+		if (value && !PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS.test(value)) {
+			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_NOT_VALID');
 		}
 		else if ((parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.headCircumference) || (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.headCircumference)) {
 			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');

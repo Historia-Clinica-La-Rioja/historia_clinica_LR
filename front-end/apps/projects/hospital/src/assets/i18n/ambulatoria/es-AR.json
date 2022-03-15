@@ -30,7 +30,7 @@
                         "MEDICAL_DISCHARGE": "Alta médica",
                         "NUEVA_CONSULTA": "Nueva consulta",
                         "AMBULATORY": "Ambulatoria",
-                        "NURSING": "Enfermería"                        
+                        "NURSING": "Enfermería"
                     }
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
@@ -91,7 +91,7 @@
                     "PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
                     "MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
                     "HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
-                    "HEAD_CIRCUNFERENCE_NOT_INTEGER": "Perímetro cefálico debe ser un valor entero",
+                    "HEAD_CIRCUNFERENCE_NOT_VALID": "Perímetro cefálico debe tener como máximo 2 decimales",
                     "BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
                     "GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
                     "CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",
