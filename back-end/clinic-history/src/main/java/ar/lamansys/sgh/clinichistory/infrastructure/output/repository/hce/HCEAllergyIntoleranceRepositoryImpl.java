@@ -54,7 +54,7 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .setParameter("documentStatusId", DocumentStatus.FINAL)
-                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.COUNTER_REFERENCE))
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.COUNTER_REFERENCE, DocumentType.ODONTOLOGY))
                 .setParameter("allergyIntoleranceStatus", AllergyIntoleranceVerificationStatus.ERROR)
                 .getResultList();
         List<HCEAllergyVo> result = new ArrayList<>();

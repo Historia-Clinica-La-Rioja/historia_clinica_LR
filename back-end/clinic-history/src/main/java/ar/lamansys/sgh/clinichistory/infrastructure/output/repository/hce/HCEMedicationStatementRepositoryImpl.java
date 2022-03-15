@@ -50,7 +50,7 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 .setParameter("documentStatusId", DocumentStatus.FINAL)
                 .setParameter("medicationStatusId", List.of(MedicationStatementStatus.ACTIVE))
                 .setParameter("patientId", patientId)
-                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.RECIPE, DocumentType.COUNTER_REFERENCE))
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.RECIPE, DocumentType.COUNTER_REFERENCE, DocumentType.ODONTOLOGY))
                 .getResultList();
         List<HCEMedicationVo> result = new ArrayList<>();
         queryResult.forEach(m ->
