@@ -35,11 +35,11 @@ export class HomeComponent implements OnInit {
   public readonly validations = PERSON;
   readonly MAX_RESULT_SIZE: number = 150;
   nameSelfDeterminationEnabled: boolean;
+  minDate = MIN_DATE;
+  requiringAtLeastOneMoreValue: boolean;
 
   private readonly routePrefix;
   private genderTableView: string[] = [];
-
-  minDate = MIN_DATE;
 
   constructor(
 	private readonly formBuilder: FormBuilder,
@@ -61,12 +61,12 @@ export class HomeComponent implements OnInit {
 
   private initPersonalInformationForm() {
 	this.personalInformationForm = this.formBuilder.group({
-			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
-			middleNames: [null, Validators.maxLength(PERSON.MAX_LENGTH.middleNames)],
-			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
-			otherLastNames: [null, Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames)],
+			firstName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.firstName), Validators.pattern(/^\S*$/)]],
+			middleNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.middleNames), Validators.pattern(/^\S*$/)]],
+			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^\S*$/)]],
+			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^\S*$/)]],
 			genderId: [],
-			identificationNumber: [null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)],
+			identificationNumber: [null, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [],
 			birthDate: []
 		});
@@ -93,6 +93,9 @@ export class HomeComponent implements OnInit {
 	}
 
 	save(): void {
+		this.requiringValues = false;
+		this.requiringAtLeastOneMoreValue = false;
+
 		const atLeastOneValueSet: boolean = atLeastOneValueInFormGroup(this.personalInformationForm);
 		if (!atLeastOneValueSet) {
 			this.formSubmitted = false;
@@ -100,9 +103,16 @@ export class HomeComponent implements OnInit {
 			return;
 		}
 
+		if (this.onlyFirstNameSet()) {
+			this.formSubmitted = false;
+			this.requiringAtLeastOneMoreValue = true;
+			return;
+		}
+
 		if ((this.personalInformationForm.valid)) {
 			this.formSubmitted = true;
 			this.requiringValues = false;
+			this.requiringAtLeastOneMoreValue = false;
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {
@@ -212,6 +222,30 @@ export class HomeComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	onlyFirstNameSet(): boolean {
+		const firstNameIsSeted = (this.personalInformationForm.value.firstName !== null);
+		return firstNameIsSeted && !this.otherAttributesAreSet();
+	}
+
+	otherAttributesAreSet(): boolean {
+		let formValues = this.personalInformationForm.value;
+		if (formValues.identificationTypeId !== null)
+			return true
+		if (formValues.identificationNumber !== null)
+			return true
+		if (formValues.lastName !== null)
+			return true
+		if (formValues.middleNames !== null)
+			return true
+		if (formValues.otherLastNames !== null)
+			return true
+		if (formValues.genderId !== null)
+			return true
+		if (formValues.birthDate !== null)
+			return true
+		return false;
 	}
 
 }
