@@ -14,7 +14,7 @@ import { DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api
 
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { NewAttentionComponent } from '../dialogs/new-attention/new-attention.component';
-import { obtainAppointmentRangeDates } from '@core/utils/date.utils';
+import { getDayHoursIntervalsByMinuteValue } from '@core/utils/date.utils';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;
@@ -96,27 +96,28 @@ export class AgendaHorarioService {
 	}
 
 	openConfirmDialogForEvent(event: CalendarEvent): void {
+		const possibleScheduleHours = getDayHoursIntervalsByMinuteValue(event.start, this.appointmentDuration);
 		const dialogRef = this.dialog.open(NewAttentionComponent,
 			{
 				data: {
-					start: event.start,
-					end: event.end,
+					start: possibleScheduleHours.find(date => date.getTime() === event.start.getTime()),
+					end: possibleScheduleHours.find(date => date.getTime() === event.end.getTime()),
 					overturnCount: event.meta.overturnCount,
 					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
-					possibleScheduleHours: obtainAppointmentRangeDates(event.start, this.appointmentDuration)
+					possibleScheduleHours
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
-			if (!dialogInfo || !dialogInfo[0]) {
+			if (!dialogInfo) {
 				if (event.meta?.tmpEvent) {
 					this.removeTempEvent(event);
 				}
 			} else {
-				event.start = dialogInfo[1];
-				event.end = dialogInfo[2];
+				event.start = dialogInfo.startingHour;
+				event.end = dialogInfo.endingHour;
 				if (this.thereIsValidTurnAvailability(event))
-					this.setNewEvent(event, dialogInfo[0]);
-				else{
+					this.setNewEvent(event, dialogInfo);
+				else {
 					this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
 					this.removeTempEvent(event);
 				}
@@ -127,11 +128,11 @@ export class AgendaHorarioService {
 
 	private thereIsValidTurnAvailability(event: CalendarEvent): boolean {
 		return this.occupiedOpeningHours
-					.filter(occupiedTurn => event.start.getDay() === occupiedTurn.start.getDay())
-					.every(occupiedTurn => this.compareTurnHourThreshold(event, occupiedTurn));
+			.filter(occupiedTurn => event.start.getDay() === occupiedTurn.start.getDay())
+			.every(occupiedTurn => this.compareTurnHourThreshold(event, occupiedTurn));
 	}
 
-	private compareTurnHourThreshold(event, occupiedTurn: CalendarEvent): boolean{
+	private compareTurnHourThreshold(event, occupiedTurn: CalendarEvent): boolean {
 		const eventStartHour = event.start.getTime();
 		const eventEndHour = event.end.getTime();
 		const occupiedTurnStartHour = occupiedTurn.start.getTime();
@@ -142,31 +143,36 @@ export class AgendaHorarioService {
 	}
 
 	openEditDialogForEvent(event: CalendarEvent): void {
+		const possibleScheduleHours = getDayHoursIntervalsByMinuteValue(event.start, this.appointmentDuration);
 		if (event.meta) {
 			const dialogRef = this.dialog.open(NewAttentionComponent,
 				{
 					data: {
-						start: event.start,
-						end: event.end,
+						start: possibleScheduleHours.find(date => date.getTime() === event.start.getTime()),
+						end: possibleScheduleHours.find(date => date.getTime() === event.end.getTime()),
 						overturnCount: event.meta.overturnCount,
 						medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
 						isEdit: true,
-						possibleScheduleHours: obtainAppointmentRangeDates(event.start, this.appointmentDuration)
+						possibleScheduleHours
 					}
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
-				if (!dialogInfo || !dialogInfo[0]) {
+				if (!dialogInfo) {
 					if (event.meta?.tmpEvent) {
 						this.removeTempEvent(event);
 					}
 				} else {
-					event.start = dialogInfo[1];
-					event.end = dialogInfo[2];
-					if (this.thereIsValidTurnAvailability(event))
-						this.setNewEvent(event, dialogInfo[0]);
-					else{
-						this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
-						this.removeTempEvent(event);
+					if (dialogInfo === REMOVEATTENTION)
+						this.setNewEvent(event, dialogInfo);
+					else {
+						event.start = dialogInfo.startingHour;
+						event.end = dialogInfo.endingHour;
+						if (this.thereIsValidTurnAvailability(event))
+							this.setNewEvent(event, dialogInfo);
+						else {
+							this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
+							this.removeTempEvent(event);
+						}
 					}
 				}
 				this.refresh();
@@ -279,7 +285,7 @@ export class AgendaHorarioService {
 			return;
 		}
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
-		if ( newEnd.getHours() >= 23 ) {
+		if (newEnd.getHours() >= 23) {
 			newEnd.setHours(23);
 			newEnd.setMinutes(0);
 			newEnd.setSeconds(0);
