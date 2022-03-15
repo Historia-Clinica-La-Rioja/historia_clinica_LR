@@ -20,7 +20,9 @@ public class GetCriticalAllergies {
 	public List<HCEAllergyBo> run(Integer patientId) {
 		log.debug("Input parameters -> patientId {}", patientId);
 		List<HCEAllergyBo> result = hceAllergyService.getAllergies(patientId)
-				.stream().filter(a -> a.getCriticalityId()!=null&&a.getCriticalityId() == 2).collect(Collectors.toList());
+				.stream()
+				.filter(a -> a.getCriticalityId() != null && a.getCriticalityId() == 2)
+				.collect(Collectors.toList());
 		result.addAll(hceAllergyService.getActiveInternmentEpisodeAllergies(patientId));
 		log.debug("Output -> {}", result);
 		return result;
