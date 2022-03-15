@@ -57,7 +57,8 @@
 		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",
 		"FORMAT_WHITOUT_BLANK_SPACES": "El valor no puede contener espacios en blanco",
 		"YES": "Si",
-		"NO": "No"
+		"NO": "No",
+		"REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH": "Debe ingresar al menos un campo más para realizar la búsqueda"
 	},
 	"logos": {
 		"footer_right": "Logo inferior derecho",
