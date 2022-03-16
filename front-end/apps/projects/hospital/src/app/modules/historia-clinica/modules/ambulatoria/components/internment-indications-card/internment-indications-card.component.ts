@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/constants/internment-indications";

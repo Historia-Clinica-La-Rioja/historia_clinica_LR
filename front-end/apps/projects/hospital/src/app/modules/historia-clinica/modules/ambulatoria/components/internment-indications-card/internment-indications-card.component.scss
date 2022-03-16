@@ -19,3 +19,32 @@
 .disabled {
 	color: rgba(0, 0, 0, 0.38);
 }
+
+.title {
+	@include general-font;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 18.75px;
+}
+
+.parenteral-plans {
+	width: 25%;
+}
+
+.other-indications {
+	width: 20%;
+}
+.mat-divider {
+	position: relative;
+}
+
+.section {
+	padding-bottom: 30px;
+}
+
+.no-data {
+	font-weight: 400;
+	font-size: 16px;
+	color: #a8a8a8;
+	padding-bottom: 20px;
+}

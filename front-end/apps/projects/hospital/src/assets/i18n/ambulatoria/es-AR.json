@@ -482,7 +482,19 @@
 					"TITLE": "Indicaciones de internación",
                     "TODAY": "Hoy, ",
                     "YESTERDAY": "Ayer, ",
-                    "TOMORROW": "Mañana, "
+                    "TOMORROW": "Mañana, ",
+                    "sections": {
+						"DIET": "Dieta",
+						"PARENTERAL_PLAN": "Planes parenterales",
+						"PHARMACO": "Fármacos",
+						"OTHER_INDICATION": "Otras indicaciones",
+						"no-data": {
+							"DIET": "Sin dietas indicadas.",
+							"PARENTERAL_PLAN": "Sin planes parenterales indicados.",
+							"PHARMACO": "Sin fármacos indicados.",
+							"OTHER_INDICATION": "Sin otras indicaciones."
+						}
+					}
 				}
             },
             "internacion": {
