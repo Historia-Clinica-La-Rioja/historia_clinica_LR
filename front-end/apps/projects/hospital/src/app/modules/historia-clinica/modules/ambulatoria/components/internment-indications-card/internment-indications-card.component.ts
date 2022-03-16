@@ -21,6 +21,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	entryDate: Date;
 	currentViewIsEntryDate = false;
 	@Input() internmentEpisodeId: number;
+	@Input() epicrisisConfirmed: boolean;
 
 	constructor(
 		private readonly internmentEpisode: InternmentEpisodeService,
