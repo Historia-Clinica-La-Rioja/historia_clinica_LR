@@ -20,7 +20,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 	private FederarWSConfig federarWSConfig;
 
 	public FederarAuthService(FederarWSConfig wsConfig) throws Exception {
-		super(wsConfig.getAuthenticationPath(), new RestTemplateSSL(), wsConfig);
+		super(wsConfig.getAuthenticationPath(), new RestTemplateSSL(wsConfig.getRequestTimeOut().intValue()), wsConfig);
 		federarWSConfig = wsConfig;
 	}
 
