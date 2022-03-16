@@ -1,9 +1,11 @@
 @import "./components/vacunas/vacunas.component.scss-theme.scss";
 @import "./components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta-theme.scss";
 @import "components/item-prescripciones/item-prescripciones.component.scss-theme.scss";
+@import "./components/internment-indications-card/internment-indications-card-theme.scss";
 
 @mixin ambulatoria-mixins($theme) {
 	@include app-item-prescripciones($theme);
 	@include app-vacunas($theme);
 	@include app-datos-antropometricos-nueva-consulta($theme);
+	@include app-internment-indications-card($theme);
 }

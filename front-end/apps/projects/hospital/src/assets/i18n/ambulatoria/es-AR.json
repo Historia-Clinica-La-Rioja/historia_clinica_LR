@@ -479,7 +479,10 @@
                 "TAB_LABEL": "Indicaciones",
                 "TITLE": "Indicaciones",
 				"internment-card": {
-					"TITLE": "Indicaciones de internación"
+					"TITLE": "Indicaciones de internación",
+                    "TODAY": "Hoy, ",
+                    "YESTERDAY": "Ayer, ",
+                    "TOMORROW": "Mañana, "
 				}
             },
             "internacion": {
