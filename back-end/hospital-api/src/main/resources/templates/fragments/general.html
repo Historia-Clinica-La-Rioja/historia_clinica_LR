@@ -18,6 +18,12 @@
         row {
             padding-left: 50px
         }
+        .wide_wrapped_text {
+            max-width: 70%;
+            word-wrap: break-word;
+            text-align: justify;
+            text-justify: inter-word;
+        }
 	</style>
 </head>
 <body>
@@ -416,27 +422,27 @@
         <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.currentIllnessNote}">
                 <strong class="center-padding">Enfermedad actual</strong>
-                <p class="center-padding" th:text="${notes.currentIllnessNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.currentIllnessNote}"></p>
             </div>
             <div class="col-12 " th:if="${notes.physicalExamNote}">
                 <strong class="center-padding">Examen físico</strong>
-                <p class="center-padding" th:text="${notes.physicalExamNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.physicalExamNote}"></p>
             </div>
             <div class="col-12" th:if="${notes.studiesSummaryNote}">
                 <strong class="center-padding">Resumen de estudios y procedimientos realizados</strong>
-                <p class="center-padding" th:text="${notes.studiesSummaryNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.studiesSummaryNote}"></p>
             </div>
             <div class="col-12" th:if="${notes.evolutionNote}">
                 <strong class="center-padding">Evolución</strong>
-                <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.evolutionNote}"></p>
             </div>
             <div class="col-12" th:if="${notes.clinicalImpressionNote}">
                 <strong class="center-padding">Impresión clinica y plan</strong>
-                <p class="center-padding" th:text="${notes.clinicalImpressionNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.clinicalImpressionNote}"></p>
             </div>
             <div class="col-12" th:if="${notes.otherNote}">
                 <strong class="center-padding">Otras observaciones</strong>
-                <p class="center-padding" th:text="${notes.otherNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.otherNote}"></p>
             </div>
         </div>
     </div>
@@ -451,23 +457,23 @@
         <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.evolutionNote}">
                 <strong class="center-padding">Evolución</strong>
-                <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.evolutionNote}"></p>
             </div>
             <div class="col-12" th:if="${notes.studiesSummaryNote}">
                 <strong class="center-padding">Resumen de estudios y procedimientos realizados</strong>
-                <p class="center-padding" th:text="${notes.studiesSummaryNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.studiesSummaryNote}"></p>
             </div>
             <div class="col-12 " th:if="${notes.physicalExamNote}">
                 <strong class="center-padding">Examen físico</strong>
-                <p class="center-padding" th:text="${notes.physicalExamNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.physicalExamNote}"></p>
             </div>
             <div class="col-12" th:if="${notes.indicationsNote}">
                 <strong class="center-padding">Indicaciones de alta</strong>
-                <p class="center-padding" th:text="${notes.indicationsNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.indicationsNote}"></p>
             </div>
             <div class="col-12" th:if="${notes.otherNote}">
                 <strong class="center-padding">Otras observaciones</strong>
-                <p class="center-padding" th:text="${notes.otherNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.otherNote}"></p>
             </div>
         </div>
     </div>
@@ -482,7 +488,7 @@
         <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.otherNote}">
                 <strong class="center-padding">Evolución</strong>
-                <p class="center-padding" th:text="${notes.otherNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.otherNote}"></p>
             </div>
         </div>
     </div>
@@ -497,7 +503,7 @@
         </div>
         <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.evolutionNote}">
-                <p class="center-padding" th:text="${notes.evolutionNote}"></p>
+                <p class="center-padding wide_wrapped_text" th:text="${notes.evolutionNote}"></p>
             </div>
         </div>
     </div>
@@ -511,7 +517,7 @@
         </div>
         <div th:if="${notes != null}">
             <div class="col-12" th:if="${notes.evolutionNote}">
-                <label th:text="${notes.evolutionNote}"></label>
+                <label class="wide_wrapped_text" th:text="${notes.evolutionNote}"></label>
             </div>
         </div>
     </div>
