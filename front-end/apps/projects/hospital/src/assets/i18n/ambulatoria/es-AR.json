@@ -477,7 +477,10 @@
             },
             "indications": {
                 "TAB_LABEL": "Indicaciones",
-                "TITLE": "Indicaciones"
+                "TITLE": "Indicaciones",
+				"internment-card": {
+					"TITLE": "Indicaciones de internación"
+				}
             },
             "internacion": {
                 "TAB_LABEL": "Internación"

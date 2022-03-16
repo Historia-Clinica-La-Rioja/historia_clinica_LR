@@ -217,6 +217,9 @@
 							<span>{{ 'ambulatoria.paciente.indications.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
+							<div *ngIf="hasInternmentEpisodeInThisInstitution">
+								<app-internment-indications-card></app-internment-indications-card>
+							</div>
 							<app-card-medicaciones [patientId]="patientId" [medicamentStatus]="medicamentStatus$ | async" ></app-card-medicaciones>
 						</ng-template>
 					</mat-tab>

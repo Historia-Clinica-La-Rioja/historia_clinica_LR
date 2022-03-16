@@ -53,6 +53,7 @@ import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatori
 import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-summary.component';
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
+import { InternmentIndicationsCardComponent } from './components/internment-indications-card/internment-indications-card.component';
 
 @NgModule({
 	declarations: [
@@ -95,7 +96,8 @@ import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagno
 		VacunasSummaryComponent,
 		MainDiagnosisSummaryComponent,
 		DiagnosisSummaryComponent,
-		InternmentSummaryComponent
+		InternmentSummaryComponent,
+		InternmentIndicationsCardComponent
 	],
 	imports: [
 		CommonModule,

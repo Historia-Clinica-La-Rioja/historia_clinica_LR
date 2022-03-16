@@ -116,3 +116,8 @@ export const ESTUDIOS: SummaryHeader = {
 	title: 'ambulatoria.paciente.ordenes_prescripciones.ESTUDIOS',
 	matIcon: 'medical_services'
 };
+
+export const INTERNMENT_INDICATIONS: SummaryHeader = {
+	title: 'ambulatoria.paciente.indications.internment-card.TITLE',
+	matIcon: 'event_available',
+}
