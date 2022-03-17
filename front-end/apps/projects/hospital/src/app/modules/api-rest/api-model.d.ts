@@ -1484,8 +1484,11 @@ export interface NewMedicalRequestDto {
 }
 
 export interface NewRiskFactorsObservationDto extends Serializable {
+    bloodGlucose?: NewEffectiveClinicalObservationDto;
     bloodOxygenSaturation?: NewEffectiveClinicalObservationDto;
+    cardiovascularRisk?: NewEffectiveClinicalObservationDto;
     diastolicBloodPressure?: NewEffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: NewEffectiveClinicalObservationDto;
     heartRate?: NewEffectiveClinicalObservationDto;
     respiratoryRate?: NewEffectiveClinicalObservationDto;
     systolicBloodPressure?: NewEffectiveClinicalObservationDto;
