@@ -1,11 +1,11 @@
 @import "./modules/ambulatoria/ambulatoria-mixins.scss";
 @import "./modules/odontologia/odontologia-mixins.scss";
 @import "./modules/ambulatoria/modules/internacion/internacion-mixins.scss";
-@import "./components/factores-de-riesgo-nueva-consulta/factores-de-riesgo-nueva-consulta-theme.scss";
+@import "./components/factores-de-riesgo-form/factores-de-riesgo-form-theme.scss";
 
 @mixin historia-clinica-mixins($theme) {
     @include ambulatoria-mixins($theme);
     @include odontologia-mixins($theme);
     @include internacion-mixins($theme);
-    @include app-factores-de-riesgo-nueva-consulta($theme);
+    @include app-factores-de-riesgo-form($theme);
 }

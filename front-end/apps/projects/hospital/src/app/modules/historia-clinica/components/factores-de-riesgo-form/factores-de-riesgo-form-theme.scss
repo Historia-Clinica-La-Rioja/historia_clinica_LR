@@ -1,6 +1,6 @@
-@mixin app-factores-de-riesgo-nueva-consulta($theme) {
+@mixin app-factores-de-riesgo-form($theme) {
 	$palette-primary: map-get($theme, primary);
-	app-factores-de-riesgo-nueva-consulta {
+	app-factores-de-riesgo-form {
 		.dialog {
 			background: mat-color($palette-primary, 50);
 		}
