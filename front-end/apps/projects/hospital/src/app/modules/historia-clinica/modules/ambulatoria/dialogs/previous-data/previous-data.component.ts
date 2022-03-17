@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
+import { FactoresDeRiesgoNuevaConsultaService } from '../../../../services/factores-de-riesgo-nueva-consulta.service';
 
 export interface PreviousData {
 	isRiskFactors: boolean;

@@ -24,7 +24,7 @@ import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-a
 import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-nurse-consultation-suggested-fields.service';
-import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
+import { FactoresDeRiesgoNuevaConsultaService } from '../../../../services/factores-de-riesgo-nueva-consulta.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 
 export interface FieldsToUpdate {

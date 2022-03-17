@@ -9,7 +9,7 @@ import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/med
 import { Problema } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
+import { FactoresDeRiesgoNuevaConsultaService } from '../../../../services/factores-de-riesgo-nueva-consulta.service';
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
