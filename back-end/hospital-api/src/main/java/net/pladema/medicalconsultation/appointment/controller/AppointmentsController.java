@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,6 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBas
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
@@ -231,15 +231,21 @@ public class AppointmentsController {
 
     @GetMapping("/getDailyAmounts")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
-    public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(@PathVariable(name = "institutionId") Integer institutionId, @RequestParam(name = "diaryId") String diaryId) {
+	public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestParam(name = "diaryId") String diaryId) {
         log.debug("Input parameters -> diaryId {}", diaryId);
 
         Integer diaryIdParam = Integer.parseInt(diaryId);
 
-        Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService.getDailyAmounts(diaryIdParam);
-        List<AppointmentDailyAmountDto> result = resultService.stream().parallel().map(appointmentMapper::toAppointmentDailyAmountDto).collect(Collectors.toList());
-        log.debug(OUTPUT, result);
-        return ResponseEntity.ok().body(result);
+		Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
+				.getDailyAmounts(diaryIdParam);
+		List<AppointmentDailyAmountDto> result = resultService.stream()
+				.parallel()
+				.map(appointmentMapper::toAppointmentDailyAmountDto)
+				.collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/{appointmentId}/notifyPatient")

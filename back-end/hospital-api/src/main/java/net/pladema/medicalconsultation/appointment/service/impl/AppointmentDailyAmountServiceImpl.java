@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -7,6 +8,8 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDai
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import ar.lamansys.sgx.shared.dates.utils.DateUtils;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 @Service
+@Slf4j
 public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmountService {
 
     private final AppointmentService appointmentService;
@@ -37,7 +41,12 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
 
     @Override
     public Collection<AppointmentDailyAmountBo> getDailyAmounts(Integer diaryId) {
-        Collection<AppointmentDailyAmountBo> appointmentsDailyAmount = new ArrayList<>();
+		log.debug("Input parameter -> diaryId {}", diaryId);
+
+		if(diaryService.getDiary(diaryId).isEmpty())
+			throw new DiaryNotFoundException(DiaryNotFoundEnumException.DIARY_ID_NOT_FOUND, "La Agenda solicitada no existe");
+
+		Collection<AppointmentDailyAmountBo> appointmentsDailyAmount = new ArrayList<>();
 
         Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId));
         Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
@@ -56,6 +65,8 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
             }
         }
 
+		log.debug("Output size -> {}", appointmentsDailyAmount.size());
+		log.trace("Output -> {}", appointmentsDailyAmount);
         return appointmentsDailyAmount;
     }
 
