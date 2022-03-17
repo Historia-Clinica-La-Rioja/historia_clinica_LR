@@ -46,9 +46,9 @@
 		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
 			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
 				<div *ngIf="createUsersIsEnable">
-					<mat-card class="box user-data">
+				 	<mat-card class="box user-data">
 						<mat-card-header>
-							<mat-card-title>
+ 							<mat-card-title>
 								<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
 									<mat-icon fontSet="material-icons-outlined">person</mat-icon>
 									<span [translate]="'pacientes.user_data.TITLE'"></span>
@@ -65,12 +65,12 @@
 						</mat-card-header>
 						<mat-divider inset></mat-divider>
 						<mat-card-content>
-							<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
-								<div fxLayout="row" fxLayoutGap="5px">
+						<div *ngIf="userData?.id else noUserInformation" fxLayout="column" fxLayoutGap="10px">
+						<div fxLayout="row" fxLayoutGap="5px">
 									<strong [translate]="'pacientes.user_data.USER_ID'"></strong>
 									<span>{{userData.id}}</span>
 								</div>
-								<div *ngIf="!userData.username" fxLayout="row" fxLayoutGap="10px">
+							 	<div *ngIf="!userData.username" fxLayout="row" fxLayoutGap="10px">
 									<mat-icon color="primary" fontSet="material-icons-outlined">error_outline</mat-icon>
 									<span class="color-primary" [translate]="'pacientes.user_data.PENDING_DATA'"></span>
 								</div>
@@ -124,22 +124,23 @@
 											class="uppercase"></span>
 									</button>
 								</div>
-							</div>
-							<div content>
-								<button id="button-edit-professions" mat-stroked-button color="primary"
-									(click)="editProfessions()">
-									<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'"
-										class="uppercase"></span>
-								</button>
-							</div>
-							<mat-divider inset></mat-divider>
-							<div fxLayout="column" fxLayoutGap="10px">
-								<div content>
-									<app-card-professions [license]="license"
-										[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties">
-									</app-card-professions>
+								<mat-divider inset></mat-divider>
+								<div fxLayout="column" fxLayoutGap="10px">
+									<div content>
+										<app-card-professions [license]="license"
+											[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties">
+										</app-card-professions>
+									</div>
+									<div content>
+										<button id="button-edit-professions" mat-stroked-button color="primary"
+											(click)="editProfessions()">
+											<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'"
+												class="uppercase"></span>
+										</button>
+									</div>
 								</div>
 							</div>
+
 						</mat-card-content>
 					</mat-card>
 				</div>
