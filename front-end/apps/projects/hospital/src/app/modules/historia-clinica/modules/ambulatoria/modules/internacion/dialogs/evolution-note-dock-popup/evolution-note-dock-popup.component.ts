@@ -10,7 +10,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -22,6 +21,7 @@ import { ProcedimientosService } from "@historia-clinica/services/procedimientos
 import {
 	InternmentFields
 } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -42,6 +42,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	allergies: AllergyConditionDto[] = [];
 	immunizations: ImmunizationDto[] = [];
 	procedimientosService: ProcedimientosService;
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
@@ -57,6 +58,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 	) {
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 	}
 
 	ngOnInit(): void {
@@ -66,32 +68,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
 				weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
 			}),
-			riskFactors: this.formBuilder.group({
-				heartRate: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				respiratoryRate: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				temperature: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				bloodOxygenSaturation: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				systolicBloodPressure: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				diastolicBloodPressure: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-			}),
+			riskFactors: this.factoresDeRiesgoFormService.getForm(),
 			observations: this.formBuilder.group({
 				currentIllnessNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 				physicalExamNote: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
@@ -160,7 +137,10 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				heartRate: getEffectiveValue(formValues.riskFactors.heartRate),
 				respiratoryRate: getEffectiveValue(formValues.riskFactors.respiratoryRate),
 				systolicBloodPressure: getEffectiveValue(formValues.riskFactors.systolicBloodPressure),
-				temperature: getEffectiveValue(formValues.riskFactors.temperature)
+				temperature: getEffectiveValue(formValues.riskFactors.temperature),
+				bloodGlucose: getEffectiveValue(formValues.riskFactors.bloodGlucose),
+				glycosylatedHemoglobin: getEffectiveValue(formValues.riskFactors.glycosylatedHemoglobin),
+				cardiovascularRisk: getEffectiveValue(formValues.riskFactors.cardiovascularRisk)
 			},
 			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos()
 		};
@@ -176,10 +156,6 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		function getEffectiveValue(controlValue: any) {
 			return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 		}
-	}
-
-	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
-		((this.form.controls.riskFactors as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
 	clearBloodType(control): void {
