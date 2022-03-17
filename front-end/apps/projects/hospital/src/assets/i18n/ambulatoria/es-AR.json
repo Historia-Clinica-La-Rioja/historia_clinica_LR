@@ -371,7 +371,7 @@
             "ordenes_prescripciones": {
                 "TAB_LABEL": "Órdenes y prescripciones",
                 "TITLE": "Órdenes y prescripciones",
-                "MEDICACION": "Medicación",
+                "MEDICACION": "Medicación  ambulatoria",
                 "RECOMENDACIONES": "Recomendaciones generales",
                 "ESTUDIOS": "Estudios",
                 "SIN_RECETA": "Sin receta",
