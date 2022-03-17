@@ -64,6 +64,10 @@ export class AppComponent {
 			'parenteral_plans',
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/parenteral_plans.svg')
 		);
+		this.matIconRegistry.addSvgIcon(
+			'assignment_return',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/assignment_return.svg')
+		);
 		//
 		pwaInstallService.install$.pipe(
 			switchMap(

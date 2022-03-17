@@ -36,6 +36,8 @@ public class DocumentType implements Serializable {
 	public static final short NURSING = (short)10;
 	public static final short COUNTER_REFERENCE = (short)11;
 	public static final short INDICATION = (short)12;
+	public static final short NURSING_EVOLUTION_NOTE  = (short)13;
+
 
 	@Id
 	@Column(name = "id")

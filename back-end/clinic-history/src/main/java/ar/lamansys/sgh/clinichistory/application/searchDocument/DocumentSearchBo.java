@@ -30,6 +30,8 @@ public class DocumentSearchBo {
 
     private LocalDate createdOn;
 
+    private String documentType;
+
     public DocumentSearchBo(DocumentSearchVo source) {
         this.id = source.getId();
         if(source.getNotes() != null)
@@ -39,5 +41,6 @@ public class DocumentSearchBo {
         this.procedures = source.getProcedures();
         this.creator = new AuthorBo(source.getCreator().getFirstName(), source.getCreator().getLastName());
         this.createdOn = source.getCreatedOn();
+        this.documentType = source.getDocumentType();
     }
 }

@@ -708,6 +708,7 @@ export interface DocumentSearchDto extends Serializable {
     createdOn: Date;
     creator: ResponsibleDoctorDto;
     diagnosis: string[];
+    documentType: string;
     id: number;
     mainDiagnosis: string;
     message: string;
@@ -884,6 +885,7 @@ export interface EvolutionNoteDto extends Serializable {
     notes?: DocumentObservationsDto;
     procedures?: HospitalizationProcedureDto[];
     riskFactors?: RiskFactorDto;
+    wasMadeByProfessionalNursing?: boolean;
 }
 
 export interface ExternalClinicalHistoryDto extends Serializable {

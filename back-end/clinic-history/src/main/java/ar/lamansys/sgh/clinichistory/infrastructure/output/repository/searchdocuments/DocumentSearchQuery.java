@@ -39,6 +39,7 @@ public class DocumentSearchQuery {
                 "hc.main, \n" +
 				"hc.problemId, \n" +
 				"hc.verificationStatusId, \n" +
+				"documenttype.description , \n" +
                 "othernote.description as otherNote, " +
                 "physicalnote.description as physicalNote, \n" +
                 "studiesnote.description as studiesNote, \n" +
@@ -65,6 +66,8 @@ public class DocumentSearchQuery {
          //Diagnosis
                 "left join HealthCondition as hc on (dhc.pk.healthConditionId = hc.id ) \n" +
                 "left join Snomed as snomed on (hc.snomedId = snomed.id ) \n" +
+		//Document type
+				"join DocumentType as documenttype on (document.typeId = documenttype.id) \n"
         );
     }
 
@@ -105,13 +108,14 @@ public class DocumentSearchQuery {
                     (String)tuple[2],
                     (String)tuple[3],
                     mapDiagnosis(v),
-                    mapMainDiagnosis(v));
+                    mapMainDiagnosis(v),
+					(String)tuple[8]));
         });
         return result;
     }
 
     private DocumentObservationsVo mapNotes(Object[] tuple){
-        int index = 8;
+        int index = 9;
         String otherNote = (String) tuple[index++];
         String physicalExam = (String)tuple[index++];
         String studiesSummary = (String)tuple[index++];

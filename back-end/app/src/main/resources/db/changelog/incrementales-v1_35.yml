@@ -475,3 +475,38 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: healthcare_professional
               validate: true
+        
+    - changeSet:       
+        id: document_type-update-description
+        author: bchacon
+        comment: Actualizar descripcion de tipo de documento
+        context: "!schema-only"
+        changes:
+          - update:  
+              columns:  
+                - column:  
+                    name: description  
+                    value: 'Nota de evolución'  
+              tableName: document_type  
+              where: id=2
+              
+              
+    - changeSet:
+        id: document_type-evolution_nursing_note-data
+        comment: Actualizar datos document_type
+        context: "!schema-only"
+        author: bchacon
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (13, 'Nota de evolución de enfermería');
+                
+    - changeSet:
+        id: document_file-update-file_name-length
+        author: bchacon
+        comment: Actualizar length de la columna file_name
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(50)
+              tableName: document_file

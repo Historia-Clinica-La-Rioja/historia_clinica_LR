@@ -6,6 +6,7 @@ import {
 	ImmunizationDto,
 	EvolutionNoteDto
 } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
@@ -22,6 +23,8 @@ import {
 	InternmentFields
 } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { PermissionsService } from "@core/services/permissions.service";
+import { anyMatch } from "@core/utils/array.utils";
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -43,6 +46,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	immunizations: ImmunizationDto[] = [];
 	procedimientosService: ProcedimientosService;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
+	wasMadeByProfessionalNursing: boolean;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
@@ -56,9 +60,13 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
+		private readonly permissionsService: PermissionsService
 	) {
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.wasMadeByProfessionalNursing = !anyMatch<ERole>(userRoles,[ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles,[ERole.ENFERMERO])  ;
+		})
 	}
 
 	ngOnInit(): void {
@@ -142,7 +150,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				glycosylatedHemoglobin: getEffectiveValue(formValues.riskFactors.glycosylatedHemoglobin),
 				cardiovascularRisk: getEffectiveValue(formValues.riskFactors.cardiovascularRisk)
 			},
-			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos()
+			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos(),
+			wasMadeByProfessionalNursing: this.wasMadeByProfessionalNursing
 		};
 
 		function isNull(formGroupValues: any): boolean {
