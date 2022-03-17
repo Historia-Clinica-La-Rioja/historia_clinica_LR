@@ -114,7 +114,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.federar.claims.role |  | Project Manager | **Obligatorio** | Especialidad del Usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.ident  |  | 0001 | **Obligatorio** | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.auth.signKey |   | federar ***[TESTING]*** | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
-| ws.federar.requestTimeOut |   | 5000 | Opacional | Determina el tiempo que se esperará la respuesta del lado del servicio al ejecutar un request | v1.34.0  |
+| ws.federar.requestTimeOut |   | 5000 | Opcional | Determina el tiempo que se esperará la respuesta del lado del servicio al ejecutar un request | v1.33.1  |
 
 ### Snowstorm
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
@@ -129,7 +129,6 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.snowstorm.url.concepts |   | /MAIN/concepts | Único |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
 | ws.snowstorm.searchLocally.enabled |   | false | Opcional |  Determina si las búsquedas se hacen de forma local o consultando al servicio de Snowstorm  | v1.33.0  |
 
-condicion = opcional desde 1.34
 #### Snomed Ecls
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
 | ---------- | ------ | -------- | -------- | ------------ | ---- |
