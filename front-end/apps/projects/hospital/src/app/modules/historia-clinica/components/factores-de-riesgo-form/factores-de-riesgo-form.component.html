@@ -4,16 +4,16 @@
         <mat-icon online class="icon" color="primary">error_outline</mat-icon>
         <div class="info-text">
             <span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DESCRIPTION'"
-                [translateParams]="{date: factoresDeRiesgoNuevaConsultaService.getDate()}"> </span>
+                [translateParams]="{date: factoresDeRiesgoFormService.getDate()}"> </span>
             <span class="question"
                 [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.QUESTION'"></span>
             <span fxLayout="row">
                 <button class="button" id=include_risk_factors mat-button color="primary"
-                    (click)=factoresDeRiesgoNuevaConsultaService.savePreloadedRiskFactorsData()>
+                    (click)=factoresDeRiesgoFormService.savePreloadedRiskFactorsData()>
                     <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.ADD'"></span>
                 </button>
                 <button class="button" id=discard_risk_factors mat-button color="warn"
-                    (click)=factoresDeRiesgoNuevaConsultaService.discardPreloadedRiskFactorsData()>
+                    (click)=factoresDeRiesgoFormService.discardPreloadedRiskFactorsData()>
                     <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DISCARD'"></span>
                 </button>
             </span>
@@ -21,7 +21,7 @@
     </div>
     <app-document-section class="margin-bottom">
         <ng-container concept-form>
-            <form fxLayout="column" fxLayoutGap="15px" [formGroup]="factoresDeRiesgoNuevaConsultaService.getForm()">
+            <form fxLayout="column" fxLayoutGap="15px" [formGroup]="factoresDeRiesgoFormService.getForm()">
                 <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
                     <div class="factores-de-riesgo-field" formGroupName="heartRate">
                         <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.factores-de-riesgo.HEART_RATE'">
@@ -38,8 +38,8 @@
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.heartRate.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'heartRate')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.heartRate.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'heartRate')">
                         </app-effective-time>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="respiratoryRate">
@@ -58,8 +58,8 @@
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.respiratoryRate.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'respiratoryRate')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.respiratoryRate.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'respiratoryRate')">
                         </app-effective-time>
                     </div>
                 </div>
@@ -80,8 +80,8 @@
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.temperature.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'temperature')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.temperature.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'temperature')">
                         </app-effective-time>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="bloodOxygenSaturation">
@@ -101,8 +101,8 @@
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.bloodOxygenSaturation.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'bloodOxygenSaturation')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.bloodOxygenSaturation.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'bloodOxygenSaturation')">
                         </app-effective-time>
                     </div>
                 </div>
@@ -126,8 +126,8 @@
                         <h5 class="recomendado recomendado-tension"
                             [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.systolicBloodPressure.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'systolicBloodPressure')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.systolicBloodPressure.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'systolicBloodPressure')">
                         </app-effective-time>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="diastolicBloodPressure">
@@ -149,8 +149,8 @@
                         <h5 class="recomendado recomendado-tension"
                             [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.diastolicBloodPressure.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'diastolicBloodPressure')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.diastolicBloodPressure.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'diastolicBloodPressure')">
                         </app-effective-time>
                     </div>
                 </div>
@@ -171,8 +171,8 @@
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.bloodGlucose.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'bloodGlucose')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.bloodGlucose.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'bloodGlucose')">
                         </app-effective-time>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="glycosylatedHemoglobin">
@@ -192,8 +192,8 @@
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.glycosylatedHemoglobin.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'glycosylatedHemoglobin')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.glycosylatedHemoglobin.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'glycosylatedHemoglobin')">
                         </app-effective-time>
                     </div>
                 </div>
@@ -215,8 +215,8 @@
                             </ng-container>
                         </div>
                         <app-effective-time
-                            [effectiveTime]="factoresDeRiesgoNuevaConsultaService.getForm().value.cardiovascularRisk.effectiveTime"
-                            (update)="factoresDeRiesgoNuevaConsultaService.setRiskFactorEffectiveTime($event, 'cardiovascularRisk')">
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.cardiovascularRisk.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'cardiovascularRisk')">
                         </app-effective-time>
                     </div>
                 </div>

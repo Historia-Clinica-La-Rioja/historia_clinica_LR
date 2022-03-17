@@ -8,8 +8,7 @@
 
 		<form [formGroup]="riskFactorsForm">
 			<section id="risk-factors" fxLayout="column">
-				<app-factores-de-riesgo-form
-					[factoresDeRiesgoNuevaConsultaService]="factoresDeRiesgoNuevaConsultaService">
+				<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
 				</app-factores-de-riesgo-form>
 			</section>
 		</form>

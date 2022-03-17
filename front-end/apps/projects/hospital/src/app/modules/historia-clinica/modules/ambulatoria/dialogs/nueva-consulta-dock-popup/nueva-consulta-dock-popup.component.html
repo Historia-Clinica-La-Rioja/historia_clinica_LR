@@ -344,9 +344,8 @@
 			</app-new-document-section>
 		</div>
 
-		<app-factores-de-riesgo-form
-			[showPreloadData]="factoresDeRiesgoNuevaConsultaService.getShowPreloadedRiskFactorsData()"
-			[factoresDeRiesgoNuevaConsultaService]="factoresDeRiesgoNuevaConsultaService">
+		<app-factores-de-riesgo-form [showPreloadData]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
+			[factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
 		</app-factores-de-riesgo-form>
 
 		<div id="alergias">

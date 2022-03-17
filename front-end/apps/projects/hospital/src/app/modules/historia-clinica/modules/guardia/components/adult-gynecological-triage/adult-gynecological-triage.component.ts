@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { getError, hasError } from '@core/utils/form.utils';
+import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { RiskFactorsValue, RiskFactorsFormService } from '../../../../services/risk-factors-form.service';
-import { FactoresDeRiesgoNuevaConsultaService } from '../../../ambulatoria/services/factores-de-riesgo-nueva-consulta.service'
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
 @Component({
@@ -18,7 +18,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	@Input() disableConfirmButton: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
-	
+
 
 	hasError = hasError;
 	getError = getError;
@@ -28,22 +28,22 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 
 	adultGynecologicalForm: FormGroup;
 	riskFactorsForm: FormGroup;
-	factoresDeRiesgoNuevaConsultaService: FactoresDeRiesgoNuevaConsultaService;
-	
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
+
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private guardiaMapperService: GuardiaMapperService,
 		public riskFactorsFormService: RiskFactorsFormService,
-	) { 
-		this.factoresDeRiesgoNuevaConsultaService = new FactoresDeRiesgoNuevaConsultaService(formBuilder);
+	) {
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 	}
 
 	ngOnInit(): void {
 		this.adultGynecologicalForm = this.formBuilder.group({
 			evaluation: [null]
 		});
-		this.riskFactorsForm = this.factoresDeRiesgoNuevaConsultaService.getForm();
+		this.riskFactorsForm = this.factoresDeRiesgoFormService.getForm();
 	}
 
 	setTriageCategoryId(triageCategoryId: number): void {

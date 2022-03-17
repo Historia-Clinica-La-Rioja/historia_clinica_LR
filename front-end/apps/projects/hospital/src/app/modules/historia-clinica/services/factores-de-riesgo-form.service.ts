@@ -21,7 +21,7 @@ export interface FactoresDeRiesgo {
 	cardiovascularRisk?: EffectiveClinicalObservationDto;
 }
 
-export class FactoresDeRiesgoNuevaConsultaService {
+export class FactoresDeRiesgoFormService {
 
 	private heartRateErrorSource = new Subject<string>();
 	private _heartRateError$: Observable<string>;
