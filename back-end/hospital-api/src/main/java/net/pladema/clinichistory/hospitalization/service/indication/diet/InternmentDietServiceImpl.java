@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,8 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 	private final DocumentFactory documentFactory;
 
 	private final InternmentEpisodeService internmentEpisodeService;
+	
+	private final LocalDateMapper localDateMapper;
 
 	@Override
 	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
@@ -59,7 +62,7 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 				dietBo.getTypeId(),
 				dietBo.getStatusId(),
 				null,
-				dietBo.getIndicationDate().toString(),
+				localDateMapper.toDateTimeDto(dietBo.getIndicationDate()),
 				dietBo.getDescription());
 	}
 }

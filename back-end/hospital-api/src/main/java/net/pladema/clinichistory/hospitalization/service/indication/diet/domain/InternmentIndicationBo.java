@@ -21,7 +21,6 @@ public abstract class InternmentIndicationBo implements IDocumentBo {
 
 	protected Short statusId;
 
-	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
 	protected LocalDateTime indicationDate;
 
 	protected Integer institutionId;

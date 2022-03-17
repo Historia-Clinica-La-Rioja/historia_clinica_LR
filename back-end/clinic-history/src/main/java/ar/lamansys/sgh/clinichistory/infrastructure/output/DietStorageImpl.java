@@ -3,8 +3,9 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
 import org.springframework.stereotype.Service;
-
 import ar.lamansys.sgh.clinichistory.application.ports.DietStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.DietBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DietRepository;
@@ -19,6 +20,8 @@ public class DietStorageImpl implements DietStorage {
 
 	private final DietRepository repository;
 
+	private final SharedHospitalUserPort sharedHospitalUserPort;
+
 
 	@Override
 	public List<DietBo> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
@@ -27,6 +30,10 @@ public class DietStorageImpl implements DietStorage {
 				.stream()
 				.map(this::mapToBo)
 				.collect(Collectors.toList());
+		result.forEach(dietBo -> {
+			HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(dietBo.getCreatedBy());
+			dietBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+		});
 		log.debug("Output -> {}", result);
 		return result;
 	}

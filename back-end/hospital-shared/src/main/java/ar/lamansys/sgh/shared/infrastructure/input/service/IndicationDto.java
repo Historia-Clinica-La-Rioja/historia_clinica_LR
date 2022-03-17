@@ -1,9 +1,9 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
-import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +28,8 @@ public class IndicationDto {
 	@NotNull(message = "{value.mandatory}")
 	private EIndicationStatus status;
 
-	private Integer createdBy;
+	private String createdBy;
 
-	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
-	private String indicationDate;
+	private DateTimeDto indicationDate;
 	
 }

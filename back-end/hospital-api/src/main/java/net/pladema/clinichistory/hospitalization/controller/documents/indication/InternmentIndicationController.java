@@ -1,7 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.indication;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,8 @@ public class InternmentIndicationController {
 
 	private final InternmentDietService internmentDietService;
 
+	private final LocalDateMapper localDateMapper;
+
 	@GetMapping("/diets")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<List<DietDto>> getInternmentEpisodeDiets(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
@@ -54,7 +57,7 @@ public class InternmentIndicationController {
 		result.setPatientId(dto.getPatientId());
 		result.setTypeId(dto.getType().getId());
 		result.setStatusId(dto.getStatus().getId());
-		result.setIndicationDate(LocalDateTime.parse(dto.getIndicationDate()));
+		result.setIndicationDate(localDateMapper.fromDateTimeDto(dto.getIndicationDate()));
 		result.setInstitutionId(institutionId);
 		result.setEncounterId(internmentEpisodeId);
 		return result;

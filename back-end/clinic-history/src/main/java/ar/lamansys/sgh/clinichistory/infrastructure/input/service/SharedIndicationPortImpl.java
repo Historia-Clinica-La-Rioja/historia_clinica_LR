@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,13 +7,13 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentIndication;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.indication.creatediet.CreateDiet;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodediets.GetInternmentEpisodeDiets;
 import ar.lamansys.sgh.clinichistory.domain.ips.DietBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
-
 import ar.lamansys.sgh.shared.infrastructure.input.service.DietDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedIndicationPort;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final CreateDiet createDiet;
 
 	private final DocumentIndicationRepository documentIndicationRepository;
+
+	private final LocalDateMapper localDateMapper;
 
 	@Override
 	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
@@ -62,8 +63,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				dto.getPatientId(),
 				dto.getType().getId(),
 				dto.getStatus().getId(),
-				dto.getCreatedBy(),
-				LocalDateTime.parse(dto.getIndicationDate()),
+				null,
+				localDateMapper.fromDateTimeDto(dto.getIndicationDate()),
 				dto.getDescription());
 	}
 
@@ -73,8 +74,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				bo.getPatientId(),
 				bo.getTypeId(),
 				bo.getStatusId(),
-				bo.getCreatedBy(),
-				bo.getIndicationDate().toString(),
+				bo.getCreatedByName(),
+				localDateMapper.toDateTimeDto(bo.getIndicationDate()),
 				bo.getDescription());
 	}
 }

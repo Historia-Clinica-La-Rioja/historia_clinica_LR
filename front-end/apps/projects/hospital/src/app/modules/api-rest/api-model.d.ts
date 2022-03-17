@@ -1173,6 +1173,14 @@ export interface HealthcareProfessionalSpecialtyDto {
     professionalSpecialtyId: number;
 }
 
+export interface HospitalUserPersonInfoDto {
+    email: string;
+    firstName: string;
+    id: number;
+    lastName: string;
+    personId: number;
+}
+
 export interface HospitalizationProcedureDto {
     performedDate?: string;
     snomed: SnomedDto;
@@ -1243,9 +1251,9 @@ export interface ImmunizePatientDto {
 }
 
 export interface IndicationDto {
-    createdBy: number;
+    createdBy: string;
     id: number;
-    indicationDate: string;
+    indicationDate: DateTimeDto;
     patientId: number;
     status: EIndicationStatus;
     type: EIndicationType;
