@@ -357,7 +357,6 @@
 				}
 			},
 			"risk-factors-summary": {
-				"UPDATE": "Actualizar factores de riesgo",
 				"save": {
 					"SUCCESS": "Los factores de riesgo se actualizaron exitosamente",
 					"ERROR": "Error al actualizar factores de riesgo"

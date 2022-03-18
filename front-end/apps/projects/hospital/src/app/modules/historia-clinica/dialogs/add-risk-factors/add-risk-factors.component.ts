@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { newMoment } from '@core/utils/moment.utils';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Moment } from 'moment';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EvolutionNoteDto } from '@api-rest/api-model';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 
 @Component({
 	selector: 'app-add-risk-factors',
@@ -16,6 +16,7 @@ export class AddRiskFactorsComponent implements OnInit {
 
 	form: FormGroup;
 	loading = false;
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 	constructor(
 		public dialogRef: MatDialogRef<AddRiskFactorsComponent>,
@@ -23,39 +24,12 @@ export class AddRiskFactorsComponent implements OnInit {
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
-	) { }
-
-	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			heartRate: this.formBuilder.group({
-				value: [null, Validators.min(0)],
-				effectiveTime: [newMoment()],
-			}),
-			respiratoryRate: this.formBuilder.group({
-				value: [null, Validators.min(0)],
-				effectiveTime: [newMoment()],
-			}),
-			temperature: this.formBuilder.group({
-				value: [null, Validators.min(0)],
-				effectiveTime: [newMoment()],
-			}),
-			bloodOxygenSaturation: this.formBuilder.group({
-				value: [null, Validators.min(0)],
-				effectiveTime: [newMoment()],
-			}),
-			systolicBloodPressure: this.formBuilder.group({
-				value: [null, Validators.min(0)],
-				effectiveTime: [newMoment()],
-			}),
-			diastolicBloodPressure: this.formBuilder.group({
-				value: [null, Validators.min(0)],
-				effectiveTime: [newMoment()],
-			}),
-		});
+	) {
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 	}
 
-	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
-		(this.form.controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
+	ngOnInit(): void {
+		this.form = this.factoresDeRiesgoFormService.getForm();
 	}
 
 	formHasNoValues(riskFactorsForm): boolean {
@@ -64,7 +38,10 @@ export class AddRiskFactorsComponent implements OnInit {
 			&& (riskFactorsForm.heartRate.value === null)
 			&& (riskFactorsForm.respiratoryRate.value === null)
 			&& (riskFactorsForm.systolicBloodPressure.value === null)
-			&& (riskFactorsForm.temperature.value === null));
+			&& (riskFactorsForm.temperature.value === null)
+			&& (riskFactorsForm.bloodGlucose.value === null)
+			&& (riskFactorsForm.glycosylatedHemoglobin.value === null)
+			&& (riskFactorsForm.cardiovascularRisk.value === null));
 	}
 
 	submit() {
@@ -92,7 +69,10 @@ export class AddRiskFactorsComponent implements OnInit {
 			heartRate: getEffectiveValue(riskFactorsForm.heartRate),
 			respiratoryRate: getEffectiveValue(riskFactorsForm.respiratoryRate),
 			systolicBloodPressure: getEffectiveValue(riskFactorsForm.systolicBloodPressure),
-			temperature: getEffectiveValue(riskFactorsForm.temperature)
+			temperature: getEffectiveValue(riskFactorsForm.temperature),
+			bloodGlucose: getEffectiveValue(riskFactorsForm.bloodGlucose),
+			glycosylatedHemoglobin: getEffectiveValue(riskFactorsForm.glycosylatedHemoglobin),
+			cardiovascularRisk: getEffectiveValue(riskFactorsForm.cardiovascularRisk)
 		};
 
 		return riskFactors ? { confirmed: true, riskFactors } : undefined;
