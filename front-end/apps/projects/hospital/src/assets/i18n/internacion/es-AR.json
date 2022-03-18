@@ -103,17 +103,6 @@
 				"ERROR": "Error al guardar documento de evaluación de ingreso",
 				"SUCCESS": "El documento de evaluación de ingreso se guardó exitosamente"
 			},
-			"risk-factors": {
-				"form": {
-					"TITLE": "Factores de riesgo",
-					"HEART_RATE": "Frecuencia cardíaca (/min)",
-					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
-					"TEMPERATURE": "Temperatura corporal",
-					"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
-					"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
-					"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)"
-				}
-			},
 			"observations": {
 				"TITLE": "Evaluación clínica",
 				"CURRENT_DISEASE": "Enfermedad actual",
