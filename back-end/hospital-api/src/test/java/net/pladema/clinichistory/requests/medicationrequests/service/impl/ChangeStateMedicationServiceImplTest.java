@@ -101,7 +101,7 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 24));
         Integer dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
-                LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), null, null)).getId();
+                LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), null, null, null)).getId();
         Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -133,7 +133,7 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 21));
         dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
-                LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), LocalDate.of(2020,12,18), LocalDate.of(2020,12,21))).getId();
+                LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), LocalDate.of(2020,12,18), LocalDate.of(2020,12,21), null)).getId();
         Integer medication4Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.SUSPENDED, null, 9, dosageId)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -159,7 +159,7 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 24));
         Integer dosageId = save(MedicationTestMocks.createDosage(7d, "d", 8, "h", false,
-                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), null, null)).getId();
+                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), null, null, null)).getId();
         Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -191,7 +191,7 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 20));
         dosageId = save(MedicationTestMocks.createDosage(7d, "d", 8, "h", false,
-                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), LocalDate.of(2020, 12, 18), LocalDate.of(2020, 12, 19))).getId();
+                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), LocalDate.of(2020, 12, 18), LocalDate.of(2020, 12, 19), null)).getId();
         Integer medication4Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.SUSPENDED, null, 9, dosageId)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
@@ -210,7 +210,7 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 24));
         Integer dosageId = save(MedicationTestMocks.createDosage(7d, "d", 8, "h", false,
-                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), null, null)).getId();
+                LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 23), null, null, null)).getId();
         Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->

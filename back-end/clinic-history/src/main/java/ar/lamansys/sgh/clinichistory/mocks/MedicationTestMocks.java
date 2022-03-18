@@ -15,8 +15,8 @@ public class MedicationTestMocks {
     }
 
     public static Dosage createDosage(Double duration, String durationUnit, Integer frequency, String periodUnit, boolean chronic,
-                                      LocalDate startDate, LocalDate endDate, LocalDate suspendedStartDate, LocalDate suspendendEndDate){
-        return new Dosage(duration,durationUnit, frequency, periodUnit, chronic, startDate, endDate, suspendedStartDate, suspendendEndDate);
+                                      LocalDate startDate, LocalDate endDate, LocalDate suspendedStartDate, LocalDate suspendendEndDate, String event){
+        return new Dosage(duration,durationUnit, frequency, periodUnit, chronic, startDate, endDate, suspendedStartDate, suspendendEndDate, event);
     }
     public static DocumentMedicamentionStatement createDocumentMedicationStatement(Long documentId, Integer medicationId){
         DocumentMedicamentionStatement result = new DocumentMedicamentionStatement(documentId, medicationId);

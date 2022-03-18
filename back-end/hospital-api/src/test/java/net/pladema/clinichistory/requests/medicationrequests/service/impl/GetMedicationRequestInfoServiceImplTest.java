@@ -71,7 +71,7 @@ class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
 
 
         Integer dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
-                LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), null, null)).getId();
+                LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), null, null, null)).getId();
 
         Integer mIbuprofenoId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe1_doc_id, mIbuprofenoId));

@@ -55,11 +55,14 @@ public class Dosage {
 	@Column(name = "suspended_end_date")
 	private LocalDate suspendedEndDate;
 
+	@Column(name = "event", length = 100)
+	private String event;
+
 
 	public Dosage(Double duration, String durationUnit,
 				  Integer frequency, String periodUnit, Boolean chronic,
 				  LocalDate startDate, LocalDate endDate,
-				  LocalDate suspendedStartDate, LocalDate suspendedEndDate) {
+				  LocalDate suspendedStartDate, LocalDate suspendedEndDate, String event) {
 		this.duration = duration;
 		this.durationUnit = durationUnit;
 		this.frequency = frequency;
@@ -69,5 +72,6 @@ public class Dosage {
 		this.endDate = endDate;
 		this.suspendedStartDate = suspendedStartDate;
 		this.suspendedEndDate = suspendedEndDate;
+		this.event = event;
 	}
 }
