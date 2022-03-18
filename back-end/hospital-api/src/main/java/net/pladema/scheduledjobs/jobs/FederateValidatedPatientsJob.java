@@ -39,7 +39,7 @@ public class FederateValidatedPatientsJob {
             "${scheduledjobs.federatepatients.dayofmonth} " +
             "${scheduledjobs.federatepatients.month} " +
             "${scheduledjobs.federatepatients.dayofweek}")
-    public void execute(){
+    public void execute() {
         LOG.debug("Executing FederateValidatedPatientsJob at {}", new Date());
         patientService.getAllValidatedPatients().forEach(p -> {
             FederarResourceAttributes attributes = new FederarResourceAttributes();

@@ -30,7 +30,7 @@ fi
 docker rm -f reviewapp-${ENV_NAME} 2> /dev/null || true
 # Rename previous environment (if exists), avoid deadlocks killing multiple olds environments 
 docker rm -f ${ENV_NAME}_old 2> /dev/null || true
-echo Renombra environment anterior
+echo "Renombra environment anterior"
 docker rename ${ENV_NAME} ${ENV_NAME}_old 2> /dev/null || true
 # Start environment
 echo "Se usara la imagen docker ${DOCKER_IMAGE}"

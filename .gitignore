@@ -10,10 +10,6 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
-*.jar
-*.war
-*.ear
 
 # logs
 *.log*
@@ -67,3 +63,7 @@ sonarlint.json
 
 #jenv
 .java-version
+
+# Docker build
+front-end/.docker/
+back-end/.docker/

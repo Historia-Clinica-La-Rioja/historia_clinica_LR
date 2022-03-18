@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEMapClinicalObservationVo;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository

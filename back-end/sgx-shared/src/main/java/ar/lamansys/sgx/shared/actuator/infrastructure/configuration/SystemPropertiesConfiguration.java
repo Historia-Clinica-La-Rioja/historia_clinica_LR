@@ -51,7 +51,8 @@ public class SystemPropertiesConfiguration {
                                          DateTimeProvider dateTimeProvider,
                                          FlavorService flavorService,
                                          MessageSource messageSource,
-                                         @Value("${app.default.language}") String defaultLanguage) {
+                                         @Value("${app.default.language}") String defaultLanguage
+    ) {
         this.environ = environ;
         this.systemPropertyRepository = systemPropertyRepository;
         this.dateTimeProvider = dateTimeProvider;
@@ -66,7 +67,11 @@ public class SystemPropertiesConfiguration {
 				+ "internment\\.*|images\\.*|mail\\.*|recaptcha\\.*|.*\\.cron\\.*|"
 				+ "habilitar\\.*|hsi\\.*"
 				+ ")";
-		loadProperties();
+		try {
+			loadProperties();
+		} catch (Exception e) {
+			log.error("Loading properties", e);
+		}
     }
 
 	@Scheduled(cron = "${app.system.properties.cron.config:-}")
@@ -113,18 +118,23 @@ public class SystemPropertiesConfiguration {
     }
 
     private Set<PropertyBo> buildProperty(EnvironmentEndpoint.PropertySourceDescriptor propertySourceDescriptor) {
+		log.info("Building properties from source {}", propertySourceDescriptor.getName());
         LinkedHashSet<PropertyBo> sortedSet = new LinkedHashSet();
         propertySourceDescriptor
                 .getProperties()
                 .forEach((propertyKey, propertyValueDescriptor) -> sortedSet.add(
                         new PropertyBo(null,
                                 propertyKey,
-                                (String)(propertyValueDescriptor.getValue()),
+                                toString(propertyValueDescriptor.getValue()),
                                 buildLabel(propertyKey),
                                 propertySourceDescriptor.getName(),
                                 nodeId, dateTimeProvider.nowDateTime())));
         return sortedSet;
     }
+
+	private static String toString(Object value) {
+		return value == null ? null : value.toString();
+	}
 
     private String buildLabel(String propertyKey) {
         return isFeatureFlag(propertyKey) ?

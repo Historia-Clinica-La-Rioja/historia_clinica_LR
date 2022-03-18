@@ -9,7 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-import static net.pladema.patient.repository.PatientSearchQuery.EQUAL_COMPARATOR;
 import static net.pladema.patient.repository.PatientSearchQuery.OR_JOINING_OPERATOR;
 
 public class PatientRepositorySearchImpl implements PatientRepositorySearch {

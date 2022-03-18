@@ -1,15 +1,10 @@
 package net.pladema.medicalconsultation.diary.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.medicalconsultation.diary.controller.constraints.*;
-import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
-import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.service.DiaryService;
-import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import java.util.Collection;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +21,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Optional;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryDeleteableAppoinmentsValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.EditDiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiary;
+import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
+import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
+import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/diary")
@@ -43,9 +52,10 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
-    public DiaryController(DiaryMapper diaryMapper,
-                           DiaryService diaryService) {
-        super();
+    public DiaryController(
+            DiaryMapper diaryMapper,
+            DiaryService diaryService
+    ) {
         this.diaryMapper = diaryMapper;
         this.diaryService = diaryService;
     }
