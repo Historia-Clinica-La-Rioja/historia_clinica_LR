@@ -4,246 +4,71 @@
     {
       "type": "typography",
       "args": {
-        "value": "Lista de componentes para demo ",
+        "value": "Lista de componentes disponibles para extensión",
         "className": "h1"
       }
     },
     {
-      "type": "typography",
+      "type": "card",
       "args": {
-        "value": "Componente: typography ",
-        "className": "title"
-      }
-    },
-    {
-      "type": "typography",
-      "args": {
-        "value": "Componente typography con el estilo de mat-h3",
-        "className": "h3"
-      }
-    },
-    {
-      "type": "code",
-      "args": {
-        "value": {
-          "type": "typography",
-          "args": {
-            "value": "Componente typography con el estilo de mat-h3 ",
-            "className": "h3"
-          }
-        }
-      }
-    },
-    {
-      "type": "typography",
-      "args": {
-        "value": "Componente typography con el estilo de mat-caption",
-        "className": "caption"
-      }
-    },
-    {
-      "type": "code",
-      "args": {
-        "value": {
-          "type": "typography",
-          "args": {
-            "value": "Esto es un componente del tipo typography con el estilo de mat-caption ",
-            "className": "caption"
-          }
-        }
-      }
-    },
-    {
-      "type": "html",
-      "args": {
-        "value": "<hr>"
-      }
-    },
-    {
-      "type": "typography",
-      "args": {
-        "value": "Componente: html ",
-        "className": "title"
-      }
-    },
-    {
-      "type": "html",
-      "args": {
-        "value": "<div style=\"margin: 10px;\">\n\n\t<div>\n\t\t<span>\n\t\t\t<img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Frame-1.png\" height=\"auto\"\n\t\t\t\twidth=\"auto\">\n\t\t</span>\n\t</div>\n\t<div>\n\t\t<div>\n\t\t\t<h4>Texto h4 agregado por html</h4>\n\t\t</div>\n\t</div>\n</div>"
-      }
-    },
-    {
-      "type": "code",
-      "args": {
-        "value": {
-          "type": "html",
-          "args": {
-            "value": "<div style=\"margin: 10px;\">\n\n\t<div>\n\t\t<span>\n\t\t\t<img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Frame-1.png\" height=\"auto\"\n\t\t\t\twidth=\"auto\">\n\t\t</span>\n\t</div>\n\t<div>\n\t\t<div>\n\t\t\t<h4>Texto h4 agregado por html</h4>\n\t\t</div>\n\t</div>\n</div>"
-          }
-        }
-      }
-    },
-    {
-      "type": "html",
-      "args": {
-        "value": "<hr>"
-      }
-    },
-    {
-      "type": "typography",
-      "args": {
-        "value": "Componente: link ",
-        "className": "title"
-      }
-    },
-    {
-      "type": "link",
-      "args": {
-        "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
-        "label": {
-          "text": "DESCARGAR"
-        }
-      }
-    },
-    {
-      "type": "code",
-      "args": {
-        "value": {
-          "type": "link",
-          "args": {
-            "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
-            "label": {
-              "text": "DESCARGAR"
-            }
-          }
-        }
-      }
-    },
-    {
-      "type": "html",
-      "args": {
-        "value": "<hr>"
-      }
-    },
-    {
-      "type": "typography",
-      "args": {
-        "value": "Componente: columns",
-        "className": "title"
-      }
-    },
-    {
-      "type": "columns",
-      "args": {
+        "title": {
+          "text": "typography"
+        },
         "content": [
           {
             "type": "typography",
             "args": {
-              "value": "Primer componente",
-              "className": "title"
+              "value": "Este componente permite incluir texto en diferentes estilos",
+              "className": "body-1"
             }
           },
           {
-            "type": "link",
+            "type": "columns",
             "args": {
-              "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
-              "label": {
-                "text": "Segundo componente"
-              }
-            }
-          },
-          {
-            "type": "typography",
-            "args": {
-              "value": "Tercer componente",
-              "className": "title"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "code",
-      "args": {
-        "value": {
-          "type": "columns",
-          "args": {
-            "content": [
-              {
-                "type": "typography",
-                "args": {
-                  "value": "Primer componente",
-                  "className": "title"
-                }
-              },
-              {
-                "type": "link",
-                "args": {
-                  "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
-                  "label": {
-                    "text": "Segundo componente"
-                  }
-                }
-              },
-              {
-                "type": "typography",
-                "args": {
-                  "value": "Tercer componente",
-                  "className": "title"
-                }
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "type": "html",
-      "args": {
-        "value": "<hr>"
-      }
-    },
-    {
-      "type": "typography",
-      "args": {
-        "value": "Componente: Tabs",
-        "className": "title"
-      }
-    },
-    {
-      "type": "tabs",
-      "args": {
-        "tabs": [
-          {
-            "args": {
-              "label": "Primer Tab",
               "content": [
                 {
                   "type": "typography",
                   "args": {
-                    "value": "Componente del primer tab",
-                    "className": "title"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "args": {
-              "label": "Segundo Tab",
-              "content": [
-                {
-                  "type": "typography",
-                  "args": {
-                    "value": "Primer componente del segundo tab",
-                    "className": "title"
+                    "value": "Componente typography con el estilo de mat-h3",
+                    "className": "h3"
                   }
                 },
                 {
+                  "type": "json",
+                  "args": {
+                    "content": {
+                      "type": "typography",
+                      "args": {
+                        "value": "Componente typography con el estilo de mat-h3",
+                        "className": "h3"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "columns",
+            "args": {
+              "content": [
+                {
                   "type": "typography",
                   "args": {
-                    "value": "Segundo componente del segundo tab",
-                    "className": "title"
+                    "value": "Componente typography con el estilo de mat-caption",
+                    "className": "caption"
+                  }
+                },
+                {
+                  "type": "json",
+                  "args": {
+                    "content": {
+                      "type": "typography",
+                      "args": {
+                        "value": "Componente typography con el estilo de mat-caption",
+                        "className": "caption"
+                      }
+                    }
                   }
                 }
               ]
@@ -253,69 +78,293 @@
       }
     },
     {
-      "type": "code",
+      "type": "card",
       "args": {
-        "value": {
-          "type": "tabs",
-          "args": {
-            "tabs": [
-              {
-                "args": {
-                  "label": "Primer Tab",
-                  "content": [
-                    {
-                      "type": "typography",
+        "title": {
+          "text": "html"
+        },
+        "content": [
+          {
+            "type": "typography",
+            "args": {
+              "value": "Este componente permite incluir HTML",
+              "className": "body-1"
+            }
+          },
+          {
+            "type": "columns",
+            "args": {
+              "content": [
+                {
+                  "type": "html",
+                  "args": {
+                    "value": "<div style=\"margin: 10px;\">\n\n\t<div>\n\t\t<span>\n\t\t\t<img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Frame-1.png\" height=\"auto\"\n\t\t\t\twidth=\"auto\">\n\t\t</span>\n\t</div>\n\t<div>\n\t\t<div>\n\t\t\t<h4>Texto h4 agregado por html</h4>\n\t\t</div>\n\t</div>\n</div>"
+                  }
+                },
+                {
+                  "type": "json",
+                  "args": {
+                    "content": {
+                      "type": "html",
                       "args": {
-                        "value": "Componente del primer tab",
-                        "className": "title"
+                        "value": "<div style=\"margin: 10px;\">\n\n\t<div>\n\t\t<span>\n\t\t\t<img loading=\"lazy\" src=\"http://hsi.pladema.net/wp-content/uploads/2021/01/Frame-1.png\" height=\"auto\"\n\t\t\t\twidth=\"auto\">\n\t\t</span>\n\t</div>\n\t<div>\n\t\t<div>\n\t\t\t<h4>Texto h4 agregado por html</h4>\n\t\t</div>\n\t</div>\n</div>"
                       }
                     }
-                  ]
+                  }
                 }
-              },
-              {
-                "args": {
-                  "label": "Segundo Tab",
-                  "content": [
-                    {
-                      "type": "typography",
-                      "args": {
-                        "value": "Primer componente del segundo tab",
-                        "className": "title"
-                      }
-                    },
-                    {
-                      "type": "typography",
-                      "args": {
-                        "value": "Segundo componente del segundo tab",
-                        "className": "title"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+              ]
+            }
           }
-        }
+        ]
       }
     },
     {
-      "type": "html",
+      "type": "card",
       "args": {
-        "value": "<hr>"
+        "title": {
+          "text": "link"
+        },
+        "content": [
+          {
+            "type": "typography",
+            "args": {
+              "value": "Este componente permite agregar un link con forma de botón",
+              "className": "body-1"
+            }
+          },
+          {
+            "type": "columns",
+            "args": {
+              "content": [
+                {
+                  "type": "link",
+                  "args": {
+                    "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+                    "label": {
+                      "text": "DESCARGAR"
+                    }
+                  }
+                },
+                {
+                  "type": "json",
+                  "args": {
+                    "content": {
+                      "type": "link",
+                      "args": {
+                        "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+                        "label": {
+                          "text": "DESCARGAR"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
     },
     {
-      "type": "typography",
+      "type": "card",
       "args": {
-        "value": "Componente: no definido ",
-        "className": "title"
+        "title": {
+          "text": "columns"
+        },
+        "content": [
+          {
+            "type": "typography",
+            "args": {
+              "value": "Este componente permite utilizar WebComponents definidos en sistemas externos",
+              "className": "body-1"
+            }
+          },
+          {
+            "type": "columns",
+            "args": {
+              "content": [
+                {
+                  "type": "columns",
+                  "args": {
+                    "content": [
+                      {
+                        "type": "typography",
+                        "args": {
+                          "value": "Primer componente",
+                          "className": "title"
+                        }
+                      },
+                      {
+                        "type": "link",
+                        "args": {
+                          "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+                          "label": {
+                            "text": "Segundo componente"
+                          }
+                        }
+                      },
+                      {
+                        "type": "typography",
+                        "args": {
+                          "value": "Tercer componente",
+                          "className": "title"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "json",
+                  "args": {
+                    "content": {
+                      "type": "columns",
+                      "args": {
+                        "content": [
+                          {
+                            "type": "typography",
+                            "args": {
+                              "value": "Primer componente",
+                              "className": "title"
+                            }
+                          },
+                          {
+                            "type": "link",
+                            "args": {
+                              "value": "http://hsi.pladema.net/wp-content/uploads/2021/03/Manual-Backoffice-HSI.pdf",
+                              "label": {
+                                "text": "Segundo componente"
+                              }
+                            }
+                          },
+                          {
+                            "type": "typography",
+                            "args": {
+                              "value": "Tercer componente",
+                              "className": "title"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
     },
     {
-      "type": "nombreIndefinido",
+      "type": "card",
       "args": {
-        "value": "Valor sin sentido"
+        "title": {
+          "text": "tabs"
+        },
+        "content": [
+          {
+            "type": "typography",
+            "args": {
+              "value": "Este componente permite utilizar Tabs / Pestañas / Solapas",
+              "className": "body-1"
+            }
+          },
+          {
+            "type": "columns",
+            "args": {
+              "content": [
+                {
+                  "type": "tabs",
+                  "args": {
+                    "tabs": [
+                      {
+                        "args": {
+                          "label": "Primer Tab",
+                          "content": [
+                            {
+                              "type": "typography",
+                              "args": {
+                                "value": "Componente del primer tab",
+                                "className": "title"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "args": {
+                          "label": "Segundo Tab",
+                          "content": [
+                            {
+                              "type": "typography",
+                              "args": {
+                                "value": "Primer componente del segundo tab",
+                                "className": "title"
+                              }
+                            },
+                            {
+                              "type": "typography",
+                              "args": {
+                                "value": "Segundo componente del segundo tab",
+                                "className": "title"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "json",
+                  "args": {
+                    "content": {
+                      "type": "tabs",
+                      "args": {
+                        "tabs": [
+                          {
+                            "args": {
+                              "label": "Primer Tab",
+                              "content": [
+                                {
+                                  "type": "typography",
+                                  "args": {
+                                    "value": "Componente del primer tab",
+                                    "className": "title"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "args": {
+                              "label": "Segundo Tab",
+                              "content": [
+                                {
+                                  "type": "typography",
+                                  "args": {
+                                    "value": "Primer componente del segundo tab",
+                                    "className": "title"
+                                  }
+                                },
+                                {
+                                  "type": "typography",
+                                  "args": {
+                                    "value": "Segundo componente del segundo tab",
+                                    "className": "title"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
     }
   ]
