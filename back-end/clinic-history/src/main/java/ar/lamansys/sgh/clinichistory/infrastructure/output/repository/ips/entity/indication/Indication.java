@@ -47,4 +47,7 @@ public class Indication extends SGXAuditableEntity<Integer> implements Serializa
 	@Column(name = "indication_date", nullable = false)
 	private LocalDate indicationDate;
 
+	@Column(name = "professional_id", nullable = false)
+	private Integer professionalId;
+
 }

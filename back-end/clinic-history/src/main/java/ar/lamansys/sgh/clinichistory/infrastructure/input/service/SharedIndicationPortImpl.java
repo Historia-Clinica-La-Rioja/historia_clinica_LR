@@ -64,6 +64,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				dto.getType().getId(),
 				dto.getStatus().getId(),
 				null,
+				dto.getProfessionalId(),
 				localDateMapper.fromDateDto(dto.getIndicationDate()),
 				localDateMapper.fromDateTimeDto(dto.getCreatedOn()),
 				dto.getDescription());
@@ -75,6 +76,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				bo.getPatientId(),
 				bo.getTypeId(),
 				bo.getStatusId(),
+				bo.getProfessionalId(),
 				bo.getCreatedByName(),
 				localDateMapper.toDateDto(bo.getIndicationDate()),
 				localDateMapper.toDateTimeDto(bo.getCreatedOn()),

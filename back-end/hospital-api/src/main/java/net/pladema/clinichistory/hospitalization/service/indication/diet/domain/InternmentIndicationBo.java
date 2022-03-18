@@ -29,6 +29,8 @@ public abstract class InternmentIndicationBo implements IDocumentBo {
 
 	protected LocalDateTime createdOn;
 
+	protected Integer professionalId;
+
 	@Override
 	public short getDocumentType() {
 		return DocumentType.INDICATION;

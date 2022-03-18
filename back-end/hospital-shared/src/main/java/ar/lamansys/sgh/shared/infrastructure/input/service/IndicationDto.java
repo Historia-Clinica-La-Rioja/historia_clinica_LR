@@ -29,10 +29,12 @@ public class IndicationDto {
 	@NotNull(message = "{value.mandatory}")
 	private EIndicationStatus status;
 
+	private Integer professionalId;
+
 	private String createdBy;
 
 	private DateDto indicationDate;
 
 	private DateTimeDto createdOn;
-	
+
 }

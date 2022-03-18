@@ -14,8 +14,8 @@ public class DietBo extends IndicationBo {
 
 	private String description;
 
-	public DietBo(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, LocalDate indicationDate, LocalDateTime createdOn, String description) {
-		super(id, patientId, typeId, statusId, createdBy, indicationDate, createdOn);
+	public DietBo(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, Integer professionalId, LocalDate indicationDate, LocalDateTime createdOn, String description) {
+		super(id, patientId, typeId, statusId, createdBy, professionalId, indicationDate, createdOn);
 		this.description = description;
 	}
 }

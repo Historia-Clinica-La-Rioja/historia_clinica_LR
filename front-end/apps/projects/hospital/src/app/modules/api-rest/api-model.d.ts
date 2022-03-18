@@ -1256,6 +1256,7 @@ export interface IndicationDto {
     id: number;
     indicationDate: DateDto;
     patientId: number;
+    professionalId: number;
     status: EIndicationStatus;
     type: EIndicationType;
 }

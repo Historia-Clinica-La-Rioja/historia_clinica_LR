@@ -53,6 +53,7 @@ public class DietStorageImpl implements DietStorage {
 		result.setTypeId(bo.getTypeId());
 		result.setStatusId(bo.getStatusId());
 		result.setIndicationDate(bo.getIndicationDate());
+		result.setProfessionalId(bo.getProfessionalId());
 		result.setDescription(bo.getDescription());
 		return result;
 	}
@@ -63,6 +64,7 @@ public class DietStorageImpl implements DietStorage {
 				entity.getTypeId(),
 				entity.getStatusId(),
 				entity.getCreatedBy(),
+				entity.getProfessionalId(),
 				entity.getIndicationDate(),
 				entity.getCreatedOn(),
 				entity.getDescription());

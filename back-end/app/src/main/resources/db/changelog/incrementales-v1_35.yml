@@ -455,3 +455,23 @@ databaseChangeLog:
               columnName: indication_date
               newDataType: date
               tableName: indication
+
+    - changeSet:
+        id: indication-addColumn-professional_id
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: professional_id
+                    type: int
+                    constraints:
+                      nullable: false
+              tableName: indication
+          - addForeignKeyConstraint:
+              baseColumnNames: professional_id
+              baseTableName: indication
+              constraintName: FK_indication_professional_id
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+              validate: true

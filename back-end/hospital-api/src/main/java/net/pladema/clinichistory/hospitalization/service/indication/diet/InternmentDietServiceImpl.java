@@ -50,7 +50,7 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 	}
 
 	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
-		if(!internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
+		if(internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
 		}
 	}
@@ -61,6 +61,7 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 				dietBo.getPatientId(),
 				dietBo.getTypeId(),
 				dietBo.getStatusId(),
+				dietBo.getProfessionalId(),
 				null,
 				localDateMapper.toDateDto(dietBo.getIndicationDate()),
 				localDateMapper.toDateTimeDto(dietBo.getCreatedOn()),
