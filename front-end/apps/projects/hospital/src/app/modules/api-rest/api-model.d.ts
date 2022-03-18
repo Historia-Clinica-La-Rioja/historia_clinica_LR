@@ -1252,8 +1252,9 @@ export interface ImmunizePatientDto {
 
 export interface IndicationDto {
     createdBy: string;
+    createdOn: DateTimeDto;
     id: number;
-    indicationDate: DateTimeDto;
+    indicationDate: DateDto;
     patientId: number;
     status: EIndicationStatus;
     type: EIndicationType;

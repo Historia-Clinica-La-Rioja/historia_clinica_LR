@@ -64,7 +64,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				dto.getType().getId(),
 				dto.getStatus().getId(),
 				null,
-				localDateMapper.fromDateTimeDto(dto.getIndicationDate()),
+				localDateMapper.fromDateDto(dto.getIndicationDate()),
+				localDateMapper.fromDateTimeDto(dto.getCreatedOn()),
 				dto.getDescription());
 	}
 
@@ -75,7 +76,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				bo.getTypeId(),
 				bo.getStatusId(),
 				bo.getCreatedByName(),
-				localDateMapper.toDateTimeDto(bo.getIndicationDate()),
+				localDateMapper.toDateDto(bo.getIndicationDate()),
+				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
 				bo.getDescription());
 	}
 }

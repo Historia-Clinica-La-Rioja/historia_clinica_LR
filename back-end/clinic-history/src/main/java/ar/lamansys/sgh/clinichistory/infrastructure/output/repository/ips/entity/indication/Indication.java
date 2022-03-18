@@ -2,7 +2,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entit
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,6 +45,6 @@ public class Indication extends SGXAuditableEntity<Integer> implements Serializa
 	private Short statusId;
 
 	@Column(name = "indication_date", nullable = false)
-	private LocalDateTime indicationDate;
+	private LocalDate indicationDate;
 
 }

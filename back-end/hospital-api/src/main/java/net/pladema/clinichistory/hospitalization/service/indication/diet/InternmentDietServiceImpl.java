@@ -62,7 +62,8 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 				dietBo.getTypeId(),
 				dietBo.getStatusId(),
 				null,
-				localDateMapper.toDateTimeDto(dietBo.getIndicationDate()),
+				localDateMapper.toDateDto(dietBo.getIndicationDate()),
+				localDateMapper.toDateTimeDto(dietBo.getCreatedOn()),
 				dietBo.getDescription());
 	}
 }

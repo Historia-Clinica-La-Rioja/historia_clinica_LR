@@ -1,13 +1,11 @@
 package net.pladema.clinichistory.hospitalization.service.indication.diet.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,13 +19,15 @@ public abstract class InternmentIndicationBo implements IDocumentBo {
 
 	protected Short statusId;
 
-	protected LocalDateTime indicationDate;
+	protected LocalDate indicationDate;
 
 	protected Integer institutionId;
 
 	protected Short typeId;
 
 	protected Integer encounterId;
+
+	protected LocalDateTime createdOn;
 
 	@Override
 	public short getDocumentType() {

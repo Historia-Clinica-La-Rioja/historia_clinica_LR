@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
@@ -13,8 +14,8 @@ public class DietBo extends IndicationBo {
 
 	private String description;
 
-	public DietBo(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, LocalDateTime indicationDate, String description) {
-		super(id, patientId, typeId, statusId, createdBy, indicationDate);
+	public DietBo(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, LocalDate indicationDate, LocalDateTime createdOn, String description) {
+		super(id, patientId, typeId, statusId, createdBy, indicationDate, createdOn);
 		this.description = description;
 	}
 }

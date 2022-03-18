@@ -64,6 +64,7 @@ public class DietStorageImpl implements DietStorage {
 				entity.getStatusId(),
 				entity.getCreatedBy(),
 				entity.getIndicationDate(),
+				entity.getCreatedOn(),
 				entity.getDescription());
 	}
 

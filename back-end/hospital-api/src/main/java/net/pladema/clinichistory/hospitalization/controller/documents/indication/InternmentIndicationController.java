@@ -57,7 +57,7 @@ public class InternmentIndicationController {
 		result.setPatientId(dto.getPatientId());
 		result.setTypeId(dto.getType().getId());
 		result.setStatusId(dto.getStatus().getId());
-		result.setIndicationDate(localDateMapper.fromDateTimeDto(dto.getIndicationDate()));
+		result.setIndicationDate(localDateMapper.fromDateDto(dto.getIndicationDate()));
 		result.setInstitutionId(institutionId);
 		result.setEncounterId(internmentEpisodeId);
 		return result;

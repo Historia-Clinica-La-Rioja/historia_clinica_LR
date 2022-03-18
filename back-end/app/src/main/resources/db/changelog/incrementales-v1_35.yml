@@ -444,3 +444,14 @@ databaseChangeLog:
                     name: created_on
                     type: datetime
                     defaultValueDate: ${date.now}
+                
+    - changeSet:
+        id: indication-update-indication_date
+        author: mvenere
+        comment: Actualizar type de la columna indication_date
+        context: "!schema-only"
+        changes:
+          - modifyDataType:
+              columnName: indication_date
+              newDataType: date
+              tableName: indication

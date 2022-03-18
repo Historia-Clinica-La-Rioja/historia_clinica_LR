@@ -2,8 +2,9 @@ package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import javax.validation.constraints.NotNull;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,8 @@ public class IndicationDto {
 
 	private String createdBy;
 
-	private DateTimeDto indicationDate;
+	private DateDto indicationDate;
+
+	private DateTimeDto createdOn;
 	
 }

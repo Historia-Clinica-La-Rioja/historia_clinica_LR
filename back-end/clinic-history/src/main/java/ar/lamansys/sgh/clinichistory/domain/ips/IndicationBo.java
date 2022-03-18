@@ -1,11 +1,8 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,16 +24,18 @@ public class IndicationBo {
 
 	private Integer createdBy;
 
-	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
-	private LocalDateTime indicationDate;
+	private LocalDate indicationDate;
 
-	public IndicationBo(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, LocalDateTime indicationDate){
+	private LocalDateTime createdOn;
+
+	public IndicationBo(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, LocalDate indicationDate, LocalDateTime createdOn){
 		this.id = id;
 		this.patientId = patientId;
 		this.typeId = typeId;
 		this.statusId = statusId;
 		this.createdBy = createdBy;
 		this.indicationDate = indicationDate;
+		this.createdOn = createdOn;
 	}
 
 }
