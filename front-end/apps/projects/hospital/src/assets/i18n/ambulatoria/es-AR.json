@@ -23,7 +23,7 @@
                 "buttons": {
                     "SHOW_PATIENT": "ver paciente",
                     "actions": {
-                        "ACTIONS":"+ acciones",
+                        "ACTIONS": "+ acciones",
                         "EVOLUTION_NOTE": "Agregar nota de evolución",
                         "ANAMNESIS": "Agregar evaluación de ingreso",
                         "EPICRISIS": "Epicrisis",
@@ -44,7 +44,7 @@
                 },
                 "INTERNMENT_EPISODE_ACTIVE": "En internación",
                 "EMERGENCY_CARE_EPISODE_ACTIVE": "En guardia",
-				"NO_CRITICAL_ALLERGIES": "Sin alergias críticas registradas",
+                "NO_CRITICAL_ALLERGIES": "Sin alergias críticas registradas",
                 "MORE_CRITICAL_ALLERGIES": "+ {{allergies}} alergias críticas"
             },
             "new-nursing-consultation": {
@@ -483,17 +483,17 @@
                 "TAB_LABEL": "Resumen",
                 "TITLE": "Resumen de historia clínica"
             },
-			"studies": {
+            "studies": {
                 "TAB_LABEL": "Estudios",
                 "TITLE": "Estudios"
             },
-			"indications": {
+            "indications": {
                 "TAB_LABEL": "Indicaciones",
                 "TITLE": "Indicaciones"
             },
             "internacion": {
-				"TAB_LABEL": "Internación"
-			},
+                "TAB_LABEL": "Internación"
+            },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
                 "TITLE": "Historial de vacunación",
@@ -543,9 +543,9 @@
                     }
                 }
             },
-			"allergies": {
-				"TITLE": "Alergias críticas"
-			}
+            "allergies": {
+                "TITLE": "Alergias críticas"
+            }
         },
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
