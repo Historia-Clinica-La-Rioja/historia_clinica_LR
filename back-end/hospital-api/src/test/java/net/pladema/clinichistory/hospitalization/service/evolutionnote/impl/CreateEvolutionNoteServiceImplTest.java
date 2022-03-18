@@ -23,6 +23,8 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.Ev
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
+import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +70,10 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Mock
     private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
+	@Mock
+	private FetchLoggedUserRolesExternalService fetchLoggedUserRolesExternalService;
+
+	private int institutionId;
 
     @BeforeEach
     void setUp(){
@@ -83,9 +89,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
                 documentFactory,
                 internmentEpisodeService,
                 fetchHospitalizationHealthConditionState,
-                dateTimeProvider);
+                dateTimeProvider, fetchLoggedUserRolesExternalService);
     }
-
 
     @Test
     void createDocumentWithEpisodeThatNotExists() {
@@ -96,7 +101,6 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         String actualMessage = exception.getMessage();
         assertEquals(actualMessage,expectedMessage);
     }
-
 
     @Test
     void createDocumentWithInvalidInstitutionId() {

@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.controller.exceptions;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
+import net.pladema.sgx.exceptions.PermissionDeniedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,12 @@ public class HospitalizationExceptionHandler {
 	protected ApiErrorMessageDto handleSaveMedicalDischargeException(SaveMedicalDischargeException ex) {
 		LOG.debug("SaveMedicalDischargeException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+	
+	@ExceptionHandler({PermissionDeniedException.class})
+	public ApiErrorMessageDto permissionDenied(PermissionDeniedException ex) {
+		LOG.debug("PermissionDeniedException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(null , ex.getMessage());
 	}
 
 }
