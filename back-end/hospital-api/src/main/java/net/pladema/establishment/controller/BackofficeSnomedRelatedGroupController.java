@@ -1,6 +1,7 @@
 package net.pladema.establishment.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSnomedRelatedGroupValidator;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
@@ -21,17 +22,21 @@ public class BackofficeSnomedRelatedGroupController extends AbstractBackofficeCo
 
     public BackofficeSnomedRelatedGroupController(SnomedRelatedGroupRepository repository,
 												  SnomedRelatedGroupRepository snomedRelatedGroupRepository,
-												  DateTimeProvider dateTimeProvider) {
-        super(repository);
+												  DateTimeProvider dateTimeProvider,
+												  BackofficeSnomedRelatedGroupValidator backofficeSnomedRelatedGroupValidator) {
+        super(repository, backofficeSnomedRelatedGroupValidator);
 		this.snomedRelatedGroupRepository = snomedRelatedGroupRepository;
 		this.dateTimeProvider = dateTimeProvider;
 	}
 
 	@Override
 	public SnomedRelatedGroup create(@Valid @RequestBody SnomedRelatedGroup entity) {
+		// as we get the SnomedRelatedGroup id in the snomedId field of the entity, we need to get the real snomedId
+		Integer snomedId = snomedRelatedGroupRepository.getById(entity.getSnomedId()).getSnomedId();
 		Integer orden = snomedRelatedGroupRepository.getLastOrdenByGroupId(entity.getGroupId()).orElse(0) + 1;
 		entity.setOrden(orden);
 		entity.setLastUpdate(dateTimeProvider.nowDate());
+		entity.setSnomedId(snomedId);
 		return super.create(entity);
 	}
 

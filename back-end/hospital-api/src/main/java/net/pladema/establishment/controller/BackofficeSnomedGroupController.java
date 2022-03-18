@@ -1,6 +1,7 @@
 package net.pladema.establishment.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSnomedGroupValidator;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
@@ -23,8 +24,9 @@ public class BackofficeSnomedGroupController extends AbstractBackofficeControlle
 
     public BackofficeSnomedGroupController(SnomedGroupRepository repository,
 										   DateTimeProvider dateTimeProvider,
-										   SnomedGroupRepository snomedGroupRepository) {
-        super(repository);
+										   SnomedGroupRepository snomedGroupRepository,
+										   BackofficeSnomedGroupValidator backofficeSnomedGroupValidator) {
+        super(repository, backofficeSnomedGroupValidator);
 		this.dateTimeProvider = dateTimeProvider;
 		this.snomedGroupRepository = snomedGroupRepository;
 	}
