@@ -10,7 +10,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.NewDosageDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

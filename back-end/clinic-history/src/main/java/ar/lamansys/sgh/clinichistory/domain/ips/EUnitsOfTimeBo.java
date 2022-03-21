@@ -12,7 +12,8 @@ public enum EUnitsOfTimeBo {
     DAY("d"),
     WEEK("w"),
     MONTH("m"),
-    ANNUAL("a");
+    ANNUAL("a"),
+	EVENT("e");
 
     private String value;
 

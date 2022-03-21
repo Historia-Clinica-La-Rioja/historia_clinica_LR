@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.medicationrequests.controller.dto;
+package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

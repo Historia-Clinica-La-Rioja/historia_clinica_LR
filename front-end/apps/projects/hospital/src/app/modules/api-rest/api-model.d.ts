@@ -1709,6 +1709,13 @@ export interface OrganizationDto extends Serializable {
     phoneNumber: string;
 }
 
+export interface OtherIndicationDto extends IndicationDto {
+    description: string;
+    dosage?: NewDosageDto;
+    otherIndicationTypeId: number;
+    otherType?: string;
+}
+
 export interface OutpatientAllergyConditionDto {
     categoryId: string;
     criticalityId: number;

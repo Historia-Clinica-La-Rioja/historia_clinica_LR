@@ -8,5 +8,7 @@ public interface SharedIndicationPort {
 
 	Integer addDiet(DietDto dietDto);
 
+	Integer addOtherIndication(OtherIndicationDto otherIndicationDto);
+
 	void saveDocument(Long id, Integer indicationId);
 }
