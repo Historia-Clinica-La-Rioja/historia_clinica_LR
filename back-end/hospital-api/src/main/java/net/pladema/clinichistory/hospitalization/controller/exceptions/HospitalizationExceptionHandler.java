@@ -2,6 +2,8 @@ package net.pladema.clinichistory.hospitalization.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -23,6 +25,13 @@ public class HospitalizationExceptionHandler {
         LOG.debug("CreateInternmentEpisodeException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }
+
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({SaveMedicalDischargeException.class})
+	protected ApiErrorMessageDto handleSaveMedicalDischargeException(SaveMedicalDischargeException ex) {
+		LOG.debug("SaveMedicalDischargeException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
 
 }
 

@@ -31,8 +31,10 @@ public interface InternmentEpisodeService {
     LocalDateTime getEntryDate(Integer internmentEpisodeId);
 
     boolean canCreateEpicrisis(Integer internmentEpisodeId);
+
+	PatientDischargeBo saveMedicalDischarge(PatientDischargeBo patientDischargeBo);
  
-    PatientDischargeBo savePatientDischarge(PatientDischargeBo patientDischarge);
+    PatientDischargeBo saveAdministrativeDischarge(PatientDischargeBo patientDischarge);
     
     void updateInternmentEpisodeStatus(Integer internmentEpisodeId, Short statusId);
 

@@ -18,6 +18,8 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeEnumException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeExceptionEnum;
 import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
@@ -174,18 +176,28 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public PatientDischargeBo savePatientDischarge(PatientDischargeBo patientDischargeBo) {
+	public PatientDischargeBo saveMedicalDischarge(PatientDischargeBo patientDischargeBo){
+		LOG.debug(INPUT_PARAMETERS, patientDischargeBo);
+		if (patientDischargeRepository.existsById(patientDischargeBo.getInternmentEpisodeId())){
+			throw new SaveMedicalDischargeException(
+					SaveMedicalDischargeExceptionEnum.MEDICAL_DISCHARGE_ALREADY_EXISTS, String.format("Ya existe un alta medica correspondiente a la internacion %s", patientDischargeBo.getInternmentEpisodeId()));
+		}
+		PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
+		PatientDischargeBo result = new PatientDischargeBo(entityResult);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public PatientDischargeBo saveAdministrativeDischarge(PatientDischargeBo patientDischargeBo) {
 		LOG.debug(INPUT_PARAMETERS, patientDischargeBo);
 		return patientDischargeRepository.findById(patientDischargeBo.getInternmentEpisodeId()).map(pd -> {
 			PatientDischargeBo result = new PatientDischargeBo(updatePatientDischarge(pd, patientDischargeBo));
 			LOG.debug(LOGGING_OUTPUT, result);
 			return result;
-		}).orElseGet(() -> {
-			PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
-			PatientDischargeBo result = new PatientDischargeBo(entityResult);
-			LOG.debug(LOGGING_OUTPUT, result);
-			return result;
-		});
+		}).orElseThrow(() -> new NotFoundException("medical-discharge-not-exists",
+				String.format("No existe alta medica para el episodio %s", patientDischargeBo.getInternmentEpisodeId()))
+		);
 	}
 
 	private PatientDischarge updatePatientDischarge(PatientDischarge patientDischarge, PatientDischargeBo patientDischargeBo) {
