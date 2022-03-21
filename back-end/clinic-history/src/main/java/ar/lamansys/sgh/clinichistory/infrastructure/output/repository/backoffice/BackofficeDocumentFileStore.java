@@ -33,7 +33,7 @@ public class BackofficeDocumentFileStore implements BackofficeStore<DocumentFile
 		List<DocumentFileDto> documentFileDtoList = page.getContent().stream().map(this::mapToDocumentFileDto).collect(Collectors.toList());
 		return new PageImpl<>(documentFileDtoList,
 				pageable,
-				documentFileDtoList.size());
+				documentFileRepository.count());
 	}
 
 	private Example<DocumentFile> createExample(DocumentFileDto dto) {
