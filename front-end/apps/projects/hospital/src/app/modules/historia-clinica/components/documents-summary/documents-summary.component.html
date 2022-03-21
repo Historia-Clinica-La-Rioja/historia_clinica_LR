@@ -60,6 +60,12 @@
 						</mat-slide-toggle>
 					</mat-label>
 				</div>
+				<div class="without-diagnosis-toggle">
+					<mat-label>Sin diagnóstico definido
+						<mat-slide-toggle formControlName="documentsWithoutDiagnosis" (change)="showDocumentsWithoutDiagnosis()">
+						</mat-slide-toggle>
+					</mat-label>
+				</div>
 			</form>
 		</div>
 		<div class="documents" id="documents" fxLayout="row">
