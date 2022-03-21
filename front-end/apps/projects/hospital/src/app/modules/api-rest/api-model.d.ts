@@ -1493,7 +1493,9 @@ export interface NewDosageDto extends Serializable {
     chronic: boolean;
     diary: boolean;
     duration?: number;
+    event?: string;
     frequency?: number;
+    periodUnit?: string;
 }
 
 export interface NewEffectiveClinicalObservationDto extends ClinicalObservationDto {

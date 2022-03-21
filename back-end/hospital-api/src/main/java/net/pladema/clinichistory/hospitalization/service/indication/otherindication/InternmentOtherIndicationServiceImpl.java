@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.indication.otherindication;
 
 import java.util.Collections;
+import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
@@ -41,6 +42,15 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 		return result;
 	}
 
+	@Override
+	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId){
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<OtherIndicationDto> result = sharedIndicationPort.getInternmentEpisodeOtherIndications(internmentEpisodeId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+
 	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
 		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
@@ -48,10 +58,10 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 	}
 
 	private OtherIndicationDto toOtherIndicationDto(InternmentOtherIndicationBo bo) {
-		return new OtherIndicationDto(null, bo.getPatientId(), bo.getTypeId(), bo.getStatusId(), bo.getProfessionalId(), null, localDateMapper.toDateDto(bo.getIndicationDate()), localDateMapper.toDateTimeDto(bo.getCreatedOn()), bo.getOtherIndicationTypeId(), bo.getDescription(), toNewDosageDto(bo.getDosageBo()), bo.getOtherType());
+		NewDosageDto dosageDto = new NewDosageDto();
+		dosageDto.setFrequency(bo.getDosageBo().getFrequency());
+		dosageDto.setPeriodUnit(bo.getDosageBo().getPeriodUnit());
+		return new OtherIndicationDto(null, bo.getPatientId(), bo.getTypeId(), bo.getStatusId(), bo.getProfessionalId(), null, localDateMapper.toDateDto(bo.getIndicationDate()), localDateMapper.toDateTimeDto(bo.getCreatedOn()), bo.getOtherIndicationTypeId(), bo.getDescription(), dosageDto, bo.getOtherType());
 	}
 
-	private NewDosageDto toNewDosageDto(DosageBo bo) {
-		return new NewDosageDto(bo.getFrequency(), false, false, null);
-	}
 }

@@ -10,5 +10,7 @@ public interface SharedIndicationPort {
 
 	Integer addOtherIndication(OtherIndicationDto otherIndicationDto);
 
+	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
+
 	void saveDocument(Long id, Integer indicationId);
 }

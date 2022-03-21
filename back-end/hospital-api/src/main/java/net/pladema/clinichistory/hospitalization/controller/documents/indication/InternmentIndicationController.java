@@ -73,6 +73,15 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/other-indication")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<OtherIndicationDto>> getInternmentEpisodeOtherIndications(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+		List<OtherIndicationDto> result = otherIndicationService.getInternmentEpisodeOtherIndications(internmentEpisodeId);
+		log.debug("Get active internment episode other indications => {}", result);
+		return ResponseEntity.ok(result);
+	}
+
 	private InternmentDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
 		InternmentDietBo result = new InternmentDietBo();
 		result.setDescription(dto.getDescription());
@@ -102,7 +111,7 @@ public class InternmentIndicationController {
 	private DosageBo toDosageBo(NewDosageDto dto, LocalDate indicationDate){
 		DosageBo result = new DosageBo();
 		result.setFrequency(dto.getFrequency());
-		result.setPeriodUnit(EUnitsOfTimeBo.HOUR);
+		result.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
 		result.setStartDate(indicationDate);
 		result.setEndDate(indicationDate);
 		return result;

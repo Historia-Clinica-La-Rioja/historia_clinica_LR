@@ -30,6 +30,8 @@ public class DosageBo {
 
     private boolean chronic = false;
 
+	private String event;
+
     public String getPeriodUnit(){
         return periodUnit != null ? periodUnit.getValue() : null;
     }

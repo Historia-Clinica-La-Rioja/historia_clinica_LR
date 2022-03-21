@@ -27,4 +27,10 @@ public class NewDosageDto implements Serializable {
     @Nullable
     private Double duration;
 
+	@Nullable
+	private String periodUnit;
+
+	@Nullable
+	private String event;
+
 }

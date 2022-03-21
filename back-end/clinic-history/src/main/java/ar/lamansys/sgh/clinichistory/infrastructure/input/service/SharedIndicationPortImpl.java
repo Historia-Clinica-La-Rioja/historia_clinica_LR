@@ -3,6 +3,10 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.indication.creatediet.CreateDiet;
@@ -28,6 +32,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final GetInternmentEpisodeDiets getInternmentEpisodeDiets;
 
+	private final GetInternmentEpisodeOtherIndications getInternmentEpisodeOtherIndications;
+
 	private final CreateDiet createDiet;
 
 	private final CreateOtherIndication createOtherIndication;
@@ -42,6 +48,17 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		List<DietDto> result = getInternmentEpisodeDiets.run(internmentEpisodeId)
 				.stream()
 				.map(this::mapToDietDto)
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<OtherIndicationDto> result = getInternmentEpisodeOtherIndications.run(internmentEpisodeId)
+				.stream()
+				.map(this::mapToOtherIndicationDto)
 				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
@@ -72,9 +89,10 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private OtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto) {
 		DosageBo dosageBo = new DosageBo();
 		dosageBo.setFrequency(dto.getDosage().getFrequency());
-		dosageBo.setPeriodUnit(EUnitsOfTimeBo.HOUR);
+		dosageBo.setPeriodUnit(EUnitsOfTimeBo.map(dto.getDosage().getPeriodUnit()));
 		dosageBo.setStartDate(localDateMapper.fromDateDto(dto.getIndicationDate()));
 		dosageBo.setEndDate(localDateMapper.fromDateDto(dto.getIndicationDate()));
+		dosageBo.setEvent(dto.getDosage().getEvent());
 		return new OtherIndicationBo(dto.getId(),
 				dto.getPatientId(),
 				dto.getType().getId(),
@@ -112,5 +130,26 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				localDateMapper.toDateDto(bo.getIndicationDate()),
 				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
 				bo.getDescription());
+	}
+
+	private OtherIndicationDto mapToOtherIndicationDto(OtherIndicationBo bo){
+		NewDosageDto dosageDto = new NewDosageDto();
+		DosageBo dosageBo = bo.getDosage();
+		dosageDto.setFrequency(dosageBo.getFrequency());
+		dosageDto.setPeriodUnit(dosageBo.getPeriodUnit());
+		dosageDto.setEvent(dosageBo.getEvent());
+		return new OtherIndicationDto(
+				bo.getId(),
+				bo.getPatientId(),
+				bo.getTypeId(),
+				bo.getStatusId(),
+				bo.getProfessionalId(),
+				bo.getCreatedByName(),
+				localDateMapper.toDateDto(bo.getIndicationDate()),
+				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
+				bo.getOtherIndicationTypeId(),
+				bo.getDescription(),
+				dosageDto,
+				bo.getOtherType());
 	}
 }
