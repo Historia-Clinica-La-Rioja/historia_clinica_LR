@@ -709,3 +709,44 @@ databaseChangeLog:
                 FROM snomed_group sg
                 JOIN snomed_related_group srg ON (sg.id = srg.group_id)
                 JOIN snomed s ON (srg.snomed_id = s.id);
+
+    - changeSet:
+        id: add-template-column-snomed_group
+        comment: Add column template to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: template
+                    type: boolean
+                    defaultValue: false
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: v_snomed_group_concept-createView
+        comment: Create v_snomed_group_concept view
+        author: tmedina
+        changes:
+          - createView:
+              viewName: v_snomed_group_concept
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT srg.id as id, s.id AS concept_id, sg.id AS group_id, s.sctid AS concept_sctid, s.pt AS concept_pt,
+                    srg.orden AS orden, srg.last_update as last_update, srg.id as snomed_related_group_id
+                FROM snomed_group sg
+                JOIN snomed_related_group srg ON (sg.id = srg.group_id)
+                JOIN snomed s ON (srg.snomed_id = s.id);
+
+    - changeSet:
+        id: snomed_group-modifyDataType-custom_id
+        author: tmedina
+        comment: Modify data type column custom_id in snomed_group table
+        changes:
+          - modifyDataType:
+              columnName: custom_id
+              newDataType: varchar(50)
+              tableName: snomed_group

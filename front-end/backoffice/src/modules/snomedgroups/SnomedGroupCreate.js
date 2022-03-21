@@ -56,7 +56,8 @@ const SnomedGroupCreate = props => (
             {/* Custom id */}
             <TextInput source="customId" validate={[
                 required(),
-                number()]}/>
+                maxLength(50)]}
+            />
 
             {/* Parent Snomed Group */}
             <FormDataConsumer>

@@ -135,7 +135,7 @@ public class UpdateSnomedConceptsByCsv {
 		log.debug("Input parameters -> eclKey {}, date {}", eclKey, date);
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
         Integer snomedGroupId = snomedGroupRepository.getIdByEcl(ecl);
-        Integer customId = 1;
+        String customId = "1";
         SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date);
 		Integer result = snomedGroupRepository.save(toSave).getId();
 		log.debug("Output -> {}", result);

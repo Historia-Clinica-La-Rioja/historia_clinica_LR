@@ -32,8 +32,8 @@ public class SnomedGroup {
 	@Column(name = "ecl", length = 255, nullable = false)
 	private String ecl;
 
-	@Column(name = "custom_id", nullable = false)
-	private Integer customId;
+	@Column(name = "custom_id", length = 50, nullable = false)
+	private String customId;
 
 	@Column(name = "last_update", nullable = false)
 	private LocalDate lastUpdate;
@@ -50,7 +50,7 @@ public class SnomedGroup {
 	@Column(name = "template", nullable = false)
 	private Boolean template = false;
 
-	public SnomedGroup(Integer id, String description, String ecl, Integer customId, LocalDate lastUpdate) {
+	public SnomedGroup(Integer id, String description, String ecl, String customId, LocalDate lastUpdate) {
 		this.id = id;
 		this.description = description;
 		this.ecl = ecl;
