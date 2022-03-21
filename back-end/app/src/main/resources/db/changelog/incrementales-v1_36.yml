@@ -20,3 +20,15 @@ databaseChangeLog:
                 INSERT INTO other_indication_type(description) VALUES ('Nebulizaciones') ON CONFLICT DO NOTHING;
                 INSERT INTO other_indication_type(description) VALUES ('Resumen') ON CONFLICT DO NOTHING;
                 INSERT INTO other_indication_type(description) VALUES ('Otro') ON CONFLICT DO NOTHING;
+
+    - changeSet:
+        id: other_indication-add-other_type
+        comment: Create column other_type to other_indication
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: other_type
+                    type: varchar(255)
+              tableName: other_indication
