@@ -142,7 +142,8 @@
 				</mat-card>
 			</div>
 			<div id="factores-de-riesgo" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
-				<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
+				<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService"
+					[showErrors]="true">
 				</app-factores-de-riesgo-form>
 			</div>
 			<div id="datos-antropometricos" *appHasRole="['ESPECIALISTA_MEDICO','ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
