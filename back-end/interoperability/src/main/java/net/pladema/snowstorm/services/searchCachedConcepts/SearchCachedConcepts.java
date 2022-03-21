@@ -24,7 +24,7 @@ public class SearchCachedConcepts {
     public SnomedSearchBo run(String term, String eclKey) {
         log.debug("Input parameters -> term {}, eclKey {}", term, eclKey);
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
-        SnomedSearchVo searchResult = snomedConceptsRepository.searchConceptsByEcl(term, ecl);
+        SnomedSearchVo searchResult = snomedConceptsRepository.searchConceptsByEcl(term, ecl, eclKey);
         List<SnomedSearchItemBo> items = searchResult.getItems()
                 .stream()
                 .map(SnomedSearchItemBo::new)
