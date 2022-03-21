@@ -8,10 +8,9 @@
 
 		<form [formGroup]="riskFactorsForm">
 			<section id="risk-factors" fxLayout="column">
-				<h4 [translate]="'guardia.triage.RISK_FACTORS'"></h4>
-					<app-factores-de-riesgo-nueva-consulta
-						[factoresDeRiesgoNuevaConsultaService]="factoresDeRiesgoNuevaConsultaService">
-					</app-factores-de-riesgo-nueva-consulta>
+				<app-factores-de-riesgo-nueva-consulta
+					[factoresDeRiesgoNuevaConsultaService]="factoresDeRiesgoNuevaConsultaService">
+				</app-factores-de-riesgo-nueva-consulta>
 			</section>
 		</form>
 
