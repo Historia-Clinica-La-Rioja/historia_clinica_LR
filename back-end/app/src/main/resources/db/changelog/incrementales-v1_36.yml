@@ -1,3 +1,22 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_36 
 
+    - changeSet:
+        id: add-other_indication_type-options
+        comment: Agregar opciones de tipos de otras indicaciones
+        author: mvenere
+        context: "!schema-only"
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO other_indication_type(description) VALUES ('Control de signos vitales') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Diuresis') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Balance hídrico') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Alimentación enteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Alimentación parenteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Oxigenoterapia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Control de glucemia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Nebulizaciones') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Resumen') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Otro') ON CONFLICT DO NOTHING;
