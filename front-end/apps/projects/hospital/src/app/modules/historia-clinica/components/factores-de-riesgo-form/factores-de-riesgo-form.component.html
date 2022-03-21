@@ -120,7 +120,7 @@
                                 </mat-icon>
                             </ng-container>
                         </div>
-                        <h5 class="recomendado recomendado-tension"
+                        <h5 *ngIf="showRecomendation" class="recomendado recomendado-tension"
                             [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
                         <app-effective-time
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.systolicBloodPressure.effectiveTime"
@@ -142,7 +142,7 @@
                                 </mat-icon>
                             </ng-container>
                         </div>
-                        <h5 class="recomendado recomendado-tension"
+                        <h5 *ngIf="showRecomendation" class="recomendado recomendado-tension"
                             [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
                         <app-effective-time
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.diastolicBloodPressure.effectiveTime"

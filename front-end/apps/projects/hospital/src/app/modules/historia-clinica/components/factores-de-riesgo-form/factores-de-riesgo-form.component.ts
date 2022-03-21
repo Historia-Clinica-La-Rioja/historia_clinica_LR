@@ -11,6 +11,7 @@ export class FactoresDeRiesgoFormComponent implements OnInit {
 
   @Input() factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
   @Input() showPreloadData: boolean = false;
+  @Input() showRecomendation: boolean = false;
   readonly isNumberOrDot = isNumberOrDot;
 
   constructor() { }
