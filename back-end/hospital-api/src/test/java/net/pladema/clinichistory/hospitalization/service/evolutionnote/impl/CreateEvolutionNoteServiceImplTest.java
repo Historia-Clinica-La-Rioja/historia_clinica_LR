@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
@@ -11,6 +12,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.UnitRepository;
@@ -23,6 +25,9 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.Ev
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.permissions.service.dto.RoleAssignment;
+import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
 
 import org.assertj.core.util.Lists;
@@ -30,12 +35,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,8 +79,6 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
 	@Mock
 	private FetchLoggedUserRolesExternalService fetchLoggedUserRolesExternalService;
-
-	private int institutionId;
 
     @BeforeEach
     void setUp(){
@@ -276,6 +281,56 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         );
         Assertions.assertTrue(exception.getMessage().contains("Saturación de oxigeno: La fecha de medición debe ser posterior a la fecha de internación"));
     }
+
+	@Test
+	void createEvolutionNoteWithProceduresWithRoleNurse(){
+		var evolutionNote = new EvolutionNoteBo();
+		evolutionNote.setInstitutionId(1);
+		evolutionNote.setEncounterId(1);
+
+		var roleNurse = new RoleAssignment(ERole.ENFERMERO, evolutionNote.getInstitutionId());
+		var roleList = new ArrayList<RoleAssignment>();
+		roleList.add(roleNurse);
+
+		var procedure = new ProcedureBo(new ProcedureSummaryBo(1, new SnomedBo(new Snomed("1", "1", "1", "1")), LocalDate.now(), 1));
+		var procedureList = new ArrayList<ProcedureBo>();
+		procedureList.add(procedure);
+		evolutionNote.setProcedures(procedureList);
+
+		Mockito.when(fetchLoggedUserRolesExternalService.execute()).thenReturn(
+			roleList.stream());
+		var exception = Assertions.assertThrows(PermissionDeniedException.class, () ->
+				createEvolutionNoteService.execute(evolutionNote)
+		);
+		Assertions.assertTrue(exception.getMessage().contains(
+				String.format("Los usuarios con roles %s y %s no tienen permiso para agregar un procedimiento a una nota de evolución",
+						ERole.ENFERMERO.getValue(), ERole.ENFERMERO_ADULTO_MAYOR.getValue())));
+	}
+
+	@Test
+	void createEvolutionNoteWithProceduresWithRoleOlderAdultNurse(){
+		var evolutionNote = new EvolutionNoteBo();
+		evolutionNote.setInstitutionId(1);
+		evolutionNote.setEncounterId(1);
+
+		var roleOlderAdultNurse = new RoleAssignment(ERole.ENFERMERO_ADULTO_MAYOR, evolutionNote.getInstitutionId());
+		var roleList = new ArrayList<RoleAssignment>();
+		roleList.add(roleOlderAdultNurse);
+
+		var procedure = new ProcedureBo(new ProcedureSummaryBo(1, new SnomedBo(new Snomed("1", "1", "1", "1")), LocalDate.now(), 1));
+		var procedureList = new ArrayList<ProcedureBo>();
+		procedureList.add(procedure);
+		evolutionNote.setProcedures(procedureList);
+
+		Mockito.when(fetchLoggedUserRolesExternalService.execute()).thenReturn(
+				roleList.stream());
+		var exception = Assertions.assertThrows(PermissionDeniedException.class, () ->
+				createEvolutionNoteService.execute(evolutionNote)
+		);
+		Assertions.assertTrue(exception.getMessage().contains(
+				String.format("Los usuarios con roles %s y %s no tienen permiso para agregar un procedimiento a una nota de evolución",
+						ERole.ENFERMERO.getValue(), ERole.ENFERMERO_ADULTO_MAYOR.getValue())));
+	}
 
     private InternmentEpisode newInternmentEpisodeWithEpicrisis(Long epicrisisId) {
         InternmentEpisode internmentEpisode = new InternmentEpisode();
