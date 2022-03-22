@@ -126,7 +126,7 @@ export class PatientDischargeComponent implements OnInit {
 		});
 		this.setValidators()
 		this.dischargeForm.get('date').valueChanges.subscribe((value: Moment) => {
-			if (value.isSame(newMoment(), 'day')) {
+			if (value?.isSame(newMoment(), 'day')) {
 				if (this.minDate === (this.datePipe.transform(new Date(), DatePipeFormat.SHORT_DATE))) {
 					this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
 				} else {
