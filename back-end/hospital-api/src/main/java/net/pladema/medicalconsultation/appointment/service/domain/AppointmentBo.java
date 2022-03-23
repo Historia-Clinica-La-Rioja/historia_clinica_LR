@@ -45,52 +45,52 @@ public class AppointmentBo {
     
     private String stateChangeReason;
 
-	private String phonePrefix;
+    private String phonePrefix;
 
     private String phoneNumber;
 
     public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
-		return AppointmentBo.builder()
-				.id(appointmentDiaryVo.getId())
-				.diaryId(appointmentDiaryVo.getDiaryId())
-				.patientId(appointmentDiaryVo.getPatientId())
-				.date(appointmentDiaryVo.getDate())
-				.hour(appointmentDiaryVo.getHour())
-				.appointmentStateId(appointmentDiaryVo.getAppointmentStateId())
-				.overturn(appointmentDiaryVo.isOverturn())
-				.patientMedicalCoverageId(appointmentDiaryVo.getPatientMedicalCoverageId())
-				.medicalAttentionTypeId(appointmentDiaryVo.getMedicalAttentionTypeId())
-				.phonePrefix(appointmentDiaryVo.getPhonePrefix())
-				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
-				.build();
+        return AppointmentBo.builder()
+                .id(appointmentDiaryVo.getId())
+                .diaryId(appointmentDiaryVo.getDiaryId())
+                .patientId(appointmentDiaryVo.getPatientId())
+                .date(appointmentDiaryVo.getDate())
+                .hour(appointmentDiaryVo.getHour())
+                .appointmentStateId(appointmentDiaryVo.getAppointmentStateId())
+                .overturn(appointmentDiaryVo.isOverturn())
+                .patientMedicalCoverageId(appointmentDiaryVo.getPatientMedicalCoverageId())
+                .medicalAttentionTypeId(appointmentDiaryVo.getMedicalAttentionTypeId())
+                .phonePrefix(appointmentDiaryVo.getPhonePrefix())
+                .phoneNumber(appointmentDiaryVo.getPhoneNumber())
+                .build();
     }
     
     public static AppointmentBo fromAppointmentVo(AppointmentVo appointmentVo) {
-		return AppointmentBo.builder()
-				.id(appointmentVo.getId())
-        		.patientId(appointmentVo.getPatientId())
-        		.date(appointmentVo.getDate())
-        		.hour(appointmentVo.getHour())
-				.appointmentStateId(appointmentVo.getAppointmentStateId())
-        		.overturn(appointmentVo.isOverturn())
-				.patientMedicalCoverageId(appointmentVo.getPatientMedicalCoverageId())
-				.medicalAttentionTypeId(appointmentVo.getMedicalAttentionTypeId())
-				.stateChangeReason(appointmentVo.getStateChangeReason())
-				.diaryId(appointmentVo.getDiaryId())
-				.build();
+        return AppointmentBo.builder()
+                .id(appointmentVo.getId())
+                .patientId(appointmentVo.getPatientId())
+                .date(appointmentVo.getDate())
+                .hour(appointmentVo.getHour())
+                .appointmentStateId(appointmentVo.getAppointmentStateId())
+                .overturn(appointmentVo.isOverturn())
+                .patientMedicalCoverageId(appointmentVo.getPatientMedicalCoverageId())
+                .medicalAttentionTypeId(appointmentVo.getMedicalAttentionTypeId())
+                .stateChangeReason(appointmentVo.getStateChangeReason())
+                .diaryId(appointmentVo.getDiaryId())
+                .build();
     }
 
     public static AppointmentBo newFromAppointment(Appointment appointment) {
         return AppointmentBo.builder()
-				.id(appointment.getId())
-				.patientId(appointment.getPatientId())
-				.date(appointment.getDateTypeId())
-				.hour(appointment.getHour())
-				.appointmentStateId(appointment.getAppointmentStateId())
-				.overturn(appointment.getIsOverturn())
-				.patientMedicalCoverageId(appointment.getPatientMedicalCoverageId())
-				.phonePrefix(appointment.getPhonePrefix())
-				.phoneNumber(appointment.getPhoneNumber())
-				.build();
+                .id(appointment.getId())
+                .patientId(appointment.getPatientId())
+                .date(appointment.getDateTypeId())
+                .hour(appointment.getHour())
+                .appointmentStateId(appointment.getAppointmentStateId())
+                .overturn(appointment.getIsOverturn())
+                .patientMedicalCoverageId(appointment.getPatientMedicalCoverageId())
+                .phonePrefix(appointment.getPhonePrefix())
+                .phoneNumber(appointment.getPhoneNumber())
+                .build();
     }
 }

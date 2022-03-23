@@ -6,7 +6,6 @@
     "start": "ng serve --proxy-config projects/hospital/src/proxy.conf.json",
     "build": "ng build",
     "build:prod": "ng build hospital --base-href /",
-    "build:odontology": "ng build odontology",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "ci:test": "ng test --no-watch --no-progress --browsers=ChromeHeadlessCI"

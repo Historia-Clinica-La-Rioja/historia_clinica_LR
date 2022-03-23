@@ -122,37 +122,6 @@
           }
         }
       }
-    },
-    "odontology": {
-      "projectType": "library",
-      "root": "projects/odontology",
-      "sourceRoot": "projects/odontology/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "projects/odontology/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/odontology/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/odontology/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/odontology/src/test.ts",
-            "tsConfig": "projects/odontology/tsconfig.spec.json",
-            "karmaConfig": "projects/odontology/karma.conf.js"
-          }
-        }
-      }
     }
   },
   "defaultProject": "hospital"

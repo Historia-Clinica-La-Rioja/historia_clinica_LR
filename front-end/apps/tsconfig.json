@@ -14,10 +14,6 @@
 		"experimentalDecorators": true,
 		"moduleResolution": "node",
 		"paths": {
-			"odontology": [
-				"dist/odontology/odontology",
-				"dist/odontology"
-			],
 			"@environments/*": [
 				"projects/hospital/src/environments/*"
 			],

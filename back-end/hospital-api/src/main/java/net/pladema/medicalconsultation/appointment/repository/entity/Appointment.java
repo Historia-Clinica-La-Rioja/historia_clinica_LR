@@ -65,26 +65,26 @@ public class Appointment extends SGXAuditableEntity<Integer> {
     private String phonePrefix;
 
     public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
-		return Appointment.builder()
-				.dateTypeId(appointmentBo.getDate())
-				.hour(appointmentBo.getHour())
-				.isOverturn(appointmentBo.isOverturn())
-				.patientId(appointmentBo.getPatientId())
-				.appointmentStateId(fromStateId(appointmentBo.getAppointmentStateId()))
-				.patientMedicalCoverageId(appointmentBo.getPatientMedicalCoverageId())
-				.phonePrefix(appointmentBo.getPhonePrefix())
-				.phoneNumber(appointmentBo.getPhoneNumber())
-				.build();
+        return Appointment.builder()
+                .dateTypeId(appointmentBo.getDate())
+                .hour(appointmentBo.getHour())
+                .isOverturn(appointmentBo.isOverturn())
+                .patientId(appointmentBo.getPatientId())
+                .appointmentStateId(fromStateId(appointmentBo.getAppointmentStateId()))
+                .patientMedicalCoverageId(appointmentBo.getPatientMedicalCoverageId())
+                .phonePrefix(appointmentBo.getPhonePrefix())
+                .phoneNumber(appointmentBo.getPhoneNumber())
+                .build();
     }
 
-	private static Short fromStateId(Short appointmentStateId) {
-		if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BOOKED))
-			return AppointmentState.BOOKED;
-		else if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BLOCKED))
-			return AppointmentState.BLOCKED;
-		else
-			return AppointmentState.ASSIGNED;
-	}
+    private static Short fromStateId(Short appointmentStateId) {
+        if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BOOKED))
+            return AppointmentState.BOOKED;
+        else if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BLOCKED))
+            return AppointmentState.BLOCKED;
+        else
+            return AppointmentState.ASSIGNED;
+    }
 
     public boolean isAssigned(){
         return Short.valueOf(AppointmentState.ASSIGNED).equals(appointmentStateId);
