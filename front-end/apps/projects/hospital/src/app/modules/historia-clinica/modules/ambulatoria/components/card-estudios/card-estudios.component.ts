@@ -11,10 +11,10 @@ import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripci
 import {
 	NewPrescription,
 	NuevaPrescripcionComponent
-} from '../../dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
+} from '../../modules/indicacion/dialogs/nueva-prescripcion/nueva-prescripcion.component';
 import { VerResultadosEstudioComponent } from '../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
-import { PrescriptionItemData } from '../item-prescripciones/item-prescripciones.component';
+import { PrescriptionItemData } from '../../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from '../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 
 @Component({

@@ -118,6 +118,6 @@ export const ESTUDIOS: SummaryHeader = {
 };
 
 export const INTERNMENT_INDICATIONS: SummaryHeader = {
-	title: 'ambulatoria.paciente.indications.internment-card.TITLE',
+	title: 'indicacion.internment-card.TITLE',
 	matIcon: 'event_available',
 }

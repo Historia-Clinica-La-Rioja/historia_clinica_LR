@@ -4,8 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MedicationInfoDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { MedicationStatusChange } from '../../../constants/prescripciones-masterdata';
-import { PrescripcionesService } from '../../../services/prescripciones.service';
+import { MedicationStatusChange } from '../../../../constants/prescripciones-masterdata';
+import { PrescripcionesService } from '../../../../services/prescripciones.service';
 
 @Component({
   selector: 'app-suspender-medicacion',

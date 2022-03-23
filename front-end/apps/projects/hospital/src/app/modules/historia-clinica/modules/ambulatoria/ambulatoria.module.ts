@@ -20,14 +20,10 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { SolveProblemComponent } from '../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
 import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
-import { NuevaPrescripcionComponent } from './dialogs/ordenes-prescripciones/nueva-prescripcion/nueva-prescripcion.component';
 import { ConfirmarPrescripcionComponent } from './dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { AgregarPrescripcionItemComponent } from './dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
-import { SuspenderMedicacionComponent } from './dialogs/ordenes-prescripciones/suspender-medicacion/suspender-medicacion.component';
-import { CardMedicacionesComponent } from './components/card-medicaciones/card-medicaciones.component';
 import { CardEstudiosComponent } from './components/card-estudios/card-estudios.component';
 import { CardIndicacionesComponent } from './components/card-indicaciones/card-indicaciones.component';
-import { ItemPrescripcionesComponent } from './components/item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
@@ -53,8 +49,7 @@ import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatori
 import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-summary.component';
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
-import { InternmentIndicationsCardComponent } from './components/internment-indications-card/internment-indications-card.component';
-import { DietComponent } from './dialogs/diet/diet.component';
+import { IndicacionModule } from "@historia-clinica/modules/ambulatoria/modules/indicacion/indicacion.module";
 
 @NgModule({
 	declarations: [
@@ -67,14 +62,10 @@ import { DietComponent } from './dialogs/diet/diet.component';
 		SolveProblemComponent,
 		HistoricalProblemsFiltersComponent,
 		NuevaConsultaDockPopupComponent,
-		NuevaPrescripcionComponent,
 		ConfirmarPrescripcionComponent,
 		AgregarPrescripcionItemComponent,
-		SuspenderMedicacionComponent,
-		CardMedicacionesComponent,
 		CardEstudiosComponent,
 		CardIndicacionesComponent,
-		ItemPrescripcionesComponent,
 		CompletarEstudioComponent,
 		VerResultadosEstudioComponent,
 		ExternalSummaryCardComponent,
@@ -98,8 +89,6 @@ import { DietComponent } from './dialogs/diet/diet.component';
 		MainDiagnosisSummaryComponent,
 		DiagnosisSummaryComponent,
 		InternmentSummaryComponent,
-		DietComponent,
-		InternmentIndicationsCardComponent
 	],
 	imports: [
 		CommonModule,
@@ -113,6 +102,7 @@ import { DietComponent } from './dialogs/diet/diet.component';
 		PacientesModule,
 		OdontologiaModule,
 		ClipboardModule,
+		IndicacionModule
 	]
 })
 export class AmbulatoriaModule {

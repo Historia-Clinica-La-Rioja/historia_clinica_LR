@@ -12,8 +12,8 @@ import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDt
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 
-import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../agregar-prescripcion-item/agregar-prescripcion-item.component';
-import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
+import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 
 @Component({
 	selector: 'app-nueva-prescripcion',

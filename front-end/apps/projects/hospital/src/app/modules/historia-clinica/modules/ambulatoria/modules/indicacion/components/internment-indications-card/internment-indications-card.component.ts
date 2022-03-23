@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay, isSameMonth, isSameYear, differenceInMinutes, differenceInHours, differenceInDays, getYear } from "date-fns";
-import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/constants/internment-indications";
+import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { BehaviorSubject } from "rxjs";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
