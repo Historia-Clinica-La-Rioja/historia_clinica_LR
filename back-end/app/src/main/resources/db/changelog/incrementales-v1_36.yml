@@ -32,3 +32,12 @@ databaseChangeLog:
                     name: other_type
                     type: varchar(255)
               tableName: other_indication
+
+    - changeSet:
+        id: dropNotNullConstraint-other_indication-dosage_id
+        author: mvenere
+        changes:
+          - dropNotNullConstraint:
+              columnDataType: int
+              columnName: dosage_id
+              tableName: other_indication
