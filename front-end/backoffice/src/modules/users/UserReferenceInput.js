@@ -10,9 +10,10 @@ const UserReferenceInput = (props) => (
     <ReferenceInput
         reference="users"
         sort={{ field: 'username', order: 'ASC' }}
+        filterToQuery={searchText => ({username: searchText})}
         {...props}
     >
-        <AutocompleteInput optionText={renderUser} optionValue="id" helperText="Buscar por nombre de usuario"  />
+        <AutocompleteInput optionText={renderUser} optionValue="id" helperText="Buscar por nombre de usuario" resettable />
     </ReferenceInput>
 );
 

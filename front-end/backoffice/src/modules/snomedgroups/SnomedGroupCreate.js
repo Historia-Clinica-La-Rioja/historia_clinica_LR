@@ -13,8 +13,8 @@ import {
     usePermissions,
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
-import UserReferenceInput from "../users/UserReferenceInput";
 import { ADMINISTRADOR } from "../roles";
+import UserReferenceInput from "../users/UserReferenceInput";
 
 const InstitutionSelect = ({ formData, ...rest }) => {
     const { permissions } = usePermissions();
@@ -24,6 +24,7 @@ const InstitutionSelect = ({ formData, ...rest }) => {
             {...rest}
             reference="institutions"
             sort={{ field: 'name', order: 'ASC' }}
+            filterToQuery={searchText => ({name: searchText})}
             filter={{ institutionId: formData.institutionId }}
             validate={!userIsAdmin ? [required()] : []}
         >

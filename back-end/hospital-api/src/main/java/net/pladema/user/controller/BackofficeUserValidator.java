@@ -70,9 +70,7 @@ public class BackofficeUserValidator
 
 	@Override
 	public ItemsAllowed itemsAllowedToList(BackofficeUserDto entity) {
-		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
-			return new ItemsAllowed<>(true, new ArrayList<>());
-		return new ItemsAllowed<>(false, new ArrayList<>());
+		return new ItemsAllowed<>(true, new ArrayList<>());
 	}
 
 	@Override
