@@ -34,7 +34,12 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			month: MONTHS_OF_YEAR[getMonth(this.actualDate)]
 		});
 		this.internmentEpisode.getInternmentEpisode(this.internmentEpisodeId).subscribe(
-			internmentEpisode => this.entryDate = new Date(internmentEpisode.entryDate)
+			internmentEpisode => {
+				this.entryDate = new Date(internmentEpisode.entryDate);
+				const differenceInDays = differenceInCalendarDays(this.actualDate, this.entryDate);
+				if (differenceInDays <= 0)
+					this.currentViewIsEntryDate = true;
+			}
 		);
 	}
 
