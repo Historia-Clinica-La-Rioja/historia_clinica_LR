@@ -65,12 +65,8 @@
 								<span class="color-primary coverage-bold-text">{{ 'ambulatoria.paciente.card.internment.COVERAGE_TITLE' | translate }}</span>
 							</div>
 							<ng-container *ngIf="internmentEpisodeCoverageInfo">
-								<div fxLayout="row">
-									<span class="coverage-bold-text top_padded_content"> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}</span>
-								</div>
-								<ng-container *ngIf="internmentEpisodeCoverageInfo">
 									<div fxLayout="row">
-										<span class="bold"> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}</span>
+										<span class="coverage-bold-text top_padded_content"> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}</span>
 									</div>
 									<div fxLayout="row">
 										<span> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.plan }}</span>
@@ -91,7 +87,6 @@
 										<span>{{ 'ambulatoria.paciente.card.internment.WITHOUT_COVERAGE' | translate }}</span>
 									</div>
 								</ng-container>
-							</ng-container>
 						</div>
 					</div>
 				</div>
