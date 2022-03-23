@@ -503,6 +503,10 @@
 							"PARENTERAL_PLAN": "Sin planes parenterales indicados.",
 							"PHARMACO": "Sin fármacos indicados.",
 							"OTHER_INDICATION": "Sin otras indicaciones."
+						},
+						"label": {
+							"SUSPENDED": "Suspendida",
+							"INDICATED": "Indicada"
 						}
 					}
 				}

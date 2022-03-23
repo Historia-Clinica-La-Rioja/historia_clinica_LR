@@ -33,7 +33,22 @@
 					<span class="color-primary title">{{ 'ambulatoria.paciente.indications.internment-card.sections.DIET' | translate | uppercase }}</span>
 					<mat-divider></mat-divider>
 				</div>
-				<div fxLayout="column" *ngTemplateOutlet="noDiet"></div>
+				<div *ngIf="dietsInCurrentView$ | async as diets">
+					<div *ngIf="diets.length; else noDiet" fxLayout="column" fxLayoutGap="20px">
+						<div *ngFor="let diet of diets">
+							<div *ngIf="diet.id else noDiet" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column">
+								<div *ngIf="diet.status == 'INDICATED' else suspended" fxFlex="10%" fxLayoutGap="20px">
+									<ng-container *ngTemplateOutlet="indicated"></ng-container>
+								</div>
+								<span fxLayout="column" fxFlex="30%" fxLayoutGap="20px">{{ diet.description }}</span>
+								<div fxLayout="row" fxLayout.xs="row" fxLayoutAlign.xs="space-between center" fxLayoutGap="30px" fxFlex="60%" class="professional-elapsed-time">
+									<span fxLayout="column" fxFlex="60%">{{ diet.createdBy }}</span>
+									<span fxLayout="column" fxFlex="40%">{{showTimeElapsed(diet.createdOn)}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div id="parenteral_plans">
@@ -94,3 +109,12 @@
 		<span [translate]="'ambulatoria.paciente.indications.internment-card.sections.no-data.OTHER_INDICATION'"></span>
 	</div>
 </ng-template>
+<ng-template #indicated>
+	<strong class="label indicated uppercase"
+			[translate]="'ambulatoria.paciente.indications.internment-card.sections.label.INDICATED'"></strong>
+</ng-template>
+<ng-template #suspended>
+	<strong class="label suspended uppercase"
+			[translate]="'ambulatoria.paciente.indications.internment-card.sections.label.SUSPENDED'"></strong>
+</ng-template>
+

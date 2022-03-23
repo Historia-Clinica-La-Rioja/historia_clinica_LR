@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
-import { getDay, getMonth, getYear, isTomorrow, isYesterday, isToday, differenceInCalendarDays } from "date-fns";
+import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay, isSameMonth, isSameYear, differenceInMinutes, differenceInHours, differenceInDays, getYear } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/constants/internment-indications";
 import { BehaviorSubject } from "rxjs";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { dateDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 
 const DIALOG_SIZE = '35%';
 
@@ -32,6 +33,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	currentViewIsEntryDate = false;
 	dateTime: DateTimeDto;
 	professionalId: number;
+	diets: DietDto[] = [];
+	dietsInCurrentViewSubject = new BehaviorSubject<DietDto[]>([]);
+	dietsInCurrentView$ = this.dietsInCurrentViewSubject.asObservable();
 
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
@@ -39,9 +43,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 	constructor(
 		private readonly dialog: MatDialog,
-
 		private readonly snackBarService: SnackBarService,
-
 		private readonly internmentIndicationService: InternmentIndicationService,
 		private readonly internmentEpisode: InternmentEpisodeService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
@@ -63,6 +65,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			}
 		);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
+		this.getPatientDiets();
 	}
 
 	viewAnotherDay(daysToMove: number) {
@@ -77,6 +80,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		const differenceInDays = differenceInCalendarDays(this.actualDate, this.entryDate);
 		if (differenceInDays >= 0) {
 			this.currentViewIsEntryDate = false;
+			this.loadIndicationsInCurrentView();
 			this.viewDay$.next({
 				nameDay: DAYS_OF_WEEK[getDay(this.actualDate)],
 				numberDay: this.actualDate.getDate(),
@@ -86,6 +90,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		if (differenceInDays <= 0)
 			this.currentViewIsEntryDate = true;
 	}
+
 	private dietIndications(submitted: string): DietDto {
 		const today = new Date();
 		return {
@@ -114,7 +119,8 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.internmentIndicationService.addDiet(this.dietIndications(submitted), this.internmentEpisodeId).subscribe(_ => {
-					this.snackBarService.showSuccess('ambulatoria.dialogs.diet.messages.SUCCESS')
+					this.snackBarService.showSuccess('ambulatoria.dialogs.diet.messages.SUCCESS');
+					this.getPatientDiets();
 				},
 					error => {
 						error?.text ?
@@ -125,7 +131,40 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		});
 	}
 
+	loadIndicationsInCurrentView() {
+		const diets = this.diets.filter(diet => this.isSameDate((dateDtoToDate(diet.indicationDate)), this.actualDate) === true)
+		this.dietsInCurrentViewSubject.next(diets);
+	}
 
+	showTimeElapsed(createdOn: DateTimeDto): string {
+		const differenceInMin = differenceInMinutes(new Date(), new Date(dateTimeDtoToStringDate(createdOn)));
+		if (differenceInMin === 1)
+			return "Hace " + differenceInMin + " minuto"
+		if (differenceInMin < 60)
+			return "Hace " + differenceInMin + " minutos"
+
+		const differenceInHs = differenceInHours(new Date(), new Date(dateTimeDtoToStringDate(createdOn)));
+		if (differenceInHs === 1)
+			return "Hace " + differenceInHs + " hora"
+		if (differenceInHs <= 24)
+			return "Hace " + differenceInHs + " horas"
+
+		const difference = differenceInDays(new Date(), new Date(dateTimeDtoToStringDate(createdOn)));
+		if (difference === 1)
+			return "Hace " + difference + " día"
+		return "Hace " + difference + " días"
+	}
+
+	private isSameDate(date1: Date, date2: Date): boolean {
+		return (isSameDay(date1, date2) && isSameMonth(date1, date2) && isSameYear(date1, date2));
+	}
+
+	private getPatientDiets() {
+		this.internmentIndicationService.getInternmentEpisodeDiets(this.internmentEpisodeId).subscribe(diets => {
+			this.diets = diets;
+			this.loadIndicationsInCurrentView();
+		});
+	}
 }
 
 interface ViewDate {
