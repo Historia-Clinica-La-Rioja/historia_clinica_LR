@@ -72,27 +72,57 @@
 			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
 				<mat-list-option (click)="setActive(document)"
 								 *ngFor="let document of documentsToShow">
-					<mat-icon *ngIf="document.documentType != 'Epicrisis' && document.documentType != 'Anamnesis'"mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
-					<mat-icon *ngIf="document.documentType == 'Anamnesis'" mat-list-icon fontSet="material-icons-outlined" color="primary" svgIcon="assignment_return"></mat-icon>
-					<mat-icon *ngIf="document.documentType == 'Epicrisis'" mat-list-icon fontSet="material-icons-outlined" color="primary">assignment_turned_in</mat-icon>
-					<span id="document-type" bold mat-line>{{document.documentType}}</span>
-					<span id="main-diagnosis" class="capitalize-first-letter">
-						<ng-container *ngIf="document.mainDiagnosis">
-							<span mat-line>{{document.mainDiagnosis}}</span>
-						</ng-container>
-						<ng-container *ngIf="!document.mainDiagnosis && !document.diagnosis.length">
-							<span mat-line [translate]="'internaciones.documents-summary.info.WITHOUT_DIAGNOSIS'"></span>
-						</ng-container>
-					</span>
-					<span *ngIf="document.diagnosis.length && !document.mainDiagnosis" mat-line></span>
-					<span id="other-diagnosis" *ngFor="let diagnosis of document.diagnosis"
-						  mat-line class="capitalize-first-letter">
-						{{diagnosis}}
-					</span>
-					<span mat-line>{{document.createdOn | date : 'dd/MM/yyyy'}}</span>
-					<span mat-line>{{document.creator.firstName}} {{document.creator.lastName}}</span>
-					<mat-divider></mat-divider>
-
+					<div fxLayout="row">
+						<div fxLayout="column">
+							<div fxLayout="row">
+								<mat-icon *ngIf="document.documentType != 'Epicrisis' && document.documentType != 'Anamnesis'"mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
+								<mat-icon *ngIf="document.documentType == 'Anamnesis'" mat-list-icon fontSet="material-icons-outlined" color="primary" svgIcon="assignment_return"></mat-icon>
+								<mat-icon *ngIf="document.documentType == 'Epicrisis'" mat-list-icon fontSet="material-icons-outlined" color="primary">assignment_turned_in</mat-icon>
+							</div>
+						</div>
+						<div fxLayout="column" fxLayoutGap="10px">
+							<div fxLayout="row" fxLayoutAlign="start center">
+								<span id="document-type" class="color-primary uppercase">
+									<ng-container *ngIf="document.documentType === 'Anamnesis'">
+										Evaluación de ingreso
+									</ng-container>
+									<ng-container *ngIf="document.documentType !== 'Anamnesis'">
+										{{document.documentType}}
+									</ng-container>
+								</span>
+							</div>
+							<div fxLayout="row">
+								<div fxLayout="column">
+									<div fxLayout="row">
+										<span id="main-diagnosis" class="capitalize-first-letter bold-text">
+											<ng-container *ngIf="document.mainDiagnosis">
+												<span>{{document.mainDiagnosis}} (Principal)</span>
+											</ng-container>
+											<ng-container *ngIf="!document.mainDiagnosis && !document.diagnosis.length">
+												<span [translate]="'internaciones.documents-summary.info.WITHOUT_DIAGNOSIS'"></span>
+											</ng-container>
+										</span>
+									</div>
+									<div fxLayout="row">
+										<span id="other-diagnosis" *ngFor="let diagnosis of document.diagnosis" class="capitalize-first-letter bold-text">
+											{{diagnosis}}
+										</span>
+									</div>
+								</div>
+							</div>
+							<div fxLayout="row">
+								<div fxLayout="column">
+									<div fxLayout="row">
+										<span mat-line>{{document.creator.firstName}} {{document.creator.lastName}}</span>
+									</div>
+									<div fxLayout="row">
+										<span mat-line>{{document.createdOn | date : 'dd/MM/yyyy'}}</span>
+									</div>
+								</div>
+							</div>
+							<mat-divider></mat-divider>
+						</div>
+					</div>
 				</mat-list-option>
 			</mat-selection-list>
 			<div *ngIf="viewEvolutionNote()" class="content">

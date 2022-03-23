@@ -25,6 +25,10 @@ mat-selection-list {
 	min-width: 30vw;
 }
 
+.selection-documents mat-list-option {
+	height: auto;
+}
+
 .no-notes {
 	display: flex;
 	justify-content: center;
@@ -38,9 +42,11 @@ mat-selection-list {
 	margin: 7px;
 }
 
-::ng-deep .mat-line {
-	&:first-child {
-		font-weight: 500 !important;
-	}
+.bold-text {
+	font-weight: 500;
+}
+
+#document-type {
+	margin-top: 7px;
 }
 
