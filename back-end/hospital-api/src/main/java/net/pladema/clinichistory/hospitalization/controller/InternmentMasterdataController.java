@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherIndicationType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
@@ -153,6 +154,12 @@ public class InternmentMasterdataController {
         LOG.debug("All internment discharge types ");
         return ResponseEntity.ok().body(dischargeExternalService.internmentGetOf());
     }
-    
+
+
+	@GetMapping(value = "/other-indication-type")
+	public ResponseEntity<Collection<MasterDataProjection>> getOtherIndicationTypes(){
+		LOG.debug("{}", "All internment episode status");
+		return ResponseEntity.ok().body(masterDataService.findAll(OtherIndicationType.class));
+	}
     
 }
