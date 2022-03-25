@@ -1,4 +1,4 @@
-<div class="dialog">
+<mat-dialog-content class="dialog">
 	<div fxLayout="row" fxLayoutAlign="end end">
 		<button matSuffix mat-icon-button [mat-dialog-close]>
 			<mat-icon>close</mat-icon>
@@ -10,19 +10,18 @@
 
 	<div id="note">
 		<ng-container concept-form>
-			<form [formGroup]="form">
+			<form [formGroup]="form" (ngSubmit)="save()">
 				<mat-form-field appearance="outline">
 					<textarea matInput type="text" id="note-input" formControlName="description"
 						placeholder="{{'ambulatoria.dialogs.diet.DESCRIPTION' | translate }}">
 					</textarea>
 				</mat-form-field>
+				<div actions id="buttons" fxLayoutAlign="end end">
+					<button mat-raised-button color="primary" id="confirm_button">
+						<span [translate]="'buttons.CONFIRM'"></span>
+					</button>
+				</div>
 			</form>
 		</ng-container>
 	</div>
-
-	<div actions id="buttons" fxLayoutAlign="end end">
-		<button class="uppercase" mat-raised-button color="primary" (click)="save()">
-			<span [translate]="'buttons.CONFIRM'"></span>
-		</button>
-	</div>
-</div>
+</mat-dialog-content>
