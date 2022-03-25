@@ -66,6 +66,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	public hasNewConsultationEnabled$: Observable<boolean>;
 	public showOrders: boolean;
 	public externalInstitutionsEnabled: boolean;
+	odontologyEnabled: boolean;
 	public externalInstitutions: OrganizationDto[];
 	public patientExternalSummary: PatientSummaryDto;
 	public externalInstitutionPlaceholder = 'Ninguna';
@@ -175,6 +176,9 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD)
 			.subscribe(isOn => this.externalInstitutionsEnabled = isOn);
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ODONTOLOGY)
+			.subscribe(isOn => this.odontologyEnabled = isOn);
 
 		this.extensionTabs$ = this.extensionPatientService.getTabs(this.patientId);
 

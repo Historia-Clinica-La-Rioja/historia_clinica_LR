@@ -42,6 +42,9 @@ public enum AppFeature implements Feature {
     @Label("Indica si está habilitado el Bus de Interoperabilidad")
     HABILITAR_BUS_INTEROPERABILIDAD,
 
+    @Label("Indica si está habilitado el módulo de odontología")
+    HABILITAR_ODONTOLOGY,
+
     @Label("Indica si está habilitado el módulo de Reportes")
     HABILITAR_REPORTES,
     

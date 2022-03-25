@@ -259,6 +259,16 @@
 							</ng-container>
 						</ng-template>
 					</mat-tab>
+					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled">
+						<ng-template mat-tab-label>
+							<span>ODONTOLOGÍA</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-odontogram (isOpenOdontologyConsultation)="setStateConsultationOdontology($event)"
+								(consultationCompleted)="updateFields($event)"></app-odontogram>
+						</ng-template>
+					</mat-tab>
+
 				</mat-tab-group>
 			</mat-card-content>
 		</mat-card>
