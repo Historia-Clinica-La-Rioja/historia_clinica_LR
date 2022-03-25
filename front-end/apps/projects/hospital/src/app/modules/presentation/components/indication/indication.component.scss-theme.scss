@@ -1,0 +1,8 @@
+@mixin app-indication($theme) {
+	$palette-primary: map-get($theme, primary);
+	app-indication {
+		.color-primary {
+			color: mat-color($palette-primary, 400);
+		}
+	}
+}

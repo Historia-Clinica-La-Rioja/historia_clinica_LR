@@ -16,6 +16,7 @@ import { FiltersCardComponent } from './components/filters-card/filters-card.com
 import { FooterComponent } from './components/footer/footer.component';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 import { InternmentEpisodeSummaryComponent } from './components/internment-episode-summary/internment-episode-summary.component';
+import { IndicationComponent } from "./components/indication/indication.component";
 import { LabelComponent } from './components/label/label.component';
 import { LocationBadgeComponent } from './components/location-badge/location-badge.component';
 import { LogoComponent } from './components/logo/logo.component';
@@ -64,6 +65,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FooterComponent,
 		ImgUploaderComponent,
 		InternmentEpisodeSummaryComponent,
+		IndicationComponent,
 		LabelComponent,
 		LocationBadgeComponent,
 		LogoComponent,
@@ -123,6 +125,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FiltersCardComponent,
 		ImgUploaderComponent,
 		InternmentEpisodeSummaryComponent,
+		IndicationComponent,
 		LabelComponent,
 		LocationBadgeComponent,
 		MainLayoutComponent,

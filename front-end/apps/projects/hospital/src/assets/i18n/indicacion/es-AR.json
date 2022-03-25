@@ -20,6 +20,13 @@
 				"label": {
 					"SUSPENDED": "Suspendida",
 					"INDICATED": "Indicada"
+				},
+				"indication-extra-description": {
+					"DOSE": "Dosis:",
+					"VIA": "Vía:",
+					"INTERVAL": "Intervalo:",
+					"ONCE": "Única vez",
+					"EVENT": "Ante evento:"
 				}
 			}
 		}
