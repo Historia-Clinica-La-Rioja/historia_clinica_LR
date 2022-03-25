@@ -17,6 +17,7 @@ import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.person.repository.entity.SelfPerceivedGender;
 import net.pladema.person.service.PersonMasterDataService;
 import net.pladema.person.service.PersonPhotoService;
 import net.pladema.person.service.PersonService;
@@ -124,6 +125,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		BasicDataPersonDto result = personMapper.basicDataFromPerson(
 				person,
 				getGender(person.getGenderId()),
+				getSelfPerceivedGender(personExtended.getGenderSelfDeterminationId(), personExtended.getId()),
 				getIdentificationType(person.getIdentificationTypeId())
 		);
 		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
@@ -134,10 +136,12 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	@Override
 	public Optional<BasicDataPersonDto> findBasicDataPerson(Integer personId) {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
+		PersonExtended personExtended = personService.getPersonExtended(personId);
 		Optional<BasicDataPersonDto> basicDataPerson = personService.findPerson(personId)
 			.map(person -> personMapper.basicDataFromPerson(
 					person,
 					getGender(person.getGenderId()),
+					getSelfPerceivedGender(personExtended.getGenderSelfDeterminationId(), personExtended.getId()),
 					getIdentificationType(person.getIdentificationTypeId())
 			));
 		LOG.debug(OUTPUT, basicDataPerson);
@@ -154,10 +158,11 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		LOG.debug(ONE_INPUT_PARAMETER, personIds);
 		List<Person> people = personService.getPeople(personIds);
 		List<Gender> genders = personMasterDataService.getGenders();
+		List<SelfPerceivedGender> selfPerceivedGenders = personMasterDataService.getSelfPerceivedGender();
 		List<IdentificationType> identificationTypes = personMasterDataService.getIdentificationTypes();
 
 		List<BasicDataPersonDto> result = people.parallelStream()
-				.map(p -> mapToBasicDataDto(p, genders, identificationTypes))
+				.map(p -> mapToBasicDataDto(p, genders, selfPerceivedGenders, identificationTypes))
 				.collect(Collectors.toList());
 
 		result.forEach(bdp -> {
@@ -170,17 +175,22 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		return result;
 	}
 
-	private BasicDataPersonDto mapToBasicDataDto(Person person, List<Gender> genders, List<IdentificationType> identificationTypes) {
+	private BasicDataPersonDto mapToBasicDataDto(Person person, List<Gender> genders, List<SelfPerceivedGender> selfPerceivedGenders, List<IdentificationType> identificationTypes) {
 		LOG.debug("Input parameters -> person {}, genders {}, identificationTypes {} ", person, genders, identificationTypes);
+		PersonExtended personExtended = personService.getPersonExtended(person.getId());
 		Gender gender = genders.stream()
 				.filter(g -> g.getId().equals(person.getGenderId())).findAny()
 				.orElse(new Gender());
+
+		String selfPerceivedGender = String.valueOf(selfPerceivedGenders.stream()
+				.filter(spg -> spg.getId().equals(personExtended.getGenderSelfDeterminationId())).findAny()
+				.orElse(new SelfPerceivedGender()));
 
 		IdentificationType identificationType = identificationTypes.stream()
 				.filter(i -> i.getId().equals(person.getIdentificationTypeId())).findAny()
 				.orElse(new IdentificationType());
 
-		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender, identificationType);
+		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender, selfPerceivedGender, identificationType);
 		LOG.debug("BasicDataPersonDto id result {}", result.getId());
 		return result;
 	}
@@ -241,5 +251,11 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 
 	private Gender getGender(Short genderId) {
 		return personMasterDataService.getGender(genderId).orElse(new Gender());
+	}
+
+	private String getSelfPerceivedGender(Short selfPerceivedGenderId, Integer personId){
+		if(selfPerceivedGenderId != null && selfPerceivedGenderId == SelfPerceivedGender.NINGUNA_DE_LAS_ANTERIORES)
+			return personService.getPersonExtended(personId).getOtherGenderSelfDetermination();
+		return personMasterDataService.getSelfPerceivedGenderById(selfPerceivedGenderId).orElse(new String());
 	}
 }

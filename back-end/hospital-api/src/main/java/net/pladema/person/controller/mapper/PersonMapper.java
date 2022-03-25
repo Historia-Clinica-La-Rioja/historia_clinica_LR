@@ -24,7 +24,7 @@ import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 
 
-@Mapper(uses = {AddressMapper.class, IdentificationTypeMapper.class, GenderMapper.class, LocalDateMapper.class, ProvinceMapper.class, DepartmentMapper.class})
+@Mapper(uses = {AddressMapper.class, IdentificationTypeMapper.class, GenderMapper.class, SelfPerceivedGenderMapper.class, LocalDateMapper.class, ProvinceMapper.class, DepartmentMapper.class})
 public interface PersonMapper {
 
 
@@ -53,7 +53,7 @@ public interface PersonMapper {
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
     @Mapping(target = "identificationType", source = "identificationType.description")
-	BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, IdentificationType identificationType);
+	BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, String selfPerceivedGender, IdentificationType identificationType);
 
 
     @Named("fromPersonalInformation")

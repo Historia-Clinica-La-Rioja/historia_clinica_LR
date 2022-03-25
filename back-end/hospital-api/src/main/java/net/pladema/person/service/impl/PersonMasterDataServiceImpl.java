@@ -62,7 +62,18 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
         return result;
     }
 
-    @Override
+	@Override
+	public Optional<String> getSelfPerceivedGenderById(Short selfPerceivedGenderId) {
+		LOG.debug("Input parameter -> {}", selfPerceivedGenderId);
+		Optional<String> result = Optional.empty();
+		if (selfPerceivedGenderId != null) {
+			result = selfPerceivedGenderRepository.findById(selfPerceivedGenderId).map(selfGender -> selfGender.getDescription());
+		}
+			LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
     public List<Gender> getGenders() {
         return genderRepository.findAll();
     }

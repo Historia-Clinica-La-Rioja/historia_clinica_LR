@@ -14,6 +14,8 @@ public interface PersonMasterDataService {
 
     Optional<Gender> getGender(Short genderId);
 
+	Optional<String> getSelfPerceivedGenderById(Short selfPerceivedGenderId);
+
     List<Gender> getGenders();
 
     List<SelfPerceivedGender> getSelfPerceivedGender();
