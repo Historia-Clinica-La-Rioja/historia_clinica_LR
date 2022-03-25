@@ -83,6 +83,9 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si esta habilitada la opción para visualizar las propiedades configuradas en el sistema ")
     HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA,
+
+	@Label("Indica si esta habilitada la opción para generar asincronicamente documentos pdf ")
+	HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF,
     ;
 
     public boolean isActive() {
