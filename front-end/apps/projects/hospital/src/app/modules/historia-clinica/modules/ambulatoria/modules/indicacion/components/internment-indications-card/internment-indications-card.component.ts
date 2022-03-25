@@ -8,9 +8,9 @@ import { DietDto } from "@api-rest/api-model";
 import { DateTimeDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
 import { MatDialog } from '@angular/material/dialog';
-import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { IndicationsFacadeService } from "@historia-clinica/modules/ambulatoria/modules/indicacion/services/indications-facade.service";
 
 const DIALOG_SIZE = '35%';
 
@@ -39,7 +39,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
-		private readonly internmentIndicationService: InternmentIndicationService,
+		private readonly indicationsFacadeService: IndicationsFacadeService,
 		private readonly internmentEpisode: InternmentEpisodeService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
 
@@ -60,6 +60,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			}
 		);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
+		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
 	}
 
 	viewAnotherDay(daysToMove: number) {
@@ -74,7 +75,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		const differenceInDays = differenceInCalendarDays(this.actualDate, this.entryDate);
 		if (differenceInDays >= 0) {
 			this.currentViewIsEntryDate = false;
-			this.viewDay={
+			this.viewDay = {
 				nameDay: DAYS_OF_WEEK[getDay(this.actualDate)],
 				numberDay: this.actualDate.getDate(),
 				month: MONTHS_OF_YEAR[getMonth(this.actualDate)]
@@ -95,7 +96,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			createdBy: null,
 			indicationDate: {
 				year: getYear(this.actualDate),
-				month:	getMonth(this.actualDate) + 1,
+				month: getMonth(this.actualDate) + 1,
 				day: this.actualDate.getDate()
 			},
 			createdOn: null,
@@ -111,8 +112,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
-				this.internmentIndicationService.addDiet(this.dietIndications(submitted), this.internmentEpisodeId).subscribe(_ => {
+				this.indicationsFacadeService.addDiet(this.dietIndications(submitted)).subscribe(_ => {
 					this.snackBarService.showSuccess('ambulatoria.dialogs.diet.messages.SUCCESS');
+					this.indicationsFacadeService.updateIndication({ diets: true });
 				},
 					error => {
 						error?.text ?
