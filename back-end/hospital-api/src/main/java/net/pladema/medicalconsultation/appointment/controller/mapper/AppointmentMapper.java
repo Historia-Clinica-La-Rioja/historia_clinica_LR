@@ -1,14 +1,20 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
-import net.pladema.medicalconsultation.appointment.controller.dto.*;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBasicPatientDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 
 @Mapper(uses = {LocalDateMapper.class})
 public interface AppointmentMapper {
@@ -31,4 +37,8 @@ public interface AppointmentMapper {
 
     @Named("toAppointmentDailyAmountDto")
     AppointmentDailyAmountDto toAppointmentDailyAmountDto(AppointmentDailyAmountBo appointmentDailyAmountBo);
+
+	@Named("toAssignedAppointmentDto")
+	AssignedAppointmentDto toAssignedAppointmentDto(AppointmentAssignedBo appointmentAssignedBo);
+
 }

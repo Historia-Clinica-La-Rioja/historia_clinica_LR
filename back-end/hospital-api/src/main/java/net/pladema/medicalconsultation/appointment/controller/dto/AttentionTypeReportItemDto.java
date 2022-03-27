@@ -1,9 +1,9 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import lombok.Getter;
 import lombok.Setter;
 import net.pladema.medicalconsultation.appointment.service.domain.AttentionTypeReportItemBo;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 
 import java.time.LocalTime;
 

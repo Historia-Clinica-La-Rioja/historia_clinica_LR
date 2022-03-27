@@ -25,7 +25,7 @@
 			<div formArrayName="specialtiesAndProfessions">
 				<span class="sub-title" translate="pacientes.edit_professions.PROFESSION_SPECIALTY"></span>
 
-				<div *ngFor="let p of getCtrl('specialtiesAndProfessions',formParent).controls;index as formChild">
+				<div *ngFor="let p of getCtrl('specialtiesAndProfessions',formParent)?.controls;index as formChild">
 
 					<div class="form-block" [formGroupName]="formChild">
 						<div class="form-input">

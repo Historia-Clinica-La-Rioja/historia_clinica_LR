@@ -2,9 +2,9 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entit
 
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEClinicalObservationBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEVitalSignBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.HCERiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EObservationLab;
-import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
+import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +21,14 @@ public class HCEMapClinicalObservationVo {
 
     private Map<String, List<HCEClinicalObservationVo>> clinicalObservationByCode;
 
-    public HCEMapClinicalObservationVo(List<HCEClinicalObservationVo> vitalsSignVos){
+    public HCEMapClinicalObservationVo(List<HCEClinicalObservationVo> RiskFactorVos){
         super();
-        clinicalObservationByCode = vitalsSignVos.stream().collect(Collectors.groupingBy(HCEClinicalObservationVo::getSctidCode));
+        clinicalObservationByCode = RiskFactorVos.stream().collect(Collectors.groupingBy(HCEClinicalObservationVo::getSctidCode));
         clinicalObservationByCode.forEach(this::processData);
     }
 
     private void processData(String key, List<HCEClinicalObservationVo> inputValues) {
-        LOG.debug("Input parameters -> key {}, vitalSigns {}", key, inputValues);
+        LOG.debug("Input parameters -> key {}, RiskFactors {}", key, inputValues);
         inputValues.sort(Comparator.comparing(HCEClinicalObservationVo::getEffectiveTime).reversed());
         List<HCEClinicalObservationVo> result = new ArrayList<>();
         int historyLength = 2;
@@ -54,56 +54,56 @@ public class HCEMapClinicalObservationVo {
     }
 
     private Optional<HCEClinicalObservationVo> getLastNClinicalObservationByCode(String sctidCode, Integer pos){
-        List<HCEClinicalObservationVo> sortedVitalSign = clinicalObservationByCode.get(sctidCode);
-        if (sortedVitalSign == null || sortedVitalSign.isEmpty() || sortedVitalSign.size() <= pos)
+        List<HCEClinicalObservationVo> sortedRiskFactor = clinicalObservationByCode.get(sctidCode);
+        if (sortedRiskFactor == null || sortedRiskFactor.isEmpty() || sortedRiskFactor.size() <= pos)
             return Optional.empty();
-        return Optional.of(sortedVitalSign.get(pos));
+        return Optional.of(sortedRiskFactor.get(pos));
     }
 
     public List<HCEClinicalObservationVo> getClinicalObservationByCode(String key){
         return clinicalObservationByCode.getOrDefault(key, new ArrayList<>());
     }
 
-    public Optional<HCEVitalSignBo> getLastVitalSigns() {
-        return getLastNVitalSigns(0);
+    public Optional<HCERiskFactorBo> getLastRiskFactors() {
+        return getLastNRiskFactors(0);
     }
 
-    public Optional<HCEVitalSignBo> getLastNVitalSigns(int i) {
+    public Optional<HCERiskFactorBo> getLastNRiskFactors(int i) {
         LOG.debug("Input parameters -> pos {}", i);
-        HCEVitalSignBo vitalSignBo = new HCEVitalSignBo();
-        getLastNClinicalObservationByCode(EVitalSign.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v ->
-            vitalSignBo.setBloodOxygenSaturation(new HCEClinicalObservationBo(v))
+        HCERiskFactorBo RiskFactorBo = new HCERiskFactorBo();
+        getLastNClinicalObservationByCode(ERiskFactor.BLOOD_OXYGEN_SATURATION.getSctidCode(),i).ifPresent(v ->
+            RiskFactorBo.setBloodOxygenSaturation(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setDiastolicBloodPressure(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.DIASTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v ->
+            RiskFactorBo.setDiastolicBloodPressure(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setSystolicBloodPressure(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.SYSTOLIC_BLOOD_PRESSURE.getSctidCode(),i).ifPresent(v ->
+            RiskFactorBo.setSystolicBloodPressure(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.BLOOD_GLUCOSE.getSctidCode(),i).ifPresent(v ->
-                vitalSignBo.setBloodGlucose(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.BLOOD_GLUCOSE.getSctidCode(),i).ifPresent(v ->
+                RiskFactorBo.setBloodGlucose(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.GLYCOSYLATED_HEMOGLOBIN.getSctidCode(),i).ifPresent(v ->
-                vitalSignBo.setGlycosylatedHemoglobin(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.GLYCOSYLATED_HEMOGLOBIN.getSctidCode(),i).ifPresent(v ->
+                RiskFactorBo.setGlycosylatedHemoglobin(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.CARDIOVASCULAR_RISK.getSctidCode(),i).ifPresent(v ->
-                vitalSignBo.setCardiovascularRisk(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.CARDIOVASCULAR_RISK.getSctidCode(),i).ifPresent(v ->
+                RiskFactorBo.setCardiovascularRisk(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.HEART_RATE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setHeartRate(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.HEART_RATE.getSctidCode(),i).ifPresent(v ->
+            RiskFactorBo.setHeartRate(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.TEMPERATURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setTemperature(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.TEMPERATURE.getSctidCode(),i).ifPresent(v ->
+            RiskFactorBo.setTemperature(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setRespiratoryRate(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.RESPIRATORY_RATE.getSctidCode(),i).ifPresent(v ->
+            RiskFactorBo.setRespiratoryRate(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v -> 
-            vitalSignBo.setMeanPressure(new HCEClinicalObservationBo(v))
+        getLastNClinicalObservationByCode(ERiskFactor.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v ->
+            RiskFactorBo.setMeanPressure(new HCEClinicalObservationBo(v))
         );
-        LOG.debug(OUTPUT, vitalSignBo);
-        if (vitalSignBo.hasValues())
-            return Optional.of(vitalSignBo);
+        LOG.debug(OUTPUT, RiskFactorBo);
+        if (RiskFactorBo.hasValues())
+            return Optional.of(RiskFactorBo);
         return Optional.empty();
     }
 
@@ -114,13 +114,13 @@ public class HCEMapClinicalObservationVo {
     public Optional<HCEAnthropometricDataBo> getLastNAnthropometricData(int i) {
         LOG.debug("Input parameters -> pos {}", i);
         HCEAnthropometricDataBo result = new HCEAnthropometricDataBo();
-        getLastNClinicalObservationByCode(EVitalSign.HEIGHT.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(ERiskFactor.HEIGHT.getSctidCode(),i).ifPresent(v ->
             result.setHeight(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.WEIGHT.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(ERiskFactor.WEIGHT.getSctidCode(),i).ifPresent(v ->
             result.setWeight(new HCEClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EVitalSign.HEAD_CIRCUMFERENCE.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(ERiskFactor.HEAD_CIRCUMFERENCE.getSctidCode(),i).ifPresent(v ->
                 result.setHeadCircumference(new HCEClinicalObservationBo(v))
         );
         getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),i).ifPresent(v ->

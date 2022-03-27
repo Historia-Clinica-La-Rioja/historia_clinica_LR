@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.VitalSignMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class AuditableContextBuilder {
 	private final Function<Long, AuthorDto> authorFromDocumentFunction;
 	private final Function<Integer, ClinicalSpecialtyDto> clinicalSpecialtyDtoFunction;
 	private final SharedImmunizationPort sharedImmunizationPort;
-	private final VitalSignMapper vitalSignMapper;
+	private final RiskFactorMapper riskFactorMapper;
 	private final LocalDateMapper localDateMapper;
 
 	public AuditableContextBuilder(
@@ -38,7 +39,7 @@ public class AuditableContextBuilder {
 			ClinicalSpecialtyFinder clinicalSpecialtyFinder,
 			AuthorMapper authorMapper,
 			SharedImmunizationPort sharedImmunizationPort,
-			VitalSignMapper vitalSignMapper,
+			RiskFactorMapper riskFactorMapper,
 			LocalDateMapper localDateMapper) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
@@ -49,7 +50,7 @@ public class AuditableContextBuilder {
 		);
 		this.clinicalSpecialtyDtoFunction = (Integer specialtyId) ->
 				clinicalSpecialtyFinder.getClinicalSpecialty(specialtyId);
-		this.vitalSignMapper = vitalSignMapper;
+		this.riskFactorMapper = riskFactorMapper;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -82,11 +83,11 @@ public class AuditableContextBuilder {
 
 		contextMap.put("medications", document.getMedications());
 		contextMap.put("anthropometricData", document.getAnthropometricData());
-		contextMap.put("vitalSigns", vitalSignMapper.toVitalSignsReportDto(document.getVitalSigns()));
+		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
 		contextMap.put("notes", document.getNotes());
 		contextMap.put("author", authorFromDocumentFunction.apply(document.getId()));
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
-		contextMap.put("performedDate", document.getPerformedDate());
+		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {

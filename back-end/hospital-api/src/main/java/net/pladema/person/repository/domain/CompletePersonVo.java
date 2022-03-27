@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.address.repository.entity.Address;
 import net.pladema.address.repository.entity.City;
+import net.pladema.address.repository.entity.Country;
 import net.pladema.address.repository.entity.Department;
 import net.pladema.address.repository.entity.Province;
 import net.pladema.person.repository.entity.Person;
@@ -28,5 +29,7 @@ public class CompletePersonVo {
 	private Province province;
 	
 	private Department department;
+
+	private Country country;
 
 }

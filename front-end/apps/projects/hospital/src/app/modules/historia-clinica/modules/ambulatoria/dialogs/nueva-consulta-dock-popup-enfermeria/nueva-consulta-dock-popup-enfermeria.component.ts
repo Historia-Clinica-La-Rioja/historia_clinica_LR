@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ClinicalTermDto, ClinicalSpecialtyDto, NursingConsultationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
@@ -9,6 +9,8 @@ import { NursingPatientConsultationService } from '@api-rest/services/nursing-pa
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { newMoment } from '@core/utils/moment.utils';
+import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -21,11 +23,11 @@ import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-a
 import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-nurse-consultation-suggested-fields.service';
-import { SignosVitalesNuevaConsultaService } from '../../services/signos-vitales-nueva-consulta.service';
+import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 
 export interface FieldsToUpdate {
-	vitalSigns: boolean;
+	riskFactors: boolean;
 	anthropometricData: boolean;
 	problem: boolean;
 	personalHistories: boolean;
@@ -49,7 +51,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	problemasService: ProblemasService;
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
-	signosVitalesNuevaConsultaService: SignosVitalesNuevaConsultaService;
+	factoresDeRiesgoNuevaConsultaService: FactoresDeRiesgoNuevaConsultaService;
 	readOnlyProblema = false;
 	apiErrors: string[] = [];
 	today = newMoment();
@@ -59,6 +61,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	defaultProblem: HCEPersonalHistoryDto;
 	specialties: ClinicalSpecialtyDto[];
 	problems: ClinicalTermDto[];
+	@ViewChild('errorsView') errorsView: ElementRef;
 
 
 	readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
@@ -87,7 +90,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService);
-		this.signosVitalesNuevaConsultaService = new SignosVitalesNuevaConsultaService(formBuilder);
+		this.factoresDeRiesgoNuevaConsultaService = new FactoresDeRiesgoNuevaConsultaService(formBuilder);
 	}
 
 	setProfessionalSpecialties() {
@@ -172,23 +175,35 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
 			this.errores[3] = pesoError;
 		});
-		this.signosVitalesNuevaConsultaService.heartRateError$.subscribe(frecuenciaCardiacaError => {
+		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
+			this.errores[11] = headCircumferenceError;
+		});
+		this.factoresDeRiesgoNuevaConsultaService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
 		});
-		this.signosVitalesNuevaConsultaService.respiratoryRateError$.subscribe(frecuenciaRespiratoriaError => {
+		this.factoresDeRiesgoNuevaConsultaService.respiratoryRateError$.subscribe(frecuenciaRespiratoriaError => {
 			this.errores[5] = frecuenciaRespiratoriaError;
 		});
-		this.signosVitalesNuevaConsultaService.temperatureError$.subscribe(temperaturaCorporalError => {
+		this.factoresDeRiesgoNuevaConsultaService.temperatureError$.subscribe(temperaturaCorporalError => {
 			this.errores[6] = temperaturaCorporalError;
 		});
-		this.signosVitalesNuevaConsultaService.bloodOxygenSaturationError$.subscribe(saturacionOxigenoError => {
+		this.factoresDeRiesgoNuevaConsultaService.bloodOxygenSaturationError$.subscribe(saturacionOxigenoError => {
 			this.errores[7] = saturacionOxigenoError;
 		});
-		this.signosVitalesNuevaConsultaService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
+		this.factoresDeRiesgoNuevaConsultaService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
 			this.errores[8] = presionSistolicaError;
 		});
-		this.signosVitalesNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
+		this.factoresDeRiesgoNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[9] = presionDiastolicaError;
+		});
+		this.factoresDeRiesgoNuevaConsultaService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
+			this.errores[12] = bloodGlucoseError;
+		});
+		this.factoresDeRiesgoNuevaConsultaService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
+			this.errores[13] = glycosylatedHemoglobinError;
+		});
+		this.factoresDeRiesgoNuevaConsultaService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
+			this.errores[14] = cardiovascularRiskError;
 		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
@@ -215,6 +230,11 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		} else {
 			this.disableConfirmButton = false;
 			this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
+			if (!this.isValidConsultation()) {
+				setTimeout(() => {
+					this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				}, 500);
+			}
 		}
 	}
 
@@ -252,7 +272,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 		function mapToFieldsToUpdate(nuevaConsultaEnfermeriaDto: NursingConsultationDto): FieldsToUpdate {
 			return {
-				vitalSigns: !!nuevaConsultaEnfermeriaDto.vitalSigns,
+				riskFactors: !!nuevaConsultaEnfermeriaDto.riskFactors,
 				anthropometricData: !!nuevaConsultaEnfermeriaDto.anthropometricData,
 				problem: !!nuevaConsultaEnfermeriaDto.problem,
 				personalHistories: !!nuevaConsultaEnfermeriaDto.problem,
@@ -267,45 +287,85 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	}
 
 	private addErrorMessage(consulta: NursingConsultationDto): void {
-		if (parseInt(consulta.anthropometricData?.height?.value, 10) < 0) {
+		let value = consulta.anthropometricData?.height?.value;
+		if (value && !PATTERN_INTEGER_NUMBER.test(value)) {
+			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_NOT_INTEGER');
+		}
+		else if (parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.height) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MIN');
-		} else if (parseInt(consulta.anthropometricData?.height?.value, 10) > 1000) {
+		}
+		else if (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.height) {
 			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MAX');
 		}
 
-		if (parseInt(consulta.anthropometricData?.weight?.value, 10) < 0) {
+		value = consulta.anthropometricData?.weight?.value;
+		if (parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.weight) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MIN');
-		} else if (parseInt(consulta.anthropometricData?.weight?.value, 10) > 1000) {
+		}
+		else if (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.weight) {
 			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
 		}
 
-		if (parseInt(consulta.vitalSigns.heartRate?.value, 10) < 0) {
-			this.signosVitalesNuevaConsultaService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
+		value = consulta.anthropometricData?.headCircumference?.value;
+		if (value && !PATTERN_INTEGER_NUMBER.test(value)) {
+			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_NOT_INTEGER');
+		}
+		else if ((parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.headCircumference) || (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.headCircumference)) {
+			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
 		}
 
-		if (parseInt(consulta.vitalSigns.respiratoryRate?.value, 10) < 0) {
-			this.signosVitalesNuevaConsultaService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
+		value = consulta.riskFactors.heartRate?.value;
+		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.heartRate) {
+			this.factoresDeRiesgoNuevaConsultaService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.temperature?.value, 10) < 0) {
-			this.signosVitalesNuevaConsultaService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
+		value = consulta.riskFactors.respiratoryRate?.value;
+		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.respiratoryRate) {
+			this.factoresDeRiesgoNuevaConsultaService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.bloodOxygenSaturation?.value, 10) < 0) {
-			this.signosVitalesNuevaConsultaService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
+		value = consulta.riskFactors.temperature?.value;
+		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.temperature) {
+			this.factoresDeRiesgoNuevaConsultaService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns.diastolicBloodPressure?.value, 10) < 0) {
-			this.signosVitalesNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
+		value = consulta.riskFactors.bloodOxygenSaturation?.value;
+		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation) {
+			this.factoresDeRiesgoNuevaConsultaService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
 		}
 
-		if (parseInt(consulta.vitalSigns?.systolicBloodPressure?.value, 10) < 0) {
-			this.signosVitalesNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
+		value = consulta.riskFactors.diastolicBloodPressure?.value;
+		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.diastolicBloodPressure) {
+			this.factoresDeRiesgoNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
 		}
 
-		hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
-			this.errores[10] = 'ambulatoria.paciente.nueva-consulta.errors.MAX_LENGTH_NOTA'
-			: this.errores[10] = undefined;
+		value = consulta.riskFactors?.systolicBloodPressure?.value;
+		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.systolicBloodPressure) {
+			this.factoresDeRiesgoNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
+		}
+
+		value = consulta.riskFactors?.bloodGlucose?.value;
+		if ((parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.bloodGlucose) || (parseInt(value, 10) > FACTORES_DE_RIESGO.MAX.bloodGlucose)) {
+			this.factoresDeRiesgoNuevaConsultaService.setBloodGlucoseError('ambulatoria.paciente.nueva-consulta.errors.BLOOD_GLUCOSE_RANGE');
+		}
+
+		value = consulta.riskFactors?.glycosylatedHemoglobin?.value;
+		if ((parseFloat(value) < FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin) || (parseFloat(value) > FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin)) {
+			this.factoresDeRiesgoNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
+		}
+		else if (value && !hasMaxTwoDecimalDigits(value)) {
+			this.factoresDeRiesgoNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
+		}
+
+		value = consulta.riskFactors?.cardiovascularRisk?.value;
+		if ((parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.cardiovascularRisk) || (parseInt(value, 10) > FACTORES_DE_RIESGO.MAX.cardiovascularRisk)) {
+			this.factoresDeRiesgoNuevaConsultaService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
+		}
+
+		this.errores[10] =
+			hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
+				'ambulatoria.paciente.nueva-consulta.errors.MAX_LENGTH_NOTA'
+				: undefined;
 	}
 
 	private buildCreateOutpatientDto(): NursingConsultationDto {
@@ -315,7 +375,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			problem: this.formEvolucion.value?.clinicalProblem,
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
-			vitalSigns: this.signosVitalesNuevaConsultaService.getSignosVitales(),
+			riskFactors: this.factoresDeRiesgoNuevaConsultaService.getFactoresDeRiesgo(),
 		}
 	}
 
@@ -332,4 +392,5 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	clear(control: AbstractControl): void {
 		control.reset();
 	}
+
 }

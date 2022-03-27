@@ -1,6 +1,6 @@
 package net.pladema.person.controller.mapper;
 
-import net.pladema.person.controller.dto.GenderDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.GenderDto;
 import net.pladema.person.controller.dto.SelfPerceivedGenderDto;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.SelfPerceivedGender;
@@ -13,7 +13,7 @@ import java.util.List;
 public interface GenderMapper {
 
     @Named("fromGender")
-    GenderDto fromGender(Gender gender);
+	GenderDto fromGender(Gender gender);
 
     List<GenderDto> fromGenderList(List<Gender> genders);
 

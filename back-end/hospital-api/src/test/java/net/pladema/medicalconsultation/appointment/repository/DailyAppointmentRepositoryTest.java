@@ -65,21 +65,21 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         merge(hi);
 
         // programmed appointments
-        Appointment pa1 = save(new Appointment(null, date, LocalTime.of(10, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011-1548"));
+        Appointment pa1 = save(new Appointment(null, date, LocalTime.of(10, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011","1548"));
         save(new AppointmentAssn(diaryId, ohProgrammed.getId(), pa1.getId()));
-        Appointment pa2 = save(new Appointment(null, date, LocalTime.of(11, 40), AppointmentState.ABSENT, true, 1, null, "011-1548"));
+        Appointment pa2 = save(new Appointment(null, date, LocalTime.of(11, 40), AppointmentState.ABSENT, true, 1, null,"011", "1548"));
         save(new AppointmentAssn(diaryId, ohProgrammed.getId(), pa2.getId()));
-        Appointment pa3 = save(new Appointment(null, date, LocalTime.of(11, 00), AppointmentState.CANCELLED, false, 1, hi.getId(), "011-1548"));
+        Appointment pa3 = save(new Appointment(null, date, LocalTime.of(11, 00), AppointmentState.CANCELLED, false, 1, hi.getId(), "011","1548"));
         save(new AppointmentAssn(diaryId, ohProgrammed.getId(), pa3.getId()));
 
         // spontaneous appointments
-        Appointment sa1 = save(new Appointment(null, date, LocalTime.of(15, 00), AppointmentState.ASSIGNED, false, 1, null, "011-1548"));
+        Appointment sa1 = save(new Appointment(null, date, LocalTime.of(15, 00), AppointmentState.ASSIGNED, false, 1, null, "011","1548"));
         save(new AppointmentAssn(diaryId, ohSpontaneous.getId(), sa1.getId()));
-        Appointment sa2 = save(new Appointment(null, date, LocalTime.of(17, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011-1548"));
+        Appointment sa2 = save(new Appointment(null, date, LocalTime.of(17, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011","1548"));
         save(new AppointmentAssn(diaryId, ohSpontaneous.getId(), sa2.getId()));
 
         // appointments that doesn't belong to the diary
-        Appointment a1 = save(new Appointment(null, date, LocalTime.of(17, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011-1548"));
+        Appointment a1 = save(new Appointment(null, date, LocalTime.of(17, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011","1548"));
         save(new AppointmentAssn(2, ohSpontaneous.getId(), a1.getId()));
 
         List<DailyAppointmentVo> result = dailyAppointmentRepository.getDailyAppointmentsByDiaryIdAndDate(institutionId, diaryId, date);
@@ -129,17 +129,17 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         merge(hi);
 
         // programmed appointments
-        Appointment pa1 = save(new Appointment(null, date, LocalTime.of(10, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011-1548"));
+        Appointment pa1 = save(new Appointment(null, date, LocalTime.of(10, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011","1548"));
         save(new AppointmentAssn(diaryId, ohProgrammed.getId(), pa1.getId()));
-        Appointment pa2 = save(new Appointment(null, date, LocalTime.of(11, 40), AppointmentState.ABSENT, true, 1, null, "011-1548"));
+        Appointment pa2 = save(new Appointment(null, date, LocalTime.of(11, 40), AppointmentState.ABSENT, true, 1, null, "011","1548"));
         save(new AppointmentAssn(diaryId, ohProgrammed.getId(), pa2.getId()));
-        Appointment pa3 = save(new Appointment(null, date, LocalTime.of(11, 00), AppointmentState.CANCELLED, false, 1, hi.getId(), "011-1548"));
+        Appointment pa3 = save(new Appointment(null, date, LocalTime.of(11, 00), AppointmentState.CANCELLED, false, 1, hi.getId(), "011","1548"));
         save(new AppointmentAssn(diaryId, ohProgrammed.getId(), pa3.getId()));
 
         // spontaneous appointments
-        Appointment sa1 = save(new Appointment(null, date, LocalTime.of(15, 00), AppointmentState.ASSIGNED, false, 1, null,"011-1548"));
+        Appointment sa1 = save(new Appointment(null, date, LocalTime.of(15, 00), AppointmentState.ASSIGNED, false, 1, null,"011","1548"));
         save(new AppointmentAssn(diaryId, ohSpontaneous.getId(), sa1.getId()));
-        Appointment sa2 = save(new Appointment(null, date, LocalTime.of(17, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011-1548"));
+        Appointment sa2 = save(new Appointment(null, date, LocalTime.of(17, 20), AppointmentState.ASSIGNED, false, 1, hi.getId(), "011","1548"));
         save(new AppointmentAssn(diaryId, ohSpontaneous.getId(), sa2.getId()));
 
         List<DailyAppointmentVo> result = dailyAppointmentRepository.getDailyAppointmentsByDiaryIdAndDate(consultedInstitutionId, diaryId, date);

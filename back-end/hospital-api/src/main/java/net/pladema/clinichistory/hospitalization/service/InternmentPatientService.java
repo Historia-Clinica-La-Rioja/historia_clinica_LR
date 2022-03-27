@@ -5,6 +5,7 @@ import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisod
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeProcessBo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InternmentPatientService {
 
@@ -13,4 +14,6 @@ public interface InternmentPatientService {
     List<InternmentEpisodeBo> getAllInternmentPatient(Integer institutionId);
 
     InternmentEpisodeProcessBo internmentEpisodeInProcess(Integer institutionId, Integer patientId);
+
+	Optional<Integer> getInternmentEpisodeInProcessAnyInstitution(Integer patientId);
 }

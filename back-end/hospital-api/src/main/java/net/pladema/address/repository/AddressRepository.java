@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface AddressRepository extends JpaRepository<Address, Integer> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT new net.pladema.address.repository.domain.AddressVo(a.id,a.street,a.number,a.floor,a.apartment,a.postcode,c.id,c.description) " +
+    @Query("SELECT new net.pladema.address.repository.domain.AddressVo(a.id,a.street,a.number,a.floor,a.apartment,a.postcode,c.id,c.description, a.countryId, a.provinceId, a.departmentId) " +
             "FROM Address a LEFT JOIN City c ON (a.cityId = c.id) " +
             "WHERE a.id IN :addressIds")
     List<AddressVo> findByIds(@Param("addressIds") List<Integer> addressIds);

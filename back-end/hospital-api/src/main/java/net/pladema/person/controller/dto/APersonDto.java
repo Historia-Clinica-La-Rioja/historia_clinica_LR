@@ -46,6 +46,8 @@ public class APersonDto {
     @Length(max = 40, message = "{person.name.max.value}")
     private String mothersLastName;
 
+	private String phonePrefix;
+
     private String phoneNumber;
 
     private String email;
@@ -79,5 +81,11 @@ public class APersonDto {
     private Integer cityId;
 
     private String postcode;
+
+	private Short countryId;
+
+	private Short provinceId;
+
+	private Short departmentId;
 
 }

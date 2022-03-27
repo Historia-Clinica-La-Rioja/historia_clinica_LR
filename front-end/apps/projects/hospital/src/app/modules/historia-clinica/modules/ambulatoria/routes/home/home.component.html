@@ -3,6 +3,7 @@
 		<h2 class="page-title" [translate]="'ambulatoria.home.TITLE'"></h2>
 		<h4 class="page-title" [translate]="'ambulatoria.home.SUBTITLE'"></h4>
 		<em class="text-danger" *ngIf="requiringValues" translate="forms.REQUIRING_FIELD_FOR_SEARCH"></em>
+		<em class="text-danger" *ngIf="requiringAtLeastOneMoreValue" translate="forms.REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH"></em>
 		<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()" fxLayout="column" fxLayoutGap="20px">
 			<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
 				<div fxFlex="30" fxFlex.lt-md="100">

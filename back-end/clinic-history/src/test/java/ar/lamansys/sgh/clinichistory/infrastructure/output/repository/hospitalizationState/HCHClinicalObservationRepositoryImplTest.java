@@ -9,7 +9,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationLab;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationVitalSign;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
 import ar.lamansys.sgh.clinichistory.mocks.ClinicalObservationTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
@@ -68,23 +68,23 @@ class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 	private void createInternmentStates(Integer internmentEpisodeId, LocalDateTime dateTime){
 		Snomed snomed1 = save(SnomedTestMocks.createSnomed("code 1"));
 		Document firstDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL));
-		ObservationVitalSign vitalSignFinal0 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(snomed1.getId(), dateTime.minusDays(8)));
-		ObservationVitalSign vitalSignFinal1 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(snomed1.getId(), dateTime.plusMinutes(2)));
-		ObservationVitalSign vitalSignError2 = save(ClinicalObservationTestMocks.createErrorObservationVitalSign(snomed1.getId(), dateTime.plusMinutes(5)));
-		save(ClinicalObservationTestMocks.createDocumentVitalSign(firstDoc, vitalSignFinal0));
-		save(ClinicalObservationTestMocks.createDocumentVitalSign(firstDoc, vitalSignFinal1));
-		save(ClinicalObservationTestMocks.createDocumentVitalSign(firstDoc, vitalSignError2));
+		ObservationRiskFactor riskFactorFinal0 = save(ClinicalObservationTestMocks.createFinalObservationRiskFactor(snomed1.getId(), dateTime.minusDays(8)));
+		ObservationRiskFactor riskFactorFinal1 = save(ClinicalObservationTestMocks.createFinalObservationRiskFactor(snomed1.getId(), dateTime.plusMinutes(2)));
+		ObservationRiskFactor riskFactorError2 = save(ClinicalObservationTestMocks.createErrorObservationRiskFactor(snomed1.getId(), dateTime.plusMinutes(5)));
+		save(ClinicalObservationTestMocks.createDocumentRiskFactor(firstDoc, riskFactorFinal0));
+		save(ClinicalObservationTestMocks.createDocumentRiskFactor(firstDoc, riskFactorFinal1));
+		save(ClinicalObservationTestMocks.createDocumentRiskFactor(firstDoc, riskFactorError2));
 
 
 		Snomed snomed2 = save(SnomedTestMocks.createSnomed("code 2"));
 		Document secondDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL));
-		ObservationVitalSign vitalSignFinal3 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(snomed2.getId(), dateTime.plusMinutes(6)));
-		save(ClinicalObservationTestMocks.createDocumentVitalSign(secondDoc, vitalSignFinal3));
+		ObservationRiskFactor riskFactorFinal3 = save(ClinicalObservationTestMocks.createFinalObservationRiskFactor(snomed2.getId(), dateTime.plusMinutes(6)));
+		save(ClinicalObservationTestMocks.createDocumentRiskFactor(secondDoc, riskFactorFinal3));
 
 		Snomed snomed3 = save(SnomedTestMocks.createSnomed("code 3"));
 		Document thirdDoc = save(DocumentsTestMocks.createDocument(internmentEpisodeId, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, DocumentStatus.ERROR));
-		ObservationVitalSign vitalSignFinal4 = save(ClinicalObservationTestMocks.createFinalObservationVitalSign(snomed3.getId(), dateTime.plusMinutes(7)));
-		save(ClinicalObservationTestMocks.createDocumentVitalSign(thirdDoc, vitalSignFinal4));
+		ObservationRiskFactor riskFactorFinal4 = save(ClinicalObservationTestMocks.createFinalObservationRiskFactor(snomed3.getId(), dateTime.plusMinutes(7)));
+		save(ClinicalObservationTestMocks.createDocumentRiskFactor(thirdDoc, riskFactorFinal4));
 
 		Snomed snomed4 = save(SnomedTestMocks.createSnomed("code 4"));
 		ObservationLab observationLab = save(ClinicalObservationTestMocks.createFinalObservationLab(snomed4.getId(), dateTime.plusMinutes(8)));

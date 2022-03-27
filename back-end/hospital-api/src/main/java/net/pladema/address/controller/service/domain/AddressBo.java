@@ -21,6 +21,12 @@ public class AddressBo {
 
     private CityDto city;
 
+	private Short countryId;
+
+	private Short provinceId;
+
+	private Short departmentId;
+
     public AddressBo (AddressVo addressVo){
         this.id = addressVo.getId();
         this.street = addressVo.getStreet();
@@ -29,5 +35,8 @@ public class AddressBo {
         this.apartment = addressVo.getApartment();
         this.city = addressVo.getCity();
         this.postcode = addressVo.getPostcode();
+		this.countryId = addressVo.getCountryId();
+		this.provinceId = addressVo.getProvinceId();
+		this.departmentId = addressVo.getDepartmentId();
     }
 }

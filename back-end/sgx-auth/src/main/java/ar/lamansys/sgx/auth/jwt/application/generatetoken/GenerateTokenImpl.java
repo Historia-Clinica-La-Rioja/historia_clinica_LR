@@ -1,7 +1,7 @@
 package ar.lamansys.sgx.auth.jwt.application.generatetoken;
 
 import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
-import ar.lamansys.sgx.auth.jwt.domain.token.JWTUtils;
+import ar.lamansys.sgx.shared.token.JWTUtils;
 import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

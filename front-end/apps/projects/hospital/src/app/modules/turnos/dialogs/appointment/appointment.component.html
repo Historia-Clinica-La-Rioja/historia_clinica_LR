@@ -35,7 +35,7 @@
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
-					<span class="mat-body patient-info coverage-text">{{params.appointmentData.phoneNumber || "Sin información"}}</span>
+					<span class="mat-body patient-info coverage-text">{{formatPhonePrefixAndNumber()}}</span>
 				</div>
 			</ng-container>
 
@@ -49,7 +49,7 @@
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
 						<mat-select formControlName="newCoverageData">
 							<mat-option
-								*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
+								*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage.id">
 								{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 							</mat-option>
 							<mat-divider></mat-divider>
@@ -58,13 +58,34 @@
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
-					<mat-form-field class="input" appearance="outline">
-						<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
-						<input matInput formControlName="phoneNumber"
-								type="tel"
-								id="phonenumber"
-								name="phonenumber">
+					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
+						<mat-form-field fxFlex="30%" appearance="outline">
+						<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_PREFIX'"></mat-label>
+							<input matInput type="text" id="phonePrefix" name="phonePrefix"
+								formControlName="phonePrefix"
+								placeholder="{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate }}"
+								(keyup)="updatePhoneValidators()">
+							<mat-error *ngIf="hasError(formEdit, 'required', 'phonePrefix')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+							</mat-error>
 					</mat-form-field>
+						<mat-form-field fxFlex="70%" appearance="outline">
+						<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
+							<input matInput type="text" id="phoneNumber" name="phoneNumber"
+								formControlName="phoneNumber"
+								placeholder="{{'turnos.appointment.phoneNumber.PHONE_NUMBER' | translate }}"
+								(keyup)="updatePhoneValidators()">
+							<mat-error *ngIf="hasError(formEdit, 'required', 'phoneNumber')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+							</mat-error>
+					</mat-form-field>
+					</div>
 					<div align="end">
 						<button mat-flat-button color="primary" type="submit">
 							<span class="uppercase">Guardar</span>

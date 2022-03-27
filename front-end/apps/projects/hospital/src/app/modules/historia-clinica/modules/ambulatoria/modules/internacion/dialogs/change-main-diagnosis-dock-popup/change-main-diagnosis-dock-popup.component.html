@@ -1,0 +1,137 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'internaciones.change-main-diagnosis.TITLE'">
+	<div body fxLayout="column" fxLayoutGap="20px">
+		<div id="main-diagnosis" *ngIf="currentMainDiagnosis">
+			<h2 [translate]="'internaciones.change-main-diagnosis.current-main.TITLE'"></h2>
+			<mat-card>
+				<div class="capitalize-first-letter">
+					{{ currentMainDiagnosis.snomed.pt }}
+				</div>
+			</mat-card>
+		</div>
+		<div id="diagnostic-seleccions">
+			<h2 [translate]="'internaciones.change-main-diagnosis.select-new-main.TITLE'"></h2>
+			<mat-accordion>
+				<mat-expansion-panel [expanded]=true (opened)="deleteMainDiagnosis()"
+					(closed)="deleteMainDiagnosis()">
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							<span class="mat-body-2"
+								[translate]="'internaciones.change-main-diagnosis.select-new-main.panels.promote-diagnosis.TITLE'"></span>
+						</mat-panel-title>
+						<mat-panel-description>
+							<span class="mat-body-2"
+								[translate]="'internaciones.change-main-diagnosis.select-new-main.panels.promote-diagnosis.DESCRIPTION'"></span>
+						</mat-panel-description>
+					</mat-expansion-panel-header>
+					<mat-selection-list [multiple]=false (selectionChange)="setMainDiagnosisFromList()">
+						<mat-list-option *ngFor="let diagnosis of diagnostics$ | async" [value]=diagnosis>
+							<span class="capitalize-first-letter">{{ diagnosis.snomed.pt }}</span>
+						</mat-list-option>
+					</mat-selection-list>
+				</mat-expansion-panel>
+				<mat-expansion-panel (opened)="panelOpenState = true; deleteMainDiagnosis()"
+					(closed)="panelOpenState = false; deleteMainDiagnosis()">
+					<mat-expansion-panel-header>
+						<mat-panel-title fxLayout = "column">
+							<span class="mat-body-2"
+								[translate]="'internaciones.change-main-diagnosis.select-new-main.panels.new-diagnosis.TITLE'"></span>
+							<span class="recomendado"
+								[translate]="'internaciones.change-main-diagnosis.select-new-main.panels.new-diagnosis.SUBTITLE'"></span>
+						</mat-panel-title>
+						<mat-panel-description>
+							<span class="mat-body-2"
+								[translate]="'internaciones.change-main-diagnosis.select-new-main.panels.new-diagnosis.DESCRIPTION'"></span>
+						</mat-panel-description>
+					</mat-expansion-panel-header>
+					<app-concepts-search *ngIf="!newMainDiagnosis else newMainDiagnosisTempRef"
+						[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
+						(search)="openSearchDialog($event)">
+					</app-concepts-search>
+					<ng-template #newMainDiagnosisTempRef>
+						<mat-list>
+							<mat-list-item>
+								<span class="capitalize-first-letter">{{ newMainDiagnosis.snomed.pt }}</span>
+								<button id="clear" mat-button color="warn" mat-icon-button
+									(click)="deleteMainDiagnosis()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-list-item>
+						</mat-list>
+					</ng-template>
+				</mat-expansion-panel>
+			</mat-accordion>
+		</div>
+		<form id="form" (keydown.enter)="false" [formGroup]="form" (ngSubmit)="save()">
+			<div id="form-fields">
+				<h2 [translate]="'internaciones.change-main-diagnosis.notes.TITLE'"></h2>
+				<mat-card>
+					<mat-card-content fxLayout="column" fxLayoutGap="10px">
+						<div fxLayout="column" fxLayoutGap="5px">
+							<mat-label [translate]="'internaciones.change-main-diagnosis.notes.CURRENT_DISEASE'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
+									formControlName="currentIllnessNote">
+									</textarea>
+							</mat-form-field>
+						</div>
+						<div fxLayout="column" fxLayoutGap="5px">
+							<mat-label
+								[translate]="'internaciones.change-main-diagnosis.notes.PHYSICAL_EXAMINATION'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
+									formControlName="physicalExamNote">
+									</textarea>
+							</mat-form-field>
+						</div>
+						<div fxLayout="column" fxLayoutGap="5px">
+							<mat-label [translate]="'internaciones.change-main-diagnosis.notes.STUDIES_PROCEDURES'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
+									formControlName="studiesSummaryNote">
+									</textarea>
+							</mat-form-field>
+						</div>
+						<div fxLayout="column" fxLayoutGap="5px">
+							<mat-label [translate]="'internaciones.change-main-diagnosis.notes.PATIENT_PROGRESS'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
+									formControlName="evolutionNote">
+									</textarea>
+							</mat-form-field>
+						</div>
+						<div fxLayout="column" fxLayoutGap="5px">
+							<mat-label
+								[translate]="'internaciones.change-main-diagnosis.notes.CLINICAL_IMPRESSION'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="clinicalImpressionNote"
+									name="clinicalImpressionNote" formControlName="clinicalImpressionNote">
+									</textarea>
+							</mat-form-field>
+						</div>
+						<div fxLayout="column" fxLayoutGap="5px">
+							<mat-label [translate]="'internaciones.change-main-diagnosis.notes.OTHERS'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="otherNote" name="otherNote"
+									formControlName="otherNote">
+									</textarea>
+							</mat-form-field>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</form>
+	</div>
+	<div id="buttons" actions align="end">
+		<button id="sign-confirm" mat-raised-button color="primary"
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+				(click)="save()">
+			<span class="uppercase" [translate]="'buttons.CONFIRM'"></span>
+		</button>
+	</div>
+</app-dock-popup>

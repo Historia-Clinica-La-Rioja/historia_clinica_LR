@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -41,7 +40,7 @@ public class InternmentSummaryBo {
 
     private LocalDateTime entryDate;
 
-    private LocalDate dischargeDate;
+    private LocalDateTime dischargeDate;
 
     private int totalInternmentDays;
 
@@ -75,7 +74,7 @@ public class InternmentSummaryBo {
             return (int) ChronoUnit.DAYS.between(getEntryDate(), LocalDateTime.now());
         }
         else {
-            return (int) ChronoUnit.DAYS.between(getEntryDate(), getDischargeDate().atStartOfDay());
+            return (int) ChronoUnit.DAYS.between(getEntryDate(), getDischargeDate());
         }
     }
 }

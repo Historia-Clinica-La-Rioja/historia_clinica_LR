@@ -28,7 +28,7 @@
 			"TRIAGE_ROOM_DESCRIPTION": "Lugar físico en el que se realiza el Triage",
 			"STRIDOR": "Respiración con estridor",
 			"SYSTOLIC_BLOOD": "Tensión arterial sistólica",
-			"VITAL_SIGNS": "Signos vitales",
+			"RISK_FACTORS": "Factores de riesgo",
 			"TEMPERATURE": "Temperatura",
 			"TITLE": "Nuevo triage"
 		},
@@ -202,7 +202,7 @@
 					"RESPIRACION_TIRAJE": "Respiración con tiraje",
 					"RESPIRACION_ESTRIDOR": "Respiración con estridor",
 					"PERFUSION": "Perfusión",
-					"SIGNOS_VITALES": "Signos vitales",
+					"FACTORES_DE_RIESGO": "Factores de riesgo",
 					"EVALUACION": "Evaluación",
 					"SI": "Si",
 					"NO": "No"

@@ -1,0 +1,8 @@
+@mixin app-datos-antropometricos-nueva-consulta($theme) {
+	$palette-primary: map-get($theme, primary);
+	app-datos-antropometricos-nueva-consulta {
+		.dialog {
+			background: mat-color($palette-primary, 50);
+		}
+	}
+}

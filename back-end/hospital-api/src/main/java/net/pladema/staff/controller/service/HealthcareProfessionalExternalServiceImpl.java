@@ -49,19 +49,28 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
     }
 
     @Override
-    public ProfessionalDto findProfessionalById(Integer healthCareProfessionalId) {
+    public ProfessionalDto findActiveProfessionalById(Integer healthCareProfessionalId) {
         LOG.debug("Input parameters -> healthCareProfessionalId {}", healthCareProfessionalId);
-        HealthcareProfessionalBo healthcareProfessionalBo = healthcareProfessionalService.findProfessionalById(healthCareProfessionalId);
+        HealthcareProfessionalBo healthcareProfessionalBo = healthcareProfessionalService.findActiveProfessionalById(healthCareProfessionalId);
         ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(healthcareProfessionalBo);
         LOG.debug("Output -> {}", result);
         return result;
     }
 
-    @Override
+	@Override
+	public ProfessionalDto findFromAllProfessionalsById(Integer healthCareProfessionalId) {
+		LOG.debug("Input parameters -> healthCareProfessionalId {}", healthCareProfessionalId);
+		HealthcareProfessionalBo healthcareProfessionalBo = healthcareProfessionalService.findFromAllProfessionalsById(healthCareProfessionalId);
+		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(healthcareProfessionalBo);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
     public ProfessionalDto findProfessionalByUserId(Integer userId) {
         LOG.debug("Input parameters -> userId {}", userId);
         Integer professionalId = healthcareProfessionalService.getProfessionalId(userId);
-        HealthcareProfessionalBo healthcareProfessionalBo = healthcareProfessionalService.findProfessionalById(professionalId);
+        HealthcareProfessionalBo healthcareProfessionalBo = healthcareProfessionalService.findActiveProfessionalById(professionalId);
         ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(healthcareProfessionalBo);
         LOG.debug("Output -> {}", result);
         return result;

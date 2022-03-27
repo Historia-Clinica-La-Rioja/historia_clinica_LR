@@ -21,7 +21,7 @@ export const POLICE_OFFICER = {
 	}
 };
 
-export const VITAL_SIGNS = {
+export const RISK_FACTORS = {
 	min_value: 0
 };
 

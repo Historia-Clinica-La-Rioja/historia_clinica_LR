@@ -36,7 +36,7 @@ public class NursingConsultationDto implements Serializable {
 
     @Valid
     @Nullable
-    private NursingVitalSignDto vitalSigns;
+    private NursingRiskFactorDto riskFactors;
 
     @Valid
     @Nullable

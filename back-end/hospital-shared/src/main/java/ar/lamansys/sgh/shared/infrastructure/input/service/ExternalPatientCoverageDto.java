@@ -19,7 +19,7 @@ public class ExternalPatientCoverageDto {
 
     private String affiliateNumber;
 
-    private boolean active;
+    private Boolean active;
 
     @Nullable
     private LocalDate vigencyDate;

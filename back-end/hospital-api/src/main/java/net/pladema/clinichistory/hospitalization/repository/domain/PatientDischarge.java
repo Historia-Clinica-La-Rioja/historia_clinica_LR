@@ -9,7 +9,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "patient_discharge")
@@ -31,10 +31,10 @@ public class PatientDischarge extends SGXAuditableEntity<Integer> {
 	private Integer internmentEpisodeId;
 
 	@Column(name = "administrative_discharge_date")
-	private LocalDate administrativeDischargeDate;
+	private LocalDateTime administrativeDischargeDate;
 
 	@Column(name = "medical_discharge_date")
-	private LocalDate medicalDischargeDate;
+	private LocalDateTime medicalDischargeDate;
 
 	@Column(name = "discharge_type_id", nullable = false)
 	private Short dischargeTypeId;

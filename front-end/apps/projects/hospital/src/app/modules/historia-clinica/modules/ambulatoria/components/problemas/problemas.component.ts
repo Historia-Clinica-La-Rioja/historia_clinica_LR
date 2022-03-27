@@ -10,6 +10,7 @@ import {
 	HCEDocumentDataDto,
 	HCEHospitalizationHistoryDto,
 	HCEPersonalHistoryDto,
+	InternmentEpisodeProcessDto,
 	ReferenceCounterReferenceFileDto
 } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -90,6 +91,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private readonly internacionMasterDataService: InternacionMasterDataService;
 	private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService;
 	private readonly featureFlagService: FeatureFlagService;
+	@Input() internmentInProcess: InternmentEpisodeProcessDto;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -171,7 +173,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			return {
 				...problema,
 				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
-				inactivationDate: momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE)
+				inactivationDate: problema.inactivationDate ? momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE) : undefined
 			};
 		});
 	}

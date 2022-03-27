@@ -2,11 +2,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 export interface AntecedenteFamiliar {
 	snomed: SnomedDto;
@@ -23,7 +24,8 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly snomedService: SnomedService) {
+		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService) {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
@@ -48,6 +50,12 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.ANTECEDENTE_FAMILIAR',
 				template: CellTemplates.TEXT,
 				text: v => v.snomed.pt
+			},
+			{
+				def: 'fecha',
+				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.FECHA',
+				template: CellTemplates.TEXT,
+				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
 			},
 			{
 				def: 'eliminar',
@@ -77,8 +85,14 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
-	add(antecedente: AntecedenteFamiliar): void {
-		this.data = pushTo<any>(this.data, antecedente);
+	add(antecedente: AntecedenteFamiliar): boolean {
+		const currentItems = this.data.length;
+		this.data = pushIfNotExists<any>(this.data, antecedente, this.compareAntecedenteFamiliar);
+		return currentItems === this.data.length;
+	}
+
+	compareAntecedenteFamiliar(data: AntecedenteFamiliar, data1: AntecedenteFamiliar): boolean {
+		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
 	addToList() {
@@ -87,7 +101,8 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 				snomed: this.snomedConcept,
 				fecha: this.form.value.fecha
 			};
-			this.add(antecedente);
+			if (this.add(antecedente))
+				this.snackBarService.showError("Antecedente familiar duplicado");
 			this.resetForm();
 		}
 	}

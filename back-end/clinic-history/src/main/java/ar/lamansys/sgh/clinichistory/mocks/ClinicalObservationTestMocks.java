@@ -3,9 +3,9 @@ package ar.lamansys.sgh.clinichistory.mocks;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentVitalSign;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationLab;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationVitalSign;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 
 import java.time.LocalDateTime;
@@ -23,29 +23,29 @@ public class ClinicalObservationTestMocks {
         return result;
     }
 
-    public static ObservationVitalSign createObservationVitalSign(Integer snomedId, String error, LocalDateTime now) {
-        ObservationVitalSign observationVitalSign = new ObservationVitalSign();
-        observationVitalSign.setPatientId(1);
-        observationVitalSign.setSnomedId(snomedId);
-        observationVitalSign.setStatusId(error);
-        observationVitalSign.setCategoryId("category");
-        observationVitalSign.setValue("Vital sign Value");
-        observationVitalSign.setEffectiveTime(now);
-        return observationVitalSign;
+    public static ObservationRiskFactor createObservationRiskFactor(Integer snomedId, String error, LocalDateTime now) {
+        ObservationRiskFactor observationRiskFactor = new ObservationRiskFactor();
+        observationRiskFactor.setPatientId(1);
+        observationRiskFactor.setSnomedId(snomedId);
+        observationRiskFactor.setStatusId(error);
+        observationRiskFactor.setCategoryId("category");
+        observationRiskFactor.setValue("Risk factor Value");
+        observationRiskFactor.setEffectiveTime(now);
+        return observationRiskFactor;
     }
 
-    public static DocumentVitalSign createDocumentVitalSign(Document doc, ObservationVitalSign obs){
-        return new DocumentVitalSign(doc.getId(), obs.getId());
+    public static DocumentRiskFactor createDocumentRiskFactor(Document doc, ObservationRiskFactor obs){
+        return new DocumentRiskFactor(doc.getId(), obs.getId());
     }
 
-    public static ObservationVitalSign createFinalObservationVitalSign(Integer snomedId, LocalDateTime now) {
-        ObservationVitalSign observationVitalSign = createObservationVitalSign(snomedId, ObservationStatus.FINAL, now);
-        return observationVitalSign;
+    public static ObservationRiskFactor createFinalObservationRiskFactor(Integer snomedId, LocalDateTime now) {
+        ObservationRiskFactor observationRiskFactor = createObservationRiskFactor(snomedId, ObservationStatus.FINAL, now);
+        return observationRiskFactor;
     }
 
-    public static ObservationVitalSign createErrorObservationVitalSign(Integer snomedId, LocalDateTime now) {
-        ObservationVitalSign observationVitalSign = createObservationVitalSign(snomedId, ObservationStatus.ERROR, now);
-        return observationVitalSign;
+    public static ObservationRiskFactor createErrorObservationRiskFactor(Integer snomedId, LocalDateTime now) {
+        ObservationRiskFactor observationRiskFactor = createObservationRiskFactor(snomedId, ObservationStatus.ERROR, now);
+        return observationRiskFactor;
     }
 
     public static DocumentLab createDocumentLab(Document doc, ObservationLab obs){

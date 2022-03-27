@@ -33,6 +33,16 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
+	@Query( value = "SELECT ece.id " +
+			" FROM EmergencyCareEpisode ece " +
+			" WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
+			" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
+			" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
+			" AND ece.institutionId = :institutionId " +
+			" GROUP BY ece.id ")
+	Optional<Integer> emergencyCareEpisodeInProgress(@Param("institutionId") Integer institutionId, @Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
 	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso.description, tc, pi) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+

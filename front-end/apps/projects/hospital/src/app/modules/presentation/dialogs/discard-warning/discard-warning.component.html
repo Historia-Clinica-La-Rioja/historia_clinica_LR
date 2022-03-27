@@ -1,0 +1,29 @@
+<div fxLayout="row" fxLayoutAlign="end">
+	<button color="warn" matSuffix class="close" mat-icon-button [mat-dialog-close]>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<div class="report" fxLayout="column" fxLayoutAlign="center center">
+
+	<h1 mat-dialog-title>{{ data.title | translate}}</h1>
+
+	<div fxLayout="row" class="image" fxLayoutAlign="center">
+		<img src='assets/images/error_outline.png'>
+	</div>
+
+	<div mat-dialog-content class="content" fxLayoutGap="25px">
+		<div innerHTML="{{ data.content | translate}}"></div>
+	</div>
+
+	<div mat-dialog-content fxLayoutGap="25px">
+		<strong innerHTML="{{ data.contentBold | translate}}"></strong>
+	</div>
+
+	<div mat-dialog-actions fxLayout="column" fxLayoutGap="25px">
+		<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial [color]='okBottonColor' class="uppercase"
+			id="okButton-button">
+			{{(data.okButtonLabel? data.okButtonLabel : 'buttons.CONFIRM' ) | translate}}</button>
+		<button mat-stroked-button [mat-dialog-close]=false color="primary" class="uppercase" id="cancel-button">
+			{{(data.cancelButtonLabel? data.cancelButtonLabel : 'buttons.CANCEL') | translate}}</button>
+	</div>
+</div>

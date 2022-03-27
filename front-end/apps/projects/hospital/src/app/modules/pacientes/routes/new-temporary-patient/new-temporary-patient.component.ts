@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
-import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
+import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
@@ -101,6 +101,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					// Person extended
 					cuil: [params.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
 					mothersLastName: [],
+					phonePrefix: [],
 					phoneNumber: [],
 					email: [null, [Validators.email]],
 					ethnicityId: [],
@@ -130,6 +131,56 @@ export class NewTemporaryPatientComponent implements OnInit {
 					pamiDoctor: [],
 					pamiDoctorPhoneNumber: []
 				});
+
+				this.form.get("addressCountryId").valueChanges.subscribe(
+					countryId => {
+						this.form.controls.addressProvinceId.reset();
+						delete this.provinces;
+						if (countryId) {
+							this.addressMasterDataService.getByCountry(countryId)
+								.subscribe(provinces => {
+									this.provinces = provinces;
+								});
+						}
+					}
+				);
+
+				this.form.get("addressProvinceId").valueChanges.subscribe(
+					provinceId => {
+						this.form.controls.addressDepartmentId.reset();
+						delete this.departments;
+						if (provinceId) {
+							this.addressMasterDataService.getDepartmentsByProvince(provinceId)
+								.subscribe(departments => {
+									this.departments = departments;
+								});
+						}
+					}
+				);
+
+				this.form.get("addressDepartmentId").valueChanges.subscribe(
+					departmentId => {
+						this.form.controls.addressCityId.reset();
+						delete this.cities;
+						if (departmentId) {
+							this.addressMasterDataService.getCitiesByDepartment(departmentId)
+								.subscribe(cities => {
+									this.cities = cities;
+								});
+						}
+					}
+				);
+
+				this.form.get("addressCityId").valueChanges.subscribe(
+					_ => {
+						this.form.controls.addressNumber.reset();
+						this.form.controls.addressFloor.reset();
+						this.form.controls.addressApartment.reset();
+						this.form.controls.addressQuarter.reset();
+						this.form.controls.addressStreet.reset();
+						this.form.controls.addressPostcode.reset();
+					}
+				);
 
 				this.lockFormField(params);
 			});
@@ -219,6 +270,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
+			phonePrefix: this.form.controls.phonePrefix.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
 			// Address
@@ -229,6 +281,9 @@ export class NewTemporaryPatientComponent implements OnInit {
 			postcode: this.form.controls.addressPostcode.value,
 			quarter: this.form.controls.addressQuarter.value,
 			street: this.form.controls.addressStreet.value,
+			countryId: this.form.controls.addressCountryId.value,
+			departmentId: this.form.controls.addressDepartmentId.value,
+			provinceId: this.form.controls.addressProvinceId.value,
 			// Patient
 			typeId: TEMPORARY_PATIENT,
 			comments: this.comments,
@@ -350,6 +405,17 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public clearGenderSelfDetermination(): void {
 		this.form.controls.genderSelfDeterminationId.reset();
 		this.showOtherSelfPerceivedGender();
+	}
+
+	updatePhoneValidators(){
+		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+		} else {
+			updateControlValidator(this.form, 'phoneNumber', []);
+			updateControlValidator(this.form, 'phonePrefix', []);
+		}
+
 	}
 
 }

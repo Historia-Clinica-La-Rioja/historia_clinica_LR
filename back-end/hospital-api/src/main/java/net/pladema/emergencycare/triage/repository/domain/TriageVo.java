@@ -42,9 +42,9 @@ public class TriageVo {
 
     private LocalDateTime createdOn;
 
-    private List<Integer> vitalSignIds;
+    private List<Integer> riskFactorIds;
 
-    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId, List<Integer> vitalSignIds) {
+    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId, List<Integer> riskFactorIds) {
         this.id = triage.getId();
         this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
         this.emergencyCareTypeId = emergencyCareTypeId;
@@ -61,7 +61,7 @@ public class TriageVo {
             this.perfusionId = triageDetails.getPerfusionId();
         }
         this.createdOn = triage.getCreatedOn();
-        this.vitalSignIds = vitalSignIds;
+        this.riskFactorIds = riskFactorIds;
     }
 
 }

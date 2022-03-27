@@ -2,30 +2,28 @@
 	<div fxLayout="column">
 		<section id="triage">
 			<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
-						(doctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+				(doctorsOfficeIdChange)="setDoctorsOfficeId($event)">
 			</app-triage>
 		</section>
 
-		<form [formGroup]="vitalSignsForm">
-			<section id="vital-signs" fxLayout="column">
-				<h4 [translate]="'guardia.triage.VITAL_SIGNS'"></h4>
+		<form [formGroup]="riskFactorsForm">
+			<section id="risk-factors" fxLayout="column">
+				<h4 [translate]="'guardia.triage.RISK_FACTORS'"></h4>
 
 				<div fxLayout="column" fxFlex="grow shrink initial">
 					<div fxLayout="row" fxFlex="100%" fxLayoutGap="20px">
 						<div fxLayout="column" formGroupName="heartRate">
 							<mat-form-field fxFlex="50%" appearance="outline">
 								<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
-								<input matInput type="number" id="heartRate" name="heartRate"
-									   formControlName="value"
-									   placeholder="00"
-								>
-								<mat-error *ngIf="hasError(vitalSignsForm, 'min', 'heartRate')"
-										   [translate]="'forms.MIN_ERROR'"
-										   [translateParams]=" { min: getError(vitalSignsForm, 'min', 'heartRate').min }">
+								<input matInput type="number" id="heartRate" name="heartRate" formControlName="value"
+									placeholder="00">
+								<mat-error *ngIf="hasError(riskFactorsForm, 'min', 'heartRate')"
+									[translate]="'forms.MIN_ERROR'"
+									[translateParams]=" { min: getError(riskFactorsForm, 'min', 'heartRate').min }">
 								</mat-error>
 							</mat-form-field>
-							<app-effective-time [effectiveTime]="vitalSignsForm.value.heartRate.effectiveTime"
-												(update)="vitalSignsFormService.setVitalSignEffectiveTime($event, vitalSignsForm,'heartRate')">
+							<app-effective-time [effectiveTime]="riskFactorsForm.value.heartRate.effectiveTime"
+								(update)="riskFactorsFormService.setRiskFactorEffectiveTime($event, riskFactorsForm,'heartRate')">
 							</app-effective-time>
 						</div>
 
@@ -33,16 +31,14 @@
 							<mat-form-field fxFlex="50%" appearance="outline">
 								<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
 								<input matInput type="number" id="respiratoryRate" name="respiratoryRate"
-									   formControlName="value"
-									   placeholder="00"
-								>
-								<mat-error *ngIf="hasError(vitalSignsForm, 'min', 'respiratoryRate')"
-										   [translate]="'forms.MIN_ERROR'"
-										   [translateParams]=" { min: getError(vitalSignsForm, 'min', 'respiratoryRate').min }">
+									formControlName="value" placeholder="00">
+								<mat-error *ngIf="hasError(riskFactorsForm, 'min', 'respiratoryRate')"
+									[translate]="'forms.MIN_ERROR'"
+									[translateParams]=" { min: getError(riskFactorsForm, 'min', 'respiratoryRate').min }">
 								</mat-error>
 							</mat-form-field>
-							<app-effective-time [effectiveTime]="vitalSignsForm.value.respiratoryRate.effectiveTime"
-												(update)="vitalSignsFormService.setVitalSignEffectiveTime($event, vitalSignsForm,'respiratoryRate')">
+							<app-effective-time [effectiveTime]="riskFactorsForm.value.respiratoryRate.effectiveTime"
+								(update)="riskFactorsFormService.setRiskFactorEffectiveTime($event, riskFactorsForm,'respiratoryRate')">
 							</app-effective-time>
 						</div>
 					</div>
@@ -52,16 +48,14 @@
 							<mat-form-field fxFlex="50%" appearance="outline">
 								<mat-label [translate]="'guardia.triage.TEMPERATURE'"></mat-label>
 								<input matInput type="number" id="temperature" name="temperature"
-									   formControlName="value"
-									   placeholder="00.0"
-								>
-								<mat-error *ngIf="hasError(vitalSignsForm, 'min', 'temperature')"
-										   [translate]="'forms.MIN_ERROR'"
-										   [translateParams]=" { min: getError(vitalSignsForm, 'min', 'temperature').min }">
+									formControlName="value" placeholder="00.0">
+								<mat-error *ngIf="hasError(riskFactorsForm, 'min', 'temperature')"
+									[translate]="'forms.MIN_ERROR'"
+									[translateParams]=" { min: getError(riskFactorsForm, 'min', 'temperature').min }">
 								</mat-error>
 							</mat-form-field>
-							<app-effective-time [effectiveTime]="vitalSignsForm.value.temperature.effectiveTime"
-												(update)="vitalSignsFormService.setVitalSignEffectiveTime($event, vitalSignsForm, 'temperature')">
+							<app-effective-time [effectiveTime]="riskFactorsForm.value.temperature.effectiveTime"
+								(update)="riskFactorsFormService.setRiskFactorEffectiveTime($event, riskFactorsForm, 'temperature')">
 							</app-effective-time>
 						</div>
 
@@ -69,16 +63,15 @@
 							<mat-form-field fxFlex="50%" appearance="outline">
 								<mat-label [translate]="'guardia.triage.OXYGEN_SATURATION'"></mat-label>
 								<input matInput type="number" id="bloodOxygenSaturation" name="bloodOxygenSaturation"
-									   formControlName="value"
-									   placeholder="00"
-								>
-								<mat-error *ngIf="hasError(vitalSignsForm, 'min', 'bloodOxygenSaturation')"
-										   [translate]="'forms.MIN_ERROR'"
-										   [translateParams]=" { min: getError(vitalSignsForm, 'min', 'bloodOxygenSaturation').min }">
+									formControlName="value" placeholder="00">
+								<mat-error *ngIf="hasError(riskFactorsForm, 'min', 'bloodOxygenSaturation')"
+									[translate]="'forms.MIN_ERROR'"
+									[translateParams]=" { min: getError(riskFactorsForm, 'min', 'bloodOxygenSaturation').min }">
 								</mat-error>
 							</mat-form-field>
-							<app-effective-time [effectiveTime]="vitalSignsForm.value.bloodOxygenSaturation.effectiveTime"
-												(update)="vitalSignsFormService.setVitalSignEffectiveTime($event, vitalSignsForm, 'bloodOxygenSaturation')">
+							<app-effective-time
+								[effectiveTime]="riskFactorsForm.value.bloodOxygenSaturation.effectiveTime"
+								(update)="riskFactorsFormService.setRiskFactorEffectiveTime($event, riskFactorsForm, 'bloodOxygenSaturation')">
 							</app-effective-time>
 						</div>
 					</div>
@@ -88,16 +81,15 @@
 							<mat-form-field fxFlex="50%" appearance="outline">
 								<mat-label [translate]="'guardia.triage.SYSTOLIC_BLOOD'"></mat-label>
 								<input matInput type="number" id="systolicBloodPressure" name="systolicBloodPressure"
-									   formControlName="value"
-									   placeholder="00"
-								>
-								<mat-error *ngIf="hasError(vitalSignsForm, 'min', 'systolicBloodPressure')"
-										   [translate]="'forms.MIN_ERROR'"
-										   [translateParams]=" { min: getError(vitalSignsForm, 'min', 'systolicBloodPressure').min }">
+									formControlName="value" placeholder="00">
+								<mat-error *ngIf="hasError(riskFactorsForm, 'min', 'systolicBloodPressure')"
+									[translate]="'forms.MIN_ERROR'"
+									[translateParams]=" { min: getError(riskFactorsForm, 'min', 'systolicBloodPressure').min }">
 								</mat-error>
 							</mat-form-field>
-							<app-effective-time [effectiveTime]="vitalSignsForm.value.systolicBloodPressure.effectiveTime"
-												(update)="vitalSignsFormService.setVitalSignEffectiveTime($event, vitalSignsForm, 'systolicBloodPressure')">
+							<app-effective-time
+								[effectiveTime]="riskFactorsForm.value.systolicBloodPressure.effectiveTime"
+								(update)="riskFactorsFormService.setRiskFactorEffectiveTime($event, riskFactorsForm, 'systolicBloodPressure')">
 							</app-effective-time>
 						</div>
 
@@ -105,16 +97,15 @@
 							<mat-form-field fxFlex="50%" appearance="outline">
 								<mat-label [translate]="'guardia.triage.DIASTOLIC_BLOOD'"></mat-label>
 								<input matInput type="number" id="diastolicBloodPressure" name="diastolicBloodPressure"
-									   formControlName="value"
-									   placeholder="00"
-								>
-								<mat-error *ngIf="hasError(vitalSignsForm, 'min', 'diastolicBloodPressure')"
-										   [translate]="'forms.MIN_ERROR'"
-										   [translateParams]=" { min: getError(vitalSignsForm, 'min', 'diastolicBloodPressure').min }">
+									formControlName="value" placeholder="00">
+								<mat-error *ngIf="hasError(riskFactorsForm, 'min', 'diastolicBloodPressure')"
+									[translate]="'forms.MIN_ERROR'"
+									[translateParams]=" { min: getError(riskFactorsForm, 'min', 'diastolicBloodPressure').min }">
 								</mat-error>
 							</mat-form-field>
-							<app-effective-time [effectiveTime]="vitalSignsForm.value.diastolicBloodPressure.effectiveTime"
-												(update)="vitalSignsFormService.setVitalSignEffectiveTime($event, vitalSignsForm, 'diastolicBloodPressure')">
+							<app-effective-time
+								[effectiveTime]="riskFactorsForm.value.diastolicBloodPressure.effectiveTime"
+								(update)="riskFactorsFormService.setRiskFactorEffectiveTime($event, riskFactorsForm, 'diastolicBloodPressure')">
 							</app-effective-time>
 						</div>
 					</div>
@@ -126,8 +117,8 @@
 			<section id="evaluation" fxLayout="column">
 				<h4 [translate]="'guardia.triage.EVALUATION'"></h4>
 				<mat-form-field fxFlex="100%" appearance="outline">
-				<textarea matInput placeholder="Descripción" formControlName="evaluation"
-						  name="evaluation"></textarea>
+					<textarea matInput placeholder="Descripción" formControlName="evaluation"
+						name="evaluation"></textarea>
 				</mat-form-field>
 			</section>
 		</form>
@@ -138,7 +129,8 @@
 		<button mat-stroked-button class="uppercase" (click)="back()">
 			<span [translate]="cancelLabel"></span>
 		</button>
-		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent" (click)="confirmAdultGynecologicalTriage()" [disabled]="disableConfirmButton">
+		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent"
+			(click)="confirmAdultGynecologicalTriage()" [disabled]="disableConfirmButton">
 			<span [translate]="confirmLabel"></span>
 		</button>
 	</div>

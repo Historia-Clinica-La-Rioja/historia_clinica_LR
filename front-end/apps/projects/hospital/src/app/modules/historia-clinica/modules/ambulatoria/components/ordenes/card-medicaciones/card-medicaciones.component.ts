@@ -120,24 +120,23 @@ export class CardMedicacionesComponent implements OnInit {
 			});
 
 		newMedicationDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
-			if (newPrescription.prescriptionDto.hasRecipe) {
-				this.dialog.open(ConfirmarPrescripcionComponent,
-					{
-						disableClose: true,
-						data: {
-							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
-							downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_MEDICATION',
-							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
-							prescriptionType: PrescriptionTypes.MEDICATION,
-							patientId: this.patientId,
-							prescriptionRequest: newPrescription.prescriptionRequestResponse,
-						},
-						width: '35%'
-					});
-			} else {
-				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
-			}
-
+				if (newPrescription?.prescriptionDto.hasRecipe) {
+					this.dialog.open(ConfirmarPrescripcionComponent,
+						{
+							disableClose: true,
+							data: {
+								titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
+								downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_MEDICATION',
+								successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
+								prescriptionType: PrescriptionTypes.MEDICATION,
+								patientId: this.patientId,
+								prescriptionRequest: newPrescription.prescriptionRequestResponse,
+							},
+							width: '35%'
+						});
+				} else if (newPrescription) {
+					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS');
+				}
 			this.getMedication();
 			this.cleanSelectedMedicationList();
 		});

@@ -7,6 +7,7 @@ import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.entity.Person;
 import ar.lamansys.sgx.shared.repositories.QueryPart;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,7 +28,8 @@ public class PatientSearchQuery {
 
     // WHERE clause formats
     private static final String LIKE_FORMAT = " (UPPER(%s) LIKE '%%%s%%') \n"; //double '%' to escape the character
-    private static final String EQUAL_FORMAT = " (UPPER(%s) = '%s') \n";
+	private static final String LIKE_FORMAT_INDEX = " (UPPER(%s) LIKE '%s%%') \n"; //double '%' to escape the character
+	private static final String EQUAL_FORMAT = " (UPPER(%s) = '%s') \n";
 
     String firstName;
     String middleNames;
@@ -37,6 +39,7 @@ public class PatientSearchQuery {
     Short identificationTypeId;
     String identificationNumber;
     LocalDate birthDate;
+    Boolean filterByNameSelfDetermination;
 
     private static final String MESSAGE = "No se han encontrado pacientes";
 
@@ -49,54 +52,61 @@ public class PatientSearchQuery {
         this.identificationTypeId = patientSearchFilter.getIdentificationTypeId();
         this.identificationNumber = patientSearchFilter.getIdentificationNumber();
         this.birthDate = patientSearchFilter.getBirthDate();
+        this.filterByNameSelfDetermination = patientSearchFilter.getFilterByNameSelfDetermination();
     }
 
     public QueryPart select() {
-        return new QueryPart(" patient.id, \n" +
-                " person.id, \n" +
-                " person.firstName, \n" +
-                " person.middleNames, \n" +
-                " person.lastName, \n" +
-                " person.otherLastNames, \n" +
-                " person.genderId, \n" +
-                " person.identificationTypeId, \n" +
-                " person.identificationNumber, \n" +
-                " person.birthDate, \n" +
-                " personExtended.nameSelfDetermination, \n" +
-                " type.active \n");
+    	String select = " patient.id as patientId, \n" +
+				" person.id as personId, \n" +
+				" person.first_name, \n" +
+				" person.middle_names, \n" +
+				" person.last_name, \n" +
+				" person.other_last_names, \n" +
+				" person.gender_id, \n" +
+				" person.identification_type_id, \n" +
+				" person.identification_number, \n" +
+				" person.birth_date, \n" +
+				" type.active \n";
+
+    	String selectWithNameSelfDetermination = ", personExtended.name_self_determination\n";
+		if (this.filterByNameSelfDetermination)
+			select = select + selectWithNameSelfDetermination;
+
+		return new QueryPart(select);
     }
 
     public QueryPart from() {
-        return new QueryPart("Patient as patient \n" +
-                "join Person as person on (patient.personId = person.id) \n" +
-                "join PatientType as type on (patient.typeId = type.id) \n" +
-                "join PersonExtended as personExtended on (person.id = personExtended.id) \n"
-        );
+    	String from = "	patient as patient \n" +
+				"	join person as person on (patient.person_id = person.id) \n" +
+				"	join patient_type as type on (patient.type_id = type.id) \n";
+
+    	String fromWithPersonExtended = "join person_extended as personExtended on (person.id = personExtended.person_id) \n";
+		if (this.filterByNameSelfDetermination)
+    		from = from + fromWithPersonExtended;
+
+		return new QueryPart(from);
     }
 
-    public QueryPart whereWithBasicAttributes(Integer joiningOperator, Integer clauseComparator) {
+    public QueryPart whereWithBasicAttributes(Integer joiningOperator) {
         List<String> whereString = new ArrayList<>();
-
-        String clauseFormat = getClauseFormat(clauseComparator);
 
         if (firstName != null) {
             firstName = (QueryStringHelper.escapeSql(firstName)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.firstName", firstName);
+            String clause = String.format(LIKE_FORMAT_INDEX, "person.first_name", firstName);
             whereString.add(clause);
         }
         if (lastName != null) {
             lastName = (QueryStringHelper.escapeSql(lastName)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.lastName", lastName);
+            String clause = String.format(LIKE_FORMAT_INDEX, "person.last_name", lastName);
             whereString.add(clause);
         }
         if (identificationNumber != null){
-            identificationNumber = (QueryStringHelper.escapeSql(identificationNumber)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.identificationNumber", identificationNumber);
-            whereString.add(clause);
+			String clause = " (person.identification_number = '" + identificationNumber+"')";
+			whereString.add(clause);
         }
-        if(birthDate != null){
+        if (birthDate != null) {
             String birthDateString = (QueryStringHelper.escapeSql(birthDate.toString())).toUpperCase();
-            whereString.add(" (person.birthDate = '"+birthDateString+"') \n");
+            whereString.add(" (person.birth_date = '"+birthDateString+"') \n");
         }
 
         String joiningOperatorString = getJoiningOperator(joiningOperator);
@@ -106,54 +116,64 @@ public class PatientSearchQuery {
     public QueryPart whereWithAllAttributes(Integer joiningOperator, Integer clauseComparator) {
         List<String> whereString = new ArrayList<>();
 
-        String clauseFormat = getClauseFormat(clauseComparator);
-
         if (firstName != null) {
             firstName = (QueryStringHelper.escapeSql(firstName)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.firstName", firstName);
+            String clause = String.format(LIKE_FORMAT_INDEX, "person.first_name", firstName);
             whereString.add(clause);
-        }
-        if (middleNames != null) {
-            middleNames = (QueryStringHelper.escapeSql(middleNames)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.middleNames", middleNames);
-            whereString.add(clause);
-        }
-        if (lastName != null) {
-            lastName = (QueryStringHelper.escapeSql(lastName)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.lastName", lastName);
-            whereString.add(clause);
-        }
-        if (otherLastNames != null) {
-            otherLastNames = (QueryStringHelper.escapeSql(otherLastNames)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.otherLastNames", otherLastNames);
-            whereString.add(clause);
-        }
-        if (genderId != null) {
-            whereString.add(" (person.genderId = '" + genderId + "') \n");
-        }
-        if (identificationNumber != null){
-            identificationNumber = (QueryStringHelper.escapeSql(identificationNumber)).toUpperCase();
-            String clause = String.format(clauseFormat, "person.identificationNumber", identificationNumber);
-            whereString.add(clause);
-        }
-        if (identificationTypeId != null) {
-            whereString.add(" (person.identificationTypeId = '"+identificationTypeId+"') \n");
-        }
-        if(birthDate != null){
-            String birthDateString = (QueryStringHelper.escapeSql(birthDate.toString())).toUpperCase();
-            whereString.add(" (person.birthDate = '"+birthDateString+"') \n");
         }
 
-        String joiningOperatorString = getJoiningOperator(joiningOperator);
-        return new QueryPart(String.join(joiningOperatorString, whereString));
+        return addOtherAttributes(whereString, joiningOperator, clauseComparator);
     }
 
-    public QueryPart whereWithNameSelfDeterminationAttribute(Integer clauseComparator) {
-        String clauseFormat = getClauseFormat(clauseComparator);
-        firstName = (QueryStringHelper.escapeSql(firstName)).toUpperCase();
-        String clause = String.format(clauseFormat, "personExtended.nameSelfDetermination", firstName);
-        return new QueryPart(clause);
-    }
+	public QueryPart whereWithAllAttributesAndNameSelfDetermination(Integer joiningOperator, Integer clauseComparator) {
+		List<String> whereString = new ArrayList<>();
+
+		if (firstName != null) {
+			firstName = (QueryStringHelper.escapeSql(firstName)).toUpperCase();
+			String clause = String.format(LIKE_FORMAT_INDEX, "personExtended.name_self_determination", firstName);
+			whereString.add(clause);
+		}
+
+		return addOtherAttributes(whereString, joiningOperator, clauseComparator);
+	}
+
+	public QueryPart addOtherAttributes (List<String> whereString, Integer joiningOperator, Integer clauseComparator) {
+
+		String clauseFormat = getClauseFormat(clauseComparator);
+
+		if (middleNames != null) {
+			middleNames = (QueryStringHelper.escapeSql(middleNames)).toUpperCase();
+			String clause = String.format(clauseFormat, "person.middle_names", middleNames);
+			whereString.add(clause);
+		}
+		if (lastName != null) {
+			lastName = (QueryStringHelper.escapeSql(lastName)).toUpperCase();
+			String clause = String.format(LIKE_FORMAT_INDEX, "person.last_name", lastName);
+			whereString.add(clause);
+		}
+		if (otherLastNames != null) {
+			otherLastNames = (QueryStringHelper.escapeSql(otherLastNames)).toUpperCase();
+			String clause = String.format(clauseFormat, "person.other_last_names", otherLastNames);
+			whereString.add(clause);
+		}
+		if (genderId != null) {
+			whereString.add(" (person.gender_id = '" + genderId + "') \n");
+		}
+		if (identificationNumber != null){
+			String clause = " (person.identification_number = '" + identificationNumber+"')";
+			whereString.add(clause);
+		}
+		if (identificationTypeId != null) {
+			whereString.add(" (person.identification_type_id = '"+identificationTypeId+"') \n");
+		}
+		if (birthDate != null){
+			String birthDateString = (QueryStringHelper.escapeSql(birthDate.toString())).toUpperCase();
+			whereString.add(" (person.birth_date = '"+birthDateString+"') \n");
+		}
+
+		String joiningOperatorString = getJoiningOperator(joiningOperator);
+		return new QueryPart(String.join(joiningOperatorString, whereString));
+	}
 
     private String getClauseFormat(Integer clauseComparator) {
         String clauseFormat;
@@ -163,6 +183,15 @@ public class PatientSearchQuery {
             clauseFormat = LIKE_FORMAT;
         return clauseFormat;
     }
+
+	public QueryPart addUnion() {
+		return new QueryPart("SELECT ")
+				.concatPart(this.select())
+				.concat(" FROM ")
+				.concatPart(this.from())
+				.concat(" WHERE ")
+				.concatPart(whereWithAllAttributesAndNameSelfDetermination(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+	}
 
     private String getJoiningOperator(Integer joiningOperator) {
         if (joiningOperator.equals(OR_JOINING_OPERATOR))
@@ -187,7 +216,12 @@ public class PatientSearchQuery {
                 );
         diagnosisByDocuments.forEach((id,v) -> {
             Object[] tuple = v.get(0);
-            result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[11], 0, (String) tuple[10])); //rating no se usa, seteo 0
+
+            if(this.filterByNameSelfDetermination) {
+				result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], 0, (String) tuple[11])); //rating no se usa, seteo 0
+			} else {
+				result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], 0, null)); //rating no se usa, seteo 0
+			}
         });
         return result;
     }
@@ -202,7 +236,7 @@ public class PatientSearchQuery {
         Short genderIdPerson = (Short) tuple[index++];
         Short identificationTypeIdPerson = (Short) tuple[index++];
         String identificationNumberPerson = (String) tuple[index++];
-        LocalDate birthDatePerson = (LocalDate) tuple[index];
+        LocalDate birthDatePerson = tuple[index] != null ? ((Date) tuple[index]).toLocalDate() : null;
         return new Person(id, firstNamePerson, middleNamesPerson, lastNamePerson, otherLastNamesPerson, identificationTypeIdPerson, identificationNumberPerson, genderIdPerson, birthDatePerson);
     }
 }

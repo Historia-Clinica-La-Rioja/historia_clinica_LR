@@ -25,6 +25,8 @@ public class PersonalInformation {
 
 	private String cuil;
 
+	private String phonePrefix;
+
 	private String phoneNumber;
 
 	private IdentificationType identificationType;
@@ -36,13 +38,14 @@ public class PersonalInformation {
 	private Province province;
 
 	public PersonalInformation(Integer personId, String identificationNumber, LocalDate birthDate, String email,
-			Short identificationTypeId, String identificationTypeDesc, String cuil, String phoneNumber,
+			Short identificationTypeId, String identificationTypeDesc, String cuil, String phonePrefix, String phoneNumber,
 			Integer addressId, String street, String number, String floor, String apartment, Integer cityId,
 			String city, Short provinceId, String province) {
 		this.id = personId;
 		this.identificationNumber = identificationNumber;
 		this.birthDate = birthDate;
 		this.email = email;
+		this.phonePrefix = phonePrefix;
 		this.phoneNumber = phoneNumber;
 		this.cuil = cuil;
 

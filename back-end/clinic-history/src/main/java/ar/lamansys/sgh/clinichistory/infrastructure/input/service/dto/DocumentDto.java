@@ -12,7 +12,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Immunizat
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProblemDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProcedureDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.VitalSignDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,7 +64,7 @@ public class DocumentDto {
 
     private AnthropometricDataDto anthropometricData;
 
-    private VitalSignDto vitalSigns;
+    private RiskFactorDto riskFactors;
 
     private List<ReasonDto> reasons;
 

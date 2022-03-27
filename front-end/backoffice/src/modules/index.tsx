@@ -83,7 +83,7 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
     <Resource name="medicalcoveragetypes" />,
     <Resource name="privatehealthinsuranceplans" {...privatehealthinsuranceplans} />,
     <Resource name="medicalcoveragesmerge" />,
-    <Resource name="properties" {...properties(permissions)} />
+    <Resource name="properties" {...properties(permissions)} />,
 
     // Ampliación
     // 

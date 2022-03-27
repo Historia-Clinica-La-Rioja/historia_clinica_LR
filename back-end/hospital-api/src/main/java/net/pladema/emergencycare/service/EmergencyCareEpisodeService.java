@@ -1,12 +1,17 @@
 package net.pladema.emergencycare.service;
 
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 
 import java.util.List;
 
 public interface  EmergencyCareEpisodeService {
 
     List<EmergencyCareBo> getAll(Integer institutionId);
+
+    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
+
+	EmergencyCareBo getEpisodeSummary(Integer institutionId, Integer episodeId);
 
     EmergencyCareBo get(Integer episodeId, Integer institutionId);
 

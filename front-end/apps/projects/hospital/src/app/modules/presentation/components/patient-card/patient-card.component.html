@@ -3,8 +3,7 @@
     <div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayout.lt-md="column">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
             <mat-card-header>
-                <img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async"
-                    onerror="this.src='../../../../../assets/images/empty-profile.png'">
+                <img mat-card-md-image mat-card-avatar [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
                 <mat-card-title class="card-style-1">
                     <span id="title" class="capitalize">
                         {{viewPatientName()}} {{patient?.lastName}} {{patient?.otherLastNames}}
@@ -16,17 +15,21 @@
                 <mat-card-subtitle>
                     <span id="gender_age" [translate]=viewGenderAge()></span>
                 </mat-card-subtitle>
+				<mat-card-subtitle *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress">
+                    <div class="label-episodes label-internment-episode uppercase">
+                        <strong class="uppercase" [translate]="'ambulatoria.paciente.card.INTERNMENT_EPISODE_ACTIVE'"></strong>
+                    </div>
+                </mat-card-subtitle>
+				<mat-card-subtitle *ngIf="emergencyCareEpisodeInProgress">
+					<div class="label-episodes label-emergency-care-episode">
+						<strong class="uppercase"
+								[translate]="'ambulatoria.paciente.card.EMERGENCY_CARE_EPISODE_ACTIVE'"></strong>
+					</div>
+				</mat-card-subtitle>
             </mat-card-header>
-
-            <div *ngIf="bloodType?.length" fxLayout="column" fxLayoutAlign="center" id="blood-type-container">
-                <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3px">
-                    <span class="center-align">{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}</span>
-                    <span class="center-align">{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}</span>
-                    <h1 class="color-primary" id="blood-type">{{ bloodType }}</h1>
-                </div>
-            </div>
         </div>
-        <ng-content id="horizontal_content" select="[horizontal-content]"></ng-content>
+		<ng-content id="info-content" select="[info-content]"></ng-content>
+        <ng-content id="buttons-content" select="[buttons-content]"></ng-content>
     </div>
     <mat-card-content>
         <ng-content id="vertical_content" select="[content]"></ng-content>

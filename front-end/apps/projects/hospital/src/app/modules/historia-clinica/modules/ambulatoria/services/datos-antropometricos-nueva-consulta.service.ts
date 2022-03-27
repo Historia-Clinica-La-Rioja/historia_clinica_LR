@@ -5,6 +5,8 @@ import { Observable, Subject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
+import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
+import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 
 export interface DatosAntropometricos {
 	bloodType?: ClinicalObservationDto;
@@ -36,9 +38,9 @@ export class DatosAntropometricosNuevaConsultaService {
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
-			headCircumference: [null, [Validators.min(1), Validators.max(100), Validators.pattern('^[0-9]+$')]],
-			height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
-			weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
+			headCircumference: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.headCircumference), Validators.max(DATOS_ANTROPOMETRICOS.MAX.headCircumference), Validators.pattern(PATTERN_INTEGER_NUMBER)]],
+			height: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.height), Validators.max(DATOS_ANTROPOMETRICOS.MAX.height), Validators.pattern(PATTERN_INTEGER_NUMBER)]],
+			weight: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.weight), Validators.max(DATOS_ANTROPOMETRICOS.MAX.weight), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]]
 		});
 		this.form.controls.height.valueChanges.subscribe(height => {
 			if (height !== undefined) {

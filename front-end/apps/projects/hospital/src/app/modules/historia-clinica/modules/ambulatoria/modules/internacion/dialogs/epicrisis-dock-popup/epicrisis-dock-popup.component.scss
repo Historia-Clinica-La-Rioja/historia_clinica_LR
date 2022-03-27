@@ -1,0 +1,22 @@
+::ng-deep .cdk-overlay-pane {
+	app-epicrisis-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+.diagnosis-table {
+	margin-top: 20px;
+}
+
+h2 {
+	margin-top: 20px;
+}
+

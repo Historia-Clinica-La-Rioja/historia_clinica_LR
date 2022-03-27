@@ -14,7 +14,7 @@ import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/con
 
 import { ProblemasService } from '../../services/problemas.service';
 import { SnomedService } from '../../services/snomed.service';
-import { HEALTH_CLINICAL_STATUS } from '../../modules/internacion/constants/ids';
+import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
 
 @Component({
 	selector: 'app-solve-problem',

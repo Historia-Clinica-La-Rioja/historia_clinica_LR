@@ -43,6 +43,7 @@ public class RestTemplateSSL extends RestTemplate {
 		clientHttpRequestFactory.setHttpClient(RestUtils.httpClient(trustInvalidCertificate));
 		clientHttpRequestFactory.setConnectTimeout((timeout != null) ? timeout : 15000);
 		clientHttpRequestFactory.setReadTimeout((timeout != null) ? timeout :15000);
+		clientHttpRequestFactory.setConnectionRequestTimeout((timeout != null) ? timeout : 15000);
 		return clientHttpRequestFactory;
 	}
 

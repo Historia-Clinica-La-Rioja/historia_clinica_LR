@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
@@ -26,11 +28,10 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
     private final ServiceRequestRepository serviceRequestRepository;
     private final DocumentFactory documentFactory;
 
-    public CreateServiceRequestServiceImpl(ServiceRequestRepository serviceRequestRepository,
-                                           DocumentFactory documentFactory){
+    public CreateServiceRequestServiceImpl(ServiceRequestRepository serviceRequestRepository, DocumentFactory documentFactory){
         this.serviceRequestRepository = serviceRequestRepository;
         this.documentFactory = documentFactory;
-    }
+	}
 
     @Override
     public Integer execute(ServiceRequestBo serviceRequestBo) {
@@ -41,8 +42,7 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
         ServiceRequest newServiceRequest = createServiceRequest(serviceRequestBo);
         serviceRequestBo.setEncounterId(newServiceRequest.getId());
         documentFactory.run(serviceRequestBo, false);
-
-        LOG.debug(OUTPUT, serviceRequestBo);
+		LOG.debug(OUTPUT, serviceRequestBo);
         return newServiceRequest.getId();
     }
 

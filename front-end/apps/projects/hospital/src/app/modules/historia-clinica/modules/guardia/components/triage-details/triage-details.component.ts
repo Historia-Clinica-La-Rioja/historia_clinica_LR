@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
-import { VitalSign } from '@presentation/components/signo-vital-current/signo-vital.component';
+import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
 
 @Component({
 	selector: 'app-triage-details',
@@ -17,21 +17,21 @@ export class TriageDetailsComponent implements OnChanges {
 	readonly triages = Triages;
 	readonly emergencyCareTypes = EmergencyCareTypes;
 
-	vitalSigns: { description: string, value: VitalSign } [];
+	riskFactors: { description: string, value: RiskFactor }[];
 
 	constructor() {
 	}
 
 	ngOnChanges() {
-		this.vitalSigns = this.includesVitalSigns() ? this.mapToVitalSign(this.triage) : undefined;
+		this.riskFactors = this.includesRiskFactors() ? this.mapToRiskFactor(this.triage) : undefined;
 	}
 
-	private includesVitalSigns(): boolean {
+	private includesRiskFactors(): boolean {
 		return !!this.emergencyCareType && !!this.triage;
 	}
 
-	private mapToVitalSign(triage: Triage): { description: string, value: VitalSign }[] {
-		const vitalSigns = [];
+	private mapToRiskFactor(triage: Triage): { description: string, value: RiskFactor }[] {
+		const riskFactors = [];
 		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
 			{
 				respiratoryRate: 'Frecuencia respiratoria',
@@ -48,22 +48,22 @@ export class TriageDetailsComponent implements OnChanges {
 			};
 
 		Object.keys(LABELS).forEach(key => {
-				const vitalSign = getVitalSign(key);
-				vitalSigns.push({
-					description: LABELS[key],
-					value: {
-						value: Number(vitalSign?.value) || undefined,
-						effectiveTime: vitalSign?.effectiveTime || undefined
-					}
-				});
-			}
+			const riskFactor = getRiskFactor(key);
+			riskFactors.push({
+				description: LABELS[key],
+				value: {
+					value: Number(riskFactor?.value) || undefined,
+					effectiveTime: riskFactor?.effectiveTime || undefined
+				}
+			});
+		}
 		);
 
-		return vitalSigns;
+		return riskFactors;
 
-		function getVitalSign(key): { value: number, effectiveTime: Date } {
-			if (triage.vitalSigns && triage.vitalSigns[key]) {
-				return triage.vitalSigns[key];
+		function getRiskFactor(key): { value: number, effectiveTime: Date } {
+			if (triage.riskFactors && triage.riskFactors[key]) {
+				return triage.riskFactors[key];
 			}
 			if (triage.breathing && (key === 'respiratoryRate' || key === 'bloodOxygenSaturation')) {
 				return triage.breathing[key];
@@ -85,7 +85,7 @@ export interface Triage {
 		lastName: string
 	};
 	doctorsOfficeDescription?: string;
-	vitalSigns?: {
+	riskFactors?: {
 		bloodOxygenSaturation: {
 			value: string,
 			effectiveTime: Date

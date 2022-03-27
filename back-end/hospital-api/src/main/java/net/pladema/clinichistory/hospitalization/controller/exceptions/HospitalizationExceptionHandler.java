@@ -1,10 +1,5 @@
 package net.pladema.clinichistory.hospitalization.controller.exceptions;
 
-import ar.lamansys.sgx.auth.user.application.registeruser.exceptions.RegisterUserException;
-import ar.lamansys.sgx.auth.user.domain.passwordreset.exceptions.PasswordResetTokenStorageException;
-import ar.lamansys.sgx.auth.user.domain.user.model.UserException;
-import ar.lamansys.sgx.auth.user.domain.user.service.exceptions.UserStorageException;
-import ar.lamansys.sgx.auth.user.domain.userpassword.UserPasswordException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
 import org.slf4j.Logger;
@@ -15,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Locale;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = {"net.pladema.clinichistory.hospitalization"})

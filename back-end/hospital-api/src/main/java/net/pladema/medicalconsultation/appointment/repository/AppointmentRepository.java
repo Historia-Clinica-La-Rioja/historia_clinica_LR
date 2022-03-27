@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentAssignedForPatientVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo;
@@ -23,7 +24,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
-            "a.patientMedicalCoverageId, a.phoneNumber, doh.medicalAttentionTypeId)" +
+            "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
@@ -48,7 +49,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
-            "a.patientMedicalCoverageId, a.phoneNumber, doh.medicalAttentionTypeId) " +
+            "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
@@ -98,10 +99,12 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Modifying
     @Query( "UPDATE Appointment  AS a " +
             "SET a.phoneNumber = :phoneNumber, " +
+			"a.phonePrefix = :phonePrefix, " +
             "a.updateable.updatedOn = CURRENT_TIMESTAMP, " +
             "a.updateable.updatedBy = :userId " +
             "WHERE a.id = :appointmentId ")
     void updatePhoneNumber(@Param("appointmentId") Integer appointmentId,
+						   @Param("phonePrefix") String phonePrefix,
                            @Param("phoneNumber") String phoneNumber,
                            @Param("userId") Integer userId);
 
@@ -125,4 +128,18 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             "JOIN Person AS php ON (php.id = hp.personId)" +
             "WHERE a.id = :appointmentId ")
     Optional<NotifyPatientVo> getNotificationData(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentAssignedForPatientVo(" +
+			"hp.licenseNumber, up.pk.userId, a.dateTypeId, a.hour, do.description)" +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
+			"JOIN HealthcareProfessional  AS hp ON (hp.id = d.healthcareProfessionalId) " +
+			"JOIN UserPerson AS up ON (up.pk.personId = hp.personId )" +
+			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId )" +
+			"WHERE a.patientId = :patientId AND (d.deleteable.deleted = false OR d.deleteable.deleted is null )" +
+			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
+	List<AppointmentAssignedForPatientVo> getAssignedAppointmentsByPatient(@Param("patientId") Integer patientId);
+
 }

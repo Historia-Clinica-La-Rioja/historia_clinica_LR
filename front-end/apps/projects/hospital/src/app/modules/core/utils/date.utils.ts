@@ -30,3 +30,7 @@ export enum DatePipeFormat {
 export function formatDateOnlyISO(date: Date) {
 	return formatISO(date, { representation: 'date' });
 }
+
+export function formatTimeOnlyISO(date: Date) {
+	return formatISO(date, { representation: 'time' });
+}

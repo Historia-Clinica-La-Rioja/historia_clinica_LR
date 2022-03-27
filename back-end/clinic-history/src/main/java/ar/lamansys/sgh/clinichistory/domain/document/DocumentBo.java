@@ -13,13 +13,12 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.VitalSignBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,7 @@ public class DocumentBo implements IDocumentBo {
 
     private List<DentalActionBo> dentalActions = new ArrayList<>();
 
-    private VitalSignBo vitalSigns;
+    private RiskFactorBo riskFactors;
 
     private AnthropometricDataBo anthropometricData;
 

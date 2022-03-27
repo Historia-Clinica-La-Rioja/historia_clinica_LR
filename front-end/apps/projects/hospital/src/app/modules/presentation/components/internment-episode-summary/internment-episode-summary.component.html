@@ -19,7 +19,13 @@
 			<span class="mat-body-2">{{ internmentEpisode?.sectorDescription}}</span>
 		</div>
 	</mat-list-item>
-
+	<div *ngIf="!hasEpicrisis">
+		<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary"
+				(click)="goToPaseCama()">
+						<span class="uppercase"
+							  [translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
+		</button>
+	</div>
 	<mat-divider inset></mat-divider>
 
 	<mat-list-item id="doctor" *ngIf="internmentEpisode?.doctor">
@@ -66,6 +72,12 @@
 			</span>
 		</mat-list-item>
 	</div>
-
+	<ng-container *ngIf="showDischarge">
+		<button mat-flat-button id="administrative_discharge_button" color="primary" *appHasRole="['ADMINISTRATIVO']"
+				(click)="goToAdministrativeDischarge()">
+						<span class="uppercase"
+							  [translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
+		</button>
+	</ng-container>
 
 </mat-list>

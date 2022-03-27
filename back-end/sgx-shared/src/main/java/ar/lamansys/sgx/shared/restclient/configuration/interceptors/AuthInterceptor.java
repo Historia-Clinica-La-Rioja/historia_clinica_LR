@@ -39,6 +39,7 @@ public abstract class AuthInterceptor<R extends LoginResponse, S extends AuthSer
 		ClientHttpResponse response = execution.execute(request, body);
 		if (loginRequired(response)) {
 			callLogin();
+			addAuthHeaders(headers);
 			response = execution.execute(request, body);
 		}
 		return response;

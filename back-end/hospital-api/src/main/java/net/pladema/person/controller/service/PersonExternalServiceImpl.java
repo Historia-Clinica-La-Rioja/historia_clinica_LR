@@ -1,12 +1,17 @@
 package net.pladema.person.controller.service;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.address.repository.CityRepository;
+import net.pladema.address.service.AddressMasterDataService;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.mapper.PersonMapper;
+import net.pladema.person.controller.service.exceptions.CreatePersonEnumException;
+import net.pladema.person.controller.service.exceptions.CreatePersonException;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
@@ -41,13 +46,15 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 
 	private final PersonMapper personMapper;
 
-	public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService,
-			PersonMapper personMapper, PersonPhotoService personPhotoService) {
+	private final AddressMasterDataService addressMasterDataService;
+
+	public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService, PersonMapper personMapper, PersonPhotoService personPhotoService, AddressExternalService addressExternalService, CityRepository cityRepository, AddressMasterDataService addressMasterDataService) {
 		super();
 		this.personService = personService;
 		this.personMasterDataService = personMasterDataService;
 		this.personMapper = personMapper;
 		this.personPhotoService = personPhotoService;
+		this.addressMasterDataService = addressMasterDataService;
 		LOG.debug("{}", "created service");
 	}
 
@@ -61,6 +68,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	@Override
 	public void addPersonExtended(APatientDto patient, Integer personId, Integer addressId) {
 		LOG.debug("Input parameters -> {}, {}, {}", patient, personId, addressId);
+		validatePersonAddress(patient);
 		PersonExtended personExtendedToAdd = personMapper.toPersonExtended(patient, addressId);
 		LOG.debug("Mapped result updatePersonExtendedPatient -> {}", personExtendedToAdd);
 		personExtendedToAdd.setId(personId);
@@ -68,6 +76,15 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		LOG.debug("Going to add person extended -> {}", personExtendedToAdd);
 		PersonExtended personExtendedSaved = personService.addPersonExtended(personExtendedToAdd);
 		LOG.debug("PersonExtended added -> {}", personExtendedSaved);
+	}
+
+	private void validatePersonAddress(APatientDto patient) {
+		if (patient.getCountryId() != null && patient.getProvinceId() !=  null && !addressMasterDataService.existProvinceInCountry(patient.getCountryId(), patient.getProvinceId()))
+			throw new CreatePersonException(CreatePersonEnumException.INVALID_ENTRY_ADDRESS, "La provincia no pertenece al pais seleccionado");
+		if (patient.getProvinceId() != null && patient.getDepartmentId() !=  null && !addressMasterDataService.existDepartmentInProvince(patient.getProvinceId(), patient.getDepartmentId()))
+			throw new CreatePersonException(CreatePersonEnumException.INVALID_ENTRY_ADDRESS, "El departamento no pertenece a la provincia seleccionada");
+		if (patient.getDepartmentId() != null && patient.getCityId() !=  null && !addressMasterDataService.existCityInDepartment(patient.getDepartmentId(), patient.getCityId()))
+			throw new CreatePersonException(CreatePersonEnumException.INVALID_ENTRY_ADDRESS, "La ciudad no pertenece al departamento seleccionado");
 	}
 
 	@Override
@@ -174,6 +191,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		Person person = personService.getPerson(personId);
 		PersonExtended personExtended = personService.getPersonExtended(personId);
 		BasicPersonalDataDto result = personMapper.basicPersonalDataDto(person);
+		result.setPhonePrefix(personExtended.getPhonePrefix());
 		result.setPhoneNumber(personExtended.getPhoneNumber());
 		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 		LOG.debug(OUTPUT, result);

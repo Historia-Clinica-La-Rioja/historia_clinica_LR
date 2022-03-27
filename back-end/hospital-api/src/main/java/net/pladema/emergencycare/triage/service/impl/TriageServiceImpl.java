@@ -6,11 +6,11 @@ import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.repository.TriageDetailsRepository;
 import net.pladema.emergencycare.triage.repository.TriageRepository;
-import net.pladema.emergencycare.triage.repository.TriageVitalSignsRepository;
+import net.pladema.emergencycare.triage.repository.TriageRiskFactorsRepository;
 import net.pladema.emergencycare.triage.repository.domain.TriageVo;
 import net.pladema.emergencycare.triage.repository.entity.Triage;
 import net.pladema.emergencycare.triage.repository.entity.TriageDetails;
-import net.pladema.emergencycare.triage.repository.entity.TriageVitalSigns;
+import net.pladema.emergencycare.triage.repository.entity.TriageRiskFactors;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.domain.enums.EBodyTemperature;
@@ -38,7 +38,7 @@ public class TriageServiceImpl implements TriageService {
 
     private final TriageDetailsRepository triageDetailsRepository;
 
-    private final TriageVitalSignsRepository triageVitalSignsRepository;
+    private final TriageRiskFactorsRepository triageRiskFactorsRepository;
 
     private final InstitutionExternalService institutionExternalService;
 
@@ -48,13 +48,13 @@ public class TriageServiceImpl implements TriageService {
 
     public TriageServiceImpl(TriageRepository triageRepository,
                              TriageDetailsRepository triageDetailsRepository,
-                             TriageVitalSignsRepository triageVitalSignsRepository,
+                             TriageRiskFactorsRepository triageRiskFactorsRepository,
                              InstitutionExternalService institutionExternalService,
                              EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, EmergencyCareEpisodeStateService emergencyCareEpisodeStateService) {
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
-        this.triageVitalSignsRepository = triageVitalSignsRepository;
+        this.triageRiskFactorsRepository = triageRiskFactorsRepository;
         this.institutionExternalService = institutionExternalService;
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
@@ -136,14 +136,14 @@ public class TriageServiceImpl implements TriageService {
     }
 
     private Consumer<TriageBo> getAdultConsumer() {
-        return triageBo -> saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
+        return triageBo -> saveRiskFactors(triageBo.getId(), triageBo.getRiskFactorIds());
     }
 
     private Consumer<TriageBo> getPediatricConsumer() {
         return triageBo -> {
             if (existDetails(triageBo))
                 triageDetailsRepository.save(new TriageDetails(triageBo));
-            saveVitalSigns(triageBo.getId(), triageBo.getVitalSignIds());
+            saveRiskFactors(triageBo.getId(), triageBo.getRiskFactorIds());
         };
     }
 
@@ -164,9 +164,9 @@ public class TriageServiceImpl implements TriageService {
         return result;
     }
 
-    private void saveVitalSigns(Integer triageId, List<Integer> vitalSignIds) {
-        LOG.debug("Input parameters -> triageId {}, vitalSignIds {}", triageId, vitalSignIds);
-        vitalSignIds.forEach(id -> triageVitalSignsRepository.save(new TriageVitalSigns(triageId, id)));
+    private void saveRiskFactors(Integer triageId, List<Integer> riskFactorIds) {
+        LOG.debug("Input parameters -> triageId {}, riskFactorIds {}", triageId, riskFactorIds);
+        riskFactorIds.forEach(id -> triageRiskFactorsRepository.save(new TriageRiskFactors(triageId, id)));
     }
 
     private Boolean setTriageCategoryId(Integer episodeId, Short triageCategoryId) {

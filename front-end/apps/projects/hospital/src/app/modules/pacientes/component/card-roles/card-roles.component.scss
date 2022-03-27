@@ -1,5 +1,6 @@
 .flex-container {
 	display: flow;
+	margin: 0.94em 0 0 0.94em;
 }
 
 .font {
@@ -8,18 +9,13 @@
 }
 
 .data {
-	font-size: 1em;
-	margin: 0.94em 0.94em 0.94em 0;
-	justify-content: space-around;
+	margin: 0 0 0.44em 0;
 }
 
 .sub-title {
 	margin: 0 0 0 0.94em;
 }
 
-.icon {
-	margin: 0 0 0.44em 0;
-}
 
 .no-info {
 	line-height: 20px;

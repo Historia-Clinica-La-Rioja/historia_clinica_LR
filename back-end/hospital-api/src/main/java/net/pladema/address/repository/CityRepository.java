@@ -30,4 +30,8 @@ public interface CityRepository extends JpaRepository<City, Integer> {
 	@Transactional(readOnly = true)
 	@Query("SELECT c.departmentId FROM City as c WHERE c.id = :cityId")
 	Short findDepartmentByCity(@Param("cityId") Integer cityId);
+
+	@Transactional (readOnly = true)
+	@Query(value = "SELECT exists (SELECT 1 FROM City as c WHERE c.department_id = :departmentId and c.id = :cityId)", nativeQuery = true)
+	boolean existCityInDepartment(@Param("departmentId") Short departmentId, @Param("cityId") Integer cityId);
 }

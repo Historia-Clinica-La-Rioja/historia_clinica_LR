@@ -56,6 +56,6 @@ public class AnamnesisDto implements Serializable {
 
     @Valid
     @Nullable
-    private VitalSignDto vitalSigns;
+    private RiskFactorDto riskFactors;
 
 }

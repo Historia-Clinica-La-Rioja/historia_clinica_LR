@@ -37,6 +37,10 @@ export class OdontogramService {
 		return toothActioned ? deepClone(toothActioned.actions) : null;
 	}
 
+	existActionedTeeth(): boolean {
+		return  !!this.actionedTeeth.find(a => a.actions.length);
+	}
+
 	resetOdontogram() {
 		this.actionedTeeth.forEach(actionedTooth => {
 			this.actionsSubject.next({ actions: [], toothCompleteNumber: actionedTooth.toothCompleteNumber, tooth: actionedTooth.tooth })

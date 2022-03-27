@@ -164,15 +164,15 @@ public class DiaryServiceImpl implements DiaryService {
 	 */
 	@Override
 	public List<Integer> getAllOverlappingDiaryByProfessional(Integer healthcareProfessionalId, Integer doctorsOfficeId,
-															  LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId) {
+															  LocalDate newDiaryStart, LocalDate newDiaryEnd, Short appointmentDuration, Optional<Integer> excludeDiaryId) {
 		LOG.debug(
 				"Input parameters -> healthcareProfessionalId {}, doctorsOfficeId {}, newDiaryStart {}, newDiaryEnd {}",
 				healthcareProfessionalId, doctorsOfficeId, newDiaryStart, newDiaryEnd);
 		List<Integer> diaryIds = excludeDiaryId.isPresent()
 				? diaryRepository.findAllOverlappingDiaryByProfessionalExcludingDiary(healthcareProfessionalId, doctorsOfficeId,
-						newDiaryStart, newDiaryEnd, excludeDiaryId.get())
+						newDiaryStart, newDiaryEnd, appointmentDuration, excludeDiaryId.get())
 				: diaryRepository.findAllOverlappingDiaryByProfessional(healthcareProfessionalId, doctorsOfficeId, newDiaryStart,
-						newDiaryEnd);
+						newDiaryEnd, appointmentDuration);
 		LOG.debug("Diary saved -> {}", diaryIds);
 		return diaryIds;
 

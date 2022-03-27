@@ -31,4 +31,8 @@ public class NursingAnthropometricDataDto implements Serializable {
     @Nullable
     private ClinicalObservationDto bmi;
 
+	@Valid
+	@Nullable
+	private ClinicalObservationDto headCircumference;
+
 }

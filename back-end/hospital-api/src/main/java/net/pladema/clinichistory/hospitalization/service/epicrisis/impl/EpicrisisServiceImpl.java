@@ -42,7 +42,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
             result.setImmunizations(documentService.getImmunizationStateFromDocument(document.getId()));
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
-            result.setVitalSigns(documentService.getVitalSignStateFromDocument(document.getId()));
+            result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
             
             result.setNotes(loadNotes(document));
         });

@@ -57,4 +57,13 @@ public class InternmentPatientServiceImpl implements InternmentPatientService {
         return result;
     }
 
+	@Override
+	public Optional<Integer> getInternmentEpisodeInProcessAnyInstitution(Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}", patientId);
+		Optional<Integer> result = internmentEpisodeRepository.internmentEpisodeInProcess(patientId).map(ie -> ie.getId());
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+
 }

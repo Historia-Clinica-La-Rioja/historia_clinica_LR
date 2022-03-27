@@ -1,12 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { ClinicalSpecialtyDto, HealthcareProfessionalCompleteDto, HealthcareProfessionalSpecialtyDto, ProfessionalDto } from '@api-rest/api-model';
-import { ProfessionalService } from '@api-rest/services/professional.service';
-import { SpecialtyService } from '@api-rest/services/specialty.service';
+import { ProfessionAndSpecialtyDto } from '@pacientes/routes/profile/profile.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface ProfessionDto {
 	description: string,
@@ -38,48 +35,29 @@ export interface ProfessionalSpecialty {
 
 export class EditProfessionsComponent implements OnInit {
 
-	public formParent: FormGroup = new FormGroup({});
+	formParent: FormGroup = new FormGroup({});
 	professionsTypeahead: TypeaheadOption<ProfessionDto>[] = [];
-	allProfessions: ProfessionDto[] = [];
-	allSpecialties: ClinicalSpecialtyDto[] = [];
 	initValueTypeaheadProfessions: TypeaheadOption<ProfessionDto>[] = [];
-	initValueTypeaheadProfessionsSimple: ProfessionDto[] = [];
 	initValueTypeaheadSpecialties: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
 	dividerNewSpecialtiesAndProfessions = false;
 	professional: ProfessionalDto;
 	specialtiesTypeahead: TypeaheadOption<ClinicalSpecialtyDto>[];
-	checkSpeciality: boolean = false;
-	checkProfession: boolean = false;
-	showAddProfessionsAndSpecialty: boolean = false;
 	professionalSpecialtyDtos: HealthcareProfessionalSpecialtyDto[] = [];
-	enabledConfirmButton: boolean = true;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { personId: number; professionalId?: number; ownLicense?: string; ownSpecialties?: number[], ownProfessions?: number[], id?: number[] },
+		@Inject(MAT_DIALOG_DATA) public data: { personId: number; professionalId?: number; ownLicense?: string; specialtyId?: number[], id?: number[], allSpecialties: ClinicalSpecialtyDto[], allProfessions: ProfessionDto[], ownProfessionsAndSpecialties: ProfessionAndSpecialtyDto[] },
 		public dialog: MatDialogRef<EditProfessionsComponent>,
-		private readonly professionalService: ProfessionalService,
-		private readonly specialtyService: SpecialtyService,
-		private readonly snackBarService: SnackBarService
 	) { }
 
 	ngOnInit(): void {
-
 		this.initFormParent();
-
-		this.professionalService.getList().subscribe((professions: ProfessionDto[]) => {
-			this.allProfessions = professions;
-			this.professionsTypeahead = this.allProfessions.map(d => this.toProfessionDtoTypeahead(d));
-			this.specialtyService.getAll().subscribe((specialities: ClinicalSpecialtyDto[]) => {
-				this.allSpecialties = specialities;
-				this.specialtiesTypeahead = this.allSpecialties.map(d => this.toSpecialtyDtoTypeahead(d));
-				this.initOwnSpecialtiesAndProfessions();
-			});
-		});
-
+		this.professionsTypeahead = this.data.allProfessions.map(d => this.toProfessionDtoTypeahead(d));
+		this.specialtiesTypeahead = this.data.allSpecialties.map(d => this.toSpecialtyDtoTypeahead(d));
+		this.initOwnSpecialtiesAndProfessions();
 	}
 
 	initOwnSpecialtiesAndProfessions(): void {
-		if ((this.allSpecialties) && (this.allProfessions)) {
+		if ((this.data.allSpecialties) && (this.data.allProfessions)) {
 			this.setOwnSpecialtiesAndProfessions()
 		}
 	}
@@ -94,12 +72,12 @@ export class EditProfessionsComponent implements OnInit {
 	//**carga especialidades | profesiones previas*/
 	setOwnSpecialtiesAndProfessions(): void {
 		if (this.data?.ownLicense)
-			for (let i = 0; i < this.data.ownProfessions.length; i++) {
+			for (let i = 0; i < this.data.ownProfessionsAndSpecialties?.length; i++) {
 				const elem = {
-					clinicalSpecialtyId: this.data?.ownSpecialties[i],
+					clinicalSpecialtyId: this.data?.ownProfessionsAndSpecialties[i].specialtyId,
 					healthcareProfessionalId: (this.data?.professionalId) ? (this.data?.professionalId) : null,
 					id: (this.data?.id[i]) ? (this.data?.id[i]) : null,
-					professionalSpecialtyId: this.data?.ownProfessions[i]
+					professionalSpecialtyId: this.data?.ownProfessionsAndSpecialties[i].professionId
 				};
 				this.saveInitValueTypeaheadProfessions(i);
 				this.saveInitValueTypeaheadSpecialty(i);
@@ -167,16 +145,16 @@ export class EditProfessionsComponent implements OnInit {
 
 	/**Guardar valores para mostrar en el app-typeahead*/
 	saveInitValueTypeaheadProfessions(index: number): void {
-		this.allProfessions.forEach((professionalSpecialtyId: ProfessionDto) => {
-			if (professionalSpecialtyId.id === this.data?.ownProfessions[index]) {
+		this.data.allProfessions.forEach((professionalSpecialtyId: ProfessionDto) => {
+			if (professionalSpecialtyId.id === this.data?.ownProfessionsAndSpecialties[index].professionId) {
 				this.initValueTypeaheadProfessions.push(this.toProfessionDtoTypeahead(professionalSpecialtyId));
 			}
 		})
 	}
 
 	saveInitValueTypeaheadSpecialty(index: number): void {
-		this.allSpecialties.forEach((speciality: ClinicalSpecialtyDto) => {
-			if (speciality.id === this.data?.ownSpecialties[index]) {
+		this.data.allSpecialties.forEach((speciality: ClinicalSpecialtyDto) => {
+			if (speciality.id === this.data?.ownProfessionsAndSpecialties[index].specialtyId) {
 				this.initValueTypeaheadSpecialties.push(this.toSpecialtyDtoTypeahead(speciality));
 			}
 		})
@@ -228,12 +206,12 @@ export class EditProfessionsComponent implements OnInit {
 	}
 
 	isDisableConfirmButton(): boolean {
-		if (this.hasError('required', 'pattern', 'license') || this.isDisabledAddProfessionAndSpecialty() || this.prueba())
+		if (this.hasError('required', 'pattern', 'license') || this.isDisabledAddProfessionAndSpecialty() || this.emptySets())
 			return true
 		return false;
 	}
 
-	prueba(): boolean {
+	emptySets(): boolean {
 		const refprofessionsAndProfessionss = this.formParent.get('specialtiesAndProfessions') as FormArray;
 		const refArray = refprofessionsAndProfessionss.controls;
 		return (refArray.find(elem =>
@@ -269,41 +247,31 @@ export class EditProfessionsComponent implements OnInit {
 	}
 
 	public save(): void {
-
 		this.buildProfessionalSpecialty();
 		const professional: HealthcareProfessionalCompleteDto = this.buildCreateProfessionalDto();
-		this.professionalSpecialtyDtos = [];
+		this.dialog.close(professional);
+	}
 
-		if (this.data?.professionalId === undefined) {
-
-			this.professionalService.addProfessional(professional).subscribe(_ => {
-				this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
-				this.enabledConfirmButton = false;
-				this.dialog.close(true);
-			},
-				error => {
-					error?.text ?
-						this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
-				})
-		}
-		else {
-			this.professionalService.editProfessional(this.data?.professionalId, professional).subscribe(_ => {
-				this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
-				this.enabledConfirmButton = false;
-				this.dialog.close(true);
-			},
-				error => {
-					error?.text ?
-						this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
-				}
-			);
-		}
+	private isEqual(e1: HealthcareProfessionalSpecialtyDto, e2: HealthcareProfessionalSpecialtyDto): boolean {
+		return ((e1.clinicalSpecialtyId === e2.clinicalSpecialtyId) &&
+			(e1.healthcareProfessionalId === e2.healthcareProfessionalId));
+	}
+	private isNotInArray(elem: HealthcareProfessionalSpecialtyDto): boolean {
+		let a = true;
+		this.professionalSpecialtyDtos.forEach(e => {
+			if (this.isEqual(elem, e))
+				a = false;
+		});
+		return a;
 	}
 
 	private buildProfessionalSpecialty(): void {
 		const refprofessionsAndProfessionss = this.formParent.get('specialtiesAndProfessions') as FormArray;
 		const refArray = refprofessionsAndProfessionss.controls;
-		refArray.forEach(e => this.professionalSpecialtyDtos.push(e.value));
+		refArray.forEach(elem => {
+			if (this.isNotInArray(elem.value))
+				this.professionalSpecialtyDtos.push(elem.value);
+		});
 	}
 
 	private buildCreateProfessionalDto(): HealthcareProfessionalCompleteDto {

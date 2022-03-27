@@ -13,8 +13,8 @@ public interface ManualClassificationRepository extends JpaRepository<ManualClas
 
 	@Query("SELECT DISTINCT mc " +
 			"FROM Snomed s " +
-			"JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
-			"JOIN SnvsGroup ng ON (ng.groupId = srg.groupId) " +
+			"JOIN SnomedRelatedGroup srg ON (s.id = srg.pk.snomedId) " +
+			"JOIN SnvsGroup ng ON (ng.groupId = srg.pk.groupId) " +
 			"JOIN ManualClassification mc ON (mc.id = ng.manualClassificationId) " +
 			"WHERE sctid = :sctid " +
 			"AND pt = :pt")

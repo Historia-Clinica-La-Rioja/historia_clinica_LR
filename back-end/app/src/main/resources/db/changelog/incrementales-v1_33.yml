@@ -1,0 +1,150 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_33
+    - changeSet:
+        id: add-phone_prefix-column-person_extended
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: person_extended
+              columns:
+                - column:
+                    name: phone_prefix
+                    type: varchar(10)
+
+    - changeSet:
+        id: add-phone_prefix-column-appointment
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    name: phone_prefix
+                    type: varchar(10)
+                                        
+    - changeSet: 
+        id: snvs_group-metadata_delete_TG5858
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        DELETE FROM snvs_group WHERE manual_classification_id = 1;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 2;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 3;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 4;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 5;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 6;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 7;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 8;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 9;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 10;
+                        DELETE FROM snvs_group WHERE manual_classification_id = 11;
+                        DELETE FROM snvs_group WHERE event_id = 113 AND group_event_id = 317;
+                        DELETE FROM snvs_group WHERE group_id = 5 AND environment = 1 AND manual_classification_id = 596;
+                        DELETE FROM snvs_group WHERE group_id = 5 AND environment = 1 AND manual_classification_id = 798;
+                        DELETE FROM snvs_group WHERE group_id = 5 AND environment = 2 AND manual_classification_id = 596;
+                        DELETE FROM snvs_group WHERE group_id = 6 AND environment = 1 AND manual_classification_id = 596;
+                        DELETE FROM snvs_group WHERE group_id = 6 AND environment = 1 AND manual_classification_id = 798;
+                        DELETE FROM snvs_group WHERE group_id = 6 AND environment = 2 AND manual_classification_id = 798;
+                        DELETE FROM snvs_group WHERE group_id = 6 AND environment = 2 AND manual_classification_id = 596;
+                    
+    - changeSet: 
+        id: snomed_group-metadata_delete_TG5858
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        DELETE FROM snomed_group WHERE description = 'Infecciones respiratorias agudas EVENTO 317' AND ecl = '<< 414051000221108 |SARS-COV-2 en puntos de entrada y casos relacionados con importación (procedimiento)|';
+                    
+    - changeSet: 
+        id: snomed_related_group-metadata_delete_TG5858
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        DELETE FROM snomed_related_group where snomed_id = 1196;
+                        
+    - changeSet: 
+        id: manual_classification-metadata_update_TG5858
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        INSERT INTO manual_classification (id, description) VALUES(796, 'Caso sospechoso de SIM asociado a COVID-19');
+    
+    - changeSet: 
+        id: snvs_group-metadata_add_TG5858
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 113, 1, 596 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 113, 1, 797 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 113, 1, 798 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 113, 1, 796 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 1) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 113, 1, 799 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 191, 1, 799 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 191, 1, 797 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 191, 1, 596 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 191, 1, 796 from t1;
+                        WITH t1 AS (SELECT id FROM snomed_group WHERE ecl = '<< 1119306006 |síndrome inflamatorio multisistémico en adultos (trastorno)| OR << 895448002 |síndrome multisistémico inflamatorio en niños (trastorno)|' AND custom_id = 2) INSERT INTO snvs_group (group_id, event_id, group_event_id, environment, manual_classification_id) select t1.id, 313, 191, 1, 798 from t1;
+    
+    - changeSet: 
+        id: manual_classification-metadata_delete_TG5858
+        author: lbergottini
+        changes: 
+            - sql:
+                sql: |-
+                        DELETE FROM manual_classification WHERE id = 1;
+                        DELETE FROM manual_classification WHERE id = 2;
+                        DELETE FROM manual_classification WHERE id = 3;
+                        DELETE FROM manual_classification WHERE id = 4;
+                        DELETE FROM manual_classification WHERE id = 5;
+                        DELETE FROM manual_classification WHERE id = 6;
+                        DELETE FROM manual_classification WHERE id = 7;
+                        DELETE FROM manual_classification WHERE id = 8;
+                        DELETE FROM manual_classification WHERE id = 9;
+                        DELETE FROM manual_classification WHERE id = 10;
+                        DELETE FROM manual_classification WHERE id = 11;
+    
+    - changeSet:
+          id: addColumn-last_update-snomed_related_group
+          author: tmedina
+          changes:
+              - addColumn:
+                    tableName: snomed_related_group
+                    columns:
+                        - column:
+                              name: last_update
+                              type: date
+
+    - changeSet:
+          id: updateValues-last_update-snomed_related_group
+          author: tmedina
+          context: "!schema-only"
+          changes:
+              - sql:
+                    sql: |-
+                        UPDATE snomed_related_group
+                        SET last_update = snomed_group.last_update
+                        FROM snomed_group
+                        WHERE (snomed_related_group.group_id = snomed_group.id);
+
+    - changeSet:
+          id: addNotNullConstraint-last_update-snomed_related_group
+          author: tmedina
+          changes:
+              - addNotNullConstraint:
+                    columnDataType: date
+                    columnName: last_update
+                    tableName: snomed_related_group
+                    validate: true
+
+    - changeSet:
+          id: createIndex-snomed
+          author: tmedina
+          dbms: postgresql
+          changes:
+              - sql:
+                    sql: |-
+                        CREATE INDEX IDX_snomed_pt ON snomed USING GIN (to_tsvector('spanish', pt));

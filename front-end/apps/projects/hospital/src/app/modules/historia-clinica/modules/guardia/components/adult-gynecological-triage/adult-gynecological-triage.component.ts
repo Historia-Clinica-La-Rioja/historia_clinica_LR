@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { getError, hasError } from '@core/utils/form.utils';
-import { VitalSignsValue, VitalSignsFormService } from '../../../../services/vital-signs-form.service';
+import { RiskFactorsValue, RiskFactorsFormService } from '../../../../services/risk-factors-form.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
 @Component({
@@ -25,19 +25,19 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	private doctorsOfficeId: number;
 
 	adultGynecologicalForm: FormGroup;
-	vitalSignsForm: FormGroup;
+	riskFactorsForm: FormGroup;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private guardiaMapperService: GuardiaMapperService,
-		public vitalSignsFormService: VitalSignsFormService,
+		public riskFactorsFormService: RiskFactorsFormService,
 	) { }
 
 	ngOnInit(): void {
 		this.adultGynecologicalForm = this.formBuilder.group({
 			evaluation: [null]
 		});
-		this.vitalSignsForm = this.vitalSignsFormService.buildForm();
+		this.riskFactorsForm = this.riskFactorsFormService.buildForm();
 	}
 
 	setTriageCategoryId(triageCategoryId: number): void {
@@ -50,13 +50,13 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 
 	confirmAdultGynecologicalTriage(): void {
 		const formValue = this.adultGynecologicalForm.value;
-		if (this.adultGynecologicalForm.valid && this.vitalSignsForm.valid) {
-			const vitalSignsValue: VitalSignsValue = this.vitalSignsFormService.buildVitalSignsValue(this.vitalSignsForm);
+		if (this.adultGynecologicalForm.valid && this.riskFactorsForm.valid) {
+			const riskFactorsValue: RiskFactorsValue = this.riskFactorsFormService.buildRiskFactorsValue(this.riskFactorsForm);
 			const triage: TriageAdultGynecologicalDto = {
 				categoryId: this.triageCategoryId,
 				doctorsOfficeId: this.doctorsOfficeId,
 				notes: formValue.evaluation,
-				vitalSigns: this.guardiaMapperService.vitalSignsValuetoNewVitalSignsObservationDto(vitalSignsValue)
+				riskFactors: this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue)
 			};
 			this.confirm.emit(triage);
 		}

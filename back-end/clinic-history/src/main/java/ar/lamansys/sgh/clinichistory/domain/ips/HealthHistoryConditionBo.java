@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @ToString
 public class HealthHistoryConditionBo extends HealthConditionBo {
 
-    private LocalDate date;
+    private LocalDate startDate;
 
     private String note;
 

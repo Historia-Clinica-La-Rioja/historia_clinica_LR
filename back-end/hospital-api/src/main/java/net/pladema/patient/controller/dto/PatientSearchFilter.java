@@ -33,5 +33,7 @@ public class PatientSearchFilter {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
-	
+
+	private Boolean filterByNameSelfDetermination = false;
+
 }

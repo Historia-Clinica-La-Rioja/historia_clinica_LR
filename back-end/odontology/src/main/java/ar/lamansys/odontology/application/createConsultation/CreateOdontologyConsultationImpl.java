@@ -8,7 +8,9 @@ import ar.lamansys.odontology.domain.DiagnosticBo;
 import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
+import ar.lamansys.odontology.domain.EOdontologyTopicDto;
 import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.Publisher;
 import ar.lamansys.odontology.domain.ToothBo;
 import ar.lamansys.odontology.domain.ToothSurfacesBo;
 import ar.lamansys.odontology.domain.consultation.ClinicalTermsValidatorUtils;
@@ -71,15 +73,9 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final GetToothService getToothService;
 
-    public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage,
-                                            ProcedureStorage proceduresStorage,
-                                            OdontologyConsultationStorage odontologyConsultationStorage,
-                                            DateTimeProvider dateTimeProvider,
-                                            OdontologyDoctorStorage odontologyDoctorStorage,
-                                            OdontologyDocumentStorage odontologyDocumentStorage,
-                                            DrawOdontogramService drawOdontogramService,
-                                            CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService,
-                                            AppointmentStorage appointmentStorage, GetToothService getToothService) {
+    private final Publisher publisher;
+
+    public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage, ProcedureStorage proceduresStorage, OdontologyConsultationStorage odontologyConsultationStorage, DateTimeProvider dateTimeProvider, OdontologyDoctorStorage odontologyDoctorStorage, OdontologyDocumentStorage odontologyDocumentStorage, DrawOdontogramService drawOdontogramService, CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService, AppointmentStorage appointmentStorage, GetToothService getToothService, Publisher publisher) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
@@ -91,7 +87,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         this.getToothSurfacesService = getToothSurfacesService;
         this.appointmentStorage = appointmentStorage;
         this.getToothService = getToothService;
-    }
+		this.publisher = publisher;
+	}
 
     @Override
     @Transactional
@@ -120,12 +117,13 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
                         now,
                         true));
 
+
         consultationBo.setConsultationId(encounterId);
         cpoCeoIndicesCalculator.run(consultationBo);
 
         odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
         appointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
-
+		publisher.run(consultationBo.getPatientId(), EOdontologyTopicDto.NUEVA_CONSULTA);
         LOG.debug("Output -> encounterId {}", encounterId);
 
         return encounterId;

@@ -3,6 +3,7 @@ package net.pladema.clinichistory.requests.medicationrequests.controller;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.ChangeStateMedicationRequestDto;
@@ -16,7 +17,6 @@ import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicat
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -190,7 +190,7 @@ public class MedicationRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, medicationRequestId {}", institutionId, patientId, medicationRequestId);
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var professionalDto = healthcareProfessionalExternalService.findProfessionalById(medicationRequestBo.getDoctorId());
+        var professionalDto = healthcareProfessionalExternalService.findFromAllProfessionalsById(medicationRequestBo.getDoctorId());
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
         var context = createContext(medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
 

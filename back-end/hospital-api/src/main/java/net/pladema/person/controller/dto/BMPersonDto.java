@@ -13,8 +13,10 @@ public class BMPersonDto extends APersonDto {
 
     private Integer id;
     
-    private ProvinceDto province;
+    private Short provinceId;
     
-    private DepartmentDto department;
-    
+    private Short departmentId;
+
+	private Short countryId;
+
 }

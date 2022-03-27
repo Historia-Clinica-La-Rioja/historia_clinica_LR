@@ -1,20 +1,24 @@
 package ar.lamansys.sgx.shared.files;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class StreamFile {
-
-    private static final Logger LOG = LoggerFactory.getLogger(StreamFile.class);
 
     @Value("${internment.document.directory:temp}")
     private String rootDirectory;
@@ -33,7 +37,9 @@ public class StreamFile {
 
     public boolean existFile(String path) {
         File file = new File(path);
-        return file.isFile();
+        var result = file.isFile();
+		log.debug("File in {} exists? => {}", path, result);
+		return result;
     }
 
     public boolean saveFileInDirectory(String path, boolean override, ByteArrayOutputStream byteArrayOutputStream) throws IOException {
@@ -51,21 +57,21 @@ public class StreamFile {
             try(OutputStream outputStream = new FileOutputStream(file)){
                 outputStream.write(byteArrayOutputStream.toByteArray());
             }
-            LOG.debug("File loaded in directory -> {}", fileCreated);
+			log.debug("File loaded in directory -> {}", fileCreated);
             return fileCreated;
         }
         return false;
     }
 
     public String readFileAsString(String path, Charset charset) throws IOException{
-        LOG.debug("Input parameter -> path {}", path);
+		log.debug("Input parameter -> path {}", path);
         String result = null;
         ByteArrayInputStream is = reader(path);
         int numberOfBytes = is.available();
         byte[] bytes = new byte[numberOfBytes];
         is.read(bytes, 0, numberOfBytes);
         result = new String(bytes, charset);
-        LOG.debug("Output -> {}", dataToString(result));
+		log.debug("Output -> {}", dataToString(result));
         return result;
     }
 
@@ -75,10 +81,10 @@ public class StreamFile {
     }
 
     private ByteArrayInputStream reader(String path) throws IOException{
-        LOG.debug("Input parameters -> path {}", path);
+		log.debug("Input parameters -> path {}", path);
         Path filePath = Paths.get(path);
         byte[] data = Files.readAllBytes(filePath);
-        LOG.debug("Output -> data {}", bytesToString(data));
+        log.debug("Output -> data {}", bytesToString(data));
         return new ByteArrayInputStream(data);
     }
 

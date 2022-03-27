@@ -115,3 +115,21 @@ databaseChangeLog:
                     referencedColumnNames: id
                     referencedTableName: patient_medical_coverage
                     validate: true
+                    
+    - changeSet:
+          id: update-type-field-administrative_discharge_date
+          author: flizalde
+          changes:
+            - modifyDataType:
+                columnName: administrative_discharge_date
+                newDataType: datetime
+                tableName: patient_discharge
+
+    - changeSet:
+          id: update-type-field-medical_discharge_date
+          author: flizalde
+          changes:
+            - modifyDataType:
+                columnName: medical_discharge_date
+                newDataType: datetime
+                tableName: patient_discharge

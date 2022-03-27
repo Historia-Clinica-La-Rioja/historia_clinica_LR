@@ -1,3 +1,4 @@
+<app-content width="full">
 <ng-template #noInfo>
     <app-no-data></app-no-data>
 </ng-template>
@@ -13,7 +14,7 @@
 	</div>
 
 	<div id="filter" *ngIf="hideFilterPanel">
-		<form id="filter-form" [formGroup]="formFilter" style="margin: 15px" fxLayout="column" (ngSubmit)="filter()">
+		<form id="filter-form" [formGroup]="formFilter" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="15px"  style="margin: 15px"  (ngSubmit)="filter()">
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
 				<mat-select name="status" formControlName="statusId">
@@ -59,7 +60,7 @@
 			</mat-form-field>
 
 
-			<div align="end">
+			<div class="filter-button">
 				<button mat-flat-button color="primary" type="submit">
 					<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.BUTTON_FILTER'"></span>
 				</button>
@@ -69,7 +70,7 @@
 	<mat-divider></mat-divider>
 
 	<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-		<div *ngIf="medicationsInfo?.length" class="header-filters" fxLayout="row" fxLayoutGap="15px">
+		<div *ngIf="medicationsInfo?.length" class="header-filters"  fxLayoutGap="15px">
 			<div class="checkbox-div-header" fxFlex="5%">
 				<mat-checkbox (change)="selectAllMedication($event.checked)"></mat-checkbox>
 			</div>
@@ -172,3 +173,4 @@
         </mat-list>
     </form>
 </app-summary-card>
+</app-content>

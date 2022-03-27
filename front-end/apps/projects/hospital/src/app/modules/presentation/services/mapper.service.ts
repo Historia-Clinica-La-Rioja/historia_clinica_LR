@@ -35,6 +35,7 @@ export class MapperService {
 
 	private static _toInternmentEpisodeSummary(internmentSummary: InternmentSummaryDto): InternmentEpisodeSummary {
 		const internmentEpisodeSummary = {
+			id: internmentSummary.id,
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,
 			sectorDescription: internmentSummary.bed.room.sector.description,
@@ -83,6 +84,7 @@ export class MapperService {
 			address: person.address,
 			birthDate: person.birthDate ? momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE) : '',
 			email: person.email,
+			phonePrefix: person.phonePrefix,
 			phoneNumber: person.phoneNumber,
 			medicalCoverageName: patient.medicalCoverageName,
 			medicalCoverageAffiliateNumber: patient.medicalCoverageAffiliateNumber

@@ -1,9 +1,9 @@
 package net.pladema.person.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.GenderDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.person.controller.dto.EducationLevelDto;
 import net.pladema.person.controller.dto.EthnicityDto;
-import net.pladema.person.controller.dto.GenderDto;
 import net.pladema.person.controller.dto.IdentificationTypeDto;
 import net.pladema.person.controller.dto.PersonOccupationDto;
 import net.pladema.person.controller.dto.SelfPerceivedGenderDto;

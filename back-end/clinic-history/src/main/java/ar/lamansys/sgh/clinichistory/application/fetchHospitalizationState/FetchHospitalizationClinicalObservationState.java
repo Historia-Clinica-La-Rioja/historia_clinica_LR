@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.Last2VitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.Last2RiskFactorsBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.HCHClinicalObservationRepository;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
@@ -31,16 +31,16 @@ public class FetchHospitalizationClinicalObservationState {
     }
 
 
-    public Last2VitalSignsBo getLast2VitalSignsGeneralState(Integer internmentEpisodeId) {
+    public Last2RiskFactorsBo getLast2RiskFactorsGeneralState(Integer internmentEpisodeId) {
         LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE_ID, internmentEpisodeId);
         MapClinicalObservationVo resultQuery = clinicalObservationRepository.getGeneralState(internmentEpisodeId);
-        Last2VitalSignsBo result = new Last2VitalSignsBo();
+        Last2RiskFactorsBo result = new Last2RiskFactorsBo();
         for (int i=0;i<2;i++){
             if (i==0) {
-                resultQuery.getLastNVitalSigns(i).ifPresent(result::setCurrent);
+                resultQuery.getLastNRiskFactors(i).ifPresent(result::setCurrent);
             }
             if (i==1) {
-                resultQuery.getLastNVitalSigns(i).ifPresent(result::setPrevious);
+                resultQuery.getLastNRiskFactors(i).ifPresent(result::setPrevious);
             }
         }
         LOG.debug(OUTPUT, result);

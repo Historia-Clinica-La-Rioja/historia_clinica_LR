@@ -1,4 +1,4 @@
-package net.pladema.sgx.repository.dialect;
+package ar.lamansys.sgx.shared.repositories.dialect;
 
 import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.dialect.function.SQLFunctionTemplate;

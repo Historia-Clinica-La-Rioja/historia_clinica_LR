@@ -12,6 +12,7 @@ import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.HistoricEmergencyEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -81,6 +83,29 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId) {
+		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		EmergencyCareEpisodeInProgressBo result = new EmergencyCareEpisodeInProgressBo(null, false);
+		Optional<Integer> resultQuery = emergencyCareEpisodeRepository.emergencyCareEpisodeInProgress(institutionId, patientId);
+		resultQuery.ifPresent(id -> {
+			result.setId(id);
+			result.setInProgress(true);
+		});
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public EmergencyCareBo getEpisodeSummary(Integer institutionId, Integer episodeId) {
+		LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
+		EmergencyCareVo resultQuery = emergencyCareEpisodeRepository.getEpisode(episodeId, institutionId).get();
+		EmergencyCareBo result = new EmergencyCareBo(resultQuery);
+		result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
     @Override
     public EmergencyCareBo get(Integer episodeId, Integer institutionId) {

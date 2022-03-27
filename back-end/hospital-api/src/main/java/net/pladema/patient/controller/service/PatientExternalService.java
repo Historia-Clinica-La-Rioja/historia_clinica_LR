@@ -1,6 +1,6 @@
 package net.pladema.patient.controller.service;
 
-import net.pladema.patient.controller.dto.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 
 import java.util.Map;

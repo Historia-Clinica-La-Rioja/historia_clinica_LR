@@ -1,11 +1,11 @@
 package net.pladema.emergencycare.triage.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareUserDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
@@ -29,7 +29,7 @@ public class TriageListDto implements Serializable {
 
     private DoctorsOfficeDto doctorsOffice;
 
-    private NewVitalSignsObservationDto vitalSigns;
+    private NewRiskFactorsObservationDto riskFactors;
 
     private TriageAppearanceDto appearance;
 

@@ -54,7 +54,7 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .setParameter("documentStatusId", DocumentStatus.FINAL)
-                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.COUNTER_REFERENCE))
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.COUNTER_REFERENCE, DocumentType.ODONTOLOGY))
                 .setParameter("allergyIntoleranceStatus", AllergyIntoleranceVerificationStatus.ERROR)
                 .getResultList();
         List<HCEAllergyVo> result = new ArrayList<>();
@@ -71,4 +71,45 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
         );
         return result;
     }
+
+	@Override
+	@Transactional(readOnly = true)
+	public HCEAllergyVo findHCEAllergy(Integer allergyId) {
+
+		String sqlString = "with temporal as (" +
+				"SELECT DISTINCT " +
+				"ai.id, " +
+				"ai.snomed_id, " +
+				"ai.status_id, " +
+				"ai.verification_status_id, " +
+				"ai.category_id, " +
+				"ai.criticality, " +
+				"ai.start_date, " +
+				"ai.updated_on, " +
+				"row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw " +
+				"FROM document d " +
+				"JOIN document_allergy_intolerance dai ON d.id = dai.document_id " +
+				"JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
+				"WHERE ai.id IN (:allergyId) "+
+				") " +
+				"SELECT t.id AS id, s.sctid AS sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
+				"FROM temporal t " +
+				"JOIN snomed s ON t.snomed_id = s.id " +
+				"WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus " +
+				"ORDER BY t.updated_on desc ";
+
+		Object[] queryResult =  (Object[]) entityManager.createNativeQuery(sqlString)
+				.setParameter("allergyId", allergyId)
+				.setParameter("allergyIntoleranceStatus", AllergyIntoleranceVerificationStatus.ERROR)
+				.getSingleResult();
+
+		return new HCEAllergyVo(
+						(Integer) queryResult[0],
+						new Snomed((String) queryResult[1], (String) queryResult[2], null, null),
+						(String) queryResult[3],
+						(String) queryResult[4],
+						(Short) queryResult[5],
+						(Short) queryResult[6],
+				queryResult[7] != null ? ((Date) queryResult[7]).toLocalDate() : null);
+	}
 }

@@ -2,12 +2,13 @@ package net.pladema.establishment.controller.dto;
 
 import java.io.Serializable;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 @Getter

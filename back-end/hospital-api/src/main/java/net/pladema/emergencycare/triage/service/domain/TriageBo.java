@@ -56,7 +56,7 @@ public class TriageBo {
 
     private LocalDateTime createdOn;
 
-    private List<Integer> vitalSignIds;
+    private List<Integer> riskFactorIds;
 
     public TriageBo(TriageVo triageVo) {
         this.id = triageVo.getId();
@@ -73,7 +73,7 @@ public class TriageBo {
         this.stridor = triageVo.getStridor();
         this.perfusionId = triageVo.getPerfusionId();
         this.createdOn = triageVo.getCreatedOn();
-        this.vitalSignIds = triageVo.getVitalSignIds();
+        this.riskFactorIds = triageVo.getRiskFactorIds();
     }
 
     public boolean isAdultGynecological() {

@@ -15,12 +15,15 @@ import { SearchComponent } from './routes/search/search.component';
 import { PacientesTableComponent } from './component/pacientes-table/pacientes-table.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
+import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
+import { CardProfessionsComponent } from './component/card-professions/card-professions.component';
 // dialogs
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { EditProfessionsComponent } from './dialogs/edit-professions/edit-professions.component';
 import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
 import { CardRolesComponent } from './component/card-roles/card-roles.component';
+import { AssignedAppointmentComponent } from './component/assigned-appointment/assigned-appointment.component';
 
 @NgModule({
 	declarations: [
@@ -35,6 +38,7 @@ import { CardRolesComponent } from './component/card-roles/card-roles.component'
 		PacientesTableComponent,
 		SearchCreateComponent,
 		ViewPatientDetailComponent,
+		AssignedAppointmentsComponent,
 		// dialogs
 		EditPatientComponent,
 		ScanPatientComponent,
@@ -42,7 +46,9 @@ import { CardRolesComponent } from './component/card-roles/card-roles.component'
 		ReportsComponent,
 		EditRolesComponent,
 		CardRolesComponent,
+		CardProfessionsComponent,
 		ScanPatientComponent,
+		AssignedAppointmentComponent,
 	],
 	imports: [
 		FormsModule,

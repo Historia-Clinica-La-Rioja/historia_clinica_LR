@@ -3,6 +3,7 @@ package net.pladema.emergencycare.controller.mapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.emergencycare.controller.dto.*;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
@@ -110,6 +111,9 @@ public interface EmergencyCareMapper {
     @Mapping(target = "firstName", source = "personDto.firstName")
     @Mapping(target = "lastName", source = "personDto.lastName")
     EmergencyCareUserDto toEmergencyCareUserDto(UserDto userDto);
+
+	@Named("toEmergencyCareEpisodeInProgressDto")
+	EmergencyCareEpisodeInProgressDto toEmergencyCareEpisodeInProgressDto(EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressBo);
 
 
 }

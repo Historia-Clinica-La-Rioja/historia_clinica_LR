@@ -119,6 +119,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.federar.claims.role |  | Project Manager | **Obligatorio** | Especialidad del Usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.claims.ident  |  | 0001 | **Obligatorio** | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
 | ws.federar.auth.signKey |   | federar ***[TESTING]*** | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
+| ws.federar.requestTimeOut |   | 5000 | Opcional | Determina el tiempo que se esperará la respuesta del lado del servicio al ejecutar un request | v1.33.1  |
 
 ### Snowstorm
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
@@ -131,6 +132,7 @@ Este documento detalla las propiedades configurables del sistema.
 | ws.snowstorm.params.termActive |   | true | Único |  Parametro para consulta a servicio Conceptos que indica si el termino a buscar debe estar activo  | v1.2.0  |
 | ws.snowstorm.auth.language |   | es-AR;q=0.8,en-GB;q=0.6 | Único |  Header que indica el lenguaje de los resultados  | v1.2.0  |
 | ws.snowstorm.url.concepts |   | /MAIN/concepts | Único |  URL relativa para consumir el servicio de Conceptos a buscar  | v1.2.0  |
+| ws.snowstorm.searchLocally.enabled |   | false | Opcional |  Determina si las búsquedas se hacen de forma local o consultando al servicio de Snowstorm  | v1.33.0  |
 
 #### Snomed Ecls
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
@@ -180,6 +182,7 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.oauth.url.issuer |	| - | Opcional |	URL del issuer para obtener los *access tokens* de OAuth | v1.32.0 |
 | ws.oauth.realm  |  | - | Opcional | Nombre del *realm* donde se van a estar almacenando los usuarios del sistema | v1.32.0  |
 | ws.oauth.client-id  |  | - | Opcional | *Client-id* del cliente público en el *realm* | v1.32.0  |
+| ws.oauth.token-expiration  |  | 1800 | Opcional | Tiempo de expiración en segundos de los *access tokens* | v1.34.0  |
 | ws.oauth.user-admin.username  |  | - | Opcional | Username del usuario con rol **realm-admin** en el *realm* | v1.32.0  |
 | ws.oauth.user-admin.password  |  | - | Opcional | Contraseña del usuario con rol **realm-admin** en el *realm* | v1.32.0  |
 | ws.oauth.url.userinfo  |  | /auth/realms/REALM_NAME/protocol/openid-connect/userinfo | Opcional | Ruta relativa de obtención de datos del usuario. No debería cambiar | v1.32.0  |
@@ -221,6 +224,14 @@ Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
 | scheduledjobs.updateethnicities.dayofmonth  |  | 15 | Opcional  | Configura el dia del mes del cron usado para la actualización de las etnias.      | v1.15.0 |
 | scheduledjobs.updateethnicities.month  |   | * | Opcional | Configura el mes del cron usado para la actualización de las etnias.              | v1.15.0 |
 | scheduledjobs.updateethnicities.dayofweek  |  | * | Opcional  | Configura el dia de la semana del cron usado para la actualización de las etnias. | v1.15.0 |
+| scheduledjobs.updatesnomedgroup.enabled  |   | false  | Opcional  | Des/habilitar la actualización de grupos de conceptos Snomed | v1.32.0 |
+| scheduledjobs.updatesnomedgroup.eclkeys  |   | -  | Opcional  | Claves de los grupos de conceptos Snomed, separadas por comas (ej. _BLOOD_TYPE,FAMILY_RECORD_) | v1.32.0 |
+| scheduledjobs.updatesnomedgroup.seconds  |   | - | Opcional  |  Configura los segundos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedgroup.minutes  |   | - | Opcional  |  Configura los minutos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedgroup.hours  |   | - | Opcional  |  Configura las horas del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedgroup.dayofmonth  |  | - | Opcional  | Configura el día del mes del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedgroup.month  |   | - | Opcional | Configura el mes del cron usado para la actualización de grupos de conceptos Snomed.  | v1.32.0 |
+| scheduledjobs.updatesnomedgroup.dayofweek  |  | - | Opcional  |  Configura el día de la semana del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
 
 
 ## Monitoring

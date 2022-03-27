@@ -29,8 +29,10 @@
 								{{bodyTemperature.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_body_temperature" type="button" mat-button *ngIf="pediatricForm.value.appearance.bodyTemperatureId" matSuffix
-							color="warn" mat-icon-button (click)="clear(pediatricForm.controls.appearance, 'bodyTemperatureId'); $event.stopPropagation()">
+						<button id="clear_body_temperature" type="button" mat-button
+							*ngIf="pediatricForm.value.appearance.bodyTemperatureId" matSuffix color="warn"
+							mat-icon-button
+							(click)="clear(pediatricForm.controls.appearance, 'bodyTemperatureId'); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -57,8 +59,10 @@
 								{{muscleHypertonya.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_body_temperature" type="button" mat-button *ngIf="pediatricForm.value.appearance.muscleHypertoniaId" matSuffix
-							color="warn" mat-icon-button (click)="clear(pediatricForm.controls.appearance, 'muscleHypertoniaId'); $event.stopPropagation()">
+						<button id="clear_body_temperature" type="button" mat-button
+							*ngIf="pediatricForm.value.appearance.muscleHypertoniaId" matSuffix color="warn"
+							mat-icon-button
+							(click)="clear(pediatricForm.controls.appearance, 'muscleHypertoniaId'); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -70,7 +74,7 @@
 				<h4 [translate]="'guardia.triage.BREATH'"></h4>
 				<div fxLayout="column" formGroupName="breathing">
 					<div fxLayout="column" formGroupName="respiratoryRate" class="mat-form-field-wrapper">
-						<mat-form-field class="simple-form-field vital-sign" appearance="outline">
+						<mat-form-field class="simple-form-field risk-factor" appearance="outline">
 							<mat-label [translate]="'guardia.triage.RESPIRATORY_RATE'"></mat-label>
 							<input matInput id="respiratoryRate" formControlName="value"
 								placeholder="{{'guardia.triage.RESPIRATORY_RATE' | translate }}" type="number">
@@ -81,7 +85,7 @@
 						</mat-form-field>
 						<app-effective-time
 							[effectiveTime]="pediatricForm.value.breathing.respiratoryRate.effectiveTime"
-							(update)="setVitalSignEffectiveTime($event, pediatricForm.controls.breathing,'respiratoryRate')">
+							(update)="setRiskFactorEffectiveTime($event, pediatricForm.controls.breathing,'respiratoryRate')">
 						</app-effective-time>
 					</div>
 
@@ -94,8 +98,10 @@
 								{{respiratoryRetraction.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_respiratory_retraction" type="button" mat-button *ngIf="pediatricForm.value.breathing.respiratoryRetractionId" matSuffix
-							color="warn" mat-icon-button (click)="clear(pediatricForm.controls.breathing, 'respiratoryRetractionId'); $event.stopPropagation()">
+						<button id="clear_respiratory_retraction" type="button" mat-button
+							*ngIf="pediatricForm.value.breathing.respiratoryRetractionId" matSuffix color="warn"
+							mat-icon-button
+							(click)="clear(pediatricForm.controls.breathing, 'respiratoryRetractionId'); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -113,7 +119,7 @@
 					</div>
 
 					<div fxLayout="column" formGroupName="bloodOxygenSaturation">
-						<mat-form-field class="simple-form-field vital-sign" appearance="outline">
+						<mat-form-field class="simple-form-field risk-factor" appearance="outline">
 							<mat-label [translate]="'guardia.triage.OXYGEN_SATURATION'"></mat-label>
 							<input id="bloodOxygenSaturation" formControlName="value" placeholder="00" type="number"
 								matInput>
@@ -124,7 +130,7 @@
 						</mat-form-field>
 						<app-effective-time
 							[effectiveTime]="pediatricForm.value.breathing.bloodOxygenSaturation.effectiveTime"
-							(update)="setVitalSignEffectiveTime($event, pediatricForm.controls.breathing,'bloodOxygenSaturation')">
+							(update)="setRiskFactorEffectiveTime($event, pediatricForm.controls.breathing,'bloodOxygenSaturation')">
 						</app-effective-time>
 					</div>
 				</div>
@@ -141,14 +147,15 @@
 								{{perfusion.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_perfusion" type="button" mat-button *ngIf="pediatricForm.value.circulation.perfusionId" matSuffix
-							color="warn" mat-icon-button (click)="clear(pediatricForm.controls.circulation, 'perfusionId'); $event.stopPropagation()">
+						<button id="clear_perfusion" type="button" mat-button
+							*ngIf="pediatricForm.value.circulation.perfusionId" matSuffix color="warn" mat-icon-button
+							(click)="clear(pediatricForm.controls.circulation, 'perfusionId'); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
 
 					<div fxLayout="column" formGroupName="heartRate">
-						<mat-form-field class="simple-form-field vital-sign" appearance="outline">
+						<mat-form-field class="simple-form-field risk-factor" appearance="outline">
 							<mat-label [translate]="'guardia.triage.HEART_RATE'"></mat-label>
 							<input matInput id="heartRate" formControlName="value"
 								placeholder="{{'guardia.triage.HEART_RATE' | translate }}" type="number">
@@ -158,7 +165,7 @@
 							</mat-error>
 						</mat-form-field>
 						<app-effective-time [effectiveTime]="pediatricForm.value.circulation.heartRate.effectiveTime"
-							(update)="setVitalSignEffectiveTime($event, pediatricForm.controls.circulation,'heartRate')">
+							(update)="setRiskFactorEffectiveTime($event, pediatricForm.controls.circulation,'heartRate')">
 						</app-effective-time>
 					</div>
 				</div>

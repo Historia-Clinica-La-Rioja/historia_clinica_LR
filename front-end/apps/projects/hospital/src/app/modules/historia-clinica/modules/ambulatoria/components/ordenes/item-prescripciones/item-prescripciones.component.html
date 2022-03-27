@@ -1,7 +1,9 @@
 <div fxLayout="row" fxLayoutAlign="space-between start">
-    <h3 mat-line class="primary bold mat-subheading-2 element-margin uppercase">
-        {{prescriptionItemData.prescriptionStatus}}
-    </h3>
+	<p [ngClass]="{ 'active':prescriptionItemData.prescriptionStatus === medication_status.ACTIVE.description || prescriptionItemData.prescriptionStatus === STUDY_STATUS.FINAL.description,
+					'suspended':prescriptionItemData.prescriptionStatus === medication_status.SUSPENDED.description || prescriptionItemData.prescriptionStatus === STUDY_STATUS.REGISTERED.description,
+					'stopped':prescriptionItemData.prescriptionStatus === medication_status.STOPPED.description }" mat-line>
+		<strong style="margin: 10px" > {{prescriptionItemData.prescriptionStatus |translate | uppercase}}</strong>
+	</p>
 
     <div>
         <ng-content select="[actions]"></ng-content>

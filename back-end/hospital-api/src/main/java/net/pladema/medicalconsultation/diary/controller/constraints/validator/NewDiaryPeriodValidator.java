@@ -21,7 +21,7 @@ public class NewDiaryPeriodValidator extends AbstractDiaryPeriodValidator<NewDia
 	@Override
 	protected List<Integer> getOverlappingDiary(DiaryADto diary,
 			LocalDate startDate, LocalDate endDate) {
-		return diaryService.getAllOverlappingDiaryByProfessional(diary.getHealthcareProfessionalId(), diary.getDoctorsOfficeId(), startDate, endDate, Optional.empty());
+		return diaryService.getAllOverlappingDiaryByProfessional(diary.getHealthcareProfessionalId(), diary.getDoctorsOfficeId(), startDate, endDate, diary.getAppointmentDuration(), Optional.empty());
 	}
 
 }

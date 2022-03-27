@@ -39,7 +39,7 @@ public class CreateOutpatientDto {
 
     @Valid
     @Nullable
-    private OutpatientVitalSignDto vitalSigns;
+    private OutpatientRiskFactorDto riskFactors;
 
     @Valid
     @Nullable

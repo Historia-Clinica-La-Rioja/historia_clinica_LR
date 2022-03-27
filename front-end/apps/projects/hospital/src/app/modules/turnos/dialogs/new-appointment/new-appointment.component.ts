@@ -85,6 +85,7 @@ export class NewAppointmentComponent implements OnInit {
 
 		this.appointmentInfoForm = this.formBuilder.group({
 			patientMedicalCoverage: [null],
+			phonePrefix: [null, [Validators.maxLength(10)]],
 			phoneNumber: [null, [Validators.maxLength(20)]]
 		});
 
@@ -107,6 +108,7 @@ export class NewAppointmentComponent implements OnInit {
 				updateControlValidator(this.formSearch, 'identifNumber', [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
 				updateControlValidator(this.formSearch, 'gender', [Validators.required]);
 			});
+		this.appointmentInfoForm.markAllAsTouched();
 	}
 
 	search(): void {
@@ -138,12 +140,27 @@ export class NewAppointmentComponent implements OnInit {
 		}
 	}
 
+	updatePhoneValidators(){
+		if (this.appointmentInfoForm.controls.phoneNumber.value||this.appointmentInfoForm.controls.phonePrefix.value) {
+			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required,Validators.maxLength(20)]);
+			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required,Validators.maxLength(10)]);
+		} else {
+			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', []);
+			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', []);
+		}
+	}
+
 	private patientSearch(patientId: number) {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
 				this.patient = reducedPatientDto;
+				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
+				if(reducedPatientDto.personalDataDto.phoneNumber){
+					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required,Validators.maxLength(20)]);
+					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required,Validators.maxLength(10)]);
+				}
 				this.setMedicalCoverages();
 			}, _ => {
 				this.patientNotFound();
@@ -186,6 +203,7 @@ export class NewAppointmentComponent implements OnInit {
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
+			phonePrefix: this.appointmentInfoForm.controls.phonePrefix.value,
 			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
 		this.appointmentFacade.addAppointment(newAppointment).subscribe(_ => {

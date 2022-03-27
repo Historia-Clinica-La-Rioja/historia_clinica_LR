@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -13,7 +14,6 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
@@ -90,7 +90,7 @@ public class DailyAppointmentController {
         List<AttentionTypeReportBo> dailyAppointments = dailyAppointmentReport.execute(institutionId, diaryId, consultedDate);
         List<AttentionTypeReportDto> attentionTypeReportDtos = createPatientAssociatedReportList(dailyAppointments);
         Integer healthCareProfessionalId = diaryService.getDiary(diaryId).map(DiaryBo::getHealthcareProfessionalId).orElse(null);
-        ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalById(healthCareProfessionalId);
+        ProfessionalDto professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(healthCareProfessionalId);
         Map<String, Object> context = createContext(professionalDto, attentionTypeReportDtos, consultedDate, now);
         String outputFileName = createOutputFileName(professionalDto, consultedDate);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName);

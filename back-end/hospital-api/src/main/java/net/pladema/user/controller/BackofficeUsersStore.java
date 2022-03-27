@@ -19,6 +19,8 @@ import net.pladema.user.repository.UserPersonRepository;
 import net.pladema.user.repository.VHospitalUserRepository;
 import net.pladema.user.repository.entity.UserPerson;
 import net.pladema.user.repository.entity.VHospitalUser;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -52,6 +54,9 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	private final UserExternalService userExternalService;
 
 	private static final UserRole rootRole = new UserRole(null, ERole.ROOT.getId());
+
+	@Value("${test.stress.disable.validation:false}")
+	private boolean disableValidation;
 
 	public BackofficeUsersStore(UserRepository userRepository,
 								VHospitalUserRepository vHospitalUserRepository, UserRoleRepository userRoleRepository,
@@ -165,7 +170,8 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	}
 
 	private BackofficeUserDto create(BackofficeUserDto dto) {
-		checkIfUserAlreadyExists(dto);
+		if (!disableValidation)
+			checkIfUserAlreadyExists(dto);
 		User modelUser = userDtoMapper.toModel(dto);
 		modelUser.setEnable(true);
 

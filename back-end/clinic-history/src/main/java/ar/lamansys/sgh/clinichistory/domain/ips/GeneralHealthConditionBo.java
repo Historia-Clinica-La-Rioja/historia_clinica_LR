@@ -86,7 +86,7 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setVerificationId(healthConditionVo.getVerificationId());
         result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
-        result.setDate(healthConditionVo.getStartDate());
+        result.setStartDate(healthConditionVo.getStartDate());
         result.setMain(healthConditionVo.isMain());
         LOG.debug(OUTPUT, result);
         return result;

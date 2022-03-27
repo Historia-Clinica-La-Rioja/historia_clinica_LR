@@ -71,6 +71,20 @@ export function beforeTimeValidation(moment: Moment) {
 	};
 }
 
+export function beforeTimeDateValidation(date: string) {
+	return (control: FormControl): ValidationErrors | null => {
+		const time: string = control.value;
+		if (isValidTime(time)) {
+			if (time < date) {
+				return {
+					beforeTime: true
+				};
+			}
+		}
+		return null;
+	};
+}
+
 function isValidTime(time: string) {
 	return time.match('([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}');
 }

@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.domain.document;
 import ar.lamansys.sgh.clinichistory.domain.ips.*;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +57,7 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-    default VitalSignBo getVitalSigns() {
+    default RiskFactorBo getRiskFactors() {
         return null;
     }
 

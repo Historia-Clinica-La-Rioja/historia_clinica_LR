@@ -38,11 +38,11 @@ public class AnthropometricDataBo extends SelfValidating<AnthropometricDataBo> {
             return null;
         if (height.getValue().isEmpty() || weight.getValue().isEmpty())
             return null;
-        try {
-            Double bmi = Float.parseFloat(weight.getValue()) / Math.pow((Float.parseFloat(height.getValue())/100),2);
-            return new ClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime());
-        } catch (Exception e) {
-            return null;
-        }
+		Float convertedHeight = Float.parseFloat(height.getValue());
+		if (convertedHeight == 0f){
+			return new ClinicalObservationBo(null, "-", weight.getEffectiveTime());
+		}
+        Double bmi = Float.parseFloat(weight.getValue()) / Math.pow((convertedHeight/100),2);
+        return new ClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime());
     }
 }

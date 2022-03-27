@@ -1,0 +1,9 @@
+::ng-deep .cdk-overlay-pane {
+	app-diagnosis-clinical-evaluation-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}

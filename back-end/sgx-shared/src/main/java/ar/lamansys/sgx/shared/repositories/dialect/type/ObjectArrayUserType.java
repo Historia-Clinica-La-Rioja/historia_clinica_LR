@@ -1,4 +1,4 @@
-package net.pladema.sgx.repository.dialect.type;
+package ar.lamansys.sgx.shared.repositories.dialect.type;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;

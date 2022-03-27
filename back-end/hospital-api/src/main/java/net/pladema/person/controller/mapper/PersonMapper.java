@@ -1,5 +1,6 @@
 package net.pladema.person.controller.mapper;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.repository.entity.IdentificationType;
 import org.mapstruct.Mapper;
@@ -15,7 +16,6 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.APersonDto;
 import net.pladema.person.controller.dto.BMPersonDto;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
@@ -53,7 +53,7 @@ public interface PersonMapper {
     @Mapping(target = "id", source = "person.id")
     @Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
     @Mapping(target = "identificationType", source = "identificationType.description")
-    BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, IdentificationType identificationType);
+	BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, IdentificationType identificationType);
 
 
     @Named("fromPersonalInformation")
@@ -72,7 +72,8 @@ public interface PersonMapper {
     @Mapping(target = "birthDate", source = "person.birthDate")
     @Mapping(target = "cuil", source = "personExtended.cuil") 
     @Mapping(target = "mothersLastName", source = "personExtended.mothersLastName")
-    @Mapping(target = "phoneNumber", source = "personExtended.phoneNumber")
+	@Mapping(target = "phonePrefix", source = "personExtended.phonePrefix")
+	@Mapping(target = "phoneNumber", source = "personExtended.phoneNumber")
     @Mapping(target = "email", source = "personExtended.email")
     @Mapping(target = "religion", source = "personExtended.religion")
     @Mapping(target = "ethnicityId", source = "personExtended.ethnicityId")
@@ -88,8 +89,9 @@ public interface PersonMapper {
     @Mapping(target = "quarter", source = "address.quarter")
     @Mapping(target = "postcode", source = "address.postcode")
     @Mapping(target = "cityId", source = "city.id")
-    @Mapping(target = "province", source = "province", qualifiedByName = "fromProvince")
-    @Mapping(target = "department", source = "department", qualifiedByName = "fromDepartment")
+    @Mapping(target = "provinceId", source = "address.provinceId")
+    @Mapping(target = "departmentId", source = "address.departmentId")
+	@Mapping(target = "countryId", source = "address.countryId")
     BMPersonDto fromCompletePersonVo(CompletePersonVo completePersonVo);
 
     @Named("basicPersonalDataDto")

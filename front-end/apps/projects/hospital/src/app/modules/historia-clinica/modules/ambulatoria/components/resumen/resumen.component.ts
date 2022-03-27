@@ -1,22 +1,22 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import {
 	AllergyIntoleranceDto,
 	ConditionDto,
 	HCEAllergyDto,
 	HCEAnthropometricDataDto,
-	HCELast2VitalSignsDto,
+	HCELast2RiskFactorsDto,
 	HCEMedicationDto,
 	HCEPersonalHistoryDto,
 	MedicationInteroperabilityDto,
 	OutpatientFamilyHistoryDto,
 	PatientSummaryDto
 } from '@api-rest/api-model';
-import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs';
-import {ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES} from '../../../../constants/summaries';
-import {AmbulatoriaSummaryFacadeService} from '../../services/ambulatoria-summary-facade.service';
-import {TableModel} from '@presentation/components/table/table.component';
-import {SnackBarService} from '@presentation/services/snack-bar.service';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import { TableModel } from '@presentation/components/table/table.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-resumen',
@@ -30,7 +30,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 	public familyHistories$: Observable<HCEPersonalHistoryDto[]>;
 	public personalHistory$: Observable<HCEPersonalHistoryDto[]>;
 	public medications$: Observable<HCEMedicationDto[]>;
-	public vitalSigns$: Observable<HCELast2VitalSignsDto>;
+	public riskFactors$: Observable<HCELast2RiskFactorsDto>;
 	public anthropometricData$: Observable<HCEAnthropometricDataDto>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
@@ -45,7 +45,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 		private route: ActivatedRoute,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		private readonly snackBarService: SnackBarService
-		) {
+	) {
 	}
 
 	ngOnInit(): void {
@@ -68,7 +68,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 		this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
 		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
 		this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
-		this.vitalSigns$ = this.ambulatoriaSummaryFacadeService.vitalSigns$;
+		this.riskFactors$ = this.ambulatoriaSummaryFacadeService.riskFactors$;
 		this.anthropometricData$ = this.ambulatoriaSummaryFacadeService.anthropometricData$;
 	}
 
@@ -126,7 +126,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 					text: (row) => row.status || 'No informado'
 
 				}
-				],
+			],
 			data
 		};
 	}

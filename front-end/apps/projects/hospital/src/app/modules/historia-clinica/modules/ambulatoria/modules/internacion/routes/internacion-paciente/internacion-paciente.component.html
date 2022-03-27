@@ -1,0 +1,90 @@
+<app-content width="full">
+	<section>
+		<h2 class="page-title" [translate]="'internaciones.internacion-paciente.TITLE'"></h2>
+		<div *ngIf="(internmentEpisodeSummary$ | async) as internmentEpisodeSummary" fxLayout="column"
+			fxLayoutGap="20px">
+			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<div *ngIf="showPatientCard">
+						<ng-container
+							*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto"></app-patient-card>
+						</ng-container>
+					</div>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-factores-de-riesgo-summary [internmentEpisodeId]="internmentEpisodeId"
+							[editable]="!epicrisisDoc?.confirmed" [riskFactors$]="internmentSummaryFacadeService.riskFactors$">
+						</app-factores-de-riesgo-summary>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"
+							[anthropometricData$]="internmentSummaryFacadeService.heightAndWeightData$" [editable]="!epicrisisDoc?.confirmed" [hideBloodType]="true">
+						</app-antropometricos-summary>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO','ENFERMERO','PROFESIONAL_DE_SALUD','ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-internacion-antecedentes-personales-summary [personalHistory]="internmentSummaryFacadeService.personalHistory$ | async"
+							[personalHistoriesHeader]="personalHistoriesHeader">
+						</app-internacion-antecedentes-personales-summary>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-antecedentes-familiares-summary [familyHistories]="internmentSummaryFacadeService.familyHistories$ | async"
+							[familyHistoriesHeader]="familyHistoriesHeader">
+						</app-antecedentes-familiares-summary>
+					</ng-container>
+				</div>
+				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+					<ng-container
+						*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-summary-card id="internment_summary_card" [header]="internacionSummary"
+							[canEdit]="['ESPECIALISTA_MEDICO']"
+							[editable]="!hasMedicalDischarge && canLoadProbableDischargeDate"
+							(openInNew)="openDialog()">
+							<mat-card-content>
+								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary"
+									[canLoadProbableDischargeDate]="canLoadProbableDischargeDate" [patientId]="patientId" [hasEpicrisis]="epicrisisDoc?.confirmed" [showDischarge]="showDischarge">
+								</app-internment-episode-summary>
+							</mat-card-content>
+						</app-summary-card>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
+							[editable]="!epicrisisDoc" [mainDiagnosis]="internmentSummaryFacadeService.mainDiagnosis$ | async">
+						</app-main-diagnosis-summary>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
+							[editable]="!epicrisisDoc && editDiagnosisSummary$" [diagnosis]="internmentSummaryFacadeService.diagnosis$ | async">
+						</app-diagnosis-summary>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-alergias-summary [internmentEpisodeId]="internmentEpisodeId"
+											  [editable]="!epicrisisDoc?.confirmed" [allergies]="internmentSummaryFacadeService.allergies$ | async"
+											  [patientId]="patientId">
+						</app-alergias-summary>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-medicacion-summary [medicationsHeader]="medicationsHeader" [medications]="internmentSummaryFacadeService.medications$ | async"></app-medicacion-summary>
+					</ng-container>
+					<ng-container
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+						<app-vacunas-summary [internmentEpisodeId]="internmentEpisodeId"
+							[immunizations]="internmentSummaryFacadeService.immunizations$ | async" [editable]="!epicrisisDoc?.confirmed">
+						</app-vacunas-summary>
+					</ng-container>
+				</div>
+			</div>
+			<ng-container
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<app-documents-summary [internmentEpisodeId]="internmentEpisodeId" [clinicalEvaluation]="internmentSummaryFacadeService.clinicalEvaluation$ | async"></app-documents-summary>
+			</ng-container>
+		</div>
+	</section>
+</app-content>

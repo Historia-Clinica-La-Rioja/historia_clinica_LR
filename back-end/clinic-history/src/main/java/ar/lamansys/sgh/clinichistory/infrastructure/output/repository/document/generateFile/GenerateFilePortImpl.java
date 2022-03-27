@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +52,8 @@ public class GenerateFilePortImpl implements GenerateFilePort {
     public Optional<DocumentFile> save(OnGenerateDocumentEvent event)  {
         Map<String,Object> contextMap = auditableContextBuilder.buildContext(event.getDocumentBo(), event.getPatientId());
 
+		formatStringDates(contextMap);
+
         String path = streamFile.buildPathAsString(event.getRelativeDirectory());
         String realFileName = event.getUuid();
         String fictitiousFileName = event.buildDownloadName();
@@ -86,5 +91,12 @@ public class GenerateFilePortImpl implements GenerateFilePort {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	private void formatStringDates(Map<String, Object> context){
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		ArrayList<ImmunizationInfoDto> vaccinesData = (ArrayList<ImmunizationInfoDto>) context.get("nonBillableImmunizations");
+		vaccinesData.forEach(immunizationInfoDto -> immunizationInfoDto.setAdministrationDate(LocalDate.parse(immunizationInfoDto.getAdministrationDate()).format(dateTimeFormatter)));
+	}
 
 }
