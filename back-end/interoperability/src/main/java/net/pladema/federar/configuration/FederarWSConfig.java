@@ -42,6 +42,10 @@ public class FederarWSConfig extends WSConfig {
 	private static final String AUTHENTICATION = "/bus-auth/auth";
 	private static final String AUTHORIZATION = "/bus-auth/tokeninfo";
 
+	private static final long DEFAULT_REQUEST_TIME_OUT = 5000L;
+
+	private long requestTimeOut = DEFAULT_REQUEST_TIME_OUT;
+
 
 	public FederarWSConfig(@Value("${ws.federar.url.base}") String baseUrl) {
 		super(baseUrl, false);
@@ -101,5 +105,9 @@ public class FederarWSConfig extends WSConfig {
 
 	public String getPatientService() {
 		return PATIENT_SERVICE;
+	}
+
+	public Long getRequestTimeOut() {
+		return requestTimeOut;
 	}
 }

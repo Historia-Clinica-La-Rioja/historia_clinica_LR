@@ -6,7 +6,7 @@ public class RestTemplateAuth<I extends ClientHttpRequestInterceptor> extends Re
 
 	public RestTemplateAuth(I authInterceptor) throws Exception {
 		super();
-		this.getInterceptors().add(authInterceptor);
+		this.getInterceptors().add(0, authInterceptor);
 	}
 
 	public RestTemplateAuth(I authInterceptor, boolean trustInvalidCertificate) throws Exception {

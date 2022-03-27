@@ -5,6 +5,7 @@ import { AnthropometricDataDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
 import { Observable } from 'rxjs';
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
 	selector: 'app-antropometricos-summary',
@@ -14,7 +15,7 @@ import { Observable } from 'rxjs';
 export class AntropometricosSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
-	@Input() anthropometricData$: Observable<AnthropometricDataDto>;
+	@Input() anthropometricData$: Observable<any>;
 	@Input() editable = false;
 	@Input() hideBloodType = false;
 
@@ -31,7 +32,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 	};
 
 	constructor(
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) { }
 
 	ngOnInit(): void {
@@ -43,7 +45,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	private updateAnthropometricData() {
 		this.anthropometricData$.subscribe(
-			(anthropometricData: AnthropometricDataDto) => {
+			anthropometricData => {
 				if (anthropometricData) {
 					if (anthropometricData.bmi?.value) {
 						anthropometricData.bmi.value = this.truncateIfNecessary(anthropometricData.bmi?.value);
@@ -74,9 +76,10 @@ export class AntropometricosSummaryComponent implements OnInit {
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(submitted => {
-			if (submitted) {
+		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate) {
 				this.updateAnthropometricData();
+				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight, bloodType: fieldsToUpdate.bloodType });
 			}
 		}
 		);
@@ -96,6 +99,11 @@ export class AntropometricosSummaryComponent implements OnInit {
 		}
 
 		return floatValue;
+	}
+
+	public getIdentificator(name: DetailBox): string {
+		return name.description.split(' (')[0]
+			.split(" ").join('-').toLowerCase();
 	}
 
 }

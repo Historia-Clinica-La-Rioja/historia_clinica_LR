@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PatientRepositoryCustom {
 
-    List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter, Integer resultSize, boolean filterByNameSelfDetermination);
+    List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter, Integer resultSize);
 
-    Long getCountByOptionalFilter(PatientSearchFilter searchFilter, boolean filterByNameSelfDetermination);
+    Integer getCountByOptionalFilter(PatientSearchFilter searchFilter);
 }

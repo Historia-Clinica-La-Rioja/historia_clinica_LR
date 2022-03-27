@@ -1,21 +1,27 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Moment } from 'moment';
-import { DocumentSearchFilterDto, EDocumentSearch, DocumentSearchDto, DocumentHistoricDto } from '@api-rest/api-model';
+import {
+	DocumentSearchFilterDto,
+	EDocumentSearch,
+	DocumentSearchDto,
+	DocumentHistoricDto,
+} from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
-import { EvolutionNotesListenerService } from '../../modules/internacion/services/evolution-notes-listener.service';
 import { hasError } from '@core/utils/form.utils';
-import {pairwise, startWith} from 'rxjs/operators';
+import { pairwise, startWith } from 'rxjs/operators';
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
 	selector: 'app-documents-summary',
 	templateUrl: './documents-summary.component.html',
 	styleUrls: ['./documents-summary.component.scss']
 })
-export class DocumentsSummaryComponent implements OnInit {
+export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	@Input() internmentEpisodeId: number;
+	@Input() clinicalEvaluation: DocumentHistoricDto;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentsToShow: DocumentSearchDto[];
@@ -28,17 +34,9 @@ export class DocumentsSummaryComponent implements OnInit {
 	public hasError = hasError;
 	constructor(
 		private formBuilder: FormBuilder,
-		private evolutionNotesListenerService: EvolutionNotesListenerService,
+		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private changeDetectorRef: ChangeDetectorRef,
 	) {
-		evolutionNotesListenerService.history$
-			.subscribe(documents => {
-				this.documentHistoric = documents;
-				this.updateDocuments();
-				this.activeDocument = undefined;
-			});
-	}
-
-	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			text: [''],
 			date: [null],
@@ -48,7 +46,25 @@ export class DocumentsSummaryComponent implements OnInit {
 			validators: this.filterFieldIsRequiredWhenInputIsSet()
 		});
 
-		this.evolutionNotesListenerService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
+		this.documentHistoric = this.clinicalEvaluation;
+		if (this.documentHistoric?.documents.length) {
+			this.updateDocuments();
+		}
+		this.activeDocument = undefined;
+
+	}
+
+	ngOnChanges() {
+		this.documentHistoric = this.clinicalEvaluation;
+		if (this.documentHistoric?.documents.length) {
+			this.updateDocuments();
+		}
+		this.activeDocument = undefined;
+	}
+
+	ngOnInit(): void {
+
+		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 
 		this.setInputResetBehaviour();
 	}
@@ -57,7 +73,7 @@ export class DocumentsSummaryComponent implements OnInit {
 		if (this.form.valid) {
 			this.searchTriggered = true;
 			const searchFilter: DocumentSearchFilterDto = this.buildSearchFilter();
-			this.evolutionNotesListenerService.setSerchFilter(searchFilter);
+			this.internmentSummaryFacadeService.setSerchFilter(searchFilter);
 		}
 	}
 
@@ -87,6 +103,7 @@ export class DocumentsSummaryComponent implements OnInit {
 		this.documentsToShow = this.documentHistoric.documents.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
 		});
+		this.changeDetectorRef.detectChanges();
 	}
 
 	viewEvolutionNote(): boolean {
@@ -105,7 +122,7 @@ export class DocumentsSummaryComponent implements OnInit {
 			const text = control.get('text');
 			const field = control.get('field');
 			const error = (text.value !== '') && (field.value === null);
-			field.setErrors(error ? {filterFieldIsRequiredWhenInputIsSet: true} : null);
+			field.setErrors(error ? { filterFieldIsRequiredWhenInputIsSet: true } : null);
 			return null;
 		};
 	}

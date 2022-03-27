@@ -4,6 +4,7 @@ import {
 	AppointmentDailyAmountDto,
 	AppointmentDto,
 	AppointmentListDto,
+	AssignedAppointmentDto,
 	CreateAppointmentDto
 } from '@api-rest/api-model';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -14,7 +15,7 @@ import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { DownloadService } from "@core/services/download.service";
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class AppointmentsService {
 
@@ -53,7 +54,7 @@ export class AppointmentsService {
 		const url = `${environment.apiBase}/institutions/
 					${this.contextService.institutionId}/medicalConsultations/appointments/
 					${appointmentId}/change-state`;
-		return this.http.put<boolean>(url, {}, {params : queryParams});
+		return this.http.put<boolean>(url, {}, { params: queryParams });
 	}
 
 	get(appoinmentId: number): Observable<AppointmentDto> {
@@ -66,7 +67,7 @@ export class AppointmentsService {
 		queryParams = queryParams.append('patientId', JSON.stringify(patientId));
 
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/confirmed-appointment`;
-		return this.http.get<boolean>(url, {params : queryParams});
+		return this.http.get<boolean>(url, { params: queryParams });
 	}
 
 	considerAppointments(): Observable<boolean> {
@@ -74,24 +75,24 @@ export class AppointmentsService {
 		return this.http.get<boolean>(url);
 	}
 
-	updatePhoneNumber(appointmentId: number, phoneNumber: string ): Observable<boolean> {
+	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
-		queryParams = (phoneNumber) ? queryParams.append('phoneNumber', phoneNumber) : queryParams;
+		queryParams = (phoneNumber) ? queryParams.append('phoneNumber', phoneNumber).append('phonePrefix', phonePrefix) : queryParams;
 
 		const url = `${environment.apiBase}/institutions/
 					${this.contextService.institutionId}/medicalConsultations/appointments/
 					${appointmentId}/update-phone-number`;
-		return this.http.put<boolean>(url, {}, {params : queryParams});
+		return this.http.put<boolean>(url, {}, { params: queryParams });
 	}
 
-	updateMedicalCoverage(appointmentId: number, patientMedicalCoverageId: number ): Observable<Boolean> {
+	updateMedicalCoverage(appointmentId: number, patientMedicalCoverageId: number): Observable<Boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (patientMedicalCoverageId) ? queryParams.append('patientMedicalCoverageId', JSON.stringify(patientMedicalCoverageId)) : queryParams;
 
 		const url = `${environment.apiBase}/institutions/
 					${this.contextService.institutionId}/medicalConsultations/appointments/
 					${appointmentId}/update-medical-coverage`;
-		return this.http.put<boolean>(url, {}, {params : queryParams});
+		return this.http.put<boolean>(url, {}, { params: queryParams });
 	}
 
 	mqttCall(appointmentId: number): Observable<any> {
@@ -126,10 +127,14 @@ export class AppointmentsService {
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
 		const appointmentId: number = appointmentData.appointmentId;
 		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
-		const appointmentDate : string = momentFormat(appointmentData.date, DateFormat.FILE_DATE);
+		const appointmentDate: string = momentFormat(appointmentData.date, DateFormat.FILE_DATE);
 		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
 
-		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId});
+		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId });
 	}
 
+	getAssignedAppointmentsList(patientId: number): Observable<AssignedAppointmentDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${patientId}/get-assigned-appointments`;
+		return this.http.get<AssignedAppointmentDto[]>(url);
+	}
 }

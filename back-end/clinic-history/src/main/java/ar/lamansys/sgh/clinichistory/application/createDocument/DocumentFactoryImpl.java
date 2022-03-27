@@ -89,7 +89,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadProcedures.run(patientInfo, doc.getId(), documentBo.getProcedures());
         loadDentalActions.run(patientInfo, doc.getId(), documentBo.getDentalActions());
 
-        clinicalObservationService.loadVitalSigns(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getVitalSigns()));
+        clinicalObservationService.loadRiskFactors(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getRiskFactors()));
         clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
 
         loadDiagnosticReports.run(doc.getId(), patientInfo, documentBo.getDiagnosticReports());

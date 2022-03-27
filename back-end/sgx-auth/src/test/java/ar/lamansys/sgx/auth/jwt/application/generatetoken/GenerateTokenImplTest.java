@@ -1,7 +1,7 @@
 package ar.lamansys.sgx.auth.jwt.application.generatetoken;
 
 import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
-import ar.lamansys.sgx.auth.jwt.domain.token.JWTUtils;
+import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
 import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
 import ar.lamansys.sgx.auth.jwt.domain.token.TokenData;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class  GenerateTokenImplTest {
     @DisplayName("Generate token success")
     void generateTokenSuccess() {
         JWTokenBo tokens = generateToken.generateTokens(5, "adminUser");
-        Optional<TokenData> tokenDataOptional =JWTUtils.parseToken(tokens.token, secret, ETokenType.NORMAL);
+        Optional<TokenData> tokenDataOptional = TokenUtils.parseToken(tokens.token, secret, ETokenType.NORMAL);
         TokenData tokenData = assertPresent(tokenDataOptional);
         assertAll("token",
                 () -> assertEquals("adminUser", tokenData.username),

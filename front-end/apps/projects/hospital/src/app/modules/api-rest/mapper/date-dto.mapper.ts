@@ -1,4 +1,5 @@
 import { DateDto, DateTimeDto, TimeDto } from '@api-rest/api-model';
+import { formatDateOnlyISO, formatTimeOnlyISO } from '@core/utils/date.utils';
 import { parse } from 'date-fns';
 
 const TIME_FORMAT = 'HH:mm:ss';
@@ -20,6 +21,12 @@ export const dateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 	dateTimeMapped.setSeconds(timeMapped.getSeconds());
 
 	return dateTimeMapped;
+};
+
+export const dateTimeDtoToStringDate = (dateTimeDto: DateTimeDto): string => {
+	const date=formatDateOnlyISO(dateDtoToDate(dateTimeDto.date));
+	const time=formatTimeOnlyISO(timeDtoToDate(dateTimeDto.time));
+	return( date + 'T' + time.split("-")[0] +'.000'+ 'Z');
 };
 
 export const dateToDateTimeDto = (date: Date): DateTimeDto => {

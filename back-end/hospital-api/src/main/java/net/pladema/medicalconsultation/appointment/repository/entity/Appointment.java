@@ -1,13 +1,7 @@
 package net.pladema.medicalconsultation.appointment.repository.entity;
 
-import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,10 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 import org.hibernate.annotations.ColumnDefault;
+
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 @Entity
 @Table(name = "appointment")
@@ -58,6 +59,9 @@ public class Appointment extends SGXAuditableEntity<Integer> {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+	@Column(name = "phone_prefix", length = 10)
+	private String phonePrefix;
+
     public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
         Appointment result = new Appointment();
         result.setDateTypeId(appointmentBo.getDate());
@@ -66,6 +70,7 @@ public class Appointment extends SGXAuditableEntity<Integer> {
         result.setPatientId(appointmentBo.getPatientId());
         result.setAppointmentStateId(AppointmentState.ASSIGNED);
         result.setPatientMedicalCoverageId(appointmentBo.getPatientMedicalCoverageId());
+		result.setPhonePrefix(appointmentBo.getPhonePrefix());
         result.setPhoneNumber(appointmentBo.getPhoneNumber());
         return result;
         

@@ -1,5 +1,42 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
@@ -17,28 +54,9 @@ import net.pladema.medicalconsultation.appointment.service.CreateAppointmentServ
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.service.PatientExternalService;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/medicalConsultations/appointments")
@@ -75,12 +93,14 @@ public class AppointmentsController {
     private boolean enableNewConsultation;
 
     public AppointmentsController(AppointmentDailyAmountService appointmentDailyAmountService,
-                                  AppointmentService appointmentService,
-                                  AppointmentValidatorService appointmentValidatorService,
-                                  CreateAppointmentService createAppointmentService,
-                                  AppointmentMapper appointmentMapper,
-                                  PatientExternalService patientExternalService,
-                                  HealthcareProfessionalExternalService healthcareProfessionalExternalService, DateTimeProvider dateTimeProvider, NotifyPatient notifyPatient) {
+    AppointmentService appointmentService,
+    AppointmentValidatorService appointmentValidatorService,
+    CreateAppointmentService createAppointmentService,
+    AppointmentMapper appointmentMapper,
+    PatientExternalService patientExternalService,
+    HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+    DateTimeProvider dateTimeProvider,
+    NotifyPatient notifyPatient) {
         super();
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
@@ -91,7 +111,7 @@ public class AppointmentsController {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.dateTimeProvider = dateTimeProvider;
         this.notifyPatient = notifyPatient;
-    }
+	}
 
     @Transactional
     @PostMapping
@@ -139,7 +159,7 @@ public class AppointmentsController {
     }
 
     private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
-		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(appointmentBo.getPatientId()),appointmentBo.getPhoneNumber());
+		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(appointmentBo.getPatientId()),appointmentBo.getPhoneNumber(), appointmentBo.getPhonePrefix());
 		AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, appointmentBasicPatientDto);
         LOG.debug("AppointmentListDto id result {}", result.getId());
         LOG.trace(OUTPUT, result);
@@ -188,9 +208,10 @@ public class AppointmentsController {
     public ResponseEntity<Boolean> updatePhoneNumber(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "appointmentId") Integer appointmentId,
-            @RequestParam(required = false) @Size(max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber) {
-        LOG.debug("Input parameters -> institutionId {},appointmentId {}, phoneNumber {}", institutionId, appointmentId, phoneNumber);
-        boolean result = appointmentService.updatePhoneNumber(appointmentId,phoneNumber,UserInfo.getCurrentAuditor());
+            @RequestParam(required = false) @Size(max = 20, message = "{appointment.new.phoneNumber.invalid}") String phoneNumber,
+			@RequestParam(required = false) @Size(max = 10, message = "{appointment.new.phonePrefix.invalid}") String phonePrefix) {
+        LOG.debug("Input parameters -> institutionId {},appointmentId {}, phonePrefix {}, phoneNumber {}", institutionId, appointmentId, phonePrefix, phoneNumber);
+        boolean result = appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber,UserInfo.getCurrentAuditor());
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
@@ -207,14 +228,14 @@ public class AppointmentsController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
-
+ 
     @GetMapping("/getDailyAmounts")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam(name = "diaryId") String diaryId) {
         LOG.debug("Input parameters -> diaryId {}", diaryId);
-
+        
         Integer diaryIdParam = Integer.parseInt(diaryId);
 
         Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
@@ -236,10 +257,24 @@ public class AppointmentsController {
         notifyPatient.run(institutionId, appointmentId);
     }
 
-	private AppointmentBasicPatientDto toAppointmentBasicPatientDto(BasicPatientDto basicData, String phoneNumber) {
+	private AppointmentBasicPatientDto toAppointmentBasicPatientDto(BasicPatientDto basicData, String phoneNumber, String phonePrefix) {
 		BasicDataPersonDto basicPatientDto = basicData.getPerson();
-		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(basicPatientDto.getFirstName(), basicPatientDto.getLastName(), basicPatientDto.getIdentificationNumber(), basicPatientDto.getIdentificationTypeId(), phoneNumber, basicPatientDto.getGender().getId(), basicPatientDto.getNameSelfDetermination());
+		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(basicPatientDto.getFirstName(), basicPatientDto.getLastName(), basicPatientDto.getIdentificationNumber(), basicPatientDto.getIdentificationTypeId(), phonePrefix, phoneNumber, basicPatientDto.getGender().getId(), basicPatientDto.getNameSelfDetermination());
 		return new AppointmentBasicPatientDto(basicData.getId(), basicPersonalDataDto, basicData.getTypeId());
+	}
+
+	@GetMapping("/{patientId}/get-assigned-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<Collection<AssignedAppointmentDto>> getAssignedAppointmentsList(@PathVariable(name = "institutionId")  Integer institutionId,
+																						  @PathVariable(name = "patientId") Integer patientId){
+		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId).stream()
+				.map(appointmentAssigned ->
+						(appointmentMapper.toAssignedAppointmentDto(appointmentAssigned)))
+				.collect(Collectors.toList());
+		LOG.debug("Result size {}", result.size());
+		LOG.trace(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 }

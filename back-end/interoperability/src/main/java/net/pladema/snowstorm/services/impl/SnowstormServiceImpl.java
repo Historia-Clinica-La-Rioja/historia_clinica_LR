@@ -63,16 +63,26 @@ public class SnowstormServiceImpl implements SnowstormService {
             urlWithParams.append("&ecl=").append(snomedSemantics.getEcl(snomedEcl));
         }
 
-        ResponseEntity<SnowstormSearchResponse> response;
+        SnowstormSearchResponse result = getSnowstormSearchResponse(urlWithParams);
+        return result;
+    }
+
+    @Override
+    public List<SnowstormItemResponse> getConceptParents(String conceptId) throws SnowstormApiException {
+        String urlWithParams = snowstormWSConfig.getBrowserConceptUrl()
+                .concat(conceptId)
+                .concat("/parents")
+                .concat("?form=inferred");
+        ResponseEntity<SnowstormConcept> response;
         try {
-            response = restClientInterface.exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
+            response = restClientInterface.exchangeGet(urlWithParams, SnowstormConcept.class);
         } catch (RestTemplateApiException e) {
             throw mapException(e);
         }
-        SnowstormSearchResponse result = response.getBody();
+        SnowstormConcept result = response.getBody();
         if (result == null)
             throw new SnowstormApiException(SnowstormEnumException.NULL_RESPONSE, response.getStatusCode(), RESPUESTA_NULA);
-        return result;
+        return result.getItems();
     }
 
     @Override
@@ -115,18 +125,41 @@ public class SnowstormServiceImpl implements SnowstormService {
     }
 
     @Override
-    public SnowstormSearchResponse getConcepts(String ecl) throws SnowstormApiException {
+    public SnowstormSearchResponse getConceptsByEclKey(String eclKey, String searchAfter) throws SnowstormApiException {
+        StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getConceptsUrl());
+
+        urlWithParams.append("?termActive=" + snowstormWSConfig.getTermActive());
+
+        if (searchAfter != null) {
+            urlWithParams.append("&searchAfter=" + searchAfter);
+        }
+
+        if (eclKey != null) {
+            var snomedEcl = SnomedECL.map(eclKey);
+            urlWithParams.append("&ecl=").append(snomedSemantics.getEcl(snomedEcl));
+        }
+
+        SnowstormSearchResponse result = getSnowstormSearchResponse(urlWithParams);
+        return result;
+    }
+
+    @Override
+    public SnowstormSearchResponse getConceptsByEcl(String ecl) throws SnowstormApiException {
         StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getConceptsUrl());
 
         urlWithParams.append("?termActive=" + snowstormWSConfig.getTermActive());
         urlWithParams.append("&ecl=" + ecl);
+        SnowstormSearchResponse result = getSnowstormSearchResponse(urlWithParams);
+        return result;
+    }
+
+    private SnowstormSearchResponse getSnowstormSearchResponse(StringBuilder urlWithParams) throws SnowstormApiException {
         ResponseEntity<SnowstormSearchResponse> response;
         try {
             response = restClientInterface.exchangeGet(urlWithParams.toString(), SnowstormSearchResponse.class);
         } catch (RestTemplateApiException e) {
             throw mapException(e);
         }
-
         SnowstormSearchResponse result = response.getBody();
         if (result == null)
             throw new SnowstormApiException(SnowstormEnumException.NULL_RESPONSE, response.getStatusCode(), RESPUESTA_NULA);
@@ -135,7 +168,6 @@ public class SnowstormServiceImpl implements SnowstormService {
 
     @Override
     public ResponseEntity<SnowstormSearchResponse> status() {
-
         try {
             return restClientInterface.exchangeGet(snowstormWSConfig.getConceptsUrl(), SnowstormSearchResponse.class);
         } catch (Exception e) {

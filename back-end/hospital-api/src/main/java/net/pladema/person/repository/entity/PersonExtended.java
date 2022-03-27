@@ -37,6 +37,9 @@ public class PersonExtended implements Serializable {
     @Column(name = "address_id")
     private Integer addressId;
 
+	@Column(name = "phone_prefix", length = 10)
+	private String phonePrefix;
+
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 

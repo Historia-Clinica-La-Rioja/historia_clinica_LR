@@ -20,7 +20,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'internaciones',
-				loadChildren: () => import('../historia-clinica/modules/internacion/internaciones.module').then(m => m.InternacionesModule),
+				loadChildren: () => import('../historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module').then(m => m.InternacionesModule),
 			},
 			{
 				path: 'ambulatoria',

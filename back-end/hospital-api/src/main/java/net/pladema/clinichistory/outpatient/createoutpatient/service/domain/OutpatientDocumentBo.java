@@ -10,7 +10,6 @@ import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private AnthropometricDataBo anthropometricData ;
 
-    private VitalSignBo vitalSigns;
+    private RiskFactorBo riskFactors;
 
     private List<ReasonBo> reasons = new ArrayList<>();
 

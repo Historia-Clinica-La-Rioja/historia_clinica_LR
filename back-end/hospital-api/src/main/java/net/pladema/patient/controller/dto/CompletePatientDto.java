@@ -2,13 +2,14 @@ package net.pladema.patient.controller.dto;
 
 import javax.annotation.Nullable;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 
 @Getter
 @Setter

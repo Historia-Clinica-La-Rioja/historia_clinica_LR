@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AnthropometricDataDto, EvolutionNoteDto, MasterDataInterface } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -47,12 +47,13 @@ export class AddAnthropometricComponent implements OnInit {
 		if (evolutionNote) {
 			this.loading = true;
 			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId).subscribe(_ => {
-					this.snackBarService.showSuccess('internaciones.internacion-paciente.anthropometric-summary.save.SUCCESS');
-					this.dialogRef.close(true);
-				}, _ => {
-					this.snackBarService.showError('internaciones.internacion-paciente.anthropometric-summary.save.ERROR');
-					this.loading = false;
-				}
+				this.snackBarService.showSuccess('internaciones.internacion-paciente.anthropometric-summary.save.SUCCESS');
+				const fieldsToUpdate = { bloodType: !!evolutionNote.anthropometricData.bloodType, heightAndWeight: !!evolutionNote.anthropometricData.height || !!evolutionNote.anthropometricData.weight }
+				this.dialogRef.close(fieldsToUpdate);
+			}, _ => {
+				this.snackBarService.showError('internaciones.internacion-paciente.anthropometric-summary.save.ERROR');
+				this.loading = false;
+			}
 			);
 		}
 	}
@@ -74,7 +75,7 @@ export class AddAnthropometricComponent implements OnInit {
 		return anthropometricData ? { confirmed: true, anthropometricData } : undefined;
 
 		function getValue(controlValue: any) {
-			return controlValue ? {value: controlValue} : undefined;
+			return controlValue ? { value: controlValue } : undefined;
 		}
 	}
 

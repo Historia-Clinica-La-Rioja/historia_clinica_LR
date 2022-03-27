@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.triage.controller.mapper;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAppearanceDto;
@@ -105,5 +105,5 @@ public interface TriageMapper {
     @Mapping(target = "heartRate", source = "circulation.heartRate")
     @Mapping(target = "respiratoryRate", source = "breathing.respiratoryRate")
     @Mapping(target = "bloodOxygenSaturation", source = "breathing.bloodOxygenSaturation")
-    NewVitalSignsObservationDto fromTriagePediatricDto(TriagePediatricDto triagePediatricDto);
+	NewRiskFactorsObservationDto fromTriagePediatricDto(TriagePediatricDto triagePediatricDto);
 }

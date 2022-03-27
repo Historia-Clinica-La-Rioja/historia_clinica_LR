@@ -29,6 +29,6 @@ public class HospitalizationGeneralState implements Serializable {
 
     private AnthropometricDataBo anthropometricData;
 
-    private Last2VitalSignsBo vitalSigns;
+    private Last2RiskFactorsBo riskFactors;
 
 }

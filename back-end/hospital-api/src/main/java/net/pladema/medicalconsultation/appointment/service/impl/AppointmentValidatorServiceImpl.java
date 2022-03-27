@@ -1,5 +1,25 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ABSENT;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ASSIGNED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.BOOKED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CANCELLED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CONFIRMED;
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.SERVED;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
+import javax.validation.ValidationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
@@ -9,18 +29,6 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.staff.service.HealthcareProfessionalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.validation.ValidationException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.function.Function;
-
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.*;
 
 @Service
 public class AppointmentValidatorServiceImpl implements AppointmentValidatorService {
@@ -28,9 +36,9 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 	public static final String OUTPUT = "Output -> {}";
 	private static final Logger LOG = LoggerFactory.getLogger(AppointmentValidatorServiceImpl.class);
 
-	private HashMap<Short, Collection<Short>> validStates;
+	private final Map<Short, Collection<Short>> validStates;
 
-	private Collection<Short> statesWithReason;
+	private final Collection<Short> statesWithReason;
 
 	private final DiaryService diaryService;
     private final HealthcareProfessionalService healthcareProfessionalService;
@@ -38,9 +46,12 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 	private final Function<Integer, Boolean> hasAdministrativeRole;
 	private final Function<Integer, Boolean> hasProfessionalRole;
 
-	public AppointmentValidatorServiceImpl(DiaryService diaryService,
-			HealthcareProfessionalService healthcareProfessionalService, AppointmentService appointmentService,
-			LoggedUserExternalService loggedUserExternalService) {
+	public AppointmentValidatorServiceImpl(
+			DiaryService diaryService,
+			HealthcareProfessionalService healthcareProfessionalService,
+			AppointmentService appointmentService,
+			LoggedUserExternalService loggedUserExternalService
+	) {
 		this.diaryService = diaryService;
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.appointmentService = appointmentService;
@@ -51,13 +62,8 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 				ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO
 		);
 
-		validStates = new HashMap<>();
-		validStates.put(ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED));
-		validStates.put(CONFIRMED, Arrays.asList(ABSENT, CANCELLED));
-		validStates.put(ABSENT, Arrays.asList(CONFIRMED,ABSENT));
-		validStates.put(SERVED, Arrays.asList());
-		validStates.put(CANCELLED, Arrays.asList(CANCELLED));
-		statesWithReason = Arrays.asList(CANCELLED, ABSENT);
+		this.validStates = buildValidStates();
+		this.statesWithReason = Arrays.asList(CANCELLED, ABSENT);
 	}
 
 	@Override
@@ -95,6 +101,17 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
 	private boolean validStateTransition(short appointmentStateId, AppointmentBo apmt) {
 		return validStates.get(apmt.getAppointmentStateId()).contains(Short.valueOf(appointmentStateId));
+	}
+
+	private static Map<Short, Collection<Short>> buildValidStates() {
+		return Map.of(
+				BOOKED, Arrays.asList(ASSIGNED, CONFIRMED, CANCELLED),
+				ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED),
+				CONFIRMED, Arrays.asList(ABSENT, CANCELLED),
+				ABSENT, Arrays.asList(CONFIRMED,ABSENT),
+				SERVED, Collections.emptyList(),
+				CANCELLED, Collections.singletonList(CANCELLED)
+		);
 	}
 
 }

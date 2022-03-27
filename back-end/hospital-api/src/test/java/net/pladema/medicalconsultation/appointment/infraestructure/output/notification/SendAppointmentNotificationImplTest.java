@@ -31,7 +31,7 @@ class SendAppointmentNotificationImplTest {
                 "MockTopic"
         );
 
-        String shouldBe = "data\":{\"appointmentId\":-2,\"patient\":\"MockName\",\"sector\":-3,\"doctor\":\"MockDrName\",\"doctorsOffice\":\"MockDrsOfficeName\"}";
+        String shouldBe = "\"data\":{\"appointmentId\":-2,\"patient\":\"MockName\",\"sector\":-3,\"doctor\":\"MockDrName\",\"doctorsOffice\":\"MockDrsOfficeName\"}";
         Assertions.assertEquals(sendAppointmentNotification.getMessage(notifyPatientBoMock), shouldBe);
 
     }

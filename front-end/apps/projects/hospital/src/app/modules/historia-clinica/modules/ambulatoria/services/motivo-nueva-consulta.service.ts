@@ -1,11 +1,11 @@
-import {SnomedDto, SnomedECL} from '@api-rest/api-model';
+import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { Observable, Subject } from 'rxjs';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import {TableColumnConfig} from "@presentation/components/document-section-table/document-section-table.component";
-import {CellTemplates} from "@presentation/components/cell-templates/cell-templates.component";
+import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
+import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface MotivoConsulta {

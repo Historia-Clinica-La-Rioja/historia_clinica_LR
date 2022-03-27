@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
@@ -11,7 +12,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
-import net.pladema.patient.controller.dto.BasicPatientDto;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -69,18 +71,9 @@ public class ServiceRequestController {
     private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
     private final PdfService pdfService;
     private final GetServiceRequestInfoService getServiceRequestInfoService;
+	private final HospitalApiPublisher hospitalApiPublisher;
 
-    public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                                    CreateServiceRequestService createServiceRequestService,
-                                    CreateServiceRequestMapper createServiceRequestMapper,
-                                    PatientExternalService patientExternalService,
-                                    StudyMapper studyMapper,
-                                    DiagnosticReportInfoMapper diagnosticReportInfoMapper,
-                                    ListDiagnosticReportInfoService listDiagnosticReportInfoService,
-                                    DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService,
-                                    CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
-                                    UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
-                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService) {
+    public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService, CreateServiceRequestService createServiceRequestService, CreateServiceRequestMapper createServiceRequestMapper, PatientExternalService patientExternalService, StudyMapper studyMapper, DiagnosticReportInfoMapper diagnosticReportInfoMapper, ListDiagnosticReportInfoService listDiagnosticReportInfoService, DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService, CompleteDiagnosticReportMapper completeDiagnosticReportMapper, UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService, UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService, HospitalApiPublisher hospitalApiPublisher) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
@@ -99,7 +92,8 @@ public class ServiceRequestController {
         this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
         this.pdfService = pdfService;
         this.getServiceRequestInfoService = getServiceRequestInfoService;
-    }
+		this.hospitalApiPublisher = hospitalApiPublisher;
+	}
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -128,6 +122,7 @@ public class ServiceRequestController {
                     studyListDto);
             serviceRequestBo.setInstitutionId(institutionId);
             Integer srId = createServiceRequestService.execute(serviceRequestBo);
+			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), EHospitalApiTopicDto.SOLICITUD_ESTUDIO);
             result.add(srId);
         });
 
@@ -265,7 +260,7 @@ public class ServiceRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
         var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var professionalDto = healthcareProfessionalExternalService.findProfessionalById(serviceRequestBo.getDoctorId());
+        var professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(serviceRequestBo.getDoctorId());
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
         var context = createContext(serviceRequestBo, patientDto, professionalDto, patientCoverageDto);
 

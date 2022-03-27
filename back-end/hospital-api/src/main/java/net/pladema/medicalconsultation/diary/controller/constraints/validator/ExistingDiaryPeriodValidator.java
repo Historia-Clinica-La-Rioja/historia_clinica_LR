@@ -21,7 +21,7 @@ public class ExistingDiaryPeriodValidator extends AbstractDiaryPeriodValidator<E
 	@Override
 	protected List<Integer> getOverlappingDiary(DiaryDto diary, LocalDate startDate, LocalDate endDate) {
 		return diaryService.getAllOverlappingDiaryByProfessional(diary.getHealthcareProfessionalId(), diary.getDoctorsOfficeId(),
-				startDate, endDate, Optional.of(diary.getId()));
+				startDate, endDate, diary.getAppointmentDuration(), Optional.of(diary.getId()));
 	}
 
 }

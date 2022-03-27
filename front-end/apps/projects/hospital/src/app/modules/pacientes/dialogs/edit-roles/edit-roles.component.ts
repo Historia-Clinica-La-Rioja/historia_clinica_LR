@@ -18,7 +18,7 @@ export class EditRolesComponent implements OnInit {
 	hasError = hasError;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { professionalId: number; roles: RoleDto[]; userId: number; rolesByUser: UserRoleDto[] },
+		@Inject(MAT_DIALOG_DATA) public data: { personId: number; isProfessional: boolean; roles: RoleDto[]; userId: number; rolesByUser: UserRoleDto[] },
 		private contextService: ContextService,
 		private dialog: MatDialogRef<EditRolesComponent>
 
@@ -99,7 +99,7 @@ export class EditRolesComponent implements OnInit {
 	}
 
 	needsValidation(control: string, index: number): boolean {
-		if (this.data.professionalId) {
+		if (this.data.isProfessional) {
 			this.removeValidation(control, index);
 			return true;
 		}

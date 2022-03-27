@@ -9,7 +9,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveRiskFactorTimeValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
         assertDoesNotHaveEpicrisis(internmentEpisode);
         assertEvolutionNoteValid(evolutionNote);
-        assertEffectiveVitalSignTimeValid(evolutionNote, internmentEpisode.getEntryDate());
+        assertEffectiveRiskFactorTimeValid(evolutionNote, internmentEpisode.getEntryDate());
         assertDiagnosisValid(evolutionNote, internmentEpisode);
         assertAnthropometricData(evolutionNote);
 
@@ -112,8 +112,8 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         }
     }
 
-    private void assertEffectiveVitalSignTimeValid(EvolutionNoteBo evolutionNote, LocalDateTime entryDate) {
-        var validator = new EffectiveVitalSignTimeValidator();
+    private void assertEffectiveRiskFactorTimeValid(EvolutionNoteBo evolutionNote, LocalDateTime entryDate) {
+        var validator = new EffectiveRiskFactorTimeValidator();
         validator.isValid(evolutionNote, entryDate);
     }
 

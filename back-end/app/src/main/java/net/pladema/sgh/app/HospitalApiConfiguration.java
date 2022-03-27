@@ -9,8 +9,9 @@ import ar.lamansys.nursing.EnableNursing;
 import ar.lamansys.sgx.auth.EnableAuth;
 import ar.lamansys.sgx.shared.EnableSharedLibrary;
 import ar.lamansys.odontology.EnableOdontology;
-import ar.lamansys.sgx.cubejs.infrastructure.configuration.EnableCubeJs;
+import ar.lamansys.sgx.cubejs.EnableCubeJs;
 import net.pladema.EnableHospitalLib;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -34,4 +35,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {"net.pladema.sgh.app"})
 @EntityScan(basePackages = {"net.pladema.sgh.app"})
 public class HospitalApiConfiguration {
+
 }

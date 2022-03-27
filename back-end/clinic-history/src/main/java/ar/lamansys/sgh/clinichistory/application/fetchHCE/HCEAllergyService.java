@@ -7,4 +7,6 @@ import java.util.List;
 public interface HCEAllergyService {
 
     List<HCEAllergyBo> getAllergies(Integer patientId);
+
+	List<HCEAllergyBo> getActiveInternmentEpisodeAllergies(Integer patientId);
 }

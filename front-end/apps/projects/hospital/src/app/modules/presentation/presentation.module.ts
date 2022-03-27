@@ -27,8 +27,8 @@ import { NoDataComponent } from './components/no-data/no-data.component';
 import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { PatientTypeLogoComponent } from './components/patient-type-logo/patient-type-logo.component';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
-import { SignoVitalComponent } from './components/signo-vital-current/signo-vital.component';
-import { SignoVitalCurrentPreviousComponent } from './components/signo-vital-current-previous/signo-vital-current-previous.component';
+import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
+import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
@@ -38,6 +38,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { MedicalCoverageComponent } from './dialogs/medical-coverage/medical-coverage.component';
+import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 // pipes
@@ -74,8 +75,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientCardComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
-		SignoVitalComponent,
-		SignoVitalCurrentPreviousComponent,
+		FactorDeRiesgoComponent,
+		FactorDeRiesgoCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,
@@ -84,6 +85,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ConfirmDialogComponent,
 		DatePickerComponent,
 		DocumentSectionComponent,
+		DiscardWarningComponent,
 		MedicalCoverageComponent,
 		// directives
 		CtrlTemplateDirective,
@@ -130,8 +132,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientCardComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
-		SignoVitalComponent,
-		SignoVitalCurrentPreviousComponent,
+		FactorDeRiesgoComponent,
+		FactorDeRiesgoCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,

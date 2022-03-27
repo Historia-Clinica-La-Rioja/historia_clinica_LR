@@ -30,9 +30,11 @@ public class HCEClinicalObservationRepositoryImpl implements HCEClinicalObservat
 
     @Transactional(readOnly = true)
     @Override
-    public HCEMapClinicalObservationVo getGeneralState(Integer patientId) {
-        LOG.debug("Input parameters -> patientId {}", patientId);
-        Query query = entityManager.createNativeQuery(
+    public HCEMapClinicalObservationVo getGeneralState(Integer patientId, List<Short> invalidDocumentTypes) {
+        LOG.debug("Input parameters -> patientId {}, invalidDocumentTypes {}", patientId, invalidDocumentTypes);
+
+		String invalidDocumentCondition = (invalidDocumentTypes.isEmpty()) ? "" : "AND d.type_id NOT IN :invalidDocumentTypes ";
+		String queryString =
                 "   (SELECT  ovs.id, " +
                         "            s.sctid, " +
                         "            ovs.status_id, " +
@@ -43,7 +45,7 @@ public class HCEClinicalObservationRepositoryImpl implements HCEClinicalObservat
                         "    JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
                         "    JOIN snomed s ON (ovs.snomed_id = s.id) " +
                         "    WHERE d.status_id = :docStatusId " +
-                        "       AND d.type_id NOT IN :invalidDocumentTypes "+
+								invalidDocumentCondition +
                         "       AND ovs.patient_id = :patientId " +
                         " )UNION( " +
                         "   SELECT  ovs.id, " +
@@ -56,13 +58,16 @@ public class HCEClinicalObservationRepositoryImpl implements HCEClinicalObservat
                         "    JOIN observation_lab ovs ON (dl.observation_lab_id = ovs.id) " +
                         "    JOIN snomed s ON (ovs.snomed_id = s.id) " +
                         "    WHERE d.status_id = :docStatusId " +
-                        "       AND d.type_id NOT IN :invalidDocumentTypes "+
+								invalidDocumentCondition +
                         "       AND ovs.patient_id = :patientId " +
                         ")" +
-                        "    ORDER BY effective_time DESC " );
+                        "    ORDER BY effective_time DESC ";
+
+		Query query = entityManager.createNativeQuery(queryString);
         query.setParameter("patientId", patientId);
         query.setParameter("docStatusId", DocumentStatus.FINAL);
-        query.setParameter("invalidDocumentTypes", Arrays.asList(DocumentType.ANAMNESIS, DocumentType.EVALUATION_NOTE, DocumentType.EPICRISIS));
+        if(!invalidDocumentTypes.isEmpty())
+        	query.setParameter("invalidDocumentTypes", invalidDocumentTypes);
 
 
         List<Object[]> queryResult = query.getResultList();

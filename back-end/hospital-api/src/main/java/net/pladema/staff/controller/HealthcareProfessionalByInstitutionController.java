@@ -87,7 +87,7 @@ public class HealthcareProfessionalByInstitutionController {
 	public ResponseEntity<ProfessionalDto> getOne(@PathVariable(name = "institutionId")  Integer institutionId,
 												  @PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
 		LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
-		HealthcareProfessionalBo resultService = healthcareProfessionalService.findProfessionalById(healthcareProfessionalId);
+		HealthcareProfessionalBo resultService = healthcareProfessionalService.findActiveProfessionalById(healthcareProfessionalId);
 		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(resultService);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);

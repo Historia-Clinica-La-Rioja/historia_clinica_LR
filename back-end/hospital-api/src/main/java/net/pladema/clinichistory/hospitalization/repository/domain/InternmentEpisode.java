@@ -8,7 +8,7 @@ import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 

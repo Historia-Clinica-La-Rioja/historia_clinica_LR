@@ -1,11 +1,13 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {AllergyConditionDto, HealthConditionDto} from '@api-rest/api-model';
-import {TableModel} from '@presentation/components/table/table.component';
-import {InternmentStateService} from '@api-rest/services/internment-state.service';
-import {ALERGIAS} from '../../constants/summaries';
-import {MatDialog} from '@angular/material/dialog';
-import {AddAllergyComponent} from '../../dialogs/add-allergy/add-allergy.component';
-import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { AllergyConditionDto, HealthConditionDto } from '@api-rest/api-model';
+import { TableModel } from '@presentation/components/table/table.component';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { ALERGIAS } from '../../constants/summaries';
+import { MatDialog } from '@angular/material/dialog';
+import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.component';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { PatientAllergiesService } from '@historia-clinica/modules/ambulatoria/services/patient-allergies.service';
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
 	selector: 'app-alergias-summary',
@@ -17,6 +19,7 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 	@Input() internmentEpisodeId: number;
 	@Input() allergies: AllergyConditionDto[];
 	@Input() editable = false;
+	@Input() patientId: number;
 
 	public readonly alergiasSummary = ALERGIAS;
 	private criticalityMasterData: any[];
@@ -42,7 +45,7 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 					header: 'Criticidad',
 					text: (row) => this.getCriticalityDisplayName(row.criticalityId)
 				}
-				],
+			],
 			data
 		};
 	}
@@ -50,7 +53,9 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private readonly patientAllergies: PatientAllergiesService,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 	}
 
@@ -86,11 +91,14 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 		});
 
 		dialogRef.afterClosed().subscribe(submitted => {
-				if (submitted) {
-					this.internmentStateService.getAllergies(this.internmentEpisodeId)
-						.subscribe(data => this.tableModel = this.buildTable(data));
-				}
+			if (submitted) {
+				this.internmentStateService.getAllergies(this.internmentEpisodeId)
+					.subscribe(data => this.tableModel = this.buildTable(data));
+				this.patientAllergies.updateCriticalAllergies(this.patientId);
+				if (this.internmentEpisodeId)
+					this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 			}
+		}
 		);
 	}
 

@@ -33,9 +33,9 @@ export class InternmentEpisodeService {
 		return this.http.get<InternmentEpisodeBMDto>(url);
 	}
 
-	getMinDischargeDate(internmentId: number): Observable<DateDto> {
+	getMinDischargeDate(internmentId: number): Observable<DateTimeDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentId}/minDischargeDate`;
-		return this.http.get<DateDto>(url);
+		return this.http.get<DateTimeDto>(url);
 	}
 
 	medicalDischargeInternmentEpisode(discharge: PatientDischargeDto, internmentEpisodeId: number): Observable<PatientDischargeDto> {
@@ -48,9 +48,9 @@ export class InternmentEpisodeService {
 		return this.http.get<PatientDischargeDto>(url);
 	}
 
-	getLastUpdateDateOfInternmentEpisode(internmentEpisodeId: number): Observable<DateDto> {
+	getLastUpdateDateOfInternmentEpisode(internmentEpisodeId: number): Observable<DateTimeDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/lastupdatedate`;
-		return this.http.get<DateDto>(url);
+		return this.http.get<DateTimeDto>(url);
 	}
 
 	updateProbableDischargeDate(probableDischargeDateDto: ProbableDischargeDateDto, internmentEpisodeId: number): Observable<DateTimeDto> {

@@ -1,0 +1,80 @@
+<app-content width="full">
+	<div class="section-container">
+		<section class="page">
+			<h2 class="page-title" [translate]="'internaciones.discharge.TITLE'"></h2>
+			<form [formGroup]="dischargeForm" (ngSubmit)="save()">
+
+				<span [translate]="'internaciones.discharge.DISCHARGE_DATE'"></span> *
+				<section>
+					<div class="form-row" fxLayoutGap="5px">
+						<mat-form-field class="date" appearance="outline">
+							<input formControlName="date" id="date" matInput [matDatepicker]="datePicker"
+								[value]="today" [max]="today" [min]="minDischargeDate"
+								placeholder="{{'internaciones.discharge.DISCHARGE_DATE' | translate}}">
+
+							<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+							<mat-datepicker #datePicker></mat-datepicker>
+
+							<mat-error *ngIf="hasError(dischargeForm, 'required', 'date') else invalidDate"
+								translate="internaciones.discharge.REQUIRED"></mat-error>
+							<ng-template #invalidDate>
+								<mat-error translate="internaciones.discharge.INVALID_DATE"></mat-error>
+							</ng-template>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
+								placeholder="{{'internaciones.discharge.TIME' | translate}}">
+							<mat-error *ngIf="hasError(dischargeForm, 'beforeTime', 'time')"
+								translate="internaciones.discharge.MIN_TIME_ERROR"
+								[translateParams]="{ minTime: minTime }"></mat-error>
+							<mat-error *ngIf="hasError(dischargeForm, 'pattern', 'time')"
+								translate="internaciones.discharge.TIME_FORMAT">
+							</mat-error>
+							<mat-error *ngIf="hasError(dischargeForm, 'required', 'time')" translate="forms.REQUIRED">
+							</mat-error>
+							<mat-error *ngIf="hasError(dischargeForm, 'futureTime', 'time')"
+								translate="internaciones.discharge.MAX_TIME_ERROR"></mat-error>
+						</mat-form-field>
+					</div>
+				</section>
+
+				<span [translate]="'internaciones.discharge.DISCHARGE_TYPE'"></span> *
+				<section>
+					<mat-form-field appearance="outline">
+						<mat-select id="dischargeTypeId" name="dischargeTypeId"formControlName="dischargeTypeId"
+							placeholder="{{'internaciones.discharge.DISCHARGE_TYPE' | translate}}">
+							<mat-option *ngFor="let dischargeType of dischargeTypes"[value]="dischargeType.id">
+								{{dischargeType.description}}
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</section>
+				<div class="form-buttons">
+					<button mat-stroked-button color="secondary" type="button" (click)="back()">
+						<span [translate]="'buttons.BACK'"></span>
+					</button>
+					<button mat-raised-button color="primary">
+						<span [translate]="'buttons.CONTINUE'"></span>
+					</button>
+				</div>
+			</form>
+		</section>
+		<section>
+			<div class="profile-card">
+				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData"  [personPhoto]="personPhoto">
+					<div header class="header">
+						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
+					</div>
+					<div content>
+						<app-personal-information
+							[personalInformation]="personalInformation"
+							[patientMedicalCoverage]="patientMedicalCoverage">
+						</app-personal-information>
+					</div>
+				</app-patient-card>
+			</div>
+		</section>
+	</div>
+</app-content>

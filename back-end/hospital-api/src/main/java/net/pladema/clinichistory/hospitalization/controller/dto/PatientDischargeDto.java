@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -15,11 +17,11 @@ import lombok.ToString;
 @NoArgsConstructor
 public class PatientDischargeDto {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate medicalDischargeDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
+    private LocalDateTime medicalDischargeDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate administrativeDischargeDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
+    private LocalDateTime administrativeDischargeDate;
 
     private short dischargeTypeId;
 

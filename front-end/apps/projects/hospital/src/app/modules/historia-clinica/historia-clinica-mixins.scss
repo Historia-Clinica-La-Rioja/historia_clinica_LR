@@ -1,6 +1,6 @@
 @import "./modules/ambulatoria/ambulatoria-mixins.scss";
 @import "./modules/odontologia/odontologia-mixins.scss";
-@import "./modules//internacion/internacion-mixins.scss";
+@import "./modules/ambulatoria/modules/internacion/internacion-mixins.scss";
 
 @mixin historia-clinica-mixins($theme) {
     @include ambulatoria-mixins($theme);

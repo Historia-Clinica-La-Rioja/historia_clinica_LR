@@ -1,10 +1,13 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +31,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
 
+	private final SharedStaffPort sharedStaffPort;
+
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
-								  HistoricAppointmentStateRepository historicAppointmentStateRepository) {
+								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
+								  SharedStaffPort sharedStaffPort) {
 		this.appointmentRepository = appointmentRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
+		this.sharedStaffPort = sharedStaffPort;
 	}
 
 	@Override
@@ -98,8 +105,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean updatePhoneNumber(Integer appointmentId, String phoneNumber, Integer userId) {
-		appointmentRepository.updatePhoneNumber(appointmentId,phoneNumber,userId);
+	public boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId) {
+		appointmentRepository.updatePhoneNumber(appointmentId,phonePrefix,phoneNumber,userId);
 		LOG.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}
@@ -125,4 +132,36 @@ public class AppointmentServiceImpl implements AppointmentService {
 		LOG.debug(OUTPUT, patientMedicalCoverageId);
 		return patientMedicalCoverageId;
 	}
+
+	private Collection<AppointmentAssignedBo> getAssignedAppointmentsByPatient(Integer patientId) {
+		LOG.debug("Input parameters -> patientId {}", patientId);
+		Collection<AppointmentAssignedBo> result;
+		result = appointmentRepository.getAssignedAppointmentsByPatient(patientId).stream().map(AppointmentAssignedBo::new)
+				.collect(Collectors.toList());
+		System.out.println(result);
+		LOG.debug("Result size {}", result.size());
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId){
+		LOG.debug("Input parameters -> patientId {}", patientId);
+		Collection<AppointmentAssignedBo> resultService = this.getAssignedAppointmentsByPatient(patientId);
+		Collection<AppointmentAssignedBo> result = resultService.stream()
+				.parallel()
+				.map(appointmentAssigned ->{
+					var basicHealtcareDtoMap = sharedStaffPort.getProfessionalCompleteInfo(appointmentAssigned.getProfessionalId());
+					appointmentAssigned.setSpecialties(basicHealtcareDtoMap.getClinicalSpecialties().stream()
+							.map(specialty -> {return specialty.getName();})
+							.collect(Collectors.toList()));
+					appointmentAssigned.setProfessionalName(basicHealtcareDtoMap.getFirstName() + ' ' + basicHealtcareDtoMap.getLastName());
+					return appointmentAssigned;
+				}).collect(Collectors.toList());
+		LOG.debug("Result size {}", result.size());
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
+
+
 }

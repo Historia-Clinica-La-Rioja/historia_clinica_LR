@@ -27,7 +27,7 @@ class HealthcareProfessionalRepositoryTest extends UnitRepository {
 
 		HealthcareProfessional hp = save(StaffTestMocks.createMinimumProfessional(person.getId(), "1234/5"));
 
-		Optional<HealthcareProfessionalVo> optResultQuery = healthcareProfessionalRepository.findProfessionalById(hp.getId());
+		Optional<HealthcareProfessionalVo> optResultQuery = healthcareProfessionalRepository.findActiveProfessionalById(hp.getId());
 
 		Assertions.assertTrue(optResultQuery.isPresent());
 
@@ -47,7 +47,7 @@ class HealthcareProfessionalRepositoryTest extends UnitRepository {
 
 	@Test
 	void test_not_exist_professional() {
-		Optional<HealthcareProfessionalVo> optResultQuery = healthcareProfessionalRepository.findProfessionalById(4);
+		Optional<HealthcareProfessionalVo> optResultQuery = healthcareProfessionalRepository.findActiveProfessionalById(4);
 
 		Assertions.assertFalse(optResultQuery.isPresent());
 	}

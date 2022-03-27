@@ -1,0 +1,35 @@
+::ng-deep .cdk-overlay-pane {
+	app-anamnesis-dock-popup {
+		width: 100%;
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
+form {
+	mat-card.datos-antropometricos-card {
+		width: 50%;
+	}
+	mat-form-field {
+		width: 100%;
+	}
+	.risk-factors-field {
+		display: flex;
+		flex-direction: column;
+		.mat-form-field {
+			width: 50%;
+			::ng-deep .mat-form-field-wrapper {
+				padding-bottom: 0;
+			}
+			margin-bottom: -5px;
+		}
+	}
+
+	.margin-bottom {
+		margin-bottom: 3vh;
+	}
+
+}
+

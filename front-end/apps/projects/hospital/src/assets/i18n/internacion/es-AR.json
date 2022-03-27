@@ -103,9 +103,9 @@
 				"ERROR": "Error al guardar documento de evaluación de ingreso",
 				"SUCCESS": "El documento de evaluación de ingreso se guardó exitosamente"
 			},
-			"vital-signs": {
+			"risk-factors": {
 				"form": {
-					"TITLE": "Signos vitales",
+					"TITLE": "Factores de riesgo",
 					"HEART_RATE": "Frecuencia cardíaca (/min)",
 					"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 					"TEMPERATURE": "Temperatura corporal",
@@ -367,11 +367,11 @@
 					"ERROR": "Error al guardar nueva vacuna"
 				}
 			},
-			"vital-signs-summary": {
-				"UPDATE": "Actualizar signos vitales",
+			"risk-factors-summary": {
+				"UPDATE": "Actualizar factores de riesgo",
 				"save": {
-					"SUCCESS": "Los signos vitales se actualizaron exitosamente",
-					"ERROR": "Error al actualizar signos vitales"
+					"SUCCESS": "Los factores de riesgo se actualizaron exitosamente",
+					"ERROR": "Error al actualizar factores de riesgo"
 				}
 			}
 		},
@@ -419,6 +419,15 @@
 			"MEDICAL_DISCHARGE": "Alta médica",
 			"DISCHARGE_DATE": "Fecha de egreso",
 			"DISCHARGE_TYPE": "Tipo de egreso",
+			"DATE": "Fecha",
+			"DATE_TIME": "Fecha y hora de ingreso",
+			"INVALID_TIME": "La hora debe ser posterior a la de creación del episodio",
+			"INVALID_DATE": "La fecha ingresada no es válida",
+			"MIN_TIME_ERROR": "La hora debe ser posterior a la hora: {{minTime}}",
+			"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
+			"REQUIRED": "El campo es requerido",
+			"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
+			"TIME": "Hora",
 			"messages": {
 				"ERROR": "No se pudo dar el alta administrativa del paciente",
 				"SUCCESS": "El alta administrativa se guardó exitosamente",

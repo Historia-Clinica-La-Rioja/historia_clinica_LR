@@ -1,0 +1,365 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'internaciones.nota-evolucion.TITLE'">
+	<div body fxLayout="column" fxLayoutGap="20px">
+		<form id="nota-evolucion-form" (keydown.enter)="false" [formGroup]="form">
+			<div id="diagnosticos"
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
+			</div>
+			<div id="procedimientos"
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
+					[tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
+					[columns]="procedimientosService.getColumns()" [data]="procedimientosService.getProcedimientos()"
+					[addRemoveColumn]="true" (removeColumn)="procedimientosService.remove($event)">
+					<ng-container concept-form>
+						<app-concepts-search *ngIf="!procedimientosService.getSnomedConcept() else procedimientoForm"
+							[label]="'internaciones.anamnesis.procedimientos.PROCEDIMIENTO'"
+							(search)="procedimientosService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #procedimientoForm>
+							<form [formGroup]="procedimientosService.getForm()"
+								(ngSubmit)="procedimientosService.addToList()">
+								<mat-form-field appearance="outline">
+									<mat-label [translate]="'internaciones.anamnesis.procedimientos.TIPO'">
+									</mat-label>
+									<input id="procedimiento-input" matInput type="text" formControlName="snomed"
+										name="snomed" readonly
+										matTooltip="{{procedimientosService.getSnomedConcept().pt }}">
+									<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
+										(click)="procedimientosService.resetForm()">
+										<mat-icon>close</mat-icon>
+									</button>
+								</mat-form-field>
+
+								<mat-form-field appearance="outline">
+									<mat-label [translate]="'internaciones.anamnesis.procedimientos.FECHA'">
+									</mat-label>
+									<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
+										formControlName="performedDate" [min]="minDate"
+										[max]="procedimientosService.getFechaMax()">
+									<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+									<mat-datepicker #datePicker></mat-datepicker>
+								</mat-form-field>
+
+								<div align="end">
+									<button id="submit_procedimiento" class="uppercase" mat-raised-button
+										color="primary" type="submit">
+										<span [translate]="'internaciones.anamnesis.procedimientos.buttons.ADD'"></span>
+									</button>
+								</div>
+
+							</form>
+						</ng-template>
+					</ng-container>
+				</app-document-section>
+			</div>
+			<div id="observations"
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
+				<mat-card>
+					<mat-card-content formGroupName="observations">
+						<div
+							*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
+									formControlName="currentIllnessNote">
+								</textarea>
+								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'currentIllnessNote')"
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+
+							</mat-form-field>
+						</div>
+						<div
+							*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
+									formControlName="physicalExamNote">
+								</textarea>
+								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'physicalExamNote')"
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div
+							*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
+									formControlName="studiesSummaryNote">
+								</textarea>
+								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'studiesSummaryNote')"
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div
+							*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
+									formControlName="evolutionNote">
+								</textarea>
+								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'evolutionNote')"
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div
+							*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'">
+							</mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
+									formControlName="clinicalImpressionNote">
+								</textarea>
+								<mat-error
+									*ngIf="hasError(form.get('observations'), 'maxlength', 'clinicalImpressionNote')"
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div
+							*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+							<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
+							<mat-form-field [floatLabel]="'never'" appearance="outline">
+								<textarea matInput type="text" id="otherNote" name="otherNote"
+									formControlName="otherNote">
+								</textarea>
+								<mat-error *ngIf="hasError(form.get('observations'), 'maxlength', 'otherNote')"
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+
+					</mat-card-content>
+				</mat-card>
+			</div>
+			<div id="factores-de-riesgo" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+				<div class="margin-bottom">
+					<h2 class="mat-h2" [translate]="'internaciones.anamnesis.risk-factors.form.TITLE'"></h2>
+
+					<mat-card>
+						<mat-card-content formGroupName="riskFactors">
+							<ng-container concept-form>
+								<div fxLayout="column" fxLayoutGap="15px">
+									<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+										<div class="risk-factors-field" formGroupName="heartRate">
+											<mat-label [translate]="'internaciones.anamnesis.risk-factors.form.HEART_RATE'"></mat-label>
+											<div fxLayout="row" fxLayoutAlign="between center">
+												<mat-form-field [floatLabel]="'never'" appearance="outline">
+													<input id="heart_rate" name="heart_rate" formControlName="value" placeholder="00"
+														   type="number" matInput>
+												</mat-form-field>
+											</div>
+											<app-effective-time
+												[effectiveTime]="form.value.riskFactors.heartRate.effectiveTime"
+												(update)="setRiskFactorEffectiveTime($event, 'heartRate')">
+											</app-effective-time>
+											<mat-error
+												*ngIf="hasError(this.form.controls.riskFactors, 'min', 'heartRate.value')"
+												[translate]="'forms.MIN_ERROR'"
+												[translateParams]="{min: getError(this.form.controls.riskFactors, 'min', 'heartRate.value').min}">
+											</mat-error>
+										</div>
+										<div class="risk-factors-field" formGroupName="respiratoryRate">
+											<mat-label [translate]="'internaciones.anamnesis.risk-factors.form.RESPIRATORY_RATE'">
+											</mat-label>
+											<div fxLayout="row" fxLayoutAlign="between center">
+												<mat-form-field [floatLabel]="'never'" appearance="outline">
+													<input id="respiratory_rate" name="respiratory_rate" formControlName="value"
+														   placeholder="00" type="number" matInput>
+												</mat-form-field>
+											</div>
+											<app-effective-time [effectiveTime]="form.value.riskFactors.respiratoryRate.effectiveTime"
+																(update)="setRiskFactorEffectiveTime($event, 'respiratoryRate')"></app-effective-time>
+											<mat-error
+												*ngIf="hasError(this.form.controls.riskFactors, 'min', 'respiratoryRate.value')"
+												[translate]="'forms.MIN_ERROR'"
+												[translateParams]="{min: getError(this.form.controls.riskFactors, 'min', 'respiratoryRate.value').min}">
+											</mat-error>
+										</div>
+									</div>
+
+									<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+										<div class="risk-factors-field" formGroupName="temperature">
+											<mat-label [translate]="'internaciones.anamnesis.risk-factors.form.TEMPERATURE'"></mat-label>
+											<div fxLayout="row" fxLayoutAlign="between center">
+												<mat-form-field [floatLabel]="'never'" appearance="outline">
+													<input id="temperature" name="temperature" formControlName="value"
+														   placeholder="00.0" type="number" matInput>
+												</mat-form-field>
+											</div>
+											<app-effective-time [effectiveTime]="form.value.riskFactors.temperature.effectiveTime"
+																(update)="setRiskFactorEffectiveTime($event, 'temperature')"></app-effective-time>
+											<mat-error
+												*ngIf="hasError(this.form.controls.riskFactors, 'min', 'temperature.value')"
+												[translate]="'forms.MIN_ERROR'"
+												[translateParams]="{min: getError(this.form.controls.riskFactors, 'min', 'temperature.value').min}">
+											</mat-error>
+										</div>
+										<div class="risk-factors-field" formGroupName="bloodOxygenSaturation">
+											<mat-label [translate]="'internaciones.anamnesis.risk-factors.form.BLOOD_OXYGEN_SATURATION'">
+											</mat-label>
+											<div fxLayout="row" fxLayoutAlign="between center">
+												<mat-form-field [floatLabel]="'never'" appearance="outline">
+													<input id="blood_oxygen_saturation" name="blood_oxygen_saturation"
+														   formControlName="value" placeholder="00" type="number" matInput>
+												</mat-form-field>
+											</div>
+											<app-effective-time
+												[effectiveTime]="form.value.riskFactors.bloodOxygenSaturation.effectiveTime"
+												(update)="setRiskFactorEffectiveTime($event, 'bloodOxygenSaturation')">
+											</app-effective-time>
+											<mat-error
+												*ngIf="hasError(this.form.controls.riskFactors, 'min', 'bloodOxygenSaturation.value')"
+												[translate]="'forms.MIN_ERROR'"
+												[translateParams]="{min: getError(this.form.controls.riskFactors, 'min', 'bloodOxygenSaturation.value').min}">
+											</mat-error>
+										</div>
+									</div>
+
+									<div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+										<div class="risk-factors-field" formGroupName="systolicBloodPressure">
+											<mat-label [translate]="'internaciones.anamnesis.risk-factors.form.SYSTOLIC_BLOOD_PRESSURE'">
+											</mat-label>
+											<div fxLayout="row" fxLayoutAlign="between center">
+												<mat-form-field [floatLabel]="'never'" appearance="outline">
+													<input id="systolic_blood_pressure" name="systolicBloodPressure"
+														   formControlName="value" placeholder="00" type="number" matInput>
+												</mat-form-field>
+											</div>
+											<app-effective-time
+												[effectiveTime]="form.value.riskFactors.systolicBloodPressure.effectiveTime"
+												(update)="setRiskFactorEffectiveTime($event, 'systolicBloodPressure')">
+											</app-effective-time>
+											<mat-error
+												*ngIf="hasError(this.form.controls.riskFactors, 'min', 'systolicBloodPressure.value')"
+												[translate]="'forms.MIN_ERROR'"
+												[translateParams]="{min: getError(this.form.controls.riskFactors, 'min', 'systolicBloodPressure.value').min}">
+											</mat-error>
+										</div>
+										<div class="risk-factors-field" formGroupName="diastolicBloodPressure">
+											<mat-label [translate]="'internaciones.anamnesis.risk-factors.form.DIASTOLIC_BLOOD_PRESSURE'">
+											</mat-label>
+											<div fxLayout="row" fxLayoutAlign="between center">
+												<mat-form-field [floatLabel]="'never'" appearance="outline">
+													<input id="diastolic_blood_pressure" name="diastolicBloodPressure"
+														   formControlName="value" placeholder="00" type="number" matInput>
+												</mat-form-field>
+											</div>
+											<app-effective-time
+												[effectiveTime]="form.value.riskFactors.diastolicBloodPressure.effectiveTime"
+												(update)="setRiskFactorEffectiveTime($event, 'diastolicBloodPressure')">
+											</app-effective-time>
+											<mat-error
+												*ngIf="hasError(this.form.controls.riskFactors, 'min', 'diastolicBloodPressure.value')"
+												[translate]="'forms.MIN_ERROR'"
+												[translateParams]="{min: getError(this.form.controls.riskFactors, 'min', 'diastolicBloodPressure.value').min}">
+											</mat-error>
+										</div>
+									</div>
+								</div>
+							</ng-container>
+						</mat-card-content>
+					</mat-card>
+				</div>
+			</div>
+			<div id="datos-antropometricos" *appHasRole="['ESPECIALISTA_MEDICO','ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+				<div class="datos-antropometricos-card">
+					<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
+					<app-document-section>
+						<ng-container concept-form formGroupName="anthropometricData">
+							<div fxLayout="row" fxLayoutAlign="space-between center">
+								<mat-form-field [floatLabel]="'never'" appearance="outline">
+									<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.BLOOD_TYPE'">
+									</mat-label>
+									<mat-select placeholder="B+" formControlName="bloodType" name="bloodTypeId">
+										<mat-option
+											*ngFor="let bloodType of bloodTypes" [value]="bloodType">
+											{{ bloodType.description }}
+										</mat-option>
+									</mat-select>
+									<button id="clear_blood_type" type="button" mat-button *ngIf="form.value.anthropometricData.bloodType" matSuffix
+											color="warn" mat-icon-button (click)="clearBloodType(form.controls.anthropometricData); $event.stopPropagation()">
+										<mat-icon>close</mat-icon>
+									</button>
+								</mat-form-field>
+							</div>
+							<div>
+								<div fxLayout="row" fxLayoutAlign="space-between center">
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.HEIGHT'"></mat-label>
+										<input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput>
+										<mat-error
+											*ngIf="hasError(this.form.controls.anthropometricData, 'min', 'height')"
+											[translate]="'forms.MIN_ERROR'"
+											[translateParams]="{min: getError(this.form.controls.anthropometricData, 'min', 'height').min}">
+										</mat-error>
+										<mat-error
+											*ngIf="hasError(this.form.controls.anthropometricData, 'max', 'height')"
+											[translate]="'forms.MAX_ERROR'"
+											[translateParams]="{max: getError(this.form.controls.anthropometricData, 'max', 'height').max}">
+										</mat-error>
+										<mat-error
+											*ngIf="hasError(this.form.controls.anthropometricData, 'pattern', 'height')"
+											[translate]="'forms.FORMAT_NUMERIC_INTEGER'"
+											[translateParams]="{pattern: getError(this.form.controls.anthropometricData, 'pattern', 'height').pattern}">
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</div>
+							<div>
+								<div fxLayout="row" fxLayoutAlign="space-between center">
+									<mat-form-field [floatLabel]="'never'" appearance="outline">
+										<mat-label [translate]="'internaciones.anamnesis.datos-antropometricos.WEIGHT'"></mat-label>
+										<input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput>
+										<mat-error
+											*ngIf="hasError(this.form.controls.anthropometricData, 'min', 'weight')"
+											[translate]="'forms.MIN_ERROR'"
+											[translateParams]="{min: getError(this.form.controls.anthropometricData, 'min', 'weight').min}">
+										</mat-error>
+										<mat-error
+											*ngIf="hasError(this.form.controls.anthropometricData, 'max', 'weight')"
+											[translate]="'forms.MAX_ERROR'"
+											[translateParams]="{max: getError(this.form.controls.anthropometricData, 'max', 'weight').max}">
+										</mat-error>
+										<mat-error
+											*ngIf="hasError(this.form.controls.anthropometricData, 'pattern', 'weight')"
+											[translate]="'forms.FORMAT_NUMERIC'"
+											[translateParams]="{pattern: getError(this.form.controls.anthropometricData, 'pattern', 'weight').pattern}">
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</div>
+						</ng-container>
+					</app-document-section>
+				</div>
+			</div>
+			<div id="alergias" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']">
+				<app-alergias [(allergies)]="allergies"></app-alergias>
+			</div>
+			<div id="vacunas" *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO']">
+				<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
+			</div>
+			<div id="validations" *ngIf="apiErrors.length > 0">
+				<mat-card>
+					<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
+				</mat-card>
+			</div>
+		</form>
+	</div>
+	<div actions id="buttons" align="end">
+		<button id="sign-confirm" mat-raised-button color="primary"
+			*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+			(click)="save()">
+			<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
+		</button>
+	</div>
+</app-dock-popup>

@@ -45,7 +45,7 @@ public class FetchHospitalizationGeneralState {
         loadGeneralHealthCondition(internmentEpisodeId, hospitalizationGeneralState);
         hospitalizationGeneralState.setMedications(getMedicationsState(internmentEpisodeId));
         hospitalizationGeneralState.setAllergies(getAllergiesState(internmentEpisodeId));
-        hospitalizationGeneralState.setVitalSigns(getVitalSignsState(internmentEpisodeId));
+        hospitalizationGeneralState.setRiskFactors(getRiskFactorsState(internmentEpisodeId));
         hospitalizationGeneralState.setAnthropometricData(getAnthropometricDataState(internmentEpisodeId));
         hospitalizationGeneralState.setImmunizations(getImmunizationsState(internmentEpisodeId));
         LOG.debug(OUTPUT, hospitalizationGeneralState);
@@ -81,8 +81,8 @@ public class FetchHospitalizationGeneralState {
         return fetchHospitalizationClinicalObservationState.getLastAnthropometricDataGeneralState(internmentEpisodeId);
     }
 
-    private Last2VitalSignsBo getVitalSignsState(Integer internmentEpisodeId){
+    private Last2RiskFactorsBo getRiskFactorsState(Integer internmentEpisodeId){
         LOG.debug(LOGGING_INTERNMENT_EPISODE_ID, internmentEpisodeId);
-        return fetchHospitalizationClinicalObservationState.getLast2VitalSignsGeneralState(internmentEpisodeId);
+        return fetchHospitalizationClinicalObservationState.getLast2RiskFactorsGeneralState(internmentEpisodeId);
     }
 }

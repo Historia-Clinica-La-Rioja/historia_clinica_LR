@@ -1,8 +1,8 @@
 package net.pladema.person.controller.service;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;

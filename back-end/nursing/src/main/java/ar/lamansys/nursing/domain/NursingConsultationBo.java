@@ -33,7 +33,7 @@ public class NursingConsultationBo {
 
     private NursingAnthropometricDataBo anthropometricData;
 
-    private NursingVitalSignBo vitalSigns;
+    private NursingRiskFactorBo riskFactors;
 
     private List<@Valid NursingProcedureBo> procedures = new ArrayList<>();
 

@@ -87,19 +87,28 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     }
 
     @Override
-    public HealthcareProfessionalBo findProfessionalById(Integer id) {
+    public HealthcareProfessionalBo findActiveProfessionalById(Integer id) {
         LOG.debug("Input parameters -> id {}", id);
-        HealthcareProfessionalBo result = healthcareProfessionalRepository.findProfessionalById(id)
+        HealthcareProfessionalBo result = healthcareProfessionalRepository.findActiveProfessionalById(id)
                 .map(HealthcareProfessionalBo::new).orElseThrow(() -> new NotFoundException("id", "Professional " + id + " does not exist"));
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    @Override
+	@Override
+	public HealthcareProfessionalBo findFromAllProfessionalsById(Integer healthcareProfessionalId) {
+		LOG.debug("Input parameters -> id {}", healthcareProfessionalId);
+		HealthcareProfessionalBo result = healthcareProfessionalRepository.findFromAllProfessionalsById(healthcareProfessionalId)
+				.map(HealthcareProfessionalBo::new).orElseThrow(() -> new NotFoundException("id", "Professional " + healthcareProfessionalId + " does not exist"));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
     public HealthcareProfessionalBo findProfessionalByPersonId(Integer personId){
         LOG.debug("Input parameters -> personId {}", personId);
         return healthcareProfessionalRepository.findProfessionalByPersonId(personId)
-                .map(professionalId -> healthcareProfessionalRepository.findProfessionalById(professionalId)
+                .map(professionalId -> healthcareProfessionalRepository.findActiveProfessionalById(professionalId)
                         .map(HealthcareProfessionalBo::new).orElse(null))
                 .orElse(null);
     }

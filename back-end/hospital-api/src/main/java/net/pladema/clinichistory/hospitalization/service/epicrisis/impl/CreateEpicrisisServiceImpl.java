@@ -6,7 +6,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveRiskFactorTimeValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         assertInternmentEpisodeCanCreateEpicrisis(internmentEpisode);
 
         assertEpicrisisValid(epicrisis);
-        assertEffectiveVitalSignTimeValid(epicrisis, internmentEpisode.getEntryDate());
+        assertEffectiveRiskFactorTimeValid(epicrisis, internmentEpisode.getEntryDate());
         assertAnthropometricData(epicrisis);
 
         LocalDateTime now = dateTimeProvider.nowDateTime();
@@ -79,8 +79,8 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
             throw new ConstraintViolationException("Antecedentes familiares repetidos", Collections.emptySet());
     }
 
-    private void assertEffectiveVitalSignTimeValid(EpicrisisBo epicrisis, LocalDateTime entryDate) {
-        var validator = new EffectiveVitalSignTimeValidator();
+    private void assertEffectiveRiskFactorTimeValid(EpicrisisBo epicrisis, LocalDateTime entryDate) {
+        var validator = new EffectiveRiskFactorTimeValidator();
         validator.isValid(epicrisis, entryDate);
     }
 

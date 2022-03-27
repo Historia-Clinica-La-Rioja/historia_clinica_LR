@@ -46,7 +46,7 @@ public class UpdateEthnicityMasterDataJob {
             "${scheduledjobs.updateethnicities.dayofweek}")
     public void execute() throws SnowstormApiException {
         LOG.debug("Executing UpdateEthnicityMasterDataJob at {}", new Date());
-        SnowstormSearchResponse response = snowstormService.getConcepts(ECL);
+        SnowstormSearchResponse response = snowstormService.getConceptsByEcl(ECL);
         personMasterDataExternalService.updateActiveEthnicities(ethnicityMapper.fromSnowstormItemResponseList(response.getItems()));
         LOG.debug("Finishing UpdateEthnicityMasterDataJob at {}", new Date());
     }

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceDto} from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { removeFrom } from '@core/utils/array.utils';
@@ -8,7 +8,6 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HCEPersonalHistory, ReferenceComponent } from '../dialogs/reference/reference.component';
 
 @Injectable({
@@ -119,7 +118,7 @@ export class AmbulatoryConsultationReferenceService {
 			reference.referenceIds = referenceFilesIds;
 		});
 	}
-	
+
 	getReferenceProblems(referenceId: number): HCEPersonalHistory[]{
 		return this.references[referenceId].referenceProblems
 	}

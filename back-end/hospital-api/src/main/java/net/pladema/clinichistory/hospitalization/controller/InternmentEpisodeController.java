@@ -1,12 +1,13 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
@@ -44,7 +45,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
@@ -79,15 +79,9 @@ public class InternmentEpisodeController {
 
 	private final LocalDateMapper localDateMapper;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService,
-									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-									   InternmentEpisodeMapper internmentEpisodeMapper,
-									   BedExternalService bedExternalService,
-									   PatientDischargeMapper patientDischargeMapper,
-									   ResponsibleContactService responsibleContactService,
-									   FeatureFlagsService featureFlagsService,
-									   PatientDischargeService patientDischargeService,
-									   ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper) {
+	private final HospitalApiPublisher hospitalApiPublisher;
+
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -98,6 +92,7 @@ public class InternmentEpisodeController {
 		this.patientDischargeService = patientDischargeService;
 		this.responsibleContactMapper = responsibleContactMapper;
 		this.localDateMapper = localDateMapper;
+		this.hospitalApiPublisher = hospitalApiPublisher;
 	}
 
 	@InternmentValid
@@ -142,6 +137,8 @@ public class InternmentEpisodeController {
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
+		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
+				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, EHospitalApiTopicDto.ALTA_MEDICA) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -166,18 +163,18 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/minDischargeDate")
-	public DateDto getMinDischargeDate(
+	public DateTimeDto getMinDischargeDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
 		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
 		if (this.featureFlagsService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
-			return localDateMapper.toDateDto(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
+			return localDateMapper.toDateTimeDto(internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId));
 		}
 		PatientDischargeBo patientDischarge =  patientDischargeService.getPatientDischarge(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
-		LocalDate result = patientDischarge.getMedicalDischargeDate();
+		LocalDateTime result = patientDischarge.getMedicalDischargeDate();
 		LOG.debug(OUTPUT, result);
-		return localDateMapper.toDateDto(result);
+		return localDateMapper.toDateTimeDto(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}")
@@ -204,13 +201,13 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/lastupdatedate")
-	public DateDto getLastUpdateDateOfInternmentEpisode(
+	public DateTimeDto getLastUpdateDateOfInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID, institutionId, internmentEpisodeId);
-		LocalDate result = internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId);
+		LocalDateTime result = internmentEpisodeService.getLastUpdateDateOfInternmentEpisode(internmentEpisodeId);
 		LOG.debug(OUTPUT, result);
-		return localDateMapper.toDateDto(result);
+		return localDateMapper.toDateTimeDto(result);
 	}
 
 	@ProbableDischargeDateValid

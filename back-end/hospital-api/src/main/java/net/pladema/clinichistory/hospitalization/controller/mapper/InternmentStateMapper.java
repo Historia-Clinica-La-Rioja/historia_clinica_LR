@@ -13,7 +13,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {HealthConditionMapper.class, VitalSignMapper.class, AnthropometricDataMapper.class,
+@Mapper(uses = {HealthConditionMapper.class, RiskFactorMapper.class, AnthropometricDataMapper.class,
         MedicationMapper.class, ImmunizationMapper.class, AllergyConditionMapper.class})
 public interface InternmentStateMapper {
 
@@ -45,7 +45,7 @@ public interface InternmentStateMapper {
     @Mapping(target = "diagnosis", source = "diagnosis", qualifiedByName = "toListDiagnosisDto")
     @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionDto")
     @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
-    @Mapping(target = "vitalSigns", source = "vitalSigns")
+    @Mapping(target = "riskFactors", source = "riskFactors")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     InternmentGeneralStateDto toInternmentGeneralStateDto(HospitalizationGeneralState interment);
 
@@ -55,6 +55,6 @@ public interface InternmentStateMapper {
     @Named("toHealthConditionDto")
     HealthConditionDto toHealthConditionDto(HealthConditionBo mainDiagnosis);
 
-    @Named("toLast2VitalSignDto")
-    Last2VitalSignsDto toLast2VitalSignDto(Last2VitalSignsBo vitalSignBos);
+    @Named("toLast2RiskFactorDto")
+	Last2RiskFactorsDto toLast2RiskFactorDto(Last2RiskFactorsBo riskFactorBos);
 }

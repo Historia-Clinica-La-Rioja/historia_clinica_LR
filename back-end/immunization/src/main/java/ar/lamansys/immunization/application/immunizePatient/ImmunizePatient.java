@@ -19,7 +19,7 @@ import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationStorag
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

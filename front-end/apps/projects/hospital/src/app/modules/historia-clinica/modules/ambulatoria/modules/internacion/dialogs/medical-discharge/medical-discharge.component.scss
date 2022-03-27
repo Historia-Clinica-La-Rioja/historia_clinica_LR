@@ -1,0 +1,31 @@
+@import "../../../../../../../../../assets/styles/mixins";
+@import "../../../../../../../../../assets/styles/mat-mixins";
+.form-row{
+	@include form-row;
+	@include mat-form-field-background-white;
+
+	.mat-form-field{
+		width: 100%;
+	}
+}
+
+.date {
+	margin-bottom: 15px;
+}
+
+.medical-discharge {
+	position: relative;
+}
+
+.close{
+	transform: scale(1.0);
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+.mat-dialog-actions{
+	margin-top: 15px;
+	margin-bottom: auto;
+	min-height: auto;
+}

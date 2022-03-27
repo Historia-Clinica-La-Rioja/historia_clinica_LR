@@ -12,7 +12,7 @@ import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     private AnthropometricDataBo anthropometricData;
 
     @Valid
-    private VitalSignBo vitalSigns;
+    private RiskFactorBo riskFactors;
 
     private LocalDateTime performedDate;
 

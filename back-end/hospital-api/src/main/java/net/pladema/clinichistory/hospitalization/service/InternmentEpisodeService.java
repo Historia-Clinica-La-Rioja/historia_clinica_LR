@@ -4,8 +4,8 @@ import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNote
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public interface InternmentEpisodeService {
 
     boolean haveEpicrisis(Integer internmentEpisodeId);
 
-    LocalDate getEntryDate(Integer internmentEpisodeId);
+    LocalDateTime getEntryDate(Integer internmentEpisodeId);
 
     boolean canCreateEpicrisis(Integer internmentEpisodeId);
  
@@ -42,10 +42,12 @@ public interface InternmentEpisodeService {
 
 	boolean existsActiveForBedId(Integer bedId);
 
-	LocalDate getLastUpdateDateOfInternmentEpisode(Integer internmentEpisode);
+	LocalDateTime getLastUpdateDateOfInternmentEpisode(Integer internmentEpisode);
 
 	LocalDateTime updateInternmentEpisodeProbableDischargeDate(Integer internmentEpisode, LocalDateTime probableDischargeDate);
 	
 	Integer updateInternmentEpisodeBed(Integer internmentEpisode, Integer newBedId);
+
+	Optional<PatientMedicalCoverageBo> getMedicalCoverage(Integer internmentEpisode);
 	
 }

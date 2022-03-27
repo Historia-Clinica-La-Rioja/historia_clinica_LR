@@ -29,12 +29,14 @@ public class AppointmentDiaryVo {
 
     private final Short medicalAttentionTypeId;
 
+	private final String phonePrefix;
+
     private final String phoneNumber;
 
     public AppointmentDiaryVo(Integer diaryId, Integer id, Integer patientId,
                               LocalDate date, LocalTime hour, Short appointmentStateId,
-                              boolean overturn, Integer patientMedicalCoverageId, String phoneNumber,
-                              Short medicalAttentionTypeId) {
+                              boolean overturn, Integer patientMedicalCoverageId, String phonePrefix,
+							  String phoneNumber, Short medicalAttentionTypeId) {
         this.diaryId = diaryId;
         this.id = id;
         this.patientId = patientId;
@@ -43,6 +45,7 @@ public class AppointmentDiaryVo {
         this.appointmentStateId = appointmentStateId;
         this.overturn = overturn;
         this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.phonePrefix = phonePrefix;
         this.phoneNumber = phoneNumber;
         this.medicalAttentionTypeId = medicalAttentionTypeId;
     }

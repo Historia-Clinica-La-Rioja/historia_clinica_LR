@@ -20,4 +20,7 @@ public interface ProvinceRepository extends JpaRepository<Province, Short> {
 	@Query("SELECT p FROM Province as p WHERE p.countryId = :countryId")
 	<T> Collection<T> findByCountry(@Param("countryId") Short countryId, Sort by, Class<T> clazz);
 
+	@Transactional (readOnly = true)
+	@Query(value = "SELECT exists (SELECT 1 FROM Province as p WHERE p.country_id = :countryId and p.id = :provinceId)", nativeQuery = true)
+	boolean existProvinceInCountry(@Param("countryId") Short countryId,@Param("provinceId") Short provinceId);
 }

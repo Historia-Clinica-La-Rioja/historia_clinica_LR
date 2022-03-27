@@ -90,8 +90,8 @@ public class EmergencyCareBo {
         this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
     }
 
-    public void setTriageVitalSignIds(List<Integer> vitalSignIds) {
-        this.getTriage().setVitalSignIds(vitalSignIds);
+    public void setTriageRiskFactorIds(List<Integer> riskFactorIds) {
+        this.getTriage().setRiskFactorIds(riskFactorIds);
     }
 
     public Integer getPersonId() {

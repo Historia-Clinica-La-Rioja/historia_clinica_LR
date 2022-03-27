@@ -1,7 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import { PersonPhotoDto } from '@api-rest/api-model';
+import {
+	ExternalPatientCoverageDto,
+	InternmentEpisodeProcessDto,
+	PersonPhotoDto
+} from '@api-rest/api-model';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientNameService } from '@core/services/patient-name.service';
 
@@ -23,7 +27,8 @@ export class PatientCardComponent {
 	@Input() showAdditionalInformation: boolean;
 	@Input() size = 'default';
 	decodedPhoto$: Observable<string>;
-	@Input() bloodType: string;
+	@Input() internmentEpisodeProcess: InternmentEpisodeProcessDto;
+	@Input() emergencyCareEpisodeInProgress: boolean;
 
 	constructor(private readonly imageDecoderService: ImageDecoderService, private readonly patientNameService: PatientNameService) { }
 

@@ -11,7 +11,8 @@ public class OAuthWSConfig extends WSConfig {
 
     private static final String REALM_NAME_PLACEHOLDER = "REALM_NAME";
 
-    private long tokenExpiration = 1800L;
+	@Value("${ws.oauth.token-expiration:1800}")
+    private long tokenExpiration;
 
     @Value("${ws.oauth.enabled:false}")
     private boolean enabled;

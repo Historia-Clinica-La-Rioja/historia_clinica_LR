@@ -109,20 +109,22 @@ export class CardEstudiosComponent implements OnInit {
 			});
 
 		newStudyDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
-			this.dialog.open(ConfirmarPrescripcionComponent,
-				{
-					disableClose: true,
-					data: {
-						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
-						downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
-						successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
-						prescriptionType: PrescriptionTypes.STUDY,
-						patientId: this.patientId,
-						prescriptionRequest: newPrescription.prescriptionRequestResponse,
-					},
-					width: '35%',
-				});
-			this.getStudy();
+			if(newPrescription) {
+				this.dialog.open(ConfirmarPrescripcionComponent,
+					{
+						disableClose: true,
+						data: {
+							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+							downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+							prescriptionType: PrescriptionTypes.STUDY,
+							patientId: this.patientId,
+							prescriptionRequest: newPrescription.prescriptionRequestResponse,
+						},
+						width: '35%',
+					});
+				this.getStudy();
+			}
 		});
 	}
 

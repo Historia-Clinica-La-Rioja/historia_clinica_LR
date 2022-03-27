@@ -1,0 +1,22 @@
+@import '../../../../../assets/styles/mixins';
+
+.risk-factors {
+	.row-container {
+		display: flex;
+		flex-direction: row;
+		.field-container {
+			.mat-form-field {
+				width: 95%;
+				::ng-deep .mat-form-field-wrapper {
+					padding-bottom: 0;
+				}
+				margin-bottom: -5px;
+			}
+			margin-bottom: 10px;
+		}
+	}
+}
+
+div.spinner {
+	@include centered-spinner;
+}

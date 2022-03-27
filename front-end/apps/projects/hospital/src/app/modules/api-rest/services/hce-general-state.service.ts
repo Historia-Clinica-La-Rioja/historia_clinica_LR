@@ -3,12 +3,13 @@ import { Observable } from 'rxjs';
 import {
 	HCEImmunizationDto,
 	HCEMedicationDto,
-	HCELast2VitalSignsDto,
+	HCELast2RiskFactorsDto,
 	HCEAnthropometricDataDto,
 	HCEPersonalHistoryDto,
 	HCEAllergyDto,
 	HCEHospitalizationHistoryDto,
-	HCEToothRecordDto, HCEEvolutionSummaryDto
+	HCEToothRecordDto, HCEEvolutionSummaryDto,
+	ExternalPatientCoverageDto
 } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
@@ -32,6 +33,11 @@ export class HceGeneralStateService {
 		return this.http.get<HCEAllergyDto[]>(url);
 	}
 
+	getCriticalAllergies(patientId: number): Observable<HCEAllergyDto[]> {
+		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/critical-allergies`;
+		return this.http.get<HCEAllergyDto[]>(url);
+	}
+
 	getFamilyHistories(patientId: number): Observable<HCEPersonalHistoryDto[]> {
 		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/familyHistories`;
 		return this.http.get<HCEPersonalHistoryDto[]>(url);
@@ -52,9 +58,9 @@ export class HceGeneralStateService {
 		return this.http.get<HCEImmunizationDto[]>(url);
 	}
 
-	getVitalSigns(patientId: number): Observable<HCELast2VitalSignsDto> {
-		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/vitalSigns`;
-		return this.http.get<HCELast2VitalSignsDto>(url);
+	getRiskFactors(patientId: number): Observable<HCELast2RiskFactorsDto> {
+		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/riskFactors`;
+		return this.http.get<HCELast2RiskFactorsDto>(url);
 	}
 
 	getAnthropometricData(patientId: number): Observable<HCEAnthropometricDataDto> {
@@ -90,6 +96,11 @@ export class HceGeneralStateService {
 	getEvolutionSummaryList(patientId: number): Observable<HCEEvolutionSummaryDto[]> {
 		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/summary-list`;
 		return this.http.get<HCEEvolutionSummaryDto[]>(url);
+	}
+
+	getInternmentEpisodeMedicalCoverage(patientId: number, internmentId: number): Observable<ExternalPatientCoverageDto> {
+		const url = this.HCE_URL_BASE + `${patientId}/hce/general-state/active-internment-episode/${internmentId}/medical-coverage`;
+		return this.http.get<ExternalPatientCoverageDto>(url);
 	}
 
 }

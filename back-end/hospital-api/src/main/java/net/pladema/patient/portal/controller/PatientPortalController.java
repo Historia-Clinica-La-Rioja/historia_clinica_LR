@@ -2,18 +2,19 @@ package net.pladema.patient.portal.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEAllergyExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEClinicalObservationExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEHealthConditionsExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEMedicationExternalService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
-import net.pladema.patient.controller.dto.BasicPatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
@@ -24,7 +25,6 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.DoctorsBo;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.service.PersonExternalService;
@@ -128,12 +128,12 @@ public class PatientPortalController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@GetMapping("/vitalSigns")
-	public ResponseEntity<HCELast2VitalSignsDto> getVitalSigns() throws MethodNotSupportedException {
+	@GetMapping("/riskFactors")
+	public ResponseEntity<HCELast2RiskFactorsDto> getRiskFactors() throws MethodNotSupportedException {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
-		HCELast2VitalSignsDto result = hceClinicalObservationExternalService.getLast2VitalSignsGeneralState(patientId);
+		HCELast2RiskFactorsDto result = hceClinicalObservationExternalService.getLast2RiskFactorsGeneralState(patientId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

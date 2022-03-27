@@ -1,0 +1,37 @@
+@import "../../../../../../../../../assets/styles/mixins";
+@import "../../../../../../../../../assets/styles/mat-mixins";
+
+.form-row{
+	@include form-row;
+	@include mat-form-field-background-white;
+
+	.mat-form-field{
+		width: 100%;
+	}
+}
+
+.date {
+	margin-bottom: 15px;
+}
+
+.header{
+	display: flex;
+	justify-content: flex-end;
+}
+
+.section-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	section{
+		width: 50%;
+	}
+}
+
+div.form-buttons {
+	margin: 20px 0;
+	button {
+		margin-right: 10px;
+	}
+}

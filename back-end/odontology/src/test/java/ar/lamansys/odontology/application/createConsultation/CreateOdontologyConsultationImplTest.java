@@ -8,6 +8,7 @@ import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.Publisher;
 import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationAllergyBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
@@ -76,6 +77,9 @@ class CreateOdontologyConsultationImplTest {
     @Mock
     private GetToothService getToothService;
 
+    @Mock
+    private Publisher publisher;
+
     @BeforeEach
     void setUp() {
         this.createOdontologyConsultation = new CreateOdontologyConsultationImpl(diagnosticStorage,
@@ -88,7 +92,7 @@ class CreateOdontologyConsultationImplTest {
                 cpoCeoIndicesCalculator,
                 getToothSurfacesService,
                 appointmentStorage,
-                getToothService);
+                getToothService, publisher);
     }
 
     @Test

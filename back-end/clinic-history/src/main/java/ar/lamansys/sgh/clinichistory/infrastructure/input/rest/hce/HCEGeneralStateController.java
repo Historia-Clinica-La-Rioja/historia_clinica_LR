@@ -7,6 +7,8 @@ import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEImmunizationService
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEMedicationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEToothRecordService;
 import ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory.FetchSummaryClinicHistory;
+import ar.lamansys.sgh.clinichistory.application.getactiveepisodemedicalcoverage.GetActiveEpisodeMedicalCoverage;
+import ar.lamansys.sgh.clinichistory.application.getcriticalallergies.GetCriticalAllergies;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAllergyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
@@ -14,7 +16,7 @@ import ar.lamansys.sgh.clinichistory.domain.hce.HCEImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEToothRecordBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCEVitalSignsBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.Last2HCERiskFactorsBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationDoseBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
@@ -22,12 +24,13 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthro
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEEvolutionSummaryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHospitalizationHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEImmunizationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2VitalSignsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEToothRecordDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.mapper.HCEGeneralStateMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
@@ -87,6 +90,10 @@ public class HCEGeneralStateController {
 
     private final FetchSummaryClinicHistory fetchSummaryClinicHistory;
 
+	private final GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage;
+
+	private final GetCriticalAllergies getCriticalAllergies;
+
     public HCEGeneralStateController(HCEHealthConditionsService hceHealthConditionsService,
                                      HCEClinicalObservationService hceClinicalObservationService,
                                      HCEGeneralStateMapper hceGeneralStateMapper,
@@ -97,7 +104,9 @@ public class HCEGeneralStateController {
                                      LocalDateMapper localDateMapper,
                                      SharedImmunizationPort sharedImmunizationPort,
                                      SharedInstitutionPort sharedInstitutionPort,
-                                     SharedStaffPort sharedStaffPort, FetchSummaryClinicHistory fetchSummaryClinicHistory) {
+                                     SharedStaffPort sharedStaffPort, FetchSummaryClinicHistory fetchSummaryClinicHistory,
+									 GetActiveEpisodeMedicalCoverage getActiveEpisodeMedicalCoverage,
+									 GetCriticalAllergies getCriticalAllergies) {
         this.hceHealthConditionsService = hceHealthConditionsService;
         this.hceClinicalObservationService = hceClinicalObservationService;
         this.hceGeneralStateMapper = hceGeneralStateMapper;
@@ -110,7 +119,9 @@ public class HCEGeneralStateController {
         this.sharedInstitutionPort = sharedInstitutionPort;
         this.sharedStaffPort = sharedStaffPort;
         this.fetchSummaryClinicHistory = fetchSummaryClinicHistory;
-    }
+		this.getActiveEpisodeMedicalCoverage = getActiveEpisodeMedicalCoverage;
+    	this.getCriticalAllergies = getCriticalAllergies;
+	}
 
     @GetMapping("/personalHistories")
     public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories(
@@ -134,13 +145,13 @@ public class HCEGeneralStateController {
         return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/vitalSigns")
-    public ResponseEntity<HCELast2VitalSignsDto> getVitalSigns(
+    @GetMapping("/riskFactors")
+    public ResponseEntity<HCELast2RiskFactorsDto> getRiskFactors(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        Last2HCEVitalSignsBo resultService = hceClinicalObservationService.getLast2VitalSignsGeneralState(patientId);
-        HCELast2VitalSignsDto result = hceGeneralStateMapper.toHCELast2VitalSignsDto(resultService);
+        Last2HCERiskFactorsBo resultService = hceClinicalObservationService.getLast2RiskFactorsGeneralState(patientId);
+        HCELast2RiskFactorsDto result = hceGeneralStateMapper.toHCELast2RiskFactorsDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
@@ -225,6 +236,16 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@GetMapping("/critical-allergies")
+	public ResponseEntity<List<HCEAllergyDto>> getCriticalAllergies(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug(LOGGING_INPUT, institutionId, patientId);
+		List<HCEAllergyDto> result = hceGeneralStateMapper.toListHCEAllergyDto(getCriticalAllergies.run(patientId));
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
     @GetMapping("/chronic")
     public ResponseEntity<List<HCEPersonalHistoryDto>> getChronicConditions(
@@ -311,5 +332,16 @@ public class HCEGeneralStateController {
         LOG.debug("Get summary  => {}", result);
         return ResponseEntity.ok(result);
     }
+
+	@GetMapping("/active-internment-episode/{internmentEpisodeId}/medical-coverage")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<ExternalPatientCoverageDto> getActiveEpisodeMedicalCoverage(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		ExternalPatientCoverageDto result = getActiveEpisodeMedicalCoverage.run(internmentEpisodeId);
+		LOG.debug("Get active internment episode medical coverage => {}", result);
+		return ResponseEntity.ok(result);
+	}
 
 }

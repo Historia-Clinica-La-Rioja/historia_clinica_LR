@@ -24,12 +24,12 @@ function ceilToNearest(amount: number, precision: number) {
 
 const colors: any = {
 	blue: {
-		primary: '#0095E1',
-		secondary: '#B3DFFF',
+		primary: '#FFF5E0',
+		secondary: '#FFF5E0',
 	},
 	green: {
-		primary: '#4CAF50',
-		secondary: '#C6E4C7',
+		primary: '#D6FBD8',
+		secondary: '#D6FBD8',
 	},
 };
 
@@ -115,26 +115,28 @@ export class AgendaHorarioService {
 	}
 
 	openEditDialogForEvent(event: CalendarEvent): void {
-		const dialogRef = this.dialog.open(NewAttentionComponent,
-			{
-				data: {
-					start: event.start,
-					end: event.end,
-					overturnCount: event.meta.overturnCount,
-					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
-					isEdit: true
+		if (event.meta) {
+			const dialogRef = this.dialog.open(NewAttentionComponent,
+				{
+					data: {
+						start: event.start,
+						end: event.end,
+						overturnCount: event.meta.overturnCount,
+						medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
+						isEdit: true
+					}
+				});
+			dialogRef.afterClosed().subscribe(dialogInfo => {
+				if (!dialogInfo) {
+					if (event.meta?.tmpEvent) {
+						this.removeTempEvent(event);
+					}
+				} else {
+					this.setNewEvent(event, dialogInfo);
 				}
+				this.refresh();
 			});
-		dialogRef.afterClosed().subscribe(dialogInfo => {
-			if (!dialogInfo) {
-				if (event.meta?.tmpEvent) {
-					this.removeTempEvent(event);
-				}
-			} else {
-				this.setNewEvent(event, dialogInfo);
-			}
-			this.refresh();
-		});
+		}
 	}
 
 	getMedicalAttentionColor(medicalAttentionTypeId: number): any {

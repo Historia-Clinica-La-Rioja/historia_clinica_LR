@@ -1,0 +1,23 @@
+@import "../../../../../../../../../assets/styles/mixins.scss";
+
+
+.mat-card {
+	width: 80%;
+
+	mat-card-content {
+		@include card-content;
+	}
+}
+
+.section-container {
+
+	section.parent-section {
+		width: 50%;
+	}
+}
+
+.bed-assignment {
+	background: #f3efef8e;
+	padding: 15px;
+	margin-bottom: 10px;
+}

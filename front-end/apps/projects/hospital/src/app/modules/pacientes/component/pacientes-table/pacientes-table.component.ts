@@ -10,7 +10,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { AppFeature } from "@api-rest/api-model";
 
-const ROUTE_INTERNMENT = 'internaciones/internacion/';
+const ROUTE_PROFILE = 'pacientes/profile/';
 
 @Component({
 	selector: 'app-pacientes-table',
@@ -87,7 +87,7 @@ export class PacientesTableComponent implements OnInit {
 							display: 'Ver',
 							matColor: 'primary',
 							do: (internacion) => {
-								const url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
+								const url = this.routePrefix + ROUTE_PROFILE + internacion.patientId;
 								this.router.navigate([url]);
 							}
 						}
@@ -137,7 +137,7 @@ export class PacientesTableComponent implements OnInit {
 							display: 'Ver',
 							matColor: 'primary',
 							do: (internacion) => {
-								const url = this.routePrefix + ROUTE_INTERNMENT + `${internacion.internmentId}/paciente/${internacion.patientId}`;
+								const url = this.routePrefix + ROUTE_PROFILE + internacion.patientId;
 								this.router.navigate([url]);
 							}
 						}

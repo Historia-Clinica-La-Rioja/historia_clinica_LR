@@ -1,0 +1,161 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_34
+    - changeSet:
+        id: dropView-v_nomivac_immunization_data
+        author: mvenere
+        dbms: "postgresql"
+        changes:
+          - dropView:
+              viewName: v_nomivac_immunization_data
+
+    - changeSet:
+        id: update-snomed-pt-length
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: pt
+              newDataType: varchar(400)
+              tableName: snomed
+
+    - changeSet:
+        id: v_nomivac_immunization_data
+        comment: Update v_nomivac_immunization_data
+        author: mvenere
+        changes:
+          - createView:
+              viewName: v_nomivac_immunization_data
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                WITH t AS (
+                	SELECT inm.id, inm.patient_id, inm.snomed_id, inm.status_id, inm.administration_date, inm.expiration_date,
+                    inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.institution_id, inm.lot_number,
+                    inm.note_id, inm.billable, inm.updated_on, inm.updated_by,
+                    row_number() over (partition by inm.patient_id, inm.snomed_id, inm.condition_id, inm.scheme_id, inm.dose,
+                    inm.dose_order, inm.administration_date, inm.institution_id order by inm.updated_on desc) as rw
+                    FROM document d
+                    JOIN document_inmunization di on d.id = di.document_id
+                    JOIN inmunization inm on di.inmunization_id = inm.id
+                    WHERE d.status_id = '445665009'
+                    AND d.type_id IN (4,8)
+                    AND inm.billable = true
+                    AND inm.condition_id IS NOT NULL
+                    AND inm.scheme_id IS NOT NULL
+                    AND inm.dose IS NOT NULL
+                    AND inm.dose_order IS NOT NULL
+                    AND inm.institution_id IS NOT NULL
+                )
+                SELECT t.id as id, t.patient_id, s.sctid as vaccine_sctid, s.pt as vaccine_pt, t.status_id,
+                administration_date, expiration_date, t.institution_id,
+                t.condition_id, vca.description as condition_description,
+                t.scheme_id, vs.description as scheme_description,
+                t.dose as dose, t.dose_order,  t.lot_number, n.description as note,
+                t.billable, t.updated_on, t.updated_by
+                FROM t
+                JOIN snomed s ON snomed_id = s.id
+                LEFT JOIN note n ON (n.id = t.note_id)
+                JOIN vaccine_condition_application vca on (t.condition_id = vca.id)
+                JOIN vaccine_scheme as vs on (t.scheme_id = vs.id)
+                WHERE rw = 1
+                AND status_id <> '723510000'
+                ORDER BY t.updated_on DESC;
+
+
+    - changeSet:
+        id: fixData-vaccine_nomivac_rule
+        comment: Actualizacion de datos en vaccine_nomivac_rule
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE vaccine_nomivac_rule
+                SET maximum_threshold_days = minimum_threshold_days
+                WHERE minimum_threshold_days > maximum_threshold_days;
+
+    - changeSet:
+        id: add-country_id-column-address
+        author: flizalde
+        changes:
+          - addColumn:
+              tableName: address
+              columns:
+                - column:
+                    name: country_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: country_id
+              baseTableName: address
+              constraintName: FK_address_country_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: country
+              validate: true
+
+    - changeSet:
+        id: add-province_id-column-address
+        author: flizalde
+        changes:
+          - addColumn:
+              tableName: address
+              columns:
+                - column:
+                    name: province_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: province_id
+              baseTableName: address
+              constraintName: FK_address_province_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: province
+              validate: true
+
+    - changeSet:
+        id: add-department_id-column-address
+        author: flizalde
+        changes:
+          - addColumn:
+              tableName: address
+              columns:
+                - column:
+                    name: department_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: department_id
+              baseTableName: address
+              constraintName: FK_address_department_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: department
+              validate: true
+
+    - changeSet:
+          id: createIndexFirstName-person
+          author: bchacon
+          dbms: postgresql
+          changes:
+              - sql:
+                    sql: |-
+                        CREATE INDEX "IDX_person_first-name" ON person (UPPER(first_name));
+                        
+    - changeSet:
+          id: createIndexLastName-person
+          author: bchacon
+          dbms: postgresql
+          changes:
+              - sql:
+                    sql: |-
+                        CREATE INDEX "IDX_person_last-name" ON person (UPPER(last_name));
+                        
+    - changeSet:
+          id: createIndexIdentificationNumber-person
+          author: bchacon
+          dbms: postgresql
+          changes:
+              - sql:
+                    sql: |-
+                        CREATE INDEX "IDX_person_identification-number" ON person (identification_number);

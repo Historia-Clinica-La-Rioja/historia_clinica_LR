@@ -68,21 +68,18 @@ a {
 		}
 	}
 
-	.assigned {
-		background-color: #009B68;
-	}
-
 	.confirmed {
-		background-color: #FF5C00;
+		background-color: #FFA500;
 	}
 
 	.absent {
-		background-color: #D34444;
+		background-color: #7D807D;
 	}
 
 	.served {
-		background-color: #2687C5;
+		background-color: #2DC64F;
 	}
+
 }
 
 mat-form-field {

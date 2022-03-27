@@ -15,7 +15,7 @@ public interface DocumentService {
 
     DocumentHealthCondition createDocumentHealthCondition(Long documentId, Integer healthConditionId);
 
-    DocumentVitalSign createDocumentVitalSign(Long documentId, Integer observationVitalSignId);
+    DocumentRiskFactor createDocumentRiskFactor(Long documentId, Integer observationRiskFactorsId);
 
     DocumentLab createDocumentLab(Long documentId, Integer observationLabId);
 
@@ -43,7 +43,7 @@ public interface DocumentService {
 
     AnthropometricDataBo getAnthropometricDataStateFromDocument(Long documentId);
 
-    VitalSignBo getVitalSignStateFromDocument(Long documentId);
+    RiskFactorBo getRiskFactorStateFromDocument(Long documentId);
 
     List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId);
 
@@ -61,7 +61,7 @@ public interface DocumentService {
 
     void deleteMedicationsHistory(Long documentId);
 
-    void deleteObservationsVitalSignsHistory(Long documentId);
+    void deleteObservationsRiskFactorsHistory(Long documentId);
 
     void deleteObservationsLabHistory(Long documentId);
 }

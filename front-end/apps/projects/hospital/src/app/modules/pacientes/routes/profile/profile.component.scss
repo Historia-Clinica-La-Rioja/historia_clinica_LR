@@ -11,10 +11,6 @@ span {
 	justify-content: flex-end;
 }
 
-.profile-card {
-	width: 80%;
-}
-
 button {
 	margin-bottom: 25px;
 }
@@ -59,4 +55,18 @@ mat-card {
 	.sub-title {
 		margin-top: 10px;
 	}
+}
+
+#triage-chip {
+    width: fit-content;
+    padding: 1.5px 8px;
+    border-radius: 5px;
+}
+
+#episode-state {
+    color: #009B68;
+}
+
+mat-card.box mat-card-content {
+    margin: 10px;
 }

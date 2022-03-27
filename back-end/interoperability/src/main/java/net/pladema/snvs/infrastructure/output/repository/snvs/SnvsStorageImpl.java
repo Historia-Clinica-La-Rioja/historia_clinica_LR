@@ -43,8 +43,8 @@ public class SnvsStorageImpl implements SnvsStorage {
         Query query = entityManager.createQuery(
                 "SELECT  snvsg.eventId, snvsg.groupEventId, snvsg.manualClassificationId, snvsg.environment " +
                         "FROM Snomed s " +
-                        "JOIN SnomedRelatedGroup srg ON (srg.snomedId = s.id) " +
-                        "JOIN SnvsGroup snvsg ON (snvsg.groupId = srg.groupId) " +
+                        "JOIN SnomedRelatedGroup srg ON (srg.pk.snomedId = s.id) " +
+                        "JOIN SnvsGroup snvsg ON (snvsg.groupId = srg.pk.groupId) " +
                         "WHERE s.sctid = :sctid " +
                         "AND s.pt = :pt " +
                         "AND snvsg.manualClassificationId = :manualClassificationId " +
@@ -71,9 +71,9 @@ public class SnvsStorageImpl implements SnvsStorage {
         Query query = entityManager.createQuery(
                 "SELECT DISTINCT sg.description, ng.eventId, ng.groupEventId, ng.environment, mc.id, mc.description " +
                         "FROM Snomed s " +
-                        "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
-                        "JOIN SnomedGroup sg ON (sg.id = srg.groupId) " +
-                        "JOIN SnvsGroup ng ON (ng.groupId = srg.groupId) " +
+                        "JOIN SnomedRelatedGroup srg ON (s.id = srg.pk.snomedId) " +
+                        "JOIN SnomedGroup sg ON (sg.id = srg.pk.groupId) " +
+                        "JOIN SnvsGroup ng ON (ng.groupId = srg.pk.groupId) " +
                         "JOIN ManualClassification mc ON (mc.id = ng.manualClassificationId) " +
                         "WHERE sctid = :sctid " +
                         "AND pt = :pt " +

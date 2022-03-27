@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.controller.dto;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewVitalSignsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -31,9 +31,9 @@ public class ECAdultGynecologicalDto implements Serializable {
                 this.getAdministrative().getPatient().getId() : null;
     }
 
-    public NewVitalSignsObservationDto vitalSignsObservation() {
-        return (this.triage != null && this.getTriage().getVitalSigns() != null) ?
-                this.getTriage().getVitalSigns() : new NewVitalSignsObservationDto();
+    public NewRiskFactorsObservationDto riskFactorsObservation() {
+        return (this.triage != null && this.getTriage().getRiskFactors() != null) ?
+                this.getTriage().getRiskFactors() : new NewRiskFactorsObservationDto();
     }
 
     public List<SnomedDto> reasons() {

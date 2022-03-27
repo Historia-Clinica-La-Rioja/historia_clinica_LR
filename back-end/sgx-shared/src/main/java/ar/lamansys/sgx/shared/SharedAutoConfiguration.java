@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
@@ -17,6 +18,7 @@ import javax.annotation.PostConstruct;
 @ComponentScan(basePackages = {"ar.lamansys.sgx.shared"})
 @EnableJpaRepositories(basePackages = {"ar.lamansys.sgx.shared"})
 @EntityScan(basePackages = {"ar.lamansys.sgx.shared"})
+@PropertySource(value = "classpath:sgx_shared.properties", ignoreResourceNotFound = true)
 public class SharedAutoConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(SharedAutoConfiguration.class);

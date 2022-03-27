@@ -1,6 +1,10 @@
 
 export const APPOINTMENT_DURATIONS = [
 	{
+		id: 10,
+		description: '10 minutos'
+	},
+	{
 		id: 15,
 		description: '15 minutos'
 	},

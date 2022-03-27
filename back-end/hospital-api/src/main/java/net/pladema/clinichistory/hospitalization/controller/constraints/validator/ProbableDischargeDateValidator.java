@@ -12,7 +12,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraintvalidation.SupportedValidationTarget;
 import javax.validation.constraintvalidation.ValidationTarget;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
@@ -49,10 +48,10 @@ public class ProbableDischargeDateValidator implements ConstraintValidator<Proba
         }
 
         if (result) {
-            LocalDate entryDate = internmentEpisodeService.getEntryDate(internmentEpisodeId);
+            LocalDateTime entryDate = internmentEpisodeService.getEntryDate(internmentEpisodeId);
             ProbableDischargeDateDto probableDischargeDateDto = (ProbableDischargeDateDto) parameters[2];
             LocalDateTime probableDischargeDate = localDateMapper.fromStringToLocalDateTime(probableDischargeDateDto.getProbableDischargeDate());
-            result = probableDischargeDate.isAfter(entryDate.atStartOfDay());
+            result = probableDischargeDate.isAfter(entryDate);
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("{patient.discharge.date.before}")
                     .addConstraintViolation();

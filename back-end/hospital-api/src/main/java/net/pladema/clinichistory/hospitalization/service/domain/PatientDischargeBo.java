@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.domain;
 import lombok.*;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,9 +14,9 @@ public class PatientDischargeBo {
 
     private Integer internmentEpisodeId;
 
-    private LocalDate administrativeDischargeDate;
+    private LocalDateTime administrativeDischargeDate;
 
-    private LocalDate medicalDischargeDate;
+    private LocalDateTime medicalDischargeDate;
 
     private Short dischargeTypeId;
 

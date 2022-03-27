@@ -13,24 +13,16 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisServ
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
-import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/anamnesis")
@@ -106,31 +98,6 @@ public class AnamnesisController {
         ResponseAnamnesisDto result = anamnesisMapper.fromAnamnesis(anamnesis);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ ConstraintViolationException.class })
-    public ApiErrorDto handleValidationExceptions(ConstraintViolationException ex, Locale locale) {
-        List<String> errors = new ArrayList<>();
-        if (ex.getConstraintViolations().isEmpty()) {
-            String msg = ex.getMessage();
-            try {
-                String property = msg.substring(0, msg.indexOf(":"));
-                msg = property + ": " + messageSource.getMessage(StringUtils.substringBetween(msg, "{", "}"), null, locale);
-            } catch (Exception e) {
-                LOG.error("No se tiene un mensaje para la siguiente clave -> {}", msg);
-            }
-            LOG.debug("Constraint validation error -> {}", msg);
-            return new ApiErrorDto("Constraint violation", List.of(msg));
-        }
-        for (ConstraintViolation<?> violation : ex.getConstraintViolations()){
-
-            if(violation.getPropertyPath().toString().contains("<cross-parameter>"))
-                errors.add(violation.getMessage());
-            else
-                errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
-        return new ApiErrorDto("Constraint violation", errors);
     }
 
 }

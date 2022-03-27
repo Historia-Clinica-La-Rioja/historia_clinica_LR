@@ -19,7 +19,7 @@ import {
 
 import { AppFeature, } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
-import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
+import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -33,6 +33,7 @@ import { map } from 'rxjs/operators';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
+import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -94,6 +95,7 @@ export class EditPatientComponent implements OnInit {
 		this.route.queryParams
 			.subscribe(params => {
 				this.patientId = params.id;
+				this.formBuild();
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						this.completeDataPatient = completeData;
@@ -128,19 +130,27 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
 								this.form.setControl('cuil', new FormControl(personInformationData.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)));
 								this.form.setControl('email', new FormControl(personInformationData.email, Validators.email));
+								this.form.setControl('phonePrefix', new FormControl(personInformationData.phonePrefix));
 								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
+								if(personInformationData.phoneNumber){
+									updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
+									updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+								}
 								this.form.setControl('religion', new FormControl(personInformationData.religion));
 								this.form.setControl('ethnicityId', new FormControl(personInformationData.ethnicityId));
 								this.form.setControl('occupationId', new FormControl(personInformationData.occupationId));
 								this.form.setControl('educationLevelId', new FormControl(personInformationData.educationLevelId));
 								// address
-								this.form.setControl('addressCountryId', new FormControl(DEFAULT_COUNTRY_ID));
-								if (personInformationData.province !== undefined) {
-									this.form.setControl('addressProvinceId', new FormControl(personInformationData.province.id));
+								if (personInformationData.countryId) {
+									this.form.setControl('addressCountryId', new FormControl(personInformationData.countryId));
+									this.setProvinces();
+								}
+								if (personInformationData.provinceId) {
+									this.form.setControl('addressProvinceId', new FormControl(personInformationData.provinceId));
 									this.setDepartments();
 								}
-								if (personInformationData.department !== undefined) {
-									this.form.setControl('addressDepartmentId', new FormControl(personInformationData.department.id));
+								if (personInformationData.departmentId) {
+									this.form.setControl('addressDepartmentId', new FormControl(personInformationData.departmentId));
 									this.setCities();
 								}
 								this.form.setControl('addressCityId', new FormControl(personInformationData.cityId));
@@ -156,9 +166,58 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('pamiDoctor', new FormControl(completeData.pamiDoctor?.fullName));
 								this.form.setControl('pamiDoctorPhoneNumber', new FormControl(completeData.pamiDoctor?.phoneNumber));
 								this.restrictFormEdit();
+
+								this.form.get("addressCountryId").valueChanges.subscribe(
+									countryId => {
+										this.clear(this.form.controls.addressProvinceId);
+										delete this.provinces;
+										if (countryId) {
+											this.addressMasterDataService.getByCountry(countryId)
+												.subscribe(provinces => {
+													this.provinces = provinces;
+												});
+										}
+									}
+								);
+
+								this.form.get("addressProvinceId").valueChanges.subscribe(
+									provinceId => {
+										this.clear(this.form.controls.addressDepartmentId);
+										delete this.departments;
+										if (provinceId) {
+											this.addressMasterDataService.getDepartmentsByProvince(provinceId)
+												.subscribe(departments => {
+													this.departments = departments;
+												});
+										}
+									}
+								);
+
+								this.form.get("addressDepartmentId").valueChanges.subscribe(
+									departmentId => {
+										this.clear(this.form.controls.addressCityId);
+										delete this.cities;
+										if (departmentId) {
+											this.addressMasterDataService.getCitiesByDepartment(departmentId)
+												.subscribe(cities => {
+													this.cities = cities;
+												});
+										}
+									}
+								);
+
+								this.form.get("addressCityId").valueChanges.subscribe(
+									_ => {
+											this.clear(this.form.controls.addressNumber);
+											this.clear(this.form.controls.addressFloor);
+											this.clear(this.form.controls.addressApartment);
+											this.clear(this.form.controls.addressQuarter);
+											this.clear(this.form.controls.addressStreet);
+											this.clear(this.form.controls.addressPostcode);
+									}
+								);
 							});
 					});
-				this.formBuild();
 				this.setPatientMedicalCoverages();
 			});
 
@@ -195,12 +254,20 @@ export class EditPatientComponent implements OnInit {
 		this.addressMasterDataService.getAllCountries()
 			.subscribe(countries => {
 				this.countries = countries;
-				this.form.controls.addressCountryId.setValue(DEFAULT_COUNTRY_ID);
-				this.setProvinces();
 			});
 
 	}
 
+	updatePhoneValidators(){
+		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+		} else {
+			updateControlValidator(this.form, 'phoneNumber', []);
+			updateControlValidator(this.form, 'phonePrefix', []);
+		}
+
+	}
 	formBuild() {
 		this.form = this.formBuilder.group({
 			firstName: [null, [Validators.required]],
@@ -215,6 +282,7 @@ export class EditPatientComponent implements OnInit {
 			// Person extended
 			cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 			mothersLastName: [],
+			phonePrefix: [],
 			phoneNumber: [],
 			email: [null, Validators.email],
 			ethnicityId: [],
@@ -232,7 +300,6 @@ export class EditPatientComponent implements OnInit {
 			addressQuarter: [],
 			addressCityId: [],
 			addressPostcode: [],
-
 			addressProvinceId: [],
 			addressCountryId: [],
 			addressDepartmentId: [],
@@ -284,6 +351,7 @@ export class EditPatientComponent implements OnInit {
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
 			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
+			phonePrefix: this.form.controls.phonePrefix.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
 			// Address
@@ -294,6 +362,9 @@ export class EditPatientComponent implements OnInit {
 			postcode: this.form.controls.addressPostcode.value,
 			quarter: this.form.controls.addressQuarter.value,
 			street: this.form.controls.addressStreet.value,
+			countryId: this.form.controls.addressCountryId.value,
+			departmentId: this.form.controls.addressDepartmentId.value,
+			provinceId: this.form.controls.addressProvinceId.value,
 			// Patient
 			typeId: this.patientType,
 			comments: null,

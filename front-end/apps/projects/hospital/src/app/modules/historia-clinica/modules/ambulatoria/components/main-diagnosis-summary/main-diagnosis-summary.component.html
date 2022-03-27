@@ -1,0 +1,22 @@
+<app-summary-card [header]="mainDiagnosticosSummary">
+	<mat-card *ngIf="(mainDiagnosis$ | async) as mainDiagnosis else noInfo">
+		<mat-card-content>
+			<div class="mat-h3 capitalize-first-letter">
+				{{ mainDiagnosis.snomed.pt }}
+			</div>
+		</mat-card-content>
+		<mat-card-actions fxLayout="row-reverse" *ngIf="editable">
+			<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
+				<button mat-raised-button id="add_clinical_assestment_button" color="primary" (click)="openClinicalEvaluation(mainDiagnosis.id)">
+					<span [translate]="'internaciones.internacion-paciente.main-diagnosis.actions.ADD_CLINICAL_ASSESTMENT'"></span>
+				</button>
+				<button mat-raised-button id="change_main_diagnosis_button" color="primary" (click)="openChangeMainDiagnosis()">
+					<span [translate]="'internaciones.internacion-paciente.main-diagnosis.actions.CHANGE'"></span>
+				</button>
+			</ng-container>
+		</mat-card-actions>
+	</mat-card>
+	<ng-template #noInfo>
+		<app-no-data></app-no-data>
+	</ng-template>
+</app-summary-card>

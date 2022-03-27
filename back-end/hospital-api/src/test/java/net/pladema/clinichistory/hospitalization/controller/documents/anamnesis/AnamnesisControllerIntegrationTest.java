@@ -11,7 +11,7 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveVitalSignTimeValidator;
+import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveRiskFactorTimeValidator;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -64,7 +64,7 @@ class AnamnesisControllerIntegrationTest extends IntegrationController {
 	private DocumentRepository documentRepository;
 
 	@MockBean
-	private EffectiveVitalSignTimeValidator effectiveVitalSignTimeValidator;
+	private EffectiveRiskFactorTimeValidator effectiveRiskFactorTimeValidator;
 
 	@MockBean
 	private SGHNotNullValidator sghNotNullValidator;

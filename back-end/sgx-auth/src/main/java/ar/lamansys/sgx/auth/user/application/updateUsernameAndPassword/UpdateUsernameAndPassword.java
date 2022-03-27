@@ -1,6 +1,5 @@
 package ar.lamansys.sgx.auth.user.application.updateUsernameAndPassword;
 
-import ar.lamansys.sgx.auth.user.application.updatepassword.UpdatePassword;
 import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenBo;
 import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenStorage;
 import ar.lamansys.sgx.auth.user.domain.user.model.OAuthUserBo;

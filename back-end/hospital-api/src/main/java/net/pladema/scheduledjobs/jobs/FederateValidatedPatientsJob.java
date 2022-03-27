@@ -44,8 +44,14 @@ public class FederateValidatedPatientsJob {
         patientService.getAllValidatedPatients().forEach(p -> {
             FederarResourceAttributes attributes = new FederarResourceAttributes();
             BeanUtils.copyProperties(p, attributes);
-            Optional<Integer> optionalNationalId = federarExternalService.federatePatient(attributes, p.getId());
-            optionalNationalId.ifPresent(nationalId -> patientService.updatePatientPermanent(p, nationalId));
+
+			try {
+				Optional<Integer> optionalNationalId = federarExternalService.federatePatient(attributes, p.getId());
+				optionalNationalId.ifPresent(nationalId -> patientService.updatePatientPermanent(p, nationalId));
+			} catch (Exception ex) {
+				LOG.error("Fallo en la comunicación", ex);
+			}
+
         });
         LOG.debug("Finishing FederateValidatedPatientsJob at {}", new Date());
     }

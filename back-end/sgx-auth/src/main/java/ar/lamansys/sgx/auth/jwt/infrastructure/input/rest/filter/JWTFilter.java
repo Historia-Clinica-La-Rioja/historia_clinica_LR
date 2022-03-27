@@ -1,7 +1,8 @@
 package ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter;
 
 import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
-import ar.lamansys.sgx.auth.jwt.domain.token.JWTUtils;
+import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,7 @@ public abstract class JWTFilter extends OncePerRequestFilter implements Authenti
 
 		tokenExtractor.apply(request)
 				.map(this::removeBearer)
-				.flatMap(token -> JWTUtils.parseToken(token, secret, ETokenType.NORMAL))
+				.flatMap(token -> TokenUtils.parseToken(token, secret, ETokenType.NORMAL))
 				.flatMap(tokenData -> authenticationLoader.apply(tokenData.username))
 				.ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA));
 

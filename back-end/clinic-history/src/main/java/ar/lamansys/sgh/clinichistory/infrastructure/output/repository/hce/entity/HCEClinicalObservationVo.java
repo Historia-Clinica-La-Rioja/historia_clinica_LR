@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EVitalSign;
+import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 import lombok.*;
 
@@ -28,8 +28,8 @@ public class HCEClinicalObservationVo {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		HCEClinicalObservationVo vitalSign = (HCEClinicalObservationVo) o;
-		return Objects.equals(id, vitalSign.id);
+		HCEClinicalObservationVo riskFactor = (HCEClinicalObservationVo) o;
+		return Objects.equals(id, riskFactor.id);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class HCEClinicalObservationVo {
 	}
 
 	public boolean isAnthropometricData(){
-		return EVitalSign.isCodeAnthropometricData(sctidCode);
+		return ERiskFactor.isCodeAnthropometricData(sctidCode);
 	}
 
     public boolean hasError() {

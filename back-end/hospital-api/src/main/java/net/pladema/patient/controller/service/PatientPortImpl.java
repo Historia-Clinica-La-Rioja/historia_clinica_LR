@@ -1,13 +1,13 @@
 package net.pladema.patient.controller.service;
 
-import net.pladema.patient.controller.dto.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.person.controller.dto.BasicDataPersonDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -6,16 +6,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 public interface AppointmentService {
 
     Optional<AppointmentBo> getAppointment(Integer appointmentId);
-	
+
     Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds);
 
     boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
-    
+
     Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
 
     boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
@@ -24,9 +25,12 @@ public interface AppointmentService {
 
     List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
-    boolean updatePhoneNumber(Integer appointmentId, String phoneNumber, Integer userId);
+    boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);
 
     boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
 
     Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId, LocalDate currentDate);
+
+	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId);
+
 }

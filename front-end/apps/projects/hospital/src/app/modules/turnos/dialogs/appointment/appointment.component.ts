@@ -8,7 +8,7 @@ import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
-import { getError, hasError, processErrors } from '@core/utils/form.utils';
+import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -99,11 +99,17 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit = this.formBuilder.group({
 			//Medical Coverage selected in Edit Mode
 			newCoverageData: null,
+			phonePrefix: null,
 			phoneNumber: null
 		});
 
 		this.setMedicalCoverages();
 		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
+		this.formEdit.controls.phonePrefix.setValue(this.params.appointmentData.phonePrefix);
+		if (this.params.appointmentData.phoneNumber) {
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+		}
 		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -116,8 +122,8 @@ export class AppointmentComponent implements OnInit {
 						.subscribe(coverageData => {
 							if (coverageData) {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
-								this.formEdit.controls.newCoverageData.setValue(coverageData);
-								this.setCoverageText(this.formEdit.controls.newCoverageData.value);
+								this.formEdit.controls.newCoverageData.setValue(coverageData.id);
+								this.setCoverageText(coverageData);
 							}
 						});
 				}
@@ -133,6 +139,23 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(identificationTypes => {
 				this.identificationType = identificationTypes.find(identificationType => identificationType.id==this.params.appointmentData.patient.identificationTypeId);
 			});
+	}
+
+	formatPhonePrefixAndNumber(): string {
+		return this.params.appointmentData.phoneNumber ? this.params.appointmentData.phonePrefix
+			? this.params.appointmentData.phonePrefix + "-" + this.params.appointmentData.phoneNumber
+			: this.params.appointmentData.phoneNumber
+			: "Sin información";
+	}
+
+	updatePhoneValidators() {
+		if (this.formEdit.controls.phoneNumber.value || this.formEdit.controls.phonePrefix.value) {
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+		} else {
+			updateControlValidator(this.formEdit, 'phoneNumber', []);
+			updateControlValidator(this.formEdit, 'phonePrefix', []);
+		}
 	}
 
 	private setMedicalCoverages(): void {
@@ -184,7 +207,7 @@ export class AppointmentComponent implements OnInit {
 		if (this.formEdit.valid) {
 			if (this.isAssigned()) {
 				if (this.formEdit.controls.newCoverageData.value) {
-					this.coverageData = this.formEdit.controls.newCoverageData.value;
+					this.coverageData = this.patientMedicalCoverages.find(mc=>this.formEdit.controls.newCoverageData.value==mc.id);
 					this.updateCoverageData(this.coverageData.id);
 					this.setCoverageText(this.coverageData);
 				} else {
@@ -193,11 +216,11 @@ export class AppointmentComponent implements OnInit {
 					this.updateCoverageData(null);
 				}
 			}
-			if (this.formEdit.controls.phoneNumber.dirty){
-				this.updatePhoneNumber(this.formEdit.controls.phoneNumber.value);
-			}
+			if (this.formEdit.controls.phoneNumber.dirty||this.formEdit.controls.phonePrefix.dirty){
+				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value,this.formEdit.controls.phoneNumber.value);
 		}
 		this.hideFilters();
+		}
 	}
 
 	isMotivoRequired(): boolean {
@@ -222,7 +245,8 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				this.closeDialog('statuschanged');
+				const appointmentInformation = {id: this.params.appointmentData.appointmentId, stateId: newStateId};
+				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
 				this.changeState(this.appointment?.appointmentStateId);
@@ -231,8 +255,8 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
-	updatePhoneNumber(phoneNumber: string) {
-		this.appointmentFacade.updatePhoneNumber(this.params.appointmentData.appointmentId, phoneNumber).subscribe(() => {
+	updatePhoneNumber(phonePrefix: string, phoneNumber: string) {
+		this.appointmentFacade.updatePhoneNumber(this.params.appointmentData.appointmentId, phonePrefix, phoneNumber).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -350,6 +374,7 @@ export interface PatientAppointmentInformation {
 	appointmentId: number;
 	appointmentStateId: number;
 	date: Date;
+	phonePrefix: string;
 	phoneNumber: string;
 	healthInsurance?: {
 		name: string,

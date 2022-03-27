@@ -7,9 +7,10 @@
 					<app-antecedentes-personales-summary [personalHistory]="personalHistory$ | async"
 						[personalHistoriesHeader]="personalProblemsHeader">
 					</app-antecedentes-personales-summary>
-					<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
+					<app-external-summary-card *ngIf="loadExternal"
+						[header]="this.patientExternalSummary.organization.name">
 						<app-table [showTableHeader]="false" [model]="this.healthConditionsTable"
-								   *ngIf="healthConditionsTable?.data?.length > 0 else noInfo"></app-table>
+							*ngIf="healthConditionsTable?.data?.length > 0 else noInfo"></app-table>
 						<ng-template #noInfo>
 							<app-no-data></app-no-data>
 						</ng-template>
@@ -28,10 +29,12 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-						<app-medicacion-summary [medicationsHeader]="medicationsHeader" [medications]="medications$ | async"></app-medicacion-summary>
-						<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
+						<app-medicacion-summary [medicationsHeader]="medicationsHeader"
+							[medications]="medications$ | async"></app-medicacion-summary>
+						<app-external-summary-card *ngIf="loadExternal"
+							[header]="this.patientExternalSummary.organization.name">
 							<app-table class="mante" [showTableHeader]="true" [model]="this.medicationsTable"
-									   *ngIf="medicationsTable?.data?.length > 0 else noInfo"></app-table>
+								*ngIf="medicationsTable?.data?.length > 0 else noInfo"></app-table>
 							<ng-template #noInfo>
 								<app-no-data></app-no-data>
 							</ng-template>
@@ -43,9 +46,10 @@
 						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-alergias-summary [allergies]="allergies$ | async">
 						</app-alergias-summary>
-						<app-external-summary-card *ngIf="loadExternal"	[header]="this.patientExternalSummary.organization.name">
+						<app-external-summary-card *ngIf="loadExternal"
+							[header]="this.patientExternalSummary.organization.name">
 							<app-table [showTableHeader]="false" [model]="this.allergiesTable"
-									   *ngIf="allergiesTable?.data?.length > 0 else noInfo"></app-table>
+								*ngIf="allergiesTable?.data?.length > 0 else noInfo"></app-table>
 							<ng-template #noInfo>
 								<app-no-data></app-no-data>
 							</ng-template>
@@ -64,8 +68,8 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-						<app-signos-vitales-summary [editable]="false" [vitalSigns$]="vitalSigns$">
-						</app-signos-vitales-summary>
+						<app-factores-de-riesgo-summary [editable]="false" [riskFactors$]="riskFactors$">
+						</app-factores-de-riesgo-summary>
 					</ng-container>
 				</div>
 			</div>

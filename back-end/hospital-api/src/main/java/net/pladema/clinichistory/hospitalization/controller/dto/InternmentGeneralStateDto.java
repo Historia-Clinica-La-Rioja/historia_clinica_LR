@@ -37,6 +37,6 @@ public class InternmentGeneralStateDto implements Serializable {
     private AnthropometricDataDto anthropometricData;
 
     @NotNull
-    private Last2VitalSignsDto vitalSigns;
+    private Last2RiskFactorsDto riskFactors;
 
 }

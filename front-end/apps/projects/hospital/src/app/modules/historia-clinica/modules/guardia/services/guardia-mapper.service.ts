@@ -7,7 +7,7 @@ import {
 	AMedicalDischargeDto,
 	NewEffectiveClinicalObservationDto,
 	NewEmergencyCareDto,
-	NewVitalSignsObservationDto,
+	NewRiskFactorsObservationDto,
 	PoliceInterventionDetailsDto,
 	ResponseEmergencyCareDto,
 	TriageListDto
@@ -16,7 +16,7 @@ import { parse } from 'date-fns';
 import { Problema } from '../../../services/problemas.service';
 import { DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
-import { EffectiveObservation, VitalSignsValue } from '../../../services/vital-signs-form.service';
+import { EffectiveObservation, RiskFactorsValue } from '../../../services/risk-factors-form.service';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 import { AdministrativeAdmission } from './new-episode.service';
 
@@ -28,7 +28,7 @@ export class GuardiaMapperService {
 
 	triageListDtoToTriage: (triageListDto: TriageListDto) => Triage = GuardiaMapperService._mapTriageListDtoToTriage;
 	triageListDtoToTriageReduced: (triageListDto: TriageListDto) => TriageReduced = GuardiaMapperService._mapTriageListDtoToTriageReduced;
-	vitalSignsValuetoNewVitalSignsObservationDto: (v: VitalSignsValue) => NewVitalSignsObservationDto = GuardiaMapperService._mapVitalSignsValuetoNewVitalSignsObservationDto;
+	riskFactorsValuetoNewRiskFactorsObservationDto: (v: RiskFactorsValue) => NewRiskFactorsObservationDto = GuardiaMapperService._mapRiskFactorsValuetoNewRiskFactorsObservationDto;
 	formToAMedicalDischargeDto: (s: MedicalDischargeForm) => AMedicalDischargeDto = GuardiaMapperService._mapFormToAMedicalDischargeDto;
 	toAdministrativeDischargeDto: (s: AdministrativeForm) => AdministrativeDischargeDto = GuardiaMapperService._toAdministrativeDischargeDto;
 	mapEffectiveObservationToNewEffectiveClinicalObservationDto: (e: EffectiveObservation) => NewEffectiveClinicalObservationDto = GuardiaMapperService._mapEffectiveObservationToNewEffectiveClinicalObservationDto;
@@ -46,7 +46,7 @@ export class GuardiaMapperService {
 			},
 			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description,
-			vitalSigns: mapVitalSigns(triageListDto.vitalSigns),
+			riskFactors: mapRiskFactors(triageListDto.riskFactors),
 			appearance: mapAppearance(triageListDto.appearance),
 			breathing: mapBreathing(triageListDto.breathing),
 			circulation: mapCirculation(triageListDto.circulation),
@@ -95,34 +95,34 @@ export class GuardiaMapperService {
 			};
 		}
 
-		function mapVitalSigns(vitalSigns: NewVitalSignsObservationDto) {
-			if (!vitalSigns) {
+		function mapRiskFactors(riskFactors: NewRiskFactorsObservationDto) {
+			if (!riskFactors) {
 				return undefined;
 			}
 			return {
-				bloodOxygenSaturation: vitalSigns.bloodOxygenSaturation ? {
-					value: vitalSigns.bloodOxygenSaturation.value,
-					effectiveTime: dateTimeDtoToDate(vitalSigns.bloodOxygenSaturation.effectiveTime)
+				bloodOxygenSaturation: riskFactors.bloodOxygenSaturation ? {
+					value: riskFactors.bloodOxygenSaturation.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.bloodOxygenSaturation.effectiveTime)
 				} : undefined,
-				diastolicBloodPressure: vitalSigns.diastolicBloodPressure ? {
-					value: vitalSigns.diastolicBloodPressure.value,
-					effectiveTime: dateTimeDtoToDate(vitalSigns.diastolicBloodPressure.effectiveTime)
+				diastolicBloodPressure: riskFactors.diastolicBloodPressure ? {
+					value: riskFactors.diastolicBloodPressure.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.diastolicBloodPressure.effectiveTime)
 				} : undefined,
-				heartRate: vitalSigns.heartRate ? {
-					value: vitalSigns.heartRate.value,
-					effectiveTime: dateTimeDtoToDate(vitalSigns.heartRate.effectiveTime)
+				heartRate: riskFactors.heartRate ? {
+					value: riskFactors.heartRate.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.heartRate.effectiveTime)
 				} : undefined,
-				respiratoryRate: vitalSigns.respiratoryRate ? {
-					value: vitalSigns.respiratoryRate.value,
-					effectiveTime: dateTimeDtoToDate(vitalSigns.respiratoryRate.effectiveTime)
+				respiratoryRate: riskFactors.respiratoryRate ? {
+					value: riskFactors.respiratoryRate.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.respiratoryRate.effectiveTime)
 				} : undefined,
-				systolicBloodPressure: vitalSigns.systolicBloodPressure ? {
-					value: vitalSigns.systolicBloodPressure.value,
-					effectiveTime: dateTimeDtoToDate(vitalSigns.systolicBloodPressure.effectiveTime)
+				systolicBloodPressure: riskFactors.systolicBloodPressure ? {
+					value: riskFactors.systolicBloodPressure.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.systolicBloodPressure.effectiveTime)
 				} : undefined,
-				temperature: vitalSigns.temperature ? {
-					value: vitalSigns.temperature.value,
-					effectiveTime: dateTimeDtoToDate(vitalSigns.temperature.effectiveTime)
+				temperature: riskFactors.temperature ? {
+					value: riskFactors.temperature.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.temperature.effectiveTime)
 				} : undefined
 			};
 		}
@@ -176,20 +176,20 @@ export class GuardiaMapperService {
 		};
 	}
 
-	static _mapVitalSignsValuetoNewVitalSignsObservationDto(vitalSignsValue: VitalSignsValue): NewVitalSignsObservationDto {
-		if (!vitalSignsValue) {
+	static _mapRiskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue: RiskFactorsValue): NewRiskFactorsObservationDto {
+		if (!riskFactorsValue) {
 			return undefined;
 		}
-		const vitalSigns = {};
-		Object.keys(vitalSignsValue).forEach((key: string) => {
-			if (vitalSignsValue[key]) {
-				vitalSigns[key] = {
-					value: vitalSignsValue[key].value,
-					effectiveTime: dateToDateTimeDto(vitalSignsValue[key].effectiveTime)
+		const riskFactors = {};
+		Object.keys(riskFactorsValue).forEach((key: string) => {
+			if (riskFactorsValue[key]) {
+				riskFactors[key] = {
+					value: riskFactorsValue[key].value,
+					effectiveTime: dateToDateTimeDto(riskFactorsValue[key].effectiveTime)
 				};
 			}
 		});
-		return vitalSigns !== {} ? vitalSigns : undefined;
+		return riskFactors !== {} ? riskFactors : undefined;
 	}
 
 	static _mapEffectiveObservationToNewEffectiveClinicalObservationDto(effectiveObservation: EffectiveObservation): NewEffectiveClinicalObservationDto {
