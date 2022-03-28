@@ -2,7 +2,8 @@
 	<section fxLayout="column" fxFlex="40%" fxFlex.lt-md="100%" fxLayoutGap="15px">
 		<div>
 			<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
-							  [internmentEpisodeProcess]="internmentEpisode">
+							  [internmentEpisodeProcess]="internmentEpisode"
+							  [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 				<div header class="header">
 					<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 				</div>
@@ -15,8 +16,5 @@
 				</div>
 			</app-patient-card>
 		</div>
-		<em *ngIf="!internmentEpisode?.id && internmentEpisode?.inProgress"
-			[translate]="'ambulatoria.paciente.profile.WARNING_INTERNADO'">
-		</em>
 	</section>
 </app-content>

@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CompletePatientDto, InternmentEpisodeProcessDto, PatientMedicalCoverageDto, PersonalInformationDto, PersonPhotoDto } from '@api-rest/api-model';
+import {
+	CompletePatientDto,
+	EmergencyCareEpisodeInProgressDto,
+	InternmentEpisodeProcessDto,
+	PatientMedicalCoverageDto,
+	PersonalInformationDto,
+	PersonPhotoDto
+} from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +18,7 @@ import { InternmentPatientService } from '@api-rest/services/internment-patient.
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
+import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 
 
 @Component({
@@ -29,6 +37,7 @@ export class PatientProfileComponent implements OnInit {
 	public personPhoto: PersonPhotoDto;
 	public internmentEpisode: InternmentEpisodeProcessDto;
 	public patientMedicalCoverage: PatientMedicalCoverageDto[];
+	public emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
 
 	constructor(
 		private readonly patientService: PatientService,
@@ -38,7 +47,8 @@ export class PatientProfileComponent implements OnInit {
 		private readonly internmentPatientService: InternmentPatientService,
 		private readonly contextService: ContextService,
 		private readonly router: Router,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService) {
 	}
 
 	ngOnInit(): void {
@@ -66,6 +76,11 @@ export class PatientProfileComponent implements OnInit {
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
 					.subscribe(internmentEpisodeProcessDto => {
 						this.internmentEpisode = internmentEpisodeProcessDto;
+					});
+
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+					.subscribe( emergencyCareEpisodeInProgressDto => {
+						this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 					});
 			});
 	}
