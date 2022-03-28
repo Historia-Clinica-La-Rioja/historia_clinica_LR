@@ -27,7 +27,7 @@
 			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
 				<mat-icon class="detail_icon">access_time</mat-icon>
 				<mat-form-field appearance="outline" class="hour_selector">
-					<mat-select formControlName="startingHour">
+					<mat-select id="startingHour" formControlName="startingHour">
 						<mat-option [value]="possibleScheduleHour" *ngFor="let possibleScheduleHour of possibleStartingScheduleHours"
 							(click)="filterAppointmentEndingHours()">
 							{{ possibleScheduleHour | date:'shortTime' }}
@@ -36,7 +36,7 @@
 				</mat-form-field>
 				<span>hs. a</span>
 				<mat-form-field appearance="outline" class="hour_selector">
-					<mat-select formControlName="endingHour">
+					<mat-select id="endingHour" formControlName="endingHour">
 						<mat-option [value]="possibleScheduleHour" *ngFor="let possibleScheduleHour of possibleEndingScheduleHours">
 							{{ possibleScheduleHour | date:'shortTime' }}
 						</mat-option>
