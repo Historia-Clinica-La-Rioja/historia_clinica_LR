@@ -139,7 +139,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 		Collection<AppointmentAssignedBo> result;
 		result = appointmentRepository.getAssignedAppointmentsByPatient(patientId).stream().map(AppointmentAssignedBo::new)
 				.collect(Collectors.toList());
-		System.out.println(result);
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;
