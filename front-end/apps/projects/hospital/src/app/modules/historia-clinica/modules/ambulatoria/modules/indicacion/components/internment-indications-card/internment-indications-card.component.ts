@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
-import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, getYear } from "date-fns";
+import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, getYear, isSameDay } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { IndicationsFacadeService } from "@historia-clinica/modules/ambulatoria/modules/indicacion/services/indications-facade.service";
+import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 
 const DIALOG_SIZE = '35%';
 
@@ -31,6 +32,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	currentViewIsEntryDate = false;
 	dateTime: DateTimeDto;
 	professionalId: number;
+	diets: DietDto[] = [];
 
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
@@ -42,7 +44,6 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		private readonly indicationsFacadeService: IndicationsFacadeService,
 		private readonly internmentEpisode: InternmentEpisodeService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
-
 	) { }
 
 	ngOnInit(): void {
@@ -61,6 +62,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
 		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
+		this.filterIndications();
 	}
 
 	viewAnotherDay(daysToMove: number) {
@@ -80,6 +82,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 				numberDay: this.actualDate.getDate(),
 				month: MONTHS_OF_YEAR[getMonth(this.actualDate)]
 			};
+			this.filterIndications();
 		}
 		if (differenceInDays <= 0)
 			this.currentViewIsEntryDate = true;
@@ -123,6 +126,10 @@ export class InternmentIndicationsCardComponent implements OnInit {
 				);
 			}
 		});
+	}
+
+	filterIndications() {
+		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate) === true));
 	}
 
 }
