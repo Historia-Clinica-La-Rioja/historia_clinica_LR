@@ -21,6 +21,7 @@ export class AddAllergyComponent implements OnInit {
 
 	searching = false;
 	snowstormServiceNotAvailable = false;
+	snowstormServiceErrorMessage : string;
 	conceptsResultsTable: TableModel<any>;
 
 	constructor(
@@ -84,6 +85,7 @@ export class AddAllergyComponent implements OnInit {
 					},
 					error => {
 						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+						this.snowstormServiceErrorMessage = error.text ? error.text : error.message;
 						this.snowstormServiceNotAvailable = true;
 					}
 				);
