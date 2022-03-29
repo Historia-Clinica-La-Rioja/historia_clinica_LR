@@ -136,52 +136,52 @@ BEGIN
         --------------------------------------------------------------------------------------------------------------------
         -- Prepagas
     FOR temprow IN
-    SELECT mc.id AS id, name, (-offset_value-created_by) AS created_by, created_on,
+		SELECT mc.id AS id, name, (-offset_value-created_by) AS created_by, created_on,
            (-offset_value-updated_by) AS updated_by,
            updated_on, deleted, (-offset_value-deleted_by) AS deleted_by, deleted_on,
            CASE WHEN cuit IS NULL THEN NULL ELSE CONCAT('-',cuit) end AS cuit,
            phi.plan
-    FROM public.medical_coverage AS mc
-             JOIN public.private_health_insurance AS phi ON mc.id = phi.id
-        LOOP
-    INSERT INTO migrate.medical_coverage (id, name, created_by, created_on, updated_by, updated_on, deleted, deleted_by,
-                                          deleted_on, cuit)
-    VALUES ((-offset_value-temprow.id), temprow.name, temprow.created_by, temprow.created_on, temprow.updated_by,
-        temprow.updated_on, temprow.deleted, temprow.deleted_by, temprow.deleted_on, temprow.cuit);
+		FROM public.medical_coverage AS mc
+        JOIN public.private_health_insurance AS phi ON mc.id = phi.id
+    LOOP
+		INSERT INTO migrate.medical_coverage (id, name, created_by, created_on, updated_by, updated_on, deleted, deleted_by,
+											  deleted_on, cuit)
+		VALUES ((-offset_value-temprow.id), temprow.name, temprow.created_by, temprow.created_on, temprow.updated_by,
+			temprow.updated_on, temprow.deleted, temprow.deleted_by, temprow.deleted_on, temprow.cuit);
 
-    INSERT INTO migrate.private_health_insurance (id, plan)
-    VALUES ((-offset_value-temprow.id), temprow.plan);
+		INSERT INTO migrate.private_health_insurance (id, plan)
+		VALUES ((-offset_value-temprow.id), temprow.plan);
 
-    INSERT INTO temp_medicalcoverage_ids (id)
-    VALUES (temprow.id);
+		INSERT INTO temp_medicalcoverage_ids (id)
+		VALUES (temprow.id);
 
-    FOR temprow2 IN
-    SELECT phip.id AS id, phip.plan, phip.private_health_insurance_id
-    FROM public.private_health_insurance_plan AS phip
-    WHERE private_health_insurance_id = temprow.id
-        LOOP
-    INSERT INTO migrate.private_health_insurance_plan (id, private_health_insurance_id, plan)
-    VALUES ((-offset_value-temprow2.id), (-offset_value-temprow2.private_health_insurance_id), temprow2.plan);
-    END LOOP;
+		FOR temprow2 IN
+			SELECT phip.id AS id, phip.plan, phip.private_health_insurance_id
+			FROM public.private_health_insurance_plan AS phip
+			WHERE private_health_insurance_id = temprow.id
+		LOOP
+			INSERT INTO migrate.private_health_insurance_plan (id, private_health_insurance_id, plan)
+			VALUES ((-offset_value-temprow2.id), (-offset_value-temprow2.private_health_insurance_id), temprow2.plan);
+		END LOOP;
     END LOOP;
 
     FOR temprow3 IN
-    SELECT phid.id AS id, start_date, end_date,
-           CASE WHEN phid.private_health_insurance_plan_id IS NULL
-                    THEN NULL
-                ELSE (-offset_value-phid.private_health_insurance_plan_id)
-               END AS private_health_insurance_plan_id
-    FROM public.private_health_insurance_details AS phid
-         --- WHERE phid.private_health_insurance_plan_id = temprow2.id
-         --- OR phid.private_health_insurance_plan_id IS NULL
-        LOOP
-           -- RAISE NOTICE 'private_health_insurance_details % and %', temprow3.id, temprow3.private_health_insurance_plan_id;
-    INSERT INTO migrate.private_health_insurance_details (id, start_date, end_date, private_health_insurance_plan_id)
-    VALUES ((-offset_value-temprow3.id), temprow3.start_date, temprow3.end_date,
-        temprow3.private_health_insurance_plan_id);
+		SELECT phid.id AS id, start_date, end_date,
+			   CASE WHEN phid.private_health_insurance_plan_id IS NULL
+						THEN NULL
+					ELSE (-offset_value-phid.private_health_insurance_plan_id)
+				   END AS private_health_insurance_plan_id
+		FROM public.private_health_insurance_details AS phid
+		 --- WHERE phid.private_health_insurance_plan_id = temprow2.id
+		 --- OR phid.private_health_insurance_plan_id IS NULL
+    LOOP
+        -- RAISE NOTICE 'private_health_insurance_details % and %', temprow3.id, temprow3.private_health_insurance_plan_id;
+		INSERT INTO migrate.private_health_insurance_details (id, start_date, end_date, private_health_insurance_plan_id)
+		VALUES ((-offset_value-temprow3.id), temprow3.start_date, temprow3.end_date,
+			temprow3.private_health_insurance_plan_id);
     END LOOP;
-        --------------------------------------------------------------------------------------------------------------------
-        -- Obras sociales
+	--------------------------------------------------------------------------------------------------------------------
+	-- Obras sociales
     FOR temprow IN
     SELECT (-offset_value-mc.id) AS id, name, (-offset_value-created_by) AS created_by, created_on,
            (-offset_value-updated_by) AS updated_by,
@@ -238,8 +238,8 @@ BEGIN
         (-offset_value-temprow.private_health_insurance_details_id));
     END LOOP;
 
-        --------------------------------------------------------------------------------------------------------------------
-        -- Notas
+    --------------------------------------------------------------------------------------------------------------------
+    -- Notas
     INSERT INTO migrate.note (id, description)
     SELECT (-offset_value-id), description
     FROM public.note;
@@ -474,6 +474,40 @@ BEGIN
     JOIN migrate.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt);
 
 
+    INSERT INTO migrate.doctors_office (id, institution_id, clinical_specialty_sector_id, description, opening_time,
+                                   closing_time, topic)
+    SELECT (-offset_value-id), (-offset_value-institution_id), (-offset_value-clinical_specialty_sector_id), description,
+           opening_time, closing_time, topic
+    FROM public.doctors_office;
+
+
+    INSERT INTO migrate.diary (id, healthcare_professional_id, doctors_office_id, start_date, end_date, appointment_duration,
+                          automatic_renewal, days_before_renew, professional_asign_shift, include_holiday, active,
+                          created_by, created_on, updated_by, updated_on, deleted, deleted_by, deleted_on)
+    SELECT (-offset_value-id), (-offset_value-healthcare_professional_id), (-offset_value-doctors_office_id), start_date, end_date,
+           appointment_duration, automatic_renewal, days_before_renew, professional_asign_shift, include_holiday, active,
+           (-offset_value-created_by), created_on,  (-offset_value-updated_by), updated_on, deleted,  (-offset_value-deleted_by), deleted_on
+    FROM public.diary;
+
+    INSERT INTO migrate.appointment (id, date_type_id, "hour", appointment_state_id, patient_id, is_overturn, created_by,
+                                created_on, updated_by, updated_on, phone_number, patient_medical_coverage_id, deleted,
+                                deleted_by, deleted_on, phone_prefix)
+    SELECT (-offset_value-id), date_type_id, "hour", appointment_state_id, (-offset_value-patient_id), is_overturn,
+           (-offset_value-created_by), created_on, (-offset_value-updated_by), updated_on, phone_number,
+           (-offset_value-patient_medical_coverage_id), deleted, (-offset_value-deleted_by), deleted_on, phone_prefix
+    FROM public.appointment;
+
+    INSERT INTO migrate.opening_hours (id, day_week_id, "from", "to")
+    SELECT (-offset_value-id), day_week_id, "from", "to"
+    FROM public.opening_hours;
+
+    INSERT INTO migrate.diary_opening_hours (diary_id, opening_hours_id, medical_attention_type_id, overturn_count)
+    SELECT (-offset_value-diary_id), (-offset_value-opening_hours_id), medical_attention_type_id, overturn_count
+    FROM public.diary_opening_hours;
+
+    INSERT INTO migrate.appointment_assn (diary_id, opening_hours_id, appointment_id)
+    SELECT (-offset_value-diary_id), (-offset_value-opening_hours_id), appointment_id
+    FROM public.appointment_assn;
 END;
 $$;
 
