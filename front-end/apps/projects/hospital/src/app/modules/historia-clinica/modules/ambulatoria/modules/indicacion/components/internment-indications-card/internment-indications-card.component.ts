@@ -116,12 +116,12 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.indicationsFacadeService.addDiet(this.dietIndications(submitted)).subscribe(_ => {
-					this.snackBarService.showSuccess('ambulatoria.dialogs.diet.messages.SUCCESS');
+					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.diet.messages.SUCCESS');
 					this.indicationsFacadeService.updateIndication({ diets: true });
 				},
 					error => {
 						error?.text ?
-							this.snackBarService.showError(error.text) : this.snackBarService.showError('ambulatoria.dialogs.diet.messages.ERROR');
+							this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.diet.messages.ERROR');
 					}
 				);
 			}

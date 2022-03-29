@@ -28,6 +28,19 @@
 					"ONCE": "Única vez",
 					"EVENT": "Ante evento:"
 				}
+			},
+			"menu-items": {
+				"DIET": "Dieta"
+			},
+			"dialogs": {
+				"diet":{
+					"TITLE": "agregar dieta",
+					"DESCRIPTION": "Descripción",
+					"messages": {
+						"ERROR": "Error al guardar una nueva dieta",
+						"SUCCESS": "La dieta se guardó exitosamente"
+					}
+				}
 			}
 		}
 	}

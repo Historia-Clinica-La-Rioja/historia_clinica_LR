@@ -17,16 +17,6 @@
         "historia-clinica-externa": {
             "TITLE": "Ver historia clínica externa"
         },
-		"dialogs": {
-			"diet":{
-				"TITLE": "agregar dieta",
-				"DESCRIPTION": "Descripción",
-				"messages": {
-                    "ERROR": "Error al guardar una nueva dieta",
-                    "SUCCESS": "La dieta se guardó exitosamente"
-                }
-			}
-		},
         "paciente": {
             "TITLE": "Historia Clínica",
             "card": {
@@ -548,9 +538,6 @@
             "ANSWER_CONTENT": "¿Desea continuar de todos modos?",
             "CONFIRM_BUTTON": "Si, descartar y continuar",
             "CANCEL_BUTTON": "No, regresar y completar"
-        },
-		"dialog-title":{
-			"DIET": "Dieta"
-		}
+        }
     }
 }
