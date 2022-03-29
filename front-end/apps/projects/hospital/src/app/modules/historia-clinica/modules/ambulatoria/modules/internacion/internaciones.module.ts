@@ -19,6 +19,7 @@ import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.co
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
+import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
@@ -50,6 +51,7 @@ import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-d
 		EpicrisisDockPopupComponent,
 		EvolutionNoteDockPopupComponent,
 		MedicalDischargeComponent,
+  		ElementoDiagnosticoComponent,
 	],
 	imports: [
 		CommonModule,

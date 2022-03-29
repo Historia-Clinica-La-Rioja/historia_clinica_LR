@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutAlign="space-evenly center">
+	<div fxLayoutGap="10px">
+		<mat-checkbox id="{{ diagnosis.snomed.pt }}"></mat-checkbox>
+		<strong class="capitalize">{{ diagnosis.snomed.pt }}</strong>
+	</div>
+	<span>Activo</span>
+	<span>{{ diagnosis.presumptive ? 'Presuntivo' : 'Confirmado' }}</span>
+	<button mat-icon-button color="primary">
+        <mat-icon>edit</mat-icon>
+      </button>
+</div>
