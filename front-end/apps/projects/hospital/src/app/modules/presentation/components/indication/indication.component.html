@@ -16,7 +16,7 @@
 			</div>
 
 			<div fxLayout="column" fxFlex="50%" fxLayoutGap="10px">
-				<span>{{content.description}}</span>
+				<span class="content">{{content.description}}</span>
 				<div fxLayout="row" fxLayoutGap="20px">
 					<div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
 						<span class="extra-info-title">{{extraInfo.title | translate}}</span>
