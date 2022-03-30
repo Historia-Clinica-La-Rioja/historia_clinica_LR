@@ -175,6 +175,7 @@
                     },
                     "TITLE": "Antecedentes familiares",
                     "ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
+					"SEARCH_PLACEHOLDER": "Buscar antecedentes familiares",
                     "FECHA": "Fecha de registro"
                 },
                 "antecedentes-personales": {

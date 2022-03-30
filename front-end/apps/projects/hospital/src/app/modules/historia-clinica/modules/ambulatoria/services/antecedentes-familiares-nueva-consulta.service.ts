@@ -21,6 +21,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	private data: AntecedenteFamiliar[];
 	private snomedConcept: SnomedDto;
 	private readonly tableColumnConfig: TableColumnConfig[];
+	private readonly ECL = SnomedECL.FAMILY_RECORD;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -126,7 +127,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.FAMILY_RECORD
+				eclFilter: this.ECL
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
@@ -139,6 +140,10 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 
 	getTableColumnConfig(): TableColumnConfig[] {
 		return this.tableColumnConfig;
+	}
+
+	getECL(): SnomedECL {
+		return this.ECL;
 	}
 
 }

@@ -200,11 +200,23 @@
 		<div id="antecedentes-familiares">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE">
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
-						(search)="antecedentesFamiliaresNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else antecedentesFamiliaresTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
+							(search)="antecedentesFamiliaresNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #antecedentesFamiliaresTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="antecedentesFamiliaresNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="antecedentesFamiliaresNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 					<ng-template #antecedentesPersonalesForm>
 						<form [formGroup]="antecedentesFamiliaresNuevaConsultaService.getForm()"
 							(ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
