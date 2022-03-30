@@ -267,11 +267,23 @@
 		<div id="medications">
 			<app-new-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE'">
 				<div concept-form>
-					<app-concepts-search
-						*ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm"
-						label="ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL"
-						(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else medicationTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL'"
+							(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #medicationTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="medicacionesNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.medicaciones.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="medicacionesNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 				</div>
 				<ng-template #medicationForm>
 					<form [formGroup]="medicacionesNuevaConsultaService.getForm()"

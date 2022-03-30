@@ -115,6 +115,7 @@
                     "CONCEPT_LABEL": "Medicación habitual",
                     "DESCRIPCION": "Descripción",
                     "NOMBRE_MEDICACION": "Nombre de medicación",
+					"SEARCH_PLACEHOLDER": "Buscar medicación",
                     "OBSERVACIONES": "Observaciones",
                     "SUSPENDIDO": "Suspendido",
                     "TABLE_TITLE": "Medicaciones registradas",
