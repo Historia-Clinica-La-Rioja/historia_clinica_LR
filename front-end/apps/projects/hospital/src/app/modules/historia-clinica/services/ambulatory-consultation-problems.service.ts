@@ -35,6 +35,7 @@ export class AmbulatoryConsultationProblemsService {
 	private _error$: Observable<string>;
 	private severityTypes: any[];
 	private snvsEvents: SnvsEventDto[] = [];
+	private readonly ECL = SnomedECL.DIAGNOSIS;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -177,7 +178,7 @@ export class AmbulatoryConsultationProblemsService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.DIAGNOSIS
+				eclFilter: this.ECL,
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
@@ -260,6 +261,10 @@ export class AmbulatoryConsultationProblemsService {
 
 	getSnvsEventsInformation(): SnvsEventDto[] {
 		return this.snvsEvents;
+	}
+
+	getECL(): SnomedECL {
+		return this.ECL;
 	}
 
 	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem) {

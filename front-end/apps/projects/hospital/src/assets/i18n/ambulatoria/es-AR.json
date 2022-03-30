@@ -141,7 +141,8 @@
                         "ADD": "Agregar problema",
                         "SAVE": "Guardar cambios"
                     },
-                    "CONCEPT_LABEL": "Problema",
+					"CONCEPT_LABEL": "Problema",
+					"SEARCH_PLACEHOLDER": "Buscar problema",
                     "SEVERIDAD": "Severidad",
                     "CRONICO": "Crónico",
                     "errors": {

@@ -79,11 +79,22 @@
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.problemas.TITLE"
 				sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 				<div concept-form *ngIf="!this.readOnlyProblema else problemaForm">
-					<app-concepts-search
-						*ngIf="!ambulatoryConsultationProblemsService.getSnomedConcept() else problemaForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
-						(search)="ambulatoryConsultationProblemsService.openSearchDialog($event)">
-					</app-concepts-search>
+					<ng-container *ngIf="!ambulatoryConsultationProblemsService.getSnomedConcept() else problemaForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else problemTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
+							(search)="ambulatoryConsultationProblemsService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #problemTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="ambulatoryConsultationProblemsService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.problemas.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="ambulatoryConsultationProblemsService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 				</div>
 
 				<ng-template #problemaForm>
