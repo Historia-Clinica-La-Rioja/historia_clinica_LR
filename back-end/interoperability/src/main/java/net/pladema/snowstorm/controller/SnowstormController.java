@@ -1,5 +1,7 @@
 package net.pladema.snowstorm.controller;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.snowstorm.controller.dto.FullySpecifiedNamesDto;
 import net.pladema.snowstorm.controller.dto.PreferredTermDto;
@@ -20,7 +22,6 @@ import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConcepts;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConceptsWithResultCount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,9 +38,6 @@ import java.util.stream.Collectors;
 @Tag(name = "Snowstorm", description = "Snowstorm")
 public class SnowstormController {
 
-    @Value("${ws.snowstorm.searchLocally.enabled:false}")
-    private boolean searchConceptsLocallyEnabled;
-
     private static final String CONCEPTS = "/concepts";
 
     private static final Logger LOG = LoggerFactory.getLogger(SnowstormController.class);
@@ -54,16 +52,20 @@ public class SnowstormController {
 
     private final UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv;
 
+	private final FeatureFlagsService featureFlagsService;
+
     public SnowstormController(SnowstormService snowstormService,
 							   FetchAllSnomedEcl fetchAllSnomedEcl,
 							   SearchCachedConceptsWithResultCount searchCachedConceptsWithResultCount,
 							   SearchCachedConcepts searchCachedConcepts,
-							   UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv) {
+							   UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv,
+							   FeatureFlagsService featureFlagsService) {
 		this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
         this.searchCachedConceptsWithResultCount = searchCachedConceptsWithResultCount;
 		this.searchCachedConcepts = searchCachedConcepts;
         this.updateSnomedConceptsByCsv = updateSnomedConceptsByCsv;
+		this.featureFlagsService = featureFlagsService;
     }
 
     @GetMapping(value = CONCEPTS)
@@ -72,7 +74,7 @@ public class SnowstormController {
             @RequestParam(value = "ecl", required = false) String eclKey) throws SnowstormApiException {
         LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
         SnomedSearchDto result;
-        if (!searchConceptsLocallyEnabled) {
+        if (!featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS)) {
 			result = searchInSnowstorm(term, eclKey);
 		} else {
 			result = searchLocallyWithResultCount(term, eclKey);
@@ -87,7 +89,7 @@ public class SnowstormController {
 			@RequestParam(value = "ecl", required = false) String eclKey) throws SnowstormApiException {
 		LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
 		List<SnomedSearchItemDto> result;
-		if (!searchConceptsLocallyEnabled) {
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS)) {
 			result = searchInSnowstorm(term, eclKey).getItems();
 			LOG.debug("Output size -> {}", result.size());
 			LOG.trace("Output -> {}", result);

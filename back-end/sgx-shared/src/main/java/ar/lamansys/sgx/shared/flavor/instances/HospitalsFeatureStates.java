@@ -39,6 +39,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS, false);
 		map.put(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA, true);
 		map.put(AppFeature.HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF, true);
+		map.put(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, false);
 	}
 
 	@Override
