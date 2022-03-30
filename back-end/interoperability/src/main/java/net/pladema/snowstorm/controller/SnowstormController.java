@@ -17,6 +17,7 @@ import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConcepts;
+import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConceptsWithResultCount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,22 +48,26 @@ public class SnowstormController {
 
     private final FetchAllSnomedEcl fetchAllSnomedEcl;
 
-    private final SearchCachedConcepts searchCachedConcepts;
+	private final SearchCachedConceptsWithResultCount searchCachedConceptsWithResultCount;
+
+	private final SearchCachedConcepts searchCachedConcepts;
 
     private final UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv;
 
     public SnowstormController(SnowstormService snowstormService,
-                               FetchAllSnomedEcl fetchAllSnomedEcl,
-                               SearchCachedConcepts searchCachedConcepts,
-                               UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv) {
-        this.snowstormService = snowstormService;
+							   FetchAllSnomedEcl fetchAllSnomedEcl,
+							   SearchCachedConceptsWithResultCount searchCachedConceptsWithResultCount,
+							   SearchCachedConcepts searchCachedConcepts,
+							   UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv) {
+		this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
-        this.searchCachedConcepts = searchCachedConcepts;
+        this.searchCachedConceptsWithResultCount = searchCachedConceptsWithResultCount;
+		this.searchCachedConcepts = searchCachedConcepts;
         this.updateSnomedConceptsByCsv = updateSnomedConceptsByCsv;
     }
 
     @GetMapping(value = CONCEPTS)
-    public SnomedSearchDto getConcepts(
+    public SnomedSearchDto getConceptsWithResultCount(
             @RequestParam(value = "term") String term,
             @RequestParam(value = "ecl", required = false) String eclKey) throws SnowstormApiException {
         LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
@@ -70,16 +75,43 @@ public class SnowstormController {
         if (!searchConceptsLocallyEnabled) {
 			result = searchInSnowstorm(term, eclKey);
 		} else {
-			result = searchLocally(term, eclKey);
+			result = searchLocallyWithResultCount(term, eclKey);
 		}
         LOG.debug("Output -> {}", result);
         return result;
     }
 
-	private SnomedSearchDto searchLocally(String term, String eclKey) {
+	@GetMapping(value = "/search-concepts")
+	public List<SnomedSearchItemDto> getConcepts(
+			@RequestParam(value = "term") String term,
+			@RequestParam(value = "ecl", required = false) String eclKey) throws SnowstormApiException {
+		LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
+		List<SnomedSearchItemDto> result;
+		if (!searchConceptsLocallyEnabled) {
+			result = searchInSnowstorm(term, eclKey).getItems();
+			LOG.debug("Output size -> {}", result.size());
+			LOG.trace("Output -> {}", result);
+			return result;
+		}
+		result = searchLocally(term, eclKey);
+		LOG.debug("Output size -> {}", result.size());
+		LOG.trace("Output -> {}", result);
+		return result;
+	}
+
+	private List<SnomedSearchItemDto> searchLocally(String term, String eclKey) {
+		LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
+		SnomedSearchBo searchResult = searchCachedConcepts.run(term, eclKey);
+		return searchResult.getItems()
+				.stream()
+				.map(this::mapToSnomedSearchItemDto)
+				.collect(Collectors.toList());
+	}
+
+	private SnomedSearchDto searchLocallyWithResultCount(String term, String eclKey) {
 		LOG.debug("Input data -> term: {} , ecl: {} ", term, eclKey);
 		SnomedSearchDto result;
-		SnomedSearchBo searchResult = searchCachedConcepts.run(term, eclKey);
+		SnomedSearchBo searchResult = searchCachedConceptsWithResultCount.run(term, eclKey);
 		List<SnomedSearchItemDto> items =
 				searchResult.getItems()
 						.stream()

@@ -17,4 +17,8 @@ public class SnomedSearchVo {
 
     private Integer totalMatches;
 
+	public SnomedSearchVo(List<SnomedSearchItemVo> items) {
+		this.items = items;
+	}
+
 }

@@ -19,7 +19,15 @@ public class SnomedConceptsRepository {
     private static final Integer LIMIT = 30;
     private final EntityManager entityManager;
 
-    public SnomedSearchVo searchConceptsByEcl(String term, String ecl, String groupDescription) {
+	public SnomedSearchVo searchConceptsByEcl(String term, String ecl, String groupDescription) {
+		log.debug("Input parameters -> term {}, ecl {}", term, ecl);
+		List<SnomedSearchItemVo> items = searchConcepts(term, ecl, groupDescription);
+		SnomedSearchVo result = new SnomedSearchVo(items);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+    public SnomedSearchVo searchConceptsWithResultCountByEcl(String term, String ecl, String groupDescription) {
         log.debug("Input parameters -> term {}, ecl {}", term, ecl);
         List<SnomedSearchItemVo> items = searchConcepts(term, ecl, groupDescription);
         Integer matchCount = Math.toIntExact(getTotalResultCount(term, ecl, groupDescription));
