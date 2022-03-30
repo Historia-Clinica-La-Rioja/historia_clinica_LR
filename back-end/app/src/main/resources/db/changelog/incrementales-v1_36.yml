@@ -41,3 +41,21 @@ databaseChangeLog:
               columnDataType: int
               columnName: dosage_id
               tableName: other_indication
+
+    - changeSet:
+        id: update-dosage-start_date-type
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: start_date
+              newDataType: datetime
+              tableName: dosage
+
+    - changeSet:
+        id: update-dosage-end_date-type
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: end_date
+              newDataType: datetime
+              tableName: dosage

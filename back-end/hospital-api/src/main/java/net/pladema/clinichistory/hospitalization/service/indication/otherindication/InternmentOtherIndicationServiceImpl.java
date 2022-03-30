@@ -61,6 +61,8 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 		NewDosageDto dosageDto = new NewDosageDto();
 		dosageDto.setFrequency(bo.getDosageBo().getFrequency());
 		dosageDto.setPeriodUnit(bo.getDosageBo().getPeriodUnit());
+		dosageDto.setStartDateTime(localDateMapper.toDateTimeDto(bo.getDosageBo().getStartDate()));
+		dosageDto.setEvent(bo.getDosageBo().getEvent());
 		return new OtherIndicationDto(null, bo.getPatientId(), bo.getTypeId(), bo.getStatusId(), bo.getProfessionalId(), null, localDateMapper.toDateDto(bo.getIndicationDate()), localDateMapper.toDateTimeDto(bo.getCreatedOn()), bo.getOtherIndicationTypeId(), bo.getDescription(), dosageDto, bo.getOtherType());
 	}
 

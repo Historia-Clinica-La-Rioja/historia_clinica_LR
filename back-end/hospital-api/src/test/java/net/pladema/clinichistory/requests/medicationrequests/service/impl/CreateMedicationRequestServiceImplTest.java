@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -332,7 +333,7 @@ class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 	private DosageBo createDosageBo(Double duration, Integer frequency, EUnitsOfTimeBo unitsOfTimeBo) {
 		DosageBo result = new DosageBo();
-		result.setStartDate(LocalDate.now());
+		result.setStartDate(LocalDateTime.now());
 		result.setDuration(duration);
 		result.setFrequency(frequency);
 		result.setPeriodUnit(unitsOfTimeBo);

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,8 @@ public class NewDosageDto implements Serializable {
 
 	@Nullable
 	private String event;
+
+	@Nullable
+	private DateTimeDto startDateTime;
 
 }

@@ -47,7 +47,7 @@ public class MedicationCalculateStatus {
             return false;
         if (dosage.getId() == null)
             return true;
-        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate());
+        return dosage.getEndDate() != null && dateTimeProvider.nowDate().isAfter(dosage.getEndDate().toLocalDate());
     }
 
     private boolean isSuspended(String statusId, DosageBo dosage) {

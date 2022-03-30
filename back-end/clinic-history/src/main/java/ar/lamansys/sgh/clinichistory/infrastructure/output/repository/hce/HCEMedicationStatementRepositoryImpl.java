@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +61,8 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                         (String)m[3],
                         (Integer)m[4],
                         (Boolean)m[5],
-                        m[6] != null ? ((Date) m[6]).toLocalDate() : null,
-                        m[7] != null ? ((Date) m[7]).toLocalDate() : null,
+                        m[6] != null ? ((Timestamp) m[6]).toLocalDateTime() : null,
+                        m[7] != null ? ((Timestamp) m[7]).toLocalDateTime() : null,
                         m[8] != null ? ((Date) m[8]).toLocalDate() : null,
                         m[9] != null ? ((Date) m[9]).toLocalDate() : null
                 ))

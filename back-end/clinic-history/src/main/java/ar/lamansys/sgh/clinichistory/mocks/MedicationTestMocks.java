@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class MedicationTestMocks {
 
@@ -15,7 +16,7 @@ public class MedicationTestMocks {
     }
 
     public static Dosage createDosage(Double duration, String durationUnit, Integer frequency, String periodUnit, boolean chronic,
-                                      LocalDate startDate, LocalDate endDate, LocalDate suspendedStartDate, LocalDate suspendendEndDate, String event){
+									  LocalDateTime startDate, LocalDateTime endDate, LocalDate suspendedStartDate, LocalDate suspendendEndDate, String event){
         return new Dosage(duration,durationUnit, frequency, periodUnit, chronic, startDate, endDate, suspendedStartDate, suspendendEndDate, event);
     }
     public static DocumentMedicamentionStatement createDocumentMedicationStatement(Long documentId, Integer medicationId){

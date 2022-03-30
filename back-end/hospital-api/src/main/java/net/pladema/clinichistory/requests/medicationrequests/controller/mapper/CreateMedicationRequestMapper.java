@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Mapper
@@ -70,7 +71,7 @@ public class CreateMedicationRequestMapper {
         if (dosage == null)
             return null;
         DosageBo result = new DosageBo();
-        result.setStartDate(LocalDate.now());
+        result.setStartDate(LocalDateTime.now());
         result.setFrequency(dosage.getFrequency());
         result.setDuration(dosage.getDuration());
         result.setPeriodUnit(dosage.isDiary() ? EUnitsOfTimeBo.DAY : EUnitsOfTimeBo.HOUR);

@@ -1496,6 +1496,7 @@ export interface NewDosageDto extends Serializable {
     event?: string;
     frequency?: number;
     periodUnit?: string;
+    startDateTime?: DateTimeDto;
 }
 
 export interface NewEffectiveClinicalObservationDto extends ClinicalObservationDto {

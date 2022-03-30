@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.indication;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
@@ -10,6 +10,9 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherIndicationDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.InternmentIndicationBo;
 import net.pladema.clinichistory.hospitalization.service.indication.otherindication.InternmentOtherIndicationService;
 
@@ -93,7 +96,7 @@ public class InternmentIndicationController {
 		result.setDescription(dto.getDescription());
 		result.setOtherIndicationTypeId(dto.getOtherIndicationTypeId());
 		result.setOtherType(dto.getOtherType());
-		result.setDosageBo(toDosageBo(dto.getDosage(),localDateMapper.fromDateDto(dto.getIndicationDate())));
+		result.setDosageBo(toDosageBo(dto.getDosage(),dto.getIndicationDate()));
 		return (InternmentOtherIndicationBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
 	}
 
@@ -108,12 +111,15 @@ public class InternmentIndicationController {
 		return bo;
 	}
 
-	private DosageBo toDosageBo(NewDosageDto dto, LocalDate indicationDate){
+	private DosageBo toDosageBo(NewDosageDto dto, DateDto indicationDate){
 		DosageBo result = new DosageBo();
 		result.setFrequency(dto.getFrequency());
 		result.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
-		result.setStartDate(indicationDate);
-		result.setEndDate(indicationDate);
+		LocalDateTime startDate = (dto.getStartDateTime()!=null)
+				? localDateMapper.fromDateTimeDto(dto.getStartDateTime())
+				: localDateMapper.fromDateTimeDto(new DateTimeDto(indicationDate, new TimeDto(0,0,0)));
+		result.setStartDate(startDate);
+		result.setEndDate(startDate.plusDays(1).toLocalDate().atStartOfDay());
 		return result;
 	}
 }

@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,7 +89,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
-                createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDate.of(2020,05,25)));
+                createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0)));
         var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
@@ -129,7 +130,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
         Assertions.assertThat(dosage.getEndDate())
                 .isNotNull()
-                .isEqualTo(LocalDate.of(2020,06, 9));
+                .isEqualTo(LocalDateTime.of(2020,06, 9,0,0,0));
 
 
         Assertions.assertThat(dosage.getPeriodUnit())
@@ -148,7 +149,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
-                createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDate.of(2020,05,25)));
+                createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0)));
         var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
         Assertions.assertThat(result.size())
                 .isEqualTo(1);
@@ -238,7 +239,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
     }
 
 
-    private DosageBo createDosageBo(Double duration, Integer frequency, boolean chronic, EUnitsOfTimeBo unitsOfTimeBo, LocalDate startDate) {
+    private DosageBo createDosageBo(Double duration, Integer frequency, boolean chronic, EUnitsOfTimeBo unitsOfTimeBo, LocalDateTime startDate) {
         DosageBo result = new DosageBo();
         result.setDuration(chronic ? null : duration);
         result.setFrequency(frequency);

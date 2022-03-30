@@ -1,11 +1,16 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
+
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 
 import org.springframework.stereotype.Service;
 
@@ -90,8 +95,11 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		DosageBo dosageBo = new DosageBo();
 		dosageBo.setFrequency(dto.getDosage().getFrequency());
 		dosageBo.setPeriodUnit(EUnitsOfTimeBo.map(dto.getDosage().getPeriodUnit()));
-		dosageBo.setStartDate(localDateMapper.fromDateDto(dto.getIndicationDate()));
-		dosageBo.setEndDate(localDateMapper.fromDateDto(dto.getIndicationDate()));
+		LocalDateTime startDate = (dto.getDosage().getStartDateTime()!=null)
+				? localDateMapper.fromDateTimeDto(dto.getDosage().getStartDateTime())
+				: localDateMapper.fromDateTimeDto(new DateTimeDto(dto.getIndicationDate(), new TimeDto(0,0,0)));
+		dosageBo.setStartDate(startDate);
+		dosageBo.setEndDate(startDate.plusDays(1).toLocalDate().atStartOfDay());
 		dosageBo.setEvent(dto.getDosage().getEvent());
 		return new OtherIndicationBo(dto.getId(),
 				dto.getPatientId(),
