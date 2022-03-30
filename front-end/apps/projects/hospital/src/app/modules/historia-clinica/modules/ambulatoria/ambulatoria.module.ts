@@ -50,6 +50,7 @@ import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-su
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { IndicacionModule } from "@historia-clinica/modules/ambulatoria/modules/indicacion/indicacion.module";
+import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 
 @NgModule({
 	declarations: [
@@ -89,6 +90,7 @@ import { IndicacionModule } from "@historia-clinica/modules/ambulatoria/modules/
 		MainDiagnosisSummaryComponent,
 		DiagnosisSummaryComponent,
 		InternmentSummaryComponent,
+  		ConceptTypeaheadSearchComponent,
 	],
 	imports: [
 		CommonModule,

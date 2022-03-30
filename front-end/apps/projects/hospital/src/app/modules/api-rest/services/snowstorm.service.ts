@@ -37,6 +37,11 @@ export class SnowstormService {
 			}
 		}));
 	}
+
+	searchSNOMEDConcepts(params): Observable<SnomedDto[]> {
+		const url = `${environment.apiBase}/snowstorm/search-concepts`;
+		return this.http.get<SnomedDto[]>(url, { params });
+	}
 }
 
 export interface ConceptRequestParams {
