@@ -5,3 +5,29 @@ mat-form-field {
 .margin-bottom {
 	margin-bottom: 15px;
 }
+
+.label {
+	margin-top: 10px;
+	border-radius: 6px;
+	padding: 4px 15px;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 19px;
+	width: 170px;
+	text-align: center;
+}
+.main-diagnosis-label {
+	padding-top: 5px;
+	background-color: #E0EEF7;
+	color: #2687C5;
+}
+
+.other-diagnoses-label {
+	padding-top: 5px;
+	background-color: #F8F8F8;
+	color: #929292;
+}
+
+.diagnoses-action-button {
+	font-size: 16px;
+}

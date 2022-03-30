@@ -66,6 +66,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
+		this.mainDiagnosis = data.mainDiagnosis;
+		this.diagnosticos = data.diagnosticos;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 	}

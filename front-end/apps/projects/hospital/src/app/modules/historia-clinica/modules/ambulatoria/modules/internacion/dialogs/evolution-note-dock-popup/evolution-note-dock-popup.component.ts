@@ -4,7 +4,8 @@ import {
 	DiagnosisDto,
 	AllergyConditionDto,
 	ImmunizationDto,
-	EvolutionNoteDto
+	EvolutionNoteDto,
+	HealthConditionDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -41,6 +42,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	form: FormGroup;
 
 	bloodTypes: MasterDataInterface<string>[];
+	mainDiagnosis: HealthConditionDto;
 	diagnosticos: DiagnosisDto[] = [];
 	allergies: AllergyConditionDto[] = [];
 	immunizations: ImmunizationDto[] = [];
@@ -62,6 +64,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly permissionsService: PermissionsService
 	) {
+		this.mainDiagnosis = data.mainDiagnosis;
+		this.diagnosticos = data.diagnosticos;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
@@ -117,6 +121,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				bloodType: !!evolutionNoteDto.anthropometricData?.bloodType,
 				immunizations: !!evolutionNoteDto.immunizations,
 				riskFactors: !!evolutionNoteDto.riskFactors,
+				mainDiagnosis: !!evolutionNoteDto.diagnosis,
 				diagnosis: !!evolutionNoteDto.diagnosis,
 				evolutionClinical: !!evolutionNoteDto.diagnosis,
 			}
@@ -136,6 +141,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				height: getValue(formValues.anthropometricData.height),
 				weight: getValue(formValues.anthropometricData.weight),
 			},
+			mainDiagnosis: this.mainDiagnosis,
 			diagnosis: this.diagnosticos,
 			immunizations: this.immunizations,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,

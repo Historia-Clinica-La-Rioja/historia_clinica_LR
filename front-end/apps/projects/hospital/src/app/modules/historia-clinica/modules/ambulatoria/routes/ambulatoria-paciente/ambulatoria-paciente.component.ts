@@ -44,6 +44,7 @@ import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambula
 import { PatientAllergiesService } from '../../services/patient-allergies.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SummaryCoverageInformation } from '../../components/medical-coverage-summary-view/medical-coverage-summary-view.component';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
 
 const RESUMEN_INDEX = 0;
 
@@ -94,6 +95,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	appointmentConfirmedCoverageInfo: ExternalPatientCoverageDto;
 	private summaryCoverageInfo: SummaryCoverageInformation;
 
+	private mainDiagnosis: any;
+	private diagnosticos: any[];
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -120,6 +123,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		readonly patientAllergies: PatientAllergiesService,
 		private readonly appointmentsService: AppointmentsService,
+		private readonly internmentStateService: InternmentStateService,
 		private readonly requestMasterDataService: RequestMasterDataService,
 
 	) {
@@ -158,6 +162,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 									(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data
 								);
 							}
+							this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+								this.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+								this.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+							});
+							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
+								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
 							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id, false);
 							if (this.internmentEpisodeProcess.inProgress) {
 								this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
@@ -373,6 +383,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.viewContainerRef.clear();
 		internmentComponent.instance.internmentEpisodeId = this.internmentEpisodeProcess.id;
 		internmentComponent.instance.patientId = this.patientId;
+		internmentComponent.instance.mainDiagnosis = this.mainDiagnosis;
+		internmentComponent.instance.diagnosticos = this.diagnosticos;
 
 		if (InternmentActions.anamnesis === internmentActionId) {
 			internmentComponent.instance.openAnamnesis();
