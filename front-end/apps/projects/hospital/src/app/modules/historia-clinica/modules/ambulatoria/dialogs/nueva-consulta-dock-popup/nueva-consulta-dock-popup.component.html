@@ -408,10 +408,23 @@
 		<div id="alergias">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.alergias.TITLE">
 				<ng-container concept-form>
-					<app-concepts-search *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
-						(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else alergiaTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
+							(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #alergiaTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="alergiasNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.alergias.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="alergiasNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 					<ng-template #alergiasForm>
 						<form [formGroup]="alergiasNuevaConsultaService.getForm()"
 							(ngSubmit)="alergiasNuevaConsultaService.addToList()">

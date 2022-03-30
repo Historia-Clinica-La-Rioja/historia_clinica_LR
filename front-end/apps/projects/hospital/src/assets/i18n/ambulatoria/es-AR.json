@@ -214,9 +214,10 @@
                 "alergias": {
                     "TITLE": "Alergias",
                     "ADD": "Agregar alergia",
-                    "ALLERGY": "Alergia",
+					"ALLERGY": "Alergia",
                     "CRITICALITY": "Criticidad",
-                    "form": {
+					"SEARCH_PLACEHOLDER": "Buscar alergia",
+					"form": {
                         "REGISTRY_DATE": "Fecha registro"
                     },
                     "table": {
