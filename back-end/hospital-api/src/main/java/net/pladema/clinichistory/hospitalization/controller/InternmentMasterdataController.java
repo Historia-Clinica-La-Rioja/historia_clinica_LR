@@ -1,9 +1,12 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.EUnit;
+import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherIndicationType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.*;
+import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.emergencycare.controller.DischargeTypeMasterDataExternalService;
@@ -160,6 +163,18 @@ public class InternmentMasterdataController {
 	public ResponseEntity<Collection<MasterDataProjection>> getOtherIndicationTypes(){
 		LOG.debug("{}", "All internment episode status");
 		return ResponseEntity.ok().body(masterDataService.findAll(OtherIndicationType.class));
+	}
+
+	@GetMapping(value = "/vias")
+	public ResponseEntity<Collection<MasterDataDto>> getVias() {
+		LOG.debug("{}", "All via types");
+		return ResponseEntity.ok().body(EnumWriter.writeList(EVia.getAll()));
+	}
+
+	@GetMapping(value = "/units")
+	public ResponseEntity<Collection<MasterDataDto>> getUnits() {
+		LOG.debug("{}", "All units types");
+		return ResponseEntity.ok().body(EnumWriter.writeList(EUnit.getAll()));
 	}
     
 }
