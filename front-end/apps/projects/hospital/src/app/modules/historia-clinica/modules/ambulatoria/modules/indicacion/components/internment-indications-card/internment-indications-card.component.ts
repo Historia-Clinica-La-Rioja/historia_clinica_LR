@@ -3,6 +3,7 @@ import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { OtherIndicationDto } from "@api-rest/api-model";
 import { DietDto } from "@api-rest/api-model";
 import { DateTimeDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
@@ -11,8 +12,10 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { IndicationsFacadeService } from "@historia-clinica/modules/ambulatoria/modules/indicacion/services/indications-facade.service";
 import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
+import { OtherIndicationComponent } from '../../dialogs/other-indication/other-indication.component';
+import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 
-const DIALOG_SIZE = '35%';
+const DIALOG_SIZE = '45%';
 
 @Component({
 	selector: 'app-internment-indications-card',
@@ -32,7 +35,8 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	dateTime: DateTimeDto;
 	professionalId: number;
 	diets: DietDto[] = [];
-
+	otherIndications: OtherIndicationDto[] = [];
+	othersIndicatiosType: OtherIndicationTypeDto[];
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
 	@Input() patientId: number;
@@ -42,6 +46,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly indicationsFacadeService: IndicationsFacadeService,
 		private readonly internmentEpisode: InternmentEpisodeService,
+
+		private readonly internmentIndicationService: InternmentIndicationService,
+
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
 	) { }
 
@@ -62,6 +69,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
 		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
 		this.filterIndications();
+		this.internmentIndicationService.getOtherIndicationTypes().subscribe((othersIndicationsType: OtherIndicationTypeDto[]) => this.othersIndicatiosType = othersIndicationsType);
 	}
 
 	viewAnotherDay(daysToMove: number) {
@@ -117,6 +125,31 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	filterIndications() {
 		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate) === true));
 	}
+	openIndicationDialog() {
+		const dialogRef = this.dialog.open(OtherIndicationComponent, {
+			disableClose: false,
+			width: DIALOG_SIZE,
+			height: '80%',
+			data: {
+				othersIndicatiosType: this.othersIndicatiosType
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(otherIndicatio => {
+
+			if (otherIndicatio) {
+				this.internmentIndicationService.addOtherIndication(this.toIndicationDto(otherIndicatio), this.internmentEpisodeId).subscribe(_ => {
+					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.other-indication.messages.SUCCESS');
+				},
+					error => {
+						error?.text ?
+							this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.other-indication.messages.ERROR');
+					});
+			}
+		});
+	}
+
+
 
 }
 
@@ -125,3 +158,4 @@ interface ViewDate {
 	numberDay: number,
 	month: string,
 }
+

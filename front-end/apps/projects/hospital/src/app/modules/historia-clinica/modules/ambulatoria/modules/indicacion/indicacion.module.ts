@@ -13,6 +13,7 @@ import { InternmentParenteralPlanCardComponent } from './components/internment-p
 import { NuevaPrescripcionComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/nueva-prescripcion/nueva-prescripcion.component";
 import { SuspenderMedicacionComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/suspender-medicacion/suspender-medicacion.component";
 import { DietComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/diet/diet.component";
+import { OtherIndicationComponent } from './dialogs/other-indication/other-indication.component';
 
 @NgModule({
 	declarations: [
@@ -26,6 +27,7 @@ import { DietComponent } from "@historia-clinica/modules/ambulatoria/modules/ind
 		NuevaPrescripcionComponent,
 		SuspenderMedicacionComponent,
 		DietComponent,
+		OtherIndicationComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,

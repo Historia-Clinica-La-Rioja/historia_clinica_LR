@@ -544,6 +544,10 @@
             "ANSWER_CONTENT": "¿Desea continuar de todos modos?",
             "CONFIRM_BUTTON": "Si, descartar y continuar",
             "CANCEL_BUTTON": "No, regresar y completar"
-        }
+        },
+		"dialog-title":{
+			"OTHER-INDICATION": "Otra indicación",
+			"DIET": "Dieta"
+		}
     }
 }

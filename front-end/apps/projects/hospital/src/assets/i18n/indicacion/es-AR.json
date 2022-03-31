@@ -45,7 +45,30 @@
 						"ERROR": "Error al guardar una nueva dieta",
 						"SUCCESS": "La dieta se guardó exitosamente"
 					}
-				}
+				},
+				"other-indication":{
+						"TITLE": "agregar otra indicación",
+						"NOTE": "Notas",
+						"DETAIL": "Detalle",
+						"DETAIL-EVENT": "Detalle evento",
+						"SELECTION-TYPE-INDICATION": "Seleccionar tipo de indicación",
+						"INDICATION": "Indicación",
+						"INTERVAL": "Intervalo",
+						"FREQUENCY": "Frecuencia",
+						"OTHER-FREQUENCY": "Otra frecuencia",
+						"START-TIME": "Hora de inicio",
+						"EVERY":"Cada",
+						"frequencyOption": {
+							"UNSPECIFIED": "Sin especificar",
+							"INTERVALS": "Intervalo",
+							"ONCE": "Unica vez",
+							"AFTER-EVENT":" Ante un evento"
+						},
+						"messages": {
+							"ERROR": "Error al guardar una nueva indicación",
+							"SUCCESS": "La indicación se guardó exitosamente"
+						}
+					}
 			}
 		}
 	}
