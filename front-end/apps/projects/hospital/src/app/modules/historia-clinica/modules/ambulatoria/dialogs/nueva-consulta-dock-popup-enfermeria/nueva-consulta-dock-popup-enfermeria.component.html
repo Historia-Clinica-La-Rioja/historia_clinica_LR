@@ -54,11 +54,22 @@
 		<div id="procedure">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.procedimientos.TITLE">
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
-						(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else procedimientoTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
+							(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #procedimientoTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="procedimientoNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.procedimientos.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="procedimientoNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
 
 					<ng-template #procedimientoForm>
 						<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
