@@ -383,16 +383,22 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		this.viewContainerRef.clear();
 		internmentComponent.instance.internmentEpisodeId = this.internmentEpisodeProcess.id;
 		internmentComponent.instance.patientId = this.patientId;
-		internmentComponent.instance.mainDiagnosis = this.mainDiagnosis;
-		internmentComponent.instance.diagnosticos = this.diagnosticos;
 
 		if (InternmentActions.anamnesis === internmentActionId) {
-			internmentComponent.instance.openAnamnesis();
+			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+				internmentComponent.instance.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+				internmentComponent.instance.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+				internmentComponent.instance.openAnamnesis();
+			});
 			return;
 		}
 
 		if (InternmentActions.evolutionNote === internmentActionId) {
-			internmentComponent.instance.openEvolutionNote();
+			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+				internmentComponent.instance.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+				internmentComponent.instance.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+				internmentComponent.instance.openEvolutionNote();
+			});
 			return;
 		}
 

@@ -11,10 +11,10 @@
 		</mat-card-subtitle>
 		<app-elemento-diagnostico *ngIf="_mainDiagnosis" [diagnosis]="_mainDiagnosis"></app-elemento-diagnostico>
 		<div *appHasRole="['ESPECIALISTA_MEDICO']">
-			<button *ngIf="!_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="type=='EVOLUTION'">
+			<button *ngIf="!_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="type=='EVOLUTION'" (click)="openCreationDialog(true)">
 				+ Agregar diagnóstico principal
 			</button>
-			<button *ngIf="_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos">
+			<button *ngIf="_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length">
 				Cambiar diagnóstico principal
 			</button>
 		</div>
@@ -24,6 +24,6 @@
 			</div>
 		</mat-card-subtitle>
 		<app-elemento-diagnostico *ngFor="let diagnosis of diagnosticos" [diagnosis]="diagnosis"></app-elemento-diagnostico>
-		<button class="diagnoses-action-button" mat-button color="primary">+ Agregar otro diagnóstico</button>
+		<button class="diagnoses-action-button" mat-button color="primary" (click)="openCreationDialog(false)">+ Agregar otro diagnóstico</button>
 	</mat-card>
 </div>

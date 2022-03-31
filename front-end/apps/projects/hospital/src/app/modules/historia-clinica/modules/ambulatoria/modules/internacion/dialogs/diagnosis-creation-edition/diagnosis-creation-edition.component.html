@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ type==='CREATION' ? 'Agregar diagnóstico' : 'Editar diagnóstico' }}</h2>
+<app-concepts-search *ngIf="!diagnosis else completedDiagnosis"
+	[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'" (search)="openSearchDialog($event)">
+</app-concepts-search>
+<form [formGroup]="form">
+	<ng-template #completedDiagnosis>
+		<mat-form-field appearance="outline">
+			<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+			</mat-label>
+			<input matInput type="text" formControlName="snomed" name="snomed" readonly
+				matTooltip="{{ diagnosis.snomed.pt }}">
+			<button id="clear" mat-button matSuffix color="warn" mat-icon-button (click)="resetForm()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</ng-template>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Verificación</mat-label>
+		<mat-select formControlName="validation" [(value)]="selection">
+			<mat-option [value]="false">Confirmado</mat-option>
+			<mat-option [value]="true">Presuntivo</mat-option>
+		</mat-select>
+	</mat-form-field>
+</form>
+<div fxLayoutAlign="end center">
+	<button class="uppercase" mat-raised-button color="primary" (click)="saveDiagnosis()">Guardar cambios</button>
+</div>

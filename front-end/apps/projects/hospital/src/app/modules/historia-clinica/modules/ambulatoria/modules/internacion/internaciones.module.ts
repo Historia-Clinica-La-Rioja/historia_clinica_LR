@@ -27,6 +27,7 @@ import { DiagnosisClinicalEvaluationDockPopupComponent } from './dialogs/diagnos
 import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component';
 import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
+import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 
 @NgModule({
 	declarations: [
@@ -52,6 +53,7 @@ import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-d
 		EvolutionNoteDockPopupComponent,
 		MedicalDischargeComponent,
   		ElementoDiagnosticoComponent,
+    	DiagnosisCreationEditionComponent,
 	],
 	imports: [
 		CommonModule,
