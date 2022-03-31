@@ -7,6 +7,9 @@
 		<button mat-menu-item (click)="openDietDialog()">
 		  <span>{{'indicacion.internment-card.menu-items.DIET' | translate }}</span>
 		</button>
+		<button mat-menu-item (click)="openIndicationDialog()">
+			<span>{{'ambulatoria.dialog-title.OTHER-INDICATION' | translate }}</span>
+		  </button>
 		</mat-menu>
 		<div class="content" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
 			<button mat-icon-button (click)="viewAnotherDay(-1)" [disabled]="this.currentViewIsEntryDate">
