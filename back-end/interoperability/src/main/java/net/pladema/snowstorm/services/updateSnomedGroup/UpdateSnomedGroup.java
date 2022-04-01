@@ -88,7 +88,7 @@ public class UpdateSnomedGroup {
 
     private Integer saveSnomedGroup(String eclKey, LocalDate date) {
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
-        Integer snomedGroupId = snomedGroupRepository.getIdByEcl(ecl);
+        Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
         String customId = "1";
 
         SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date);

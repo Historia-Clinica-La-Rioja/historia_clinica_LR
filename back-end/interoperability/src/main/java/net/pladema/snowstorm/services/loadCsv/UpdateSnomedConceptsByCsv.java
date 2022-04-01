@@ -122,7 +122,10 @@ public class UpdateSnomedConceptsByCsv {
 				snomedGroupId, conceptIds.size(), orden, date);
         List<SnomedRelatedGroup> elementsToSave = new ArrayList<>();
         for (Integer snomedId : conceptIds) {
-            SnomedRelatedGroup snomedRelatedGroup = new SnomedRelatedGroup(snomedId, snomedGroupId, orden, date);
+			SnomedRelatedGroup snomedRelatedGroup = snomedRelatedGroupRepository.getByGroupIdAndSnomedId(snomedGroupId, snomedId)
+					.orElse(new SnomedRelatedGroup(snomedId, snomedGroupId));
+			snomedRelatedGroup.setLastUpdate(date);
+			snomedRelatedGroup.setOrden(orden);
             elementsToSave.add(snomedRelatedGroup);
             orden = orden + 1;
         }
@@ -134,7 +137,7 @@ public class UpdateSnomedConceptsByCsv {
     private Integer saveSnomedGroup(String eclKey, LocalDate date) {
 		log.debug("Input parameters -> eclKey {}, date {}", eclKey, date);
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
-        Integer snomedGroupId = snomedGroupRepository.getIdByEcl(ecl);
+        Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
         String customId = "1";
         SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date);
 		Integer result = snomedGroupRepository.save(toSave).getId();
