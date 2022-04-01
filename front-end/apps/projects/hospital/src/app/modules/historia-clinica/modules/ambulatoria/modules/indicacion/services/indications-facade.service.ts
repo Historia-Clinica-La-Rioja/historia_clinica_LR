@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from "rxjs";
-import { DietDto } from "@api-rest/api-model";
+import { DietDto, OtherIndicationDto } from "@api-rest/api-model";
 import { InternmentIndicationService } from "@api-rest/services/internment-indication.service";
 import { Observable } from "rxjs";
 
@@ -19,6 +19,10 @@ export class IndicationsFacadeService {
 
 	addDiet(diet: DietDto): Observable<any> {
 		return this.internmentIndicationService.addDiet(diet, this.internmentEpisodeId);
+	}
+
+	addOtherIndication(otherIndication: OtherIndicationDto): Observable<any> {
+		return this.internmentIndicationService.addOtherIndication(otherIndication, this.internmentEpisodeId);
 	}
 
 	updateIndication(updateIndication: UpdateIndication) {

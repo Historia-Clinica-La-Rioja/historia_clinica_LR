@@ -138,7 +138,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(otherIndicatio => {
 
 			if (otherIndicatio) {
-				this.internmentIndicationService.addOtherIndication(this.toIndicationDto(otherIndicatio), this.internmentEpisodeId).subscribe(_ => {
+				this.indicationsFacadeService.addOtherIndication(this.toIndicationDto(otherIndicatio)).subscribe(_ => {
 					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.other-indication.messages.SUCCESS');
 				},
 					error => {
