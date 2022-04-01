@@ -43,9 +43,9 @@ public class HCHImmunizationRepositoryImpl implements HCHImmunizationRepository 
                 "i.administration_date, " +
                 "i.updated_on, " +
                 "row_number() over (partition by i.snomed_id, i.administration_date order by i.updated_on desc) as rw " +
-                "from document d " +
-                "join document_inmunization di on (d.id = di.document_id) " +
-                "join inmunization i on (di.inmunization_id = i.id) " +
+                "from {h-schema}document d " +
+                "join {h-schema}document_inmunization di on (d.id = di.document_id) " +
+                "join {h-schema}inmunization i on (di.inmunization_id = i.id) " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :documentStatusId " +
@@ -53,8 +53,8 @@ public class HCHImmunizationRepositoryImpl implements HCHImmunizationRepository 
                 "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.administration_date, " +
                 "n.id as note_id, n.description as note " +
                 "from temporal t " +
-                "left join note n on t.note_id = n.id " +
-                "join snomed s on t.snomed_id = s.id " +
+                "left join {h-schema}note n on t.note_id = n.id " +
+                "join {h-schema}snomed s on t.snomed_id = s.id " +
                 "where rw = 1 and not status_id = :immunizationStatusId " +
                 "order by t.updated_on";
 

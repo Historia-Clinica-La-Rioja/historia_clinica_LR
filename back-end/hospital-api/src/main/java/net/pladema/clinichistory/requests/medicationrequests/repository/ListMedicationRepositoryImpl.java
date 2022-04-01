@@ -49,14 +49,14 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 ", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
                 ", t.created_on AS m_created_on " +
                 "FROM temporal t " +
-                "JOIN snomed s ON (t.snomed_id = s.id) " +
-                "LEFT JOIN medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +
-                "LEFT JOIN medication_statement_status mss ON (mss.id = t.status_id)" +
-                "LEFT JOIN note n ON (t.note_id = n.id) " +
-                "LEFT JOIN dosage d ON (t.dosage_id = d.id) " +
+                "JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
+                "LEFT JOIN {h-schema}medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +
+                "LEFT JOIN {h-schema}medication_statement_status mss ON (mss.id = t.status_id)" +
+                "LEFT JOIN {h-schema}note n ON (t.note_id = n.id) " +
+                "LEFT JOIN {h-schema}dosage d ON (t.dosage_id = d.id) " +
                 "LEFT JOIN ( SELECT h1.id, s1.id as s_id, s1.sctid as sctid_id, s1.pt " +
-                "            FROM health_condition h1 " +
-                "            JOIN snomed s1 ON (h1.snomed_id = s1.id) " +
+                "            FROM {h-schema}health_condition h1 " +
+                "            JOIN {h-schema}snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = t.health_condition_id) " +
                 "WHERE rw = 1 " +
                 (filter.getMedicationStatement() != null ? "AND UPPER(s.pt) LIKE :medication " : "") +

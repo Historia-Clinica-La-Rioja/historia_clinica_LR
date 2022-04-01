@@ -76,11 +76,11 @@ public class PatientSearchQuery {
     }
 
     public QueryPart from() {
-    	String from = "	patient as patient \n" +
-				"	join person as person on (patient.person_id = person.id) \n" +
-				"	join patient_type as type on (patient.type_id = type.id) \n";
+    	String from = "	{h-schema}patient as patient \n" +
+				"	join {h-schema}person as person on (patient.person_id = person.id) \n" +
+				"	join {h-schema}patient_type as type on (patient.type_id = type.id) \n";
 
-    	String fromWithPersonExtended = "join person_extended as personExtended on (person.id = personExtended.person_id) \n";
+    	String fromWithPersonExtended = "join {h-schema}person_extended as personExtended on (person.id = personExtended.person_id) \n";
 		if (this.filterByNameSelfDetermination)
     		from = from + fromWithPersonExtended;
 

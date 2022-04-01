@@ -40,11 +40,11 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
         LOG.debug("getBedRelocationsByActivity ActivityInfoStorage -> refsetCode {}, provinceCode {}, activityId {}", refsetCode, provinceCode, activityId);
 
         String sqlString = "SELECT snm.sctid , snm.pt " +
-                "FROM v_attention va " +
-                "JOIN institution i ON (i.sisa_code = :refsetCode AND i.province_code = :provinceCode AND va.institution_id = i.id) " +
+                "FROM {h-schema}v_attention va " +
+                "JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND i.province_code = :provinceCode AND va.institution_id = i.id) " +
                 "LEFT JOIN (SELECT cs.clinical_specialty_type_id, s.sctid, s.pt " +
-                            "FROM clinical_specialty cs " +
-                            "JOIN snomed s on s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
+                            "FROM {h-schema}clinical_specialty cs " +
+                            "JOIN {h-schema}snomed s on s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
                 "WHERE va.id = :activityId ";
 
         Query query = entityManager.createNativeQuery(sqlString)
@@ -80,18 +80,18 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
         Integer outpatient = 1;
 
         String careTypeIdSubQuery = "SELECT s.care_type_id " +
-                                    "FROM bed b " +
-                                    "JOIN room r ON b.room_id = r.id " +
-                                    "JOIN sector s ON r.sector_id = s.id " +
+                                    "FROM {h-schema}bed b " +
+                                    "JOIN {h-schema}room r ON b.room_id = r.id " +
+                                    "JOIN {h-schema}sector s ON r.sector_id = s.id " +
                                     "WHERE b.id = hpbr.destination_bed_id ";
 
         String sqlString = "SELECT hpbr.relocation_date, snm.sctid, snm.pt, ("+careTypeIdSubQuery+")" +
-                "FROM v_attention va " +
-                "JOIN historic_patient_bed_relocation hpbr ON (hpbr.internment_episode_id = va.encounter_id) " +
-                "JOIN institution i ON (i.sisa_code = :refsetCode AND i.province_code = :provinceCode AND va.institution_id = i.id) " +
+                "FROM {h-schema}v_attention va " +
+                "JOIN {h-schema}historic_patient_bed_relocation hpbr ON (hpbr.internment_episode_id = va.encounter_id) " +
+                "JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND i.province_code = :provinceCode AND va.institution_id = i.id) " +
                 "LEFT JOIN (SELECT cs.clinical_specialty_type_id, s.sctid, s.pt " +
-                            "FROM clinical_specialty cs " +
-                            "JOIN snomed s on s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
+                            "FROM {h-schema}clinical_specialty cs " +
+                            "JOIN {h-schema}snomed s on s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
                 "WHERE va.id = :activityId AND va.scope_id = " + outpatient;
 
         Query query = entityManager.createNativeQuery(sqlString)

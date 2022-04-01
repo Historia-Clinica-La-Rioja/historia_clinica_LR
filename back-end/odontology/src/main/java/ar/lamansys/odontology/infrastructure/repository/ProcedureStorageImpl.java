@@ -54,7 +54,7 @@ public class ProcedureStorageImpl implements ProcedureStorage {
         String sqlString =
                 "SELECT ap.sctid, ap.pt, ap.applicable_to_tooth, ap.applicable_to_surface, " +
                 "       ap.permanent_c, ap.permanent_p, ap.permanent_o, ap.temporary_c, ap.temporary_e, ap.temporary_o " +
-                "FROM applicable_procedure ap " +
+                "FROM {h-schema}applicable_procedure ap " +
                 "WHERE ap.sctid = :sctid ";
 
         Query query = entityManager.createNativeQuery(sqlString)

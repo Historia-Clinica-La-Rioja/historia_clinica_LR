@@ -63,9 +63,9 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 	@Transactional(readOnly = true)
 	public List<PatientMedicalCoverageVo> getActivePatientHealthInsurances(Integer patientId) {
 		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliate_number, pmc.vigency_date, pmc.active, mc.id, mc.name, mc.cuit, hi.rnos, hi.acronym" +
-				"FROM patient_medical_coverage pmc " +
-				"JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
-				"JOIN health_insurance hi ON (mc.id = hi.id) " +
+				"FROM {h-schema}patient_medical_coverage pmc " +
+				"JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+				"JOIN {h-schema}health_insurance hi ON (mc.id = hi.id) " +
 				"WHERE pmc.active = true " +
 				"AND pmc.patient_id = :patientId ";
 
@@ -93,10 +93,10 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 	@Transactional(readOnly = true)
 	public List<PatientMedicalCoverageVo> getActivePatientPrivateHealthInsurances(Integer patientId) {
 		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliate_number, pmc.vigency_date, pmc.active, mc.id as mcid, mc.name, mc.cuit, phid.id as phid, phid.start_date, phid.end_date, phid.private_health_insurance_plan_id " +
-				"FROM patient_medical_coverage pmc " +
-				"JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
-				"JOIN private_health_insurance phi ON (mc.id = phi.id) " +
-				"JOIN private_health_insurance_details phid ON (pmc.private_health_insurance_details_id = phid.id) "+
+				"FROM {h-schema}patient_medical_coverage pmc " +
+				"JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+				"JOIN {h-schema}private_health_insurance phi ON (mc.id = phi.id) " +
+				"JOIN {h-schema}private_health_insurance_details phid ON (pmc.private_health_insurance_details_id = phid.id) "+
 				"WHERE pmc.active = true " +
 				"AND pmc.patient_id = :patientId ";
 

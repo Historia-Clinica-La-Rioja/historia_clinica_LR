@@ -38,16 +38,16 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                 "ai.start_date, " +
                 "ai.updated_on, " +
                 "row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw " +
-                "from document d " +
-                "join document_allergy_intolerance dai on d.id = dai.document_id " +
-                "join allergy_intolerance ai on dai.allergy_intolerance_id = ai.id " +
+                "from {h-schema}document d " +
+                "join {h-schema}document_allergy_intolerance dai on d.id = dai.document_id " +
+                "join {h-schema}allergy_intolerance ai on dai.allergy_intolerance_id = ai.id " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
                 "from temporal t " +
-                "join snomed s on t.snomed_id = s.id " +
+                "join {h-schema}snomed s on t.snomed_id = s.id " +
                 "where rw = 1 and not status_id = :allergyIntoleranceStatus " +
                 "order by t.updated_on desc ";
 

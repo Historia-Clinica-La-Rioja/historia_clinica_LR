@@ -37,10 +37,10 @@ public class TriageRepositoryCustomImpl implements TriageRepositoryCustom {
                         " td.respiratory_retraction_id,  td.stridor, td.perfusion_id, " +
                         " ece.emergency_care_type_id, " +
                         " array_agg( tvs.observation_vital_sign_id ) " +
-                        "FROM triage AS t " +
-                        "JOIN emergency_care_episode AS ece ON (t.emergency_care_episode_id = ece.id) " +
-                        "LEFT JOIN triage_details AS td ON (t.id = td.triage_id) " +
-                        "LEFT JOIN triage_vital_signs AS tvs on ( t.id = tvs.triage_id ) " +
+                        "FROM {h-schema}triage AS t " +
+                        "JOIN {h-schema}emergency_care_episode AS ece ON (t.emergency_care_episode_id = ece.id) " +
+                        "LEFT JOIN {h-schema}triage_details AS td ON (t.id = td.triage_id) " +
+                        "LEFT JOIN {h-schema}triage_vital_signs AS tvs on ( t.id = tvs.triage_id ) " +
                         "WHERE t.emergency_care_episode_id = :episodeId " +
                         "GROUP BY t.id, t.emergency_care_episode_id, t.triage_category_id, t.created_by, " +
                         " t.doctors_office_id, t.notes, t.created_on, " +
