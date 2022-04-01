@@ -5,7 +5,7 @@
 	</div>
 	<span>Activo</span>
 	<span>{{ diagnosis.presumptive ? 'Presuntivo' : 'Confirmado' }}</span>
-	<button mat-icon-button color="primary">
+	<button mat-icon-button color="primary" (click)="openDiagnosisEditionDialog()">
         <mat-icon>edit</mat-icon>
       </button>
 </div>

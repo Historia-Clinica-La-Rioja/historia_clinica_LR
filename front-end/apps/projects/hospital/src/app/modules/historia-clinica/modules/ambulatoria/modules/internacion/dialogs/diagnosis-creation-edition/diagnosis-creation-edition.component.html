@@ -8,8 +8,8 @@
 			<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
 			</mat-label>
 			<input matInput type="text" formControlName="snomed" name="snomed" readonly
-				matTooltip="{{ diagnosis.snomed.pt }}">
-			<button id="clear" mat-button matSuffix color="warn" mat-icon-button (click)="resetForm()">
+				matTooltip="{{ diagnosis.snomed.pt }}" [disabled]="type==='EDITION'">
+			<button *ngIf="type==='CREATION'" id="clear" mat-button matSuffix color="warn" mat-icon-button (click)="resetForm()">
 				<mat-icon>close</mat-icon>
 			</button>
 		</mat-form-field>

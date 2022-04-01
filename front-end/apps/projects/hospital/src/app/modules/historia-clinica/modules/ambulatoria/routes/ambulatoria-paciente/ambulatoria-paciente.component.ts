@@ -386,6 +386,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 		if (InternmentActions.anamnesis === internmentActionId) {
 			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId==='76104008');
 				internmentComponent.instance.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
 				internmentComponent.instance.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
 				internmentComponent.instance.openAnamnesis();
@@ -395,6 +396,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 		if (InternmentActions.evolutionNote === internmentActionId) {
 			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId==='76104008');
 				internmentComponent.instance.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
 				internmentComponent.instance.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
 				internmentComponent.instance.openEvolutionNote();

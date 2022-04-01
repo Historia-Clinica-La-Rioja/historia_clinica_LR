@@ -121,7 +121,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				bloodType: !!evolutionNoteDto.anthropometricData?.bloodType,
 				immunizations: !!evolutionNoteDto.immunizations,
 				riskFactors: !!evolutionNoteDto.riskFactors,
-				mainDiagnosis: !!evolutionNoteDto.diagnosis,
+				mainDiagnosis: !!evolutionNoteDto.mainDiagnosis,
 				diagnosis: !!evolutionNoteDto.diagnosis,
 				evolutionClinical: !!evolutionNoteDto.diagnosis,
 			}

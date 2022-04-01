@@ -22,6 +22,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private snomedService: SnomedService) {
 		this.type = data.type;
+		this.diagnosis = data.diagnosis;
 	}
 
 	ngOnInit(): void {
@@ -29,6 +30,10 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 			snomed: [null, Validators.required],
 			validation: [false, Validators.required]
 		});
+		if (this.diagnosis){
+			this.form.controls.snomed.setValue(this.diagnosis.snomed.pt);
+			this.form.controls.validation.setValue(this.diagnosis.presumptive);
+		}
 	}
 
 	saveDiagnosis() {

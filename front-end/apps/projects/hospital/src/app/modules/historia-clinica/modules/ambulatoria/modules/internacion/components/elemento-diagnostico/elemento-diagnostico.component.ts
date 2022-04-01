@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DiagnosesGeneralStateDto } from '@api-rest/api-model';
+import { MatDialog } from '@angular/material/dialog';
+import { DiagnosisDto } from '@api-rest/api-model';
+import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 
 @Component({
 	selector: 'app-elemento-diagnostico',
@@ -9,11 +11,22 @@ import { DiagnosesGeneralStateDto } from '@api-rest/api-model';
 export class ElementoDiagnosticoComponent implements OnInit {
 
 	@Input()
-	diagnosis: DiagnosesGeneralStateDto;
+	diagnosis: DiagnosisDto;
 
-	constructor() { }
+	constructor(public dialog: MatDialog) { }
 
   	ngOnInit(): void {
   	}
+
+	openDiagnosisEditionDialog() {
+		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
+			width: '450px',
+			height: '270px',
+			data: {
+				type: 'EDITION',
+				diagnosis: this.diagnosis
+			}
+		});
+	}
 
 }
