@@ -59,3 +59,24 @@ databaseChangeLog:
               columnName: end_date
               newDataType: datetime
               tableName: dosage
+              
+    - changeSet:
+        id: update-pharmaco-via-type
+        comment: Actualiza tipo de dato de la columna via en pharmaco
+        author: bchacon
+        changes:
+          - modifyDataType:
+              columnName: via
+              newDataType: smallint
+              tableName: pharmaco
+              
+              
+    - changeSet:
+          id: addNotNullConstraint-via-pharmaco
+          author: bchacon
+          changes:
+              - addNotNullConstraint:
+                    columnDataType: smallint
+                    columnName: via
+                    tableName: pharmaco
+                    validate: true
