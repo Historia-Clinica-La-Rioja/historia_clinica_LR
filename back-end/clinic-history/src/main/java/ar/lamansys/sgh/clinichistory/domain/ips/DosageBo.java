@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,6 +31,8 @@ public class DosageBo {
     private boolean chronic = false;
 
 	private String event;
+
+	private QuantityBo quantity;
 
     public String getPeriodUnit(){
         return periodUnit != null ? periodUnit.getValue() : null;

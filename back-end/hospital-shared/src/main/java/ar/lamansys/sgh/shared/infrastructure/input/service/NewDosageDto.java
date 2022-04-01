@@ -37,4 +37,7 @@ public class NewDosageDto implements Serializable {
 	@Nullable
 	private DateTimeDto startDateTime;
 
+	@Nullable
+	private QuantityDto quantity;
+
 }

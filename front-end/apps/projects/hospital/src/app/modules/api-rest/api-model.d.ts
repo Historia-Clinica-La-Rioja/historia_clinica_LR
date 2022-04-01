@@ -1494,6 +1494,7 @@ export interface NewDosageDto extends Serializable {
     event?: string;
     frequency?: number;
     periodUnit?: string;
+    quantity?: QuantityDto;
     startDateTime?: DateTimeDto;
 }
 
@@ -1715,6 +1716,11 @@ export interface OtherIndicationDto extends IndicationDto {
     dosage?: NewDosageDto;
     otherIndicationTypeId: number;
     otherType?: string;
+}
+
+export interface OtherPharmacoDto {
+    dosage: NewDosageDto;
+    snomed: SharedSnomedDto;
 }
 
 export interface OutpatientAllergyConditionDto {
@@ -1964,6 +1970,17 @@ export interface PersonalInformationDto {
     phonePrefix: string;
 }
 
+export interface PharmacoDto extends IndicationDto {
+    dosage: NewDosageDto;
+    foodRelationId: number;
+    healthConditionId: number;
+    note?: string;
+    patientProvided: boolean;
+    snomed: SharedSnomedDto;
+    solvent?: OtherPharmacoDto;
+    viaId: number;
+}
+
 export interface PoliceInterventionDetailsDto extends Serializable {
     callDate: DateDto;
     callTime: TimeDto;
@@ -2073,6 +2090,11 @@ export interface ProvinceDto extends AbstractMasterdataDto<number> {
 export interface PublicInfoDto {
     features: AppFeature[];
     flavor: string;
+}
+
+export interface QuantityDto extends Serializable {
+    unit: string;
+    value: number;
 }
 
 export interface ReasonDto {
