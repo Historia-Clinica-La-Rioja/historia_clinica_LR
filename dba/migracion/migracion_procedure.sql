@@ -1,4 +1,4 @@
-CREATE PROCEDURE migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50))
+CREATE PROCEDURE migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
     language plpgsql
 as
 $$
@@ -48,10 +48,19 @@ BEGIN
     query := 'INSERT INTO ' || to_schema || '.users (id, created_on, deleted_on, deleted, updated_on, last_login, enable, username, created_by,
                                updated_by, deleted_by)
     SELECT (-'|| offset_value ||'-u.id), u.created_on, u.deleted_on, u.deleted, u.updated_on, u.last_login, u.enable,
-           (''MIGRACION'' || u.username), (-'|| offset_value ||'-u.created_by), (-'|| offset_value ||'-u.updated_by), (-'|| offset_value ||'-u.deleted_by)
+           ('''||prefix_username||'-'' || u.username), (-'|| offset_value ||'-u.created_by), (-'|| offset_value ||'-u.updated_by), (-'|| offset_value ||'-u.deleted_by)
     FROM '|| from_schema || '.users AS u
     WHERE u.created_by != -1;';
     EXECUTE format(query);
+
+
+    query := 'INSERT INTO ' || to_schema || '.user_person (user_id, person_id)
+    SELECT (-'|| offset_value ||'-up.user_id), (-'|| offset_value ||'-up.person_id)
+    FROM '|| from_schema || '.user_person AS up
+	JOIN '|| from_schema || '.users AS u ON  u.id = up.user_id
+    WHERE u.created_by != -1;';
+    EXECUTE format(query);
+
 
     query := 'INSERT INTO ' || to_schema || '.user_password (id, created_on, deleted_on, deleted, updated_on, hash_algorithm, password, salt,
                                        created_by, updated_by, deleted_by)
@@ -401,6 +410,11 @@ BEGIN
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
     EXECUTE(query);
 
+    query := 'INSERT INTO ' || to_schema || '.document_health_condition (health_condition_id, document_id)
+    SELECT (-'|| offset_value ||'-m.health_condition_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_health_condition AS m';
+    EXECUTE(query);
+
     query := 'INSERT INTO ' || to_schema || '.observation_lab (id, patient_id, sctid_code, status_id, category_id, "value", effective_time,
                                          note_id, created_by, updated_by, created_on, updated_on, cie10_codes, snomed_id,
                                          deleted, deleted_by, deleted_on)
@@ -411,6 +425,11 @@ BEGIN
             FROM '|| from_schema ||'.observation_lab AS hc
             JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    EXECUTE(query);
+
+    query := 'INSERT INTO ' || to_schema || '.document_lab (observation_lab_id, document_id)
+    SELECT (-'|| offset_value ||'-m.observation_lab_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_lab AS m';
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.observation_vital_sign (id, patient_id, sctid_code, status_id, category_id, "value", effective_time,
@@ -425,6 +444,11 @@ BEGIN
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
     EXECUTE(query);
 
+    query := 'INSERT INTO ' || to_schema || '.document_vital_sign (observation_vital_sign_id, document_id)
+    SELECT (-'|| offset_value ||'-m.observation_vital_sign_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_vital_sign AS m';
+    EXECUTE(query);
+
     query := 'INSERT INTO ' || to_schema || '.procedures (id, patient_id, sctid_code, status_id, note_id, performed_date, created_by, updated_by,
                                     created_on, updated_on, cie10_codes, snomed_id, deleted, deleted_by, deleted_on)
             SELECT (-'|| offset_value ||'-hc.id), (-'|| offset_value ||'-patient_id), null, status_id, (-'|| offset_value ||'-note_id), performed_date,
@@ -433,6 +457,11 @@ BEGIN
             FROM '|| from_schema ||'.procedures AS hc
             JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    EXECUTE(query);
+
+    query := 'INSERT INTO ' || to_schema || '.document_procedure (procedure_id, document_id)
+    SELECT (-'|| offset_value ||'-m.procedure_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_procedure AS m';
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.allergy_intolerance (id, patient_id, sctid_code, status_id, verification_status_id, start_date,
@@ -447,6 +476,11 @@ BEGIN
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
     EXECUTE(query);
 
+    query := 'INSERT INTO ' || to_schema || '.document_allergy_intolerance (allergy_intolerance_id, document_id)
+    SELECT (-'|| offset_value ||'-m.allergy_intolerance_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_allergy_intolerance AS m';
+    EXECUTE(query);
+
     query := 'INSERT INTO ' || to_schema || '.diagnostic_report (id, patient_id, status_id, health_condition_id, effective_time, link, note_id,
                                            created_by, updated_by, created_on, updated_on, cie10_codes, snomed_id, deleted,
                                            deleted_by, deleted_on)
@@ -457,6 +491,11 @@ BEGIN
     FROM '|| from_schema ||'.diagnostic_report AS hc
     JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
     JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    EXECUTE(query);
+
+    query := 'INSERT INTO ' || to_schema || '.document_diagnostic_report (diagnostic_report_id, document_id)
+    SELECT (-'|| offset_value ||'-m.diagnostic_report_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_diagnostic_report AS m';
     EXECUTE(query);
 
     FOR temprow IN EXECUTE 'SELECT (-'|| offset_value ||'-hc.id) AS id, (-'|| offset_value ||'-patient_id) as patient_id, null, status_id,
@@ -486,6 +525,10 @@ BEGIN
        temprow.billable, temprow.dose, temprow.doctor_info, temprow.institution_info;
     END LOOP;
 
+    query := 'INSERT INTO ' || to_schema || '.document_inmunization (inmunization_id, document_id)
+    SELECT (-'|| offset_value ||'-m.inmunization_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_inmunization AS m';
+    EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.dosage (id, sequence, "count", duration, duration_unit, frequency, period_unit, dose_quantity_id,
                                 chronic, start_date, end_date, suspended_start_date, suspended_end_date, event)
@@ -493,7 +536,6 @@ BEGIN
            chronic, start_date, end_date, suspended_start_date, suspended_end_date, event
     FROM '|| from_schema ||'.dosage AS d';
     EXECUTE(query);
-
 
     query := 'INSERT INTO ' || to_schema || '.medication_statement (id, patient_id, sctid_code, status_id, note_id, created_by, updated_by,
                                               created_on, updated_on, dosage_id, health_condition_id, cie10_codes,
@@ -507,6 +549,10 @@ BEGIN
     JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
     EXECUTE(query);
 
+    query := 'INSERT INTO ' || to_schema || '.document_medicamention_statement (medication_statement_id, document_id)
+    SELECT (-'|| offset_value ||'-m.medication_statement_id), (-'|| offset_value ||'-document_id)
+    FROM '|| from_schema ||'.document_medicamention_statement AS m';
+    EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.doctors_office (id, institution_id, clinical_specialty_sector_id, description, opening_time,
                                    closing_time, topic)
@@ -560,4 +606,4 @@ BEGIN
 END;
 $$;
 
-CALL migrate(1000, 'public', 'migrate');
+CALL migrate(1000, 'public', 'migrate', 'QUILMES');
