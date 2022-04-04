@@ -38,7 +38,10 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 
 	saveDiagnosis() {
 		if (this.form.valid) {
-			this.diagnosis.presumptive = this.form.value.validation;
+			if (this.diagnosis.presumptive != this.form.value.validation) {
+				this.diagnosis.presumptive = this.form.value.validation;
+				this.diagnosis.isAdded = true;
+			}
 			this.dialogRef.close(this.diagnosis);
 		}
 	}

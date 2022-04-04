@@ -1120,6 +1120,7 @@ export interface HealthCareProfessionalGroupDto {
 }
 
 export interface HealthConditionDto extends ClinicalTermDto {
+    isAdded?: boolean;
     verificationId?: string;
 }
 

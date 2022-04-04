@@ -141,8 +141,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				height: getValue(formValues.anthropometricData.height),
 				weight: getValue(formValues.anthropometricData.weight),
 			},
-			mainDiagnosis: this.mainDiagnosis,
-			diagnosis: this.diagnosticos,
+			mainDiagnosis: this.mainDiagnosis?.isAdded ? this.mainDiagnosis : null,
+			diagnosis: this.diagnosticos.filter(diagnosis => diagnosis.isAdded),
 			immunizations: this.immunizations,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
 			riskFactors: isNull(formValues.riskFactors) ? undefined : {

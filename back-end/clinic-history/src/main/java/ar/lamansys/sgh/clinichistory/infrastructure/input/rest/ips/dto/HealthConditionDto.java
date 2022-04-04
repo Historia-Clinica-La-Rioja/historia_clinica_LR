@@ -13,4 +13,7 @@ public class HealthConditionDto extends ClinicalTermDto {
 
     @Nullable
     private String verificationId;
+
+	@Nullable
+	private Boolean isAdded;
 }

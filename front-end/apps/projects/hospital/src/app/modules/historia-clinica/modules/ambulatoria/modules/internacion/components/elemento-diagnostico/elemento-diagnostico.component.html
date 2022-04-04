@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="space-evenly center">
 	<div fxLayoutGap="10px">
-		<mat-checkbox id="{{ diagnosis.snomed.pt }}"></mat-checkbox>
+		<mat-checkbox id="{{ diagnosis.snomed.pt }}" [checked]="diagnosis.isAdded" (change)="diagnosis.isAdded = $event.checked"></mat-checkbox>
 		<strong class="capitalize">{{ diagnosis.snomed.pt }}</strong>
 	</div>
 	<span>Activo</span>
