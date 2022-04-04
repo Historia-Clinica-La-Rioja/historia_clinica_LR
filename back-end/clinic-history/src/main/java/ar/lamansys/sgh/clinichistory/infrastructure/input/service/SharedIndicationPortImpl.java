@@ -146,6 +146,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		dosageDto.setFrequency(dosageBo.getFrequency());
 		dosageDto.setPeriodUnit(dosageBo.getPeriodUnit());
 		dosageDto.setEvent(dosageBo.getEvent());
+		dosageDto.setStartDateTime(localDateMapper.toDateTimeDto(dosageBo.getStartDate()));
 		return new OtherIndicationDto(
 				bo.getId(),
 				bo.getPatientId(),

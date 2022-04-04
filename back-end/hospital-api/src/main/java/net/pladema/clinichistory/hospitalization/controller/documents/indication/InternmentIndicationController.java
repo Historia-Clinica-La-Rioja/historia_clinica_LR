@@ -120,6 +120,7 @@ public class InternmentIndicationController {
 				: localDateMapper.fromDateTimeDto(new DateTimeDto(indicationDate, new TimeDto(0,0,0)));
 		result.setStartDate(startDate);
 		result.setEndDate(startDate.plusDays(1).toLocalDate().atStartOfDay());
+		result.setEvent(dto.getEvent());
 		return result;
 	}
 }
