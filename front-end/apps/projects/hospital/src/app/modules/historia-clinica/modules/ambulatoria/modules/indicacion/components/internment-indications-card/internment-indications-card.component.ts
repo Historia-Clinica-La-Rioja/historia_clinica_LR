@@ -124,6 +124,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 	filterIndications() {
 		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate) === true));
+		this.indicationsFacadeService.otherIndications$.subscribe(d => this.otherIndications = d.filter((otherIndications: OtherIndicationDto) => isSameDay(dateDtoToDate(otherIndications.indicationDate), this.actualDate)));
 	}
 	openIndicationDialog() {
 		const dialogRef = this.dialog.open(OtherIndicationComponent, {
@@ -140,6 +141,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			if (otherIndicatio) {
 				this.indicationsFacadeService.addOtherIndication(this.toIndicationDto(otherIndicatio)).subscribe(_ => {
 					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.other-indication.messages.SUCCESS');
+					this.indicationsFacadeService.updateIndication({ otherIndication: true });
 				},
 					error => {
 						error?.text ?

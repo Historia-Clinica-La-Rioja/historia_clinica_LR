@@ -30,7 +30,8 @@
 					"DOSE": "Dosis:",
 					"VIA": "Vía:",
 					"INTERVAL": "Intervalo:",
-					"ONCE": "Única vez",
+					"ONCE": "Única vez:",
+					"START_TIME": "Hora de inicio:",
 					"EVENT": "Ante evento:"
 				}
 			},

@@ -1,5 +1,5 @@
-import { Title } from "@presentation/components/indication/indication.component"
-import { DateTimeDto } from "@api-rest/api-model";
+import { ExtraInfo, Title } from "@presentation/components/indication/indication.component"
+import { DateTimeDto, NewDosageDto } from "@api-rest/api-model";
 import { dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
 import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
@@ -49,6 +49,27 @@ export const PHARMACO: Title = {
 export const OTHER_INDICATION: Title = {
 	title: 'indicacion.internment-card.sections.OTHER_INDICATION',
 	matIcon: 'assignment_late',
+}
+
+export function showFrequency(dosage: NewDosageDto): ExtraInfo[] {
+	if (dosage?.frequency)
+		return [{
+			title: 'indicacion.internment-card.sections.indication-extra-description.START_TIME',
+			content: dosage?.startDateTime?.time.hours + "hs."
+		}, {
+			title:  'indicacion.internment-card.sections.indication-extra-description.INTERVAL',
+			content: dosage?.frequency + "hs."
+		}]
+	if (dosage?.event)
+		return [{
+			title:  'indicacion.internment-card.sections.indication-extra-description.EVENT',
+			content: dosage?.event
+		}]
+	if (dosage?.startDateTime?.time.hours)
+		return [{
+			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
+			content: dosage?.startDateTime.time.hours + "hs."
+		}]
 }
 
 export function showTimeElapsed(createdOn: DateTimeDto): string {

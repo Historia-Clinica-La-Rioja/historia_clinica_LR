@@ -1,15 +1,15 @@
 <app-content width="full">
 	<app-summary-card id="internment-indications"	[header]="internmentIndication"
-				  [editable]="false"
-				  [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
-				  [menu]="!epicrisisConfirmed" [matMenu]="menu">
+		[editable]="false"
+		[canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
+		[menu]="!epicrisisConfirmed" [matMenu]="menu">
 		<mat-menu #menu="matMenu">
-		<button mat-menu-item (click)="openDietDialog()">
-		  <span>{{'indicacion.internment-card.menu-items.DIET' | translate }}</span>
-		</button>
-		<button mat-menu-item (click)="openIndicationDialog()">
-			<span>{{'ambulatoria.dialog-title.OTHER-INDICATION' | translate }}</span>
-		  </button>
+			<button mat-menu-item (click)="openDietDialog()">
+				<span>{{'indicacion.internment-card.menu-items.DIET' | translate }}</span>
+			</button>
+			<button mat-menu-item (click)="openIndicationDialog()">
+				<span>{{'ambulatoria.dialog-title.OTHER-INDICATION' | translate }}</span>
+			</button>
 		</mat-menu>
 		<div class="content" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
 			<button mat-icon-button (click)="viewAnotherDay(-1)" [disabled]="this.currentViewIsEntryDate">
@@ -33,7 +33,7 @@
 			<app-internment-diet-card [diets]="diets"></app-internment-diet-card>
 			<app-internment-parenteral-plan-card></app-internment-parenteral-plan-card>
 			<app-internment-pharmaco-card></app-internment-pharmaco-card>
-			<app-internment-other-indication-card></app-internment-other-indication-card>
+			<app-internment-other-indication-card [otherIndications]="otherIndications"></app-internment-other-indication-card>
 		</div>
 	</app-summary-card>
 </app-content>
