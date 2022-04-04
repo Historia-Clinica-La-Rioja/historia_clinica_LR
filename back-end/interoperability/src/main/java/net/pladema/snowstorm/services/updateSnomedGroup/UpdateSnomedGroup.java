@@ -10,7 +10,6 @@ import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 import net.pladema.snowstorm.services.SnowstormService;
-import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
@@ -44,7 +43,7 @@ public class UpdateSnomedGroup {
         do {
             SnowstormSearchResponse response = snowstormService.getConceptsByEclKey(eclKey, searchAfter);
             searchAfter = response.getSearchAfter();
-            List<Integer> conceptIds = sharedSnomedPort.addSnomedConcepts(associateWithParentAndMapToDto(response));
+            List<Integer> conceptIds = sharedSnomedPort.addSnomedConcepts(mapToDto(response));
             conceptsProcessed = associateConceptIdsWithSnomedGroup(snomedGroupId, conceptIds, conceptsProcessed, today);
             log.trace("Concepts processed -> {}", conceptsProcessed);
         }
@@ -52,26 +51,13 @@ public class UpdateSnomedGroup {
         log.debug("Finished updating Snomed group");
     }
 
-    private List<SharedSnomedDto> associateWithParentAndMapToDto(SnowstormSearchResponse response) {
+    private List<SharedSnomedDto> mapToDto(SnowstormSearchResponse response) {
         return response.getItems().stream()
-                .map(i -> {
-                    SnowstormItemResponse parent = getConceptParent(i.getConceptId());
-                    return new SharedSnomedDto(i.getConceptId(),
-                            i.getPt().get("term").asText(),
-                            (parent != null) ? parent.getConceptId() : null,
-                            (parent != null) ? parent.getPt().get("term").asText() : null);
-                })
+                .map(i -> new SharedSnomedDto(i.getConceptId(),
+						i.getPt().get("term").asText(),
+						null,
+						null))
                 .collect(Collectors.toList());
-    }
-
-    private SnowstormItemResponse getConceptParent(String conceptId) {
-        try {
-            return snowstormService.getConceptParents(conceptId).get(0);
-        }
-        catch (SnowstormApiException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private Integer associateConceptIdsWithSnomedGroup(Integer snomedGroupId, List<Integer> conceptIds, Integer orden, LocalDate date) {
