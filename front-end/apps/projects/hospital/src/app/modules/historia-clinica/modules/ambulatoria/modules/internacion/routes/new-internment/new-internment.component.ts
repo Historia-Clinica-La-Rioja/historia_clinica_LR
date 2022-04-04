@@ -12,7 +12,6 @@ import { futureTimeValidation, hasError, scrollIntoError, TIME_PATTERN } from '@
 import { PersonService } from '@api-rest/services/person.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { PatientService } from '@api-rest/services/patient.service';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
 	CompletePatientDto,
@@ -65,7 +64,6 @@ export class NewInternmentComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[] = [];
 	hasError = hasError;
 	public form: FormGroup;
-	public specialties;
 	public doctors: HealthcareProfessionalDto[];
 	public patientId: number;
 	public patientBasicData: PatientBasicData;
@@ -80,7 +78,6 @@ export class NewInternmentComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly el: ElementRef,
 		private readonly router: Router,
-		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
 		private readonly patientService: PatientService,
 		private readonly personService: PersonService,
@@ -127,7 +124,6 @@ export class NewInternmentComponent implements OnInit {
 				Validators.pattern(TIME_PATTERN)]]
 			}),
 			patientMedicalCoverage: [null, [Validators.required]],
-			specialtyId: [null, [Validators.required]],
 			doctorId: [null, [Validators.required]],
 			contactName: [null],
 			contactPhoneNumber: [null],
@@ -142,10 +138,6 @@ export class NewInternmentComponent implements OnInit {
 				this.form.controls.dateTime.get('time').removeValidators(futureTimeValidation);
 			}
 			this.form.controls.dateTime.get('time').updateValueAndValidity();
-		});
-
-		this.internacionMasterDataService.getClinicalSpecialty().subscribe(data => {
-			this.specialties = data;
 		});
 
 		this.healthcareProfessionalService.getAllDoctors().subscribe(data => {
@@ -227,7 +219,6 @@ export class NewInternmentComponent implements OnInit {
 		const response = {
 			patientId: this.patientId,
 			bedId: this.selectedBedInfo.bed.id,
-			clinicalSpecialtyId: this.form.controls.specialtyId.value,
 			entryDate: newDatetime.toISOString(),
 			patientMedicalCoverageId: medicalCoverageId,
 			responsibleDoctorId: this.form.controls.doctorId.value,

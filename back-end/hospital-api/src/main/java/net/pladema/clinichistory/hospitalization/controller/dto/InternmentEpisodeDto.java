@@ -19,6 +19,4 @@ public class InternmentEpisodeDto {
 
     private ResponsibleDoctorDto doctor;
 
-    private ClinicalSpecialtyDto specialty;
-
 }

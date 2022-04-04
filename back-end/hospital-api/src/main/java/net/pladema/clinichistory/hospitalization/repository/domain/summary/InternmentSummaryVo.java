@@ -36,10 +36,6 @@ public class InternmentSummaryVo {
 
 	private String sectorSpecialty;
 
-	private Integer clinicalSpecialtyId;
-
-	private String specialty;
-
 	private LocalDateTime entryDate;
 
 	private LocalDateTime dischargeDate;
@@ -52,7 +48,7 @@ public class InternmentSummaryVo {
 
 	public InternmentSummaryVo(Integer id, LocalDateTime entryDate, Long anamnesisDocId, String anamnesisStatusId,
 			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
-			String roomNumber, String sectorDescription, ClinicalSpecialty clinicalSpecialty,
+			String roomNumber, String sectorDescription,
 			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
 			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate, LocalDateTime dischargeDate, Short internmentStatusId) {
 		this.id = id;
@@ -65,12 +61,7 @@ public class InternmentSummaryVo {
 		this.roomNumber = roomNumber;
 		this.sectorDescription = sectorDescription;
 
-		//Fix clinical specialty as speciality (not as service)
-		clinicalSpecialty.fixSpecialtyType();
 		this.sectorSpecialty = null;
-		this.clinicalSpecialtyId = clinicalSpecialty.getId();
-		this.specialty = clinicalSpecialty.getName();
-
 		this.entryDate = entryDate;
 		if (healthcareProfessionalId != null)
 			this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);

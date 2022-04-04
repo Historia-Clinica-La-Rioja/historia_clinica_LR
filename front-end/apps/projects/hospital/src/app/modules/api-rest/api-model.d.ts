@@ -1293,7 +1293,6 @@ export interface InstitutionInfoDto extends Serializable {
 
 export interface InternmentEpisodeADto {
     bedId: number;
-    clinicalSpecialtyId: number;
     dischargeDate: Date;
     entryDate: Date;
     institutionId: number;
@@ -1313,7 +1312,6 @@ export interface InternmentEpisodeDto {
     doctor: ResponsibleDoctorDto;
     id: number;
     patient: PatientDto;
-    specialty: ClinicalSpecialtyDto;
 }
 
 export interface InternmentEpisodeProcessDto {
