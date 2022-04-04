@@ -11,7 +11,11 @@ export class IndicationsFacadeService {
 
 	private internmentEpisodeId: number;
 	private dietsSubject: Subject<any> = new BehaviorSubject<DietDto[]>([]);
+
+	private otherIndecationsSubject: Subject<any> = new BehaviorSubject<OtherIndicationDto[]>([]);
 	readonly diets$ = this.dietsSubject.asObservable();
+
+	readonly otherIndications$ = this.otherIndecationsSubject.asObservable();
 
 	constructor(
 		private readonly internmentIndicationService: InternmentIndicationService
@@ -29,12 +33,17 @@ export class IndicationsFacadeService {
 		if (updateIndication.diets) {
 			this.internmentIndicationService.getInternmentEpisodeDiets(this.internmentEpisodeId).subscribe(d => this.dietsSubject.next(d));
 		}
+		if (updateIndication.otherIndication) {
+			this.internmentIndicationService.getInternmentEpisodeOtherIndications(this.internmentEpisodeId).subscribe(d => this.otherIndecationsSubject.next(d));
+		}
+
 	}
 
 	setInternmentEpisodeId(id: number) {
 		this.internmentEpisodeId = id;
 		this.updateIndication({
-			diets: true
+			diets: true,
+			otherIndication: true
 		})
 	}
 }

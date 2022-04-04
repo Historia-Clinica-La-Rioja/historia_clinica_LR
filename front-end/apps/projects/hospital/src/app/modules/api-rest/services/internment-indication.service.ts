@@ -25,6 +25,15 @@ export class InternmentIndicationService {
 			}
 		});
 	}
+	getInternmentEpisodeOtherIndications(internmentEpisodeId: number): Observable<OtherIndicationDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/other-indication`;
+		return this.http.get<OtherIndicationDto[]>(url, {
+			params: {
+				institutionId: this.contextService.institutionId,
+				internmentEpisodeId: internmentEpisodeId,
+			}
+		});
+	}
 	addDiet(indication: DietDto, internmentEpisodeId: number): Observable<DietDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/diet`;
 		return this.http.post<DietDto>(url, indication);
