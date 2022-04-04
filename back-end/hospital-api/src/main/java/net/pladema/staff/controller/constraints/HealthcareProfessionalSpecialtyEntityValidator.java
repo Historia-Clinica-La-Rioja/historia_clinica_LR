@@ -6,6 +6,8 @@ import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEntityValidatorAdapter<HealthcareProfessionalSpecialty, Integer> {
 
@@ -17,17 +19,21 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 
 	@Override
 	public void assertCreate(HealthcareProfessionalSpecialty entity) {
-		if (healthcareProfessionalSpecialtyRepository.existsValues(entity.getHealthcareProfessionalId(),
-				entity.getClinicalSpecialtyId(), entity.getProfessionalSpecialtyId()))
-			throw new BackofficeValidationException("healthcare-professional.specialty-profession-exists");
+		healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getHealthcareProfessionalId(), entity.getClinicalSpecialtyId(), entity.getProfessionalSpecialtyId()).
+		ifPresent(healthcareProfessionalSpecialty -> {
+			if (!healthcareProfessionalSpecialty.isDeleted()) {
+				throw new BackofficeValidationException("healthcare-professional.specialty-profession-exists");
+			}
+		});
 	}
 
 	@Override
 	public void assertUpdate(Integer id, HealthcareProfessionalSpecialty entity) {
-		if (healthcareProfessionalSpecialtyRepository.existsValues(entity.getHealthcareProfessionalId(),
+		if (!healthcareProfessionalSpecialtyRepository.existsValues(entity.getHealthcareProfessionalId(),
 				entity.getClinicalSpecialtyId(), entity.getProfessionalSpecialtyId()))
-			throw new BackofficeValidationException("healthcare-professional.specialty-profession-exists");
+			throw new BackofficeValidationException("healthcare-professional.specialty-profession-not-assigned");
 	}
+
 
 	@Override
 	public void assertDelete(Integer id){
