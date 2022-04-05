@@ -220,8 +220,8 @@ export class EditPatientComponent implements OnInit {
 								);
 
 								//Tooltips
-								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId).description;
-								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId).description;
+								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId)?.description;
+								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;
 							});
 					});
 				this.setPatientMedicalCoverages();
