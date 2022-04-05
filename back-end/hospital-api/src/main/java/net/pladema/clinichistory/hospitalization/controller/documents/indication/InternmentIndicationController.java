@@ -9,12 +9,12 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherPharmaco;
 import ar.lamansys.sgh.shared.infrastructure.input.service.IndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherIndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoSummaryDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
@@ -109,6 +109,15 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/pharmacos")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<PharmacoSummaryDto>> getInternmentEpisodePharmacos(@PathVariable(name = "institutionId") Integer institutionId,
+																				  @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+		List<PharmacoSummaryDto> result = internmentPharmacoService.getInternmentEpisodePharmacos(internmentEpisodeId);
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok(result);
+	}
 
 	private InternmentDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
 		InternmentDietBo result = new InternmentDietBo();

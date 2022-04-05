@@ -1981,6 +1981,12 @@ export interface PharmacoDto extends IndicationDto {
     viaId: number;
 }
 
+export interface PharmacoSummaryDto extends IndicationDto, Serializable {
+    dosage: NewDosageDto;
+    snomed: SharedSnomedDto;
+    via: string;
+}
+
 export interface PoliceInterventionDetailsDto extends Serializable {
     callDate: DateDto;
     callTime: TimeDto;

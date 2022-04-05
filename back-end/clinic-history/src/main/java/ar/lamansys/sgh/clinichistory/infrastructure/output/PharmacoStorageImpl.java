@@ -1,12 +1,16 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
 import ar.lamansys.sgh.clinichistory.application.ports.PharmacoStorage;
+import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
+import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.OtherPharmacoRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.PharmacoRepository;
@@ -15,10 +19,15 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Quantity;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherPharmaco;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.Pharmaco;
+import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -29,8 +38,9 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 	private final DosageRepository dosageRepository;
 	private final PharmacoRepository pharmacoRepository;
 	private final OtherPharmacoRepository otherPharmacoRepository;
-
 	private final SnomedService snomedService;
+	private final SharedHospitalUserPort sharedHospitalUserPort;
+
 
 	@Override
 	public Integer createPharmaco(PharmacoBo pharmacoBo) {
@@ -43,6 +53,17 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		log.debug("pharmacoId {}, solventId {} -> ", pharmacoId, solventId);
 		log.debug("Output -> {}", pharmacoId);
 		return pharmacoId;
+	}
+
+	@Override
+	public List<PharmacoSummaryBo> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<PharmacoSummaryBo> result = pharmacoRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId())
+				.stream()
+				.map(this::mapToPharmacoSummaryBo)
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 	private Integer saveSolvent(OtherPharmacoBo bo, Integer indicationId) {
@@ -97,6 +118,38 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setIndicationId(indicationId);
 		result.setSnomedId(snomedId);
 		result.setDosageId(dosageId);
+		return result;
+	}
+
+	private PharmacoSummaryBo mapToPharmacoSummaryBo(Pharmaco entity){
+		PharmacoSummaryBo result = new PharmacoSummaryBo();
+		HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(entity.getCreatedBy());
+		SnomedBo snomedBo = snomedService.getSnomed(entity.getSnomedId());
+		DosageBo dosageBo = dosageRepository.findById(entity.getDosageId())
+				.map(this::mapToDosageBo).orElse(null);
+		result.setId(entity.getId());
+		result.setPatientId(entity.getPatientId());
+		result.setStatusId(entity.getStatusId());
+		result.setTypeId(entity.getTypeId());
+		result.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+		result.setIndicationDate(entity.getIndicationDate());
+		result.setCreatedOn(entity.getCreatedOn());
+		result.setSnomed(snomedBo);
+		result.setDosage(dosageBo);
+		result.setVia(EVia.getById(entity.getViaId()).getDescription());
+		return result;
+	}
+
+	private DosageBo mapToDosageBo(Dosage entity) {
+		DosageBo result = new DosageBo();
+		result.setId(entity.getId());
+		result.setFrequency(entity.getFrequency());
+		result.setPeriodUnit(EUnitsOfTimeBo.map(entity.getPeriodUnit()));
+		result.setStartDate(entity.getStartDate());
+		result.setEndDate(entity.getEndDate());
+		result.setEvent(entity.getEvent());
+		quantityRepository.findById(entity.getDoseQuantityId()).ifPresent( quantity ->
+				result.setQuantity(new QuantityBo(quantity.getValue().intValue(), quantity.getUnit())));
 		return result;
 	}
 

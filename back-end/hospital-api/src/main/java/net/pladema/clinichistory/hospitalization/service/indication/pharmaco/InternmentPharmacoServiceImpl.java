@@ -6,17 +6,19 @@ import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.QuantityDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedIndicationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.domain.InternmentPharmacoBo;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -35,6 +37,14 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo));
 		pharmacoBo.setId(documentFactory.run(pharmacoBo, false));
 		sharedIndicationPort.saveDocument(pharmacoBo.getId(), result);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<PharmacoSummaryDto> result = sharedIndicationPort.getInternmentEpisodePharmacos(internmentEpisodeId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

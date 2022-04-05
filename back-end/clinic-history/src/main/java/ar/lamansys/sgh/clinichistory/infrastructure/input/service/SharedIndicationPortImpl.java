@@ -7,16 +7,21 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.CreatePharmaco;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
 
+import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos.GetInternmentEpisodePharmacos;
+import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.QuantityDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
@@ -48,6 +53,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final GetInternmentEpisodeOtherIndications getInternmentEpisodeOtherIndications;
 
+	private final GetInternmentEpisodePharmacos getInternmentEpisodePharmacos;
+
 	private final CreateDiet createDiet;
 
 	private final CreateOtherIndication createOtherIndication;
@@ -75,6 +82,17 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		List<OtherIndicationDto> result = getInternmentEpisodeOtherIndications.run(internmentEpisodeId)
 				.stream()
 				.map(this::mapToOtherIndicationDto)
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<PharmacoSummaryDto> result = getInternmentEpisodePharmacos.run(internmentEpisodeId)
+				.stream()
+				.map(this::mapToPharmacoSummaryDto)
 				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
@@ -221,6 +239,34 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		OtherPharmacoBo result = new OtherPharmacoBo();
 		result.setSnomed(new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()));
 		result.setDosage(toDosageBo(dto.getDosage(), indicationDate));
+		return result;
+	}
+
+	private PharmacoSummaryDto mapToPharmacoSummaryDto(PharmacoSummaryBo bo) {
+		NewDosageDto dosageDto = toDosageDto(bo.getDosage());
+		SharedSnomedDto snomedDto = new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt());
+
+		return new PharmacoSummaryDto(
+				bo.getId(),
+				bo.getPatientId(),
+				bo.getTypeId(),
+				bo.getStatusId(),
+				bo.getProfessionalId(),
+				bo.getCreatedByName(),
+				localDateMapper.toDateDto(bo.getIndicationDate()),
+				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
+				snomedDto,
+				dosageDto,
+				bo.getVia());
+	}
+
+	private NewDosageDto toDosageDto(DosageBo bo) {
+		NewDosageDto result = new NewDosageDto();
+		result.setFrequency(bo.getFrequency());
+		result.setPeriodUnit(bo.getPeriodUnit());
+		result.setEvent(bo.getEvent());
+		if(bo.getQuantity() != null)
+			result.setQuantity(new QuantityDto(bo.getQuantity().getValue(), bo.getQuantity().getUnit()));
 		return result;
 	}
 }
