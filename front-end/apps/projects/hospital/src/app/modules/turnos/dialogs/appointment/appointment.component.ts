@@ -5,7 +5,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
@@ -70,7 +70,7 @@ export class AppointmentComponent implements OnInit {
 	isMqttCallEnabled: boolean = false;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public params : { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
+		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
@@ -136,7 +136,7 @@ export class AppointmentComponent implements OnInit {
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
-				this.identificationType = identificationTypes.find(identificationType => identificationType.id==this.params.appointmentData.patient.identificationTypeId);
+				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.params.appointmentData.patient.identificationTypeId);
 			});
 	}
 
@@ -158,7 +158,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private setMedicalCoverages(): void {
-		if(this.params.appointmentData.patient?.id) {
+		if (this.params.appointmentData.patient?.id) {
 			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.params.appointmentData.patient.id))
 				.pipe(
 					map(
@@ -208,7 +208,7 @@ export class AppointmentComponent implements OnInit {
 		if (this.formEdit.valid) {
 			if (this.isAssigned()) {
 				if (this.formEdit.controls.newCoverageData.value) {
-					this.coverageData = this.patientMedicalCoverages.find(mc=>this.formEdit.controls.newCoverageData.value==mc.id);
+					this.coverageData = this.patientMedicalCoverages.find(mc => this.formEdit.controls.newCoverageData.value == mc.id);
 					this.updateCoverageData(this.coverageData.id);
 					this.setCoverageText(this.coverageData);
 				} else {
@@ -217,10 +217,10 @@ export class AppointmentComponent implements OnInit {
 					this.updateCoverageData(null);
 				}
 			}
-			if (this.formEdit.controls.phoneNumber.dirty||this.formEdit.controls.phonePrefix.dirty){
-				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value,this.formEdit.controls.phoneNumber.value);
-		}
-		this.hideFilters();
+			if (this.formEdit.controls.phoneNumber.dirty || this.formEdit.controls.phonePrefix.dirty) {
+				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
+			}
+			this.hideFilters();
 		}
 	}
 
@@ -246,7 +246,7 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				const appointmentInformation = {id: this.params.appointmentData.appointmentId, stateId: newStateId};
+				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {

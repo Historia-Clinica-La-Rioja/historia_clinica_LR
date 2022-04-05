@@ -2,14 +2,12 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import {
-	AbstractMasterdataDto,
-	ExternalPatientCoverageDto,
 	InternmentEpisodeProcessDto,
 	PersonPhotoDto
 } from '@api-rest/api-model';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientNameService } from '@core/services/patient-name.service';
-import {PatientGenderService} from "@core/services/patient-gender.service";
+import { PatientGenderService } from "@core/services/patient-gender.service";
 
 const NO_DOCUMENT_TYPE = 'No posee';
 @Component({
@@ -32,7 +30,11 @@ export class PatientCardComponent {
 	@Input() internmentEpisodeProcess: InternmentEpisodeProcessDto;
 	@Input() emergencyCareEpisodeInProgress: boolean;
 
-	constructor(private readonly imageDecoderService: ImageDecoderService, private readonly patientNameService: PatientNameService, private readonly patientGenderService: PatientGenderService) { }
+	constructor(
+		private readonly imageDecoderService: ImageDecoderService,
+		private readonly patientNameService: PatientNameService,
+		private readonly patientGenderService: PatientGenderService
+	) { }
 
 	public showID(): string {
 		if (this.patient?.id === undefined) {
@@ -46,10 +48,10 @@ export class PatientCardComponent {
 	public showIdentificationTypeAndNumber(): string {
 		let identificationType: string;
 		let identificationNumber: string;
-		this.personalAdditionalInformation.map(info => {
+		this.personalAdditionalInformation.forEach(info => {
 			identificationNumber = info.data;
 			identificationType = info.description;
-		})
+		});
 		if ((identificationNumber === undefined) && ((identificationType === undefined) || (identificationType === NO_DOCUMENT_TYPE))) {
 			return ('');
 		}
@@ -60,14 +62,14 @@ export class PatientCardComponent {
 		}
 	}
 
-	public viewIDAndIdentificationTypeAndNumber() {
+	public viewIDAndIdentificationTypeAndNumber(): string {
 		if (this.showAdditionalInformation) {
 			return (this.showID() + this.showIdentificationTypeAndNumber());
 		}
 		return (this.showID());
 	}
 
-	public viewGenderAge() {
+	public viewGenderAge(): string {
 		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender) + ' · ';
 		gender = gender ? gender : '';
 		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : '';
