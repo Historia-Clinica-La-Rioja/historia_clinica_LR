@@ -3,11 +3,18 @@ package net.pladema.clinichistory.hospitalization.controller.documents.indicatio
 import java.time.LocalDateTime;
 import java.util.List;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherPharmaco;
 import ar.lamansys.sgh.shared.infrastructure.input.service.IndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherIndicationDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
@@ -17,6 +24,9 @@ import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.
 import net.pladema.clinichistory.hospitalization.service.indication.otherindication.InternmentOtherIndicationService;
 
 import net.pladema.clinichistory.hospitalization.service.indication.otherindication.domain.InternmentOtherIndicationBo;
+
+import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.InternmentPharmacoService;
+import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.domain.InternmentPharmacoBo;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,6 +56,8 @@ public class InternmentIndicationController {
 	private final InternmentDietService internmentDietService;
 
 	private final InternmentOtherIndicationService otherIndicationService;
+
+	private final InternmentPharmacoService internmentPharmacoService;
 
 	private final LocalDateMapper localDateMapper;
 
@@ -85,6 +97,19 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
+
+	@PostMapping("/pharmaco")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<Integer> addPharmaco(@PathVariable(name = "institutionId") Integer institutionId,
+											   @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+											   @RequestBody PharmacoDto pharmacoDto) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, pharmacoDto {}", institutionId, internmentEpisodeId, pharmacoDto);
+		Integer result = internmentPharmacoService.add(mapToPharmacoBo(pharmacoDto, institutionId, internmentEpisodeId));
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok(result);
+	}
+
+
 	private InternmentDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
 		InternmentDietBo result = new InternmentDietBo();
 		result.setDescription(dto.getDescription());
@@ -100,6 +125,21 @@ public class InternmentIndicationController {
 		return (InternmentOtherIndicationBo) setIndicationInfoBo(dto,result,institutionId,internmentEpisodeId);
 	}
 
+	private InternmentPharmacoBo mapToPharmacoBo(PharmacoDto dto, Integer institutionId, Integer internmentEpisodeId) {
+		InternmentPharmacoBo result = new InternmentPharmacoBo();
+		result.setSnomed(dto.getSnomed() != null? new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()) : null);
+		result.setDosage(toDosageBo(dto.getDosage(),dto.getIndicationDate()));
+		result.setSolvent(toOtherPharmacoBo(dto.getSolvent(), dto.getIndicationDate()));
+		result.setHealthConditionId(dto.getHealthConditionId());
+		result.setFoodRelationId(dto.getFoodRelationId());
+		result.setPatientProvided(dto.getPatientProvided());
+		result.setViaId(dto.getViaId());
+		DocumentObservationsBo documentObservationsBo = new DocumentObservationsBo();
+		documentObservationsBo.setOtherNote(dto.getNote());
+		result.setNotes(documentObservationsBo);
+		return (InternmentPharmacoBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
+	}
+
 	private InternmentIndicationBo setIndicationInfoBo (IndicationDto dto, InternmentIndicationBo bo, Integer institutionId, Integer internmentEpisodeId) {
 		bo.setPatientId(dto.getPatientId());
 		bo.setTypeId(dto.getType().getId());
@@ -111,7 +151,7 @@ public class InternmentIndicationController {
 		return bo;
 	}
 
-	private DosageBo toDosageBo(NewDosageDto dto, DateDto indicationDate){
+	private DosageBo toDosageBo(NewDosageDto dto, DateDto indicationDate) {
 		DosageBo result = new DosageBo();
 		result.setFrequency(dto.getFrequency());
 		result.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
@@ -121,6 +161,16 @@ public class InternmentIndicationController {
 		result.setStartDate(startDate);
 		result.setEndDate(startDate.plusDays(1).toLocalDate().atStartOfDay());
 		result.setEvent(dto.getEvent());
+		if(dto.getQuantity() != null)
+			result.setQuantity(new QuantityBo(dto.getQuantity().getValue(), dto.getQuantity().getUnit()));
 		return result;
 	}
+
+	private OtherPharmacoBo toOtherPharmacoBo(OtherPharmacoDto dto, DateDto indicationDate) {
+		OtherPharmacoBo result = new OtherPharmacoBo();
+		result.setSnomed(new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()));
+		result.setDosage(toDosageBo(dto.getDosage(), indicationDate));
+		return result;
+	}
+
 }
