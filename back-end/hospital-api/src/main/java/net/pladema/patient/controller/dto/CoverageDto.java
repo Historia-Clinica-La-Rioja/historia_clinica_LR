@@ -27,5 +27,7 @@ public abstract class CoverageDto implements Serializable {
 
     private String cuit;
 
+	public abstract String obtainCoverageType();
+
     public abstract MedicalCoverageBo newInstance();
 }

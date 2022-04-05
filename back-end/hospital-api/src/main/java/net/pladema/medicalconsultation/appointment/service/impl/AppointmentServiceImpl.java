@@ -2,11 +2,25 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+
+import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+
+import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+
+import net.pladema.patient.service.domain.PrivateHealthInsuranceDetailsBo;
 
 import org.springframework.stereotype.Service;
 
@@ -32,14 +46,28 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final SharedStaffPort sharedStaffPort;
 
-	public AppointmentServiceImpl(
-			AppointmentRepository appointmentRepository,
-			HistoricAppointmentStateRepository historicAppointmentStateRepository,
-			SharedStaffPort sharedStaffPort
-	) {
+	private final DateTimeProvider dateTimeProvider;
+
+	private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+
+	private final InstitutionExternalService institutionExternalService;
+
+	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
+								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
+								  SharedStaffPort sharedStaffPort,
+								  DateTimeProvider dateTimeProvider,
+								  PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
+								  InstitutionExternalService institutionExternalService,
+								  PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
 		this.appointmentRepository = appointmentRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
 		this.sharedStaffPort = sharedStaffPort;
+		this.dateTimeProvider = dateTimeProvider;
+		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
+		this.institutionExternalService = institutionExternalService;
+		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
 	}
 
 	@Override
@@ -134,6 +162,71 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return patientMedicalCoverageId;
 	}
 
+	@Override
+	public PatientMedicalCoverageBo getCurrentAppointmentMedicalCoverage(Integer patientId, Integer institutionId) {
+		log.debug("Input parameters -> patientId {}, institutionId {}", patientId, institutionId);
+
+		var appointmentId = this.getCurrentAppointmentId(patientId, institutionId);
+		if(appointmentId == null)
+			return null;
+
+		var medicalCoverageIdOpt = appointmentRepository.getAppointmentMedicalCoverageId(appointmentId);
+		if(medicalCoverageIdOpt.isPresent()){
+			var result = this.makePatientMedicalCoverageBo(patientExternalMedicalCoverageService
+					.getCoverage(medicalCoverageIdOpt.get()));
+			if(result != null) {
+				log.trace(OUTPUT, result);
+				return result;
+			}
+		}
+
+		return new PatientMedicalCoverageBo();
+	}
+
+	private Integer getCurrentAppointmentId(Integer patientId, Integer institutionId) {
+		log.debug("Input parameters -> patientId {}, institutionId {}", patientId, institutionId);
+
+		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+		var currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
+		var userId = UserInfo.getCurrentAuditor();
+		var getConfirmedAppointmentsByPatient = appointmentRepository.getConfirmedAppointmentsByPatient(patientId,
+				institutionId, userId, currentDateTime.toLocalDate(), currentDateTime.toLocalTime());
+		if(getConfirmedAppointmentsByPatient.isEmpty())
+			return null;
+
+		var result = getConfirmedAppointmentsByPatient.get(0);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	private PatientMedicalCoverageBo makePatientMedicalCoverageBo(PatientMedicalCoverageDto dto){
+		log.trace("Input parameters -> patientMedicalCoverageDto {}", dto);
+		if(dto == null)
+			return null;
+
+		var coverageDto = dto.getMedicalCoverage();
+		var medicalCoverageBo = new PatientCoverageInsuranceDetailsBo(coverageDto.getId(),
+				coverageDto.getName(), coverageDto.getCuit(), coverageDto.obtainCoverageType());
+		var phidDto = dto.getPrivateHealthInsuranceDetails();
+		var phidBo = new PrivateHealthInsuranceDetailsBo();
+		var vigencyDate = dto.getVigencyDate();
+
+		var result = new PatientMedicalCoverageBo(dto.getId(),
+				vigencyDate != null ? LocalDate.parse(vigencyDate) : null,
+				dto.getActive(),
+				dto.getAffiliateNumber(),
+				medicalCoverageBo,
+				phidBo);
+
+		if (phidDto != null && phidDto.getPlanId() != null) {
+			var planIdOpt = privateHealthInsurancePlanRepository.findById(phidDto.getPlanId());
+			planIdOpt.ifPresent(privateHealthInsurancePlan -> result.getPrivateHealthInsuranceDetails().setPlanName(privateHealthInsurancePlan.getPlan()));
+		}
+
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
 	private Collection<AppointmentAssignedBo> getAssignedAppointmentsByPatient(Integer patientId) {
 		log.debug("Input parameters -> patientId {}", patientId);
 		Collection<AppointmentAssignedBo> result;
@@ -162,6 +255,5 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.trace(OUTPUT, result);
 		return result;
 	}
-
 
 }

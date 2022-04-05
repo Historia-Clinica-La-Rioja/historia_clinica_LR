@@ -19,6 +19,8 @@ public abstract class MedicalCoverageBo implements Serializable {
 
     private String cuit;
 
+	public abstract String obtainCoverageType();
+
     public abstract CoverageDto newInstance();
 
     public abstract MedicalCoverage mapToEntity();
