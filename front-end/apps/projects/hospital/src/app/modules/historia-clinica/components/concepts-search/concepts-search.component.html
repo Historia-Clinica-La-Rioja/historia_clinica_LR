@@ -3,7 +3,7 @@
 		<mat-label [translate]="'internaciones.anamnesis.SEARCH'" [translateParams]="{ conceptLabel: translatedLabel }"></mat-label>
 		<input id="input" name="input" matInput type="text" formControlName="searchValue">
 		<mat-error *ngIf="hasError(form, 'minlength', 'searchValue')" [translate]="'forms.MIN_LENGTH_ERROR'" [translateParams]="{ minLength: MIN_LENGTH }"></mat-error>
-		<button id="clear" type="button" mat-button *ngIf="form.controls.searchValue" matSuffix color="warn" mat-icon-button
+		<button id="clear" type="button" mat-button *ngIf="form.controls.searchValue && !hideIcon" matSuffix color="warn" mat-icon-button
 			(click)="clear()">
 			<mat-icon>close</mat-icon>
 		</button>
