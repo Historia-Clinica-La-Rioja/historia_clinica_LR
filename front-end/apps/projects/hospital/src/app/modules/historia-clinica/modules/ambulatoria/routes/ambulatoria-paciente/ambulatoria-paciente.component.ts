@@ -24,7 +24,7 @@ import { ExtensionPatientService } from '@extensions/services/extension-patient.
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
 import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
-import { anyMatch, pushIfNotExists } from '@core/utils/array.utils';
+import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,6 +42,7 @@ import { RequestMasterDataService } from '@api-rest/services/request-masterdata.
 import { InternacionPacienteComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internacion-paciente/internacion-paciente.component";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { PatientAllergiesService } from '../../services/patient-allergies.service';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 
 const RESUMEN_INDEX = 0;
 
@@ -89,6 +90,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	currentUserIsAllowedToDoAConsultation = false;
 	hasMedicalRole = false;
 	internmentAction: InternmentActions;
+	appointmentConfirmedCoverageInfo: ExternalPatientCoverageDto;
+
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -114,7 +117,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private viewContainerRef: ViewContainerRef,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		readonly patientAllergies: PatientAllergiesService,
-
+		private readonly appointmentsService: AppointmentsService,
 		private readonly requestMasterDataService: RequestMasterDataService,
 
 	) {
@@ -167,6 +170,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
 					.subscribe(emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
+
+				this.appointmentsService.getCurrentAppointmentMedicalCoverage(this.patientId).subscribe(
+					info => this.appointmentConfirmedCoverageInfo = info
+				);
 			});
 	}
 

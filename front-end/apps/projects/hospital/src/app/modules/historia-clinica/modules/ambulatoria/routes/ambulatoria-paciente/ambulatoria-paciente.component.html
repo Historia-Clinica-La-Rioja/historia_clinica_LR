@@ -70,11 +70,21 @@
 						</div>
 					</div>
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
-					<app-medical-coverage-summary-view
-						*ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress"
-						[title]="'ambulatoria.paciente.card.INTERNMENT_COVERAGE_TITLE'"
-						[patientCoverageInfo]="internmentEpisodeCoverageInfo">
-					</app-medical-coverage-summary-view>
+
+					<ng-container *ngIf="appointmentConfirmedCoverageInfo else internmentCovarage">
+						<app-medical-coverage-summary-view
+							[title]="'ambulatoria.paciente.card.APPOINTMENT_COVERAGE_TITLE'"
+							[patientCoverageInfo]="appointmentConfirmedCoverageInfo">
+						</app-medical-coverage-summary-view>
+					</ng-container>
+					<ng-template #internmentCovarage>
+						<app-medical-coverage-summary-view
+							*ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress"
+							[title]="'ambulatoria.paciente.card.INTERNMENT_COVERAGE_TITLE'"
+							[patientCoverageInfo]="internmentEpisodeCoverageInfo">
+						</app-medical-coverage-summary-view>
+					</ng-template>
+
 				</div>
 
 			</div>

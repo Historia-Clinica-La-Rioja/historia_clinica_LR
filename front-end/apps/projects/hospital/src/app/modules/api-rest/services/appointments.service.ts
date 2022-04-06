@@ -5,8 +5,12 @@ import {
 	AppointmentDto,
 	AppointmentListDto,
 	AssignedAppointmentDto,
-	CreateAppointmentDto
+	CreateAppointmentDto,
+	ExternalPatientCoverageDto
 } from '@api-rest/api-model';
+
+import { EMedicalCoverageTypeDto } from '@api-rest/api-model';
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
@@ -136,5 +140,19 @@ export class AppointmentsService {
 	getAssignedAppointmentsList(patientId: number): Observable<AssignedAppointmentDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${patientId}/get-assigned-appointments`;
 		return this.http.get<AssignedAppointmentDto[]>(url);
+	}
+
+	getCurrentAppointmentMedicalCoverage(patientId: number): Observable<ExternalPatientCoverageDto> {
+		const mock: ExternalPatientCoverageDto = {
+			active: true,
+			affiliateNumber: "4515421",
+			medicalCoverage: {
+				cuit: "20378610177",
+				name: "OSDE",
+				plan: "ORO",
+				type: EMedicalCoverageTypeDto.PREPAGA,
+			}
+		};
+		return of(mock);
 	}
 }
