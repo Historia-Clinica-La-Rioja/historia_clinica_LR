@@ -2,8 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
 import java.util.List;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
-import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +12,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 
 
 @Repository
-public interface OtherIndicationRepository extends SGXAuditableEntityJPARepository<OtherIndication, Integer> {
+public interface OtherIndicationRepository extends JpaRepository<OtherIndication, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT oi "

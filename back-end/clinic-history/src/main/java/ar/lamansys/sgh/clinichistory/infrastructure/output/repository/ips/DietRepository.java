@@ -2,16 +2,16 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.Diet;
-import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 @Repository
-public interface DietRepository extends SGXAuditableEntityJPARepository<Diet, Integer> {
+public interface DietRepository extends JpaRepository<Diet, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d "
