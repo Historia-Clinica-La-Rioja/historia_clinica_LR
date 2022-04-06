@@ -52,7 +52,6 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 			this.form.controls.snomed.setValue(selectedConcept.pt);
 			newDiagnosis = {
 				id: null,
-				presumptive: this.form.value.validation,
 				verificationId: null,
 				statusId: null,
 				snomed: selectedConcept

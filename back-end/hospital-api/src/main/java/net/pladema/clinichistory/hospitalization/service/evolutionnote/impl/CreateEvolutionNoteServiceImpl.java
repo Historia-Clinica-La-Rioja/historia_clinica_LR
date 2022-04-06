@@ -104,7 +104,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     }
 
     private void assertDiagnosisValid(EvolutionNoteBo evolutionNote, InternmentEpisode internmentEpisode, HealthConditionBo mainDiagnosis) {
-        if (evolutionNote.getDiagnosis() == null || evolutionNote.getDiagnosis().isEmpty())
+        if (evolutionNote.getDiagnosis() == null || evolutionNote.getDiagnosis().isEmpty() || evolutionNote.getMainDiagnosis() != mainDiagnosis)
             return;
         if (evolutionNote.getDiagnosis().stream()
                 .map(DiagnosisBo::getSnomed)

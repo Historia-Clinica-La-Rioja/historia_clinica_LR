@@ -14,7 +14,7 @@
 			<button *ngIf="!_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="type=='EVOLUTION'" (click)="openCreationDialog(true)">
 				+ Agregar diagnóstico principal
 			</button>
-			<button *ngIf="_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length">
+			<button *ngIf="_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length" (click)="openModifyMainDiagnosisDialog()">
 				Cambiar diagnóstico principal
 			</button>
 		</div>

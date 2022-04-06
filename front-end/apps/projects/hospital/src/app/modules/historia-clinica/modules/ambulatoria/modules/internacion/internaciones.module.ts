@@ -28,6 +28,7 @@ import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epic
 import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
 import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
+import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
 
 @NgModule({
 	declarations: [
@@ -54,6 +55,7 @@ import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-
 		MedicalDischargeComponent,
   		ElementoDiagnosticoComponent,
     	DiagnosisCreationEditionComponent,
+		SelectMainDiagnosisComponent,
 	],
 	imports: [
 		CommonModule,
