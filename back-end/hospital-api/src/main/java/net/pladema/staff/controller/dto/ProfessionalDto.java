@@ -23,6 +23,8 @@ public class ProfessionalDto {
 
     private String phoneNumber;
 
+	private String nameSelfDetermination;
+
     public String getCompleteName(){
         return String.format("%s %s", firstName, lastName);
     }

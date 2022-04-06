@@ -53,7 +53,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON (hp.personId = p.id)"
-			+ " INNER JOIN PersonExtended pe ON (p.id = pe.id)"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " WHERE hp.id = :id"
 			+ " AND hp.deleteable.deleted = false")
 	Optional<HealthcareProfessionalVo> findActiveProfessionalById(@Param("id") Integer id);

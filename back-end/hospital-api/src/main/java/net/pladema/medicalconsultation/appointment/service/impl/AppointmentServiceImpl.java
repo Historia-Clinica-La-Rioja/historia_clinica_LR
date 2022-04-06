@@ -6,8 +6,12 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -44,6 +48,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final SharedStaffPort sharedStaffPort;
 
+	private final FeatureFlagsService featureFlagsService;
+
 	private final DateTimeProvider dateTimeProvider;
 
 	private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
@@ -58,10 +64,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  DateTimeProvider dateTimeProvider,
 								  PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
 								  InstitutionExternalService institutionExternalService,
-								  MedicalCoveragePlanRepository medicalCoveragePlanRepository) {
+								  MedicalCoveragePlanRepository medicalCoveragePlanRepository,
+								  FeatureFlagsService featureFlagsService) {
 		this.appointmentRepository = appointmentRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
 		this.sharedStaffPort = sharedStaffPort;
+		this.featureFlagsService = featureFlagsService;
 		this.dateTimeProvider = dateTimeProvider;
 		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
 		this.institutionExternalService = institutionExternalService;
@@ -248,7 +256,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 					appointmentAssigned.setSpecialties(basicHealtcareDtoMap.getClinicalSpecialties().stream()
 							.map(specialty -> {return specialty.getName();})
 							.collect(Collectors.toList()));
-					appointmentAssigned.setProfessionalName(basicHealtcareDtoMap.getFirstName() + ' ' + basicHealtcareDtoMap.getLastName());
+					if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && basicHealtcareDtoMap.getNameSelfDetermination() != null && !basicHealtcareDtoMap.getNameSelfDetermination().isEmpty())
+						appointmentAssigned.setProfessionalName(basicHealtcareDtoMap.getNameSelfDetermination() + ' ' + basicHealtcareDtoMap.getLastName() + ' ' + basicHealtcareDtoMap.getId());
+					else
+						appointmentAssigned.setProfessionalName(basicHealtcareDtoMap.getFirstName() + ' ' + basicHealtcareDtoMap.getLastName());
 					return appointmentAssigned;
 				}).collect(Collectors.toList());
 		log.debug("Result size {}", result.size());

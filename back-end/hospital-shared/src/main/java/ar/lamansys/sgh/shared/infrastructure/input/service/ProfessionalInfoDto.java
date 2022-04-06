@@ -25,8 +25,10 @@ public class ProfessionalInfoDto {
 
     private final List<ClinicalSpecialtyDto> clinicalSpecialties;
 
+	private String nameSelfDetermination;
+
     public ProfessionalInfoDto(Integer id, String licenceNumber, String firstName, String lastName,
-                               String identificationNumber, String phoneNumber, List<ClinicalSpecialtyDto> clinicalSpecialties) {
+                               String identificationNumber, String phoneNumber, List<ClinicalSpecialtyDto> clinicalSpecialties, String nameSelfDetermination) {
         this.id = id;
         this.licenceNumber = licenceNumber;
         this.firstName = firstName;
@@ -34,5 +36,6 @@ public class ProfessionalInfoDto {
         this.identificationNumber = identificationNumber;
         this.phoneNumber = phoneNumber;
         this.clinicalSpecialties = clinicalSpecialties;
+		this.nameSelfDetermination = nameSelfDetermination;
     }
 }

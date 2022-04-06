@@ -18,4 +18,6 @@ public class BasicPersonalDataBo {
     private String lastName;
 
     private String identificationNumber;
+
+	private String nameSelfDetermination;
 }

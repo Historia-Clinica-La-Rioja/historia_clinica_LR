@@ -210,7 +210,7 @@ public class HCEGeneralStateController {
     private ProfessionalInfoDto mapProfessionalInfoDto(HCEImmunizationBo hceImmunizationBo) {
         if (hceImmunizationBo.isBillable())
             return sharedStaffPort.getProfessionalCompleteInfo(hceImmunizationBo.getCreatedByUserId());
-        return new ProfessionalInfoDto(null, null, hceImmunizationBo.getDoctorInfo(), null, null, null, null);
+        return new ProfessionalInfoDto(null, null, hceImmunizationBo.getDoctorInfo(), null, null, null, null, null);
     }
 
     private InstitutionInfoDto mapInstitutionInfo(HCEImmunizationBo hceImmunizationBo) {

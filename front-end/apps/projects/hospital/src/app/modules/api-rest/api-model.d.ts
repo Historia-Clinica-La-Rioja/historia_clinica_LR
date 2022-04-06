@@ -2082,6 +2082,7 @@ export interface ProfessionalDto {
     identificationNumber: string;
     lastName: string;
     licenceNumber: string;
+    nameSelfDetermination: string;
     phoneNumber: string;
 }
 
@@ -2092,6 +2093,7 @@ export interface ProfessionalInfoDto {
     identificationNumber: string;
     lastName: string;
     licenceNumber: string;
+    nameSelfDetermination: string;
     phoneNumber: string;
 }
 
