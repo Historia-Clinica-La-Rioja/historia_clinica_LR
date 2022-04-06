@@ -26,4 +26,6 @@ public class ConsultationsVo {
     private String lastName;
 
     private String otherLastNames;
+
+	private String nameSelfDetermination;
 }

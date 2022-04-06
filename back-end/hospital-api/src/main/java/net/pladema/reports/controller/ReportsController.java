@@ -2,6 +2,8 @@ package net.pladema.reports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
@@ -41,6 +43,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("reports")
@@ -68,13 +71,9 @@ public class ReportsController {
 
     private final FetchConsultations fetchConsultations;
 
-    public ReportsController(ExcelService excelService, ConsultationSummaryReport consultationSummaryReport,
-                             QueryFactory queryFactory, LocalDateMapper localDateMapper,
-                             PdfService pdfService,
-                             AnnexReportService annexReportService,
-                             FormReportService formReportService,
-                             ReportsMapper reportsMapper,
-                             FetchConsultations fetchConsultations){
+	private final FeatureFlagsService featureFlagsService;
+
+    public ReportsController(ExcelService excelService, ConsultationSummaryReport consultationSummaryReport, QueryFactory queryFactory, LocalDateMapper localDateMapper, PdfService pdfService, AnnexReportService annexReportService, FormReportService formReportService, ReportsMapper reportsMapper, FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService){
         this.excelService = excelService;
         this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
@@ -84,7 +83,8 @@ public class ReportsController {
         this.formReportService = formReportService;
         this.reportsMapper = reportsMapper;
         this.fetchConsultations = fetchConsultations;
-    }
+		this.featureFlagsService = featureFlagsService;
+	}
 
     @GetMapping(value = "/{institutionId}/monthly")
     public @ResponseBody
