@@ -48,7 +48,7 @@ public class InternmentSummaryVo {
 	public InternmentSummaryVo(Integer id, LocalDateTime entryDate, Long anamnesisDocId, String anamnesisStatusId,
 			Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
 			String roomNumber, String sectorDescription,
-			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName,
+			Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName, String nameSelfDetermination,
 			ResponsibleContact responsibleContact, LocalDateTime probableDischargeDate, LocalDateTime dischargeDate, Short internmentStatusId) {
 		this.id = id;
 		this.documents = new DocumentsSummaryVo();
@@ -63,7 +63,7 @@ public class InternmentSummaryVo {
 		this.sectorSpecialty = null;
 		this.entryDate = entryDate;
 		if (healthcareProfessionalId != null)
-			this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber);
+			this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber, nameSelfDetermination);
 		if (responsibleContact != null)
 			this.responsibleContact = new ResponsibleContactVo(responsibleContact);
 		this.probableDischargeDate = probableDischargeDate;

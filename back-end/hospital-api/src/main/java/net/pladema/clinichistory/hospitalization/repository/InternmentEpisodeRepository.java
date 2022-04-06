@@ -32,7 +32,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, sector.description, " +
-            "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
+			"hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName, pe.nameSelfDetermination," +
             "rc, ie.probableDischargeDate, pd.administrativeDischargeDate, ie.statusId) " +
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
@@ -43,6 +43,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
             "LEFT JOIN HealthcareProfessional hp ON (hpg.pk.healthcareProfessionalId = hp.id) " +
             "LEFT JOIN Person p ON (hp.personId = p.id) " +
+			"LEFT JOIN PersonExtended pe ON (p.id = pe.id) " +
             "LEFT JOIN ResponsibleContact rc ON (ie.id = rc.internmentEpisodeId) " +
             "LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId) " +
             "WHERE ie.id = :internmentEpisodeId")
