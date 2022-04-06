@@ -13,6 +13,9 @@ export class ElementoDiagnosticoComponent implements OnInit {
 	@Input()
 	diagnosis: DiagnosisDto;
 
+	@Input()
+	isMain: boolean;
+
 	constructor(public dialog: MatDialog) { }
 
   	ngOnInit(): void {

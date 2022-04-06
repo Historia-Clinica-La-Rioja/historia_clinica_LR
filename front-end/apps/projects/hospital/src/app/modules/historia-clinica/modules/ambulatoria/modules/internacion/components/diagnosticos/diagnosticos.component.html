@@ -1,8 +1,9 @@
 <div>
 	<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
-	<span>
-		{{ type == 'ANAMNESIS' ? 'Agregue los diagnósticos detectados' : 'Seleccione los diagnósticos que desea evolucionar o agregue nuevos' }}
-	</span>
+	<span *ngIf="type === 'ANAMNESIS' else evolutionNoteSubtitle" [translate]="'internaciones.anamnesis.diagnosticos.ANAMNESIS_SUBTITLE'"></span>
+	<ng-template #evolutionNoteSubtitle>
+		<span [translate]="'internaciones.anamnesis.diagnosticos.EVOLUTION_NOTE_SUBTITLE'"></span>
+	</ng-template>
 	<br><br>
 	<mat-card>
 		<mat-card-subtitle class="main-diagnosis">
@@ -10,13 +11,13 @@
 				<span [translate]="'internaciones.anamnesis.diagnosticos.TITLE_PRINCIPAL'"></span>
 			</div>
 		</mat-card-subtitle>
-		<app-elemento-diagnostico *ngIf="_mainDiagnosis" [diagnosis]="_mainDiagnosis"></app-elemento-diagnostico>
+		<app-elemento-diagnostico *ngIf="_mainDiagnosis" [diagnosis]="_mainDiagnosis" [isMain]="true"></app-elemento-diagnostico>
 		<div *appHasRole="['ESPECIALISTA_MEDICO']">
 			<button *ngIf="!_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="type=='EVOLUTION'" (click)="openCreationDialog(true)">
-				+ Agregar diagnóstico principal
+				{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
 			</button>
 			<button *ngIf="_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length" (click)="openModifyMainDiagnosisDialog()">
-				Cambiar diagnóstico principal
+				{{ 'internaciones.anamnesis.diagnosticos.CHANGE_MAIN_DIAGNOSIS' | translate }}
 			</button>
 		</div>
 		<br>
@@ -26,10 +27,12 @@
 			</div>
 		</mat-card-subtitle>
 		<div *ngFor="let diagnosis of diagnosticos">
-			<app-elemento-diagnostico [diagnosis]="diagnosis"></app-elemento-diagnostico>
+			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false"></app-elemento-diagnostico>
 			<hr *ngIf="diagnosticos.length - 1 != diagnosticos.indexOf(diagnosis)">
 		</div>
-		<button class="diagnoses-action-button" mat-button color="primary" (click)="openCreationDialog(false)">+ Agregar otro diagnóstico</button>
+		<button class="diagnoses-action-button" mat-button color="primary" (click)="openCreationDialog(false)">
+			{{ 'internaciones.anamnesis.diagnosticos.ADD_OTHER_DIAGNOSIS' | translate }}
+		</button>
 	</mat-card>
 	<br><br>
 </div>

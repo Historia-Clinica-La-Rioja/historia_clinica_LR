@@ -69,6 +69,8 @@ export class DiagnosticosComponent implements OnInit {
 					this.diagnosticos.splice(this.diagnosticos.indexOf(potentialNewMainDiagnosis), 1);
 					this.mainDiagnosis = potentialNewMainDiagnosis;
 					this._mainDiagnosis.isAdded = true;
+					this._mainDiagnosis.verificationId = '59156000';
+					(<DiagnosisDto>this._mainDiagnosis).presumptive = false;
 				}
 			}
 		});

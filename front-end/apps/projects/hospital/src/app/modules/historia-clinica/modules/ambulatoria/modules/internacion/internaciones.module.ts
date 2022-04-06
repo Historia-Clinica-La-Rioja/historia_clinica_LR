@@ -14,7 +14,6 @@ import { AlergiasComponent } from './components/alergias/alergias.component';
 // components
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
-import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
@@ -41,7 +40,6 @@ import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/se
 		AlergiasComponent,
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
-		DiagnosticoPrincipalComponent,
 		DiagnosticosComponent,
 		InternacionesTableComponent,
 		MedicacionComponent,

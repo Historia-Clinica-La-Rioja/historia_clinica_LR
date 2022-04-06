@@ -144,9 +144,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     void createDocument_withMainDiagnosisDuplicated() {
         var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
         var evolutionNote  = validEvolutionNote(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
-        evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("SECONDARY", "SECONDARY"))));
+        evolutionNote.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("SECONDARY", "SECONDARY")), new DiagnosisBo(new SnomedBo("MAIN", "MAIN"))));
 
-        when(fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(any())).thenReturn(new HealthConditionBo(new SnomedBo("SECONDARY", "SECONDARY")));
+        when(fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(any())).thenReturn(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEvolutionNoteService.execute(evolutionNote)
         );

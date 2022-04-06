@@ -1,4 +1,7 @@
-<h2 mat-dialog-title>{{ type==='CREATION' ? 'Agregar diagnóstico' : 'Editar diagnóstico' }}</h2>
+<h2 mat-dialog-title *ngIf="type==='CREATION' else editDiagnosisTitle" [translate]="'internaciones.anamnesis.diagnosticos.ADD'"></h2>
+<ng-template #editDiagnosisTitle>
+	<h2 mat-dialog-title [translate]="'internaciones.anamnesis.diagnosticos.EDIT'"></h2>
+</ng-template>
 <app-concepts-search *ngIf="!diagnosis else completedDiagnosis"
 	[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'" (search)="openSearchDialog($event)">
 </app-concepts-search>
@@ -16,13 +19,13 @@
 	</ng-template>
 
 	<mat-form-field appearance="fill">
-		<mat-label>Verificación</mat-label>
+		<mat-label [translate]="'internaciones.anamnesis.diagnosticos.VERIFICATION'"></mat-label>
 		<mat-select formControlName="validation" [(value)]="selection">
-			<mat-option [value]="false">Confirmado</mat-option>
-			<mat-option [value]="true">Presuntivo</mat-option>
+			<mat-option [value]="false">{{ 'internaciones.anamnesis.diagnosticos.CONFIRMED' | translate }}</mat-option>
+			<mat-option [value]="true">{{ 'internaciones.anamnesis.diagnosticos.PRESUMPTIVE' | translate }}</mat-option>
 		</mat-select>
 	</mat-form-field>
 </form>
 <div fxLayoutAlign="end center">
-	<button class="uppercase" mat-raised-button color="primary" (click)="saveDiagnosis()">Guardar cambios</button>
+	<button class="uppercase" mat-raised-button color="primary" (click)="saveDiagnosis()">{{ 'internaciones.anamnesis.diagnosticos.SAVE' | translate }}</button>
 </div>
