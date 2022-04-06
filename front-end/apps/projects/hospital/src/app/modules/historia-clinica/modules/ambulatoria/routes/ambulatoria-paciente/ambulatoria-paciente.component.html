@@ -70,53 +70,13 @@
 						</div>
 					</div>
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
+					<app-medical-coverage-summary-view
+						*ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress"
+						[title]="'ambulatoria.paciente.card.INTERNMENT_COVERAGE_TITLE'"
+						[patientCoverageInfo]="internmentEpisodeCoverageInfo">
+					</app-medical-coverage-summary-view>
 				</div>
-				<div *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress"
-					id="coverage-container" fxLayoutAlign="none center">
-					<div fxLayout="row">
-						<div fxLayout="column">
-							<mat-icon class="color-primary" fontSet="material-icons-outlined">
-								health_and_safety
-							</mat-icon>
-						</div>
-						<div fxLayout="column">
-							<div fxLayout="row" id="coverage-title">
-								<span class="color-primary coverage-bold-text">
-									{{ 'ambulatoria.paciente.card.internment.COVERAGE_TITLE' | translate }}
-								</span>
-							</div>
-							<ng-container *ngIf="internmentEpisodeCoverageInfo">
-								<div fxLayout="row">
-									<span class="coverage-bold-text top_padded_content">
-										{{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}
-									</span>
-								</div>
-								<div fxLayout="row">
-									<span> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.plan }} </span>
-								</div>
-								<div fxLayout="row">
-									<span> {{ 'ambulatoria.paciente.card.internment.AFFILIATE_NUMBER' | translate }}
-										<ng-container *ngIf="!internmentEpisodeCoverageInfo?.affiliateNumber">
-											<span class="color-grey">
-												{{ 'ambulatoria.paciente.card.internment.NO_INFO' | translate }}
-											</span>
-										</ng-container>
-										<ng-container *ngIf="internmentEpisodeCoverageInfo?.affiliateNumber">
-											<span>{{ internmentEpisodeCoverageInfo?.affiliateNumber }}</span>
-										</ng-container>
-									</span>
-								</div>
-							</ng-container>
-							<ng-container *ngIf="!internmentEpisodeCoverageInfo">
-								<div fxLayout="row" class="color-grey">
-									<span>
-										{{ 'ambulatoria.paciente.card.internment.WITHOUT_COVERAGE' | translate }}
-									</span>
-								</div>
-							</ng-container>
-						</div>
-					</div>
-				</div>
+
 			</div>
 			<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
 				<ng-container *ngIf="currentUserIsAllowedToDoAConsultation else hasOdontologyRole">

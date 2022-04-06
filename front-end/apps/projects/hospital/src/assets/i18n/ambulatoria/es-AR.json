@@ -1,5 +1,11 @@
 {
     "ambulatoria": {
+        "medical-coverage-summary-view": {
+            "TITLE": "Cobertura",
+            "AFFILIATE_NUMBER": "Afiliado N°:",
+            "WITHOUT_COVERAGE": "Sin cobertura",
+            "NO_INFO": "Sin información"
+        },
         "bus-interoperabilidad": {
             "TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
             "PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",
@@ -36,12 +42,8 @@
                 "GROUP_AND_FACTOR": "Grupo y factor",
                 "SANGUINEOUS": "sanguíneo",
                 "WITHOUT_BLOOD_DATA": "Sin grupo y factor sanguíneo registrado",
-                "internment": {
-                    "COVERAGE_TITLE": "Cobertura del episodio",
-                    "AFFILIATE_NUMBER": "Afiliado N°:",
-                    "WITHOUT_COVERAGE": "Sin cobertura",
-                    "NO_INFO": "Sin información"
-                },
+                "INTERNMENT_COVERAGE_TITLE": "Cobertura del episodio",
+                "APPOINTMENT_COVERAGE_TITLE": "Cobertura del turno",
                 "INTERNMENT_EPISODE_ACTIVE": "En internación",
                 "EMERGENCY_CARE_EPISODE_ACTIVE": "En guardia",
                 "NO_CRITICAL_ALLERGIES": "Sin alergias críticas registradas",

@@ -51,6 +51,7 @@ import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summa
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { IndicacionModule } from "@historia-clinica/modules/ambulatoria/modules/indicacion/indicacion.module";
 import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
+import { MedicalCoverageSummaryViewComponent } from './components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 
 @NgModule({
 	declarations: [
@@ -90,7 +91,8 @@ import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-
 		MainDiagnosisSummaryComponent,
 		DiagnosisSummaryComponent,
 		InternmentSummaryComponent,
-  		ConceptTypeaheadSearchComponent,
+		ConceptTypeaheadSearchComponent,
+		MedicalCoverageSummaryViewComponent,
 	],
 	imports: [
 		CommonModule,
