@@ -15,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -80,6 +81,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	@Mock
 	private FetchLoggedUserRolesExternalService fetchLoggedUserRolesExternalService;
 
+	@Mock
+	private FeatureFlagsService featureFlagsService;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -88,8 +92,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 				evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService,
-                medicalCoveragePlanRepository
-        );
+                medicalCoveragePlanRepository,
+				featureFlagsService);
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

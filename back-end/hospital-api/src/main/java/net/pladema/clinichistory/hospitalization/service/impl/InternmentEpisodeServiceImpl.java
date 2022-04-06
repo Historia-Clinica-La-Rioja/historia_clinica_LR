@@ -2,6 +2,8 @@ package net.pladema.clinichistory.hospitalization.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
@@ -61,13 +63,16 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private final DocumentService documentService;
 
-    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, MedicalCoveragePlanRepository medicalCoveragePlanRepository) {
+	private final FeatureFlagsService featureFlagsService;
+
+	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
         this.patientDischargeRepository = patientDischargeRepository;
         this.documentService = documentService;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
+		this.featureFlagsService = featureFlagsService;
 	}
 
     @Override
@@ -154,6 +159,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 			result.set(Optional.of(new InternmentSummaryBo(r)));
 
 		});
+		var nameSelfDetermination = resultQuery.get().getDoctor().getNameSelfDetermination();
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && nameSelfDetermination != null && !nameSelfDetermination.isEmpty())
+			result.get().get().getDoctor().setFirstName(nameSelfDetermination);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result.get();
 	}

@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -56,14 +57,18 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     @Mock
     private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
+	@Mock
+	private FeatureFlagsService featureFlagsService;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
                 dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
-                documentService, medicalCoveragePlanRepository
-        );
+                documentService,
+				medicalCoveragePlanRepository,
+				featureFlagsService);
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

@@ -40,7 +40,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
-			+ " INNER JOIN PersonExtended pe ON (p.id = pe.id)"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
 			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userRolePK.userId"
 			+ " WHERE ur.userRolePK.institutionId = :institutionId "
@@ -63,7 +63,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON (hp.personId = p.id)"
-			+ " INNER JOIN PersonExtended pe ON (p.id = pe.id)"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " WHERE hp.id = :id")
 	Optional<HealthcareProfessionalVo> findFromAllProfessionalsById(@Param("id") Integer id);
 
@@ -77,7 +77,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
-			+ " INNER JOIN PersonExtended pe ON (p.id = pe.id)"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " AND hp.deleteable.deleted = false "
 			+ " ORDER BY p.lastName, p.firstName")
 	List<HealthcareProfessionalVo> getAllProfessional();

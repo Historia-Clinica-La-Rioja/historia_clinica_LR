@@ -82,8 +82,8 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
                 dateTimeProvider, evolutionNoteDocumentRepository,
 				patientDischargeRepository,
 				documentService,
-                medicalCoveragePlanRepository
-		);
+                medicalCoveragePlanRepository,
+				featureFlagsService);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, featureFlagsService, dateTimeProvider);
 	}
