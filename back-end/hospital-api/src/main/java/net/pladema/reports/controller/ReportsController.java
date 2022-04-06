@@ -238,6 +238,13 @@ public class ReportsController {
             @PathVariable(name = "patientId") Integer patientId){
         LOG.debug("Input parameter -> patientId {}", patientId);
         List<ConsultationsBo> consultations = fetchConsultations.run(patientId);
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)){
+			consultations.stream().map(consultationsBo -> {
+			if (consultationsBo.getCompleteProfessionalNameSelfDetermination() != null)
+				consultationsBo.setCompleteProfessionalName(consultationsBo.getCompleteProfessionalNameSelfDetermination());
+			return consultationsBo;
+		}).collect(Collectors.toList());
+		}
         List<ConsultationsDto> result = reportsMapper.fromListConsultationsBo(consultations);
         return ResponseEntity.ok(result);
     }
