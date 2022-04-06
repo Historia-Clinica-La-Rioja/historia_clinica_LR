@@ -35,7 +35,7 @@
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
                 "SANGUINEOUS": "sanguíneo",
-				"WITHOUT_BLOOD_DATA": "Sin grupo y factor sanguíneo registrado",
+                "WITHOUT_BLOOD_DATA": "Sin grupo y factor sanguíneo registrado",
                 "internment": {
                     "COVERAGE_TITLE": "Cobertura del episodio",
                     "AFFILIATE_NUMBER": "Afiliado N°:",
@@ -100,7 +100,7 @@
                 "motivo": {
                     "TITLE": "Motivo de consulta",
                     "MOTIVO": "motivo",
-					"SEARCH_PLACEHOLDER": "Buscar motivo",
+                    "SEARCH_PLACEHOLDER": "Buscar motivo",
                     "ADD": "Agregar motivo",
                     "table": {
                         "TITLE": "Motivos registrados",
@@ -131,8 +131,8 @@
                         "ADD": "Agregar problema",
                         "SAVE": "Guardar cambios"
                     },
-					"CONCEPT_LABEL": "Problema",
-					"SEARCH_PLACEHOLDER": "Buscar problema",
+                    "CONCEPT_LABEL": "Problema",
+                    "SEARCH_PLACEHOLDER": "Buscar problema",
                     "SEVERIDAD": "Severidad",
                     "CRONICO": "Crónico",
                     "errors": {
