@@ -14,10 +14,14 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.domain.InternmentPharmacoBo;
 
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
+
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,9 +35,13 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 
 	private final LocalDateMapper localDateMapper;
 
+	private final InternmentEpisodeService internmentEpisodeService;
+
+
 	@Override
 	public Integer add(InternmentPharmacoBo pharmacoBo) {
 		log.debug("Input parameter -> pharmacoBo {}", pharmacoBo);
+		assertInternmentEpisodeCanCreateIndication(pharmacoBo.getEncounterId());
 		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo));
 		pharmacoBo.setId(documentFactory.run(pharmacoBo, false));
 		sharedIndicationPort.saveDocument(pharmacoBo.getId(), result);
@@ -47,6 +55,12 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 		List<PharmacoSummaryDto> result = sharedIndicationPort.getInternmentEpisodePharmacos(internmentEpisodeId);
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
+		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
+			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
+		}
 	}
 
 	private PharmacoDto toPharmacoDto(InternmentPharmacoBo bo) {
