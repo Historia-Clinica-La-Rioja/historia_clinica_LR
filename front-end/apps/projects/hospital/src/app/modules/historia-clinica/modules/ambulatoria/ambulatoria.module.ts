@@ -50,7 +50,6 @@ import { VacunasSummaryComponent } from './components/vacunas-summary/vacunas-su
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { IndicacionModule } from "@historia-clinica/modules/ambulatoria/modules/indicacion/indicacion.module";
-import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { MedicalCoverageSummaryViewComponent } from './components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 
 @NgModule({
@@ -91,7 +90,6 @@ import { MedicalCoverageSummaryViewComponent } from './components/medical-covera
 		MainDiagnosisSummaryComponent,
 		DiagnosisSummaryComponent,
 		InternmentSummaryComponent,
-		ConceptTypeaheadSearchComponent,
 		MedicalCoverageSummaryViewComponent,
 	],
 	imports: [

@@ -11,7 +11,8 @@ import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
 import { newMoment } from "@core/utils/moment.utils";
-import { ClinicalSpecialtyDto, DateDto, HCEPersonalHistoryDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto, OdontologyDiagnosticDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, DateDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto, OdontologyDiagnosticDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ActionsNewConsultationService } from '../../services/actions-new-consultation.service';
@@ -34,6 +35,7 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -59,6 +61,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	otherProceduresService: ProcedimientosService;
 	odontologyReferenceService: OdontologyReferenceService;
 
+	searchConceptsLocallyFFIsOn = false;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	errors: string[] = [];
 	public hasError = hasError;
@@ -81,6 +84,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly careLineService: CareLineService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -135,6 +139,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			}
 		});
 
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
 	}
 
 	private addErrorMessage(): void {
@@ -180,7 +185,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		if (odontologyDto.references.length) {
 			odontologyDto.diagnostics = this.problemsToUpdate(odontologyDto);
 		}
-		
+
 		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto).subscribe(
 			_ => {
 				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente');
@@ -291,7 +296,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		odontologyDto.diagnostics?.forEach( diagnostic => odontologyDiagnosticDto.push(diagnostic));
 
 		const references: Reference[] = this.odontologyReferenceService.getReferences();
-		
+
 		references.forEach(reference => {
 			const referenceProblems = this.odontologyReferenceService.getReferenceProblems(reference.referenceNumber);
 			referenceProblems.forEach(referenceProblem => {
@@ -305,7 +310,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 		return odontologyDiagnosticDto;
 	}
-	
+
 	private mapToOdontologyDiagnosticDto(problem: HCEPersonalHistory): OdontologyDiagnosticDto {
 		return {
 			chronic: problem.chronic,

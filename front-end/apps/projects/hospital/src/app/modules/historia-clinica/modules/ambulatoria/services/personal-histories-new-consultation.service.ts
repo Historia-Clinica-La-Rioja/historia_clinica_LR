@@ -19,6 +19,7 @@ export class PersonalHistoriesNewConsultationService {
 	private data: AntecedentePersonal[];
 	private snomedConcept: SnomedDto;
 
+	private readonly ECL = SnomedECL.PERSONAL_RECORD;
 	private readonly tableColumnConfig : TableColumnConfig[];
 
 	constructor(
@@ -118,7 +119,7 @@ export class PersonalHistoriesNewConsultationService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.PERSONAL_RECORD
+				eclFilter: this.ECL
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
@@ -128,4 +129,9 @@ export class PersonalHistoriesNewConsultationService {
 	getMaxDate(): Moment {
 		return newMoment();
 	}
+
+	getECL(): SnomedECL {
+		return this.ECL;
+	}
+
 }
