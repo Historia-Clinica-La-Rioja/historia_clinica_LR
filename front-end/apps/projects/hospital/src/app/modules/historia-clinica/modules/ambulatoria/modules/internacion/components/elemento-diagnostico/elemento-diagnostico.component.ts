@@ -21,7 +21,6 @@ export class ElementoDiagnosticoComponent implements OnInit {
 	openDiagnosisEditionDialog() {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
-			height: '270px',
 			data: {
 				type: 'EDITION',
 				diagnosis: this.diagnosis

@@ -35,7 +35,6 @@ export class DiagnosticosComponent implements OnInit {
 	openCreationDialog(isMainDiagnosis: boolean) {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
-			height: '270px',
 			data: {
 				type: 'CREATION'
 			}

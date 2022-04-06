@@ -3,6 +3,7 @@
 	<span>
 		{{ type == 'ANAMNESIS' ? 'Agregue los diagnósticos detectados' : 'Seleccione los diagnósticos que desea evolucionar o agregue nuevos' }}
 	</span>
+	<br><br>
 	<mat-card>
 		<mat-card-subtitle class="main-diagnosis">
 			<div class="label main-diagnosis-label uppercase">
@@ -18,12 +19,17 @@
 				Cambiar diagnóstico principal
 			</button>
 		</div>
+		<br>
 		<mat-card-subtitle class="other-diagnoses">
 			<div class="label other-diagnoses-label uppercase">
 				<span [translate]="'internaciones.anamnesis.diagnosticos.TITLE'"></span>
 			</div>
 		</mat-card-subtitle>
-		<app-elemento-diagnostico *ngFor="let diagnosis of diagnosticos" [diagnosis]="diagnosis"></app-elemento-diagnostico>
+		<div *ngFor="let diagnosis of diagnosticos">
+			<app-elemento-diagnostico [diagnosis]="diagnosis"></app-elemento-diagnostico>
+			<hr *ngIf="diagnosticos.length - 1 != diagnosticos.indexOf(diagnosis)">
+		</div>
 		<button class="diagnoses-action-button" mat-button color="primary" (click)="openCreationDialog(false)">+ Agregar otro diagnóstico</button>
 	</mat-card>
+	<br><br>
 </div>
