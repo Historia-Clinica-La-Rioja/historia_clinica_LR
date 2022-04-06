@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { ContextService } from "@core/services/context.service";
+import {FeatureFlagService} from "@core/services/feature-flag.service";
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -21,6 +22,7 @@ export class InternmentEpisodeSummaryComponent {
 	@Input() showDischarge: boolean;
 	@Input() hasEpicrisis: boolean;
 	private readonly routePrefix;
+	private readonly ff: FeatureFlagService;
 
 	constructor(private router: Router,
 				private contextService: ContextService,
