@@ -169,7 +169,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 		[appointment.patient.person.lastName, appointment.patient.person.nameSelfDetermination].filter(val => val).join(', ') : null;
 
 	const title = appointment.patient.typeId === TEMPORARY_PATIENT ?
-		`${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} Temporal` : `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
+		`${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName} (Temporario)` : `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
 
 	return {
 		start: buildFullDate(from, date).toDate(),
