@@ -1,4 +1,4 @@
-CREATE PROCEDURE migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
+CREATE PROCEDURE migrate.migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
     language plpgsql
 as
 $$
@@ -8,6 +8,13 @@ DECLARE
     temprow2 RECORD;
     temprow3 RECORD;
 BEGIN
+    IF (offset_value < 1000) THEN
+        RAISE EXCEPTION 'No se puede elegir un offset menor a 1000';
+    END IF;
+
+    IF (prefix_username = '') OR (prefix_username IS NULL)THEN
+        RAISE EXCEPTION 'El prefijo usado para los nombres de usuarios es obligatorio';
+    END IF;
 
     -- Direcciones
     query := 'INSERT INTO ' || to_schema || '.address  (id, street, number, floor, apartment, quarter, city_id, postcode, latitude, longitude)
@@ -36,23 +43,64 @@ BEGIN
     FROM '|| from_schema || '.person_extended AS pe';
     EXECUTE(query);
 
+    --------------------------------------------------------------------------------------------------------------------
+    -- pacientes nuevos se deben marcar como validados
     query := 'INSERT INTO ' || to_schema || '.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
                                  comments)
-    SELECT (-'|| offset_value ||'-pa.id), (-'|| offset_value ||'-pa.person_id), pa.type_id, pa.possible_duplicate,
+    SELECT (-'|| offset_value ||'-pa.id), (-'|| offset_value ||'-pa.person_id), 2, pa.possible_duplicate,
            pa.national_id, pa.identity_verification_status_id, pa.comments
-    FROM '|| from_schema || '.patient AS pa';
+    FROM '|| from_schema || '.patient AS pa
+    JOIN '|| from_schema || '.person AS p ON (p.id = pa.person_id)
+    WHERE NOT EXISTS (SELECT p1.id FROM '|| to_schema ||'.person AS p1
+                      WHERE UPPER(p.identification_number) = UPPER(p1.identification_number)
+                      AND p.identification_number = p1.identification_number
+                      AND p.gender_id = p1.gender_id
+                      AND p.birth_date = p1.birth_date);';
     EXECUTE(query);
 
+    CREATE TEMPORARY TABLE temp_duplicate_patient_ids (id int not null) ON COMMIT DROP;
+
+    FOR temprow IN EXECUTE
+        'SELECT pa.id AS id, (-'|| offset_value ||'-pa.person_id) AS person_id,
+            3 AS type_id, true AS possible_duplicate, pa.national_id, pa.identity_verification_status_id, pa.comments
+        FROM '|| from_schema || '.patient AS pa
+        JOIN '|| from_schema || '.person AS p ON (p.id = pa.person_id)
+        WHERE EXISTS (SELECT p1.id FROM '|| to_schema ||'.person AS p1
+                      WHERE UPPER(p.identification_number) = UPPER(p1.identification_number)
+                      AND p.identification_number = p1.identification_number
+                      AND p.gender_id = p1.gender_id
+                      AND p.birth_date = p1.birth_date)'
+    LOOP
+        EXECUTE format('INSERT INTO %I.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
+                                 comments)
+        VALUES ($1,$2,$3,$4,$5,$6,$7)', to_schema) USING
+         (-offset_value-temprow.id), temprow.person_id, temprow.type_id, temprow.possible_duplicate, temprow.national_id,
+         temprow.identity_verification_status_id, temprow.comments;
+
+        INSERT INTO temp_duplicate_patient_ids (id) VALUES (temprow.id);
+    END LOOP;
+
     --------------------------------------------------------------------------------------------------------------------
-    -- Usuarios
+    -- Usuarios con username repetidos
     query := 'INSERT INTO ' || to_schema || '.users (id, created_on, deleted_on, deleted, updated_on, last_login, enable, username, created_by,
                                updated_by, deleted_by)
     SELECT (-'|| offset_value ||'-u.id), u.created_on, u.deleted_on, u.deleted, u.updated_on, u.last_login, u.enable,
            ('''||prefix_username||'-'' || u.username), (-'|| offset_value ||'-u.created_by), (-'|| offset_value ||'-u.updated_by), (-'|| offset_value ||'-u.deleted_by)
     FROM '|| from_schema || '.users AS u
-    WHERE u.created_by != -1;';
+    WHERE u.created_by != -1
+    AND UPPER(u.username) IN (SELECT UPPER(u1.username) FROM '|| to_schema ||'.users AS u1);';
     EXECUTE format(query);
 
+    --------------------------------------------------------------------------------------------------------------------
+    -- Usuarios con username no repetidos
+    query := 'INSERT INTO ' || to_schema || '.users (id, created_on, deleted_on, deleted, updated_on, last_login, enable, username, created_by,
+                               updated_by, deleted_by)
+    SELECT (-'|| offset_value ||'-u.id), u.created_on, u.deleted_on, u.deleted, u.updated_on, u.last_login, u.enable,
+           u.username, (-'|| offset_value ||'-u.created_by), (-'|| offset_value ||'-u.updated_by), (-'|| offset_value ||'-u.deleted_by)
+    FROM '|| from_schema || '.users AS u
+    WHERE u.created_by != -1
+    AND UPPER(u.username) NOT IN (SELECT UPPER(u1.username) FROM '|| to_schema ||'.users AS u1);';
+    EXECUTE format(query);
 
     query := 'INSERT INTO ' || to_schema || '.user_person (user_id, person_id)
     SELECT (-'|| offset_value ||'-up.user_id), (-'|| offset_value ||'-up.person_id)
@@ -234,6 +282,7 @@ BEGIN
         FROM '|| from_schema ||'.patient_medical_coverage AS pmc
         JOIN '|| from_schema ||'.medical_coverage AS mc ON pmc.medical_coverage_id = mc.id
         JOIN '|| from_schema ||'.private_health_insurance AS phi ON mc.id = phi.id'
+       -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     LOOP
         EXECUTE format('INSERT INTO %I.patient_medical_coverage (id, patient_id, medical_coverage_id, active, vigency_date,
                                                   affiliate_number, private_health_insurance_details_id)' ||
@@ -250,6 +299,7 @@ BEGIN
         FROM '|| from_schema ||'.patient_medical_coverage AS pmc
         JOIN '|| from_schema ||'.medical_coverage AS mc ON pmc.medical_coverage_id = mc.id
         JOIN '|| from_schema ||'.health_insurance AS hi ON mc.id = hi.id'
+       -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     LOOP
         EXECUTE format('INSERT INTO %I.patient_medical_coverage (id, patient_id, medical_coverage_id, active, vigency_date,
                                                   affiliate_number, private_health_insurance_details_id)' ||
@@ -279,6 +329,7 @@ BEGIN
            (-'|| offset_value ||'-current_illness_note_id), (-'|| offset_value ||'-indications_note_id), (-'|| offset_value ||'-source_type_id),
            deleted, (-'|| offset_value ||'-deleted_by), deleted_on
     FROM  '|| from_schema ||'.document';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
 
@@ -302,6 +353,7 @@ BEGIN
            (-'|| offset_value ||'-created_by), (-'|| offset_value ||'-updated_by), created_on, updated_on, (-'|| offset_value ||'-institution_id),
            probable_discharge_date, deleted, (-'|| offset_value ||'-deleted_by), deleted_on, (-'|| offset_value ||'-patient_medical_coverage_id)
     FROM  '|| from_schema ||'.internment_episode';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.evolution_note_document (document_id, internment_episode_id)
@@ -331,6 +383,7 @@ BEGIN
            (-'|| offset_value ||'-document_id), (-'|| offset_value ||'-doctor_id), billable, (-'|| offset_value ||'-created_by), created_on,
            (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on, (-'|| offset_value ||'-patient_medical_coverage_id)
     FROM  '|| from_schema ||'.outpatient_consultation';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.outpatient_consultation_reasons (reason_id, outpatient_consultation_id)
@@ -348,6 +401,7 @@ BEGIN
            (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on,
            (-'|| offset_value ||'-patient_medical_coverage_id)
     FROM  '|| from_schema ||'.vaccine_consultation';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     --------------------------------------------------------------------------------------------------------------------
@@ -360,6 +414,7 @@ BEGIN
            (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on,
            (-'|| offset_value ||'-patient_medical_coverage_id)
     FROM  '|| from_schema ||'.nursing_consultation';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     --------------------------------------------------------------------------------------------------------------------
@@ -372,6 +427,7 @@ BEGIN
            request_date, (-'|| offset_value ||'-created_by), (-'|| offset_value ||'-updated_by), created_on, updated_on, deleted,
            (-'|| offset_value ||'-deleted_by), deleted_on
     FROM  '|| from_schema ||'.medication_request';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     --------------------------------------------------------------------------------------------------------------------
@@ -384,6 +440,7 @@ BEGIN
            request_date, (-'|| offset_value ||'-created_by), (-'|| offset_value ||'-updated_by), created_on, updated_on, deleted,
            (-'|| offset_value ||'-deleted_by), deleted_on
     FROM  '|| from_schema ||'.service_request';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     FOR temprow IN EXECUTE 'SELECT s.pt, s.sctid, s.parent_fsn, s.parent_id
@@ -425,6 +482,7 @@ BEGIN
             FROM '|| from_schema ||'.observation_lab AS hc
             JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.document_lab (observation_lab_id, document_id)
@@ -442,6 +500,7 @@ BEGIN
             FROM '|| from_schema ||'.observation_vital_sign AS hc
             JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.document_vital_sign (observation_vital_sign_id, document_id)
@@ -457,6 +516,7 @@ BEGIN
             FROM '|| from_schema ||'.procedures AS hc
             JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.document_procedure (procedure_id, document_id)
@@ -474,6 +534,7 @@ BEGIN
             FROM '|| from_schema ||'.allergy_intolerance AS hc
             JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
             JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.document_allergy_intolerance (allergy_intolerance_id, document_id)
@@ -491,6 +552,7 @@ BEGIN
     FROM '|| from_schema ||'.diagnostic_report AS hc
     JOIN '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
     JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.document_diagnostic_report (diagnostic_report_id, document_id)
@@ -508,6 +570,7 @@ BEGIN
         FROM '|| from_schema ||'.inmunization AS hc
         JOIN  '|| from_schema ||'.snomed AS s ON hc.snomed_id = s.id
         JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)'
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     LOOP
         EXECUTE format('INSERT INTO %I.inmunization (id, patient_id, sctid_code, status_id, institution_id, administration_date,
                                           expiration_date, note_id, created_by, updated_by, created_on, updated_on, cie10_codes,
@@ -547,6 +610,7 @@ BEGIN
     FROM '|| from_schema ||'.medication_statement AS m
     JOIN '|| from_schema ||'.snomed AS s ON m.snomed_id = s.id
     JOIN '|| to_schema ||'.snomed AS ms ON (ms.sctid = s.sctid AND ms.pt = s.pt)';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.document_medicamention_statement (medication_statement_id, document_id)
@@ -578,6 +642,7 @@ BEGIN
            (-'|| offset_value ||'-created_by), created_on, (-'|| offset_value ||'-updated_by), updated_on, phone_number,
            (-'|| offset_value ||'-patient_medical_coverage_id), deleted, (-'|| offset_value ||'-deleted_by), deleted_on, phone_prefix
     FROM '|| from_schema ||'.appointment';
+    -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.opening_hours (id, day_week_id, "from", "to")
@@ -602,8 +667,7 @@ BEGIN
            created_on, (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on
     FROM '|| from_schema ||'.historic_appointment_state;';
     EXECUTE(query);
-
 END;
 $$;
 
-CALL migrate(1000, 'public', 'migrate', 'QUILMES');
+CALL migrate.migrate(1000, 'public', 'migrate', 'QUILMES');
