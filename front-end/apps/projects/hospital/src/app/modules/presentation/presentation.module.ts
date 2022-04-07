@@ -8,6 +8,7 @@ import { AppMaterialModule } from '@material/app.material.module';
 import { BarComponent } from './components/bar/bar.component';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
+import { DatepickerComponent } from "@presentation/components/datepicker/datepicker.component";
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
@@ -57,6 +58,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		BarComponent,
 		CellTemplatesComponent,
 		ContentTitleComponent,
+		DatepickerComponent,
 		DetailBoxComponent,
 		DockPopupComponent,
 		DocumentSectionTableComponent,
@@ -117,6 +119,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		BarComponent,
 		CellTemplatesComponent,
 		ContentTitleComponent,
+		DatepickerComponent,
 		DetailBoxComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,

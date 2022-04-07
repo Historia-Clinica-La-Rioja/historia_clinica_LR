@@ -36,7 +36,8 @@
 		"YES": "Si",
 		"SKIP": "Omitir",
 		"RESET": "Restablecer",
-		"SELECT": "Seleccionar"
+		"SELECT": "Seleccionar",
+		"APPLY": "Aplicar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
