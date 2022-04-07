@@ -5,13 +5,13 @@
         </mat-icon>
         <div fxLayout="column" fxLayoutGap="6px">
             <span class="color-primary bold line-height"> {{ title | translate }} </span>
-            <div fxLayout="column" *ngIf="patientCoverageInfo?.medicalCoverage else noCoverage">
-                <span class="bold"> {{ patientCoverageInfo?.medicalCoverage?.name }} </span>
-                <span> {{ patientCoverageInfo?.medicalCoverage?.plan }} </span>
+            <div fxLayout="column" *ngIf="thereIsCoverageInfo() else noCoverage">
+                <span class="bold"> {{ coverageInfo?.name }} </span>
+                <span> {{ coverageInfo?.plan }} </span>
                 <span>
                     {{ 'ambulatoria.medical-coverage-summary-view.AFFILIATE_NUMBER' | translate }}
-                    <ng-container *ngIf="patientCoverageInfo?.affiliateNumber else noInfo">
-                        {{ patientCoverageInfo?.affiliateNumber }}
+                    <ng-container *ngIf="coverageInfo?.affiliateNumber else noInfo">
+                        {{ coverageInfo.affiliateNumber }}
                     </ng-container>
                     <ng-template #noInfo>
                         <span class="color-grey">

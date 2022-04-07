@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
+import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -56,13 +57,14 @@ export class AppointmentComponent implements OnInit {
 	coverageText: string;
 	coverageNumber: any;
 	coverageData: PatientMedicalCoverage;
+	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	identificationType: IdentificationTypeDto;
 
-	public hideFilterPanel = false;
+	hideFilterPanel = false;
 
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
@@ -121,6 +123,7 @@ export class AppointmentComponent implements OnInit {
 						.subscribe(coverageData => {
 							if (coverageData) {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
+								this.updateSummaryCoverageData();
 								this.formEdit.controls.newCoverageData.setValue(coverageData.id);
 								this.setCoverageText(coverageData);
 							}
@@ -209,11 +212,13 @@ export class AppointmentComponent implements OnInit {
 			if (this.isAssigned()) {
 				if (this.formEdit.controls.newCoverageData.value) {
 					this.coverageData = this.patientMedicalCoverages.find(mc => this.formEdit.controls.newCoverageData.value == mc.id);
+					this.updateSummaryCoverageData();
 					this.updateCoverageData(this.coverageData.id);
 					this.setCoverageText(this.coverageData);
 				} else {
 					this.coverageData = null;
 					this.coverageNumber = null;
+					this.updateSummaryCoverageData();
 					this.updateCoverageData(null);
 				}
 			}
@@ -360,6 +365,23 @@ export class AppointmentComponent implements OnInit {
 	clear(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
+
+	private updateSummaryCoverageData(): void {
+		let summaryInfo: SummaryCoverageInformation = {};
+		if (this.coverageData) {
+			if (this.coverageData.medicalCoverage.name) {
+				summaryInfo.name = this.coverageData.medicalCoverage.name;
+			}
+			if (this.coverageData.affiliateNumber) {
+				summaryInfo.affiliateNumber = this.coverageData.affiliateNumber;
+			}
+			if (this.coverageData?.privateHealthInsuranceDetails?.planName) {
+				summaryInfo.plan = this.coverageData?.privateHealthInsuranceDetails?.planName;
+			}
+		}
+		this.summaryCoverageData = summaryInfo;
+	}
+
 }
 
 export interface PatientAppointmentInformation {

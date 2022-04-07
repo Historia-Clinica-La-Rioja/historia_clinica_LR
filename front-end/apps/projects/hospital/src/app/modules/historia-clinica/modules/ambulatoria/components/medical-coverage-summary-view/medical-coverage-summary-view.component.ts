@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ExternalPatientCoverageDto } from '@api-rest/api-model';
 
 @Component({
   selector: 'app-medical-coverage-summary-view',
@@ -8,9 +7,18 @@ import { ExternalPatientCoverageDto } from '@api-rest/api-model';
 })
 export class MedicalCoverageSummaryViewComponent {
 
-  @Input() patientCoverageInfo: ExternalPatientCoverageDto;
+  @Input() coverageInfo: SummaryCoverageInformation;
   @Input() title = "ambulatoria.medical-coverage-summary-view.TITLE";
 
-  constructor() { }
+  thereIsCoverageInfo(): boolean {
+    if (!this.coverageInfo)
+      return false;
+    return (Object.keys(this.coverageInfo).length >= 1);
+  }
+}
 
+export interface SummaryCoverageInformation {
+  name?: string;
+  affiliateNumber?: string;
+  plan?: string;
 }

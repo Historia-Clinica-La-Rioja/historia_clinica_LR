@@ -23,7 +23,7 @@
 						<a class="mat-body"
 							*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
-							(click)="closeDialog()">
+							[state]="{ appointmentCoverageInfo: summaryCoverageData }" (click)="closeDialog()">
 							Ver historia clínica
 						</a>
 					</div>
