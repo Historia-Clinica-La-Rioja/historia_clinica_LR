@@ -947,6 +947,14 @@ export interface FormVDto {
     sisaCode: string;
 }
 
+export interface FrequencyDto {
+    dailyVolume?: number;
+    duration?: TimeDto;
+    flowDropsHour: number;
+    flowMlHour: number;
+    id?: number;
+}
+
 export interface FullySpecifiedNamesDto {
     lang: string;
     term: string;
@@ -1838,6 +1846,14 @@ export interface OutpatientUpdateImmunizationDto {
 }
 
 export interface Overlapping<T> {
+}
+
+export interface ParenteralPlanDto extends IndicationDto {
+    dosage: NewDosageDto;
+    frequency: FrequencyDto;
+    pharmacos: OtherPharmacoDto[];
+    snomed: SharedSnomedDto;
+    via?: number;
 }
 
 export interface PasswordResetDto {

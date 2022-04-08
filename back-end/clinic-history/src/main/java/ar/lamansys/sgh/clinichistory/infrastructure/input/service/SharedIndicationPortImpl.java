@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,11 +9,13 @@ import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.Creat
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
 
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos.GetInternmentEpisodePharmacos;
+import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.FrequencyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
@@ -21,6 +24,11 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.QuantityDto;
+import ar.lamansys.sgh.clinichistory.application.indication.createparenteralplan.CreateParenteralPlan;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.ParenteralPlanBo;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.ParenteralPlanDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
@@ -64,6 +72,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final LocalDateMapper localDateMapper;
 
+	private final CreateParenteralPlan createParenteralPlan;
+
 	@Override
 	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
@@ -89,10 +99,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	@Override
 	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<PharmacoSummaryDto> result = getInternmentEpisodePharmacos.run(internmentEpisodeId)
-				.stream()
-				.map(this::mapToPharmacoSummaryDto)
-				.collect(Collectors.toList());
+		List<PharmacoSummaryDto> result = getInternmentEpisodePharmacos.run(internmentEpisodeId).stream().map(this::mapToPharmacoSummaryDto).collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -117,6 +124,13 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public Integer addPharmaco(PharmacoDto pharmacoDto) {
 		log.debug("Input parameter -> pharmacoDto {}", pharmacoDto);
 		Integer result = createPharmaco.run(mapToPharmacoBo(pharmacoDto));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	public Integer addParenteralPlan(ParenteralPlanDto dto) {
+		log.debug("Input parameter -> parenteralPlanDto {}", dto);
+		Integer result = createParenteralPlan.run(mapToParenteralPlanBo(dto));
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -223,7 +237,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private DosageBo toDosageBo(NewDosageDto dto, DateDto indicationDate) {
 		DosageBo dosageBo = new DosageBo();
 		dosageBo.setFrequency(dto.getFrequency());
-		dosageBo.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
+		if(dto.getPeriodUnit()!=null)
+			dosageBo.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
 		LocalDateTime startDate = (dto.getStartDateTime()!=null)
 				? localDateMapper.fromDateTimeDto(dto.getStartDateTime())
 				: localDateMapper.fromDateTimeDto(new DateTimeDto(indicationDate, new TimeDto(0,0,0)));
@@ -268,4 +283,75 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 			result.setQuantity(new QuantityDto(bo.getQuantity().getValue(), bo.getQuantity().getUnit()));
 		return result;
 	}
+
+	private ParenteralPlanBo mapToParenteralPlanBo(ParenteralPlanDto dto) {
+		DosageBo dosage = toDosageBo(dto.getDosage(), dto.getIndicationDate());
+		FrequencyBo frequency = toFrequencyBo(dto.getFrequency());
+		SnomedBo snomed = new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt());
+		List<OtherPharmacoBo> pharmacos = dto.getPharmacos().stream().map(p-> toOtherPharmacoBo(p, dto.getIndicationDate())).collect(Collectors.toList());
+
+		return new ParenteralPlanBo(dto.getId(),
+				dto.getPatientId(),
+				dto.getType().getId(),
+				dto.getStatus().getId(),
+				null,
+				dto.getProfessionalId(),
+				localDateMapper.fromDateDto(dto.getIndicationDate()),
+				null,
+				snomed,
+				dosage,
+				frequency,
+				dto.getVia(),
+				pharmacos);
+	}
+
+	private FrequencyBo toFrequencyBo(FrequencyDto dto){
+		FrequencyBo result = new FrequencyBo();
+		result.setFlowMlHour(dto.getFlowMlHour());
+		result.setFlowDropsHour(dto.getFlowDropsHour());
+		result.setDailyVolume(dto.getDailyVolume());
+		if (dto.getDuration()!=null)
+			result.setDuration(LocalTime.of(
+					dto.getDuration().getHours()==null ? 0 : dto.getDuration().getHours(),
+					dto.getDuration().getMinutes()==null ? 0 : dto.getDuration().getMinutes(),
+					dto.getDuration().getSeconds()==null ? 0 : dto.getDuration().getSeconds()));
+		return result;
+	}
+
+	private FrequencyDto toFrequencyDto(FrequencyBo bo){
+		FrequencyDto result = new FrequencyDto();
+		result.setFlowMlHour(bo.getFlowMlHour());
+		result.setFlowDropsHour(bo.getFlowDropsHour());
+		result.setDailyVolume(bo.getDailyVolume());
+		if (bo.getDuration()!=null)
+			result.setDuration(new TimeDto(bo.getDuration().getHour(), bo.getDuration().getMinute(), bo.getDuration().getSecond()));
+		return result;
+	}
+
+	private ParenteralPlanDto mapToParenteralPlanDto(ParenteralPlanBo bo){
+		NewDosageDto dosageDto = new NewDosageDto();
+		DosageBo dosageBo = bo.getDosage();
+		dosageDto.setFrequency(dosageBo.getFrequency());
+		dosageDto.setPeriodUnit(dosageBo.getPeriodUnit());
+		dosageDto.setEvent(dosageBo.getEvent());
+		dosageDto.setStartDateTime(localDateMapper.toDateTimeDto(dosageBo.getStartDate()));
+		dosageDto.setQuantity(new QuantityDto(dosageBo.getQuantity().getValue(), dosageBo.getQuantity().getUnit()));
+		SharedSnomedDto snomedDto = new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt());
+		FrequencyDto frequencyDto = toFrequencyDto(bo.getFrequency());
+		return new ParenteralPlanDto(
+				bo.getId(),
+				bo.getPatientId(),
+				bo.getTypeId(),
+				bo.getStatusId(),
+				bo.getProfessionalId(),
+				bo.getCreatedByName(),
+				localDateMapper.toDateDto(bo.getIndicationDate()),
+				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
+				snomedDto,
+				dosageDto,
+				frequencyDto,
+				bo.getVia(),
+				null);
+	}
+
 }

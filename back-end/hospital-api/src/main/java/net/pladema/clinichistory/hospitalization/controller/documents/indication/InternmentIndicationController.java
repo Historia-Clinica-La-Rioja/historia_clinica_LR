@@ -1,7 +1,9 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.indication;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
@@ -15,6 +17,9 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.OtherIndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoSummaryDto;
+import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.FrequencyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ParenteralPlanDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
@@ -27,6 +32,10 @@ import net.pladema.clinichistory.hospitalization.service.indication.otherindicat
 
 import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.InternmentPharmacoService;
 import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.domain.InternmentPharmacoBo;
+
+import net.pladema.clinichistory.hospitalization.service.indication.parenteralplan.InternmentParenteralPlanService;
+
+import net.pladema.clinichistory.hospitalization.service.indication.parenteralplan.domain.InternmentParenteralPlanBo;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,6 +67,8 @@ public class InternmentIndicationController {
 	private final InternmentOtherIndicationService otherIndicationService;
 
 	private final InternmentPharmacoService internmentPharmacoService;
+
+	private final InternmentParenteralPlanService internmentParenteralPlanService;
 
 	private final LocalDateMapper localDateMapper;
 
@@ -96,8 +107,6 @@ public class InternmentIndicationController {
 		log.debug("Get active internment episode other indications => {}", result);
 		return ResponseEntity.ok(result);
 	}
-
-
 	@PostMapping("/pharmaco")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Integer> addPharmaco(@PathVariable(name = "institutionId") Integer institutionId,
@@ -105,6 +114,17 @@ public class InternmentIndicationController {
 											   @RequestBody PharmacoDto pharmacoDto) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, pharmacoDto {}", institutionId, internmentEpisodeId, pharmacoDto);
 		Integer result = internmentPharmacoService.add(mapToPharmacoBo(pharmacoDto, institutionId, internmentEpisodeId));
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/parenteral-plan")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<Integer> addParenteralPlan(@PathVariable(name = "institutionId") Integer institutionId,
+													 @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+													 @RequestBody ParenteralPlanDto parenteralPlan) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, parenteralPlanDto {}", institutionId, internmentEpisodeId, parenteralPlan);
+		Integer result = internmentParenteralPlanService.add(mapToInternmentParenteralPlanBo(parenteralPlan, institutionId, internmentEpisodeId));
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -163,7 +183,8 @@ public class InternmentIndicationController {
 	private DosageBo toDosageBo(NewDosageDto dto, DateDto indicationDate) {
 		DosageBo result = new DosageBo();
 		result.setFrequency(dto.getFrequency());
-		result.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
+		if(dto.getPeriodUnit()!=null)
+			result.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
 		LocalDateTime startDate = (dto.getStartDateTime()!=null)
 				? localDateMapper.fromDateTimeDto(dto.getStartDateTime())
 				: localDateMapper.fromDateTimeDto(new DateTimeDto(indicationDate, new TimeDto(0,0,0)));
@@ -179,6 +200,30 @@ public class InternmentIndicationController {
 		OtherPharmacoBo result = new OtherPharmacoBo();
 		result.setSnomed(new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()));
 		result.setDosage(toDosageBo(dto.getDosage(), indicationDate));
+		return result;
+	}
+
+	private InternmentParenteralPlanBo mapToInternmentParenteralPlanBo (ParenteralPlanDto dto, Integer institutionId, Integer internmentEpisodeId){
+		InternmentParenteralPlanBo result = new InternmentParenteralPlanBo();
+		result.setDosage(toDosageBo(dto.getDosage(), dto.getIndicationDate()));
+		result.setFrequency(mapToFrequencyBo(dto.getFrequency()));
+		result.setSnomed(new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()));
+		result.setVia(dto.getVia());
+		result.setPharmacos(dto.getPharmacos().stream().
+				map(p -> toOtherPharmacoBo(p, dto.getIndicationDate())).collect(Collectors.toList()));
+		return (InternmentParenteralPlanBo) setIndicationInfoBo(dto, result, institutionId, internmentEpisodeId);
+	}
+
+	private FrequencyBo mapToFrequencyBo(FrequencyDto frequency){
+		FrequencyBo result = new FrequencyBo();
+		result.setFlowMlHour(frequency.getFlowMlHour());
+		result.setFlowDropsHour(frequency.getFlowDropsHour());
+		result.setDailyVolume(frequency.getDailyVolume());
+		if (frequency.getDuration()!=null)
+			result.setDuration(LocalTime.of(
+					frequency.getDuration().getHours()==null ? 0 : frequency.getDuration().getHours(),
+					frequency.getDuration().getMinutes()==null ? 0 : frequency.getDuration().getMinutes(),
+					frequency.getDuration().getSeconds()==null ? 0 : frequency.getDuration().getSeconds()));
 		return result;
 	}
 
