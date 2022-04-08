@@ -663,7 +663,7 @@ BEGIN
     EXECUTE(query);
 
     query := 'INSERT INTO ' || to_schema || '.appointment_assn (diary_id, opening_hours_id, appointment_id)
-    SELECT (-'|| offset_value ||'-diary_id), (-'|| offset_value ||'-opening_hours_id), appointment_id
+    SELECT (-'|| offset_value ||'-diary_id), (-'|| offset_value ||'-opening_hours_id), (-'|| offset_value ||'-appointment_id)
     FROM '|| from_schema ||'.appointment_assn';
     EXECUTE(query);
 
