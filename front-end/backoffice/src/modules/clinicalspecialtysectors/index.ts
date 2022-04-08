@@ -6,6 +6,9 @@ const clinicalspecialtysectors = {
     show: ClinicalSpecialtySectorShow,
     list: ClinicalSpecialtySectorList,
     create: ClinicalSpecialtySectorCreate,
+    options: {
+        submenu: 'facilities'
+    }
 };
 
 export default clinicalspecialtysectors;

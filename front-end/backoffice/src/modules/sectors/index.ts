@@ -8,6 +8,9 @@ const sectors = {
     list: SectorList,
     create: SectorCreate,
     edit: SectorEdit,
+    options: {
+        submenu: 'facilities'
+    }
 };
 
 export default sectors;
