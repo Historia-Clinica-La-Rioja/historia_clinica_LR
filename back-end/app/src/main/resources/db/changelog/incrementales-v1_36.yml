@@ -59,7 +59,7 @@ databaseChangeLog:
               columnName: end_date
               newDataType: datetime
               tableName: dosage
-              
+
     - changeSet:
         id: update-pharmaco-via-type
         comment: Actualiza tipo de dato de la columna via en pharmaco
@@ -69,8 +69,18 @@ databaseChangeLog:
               columnName: via
               newDataType: smallint
               tableName: pharmaco
-              
-              
+
+
+    - changeSet:
+        id: addNotNullConstraint-via-pharmaco
+        author: bchacon
+        changes:
+          - addNotNullConstraint:
+              columnDataType: smallint
+              columnName: via
+              tableName: pharmaco
+              validate: true
+
     - changeSet:
           id: addNotNullConstraint-via-pharmaco
           author: bchacon
@@ -114,3 +124,37 @@ databaseChangeLog:
                 INSERT INTO other_indication_type(id,description) VALUES ('9','Nebulizaciones') ON CONFLICT DO NOTHING;
                 INSERT INTO other_indication_type(id,description) VALUES ('10','Resumen') ON CONFLICT DO NOTHING;
                 INSERT INTO other_indication_type(id,description) VALUES ('11','Otro') ON CONFLICT DO NOTHING;
+
+        id: frequency-createTable
+        author: fsimaro
+        comment: Create table Frequency
+        changes:
+          - createTable:
+              tableName: frequency
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_frequency
+                      references: frequency(id)
+                      foreignKeyName: FK_frequency
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    name: duration
+                    type: time
+                - column:
+                    constraints:
+                      nullable: false
+                    name: flow_ml_hour
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: flow_drops_hour
+                    type: float
+                - column:
+                    name: daily_volume
+                    type: float
