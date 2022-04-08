@@ -21,6 +21,14 @@ mat-selection-list {
 	max-height: 50vh;
 }
 
+.selection-documents {
+	min-width: 30vw;
+}
+
+.selection-documents mat-list-option {
+	height: auto;
+}
+
 .no-notes {
 	display: flex;
 	justify-content: center;
@@ -28,16 +36,17 @@ mat-selection-list {
 	text-align: center;
 }
 
-.main-diagnosis-toggle{
+.main-diagnosis-toggle, .without-diagnosis-toggle{
 	display: flex;
 	flex-direction: column;
 	margin: 7px;
-	align-items: center;
 }
 
-::ng-deep .mat-line {
-	&:first-child {
-		font-weight: 500 !important;
-	}
+.bold-text {
+	font-weight: 500;
+}
+
+#document-type {
+	margin-top: 7px;
 }
 

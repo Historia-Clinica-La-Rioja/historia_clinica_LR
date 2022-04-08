@@ -194,6 +194,12 @@ public class EmergencyCareEpisodeController {
             result.add(riskFactorsObservationDto.getRespiratoryRate().getId());
         if (riskFactorsObservationDto.getBloodOxygenSaturation() != null && riskFactorsObservationDto.getBloodOxygenSaturation().getId() != null)
             result.add(riskFactorsObservationDto.getBloodOxygenSaturation().getId());
+        if (riskFactorsObservationDto.getBloodGlucose() != null && riskFactorsObservationDto.getBloodGlucose().getId() != null)
+        	result.add(riskFactorsObservationDto.getBloodGlucose().getId());
+		if (riskFactorsObservationDto.getGlycosylatedHemoglobin() != null && riskFactorsObservationDto.getGlycosylatedHemoglobin().getId() != null)
+			result.add(riskFactorsObservationDto.getGlycosylatedHemoglobin().getId());
+		if (riskFactorsObservationDto.getCardiovascularRisk() != null && riskFactorsObservationDto.getCardiovascularRisk().getId() != null)
+			result.add(riskFactorsObservationDto.getCardiovascularRisk().getId());
         LOG.debug("Output -> {}", result);
         return result;
     }

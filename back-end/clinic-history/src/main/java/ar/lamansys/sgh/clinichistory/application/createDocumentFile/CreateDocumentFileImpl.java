@@ -39,6 +39,11 @@ public class CreateDocumentFileImpl implements CreateDocumentFile {
                     .ifPresent(documentFileRepository::save);
     }
 
+	@Override
+	public void executeSync(OnGenerateDocumentEvent event){
+		this.execute(event);
+	}
+
 
 
 

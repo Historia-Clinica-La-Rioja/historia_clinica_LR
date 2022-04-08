@@ -45,9 +45,9 @@ public abstract class JWTFilter extends OncePerRequestFilter implements Authenti
 				.flatMap(tokenData -> authenticationLoader.apply(tokenData.username))
 				.ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA));
 
-		logger.debug("Request {}", request);
+		logger.debug("Request {}", request.getRequestURL());
 		chain.doFilter(request, response);
-		logger.debug("Response {}", response);
+		logger.debug("Response {}", response.getStatus());
 	}
 
 	private String removeBearer(String token) {

@@ -385,6 +385,51 @@ const messages = {
             },
             addRelated: 'Agregar plan',
         },
+        snomedgroups: {
+            name: 'Grupo de terminología |||| Grupos de terminología',
+            fields: {
+                id: 'ID',
+                description: 'Descripción',
+                ecl: 'ECL',
+                customId: 'ID custom',
+                groupId: 'Grupo padre',
+                institutionId: 'Institución',
+                userId: 'Usuario',
+                template: 'Plantilla',
+                lastUpdate: 'Última actualización',
+                snomedConcepts: "Conceptos de Snomed"
+            },
+            createRelated: 'Agregar concepto Snomed',
+            noInfo: 'Sin información',
+        },
+        snomedrelatedgroups: {
+            name: 'Snomed | Grupo de terminología',
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+                groupId: 'Grupo de terminología',
+                snomedId: 'Concepto Snomed'
+            },
+        },
+        snomedgroupconcepts: {
+            name: 'Snomed | Grupo de terminología',
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+                groupId: 'Grupo de terminología',
+                snomedId: 'Concepto Snomed',
+                conceptSctid: 'Snomed CT ID',
+                conceptPt: 'Término'
+            },
+        },
+        snomedconcepts: {
+            name: 'Concepto de Snomed |||| Conceptos de Snomed',
+            fields: {
+                id: 'ID',
+                sctid: 'Snomed CT ID',
+                pt: 'Preferred Term'
+            },
+        },
         "properties": {
             name: 'Propiedades del sistema |||| Propiedades del sistema',
             fields: {

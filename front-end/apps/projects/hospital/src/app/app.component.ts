@@ -56,6 +56,18 @@ export class AppComponent {
 			'bell_appointment_call',
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/bell_appointment_call.svg')
 		);
+		this.matIconRegistry.addSvgIcon(
+			'pharmaco',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/pharmaco.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'parenteral_plans',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/parenteral_plans.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'assignment_return',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/assignment_return.svg')
+		);
 		//
 		pwaInstallService.install$.pipe(
 			switchMap(

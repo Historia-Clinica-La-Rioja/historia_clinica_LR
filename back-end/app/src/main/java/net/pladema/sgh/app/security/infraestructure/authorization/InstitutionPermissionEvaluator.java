@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementa hasPermission que se puede acceder desde las anotaciones
@@ -51,8 +52,7 @@ public class InstitutionPermissionEvaluator implements PermissionEvaluator {
 	private boolean hasRoleInInstitution(Authentication auth, Integer targetId, ERole role) {
 		List<InstitutionGrantedAuthority> authorities =
 				(List<InstitutionGrantedAuthority>) auth.getAuthorities();
-		RoleAssignment requestedRole = new RoleAssignment(role, targetId);
-		return authorities.contains(new InstitutionGrantedAuthority(requestedRole));
+		return (authorities.stream().anyMatch(a -> a.getRoleAssignment().role.equals(role) && a.getRoleAssignment().institutionId.equals(targetId)));
 	}
 	
 }

@@ -17,8 +17,4 @@ public interface GenderMapper {
 
     List<GenderDto> fromGenderList(List<Gender> genders);
 
-    @Named("fromSelfPerceivedGender")
-    SelfPerceivedGenderDto fromSelfPerceivedGender(SelfPerceivedGender selfPerceivedGender);
-
-    List<SelfPerceivedGenderDto> fromSelfPerceivedGenderList(List<SelfPerceivedGender> genders);
 }

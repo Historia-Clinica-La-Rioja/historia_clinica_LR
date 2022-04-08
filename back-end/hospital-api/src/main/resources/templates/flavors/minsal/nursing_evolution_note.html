@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
+</head>
+<body>
+<div th:replace="fragments/general.html :: header(title='Nota de evolución de enfermería', subtitle='Internación')"></div>
+<div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
+<div th:replace="fragments/general.html :: mainDiagnosis(message='Diagnóstico principal')"></div>
+<div th:replace="fragments/general.html :: antropometicData"></div>
+<div th:replace="fragments/general.html :: immunizations"></div>
+<div th:replace="fragments/general.html :: riskFactors"></div>
+<div th:replace="fragments/general.html :: notes-base"></div>
+</body>
+<footer>
+    <div th:replace="fragments/general.html :: footer"></div>
+</footer>
+</html>

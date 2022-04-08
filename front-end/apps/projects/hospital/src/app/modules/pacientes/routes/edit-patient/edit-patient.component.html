@@ -387,9 +387,9 @@
 					</div>
 					<mat-form-field appearance="outline">
 						<mat-select id="occupation-select" formControlName="occupationId"
-							placeholder="{{'pacientes.form.OCCUPATION' | translate}}">
+							placeholder="{{'pacientes.form.OCCUPATION' | translate}}" matTooltip="{{ currentOccupationDescription }}">
 							<mat-option *ngFor="let occupation of occupations" [value]="occupation.id"
-								matTooltip="{{ occupation.description }}">
+								matTooltip="{{ occupation.description }}" (click)="currentOccupationDescription = occupation.description">
 								{{occupation.description}}
 							</mat-option>
 
@@ -407,9 +407,9 @@
 					</div>
 					<mat-form-field appearance="outline">
 						<mat-select id="educationLevel-select" formControlName="educationLevelId"
-							placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}">
+							placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}" matTooltip="{{ currentEducationLevelDescription }}">
 							<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id"
-								matTooltip="{{ educationLevel.description }}">
+								matTooltip="{{ educationLevel.description }}" (click)="currentEducationLevelDescription = educationLevel.description">
 								{{educationLevel.description}}
 							</mat-option>
 						</mat-select>

@@ -321,6 +321,7 @@ export interface BasicDataPersonDto extends Serializable {
     middleNames: string;
     nameSelfDetermination: string;
     otherLastNames: string;
+    selfPerceivedGender: string;
 }
 
 export interface BasicPatientDto extends Serializable {
@@ -634,6 +635,10 @@ export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> 
     overturnCount?: number;
 }
 
+export interface DietDto extends IndicationDto {
+    description: string;
+}
+
 export interface DoctorInfoDto {
     firstName: string;
     id: number;
@@ -703,6 +708,7 @@ export interface DocumentSearchDto extends Serializable {
     createdOn: Date;
     creator: ResponsibleDoctorDto;
     diagnosis: string[];
+    documentType: string;
     id: number;
     mainDiagnosis: string;
     message: string;
@@ -879,6 +885,7 @@ export interface EvolutionNoteDto extends Serializable {
     notes?: DocumentObservationsDto;
     procedures?: HospitalizationProcedureDto[];
     riskFactors?: RiskFactorDto;
+    wasMadeByProfessionalNursing?: boolean;
 }
 
 export interface ExternalClinicalHistoryDto extends Serializable {
@@ -1169,6 +1176,14 @@ export interface HealthcareProfessionalSpecialtyDto {
     professionalSpecialtyId: number;
 }
 
+export interface HospitalUserPersonInfoDto {
+    email: string;
+    firstName: string;
+    id: number;
+    lastName: string;
+    personId: number;
+}
+
 export interface HospitalizationProcedureDto {
     performedDate?: string;
     snomed: SnomedDto;
@@ -1236,6 +1251,17 @@ export interface ImmunizationInteroperabilityDto {
 export interface ImmunizePatientDto {
     clinicalSpecialtyId: number;
     immunizations: ImmunizationDto[];
+}
+
+export interface IndicationDto {
+    createdBy: string;
+    createdOn: DateTimeDto;
+    id: number;
+    indicationDate: DateDto;
+    patientId: number;
+    professionalId: number;
+    status: EIndicationStatus;
+    type: EIndicationType;
 }
 
 export interface InstitutionAddressDto extends Serializable {
@@ -1484,8 +1510,11 @@ export interface NewMedicalRequestDto {
 }
 
 export interface NewRiskFactorsObservationDto extends Serializable {
+    bloodGlucose?: NewEffectiveClinicalObservationDto;
     bloodOxygenSaturation?: NewEffectiveClinicalObservationDto;
+    cardiovascularRisk?: NewEffectiveClinicalObservationDto;
     diastolicBloodPressure?: NewEffectiveClinicalObservationDto;
+    glycosylatedHemoglobin?: NewEffectiveClinicalObservationDto;
     heartRate?: NewEffectiveClinicalObservationDto;
     respiratoryRate?: NewEffectiveClinicalObservationDto;
     systolicBloodPressure?: NewEffectiveClinicalObservationDto;
@@ -2392,6 +2421,13 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
+export interface UpdateConceptsResultDto {
+    conceptsLoaded: number;
+    eclKey: string;
+    erroneousConcepts: number;
+    errorMessages: string[];
+}
+
 export interface UserDataDto {
     enable?: boolean;
     id?: number;
@@ -2500,14 +2536,27 @@ export const enum AppFeature {
     HABILITAR_REPORTE_EPIDEMIOLOGICO = "HABILITAR_REPORTE_EPIDEMIOLOGICO",
     AGREGAR_MEDICOS_ADICIONALES = "AGREGAR_MEDICOS_ADICIONALES",
     HABILITAR_DESCARGA_DOCUMENTOS_PDF = "HABILITAR_DESCARGA_DOCUMENTOS_PDF",
-    HABILITAR_NOMBRE_AUTOPERCIBIDO = "HABILITAR_NOMBRE_AUTOPERCIBIDO",
+    HABILITAR_DATOS_AUTOPERCIBIDOS = "HABILITAR_DATOS_AUTOPERCIBIDOS",
     HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA = "HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA",
+    HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF = "HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF",
 }
 
 export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
+}
+
+export const enum EIndicationStatus {
+    INDICATED = "INDICATED",
+    SUSPENDED = "SUSPENDED",
+}
+
+export const enum EIndicationType {
+    PHARMACO = "PHARMACO",
+    DIET = "DIET",
+    PARENTERAL_PLAN = "PARENTERAL_PLAN",
+    OTHER_INDICATION = "OTHER_INDICATION",
 }
 
 export const enum EMedicalCoverageTypeDto {

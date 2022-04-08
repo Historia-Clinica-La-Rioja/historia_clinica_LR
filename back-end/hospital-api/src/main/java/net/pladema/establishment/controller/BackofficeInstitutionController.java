@@ -27,7 +27,7 @@ public class BackofficeInstitutionController extends AbstractBackofficeControlle
 		super(
 				new BackofficeRepository<>(
 						repository,
-						new BackofficeQueryAdapter<Institution>() {
+						new BackofficeQueryAdapter<>() {
 							@Override
 							public Example<Institution> buildExample(Institution entity) {
 								ExampleMatcher matcher = ExampleMatcher

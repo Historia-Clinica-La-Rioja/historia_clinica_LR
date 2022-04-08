@@ -123,6 +123,18 @@ export class GuardiaMapperService {
 				temperature: riskFactors.temperature ? {
 					value: riskFactors.temperature.value,
 					effectiveTime: dateTimeDtoToDate(riskFactors.temperature.effectiveTime)
+				} : undefined,
+				bloodGlucose: riskFactors.bloodGlucose ? {
+					value: riskFactors.bloodGlucose.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.bloodGlucose.effectiveTime)
+				} : undefined,
+				glycosylatedHemoglobin: riskFactors.glycosylatedHemoglobin ? {
+					value: riskFactors.glycosylatedHemoglobin.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.glycosylatedHemoglobin.effectiveTime)
+				} : undefined,
+				cardiovascularRisk: riskFactors.cardiovascularRisk ? {
+					value: riskFactors.cardiovascularRisk.value,
+					effectiveTime: dateTimeDtoToDate(riskFactors.cardiovascularRisk.effectiveTime)
 				} : undefined
 			};
 		}

@@ -34,9 +34,12 @@ import properties from "./properties";
 import restClientMeasures from "./rest-client-measures";
 import medicalCoverage from "./medicalcoverage";
 import privatehealthinsuranceplans from "./privatehealthinsuranceplans";
+import snomedgroups from "./snomedgroups";
 
 
 import { ROOT, ADMINISTRADOR } from './roles';
+import snomedconcepts from "./snomedconcepts";
+import snomedrelatedgroups from "./snomedrelatedgroups";
 
 // Ampliación
 //
@@ -52,6 +55,11 @@ const resourcesAdminInstitucional = [
     <Resource name="rooms" {...rooms} />,
     <Resource name="beds" {...beds} />,
     <Resource name="cities" />,
+    <Resource name="users" />,
+    <Resource name="snomedgroups"   {...snomedgroups} />,
+    <Resource name="snomedgroupconcepts" />,
+    <Resource name="snomedrelatedgroups" {...snomedrelatedgroups} />,
+    <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="departments" />,
 ];
 
@@ -83,6 +91,10 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
     <Resource name="medicalcoveragetypes" />,
     <Resource name="privatehealthinsuranceplans" {...privatehealthinsuranceplans} />,
     <Resource name="medicalcoveragesmerge" />,
+    <Resource name="snomedgroups"  {...snomedgroups} />,
+    <Resource name="snomedgroupconcepts" />,
+    <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
+    <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="properties" {...properties(permissions)} />,
 
     // Ampliación
@@ -111,6 +123,10 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="provinces" />,
     <Resource name="bedcategories" />,
     <Resource name="educationtypes" />,
+    <Resource name="snomedgroups"   {...snomedgroups} />,
+    <Resource name="snomedgroupconcepts" />,
+    <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
+    <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="internmentepisodes" />,
 ];
 

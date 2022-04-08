@@ -16,6 +16,7 @@ import net.pladema.clinichistory.hospitalization.service.ResponsibleContactServi
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,6 +81,9 @@ class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private SimplePublishService simplePublishService;
+
+	@MockBean
+	private HospitalApiPublisher hospitalApiPublisher;
 
 	@BeforeEach
 	void setup() {

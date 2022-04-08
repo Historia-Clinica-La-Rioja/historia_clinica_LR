@@ -1,0 +1,8 @@
+@mixin app-factores-de-riesgo-form($theme) {
+	$palette-primary: map-get($theme, primary);
+	app-factores-de-riesgo-form {
+		.dialog {
+			background: mat-color($palette-primary, 50);
+		}
+	}
+}

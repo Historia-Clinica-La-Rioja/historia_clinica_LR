@@ -1,0 +1,301 @@
+<div class="margin-bottom">
+    <h2 class="mat-h2" [translate]="'historia-clinica.factores-de-riesgo-form.TITLE'"></h2>
+    <div *ngIf="showPreloadData" class="dialog">
+        <mat-icon online class="icon" color="primary">error_outline</mat-icon>
+        <div class="info-text">
+            <span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DESCRIPTION'"
+                [translateParams]="{date: factoresDeRiesgoFormService.getDate()}"> </span>
+            <span class="question"
+                [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.QUESTION'"></span>
+            <span fxLayout="row">
+                <button class="button" id=include_risk_factors mat-button color="primary"
+                    (click)=factoresDeRiesgoFormService.savePreloadedRiskFactorsData()>
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.ADD'"></span>
+                </button>
+                <button class="button" id=discard_risk_factors mat-button color="warn"
+                    (click)=factoresDeRiesgoFormService.discardPreloadedRiskFactorsData()>
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DISCARD'"></span>
+                </button>
+            </span>
+        </div>
+    </div>
+    <app-document-section class="margin-bottom">
+        <ng-container concept-form>
+            <form fxLayout="column" fxLayoutGap="15px" [formGroup]="factoresDeRiesgoFormService.getForm()">
+                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                    <div class="factores-de-riesgo-field" formGroupName="heartRate">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.HEART_RATE'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="heart_rate" name="heart_rate" formControlName="value" placeholder="00"
+                                    type="number" matInput (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.heartRate.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'heartRate')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'heartRate.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'heartRate.value').min}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                    <div class="factores-de-riesgo-field" formGroupName="respiratoryRate">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.RESPIRATORY_RATE'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="respiratory_rate" name="respiratory_rate" formControlName="value"
+                                    placeholder="00" type="number" matInput (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.respiratoryRate.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'respiratoryRate')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'respiratoryRate.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'respiratoryRate.value').min}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                    <div class="factores-de-riesgo-field" formGroupName="temperature">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.TEMPERATURE'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="temperature" name="temperature" formControlName="value" placeholder="00.0"
+                                    type="number" matInput (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.temperature.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'temperature')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'temperature.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'temperature.value').min}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                    <div class="factores-de-riesgo-field" formGroupName="bloodOxygenSaturation">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.BLOOD_OXYGEN_SATURATION'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="blood_oxygen_saturation" name="blood_oxygen_saturation"
+                                    formControlName="value" placeholder="00" type="number" matInput
+                                    (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.bloodOxygenSaturation.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'bloodOxygenSaturation')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodOxygenSaturation.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodOxygenSaturation.value').min}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                    <div class="factores-de-riesgo-field" formGroupName="systolicBloodPressure">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.SYSTOLIC_BLOOD_PRESSURE'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="systolic_blood_pressure" name="systolicBloodPressure" formControlName="value"
+                                    placeholder="00" type="number" matInput (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <h5 *ngIf="showRecomendation" class="recomendado recomendado-tension"
+                            [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.systolicBloodPressure.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'systolicBloodPressure')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'systolicBloodPressure.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'systolicBloodPressure.value').min}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                    <div class="factores-de-riesgo-field" formGroupName="diastolicBloodPressure">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.DIASTOLIC_BLOOD_PRESSURE'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="diastolic_blood_pressure" name="diastolicBloodPressure"
+                                    formControlName="value" placeholder="00" type="number" matInput
+                                    (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <h5 *ngIf="showRecomendation" class="recomendado recomendado-tension"
+                            [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.diastolicBloodPressure.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'diastolicBloodPressure')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'diastolicBloodPressure.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'diastolicBloodPressure.value').min}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                    <div class="factores-de-riesgo-field" formGroupName="bloodGlucose">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.BLOOD_GLUCOSE'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="blood_glucose" name="blood_glucose" formControlName="value" placeholder="00"
+                                    type="number" matInput (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.bloodGlucose.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'bloodGlucose')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodGlucose.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodGlucose.value').min}">
+                            </mat-error>
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'max', 'bloodGlucose.value')"
+                                [translate]="'forms.MAX_ERROR'"
+                                [translateParams]="{max: getError(factoresDeRiesgoFormService.getForm(), 'max', 'bloodGlucose.value').max}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                    <div class="factores-de-riesgo-field" formGroupName="glycosylatedHemoglobin">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.GLYCOSYLATED_HEMOGLOBIN'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="glycosylated_hemoglobin" name="glycosylated_hemoglobin"
+                                    formControlName="value" placeholder="00.00" type="number" matInput
+                                    (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.glycosylatedHemoglobin.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'glycosylatedHemoglobin')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'glycosylatedHemoglobin.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'glycosylatedHemoglobin.value').min}">
+                            </mat-error>
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'max', 'glycosylatedHemoglobin.value')"
+                                [translate]="'forms.MAX_ERROR'"
+                                [translateParams]="{max: getError(factoresDeRiesgoFormService.getForm(), 'max', 'glycosylatedHemoglobin.value').max}">
+                            </mat-error>
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'pattern', 'glycosylatedHemoglobin.value')"
+                                [translate]="'historia-clinica.factores-de-riesgo-form.MAX_TWO_DECIMAL_DIGITS'">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                    <div class="factores-de-riesgo-field" formGroupName="cardiovascularRisk">
+                        <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.CARDIOVASCULAR_RISK'">
+                        </mat-label>
+                        <div fxLayout="row" fxLayoutAlign="between center">
+                            <mat-form-field [floatLabel]="'never'" appearance="outline">
+                                <input id="cardiovascular_risk" name="cardiovascular_risk" formControlName="value"
+                                    placeholder="00" type="number" matInput (keypress)="isNumberOrDot($event.key)">
+                            </mat-form-field>
+                            <ng-container *ngIf="showPreloadData">
+                                <mat-icon class="field-icon-risk-factor" color="primary">
+                                    error_outline
+                                </mat-icon>
+                            </ng-container>
+                        </div>
+                        <app-effective-time
+                            [effectiveTime]="factoresDeRiesgoFormService.getForm().value.cardiovascularRisk.effectiveTime"
+                            (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'cardiovascularRisk')">
+                        </app-effective-time>
+                        <ng-container *ngIf="showErrors">
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'cardiovascularRisk.value')"
+                                [translate]="'forms.MIN_ERROR'"
+                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'cardiovascularRisk.value').min}">
+                            </mat-error>
+                            <mat-error
+                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'max', 'cardiovascularRisk.value')"
+                                [translate]="'forms.MAX_ERROR'"
+                                [translateParams]="{max: getError(factoresDeRiesgoFormService.getForm(), 'max', 'cardiovascularRisk.value').max}">
+                            </mat-error>
+                        </ng-container>
+                    </div>
+                </div>
+            </form>
+        </ng-container>
+    </app-document-section>
+</div>

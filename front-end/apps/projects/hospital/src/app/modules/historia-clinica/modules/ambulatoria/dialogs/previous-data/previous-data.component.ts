@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
+import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 
 export interface PreviousData {
 	isRiskFactors: boolean;
@@ -17,20 +17,20 @@ export class PreviousDataComponent implements OnInit {
 	previousData: PreviousData;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: {
-		factoresDeRiesgoNuevaConsultaService: FactoresDeRiesgoNuevaConsultaService,
+		factoresDeRiesgoFormService: FactoresDeRiesgoFormService,
 		datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService
 	}, private dialogRef: MatDialogRef<PreviousDataComponent>) { }
 
 	ngOnInit(): void {
 		this.previousData = {
-			isRiskFactors: this.data.factoresDeRiesgoNuevaConsultaService.getShowPreloadedRiskFactorsData(),
+			isRiskFactors: this.data.factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData(),
 			isAnthropometricData: this.data.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()
 		}
 	}
 
 	discardData(): void {
 		if ((this.previousData.isRiskFactors))
-			this.data.factoresDeRiesgoNuevaConsultaService.discardPreloadedRiskFactorsData();
+			this.data.factoresDeRiesgoFormService.discardPreloadedRiskFactorsData();
 		if ((this.previousData.isAnthropometricData))
 			this.data.datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData();
 		this.dialogRef.close(true);
@@ -38,7 +38,7 @@ export class PreviousDataComponent implements OnInit {
 
 	addData(): void {
 		if ((this.previousData.isRiskFactors))
-			this.data.factoresDeRiesgoNuevaConsultaService.savePreloadedRiskFactorsData();
+			this.data.factoresDeRiesgoFormService.savePreloadedRiskFactorsData();
 		if ((this.previousData.isAnthropometricData))
 			this.data.datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData();
 		this.dialogRef.close(true);

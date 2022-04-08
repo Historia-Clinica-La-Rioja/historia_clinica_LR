@@ -30,7 +30,8 @@ export enum APPOINTMENT_STATES_ID {
 	ABSENT = 3,
 	CANCELLED = 4,
 	SERVED = 5,
-	BOOKED = 6
+	BOOKED = 6,
+	BLOCKED = 7
 }
 
 export const APPOINTMENT_STATES: AppointmentState[] = [

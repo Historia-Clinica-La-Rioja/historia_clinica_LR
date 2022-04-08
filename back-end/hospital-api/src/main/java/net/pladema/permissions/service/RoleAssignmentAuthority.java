@@ -2,11 +2,13 @@ package net.pladema.permissions.service;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.Getter;
 import lombok.EqualsAndHashCode;
 import net.pladema.permissions.service.dto.RoleAssignment;
 
 public class RoleAssignmentAuthority implements GrantedAuthority {
 	@EqualsAndHashCode.Include
+	@Getter
 	private final RoleAssignment roleAssignment;
 
 	public RoleAssignmentAuthority(RoleAssignment roleAssignment) {

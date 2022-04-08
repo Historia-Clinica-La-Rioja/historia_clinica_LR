@@ -12,6 +12,12 @@
 				<mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon>
 			</button>
 		</ng-container>
+		<ng-container *ngIf="menu">
+			<button matTooltip="{{ tooltip | translate }}" mat-icon-button [matMenuTriggerFor]="matMenu"
+				*appHasRole="canEdit">
+				<mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon>
+			</button>
+		</ng-container>
 	</mat-card-header>
 	<ng-content></ng-content>
 </mat-card>

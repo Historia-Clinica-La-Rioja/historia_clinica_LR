@@ -45,6 +45,9 @@ export class TriageDetailsComponent implements OnChanges {
 				respiratoryRate: 'Frecuencia respiratoria',
 				temperature: 'Temperatura',
 				bloodOxygenSaturation: 'Saturación de oxígeno',
+				bloodGlucose: 'Glucemia (mg/dl)',
+				glycosylatedHemoglobin: 'Hemoglobina glicosilada (%)',
+				cardiovascularRisk: 'Riesgo cardiovascular (%)',
 			};
 
 		Object.keys(LABELS).forEach(key => {
@@ -109,7 +112,19 @@ export interface Triage {
 		temperature?: {
 			value: string,
 			effectiveTime: Date
-		}
+		},
+		bloodGlucose?: {
+			value: string,
+			effectiveTime: Date
+		},
+		glycosylatedHemoglobin?: {
+			value: string,
+			effectiveTime: Date
+		},
+		cardiovascularRisk?: {
+			value: string,
+			effectiveTime: Date
+		},
 	};
 	appearance?: {
 		bodyTemperatureDescription?: string,

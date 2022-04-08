@@ -17,8 +17,9 @@
     height: 100%;
 }
 
-.center-align {
+.group-and-factor-properties {
     text-align: center;
+	line-height: 16px;
 }
 #blood-type-container, #coverage-container, #allergy-container {
     padding: 10px;
@@ -52,10 +53,28 @@ mat-divider.header-divider{
 }
 mat-label.actions-labels {
 	margin-left: 15px;
-	font-size: 12px; 
+	font-size: 12px;
 	font-weight: 600;
 }
 
 button.actions{
 	font-weight: 500;
+}
+
+.coverage-bold-text{
+	font-weight: 500;
+}
+
+.no-blood-data{
+	text-align: center;
+	max-width: 150px;
+}
+
+.top_padded_content{
+	padding-top: 6px;
+}
+
+.sided_spaced_content{
+	padding-left: 10px;
+	padding-right: 10px;
 }

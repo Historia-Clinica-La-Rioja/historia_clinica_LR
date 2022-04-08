@@ -1,8 +1,0 @@
-@mixin app-factores-de-riesgo-nueva-consulta($theme) {
-	$palette-primary: map-get($theme, primary);
-	app-factores-de-riesgo-nueva-consulta {
-		.dialog {
-			background: mat-color($palette-primary, 50);
-		}
-	}
-}

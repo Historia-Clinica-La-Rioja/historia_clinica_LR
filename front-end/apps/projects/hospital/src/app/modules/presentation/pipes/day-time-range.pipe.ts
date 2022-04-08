@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 import { capitalize } from '@core/utils/core.utils';
 import { DatePipeFormat } from '@core/utils/date.utils';
-import { DEFAULT_LANG } from '../../../app.component';
+import { DEFAULT_LANG } from './../../../app.component';
 
 
 @Pipe({

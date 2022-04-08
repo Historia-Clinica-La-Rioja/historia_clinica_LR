@@ -13,7 +13,6 @@
 			"CIRCULATION": "Circulación",
 			"CONFIRM": "Confirmar triage",
 			"CRYING_EXCESSIVE": "Llanto sin consuelo",
-			"DIASTOLIC_BLOOD": "Tensión arterial diastólica",
 			"EVALUATION": "Evaluación",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"LEVEL": "Nivel de urgencia",
@@ -27,8 +26,6 @@
 			"TRIAGE_ROOM": "Zona de Triage",
 			"TRIAGE_ROOM_DESCRIPTION": "Lugar físico en el que se realiza el Triage",
 			"STRIDOR": "Respiración con estridor",
-			"SYSTOLIC_BLOOD": "Tensión arterial sistólica",
-			"RISK_FACTORS": "Factores de riesgo",
 			"TEMPERATURE": "Temperatura",
 			"TITLE": "Nuevo triage"
 		},

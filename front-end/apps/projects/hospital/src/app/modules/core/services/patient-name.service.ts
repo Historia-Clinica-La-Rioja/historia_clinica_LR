@@ -15,7 +15,8 @@ export class PatientNameService {
 
 	nameSelfDeterminationFFIsEnabled(): boolean {
 		if ((this.nameSelfDeterminationFF === null) || (this.nameSelfDeterminationFF === undefined))
-			this.featureFlagService.isActive(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO).subscribe(isOn => this.nameSelfDeterminationFF = isOn);
+			this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
+				this.nameSelfDeterminationFF = isOn});
 		return this.nameSelfDeterminationFF;
 	}
 

@@ -12,6 +12,7 @@ import net.pladema.person.controller.mapper.EthnicityMapper;
 import net.pladema.person.controller.mapper.GenderMapper;
 import net.pladema.person.controller.mapper.IdentificationTypeMapper;
 import net.pladema.person.controller.mapper.OccupationMapper;
+import net.pladema.person.controller.mapper.SelfPerceivedGenderMapper;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.SelfPerceivedGender;
@@ -41,6 +42,8 @@ public class PersonMasterDataController {
 
     private final GenderMapper genderMapper;
 
+	private final SelfPerceivedGenderMapper selfPerceivedGenderMapper;
+
     private final IdentificationTypeMapper identificationTypeMapper;
 
     private final EthnicityMapper ethnicityMapper;
@@ -49,14 +52,12 @@ public class PersonMasterDataController {
 
     private final OccupationMapper occupationMapper;
 
-    public PersonMasterDataController(PersonMasterDataService personMasterDataService,
-                                      GenderMapper genderMapper,
-                                      IdentificationTypeMapper identificationTypeMapper,
-                                      EthnicityMapper ethnicityMapper, EducationLevelMapper educationLevelMapper, OccupationMapper occupationMapper) {
+    public PersonMasterDataController(PersonMasterDataService personMasterDataService, GenderMapper genderMapper, SelfPerceivedGenderMapper selfPerceivedGenderMapper, IdentificationTypeMapper identificationTypeMapper, EthnicityMapper ethnicityMapper, EducationLevelMapper educationLevelMapper, OccupationMapper occupationMapper) {
         super();
         this.personMasterDataService = personMasterDataService;
         this.genderMapper = genderMapper;
-        this.identificationTypeMapper = identificationTypeMapper;
+		this.selfPerceivedGenderMapper = selfPerceivedGenderMapper;
+		this.identificationTypeMapper = identificationTypeMapper;
         this.ethnicityMapper = ethnicityMapper;
         this.educationLevelMapper = educationLevelMapper;
         this.occupationMapper = occupationMapper;
@@ -75,7 +76,7 @@ public class PersonMasterDataController {
     public ResponseEntity<Collection<SelfPerceivedGenderDto>> getSelfPerceivedGenders(){
         LOG.debug("{}", "All self-perceived genders");
         List<SelfPerceivedGender> genders = personMasterDataService.getSelfPerceivedGender();
-        List<SelfPerceivedGenderDto> result = genderMapper.fromSelfPerceivedGenderList(genders);
+        List<SelfPerceivedGenderDto> result = selfPerceivedGenderMapper.fromSelfPerceivedGenderList(genders);
         LOG.debug("OUTPUT -> {}", result);
         return ResponseEntity.ok().body(result);
     }

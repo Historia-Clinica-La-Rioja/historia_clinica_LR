@@ -32,4 +32,6 @@ public class DocumentSearchDto implements Serializable {
 
     private String message;
 
+    private String documentType;
+
 }

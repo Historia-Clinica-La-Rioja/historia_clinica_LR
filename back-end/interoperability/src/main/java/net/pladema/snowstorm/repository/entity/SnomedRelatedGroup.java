@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
@@ -19,8 +21,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class SnomedRelatedGroup {
 
-	@EmbeddedId
-	private SnomedRelatedGroupPK pk;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	@Column(name = "snomed_id", nullable = false)
+	private Integer snomedId;
+
+	@Column(name = "group_id", nullable = false)
+	private Integer groupId;
 
 	@Column(name = "orden", nullable = false)
 	private Integer orden;
@@ -29,17 +39,14 @@ public class SnomedRelatedGroup {
 	private LocalDate lastUpdate;
 
 	public SnomedRelatedGroup(Integer snomedId, Integer groupId, Integer orden, LocalDate lastUpdate) {
-		pk = new SnomedRelatedGroupPK(snomedId, groupId);
+		this.snomedId = snomedId;
+		this.groupId = groupId;
 		this.orden = orden;
 		this.lastUpdate = lastUpdate;
 	}
 
-	public Integer getSnomedId() {
-		return pk.getSnomedId();
+	public SnomedRelatedGroup(Integer snomedId, Integer groupId) {
+		this.snomedId = snomedId;
+		this.groupId = groupId;
 	}
-
-	public Integer getGroupId() {
-		return pk.getGroupId();
-	}
-
 }

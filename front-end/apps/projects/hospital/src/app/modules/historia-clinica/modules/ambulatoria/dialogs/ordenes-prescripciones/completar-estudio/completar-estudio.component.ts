@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CompleteRequestDto, DiagnosticReportInfoDto } from '@api-rest/api-model';
-import { PrescriptionItemData } from '../../../components/ordenes/item-prescripciones/item-prescripciones.component';
+import { PrescriptionItemData } from '../../../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
 import { PrescripcionesService, PrescriptionTypes } from './../../../services/prescripciones.service';
 import { hasError } from '@core/utils/form.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';

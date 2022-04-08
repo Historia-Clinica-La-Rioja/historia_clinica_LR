@@ -93,12 +93,12 @@ export class AgendaComponent implements OnInit, OnDestroy {
 				this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 			});
 			this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
-					if (appointments) {
-						this.appointments = appointments;
-						this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
-						this.loading = false;
-					}
-				});
+				if (appointments) {
+					this.appointments = appointments;
+					this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
+					this.loading = false;
+				}
+			});
 		});
 
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
@@ -163,21 +163,21 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	}
 
 	private setDailyAmounts(daysCells: MonthViewDay[], dailyAmounts: AppointmentDailyAmountDto[]) {
-			daysCells.forEach((cell: MonthViewDay) => {
-				const amount = getAmount(cell.date);
-				if (amount) {
-					cell.meta = {
-						amount
-					};
-				}
+		daysCells.forEach((cell: MonthViewDay) => {
+			const amount = getAmount(cell.date);
+			if (amount) {
+				cell.meta = {
+					amount
+				};
+			}
 
-				function getAmount(date: Date): AppointmentDailyAmountDto {
-					return dailyAmounts
-						.find(dailyAmount => {
-							return dateToMoment(date).isSame(momentParseDate(dailyAmount.date), 'days');
-						});
-				}
-			});
+			function getAmount(date: Date): AppointmentDailyAmountDto {
+				return dailyAmounts
+					.find(dailyAmount => {
+						return dateToMoment(date).isSame(momentParseDate(dailyAmount.date), 'days');
+					});
+			}
+		});
 	}
 
 	onClickedSegment(event) {

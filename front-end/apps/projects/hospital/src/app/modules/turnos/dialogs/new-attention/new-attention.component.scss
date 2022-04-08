@@ -1,3 +1,29 @@
 div {
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+mat-form-field {
+    width:100%;
+}
+
+.hour_selector{
+	width: 75px;
+	margin-top: 20px;
+}
+
+.detail_icon{
+	color: #A8A8A8;
+}
+
+.day_text{
+	font-weight: bolder;
+	color: #2C2C2C;
+}
+
+.attention_dialog{
+	width: 25vw;
+}
+
+.attention_dialog_title{
+	margin-top: -10%;
+}

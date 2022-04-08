@@ -95,7 +95,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PersonIdentificationPipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
-		ViewHourMinutePipe,
+		ViewHourMinutePipe
 	],
 	imports: [
 		CommonModule,
@@ -148,7 +148,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PersonIdentificationPipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
-		ViewHourMinutePipe,
+		ViewHourMinutePipe
 	],
 	entryComponents: [
 		DockPopupComponent
