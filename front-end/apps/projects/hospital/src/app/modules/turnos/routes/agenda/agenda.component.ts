@@ -63,7 +63,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	refreshCalendar = new Subject<void>();
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
-
+	private patientId: number;
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly diaryService: DiaryService,
@@ -80,6 +80,8 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
+
 		this.route.paramMap.subscribe((params: ParamMap) => {
 			this.loading = true;
 			this.appointmentSubscription?.unsubscribe();
@@ -203,7 +205,8 @@ export class AgendaComponent implements OnInit, OnDestroy {
 							diaryId: this.agenda.id,
 							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
 							openingHoursId: openingHourId,
-							overturnMode: addingOverturn
+							overturnMode: addingOverturn,
+							patientId: this.patientId
 						}
 					});
 				}

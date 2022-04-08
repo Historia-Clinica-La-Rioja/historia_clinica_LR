@@ -432,4 +432,9 @@ export class ProfileComponent implements OnInit {
 		this.router.navigate([url]);
 	}
 
+	newAppointment() {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/turnos`;
+		this.router.navigate([url], { queryParams: { idPaciente: this.patientId } });
+	}
+
 }

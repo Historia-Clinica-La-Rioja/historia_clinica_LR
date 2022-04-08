@@ -55,7 +55,7 @@ export class NewAppointmentComponent implements OnInit {
 	VALIDATIONS = VALIDATIONS;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean
+			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
@@ -109,9 +109,12 @@ export class NewAppointmentComponent implements OnInit {
 				updateControlValidator(this.formSearch, 'gender', [Validators.required]);
 			});
 		this.appointmentInfoForm.markAllAsTouched();
+
+		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 	}
 
 	search(): void {
+		this.clearQueryParams();
 		this.isFormSubmitted = true;
 		if (this.isFormSearchValid()) {
 			const formSearchValue = this.formSearch.value;
@@ -260,7 +263,7 @@ export class NewAppointmentComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(
 			values => {
-				this.appointmentInfoForm.patchValue({patientMedicalCoverage: null});
+				this.appointmentInfoForm.patchValue({ patientMedicalCoverage: null });
 				if (values) {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
@@ -286,5 +289,9 @@ export class NewAppointmentComponent implements OnInit {
 				)
 			)
 			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+	}
+
+	private clearQueryParams() {
+		this.router.navigate([]);
 	}
 }

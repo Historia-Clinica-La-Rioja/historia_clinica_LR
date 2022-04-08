@@ -209,7 +209,8 @@
 						</div>
 					</mat-card-content>
 				</mat-card>
-				<app-assigned-appointments [patientId]="patientId"></app-assigned-appointments>
+				<app-assigned-appointments [patientId]="patientId" (newAppointmentRequired)="newAppointment()">
+				</app-assigned-appointments>
 			</div>
 		</div>
 	</div>
