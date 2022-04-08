@@ -274,14 +274,6 @@
 							<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_vacunas">
-						<ng-template mat-tab-label>
-							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
-						</ng-template>
-						<ng-template matTabContent>
-							<app-vacunas></app-vacunas>
-						</ng-template>
-					</mat-tab>
 					<mat-tab id="tab_problemas">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.problemas.TAB_LABEL' | translate | uppercase }}</span>
@@ -290,6 +282,14 @@
 							<app-problemas [nuevaConsultaRef]="dialogRef"
 								[internmentInProcess]="internmentEpisodeProcess">
 							</app-problemas>
+						</ng-template>
+					</mat-tab>
+					<mat-tab id="tab_vacunas">
+						<ng-template mat-tab-label>
+							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-vacunas></app-vacunas>
 						</ng-template>
 					</mat-tab>
 					<mat-tab *ngFor="let extensionTab of extensionTabs$ | async" [id]="extensionTab.head.id">
