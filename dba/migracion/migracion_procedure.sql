@@ -1,4 +1,4 @@
-CREATE PROCEDURE migrate.migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
+CREATE PROCEDURE quilmes.migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
     language plpgsql
 as
 $$
@@ -257,15 +257,15 @@ BEGIN
         FROM '|| from_schema ||'.medical_coverage AS mc
         JOIN '|| from_schema ||'.health_insurance AS hi ON mc.id = hi.id
         WHERE UPPER(name) NOT IN (SELECT UPPER(name) FROM '|| to_schema ||'.medical_coverage AS mcc
-        JOIN '|| to_schema ||'.health_insurance AS hii ON mcc.id = hii.id)'
+                                  JOIN '|| to_schema ||'.health_insurance AS hii ON mcc.id = hii.id) '
     LOOP
         EXECUTE format('INSERT INTO %I.medical_coverage (id, name, created_by, created_on, updated_by, updated_on, deleted, deleted_by, deleted_on, cuit)' ||
-                       'VALUES ((-$1-$2), $3, $4, $5)', to_schema)
-            USING temprow.id, temprow.name, temprow.created_by, temprow.created_on, temprow.updated_by,
+                       'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', to_schema)
+            USING temprow.id, temprow.name, temprow.created_by, temprow.created_on, temprow.updated_by, temprow.updated_on,
                 temprow.deleted, temprow.deleted_by, temprow.deleted_on, temprow.cuit;
 
         EXECUTE format('INSERT INTO %I.health_insurance (id, rnos, acronym)' ||
-                       'VALUES ($1, $2, $3)',to_schema) USING temprow.id, temprow.rnos, temprow3.acronym;
+                       'VALUES ($1, $2, $3)',to_schema) USING temprow.id, temprow.rnos, temprow.acronym;
     END LOOP;
 
     --------------------------------------------------------------------------------------------------------------------
@@ -291,20 +291,27 @@ BEGIN
             temprow.affiliate_number, temprow.private_health_insurance_details_id;
     END LOOP;
 
+   -- RAISE EXCEPTION 'LLEGO';
 
     FOR temprow IN EXECUTE 'SELECT pmc.id AS id, (-'|| offset_value ||'-patient_id) AS patient_id,
            pmc.medical_coverage_id AS medical_coverage_id, active, vigency_date,
            affiliate_number,
-           pmc.private_health_insurance_details_id AS private_health_insurance_details_id
+           pmc.private_health_insurance_details_id AS private_health_insurance_details_id, mc.name
         FROM '|| from_schema ||'.patient_medical_coverage AS pmc
         JOIN '|| from_schema ||'.medical_coverage AS mc ON pmc.medical_coverage_id = mc.id
         JOIN '|| from_schema ||'.health_insurance AS hi ON mc.id = hi.id'
        -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     LOOP
+       -- RAISE NOTICE '%', temprow.name;
         EXECUTE format('INSERT INTO %I.patient_medical_coverage (id, patient_id, medical_coverage_id, active, vigency_date,
                                                   affiliate_number, private_health_insurance_details_id)' ||
-                       'VALUES ((-$1-$2), $3, $4, $5, $6, $7, (-$1-$8))', to_schema)
-            USING offset_value, temprow.id, temprow.patient_id, temprow.medical_coverage_id, temprow.active, temprow.vigency_date,
+                       'VALUES ((-$1-$2), $3,
+                       (SELECT mcc.id FROM %I.medical_coverage AS mcc
+                       JOIN %I.health_insurance AS hii ON mcc.id = hii.id
+                       WHERE UPPER(mcc.name) = UPPER($4)
+                       LIMIT  1),
+                       $5, $6, $7, (-$1-$8))', to_schema, to_schema, to_schema)
+            USING offset_value, temprow.id, temprow.patient_id, temprow.name, temprow.active, temprow.vigency_date,
             temprow.affiliate_number, temprow.private_health_insurance_details_id;
     END LOOP;
 
@@ -323,10 +330,10 @@ BEGIN
                                   updated_on, physical_exam_note_id, studies_summary_note_id, evolution_note_id,
                                   clinical_impression_note_id, current_illness_note_id, indications_note_id, source_type_id,
                                   deleted, deleted_by, deleted_on)
-    SELECT (-'|| offset_value ||'-id), source_id, (-'|| offset_value ||'-other_note_id), status_id, type_id, (-'|| offset_value ||'-created_by),
+    SELECT (-'|| offset_value ||'-id), (-'|| offset_value ||'-source_id), (-'|| offset_value ||'-other_note_id), status_id, type_id, (-'|| offset_value ||'-created_by),
            (-'|| offset_value ||'-updated_by), created_on, updated_on, (-'|| offset_value ||'-physical_exam_note_id),
            (-'|| offset_value ||'-studies_summary_note_id), (-'|| offset_value ||'-evolution_note_id), (-'|| offset_value ||'-clinical_impression_note_id),
-           (-'|| offset_value ||'-current_illness_note_id), (-'|| offset_value ||'-indications_note_id), (-'|| offset_value ||'-source_type_id),
+           (-'|| offset_value ||'-current_illness_note_id), (-'|| offset_value ||'-indications_note_id), source_type_id,
            deleted, (-'|| offset_value ||'-deleted_by), deleted_on
     FROM  '|| from_schema ||'.document';
     -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
@@ -335,7 +342,7 @@ BEGIN
 
     query := 'INSERT INTO ' || to_schema || '.document_file (id, source_id, type_id, file_path, file_name, created_by, created_on, updated_by,
                                        updated_on, uuid_file, source_type_id, checksum, deleted, deleted_by, deleted_on)
-    SELECT (-'|| offset_value ||'-id), source_id, type_id, file_path, file_name, (-'|| offset_value ||'-created_by), created_on,
+    SELECT (-'|| offset_value ||'-id), (-'|| offset_value ||'-source_id), type_id, file_path, file_name, (-'|| offset_value ||'-created_by), created_on,
            (-'|| offset_value ||'-updated_by), updated_on, uuid_file, source_type_id, checksum, deleted,
            (-'|| offset_value ||'-deleted_by), deleted_on
     FROM '|| from_schema ||'.document_file';
@@ -670,4 +677,4 @@ BEGIN
 END;
 $$;
 
-CALL migrate.migrate(1000, 'public', 'migrate', 'QUILMES');
+CALL quilmes.migrate(1000, 'quilmes', 'public', 'QUILMES');
