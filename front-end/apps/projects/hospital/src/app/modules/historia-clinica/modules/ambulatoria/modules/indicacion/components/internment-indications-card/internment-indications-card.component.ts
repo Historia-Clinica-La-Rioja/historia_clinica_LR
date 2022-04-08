@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
-import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, getYear, isSameDay } from "date-fns";
+import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
 import { DietDto } from "@api-rest/api-model";
 import { DateTimeDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
@@ -88,34 +87,15 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			this.currentViewIsEntryDate = true;
 	}
 
-	private dietIndications(submitted: string): DietDto {
-		const today = new Date();
-		return {
-			id: 0,
-			patientId: this.patientId,
-			type: EIndicationType.DIET,
-			status: EIndicationStatus.INDICATED,
-			professionalId: this.professionalId,
-			createdBy: null,
-			indicationDate: {
-				year: getYear(this.actualDate),
-				month: getMonth(this.actualDate) + 1,
-				day: this.actualDate.getDate()
-			},
-			createdOn: null,
-			description: submitted
-		}
-	}
-
 	openDietDialog() {
 		const dialogRef = this.dialog.open(DietComponent, {
 			disableClose: false,
 			width: DIALOG_SIZE
 		});
 
-		dialogRef.afterClosed().subscribe(submitted => {
-			if (submitted) {
-				this.indicationsFacadeService.addDiet(this.dietIndications(submitted)).subscribe(_ => {
+		dialogRef.afterClosed().subscribe((diet: DietDto) => {
+			if (diet) {
+				this.indicationsFacadeService.addDiet(diet).subscribe(_ => {
 					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.diet.messages.SUCCESS');
 					this.indicationsFacadeService.updateIndication({ diets: true });
 				},
