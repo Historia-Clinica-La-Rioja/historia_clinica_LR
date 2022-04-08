@@ -6,6 +6,11 @@
 			"TODAY": "Hoy, ",
 			"YESTERDAY": "Ayer, ",
 			"TOMORROW": "Mañana, ",
+			"INDICATION_DATE": "Fecha de indicación",
+			"buttons": {
+				"CONFIRM": "si, confirmar ",
+				"CANCEL": "no, ajustar fecha"
+			},
 			"sections": {
 				"DIET": "Dieta",
 				"PARENTERAL_PLAN": "Planes parenterales",
