@@ -158,3 +158,55 @@ databaseChangeLog:
                 - column:
                     name: daily_volume
                     type: float
+
+    - changeSet:
+        id: update-parenteral_plan-via-type
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: via
+              newDataType: smallint
+              tableName: parenteral_plan
+
+    - changeSet:
+        id: update-parenteral_plan-frequency-type
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: frequency
+              newDataType: int
+              tableName: parenteral_plan
+
+    - changeSet:
+        id: update-parenteral_plan-frequency-name
+        author: fsimaro
+        changes:
+          - renameColumn:
+              columnDataType:
+              oldColumnName: frequency
+              newColumnName: frequency_id
+              tableName: parenteral_plan
+
+    - changeSet:
+        id: addNotNullConstraint-parenteral_plan-frequency_id
+        comment: Add not null constraint for column frequency_id in parenteral_plan
+        author: fsimaro
+        changes:
+          - addNotNullConstraint:
+              columnDataType: int
+              columnName: frequency_id
+              tableName: parenteral_plan
+              validate: true
+
+    - changeSet:
+        id: addForeignKeyConstraint-parenteral_plan-frequency_id
+        comment: Add foreign key constraint for column frequency_id in parenteral_plan to table frequency
+        author: fsimaro
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: frequency_id
+              baseTableName: parenteral_plan
+              constraintName: FK_parenteral_plan_frequency_id
+              referencedColumnNames: id
+              referencedTableName: frequency
+              validate: true
