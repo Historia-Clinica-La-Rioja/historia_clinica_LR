@@ -4,7 +4,7 @@
 
 <ng-template #calendar>
 	<section class="turnos" id="calendar">
-		<div class="header" id="header" fxLayout="row" fxLayoutAlign="space-between center">
+		<div class="header" id="header" fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayout.xs="column">
 			<mat-button-toggle-group>
 				<mat-button-toggle id="previous" class="navigation"
 								   mwlCalendarPreviousView
