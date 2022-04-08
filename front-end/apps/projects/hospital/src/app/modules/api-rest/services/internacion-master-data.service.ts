@@ -81,4 +81,9 @@ export class InternacionMasterDataService {
 		const url = `${environment.apiBase}/internments/masterdata/health/severity`;
 		return this.http.get<any[]>(url);
 	}
+
+	getVias(): Observable<any[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias`;
+		return this.http.get<any[]>(url);
+	}
 }
