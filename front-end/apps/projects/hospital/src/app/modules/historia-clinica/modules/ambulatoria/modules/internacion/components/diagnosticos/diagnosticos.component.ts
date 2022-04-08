@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from '../../dialogs/select-main-diagnosis/select-main-diagnosis.component';
 
@@ -27,7 +28,10 @@ export class DiagnosticosComponent implements OnInit {
 	@Input()
 	type: string;
 
-	constructor(public dialog: MatDialog) { }
+	constructor(
+		public dialog: MatDialog,
+		private snackBarService: SnackBarService
+	) { }
 
 	ngOnInit(): void {
 	}
@@ -45,8 +49,12 @@ export class DiagnosticosComponent implements OnInit {
 				if (isMainDiagnosis)
 					this.mainDiagnosis = diagnosis;
 				else {
-					this.diagnosticos.push(diagnosis);
-					this.diagnosisChange.emit(this.diagnosticos);
+					if (this.diagnosticos.filter(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt).length === 0){
+						this.diagnosticos.push(diagnosis);
+						this.diagnosisChange.emit(this.diagnosticos);
+					}
+					else
+						this.snackBarService.showError('internaciones.anamnesis.diagnosticos.messages.ERROR');
 				}
 			}
 		});

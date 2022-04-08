@@ -68,6 +68,9 @@
 				"ADD_MAIN_DIAGNOSIS": "+ Agregar diagnóstico principal",
 				"ADD_OTHER_DIAGNOSIS": "+ Agregar otro diagnóstico",
 				"CHANGE_MAIN_DIAGNOSIS": "Cambiar diagnóstico principal",
+				"messages": {
+					"ERROR": "Ha ingresado un diagnóstico duplicado"
+				},
 				"table": {
 					"TITLE": "Diagnósticos seleccionados",
 					"columns": {
