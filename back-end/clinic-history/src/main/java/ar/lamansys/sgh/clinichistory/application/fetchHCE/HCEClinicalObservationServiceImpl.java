@@ -32,11 +32,20 @@ public class HCEClinicalObservationServiceImpl implements HCEClinicalObservation
         LOG.debug(LOGGING_INPUT, patientId);
         List<Short> invalidDocumentTypes = Arrays.asList();
 		HCEMapClinicalObservationVo resultQuery = hceClinicalObservationRepository.getGeneralState(patientId, invalidDocumentTypes);
-        HCEAnthropometricDataBo result = resultQuery.getLastNAnthropometricData(0).orElse(null);
+        HCEAnthropometricDataBo result = resultQuery.getNAnthropometricData(0).orElse(null);
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
+    @Override
+	public List<HCEAnthropometricDataBo> getLast2AnthropometricDataGeneralState(Integer patientId) {
+		LOG.debug(LOGGING_INPUT, patientId);
+		List<Short> invalidDocumentTypes = Arrays.asList();
+		HCEMapClinicalObservationVo resultQuery = hceClinicalObservationRepository.getGeneralState(patientId, invalidDocumentTypes);
+		List<HCEAnthropometricDataBo> result = resultQuery.getLastNAnthropometricData(2);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
 
     @Override
     public Last2HCERiskFactorsBo getLast2RiskFactorsGeneralState(Integer patientId) {

@@ -1,5 +1,20 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEAllergyService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEHealthConditionsService;
@@ -39,20 +54,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institution.Instituti
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/hce/general-state")
@@ -166,6 +167,17 @@ public class HCEGeneralStateController {
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@GetMapping("/last-2-anthropometric-data")
+	public ResponseEntity<List<HCEAnthropometricDataDto>> getLast2AnthropometricData(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug(LOGGING_INPUT, institutionId, patientId);
+		List<HCEAnthropometricDataBo> resultService = hceClinicalObservationService.getLast2AnthropometricDataGeneralState(patientId);
+		List<HCEAnthropometricDataDto> result = hceGeneralStateMapper.toListHCEAnthropometricDataDto(resultService);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
     @GetMapping("/immunizations")
     public ResponseEntity<List<HCEImmunizationDto>> getImmunizations(
