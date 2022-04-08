@@ -89,6 +89,12 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 	openDietDialog() {
 		const dialogRef = this.dialog.open(DietComponent, {
+			data: {
+				entryDate: this.entryDate,
+				actualDate: this.actualDate,
+				patientId: this.patientId,
+				professionalId: this.professionalId
+			},
 			disableClose: false,
 			width: DIALOG_SIZE
 		});

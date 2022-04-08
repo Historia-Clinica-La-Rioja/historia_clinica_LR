@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DietDto } from "@api-rest/api-model";
 import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
-import { getMonth, getYear } from "date-fns";
+import { getMonth, getYear, isSameDay } from "date-fns";
+import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
+import { openConfirmDialog } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 
 @Component({
 	selector: 'app-diet',
@@ -16,11 +18,14 @@ export class DietComponent implements OnInit {
 	indicationDate: Date;
 
 	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: { entryDate:Date, actualDate:Date, patientId: number, professionalId: number},
 		private readonly formBuilder: FormBuilder,
-		private dialogRef: MatDialogRef<DietComponent>
+		private dialogRef: MatDialogRef<DietComponent>,
+		private readonly dialog: MatDialog,
 	) {	}
 
 	ngOnInit(): void {
+		this.indicationDate = this.data.actualDate;
 		this.form = this.formBuilder.group({
 			description: [null, [Validators.required]],
 		});
@@ -29,7 +34,16 @@ export class DietComponent implements OnInit {
 	save(): void {
 		if (this.form.valid) {
 			const diet = this.toDietDto();
-			this.dialogRef.close(diet);		
+			const dietIndicationDate = dateDtoToDate(diet.indicationDate);
+			if (!isSameDay(dietIndicationDate, this.data.actualDate)) {
+				openConfirmDialog(this.dialog, dietIndicationDate).subscribe(confirm => {
+						if (confirm === true) {
+							this.dialogRef.close(diet);
+						}
+					});
+			}
+			else
+				this.dialogRef.close(diet);
 		}
 	}
 
@@ -49,5 +63,9 @@ export class DietComponent implements OnInit {
 			createdOn: null,
 			description: this.form.value.description
 		}
+	}
+
+	setIndicationDate(d: Date){
+		this.indicationDate = d;
 	}
 }

@@ -2,6 +2,9 @@ import { Title } from "@presentation/components/indication/indication.component"
 import { DateTimeDto } from "@api-rest/api-model";
 import { dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
+import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { Observable } from "rxjs";
 
 export enum MONTHS_OF_YEAR {
 	Enero,
@@ -65,4 +68,25 @@ export function showTimeElapsed(createdOn: DateTimeDto): string {
 	if (difference === 1)
 		return "Hace " + difference + " día"
 	return "Hace " + difference + " días"
+}
+
+export function openConfirmDialog(dialog: MatDialog, date: Date): Observable<any> {
+	const keyPrefix = 'indicacion.internment-card.buttons';
+	const dateString = date.getDate() + "/" + (date.getMonth() +1) + "/" + date.getFullYear();
+	const dateHTML = `<strong>${dateString}</strong>`;
+	const messageHTML = `<strong>¿Desea confirmar la indicación?</strong>`;
+	const dialogRef = dialog.open(ConfirmDialogComponent, {
+		data: {
+			content: `La indicación se estará realizando para el día ${dateHTML}. Si desea realizar la indicación para el dia de hoy, por favor
+					seleccione la fecha indicada en el campo “Fecha de indicación”. ${messageHTML}`,
+			okButtonLabel: `${keyPrefix}.CONFIRM`,
+			cancelButtonLabel: `${keyPrefix}.CANCEL`,
+			showMatIconError: true,
+		},
+		width: "40%",
+		autoFocus: false,
+		disableClose: true,
+	});
+
+	return dialogRef.afterClosed();
 }

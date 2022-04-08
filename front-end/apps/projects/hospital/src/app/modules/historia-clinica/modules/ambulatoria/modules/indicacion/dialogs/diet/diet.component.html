@@ -16,6 +16,7 @@
 						placeholder="{{'indicacion.internment-card.dialogs.diet.DESCRIPTION' | translate }}">
 					</textarea>
 				</mat-form-field>
+				<app-datepicker [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate" [dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
 				<div actions id="buttons" fxLayoutAlign="end end">
 					<button mat-raised-button color="primary" id="confirm_button">
 						<span [translate]="'buttons.CONFIRM'"></span>
