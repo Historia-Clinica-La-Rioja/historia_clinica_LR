@@ -30,6 +30,7 @@
 			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false"></app-elemento-diagnostico>
 			<hr *ngIf="diagnosticos.length - 1 != diagnosticos.indexOf(diagnosis)">
 		</div>
+		<br>
 		<button class="diagnoses-action-button" mat-button color="primary" (click)="openCreationDialog(false)">
 			{{ 'internaciones.anamnesis.diagnosticos.ADD_OTHER_DIAGNOSIS' | translate }}
 		</button>
