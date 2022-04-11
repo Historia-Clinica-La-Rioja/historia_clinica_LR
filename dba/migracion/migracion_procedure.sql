@@ -7,6 +7,7 @@ DECLARE
     temprow RECORD;
     temprow2 RECORD;
     temprow3 RECORD;
+    exists_patient BOOLEAN;
 BEGIN
     IF (offset_value < 1000) THEN
         RAISE EXCEPTION 'No se puede elegir un offset menor a 1000';
@@ -43,42 +44,71 @@ BEGIN
     FROM '|| from_schema || '.person_extended AS pe';
     EXECUTE(query);
 
-    --------------------------------------------------------------------------------------------------------------------
-    -- pacientes nuevos se deben marcar como validados
-    query := 'INSERT INTO ' || to_schema || '.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
-                                 comments)
-    SELECT (-'|| offset_value ||'-pa.id), (-'|| offset_value ||'-pa.person_id), 2, pa.possible_duplicate,
-           pa.national_id, pa.identity_verification_status_id, pa.comments
-    FROM '|| from_schema || '.patient AS pa
-    JOIN '|| from_schema || '.person AS p ON (p.id = pa.person_id)
-    WHERE NOT EXISTS (SELECT p1.id FROM '|| to_schema ||'.person AS p1
-                      WHERE UPPER(p.identification_number) = UPPER(p1.identification_number)
-                      AND p.identification_number = p1.identification_number
-                      AND p.gender_id = p1.gender_id
-                      AND p.birth_date = p1.birth_date);';
-    EXECUTE(query);
 
     CREATE TEMPORARY TABLE temp_duplicate_patient_ids (id int not null) ON COMMIT DROP;
 
     FOR temprow IN EXECUTE
-        'SELECT pa.id AS id, (-'|| offset_value ||'-pa.person_id) AS person_id,
-            3 AS type_id, true AS possible_duplicate, pa.national_id, pa.identity_verification_status_id, pa.comments
+        'SELECT pa.id AS id, pa.person_id, type_id, possible_duplicate, pa.national_id,
+        pa.identity_verification_status_id, pa.comments,
+        UPPER(p.identification_number::varchar(11)) AS identification_number, p.gender_id, p.birth_date
         FROM '|| from_schema || '.patient AS pa
-        JOIN '|| from_schema || '.person AS p ON (p.id = pa.person_id)
-        WHERE EXISTS (SELECT p1.id FROM '|| to_schema ||'.person AS p1
-                      WHERE UPPER(p.identification_number) = UPPER(p1.identification_number)
-                      AND p.identification_number = p1.identification_number
-                      AND p.gender_id = p1.gender_id
-                      AND p.birth_date = p1.birth_date)'
+        JOIN '|| from_schema || '.person AS p ON (p.id = pa.person_id)'
     LOOP
-        EXECUTE format('INSERT INTO %I.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
+        --RAISE NOTICE '%', temprow;
+        IF ((temprow.identification_number IS NULL) OR
+           (temprow.gender_id IS NULL) OR
+           (temprow.birth_date IS NULL))
+        THEN
+            IF (temprow.type_id = (1::smallint)) --SI ESTA COMO PERMANENTE VALIDADO EN LA BASE ORIGEN, LO TENGO QUE MARCAR COMO VALIDADO PARA QUE EL NUEVO DOMINIO LO FEDERE.
+            THEN
+                EXECUTE format('INSERT INTO %I.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
                                  comments)
-        VALUES ($1,$2,$3,$4,$5,$6,$7)', to_schema) USING
-         (-offset_value-temprow.id), temprow.person_id, temprow.type_id, temprow.possible_duplicate, temprow.national_id,
-         temprow.identity_verification_status_id, temprow.comments;
-
-        INSERT INTO temp_duplicate_patient_ids (id) VALUES (temprow.id);
+                VALUES ($1,$2,$3,$4,$5,$6,$7)', to_schema) USING
+                 (-offset_value-temprow.id), (-offset_value-temprow.person_id), 2, temprow.possible_duplicate, temprow.national_id,
+                 temprow.identity_verification_status_id, temprow.comments;
+            ELSE
+                EXECUTE format('INSERT INTO %I.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
+                                 comments)
+                VALUES ($1,$2,$3,$4,$5,$6,$7)', to_schema) USING
+                 (-offset_value-temprow.id), (-offset_value-temprow.person_id), temprow.type_id, temprow.possible_duplicate, temprow.national_id,
+                 temprow.identity_verification_status_id, temprow.comments;
+            END IF;
+        ELSE
+-- RAISE NOTICE 'ENTRO2 %', temprow;
+            EXECUTE ('SELECT COUNT(p1.id) > 0
+                      FROM '|| to_schema ||'.person AS p1
+                      JOIN '|| to_schema ||'.patient AS pt1 ON (p1.id = pt1.person_id)
+                      WHERE UPPER(p1.identification_number) = UPPER('''|| temprow.identification_number ||''')
+                      AND p1.gender_id = '|| temprow.gender_id ||'
+                      AND p1.birth_date = '''|| temprow.birth_date ||'''') INTO exists_patient;
+            IF (exists_patient)
+            THEN
+                EXECUTE format('INSERT INTO %I.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
+                                     comments)
+                VALUES ($1,$2,$3,$4,$5,$6,$7)', to_schema) USING
+                 (-offset_value-temprow.id), (-offset_value-temprow.person_id), 3, true, temprow.national_id,
+                    temprow.identity_verification_status_id, temprow.comments;
+                INSERT INTO temp_duplicate_patient_ids (id) VALUES (temprow.id);
+            ELSE
+                --RAISE NOTICE 'Paciente nuevo -> %', temprow;
+                IF (temprow.type_id = (1::smallint)) --SI ESTA COMO PERMANENTE VALIDADO EN LA BASE ORIGEN, LO TENGO QUE MARCAR COMO VALIDADO PARA QUE EL NUEVO DOMINIO LO FEDERE.
+                THEN
+                    EXECUTE format('INSERT INTO %I.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
+                                     comments)
+                    VALUES ($1,$2,$3,$4,$5,$6,$7)', to_schema) USING
+                     (-offset_value-temprow.id), (-offset_value-temprow.person_id), 2, temprow.possible_duplicate, temprow.national_id,
+                     temprow.identity_verification_status_id, temprow.comments;
+                ELSE
+                    EXECUTE format('INSERT INTO %I.patient (id, person_id, type_id, possible_duplicate, national_id, identity_verification_status_id,
+                                     comments)
+                    VALUES ($1,$2,$3,$4,$5,$6,$7)', to_schema) USING
+                     (-offset_value-temprow.id), (-offset_value-temprow.person_id), temprow.type_id, temprow.possible_duplicate, temprow.national_id,
+                     temprow.identity_verification_status_id, temprow.comments;
+                END IF;
+            END IF;
+        END IF;
     END LOOP;
+
 
     --------------------------------------------------------------------------------------------------------------------
     -- Usuarios con username repetidos
