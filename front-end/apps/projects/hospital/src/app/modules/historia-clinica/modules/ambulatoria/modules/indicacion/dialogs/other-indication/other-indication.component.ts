@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OtherIndicationDto } from '@api-rest/api-model';
 import { EIndicationStatus, EIndicationType } from '@api-rest/api-model';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
-import { getMonth, getYear } from 'date-fns';
-import { HOURS_LIST, INTERVALS_TIME, OTHER_FREQUENCY, OTHER_INDICATION_ID } from '../../constants/internment-indications';
+import { getMonth, getYear, isSameDay } from 'date-fns';
+import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_INDICATION_ID } from '../../constants/internment-indications';
 
 @Component({
 	selector: 'app-other-indication',
@@ -26,7 +27,7 @@ export class OtherIndicationComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, othersIndicatiosType: OtherIndicationTypeDto[] },
 		private readonly formBuilder: FormBuilder,
 		private dialogRef: MatDialogRef<OtherIndicationComponent>,
-		private dialog: MatDialogRef<OtherIndicationComponent>
+		private dialog: MatDialog
 
 	) { }
 
@@ -114,11 +115,17 @@ export class OtherIndicationComponent implements OnInit {
 
 	submit(): void {
 		if (this.form.valid) {
-			if (this.form.controls.frequencyHour?.value) {
-				this.form.controls.interval.setValue(this.form.controls.frequencyHour.value);
-				const otherIndicatio = this.toIndicationDto(this.form.value);
+			const otherIndicatio = this.toIndicationDto(this.form.value);
+			const otherIndicatioDate = dateDtoToDate(otherIndicatio.indicationDate);
+			if (!isSameDay(otherIndicatioDate, this.data.actualDate)) {
+				openConfirmDialog(this.dialog, otherIndicatioDate).subscribe(confirm => {
+					if (confirm === true) {
+						this.dialogRef.close(otherIndicatio);
+					}
+				});
+			} else
 				this.dialogRef.close(otherIndicatio);
-			}
+
 		}
 	}
 
@@ -161,7 +168,7 @@ export class OtherIndicationComponent implements OnInit {
 		}
 	}
 
-	setIndicationDate(d: Date){
+	setIndicationDate(d: Date) {
 		this.indicationDate = d;
 	}
 
