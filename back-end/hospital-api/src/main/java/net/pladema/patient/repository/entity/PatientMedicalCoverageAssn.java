@@ -46,6 +46,9 @@ public class PatientMedicalCoverageAssn implements Serializable {
     @Column(name = "private_health_insurance_details_id")
     private Integer privateHealthInsuranceDetailsId;
 
+	@Column(name = "condition_id")
+	private Short conditionId;
+
     public PatientMedicalCoverageAssn(PatientMedicalCoverageBo coverageBo, Integer patientId){
         if (coverageBo.getId() != null)
             this.id = coverageBo.getId();

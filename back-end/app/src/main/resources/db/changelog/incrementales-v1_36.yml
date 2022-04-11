@@ -261,3 +261,15 @@ databaseChangeLog:
                 WHERE rw = 1
                 AND status_id <> '723510000'
                 ORDER BY t.updated_on DESC;
+    
+    - changeSet:
+        id: patient_medical_coverage-addConditionColumn
+        comment: Create column condition to patient_medical_coverage
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: condition_id
+                    type: smallint
+              tableName: patient_medical_coverage
