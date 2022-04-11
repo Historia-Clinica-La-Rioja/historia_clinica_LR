@@ -26,7 +26,6 @@ export class OtherIndicationComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, othersIndicatiosType: OtherIndicationTypeDto[] },
 		private readonly formBuilder: FormBuilder,
 		private dialogRef: MatDialogRef<OtherIndicationComponent>,
-
 		private dialog: MatDialogRef<OtherIndicationComponent>
 
 	) { }
@@ -162,6 +161,9 @@ export class OtherIndicationComponent implements OnInit {
 		}
 	}
 
+	setIndicationDate(d: Date){
+		this.indicationDate = d;
+	}
 
 }
 
