@@ -132,6 +132,10 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			width: DIALOG_SIZE,
 			height: '80%',
 			data: {
+				entryDate: this.entryDate,
+				actualDate: this.actualDate,
+				patientId: this.patientId,
+				professionalId: this.professionalId,
 				othersIndicatiosType: this.othersIndicatiosType
 			}
 		});
@@ -139,7 +143,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(otherIndicatio => {
 
 			if (otherIndicatio) {
-				this.indicationsFacadeService.addOtherIndication(this.toIndicationDto(otherIndicatio)).subscribe(_ => {
+				this.indicationsFacadeService.addOtherIndication(otherIndicatio).subscribe(_ => {
 					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.other-indication.messages.SUCCESS');
 					this.indicationsFacadeService.updateIndication({ otherIndication: true });
 				},

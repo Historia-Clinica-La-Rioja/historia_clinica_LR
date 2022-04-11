@@ -1,7 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { OtherIndicationDto } from '@api-rest/api-model';
+import { EIndicationStatus, EIndicationType } from '@api-rest/api-model';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
+import { getMonth, getYear } from 'date-fns';
 import { HOURS_LIST, INTERVALS_TIME, OTHER_FREQUENCY, OTHER_INDICATION_ID } from '../../constants/internment-indications';
 
 @Component({
@@ -17,14 +20,20 @@ export class OtherIndicationComponent implements OnInit {
 	otherFrequency = OTHER_FREQUENCY;
 	DEFAULT_RADIO_OPTION = '0';
 	OtherIndication = OTHER_INDICATION_ID;
+	indicationDate: Date;
+
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { othersIndicatiosType: OtherIndicationTypeDto[] },
+		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, othersIndicatiosType: OtherIndicationTypeDto[] },
 		private readonly formBuilder: FormBuilder,
+		private dialogRef: MatDialogRef<OtherIndicationComponent>,
+
 		private dialog: MatDialogRef<OtherIndicationComponent>
 
 	) { }
 
 	ngOnInit(): void {
+		this.indicationDate = this.data.actualDate;
+
 		this.othersIndicatiosType = this.data.othersIndicatiosType;
 
 		this.form = this.formBuilder.group({
@@ -106,11 +115,53 @@ export class OtherIndicationComponent implements OnInit {
 
 	submit(): void {
 		if (this.form.valid) {
-			if (this.form.controls.frequencyHour?.value)
+			if (this.form.controls.frequencyHour?.value) {
 				this.form.controls.interval.setValue(this.form.controls.frequencyHour.value);
-			this.dialog.close(this.form.value);
+				const otherIndicatio = this.toIndicationDto(this.form.value);
+				this.dialogRef.close(otherIndicatio);
+			}
 		}
 	}
+
+	private toIndicationDto(otherIndicatio: any): OtherIndicationDto {
+		return {
+			id: 0,
+			patientId: this.data.patientId,
+			type: EIndicationType.OTHER_INDICATION,
+			status: EIndicationStatus.INDICATED,
+			professionalId: this.data.professionalId,
+			createdBy: null,
+			indicationDate: {
+				year: getYear(this.indicationDate),
+				month: getMonth(this.indicationDate) + 1,
+				day: this.indicationDate.getDate()
+			},
+			createdOn: null,
+			otherIndicationTypeId: otherIndicatio.indicationType,
+			description: otherIndicatio.note,
+			dosage: {
+				frequency: (otherIndicatio?.interval) ? (otherIndicatio?.interval) : null,
+				diary: true,
+				chronic: true,
+				duration: 0,
+				periodUnit: (otherIndicatio?.event) ? "e" : "h",
+				event: otherIndicatio.event,
+				startDateTime: (otherIndicatio?.startTime) ? {
+					date: {
+						year: this.indicationDate.getUTCFullYear(),
+						month: this.indicationDate.getUTCMonth() + 1,
+						day: this.indicationDate.getUTCDay()
+					},
+					time: {
+						hours: otherIndicatio?.startTime,
+						minutes: 0
+					}
+				} : null,
+			},
+			otherType: otherIndicatio.indication
+		}
+	}
+
 
 }
 
