@@ -59,6 +59,8 @@ public class PatientMedicalCoverageAssn implements Serializable {
         this.affiliateNumber = coverageBo.getAffiliateNumber();
         if (coverageBo.getPrivateHealthInsuranceDetails() != null)
             this.privateHealthInsuranceDetailsId = coverageBo.getPrivateHealthInsuranceDetails().getId();
-    }
+		if(coverageBo.getCondition()!=null)
+			this.conditionId = coverageBo.getCondition().getId();
+	}
 
 }

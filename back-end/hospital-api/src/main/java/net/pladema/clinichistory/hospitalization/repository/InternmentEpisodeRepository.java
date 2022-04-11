@@ -184,7 +184,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.patient.repository.domain.PatientMedicalCoverageVo" +
 			"(pmc.id, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id, mc.name, " +
-			"mc.cuit, hi.rnos, hi.acronym, phi.id, phid) " +
+			"mc.cuit, hi.rnos, hi.acronym, phi.id, phid, pmc.conditionId) " +
 			"FROM PatientMedicalCoverageAssn pmc " +
 			"JOIN InternmentEpisode ie ON (ie.patientMedicalCoverageId = pmc.id) " +
 			"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +

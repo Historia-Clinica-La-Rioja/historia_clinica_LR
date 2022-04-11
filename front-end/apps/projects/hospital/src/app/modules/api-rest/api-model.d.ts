@@ -1909,6 +1909,7 @@ export interface PatientInteroperabilityDto {
 export interface PatientMedicalCoverageDto {
     active: boolean;
     affiliateNumber?: string;
+    condition: EPatientMedicalCoverageCondition;
     id?: number;
     medicalCoverage: CoverageDtoUnion;
     privateHealthInsuranceDetails?: PrivateHealthInsuranceDetailsDto;
@@ -2620,6 +2621,11 @@ export const enum EMedicalCoverageTypeDto {
 
 export const enum EOdontologyTopicDto {
     NUEVA_CONSULTA = "NUEVA_CONSULTA",
+}
+
+export const enum EPatientMedicalCoverageCondition {
+    VOLUNTARIA = "VOLUNTARIA",
+    OBLIGATORIA = "OBLIGATORIA",
 }
 
 export const enum ERole {
