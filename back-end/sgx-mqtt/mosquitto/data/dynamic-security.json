@@ -22,7 +22,9 @@
 			"username":	"hsi",
 			"textname":	"",
 			"textdescription":	"",
-			"roles":	[],
+			"roles":	[{
+					"rolename":	"PublicadorHSI"
+				}],
 			"password":	"07EPZtnUNSis8Allidg6bacUOeSFgpbhHpUy/2TqwhqiojLazCJJewLGyXoO6umu67/1aWEapK+jVS0Y6IOFng==",
 			"salt":	"sXtwby6m3YhQDBWM",
 			"iterations":	101
@@ -38,6 +40,16 @@
 		}],
 	"groups":	[],
 	"roles":	[{
+			"rolename":	"PublicadorHSI",
+			"textname":	"Permite publicar bajo cualquier topico con el prefijo HSI",
+			"textdescription":	"Permite publicar bajo cualquier topico con el prefijo HSI",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"HSI/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
 			"rolename":	"client",
 			"textdescription":	"Read/write access to the full application topic hierarchy.",
 			"acls":	[{
