@@ -2410,6 +2410,11 @@ export interface SnomedSearchItemDto {
     pt: PreferredTermDto;
 }
 
+export interface SnomedTemplateDto {
+    concepts: SnomedSearchItemDto[];
+    description: string;
+}
+
 export interface SnvsEventDto {
     description: string;
     eventId: number;
