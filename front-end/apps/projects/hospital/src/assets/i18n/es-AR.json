@@ -77,7 +77,9 @@
 		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga",
 		"CUIT_LABEL": "CUIT",
 		"PLAN_LABEL": "Plan",
-		"AFFILIATE_NUMBER_LABEL": "Nro de afiliado"
+		"AFFILIATE_NUMBER_LABEL": "Nro de afiliado",
+		"VOLUNTARY": "Voluntaria",
+		"MANDATORY": "Obligatoria"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"

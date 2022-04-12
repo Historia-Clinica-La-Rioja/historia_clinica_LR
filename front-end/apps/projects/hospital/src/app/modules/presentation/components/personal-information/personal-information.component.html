@@ -69,6 +69,9 @@
 					<span>
 						{{ patientMC.medicalCoverage?.name}}
 					</span>
+					<span class="lowercase capitalize-first-letter">
+						{{getMedicalCoveragePlanText(patientMC)}}
+					</span>
 					<span fxLayout="row" fxLayoutGap="10px">
 						<span>{{ 'Nro afiliado/credencial:' }}</span>
 						<span *ngIf="patientMC.affiliateNumber; else noInformation">
