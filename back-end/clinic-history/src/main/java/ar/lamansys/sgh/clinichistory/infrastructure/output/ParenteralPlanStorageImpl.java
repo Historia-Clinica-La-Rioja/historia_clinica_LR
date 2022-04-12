@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ParenteralPlanBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.FrequencyRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.OtherPharmacoRepository;
@@ -19,12 +20,16 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.Frequency;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherPharmaco;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.ParenteralPlan;
+import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 @Service
@@ -38,6 +43,7 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 	private final SnomedService snomedService;
 	private final FrequencyRepository frequencyRepository;
 	private final OtherPharmacoRepository otherPharmacoRepository;
+	private final SharedHospitalUserPort sharedHospitalUserPort;
 
 	@Override
 	public Integer createParenteralPlan(ParenteralPlanBo bo) {
@@ -54,6 +60,22 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 		log.debug("Output -> {}", parenteralPlanId);
 		return parenteralPlanId;
 	}
+
+	@Override
+	public List<ParenteralPlanBo> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<ParenteralPlanBo> result = parenteralPlanRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId())
+				.stream()
+				.map(entity -> {
+					ParenteralPlanBo ppBo = mapToBo(entity);
+					HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(ppBo.getCreatedBy());
+					ppBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+					return ppBo;})
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 
 	private void saveOtherPharmaco (OtherPharmacoBo bo){
 		OtherPharmaco otherPharmaco = new OtherPharmaco();

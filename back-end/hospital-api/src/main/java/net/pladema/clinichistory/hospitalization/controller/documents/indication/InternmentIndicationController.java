@@ -139,6 +139,16 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/parenteral-plans")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	public ResponseEntity<List<ParenteralPlanDto>> getInternmentEpisodeParenteralPlans(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+		List<ParenteralPlanDto> result = internmentParenteralPlanService.getInternmentEpisodeParenteralPlans(internmentEpisodeId);
+		log.debug("Output => {}", result.toString());
+		return ResponseEntity.ok(result);
+	}
+
+
 	private InternmentDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
 		InternmentDietBo result = new InternmentDietBo();
 		result.setDescription(dto.getDescription());
@@ -183,7 +193,7 @@ public class InternmentIndicationController {
 	private DosageBo toDosageBo(NewDosageDto dto, DateDto indicationDate) {
 		DosageBo result = new DosageBo();
 		result.setFrequency(dto.getFrequency());
-		if(dto.getPeriodUnit()!=null)
+		if(dto.getPeriodUnit() != null)
 			result.setPeriodUnit(EUnitsOfTimeBo.map(dto.getPeriodUnit()));
 		LocalDateTime startDate = (dto.getStartDateTime()!=null)
 				? localDateMapper.fromDateTimeDto(dto.getStartDateTime())

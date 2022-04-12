@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolationException;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +53,14 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 		return result;
 	}
 
+	@Override
+	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<ParenteralPlanDto> result = sharedIndicationPort.getInternmentEpisodeParenteralPlans(internmentEpisodeId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
 		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
@@ -60,6 +69,7 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 
 	private ParenteralPlanDto toParenteralPlanDto (InternmentParenteralPlanBo bo){
 		ParenteralPlanDto result = new ParenteralPlanDto();
+		result.setSnomed(new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt()));
 		result.setPharmacos(bo.getPharmacos().stream().map(this::toOtherPharmacoDto).collect(Collectors.toList()));
 		result.setDosage(toDosageDto(bo.getDosage()));
 		result.setFrequency(toFrequencyDto(bo.getFrequency()));
