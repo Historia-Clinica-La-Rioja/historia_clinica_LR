@@ -19,6 +19,14 @@
 			"salt":	"b0VSqBo0uiQnlS9Y",
 			"iterations":	101
 		}, {
+			"username":	"hsi",
+			"textname":	"",
+			"textdescription":	"",
+			"roles":	[],
+			"password":	"07EPZtnUNSis8Allidg6bacUOeSFgpbhHpUy/2TqwhqiojLazCJJewLGyXoO6umu67/1aWEapK+jVS0Y6IOFng==",
+			"salt":	"sXtwby6m3YhQDBWM",
+			"iterations":	101
+		}, {
 			"username":	"streamsheets",
 			"textname":	"Streamsheets User",
 			"roles":	[{
