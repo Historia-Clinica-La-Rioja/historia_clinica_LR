@@ -37,6 +37,14 @@
 			"password":	"JYNxiUk080yOJRY1ouK/8KXX8z4Su7Izp4LIfIHBXSFuVbkiAEsiQixJWaH2/FyCJyMW9rgWX3nl1zQk1Irnzg==",
 			"salt":	"2usWJu+zfRRk67ev",
 			"iterations":	101
+		}, {
+			"username":	"tareas",
+			"textname":	"",
+			"textdescription":	"",
+			"roles":	[],
+			"password":	"wLG5+jSubntJHSD8a7gTFv7H0ah/Ovdidm3bJw9mJQOpIKGkNV4KhnLMUl8G52U9AWJsGZf+ntwkh58S/JDM5A==",
+			"salt":	"k3Z/QT1YYRb6ADGz",
+			"iterations":	101
 		}],
 	"groups":	[],
 	"roles":	[{
