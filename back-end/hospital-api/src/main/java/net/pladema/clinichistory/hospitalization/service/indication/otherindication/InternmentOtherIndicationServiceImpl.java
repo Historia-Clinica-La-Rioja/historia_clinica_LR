@@ -8,7 +8,6 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherIndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedIndicationPort;

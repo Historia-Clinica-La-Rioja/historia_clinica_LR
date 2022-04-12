@@ -2,7 +2,6 @@ package ar.lamansys.sgh.clinichistory.application.indication.createotherindicati
 
 import ar.lamansys.sgh.clinichistory.application.ports.OtherIndicationStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherIndicationBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.OtherIndicationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

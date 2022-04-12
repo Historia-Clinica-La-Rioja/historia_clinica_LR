@@ -13,7 +13,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;

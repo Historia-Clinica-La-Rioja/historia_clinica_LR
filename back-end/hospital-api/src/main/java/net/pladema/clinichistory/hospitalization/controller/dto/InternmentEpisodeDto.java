@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,9 +1,8 @@
 package net.pladema.person.controller.mapper;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.GenderDto;
-import net.pladema.person.controller.dto.SelfPerceivedGenderDto;
 import net.pladema.person.repository.entity.Gender;
-import net.pladema.person.repository.entity.SelfPerceivedGender;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 

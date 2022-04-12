@@ -1,8 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos;
 
 import ar.lamansys.sgh.clinichistory.application.ports.PharmacoStorage;
-import ar.lamansys.sgh.clinichistory.domain.ips.OtherIndicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
