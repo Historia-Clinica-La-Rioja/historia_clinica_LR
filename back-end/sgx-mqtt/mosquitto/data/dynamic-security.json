@@ -1,0 +1,121 @@
+{
+	"defaultACLAccess":	{
+		"publishClientSend":	true,
+		"publishClientReceive":	true,
+		"subscribe":	true,
+		"unsubscribe":	true
+	},
+	"clients":	[{
+			"username":	"cedalo",
+			"textname":	"Admin user",
+			"roles":	[{
+					"rolename":	"dynsec-admin"
+				}, {
+					"rolename":	"sys-observe"
+				}, {
+					"rolename":	"topic-observe"
+				}],
+			"password":	"UlumsKJGGmZGYmM/7aGUubyS7SfkS87TXtPsdr6jeDlx15Pwmyt009f/M9dF6NX1E+WzKi0vG+ZDHtwrWIrTWQ==",
+			"salt":	"b0VSqBo0uiQnlS9Y",
+			"iterations":	101
+		}, {
+			"username":	"streamsheets",
+			"textname":	"Streamsheets User",
+			"roles":	[{
+					"rolename":	"client"
+				}],
+			"password":	"JYNxiUk080yOJRY1ouK/8KXX8z4Su7Izp4LIfIHBXSFuVbkiAEsiQixJWaH2/FyCJyMW9rgWX3nl1zQk1Irnzg==",
+			"salt":	"2usWJu+zfRRk67ev",
+			"iterations":	101
+		}],
+	"groups":	[],
+	"roles":	[{
+			"rolename":	"client",
+			"textdescription":	"Read/write access to the full application topic hierarchy.",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"publishClientReceive",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"unsubscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"dynsec-admin",
+			"textname":	"",
+			"textdescription":	"Grants access to administer clients/groups/roles.",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"$CONTROL/dynamic-security/#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"publishClientReceive",
+					"topic":	"$CONTROL/dynamic-security/#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"$CONTROL/dynamic-security/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"sys-notify",
+			"textname":	"",
+			"textdescription":	"Allow bridges to publish connection state messages.",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"$SYS/broker/connection/+/state",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"sys-observe",
+			"textname":	"",
+			"textdescription":	"Observe the $SYS topic hierarchy.",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"$SYS/#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"$SYS/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"topic-observe",
+			"textdescription":	"Read only access to the full application topic hierarchy.",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"unsubscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}]
+}

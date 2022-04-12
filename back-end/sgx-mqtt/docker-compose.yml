@@ -1,11 +1,55 @@
-version: "3.4"
+version: "3.6"
 services:
-    mosquitto:
-        image: eclipse-mosquitto:latest
-        hostname: mosquitto
-        container_name: mosquitto
-        ports:
-            - "1883:1883"
-            - "9001:9001"
-        volumes:
-            - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+  mosquitto:
+    image: eclipse-mosquitto:2-openssl
+    ports:
+      - 9001:9001
+    networks:
+      - cedalo-platform
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+  management-center:
+    image: cedalo/management-center:2
+    ports:
+      - 8088:8088
+    depends_on:
+      - mosquitto
+    networks:
+      - cedalo-platform
+    environment:
+        CEDALO_MC_BROKER_ID: mosquitto-2.0
+        CEDALO_MC_BROKER_NAME: Mosquitto 2.0
+        CEDALO_MC_BROKER_URL: ws://mosquitto:9001
+        CEDALO_MC_BROKER_USERNAME: cedalo
+        CEDALO_MC_BROKER_PASSWORD: 3brSAcXSum
+        CEDALO_MC_USERNAME: cedalo
+        CEDALO_MC_PASSWORD: mmcisawesome
+        CEDALO_STREAMSHEETS_ID: streamsheets-local
+        CEDALO_STREAMSHEETS_NAME: Streamsheets
+        CEDALO_STREAMSHEETS_DESCRIPTION: Local Streamsheets
+        CEDALO_STREAMSHEETS_URL: http://localhost:8081
+  streamsheets:
+    image: cedalo/streamsheets:2-milestone
+    ports:
+      - 8081:8081 # Frontend and APIs
+    expose:
+      - 8081
+    volumes:
+      - streamsheets-data:/var/lib/mongodb
+      - ./streamsheets/init.json:/streamsheets/packages/gateway/config/init.json
+      - ./streamsheets/data:/streamsheets/data
+    environment:
+      FILE_STREAM_DEFAULT_ROOT: "/streamsheets/data/filestream"
+    networks:
+      - cedalo-platform
+    depends_on:
+      - mosquitto
+    # logging:
+    #   driver: "none"
+volumes:
+  streamsheets-data:
+    external: true
+networks:
+  cedalo-platform:
+    name: cedalo-platform
