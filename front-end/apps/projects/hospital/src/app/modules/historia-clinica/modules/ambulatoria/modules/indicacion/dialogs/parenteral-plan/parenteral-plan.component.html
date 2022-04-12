@@ -1,0 +1,173 @@
+<ng-container *ngIf="searchSnomedConcept.salineSnomedConcept else SearchSalineSnomedConcept">
+
+	<div mat-dialog-title fxLayoutAlign="space-between">
+		<div class="mat-h2" [translate]="'indicacion.internment-card.dialogs.parenteral-plan.TITLE'"></div>
+		<button type="button" mat-icon-button (click)="close()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<mat-dialog-content fxLayout="column" fxLayoutGap="15px">
+		<form [formGroup]="searchSnomedConcept.salineForm" fxLayout="column">
+			<mat-form-field appearance="outline">
+				<mat-label>{{'indicacion.internment-card.dialogs.parenteral-plan.add-snomed-concept.SEARCH' | translate | titlecase}}</mat-label>
+				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
+				<button id="clear" mat-button matSuffix color="warn" mat-icon-button *ngIf="searchSnomedConcept.salineForm.value.snomed"
+						(click)="resetForm()">
+					<mat-icon>close</mat-icon>
+				</button>
+				<mat-error *ngIf="searchSnomedConcept.salineForm.hasError('required', 'saline')" [translate]="'forms.REQUIRED'"></mat-error>
+			</mat-form-field>
+		</form>
+		<form [formGroup]="parenteralPlanForm" fxLayout="column">
+			<div fxLayoutGap="20px">
+				<mat-form-field appearance="outline">
+					<mat-label>{{'indicacion.internment-card.dialogs.parenteral-plan.VOLUMEN' | translate | titlecase}}</mat-label>
+					<input matInput type="number" formControlName="volumen" name="volumen">
+					<mat-error *ngIf="parenteralPlanForm.hasError('required', 'volumen')" [translate]="'forms.REQUIRED'"></mat-error>
+				</mat-form-field>
+				<span>{{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS' | translate}}.</span>
+
+				<mat-form-field appearance="outline">
+					<mat-label>{{'indicacion.internment-card.dialogs.parenteral-plan.VIA' | translate | titlecase}}</mat-label>
+					<mat-select formControlName="via" name="via">
+						<mat-option *ngFor="let via of vias" [value]="via.id">
+							{{via.description | translate}}
+						</mat-option>
+					</mat-select>
+					<button id="clear" mat-button matSuffix type="button" color="warn" mat-icon-button *ngIf="parenteralPlanForm.value.via"
+							(click)="clear(parenteralPlanForm.controls.via); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</div>
+
+			<div fxLayout="column" fxLayoutAlign="center" formGroupName="frequency">
+				<span class="title">{{'indicacion.internment-card.dialogs.parenteral-plan.FREQUENCY' | translate | titlecase}}</span>
+				<div id="duration" fxLayoutGap="10px" formGroupName="duration">
+					<span class="subtitle">{{'indicacion.internment-card.dialogs.parenteral-plan.DURATION' | translate | titlecase}}:</span>
+					<mat-form-field appearance="outline">
+						<input matInput type="number" formControlName="hours" name="hours" placeholder="00" (keypress)="isNumberOrDot($event.key)">
+						<mat-error *ngIf="hasError(parenteralPlanForm.get('frequency').get('duration'), 'max', 'hours')" [translate]="'forms.MAX_ERROR'"
+								   [translateParams]="{max: getError(parenteralPlanForm.get('frequency').get('duration'), 'max', 'hours').max}">
+						</mat-error>
+						<mat-error *ngIf="hasError(parenteralPlanForm.get('frequency').get('duration'), 'min', 'hours')" [translate]="'forms.MIN_ERROR'"
+								   [translateParams]="{min: getError(parenteralPlanForm.get('frequency').get('duration'), 'min', 'hours').min}">
+						</mat-error>
+					</mat-form-field>
+					<span>{{'indicacion.internment-card.dialogs.parenteral-plan.HOURS' | translate}}</span>
+					<mat-form-field appearance="outline">
+						<input matInput type="number" formControlName="minutes" name="minutes" placeholder="00" (keypress)="isNumberOrDot($event.key)">
+						</mat-form-field>
+					<span>{{'indicacion.internment-card.dialogs.parenteral-plan.MINUTES' | translate}}</span>
+				</div>
+				<div id="flow" fxLayoutGap="10px" formGroupName="flow">
+					<span class="flow subtitle">{{'indicacion.internment-card.dialogs.parenteral-plan.FLOW' | translate | titlecase}}:</span>
+					<mat-form-field appearance="outline">
+						<input matInput type="number" formControlName="velocity" name="velocity" placeholder="00" (keypress)="isNumberOrDot($event.key)">
+						<mat-error *ngIf="hasError(parenteralPlanForm.get('frequency').get('flow'), 'required', 'velocity')" [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					<span>{{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS_HOURS' | translate}}</span>
+
+					<mat-form-field appearance="outline">
+						<input matInput type="number" formControlName="drops" name="drops" placeholder="00.0" (keypress)="isNumberOrDot($event.key)">
+						<mat-error *ngIf="hasError(parenteralPlanForm.get('frequency').get('flow'), 'required', 'drops')" [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+					<span>{{'indicacion.internment-card.dialogs.parenteral-plan.DROPS' | translate }}</span>
+				</div>
+
+				<div id="volumen" fxLayoutGap="10px">
+					<span class="volumen subtitle">{{'indicacion.internment-card.dialogs.parenteral-plan.VOLUMEN_DAY' | translate | titlecase}}:</span>
+					<mat-form-field appearance="outline">
+						<input matInput type="number" formControlName="volumen" name="volumen" placeholder="00.0" (keypress)="isNumberOrDot($event.key)">
+					</mat-form-field>
+					<span>{{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS' | translate}}.</span>
+				</div>
+			</div>
+			<ng-container>
+				<mat-form-field appearance="outline">
+					<mat-label>{{'indicacion.internment-card.dialogs.parenteral-plan.START_TIME' | translate}}</mat-label>
+					<mat-select formControlName="startTime" name="startTime">
+						<mat-option *ngFor="let hour of HOURS_LIST" [value]="hour">
+							{{hour | translate}}hs.
+						</mat-option>
+					</mat-select>
+					<button id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button *ngIf="parenteralPlanForm.controls.startTime.value"
+							(click)="clear(parenteralPlanForm.controls.startTime); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</ng-container>
+		</form>
+		<form [formGroup]="searchSnomedConcept.pharmacoForm">
+			<div id="pharmaco" fxLayout="column" fxLayoutGap="10px" formArrayName="pharmaco">
+				<span *ngIf="searchSnomedConcept.showPharmacoTitle" class="subtitle">
+					{{'indicacion.internment-card.dialogs.parenteral-plan.PHARMACO' | translate | titlecase}}</span>
+				<div *ngIf="searchSnomedConcept.pharmacos.controls.length else searchPharmacoSnomed">
+					<div  *ngFor="let pharmaco of searchSnomedConcept.pharmacos.controls let i=index">
+						<div formGroupName="{{i}}">
+							<div fxLayoutGap="20px" fxLayoutAlign="space-between center">
+								<div formGroupName="snomed">
+									<mat-form-field appearance="outline">
+										<mat-label> {{'indicacion.internment-card.dialogs.parenteral-plan.PHARMACO' | translate | titlecase}}</mat-label>
+										<input matInput type="text" formControlName="pt" name="pt" readonly matTooltip="{{searchSnomedConcept.loadTootip(i)}}">
+									</mat-form-field>
+								</div>
+								<mat-form-field appearance="outline">
+									<mat-label> {{'indicacion.internment-card.dialogs.parenteral-plan.DOSE' | translate | titlecase}}</mat-label>
+									<input matInput type="number" formControlName="dose" name="dose">
+									<mat-error *ngIf="hasError(searchSnomedConcept.pharmacos.at(i), 'required', 'dose')" [translate]="'forms.REQUIRED'"></mat-error>
+								</mat-form-field>
+								<span> {{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS' | translate }}.</span>
+								<button mat-button type="button" color="warn" (click)="searchSnomedConcept.removePharmaco(i)">
+									<mat-icon color="warn">delete</mat-icon>
+								</button>
+							</div>
+						</div>
+					</div>
+					<ng-container *ngTemplateOutlet="searchPharmacoSnomed"></ng-container>
+				</div>
+			</div>
+			<button mat-button type="button" color="primary" class="button-add-pharmaco" (click)="searchSnomedConcept.searchPharmacoSnomedConcept()">
+				+{{'indicacion.internment-card.dialogs.parenteral-plan.ADD_PHARMACO' | translate}}
+			</button>
+		</form>
+		<mat-divider></mat-divider>
+		<app-datepicker [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate" [dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
+	</mat-dialog-content>
+	<div actions id="buttons" fxLayoutAlign="end end">
+		<button mat-raised-button color="primary" id="confirm_button" (click)="save()">
+			<span class="uppercase" [translate]="'buttons.ADD'"></span>
+		</button>
+	</div>
+</ng-container>
+
+<ng-template #SearchSalineSnomedConcept>
+	<div mat-dialog-title fxLayoutAlign="space-between">
+		<span [translate]="'indicacion.internment-card.dialogs.parenteral-plan.add-snomed-concept.TITLE'"></span>
+		<button type="button" mat-icon-button (click)="close()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<app-concepts-search [label]="'indicacion.internment-card.dialogs.parenteral-plan.add-snomed-concept.SEARCH'"
+		(search)="searchSnomedConcept.searchSalineConcept($event)">
+	</app-concepts-search>
+	<div class="spinner">
+		<mat-spinner diameter="70" color="primary" *ngIf="searchSnomedConcept.searching && !searchSnomedConcept.snowstormServiceNotAvailable"></mat-spinner>
+	</div>
+	<div *ngIf="searchSnomedConcept.snowstormServiceNotAvailable">
+		<span [translate]="'historia-clinica.snowstorm.SERVICE_NOT_AVAILABLE'"> </span>
+	</div>
+	<app-table *ngIf="!searchSnomedConcept.searching && !searchSnomedConcept.salineSnomedConcept" [model]="searchSnomedConcept.conceptsResultsTable" [mainStyle]="'secondary'">
+	</app-table>
+</ng-template>
+
+<ng-template #searchPharmacoSnomed>
+	<ng-container *ngIf="searchSnomedConcept.showToSearchSnomedConcept">
+		<app-concepts-search
+			[label]="'indicacion.internment-card.dialogs.parenteral-plan.PHARMACO'"
+			[hideIcon]="true"
+			(search)="searchSnomedConcept.searchPharmacoConcept($event)">
+		</app-concepts-search>
+	</ng-container>
+</ng-template>

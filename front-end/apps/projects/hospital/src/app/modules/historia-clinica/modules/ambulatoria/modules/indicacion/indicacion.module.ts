@@ -14,6 +14,8 @@ import { NuevaPrescripcionComponent } from "@historia-clinica/modules/ambulatori
 import { SuspenderMedicacionComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/suspender-medicacion/suspender-medicacion.component";
 import { DietComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/diet/diet.component";
 import { OtherIndicationComponent } from './dialogs/other-indication/other-indication.component';
+import { ParenteralPlanComponent } from './dialogs/parenteral-plan/parenteral-plan.component';
+import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 
 @NgModule({
 	declarations: [
@@ -28,6 +30,7 @@ import { OtherIndicationComponent } from './dialogs/other-indication/other-indic
 		SuspenderMedicacionComponent,
 		DietComponent,
 		OtherIndicationComponent,
+  		ParenteralPlanComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
@@ -37,7 +40,8 @@ import { OtherIndicationComponent } from './dialogs/other-indication/other-indic
 	imports: [
 		CommonModule,
 		FormsModule,
-		PresentationModule
+		PresentationModule,
+		HistoriaClinicaModule
 	]
 })
 export class IndicacionModule { }

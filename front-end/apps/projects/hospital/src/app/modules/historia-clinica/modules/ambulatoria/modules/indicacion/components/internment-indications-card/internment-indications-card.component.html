@@ -10,6 +10,11 @@
 			<button mat-menu-item (click)="openIndicationDialog()">
 				<span>{{'ambulatoria.dialog-title.OTHER-INDICATION' | translate }}</span>
 			</button>
+			<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<button mat-menu-item (click)="openParenteralPlanDialog()">
+					<span>{{'indicacion.internment-card.menu-items.PARENTERAL_PLAN' | translate }}</span>
+				</button>
+			</ng-container>
 		</mat-menu>
 		<div class="content" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
 			<button mat-icon-button (click)="viewAnotherDay(-1)" [disabled]="this.currentViewIsEntryDate">

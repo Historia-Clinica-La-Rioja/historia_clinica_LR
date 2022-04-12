@@ -36,7 +36,8 @@
 				}
 			},
 			"menu-items": {
-				"DIET": "Dieta"
+				"DIET": "Dieta",
+				"PARENTERAL_PLAN": "Plan parenteral"
 			},
 			"dialogs": {
 				"diet":{
@@ -48,28 +49,54 @@
 					}
 				},
 				"other-indication":{
-						"TITLE": "agregar otra indicación",
-						"NOTE": "Notas",
-						"DETAIL": "Detalle",
-						"DETAIL-EVENT": "Detalle evento",
-						"SELECTION-TYPE-INDICATION": "Seleccionar tipo de indicación",
-						"INDICATION": "Indicación",
-						"INTERVAL": "Intervalo",
-						"FREQUENCY": "Frecuencia",
-						"OTHER-FREQUENCY": "Otra frecuencia",
-						"START-TIME": "Hora de inicio",
-						"EVERY":"Cada",
-						"frequencyOption": {
-							"UNSPECIFIED": "Sin especificar",
-							"INTERVALS": "Intervalo",
-							"ONCE": "Unica vez",
-							"AFTER-EVENT":" Ante un evento"
-						},
-						"messages": {
-							"ERROR": "Error al guardar una nueva indicación",
-							"SUCCESS": "La indicación se guardó exitosamente"
-						}
+					"TITLE": "agregar otra indicación",
+					"NOTE": "Notas",
+					"DETAIL": "Detalle",
+					"DETAIL-EVENT": "Detalle evento",
+					"SELECTION-TYPE-INDICATION": "Seleccionar tipo de indicación",
+					"INDICATION": "Indicación",
+					"INTERVAL": "Intervalo",
+					"FREQUENCY": "Frecuencia",
+					"OTHER-FREQUENCY": "Otra frecuencia",
+					"START-TIME": "Hora de inicio",
+					"EVERY":"Cada",
+					"frequencyOption": {
+						"UNSPECIFIED": "Sin especificar",
+						"INTERVALS": "Intervalo",
+						"ONCE": "Unica vez",
+						"AFTER-EVENT":" Ante un evento"
+					},
+					"messages": {
+						"ERROR": "Error al guardar una nueva indicación",
+						"SUCCESS": "La indicación se guardó exitosamente"
 					}
+				},
+				"parenteral-plan": {
+					"add-snomed-concept": {
+						"TITLE": "Agregar plan parenteral",
+						"SEARCH": "Plan parenteral"
+					},
+					"messages": {
+						"ERROR": "Error al guardar un nuevo plan parenteral",
+						"SUCCESS": "El plan parenteral se guardó exitosamente"
+					},
+					"TITLE": "Plan parenteral continuo",
+					"VOLUMEN": "vol/Bolsa",
+					"MILLILITERS": "ml",
+					"VIA": "vía",
+					"FREQUENCY": "frecuencia",
+					"DURATION": "duración",
+					"HOURS": "hs.",
+					"MINUTES": "min.",
+					"FLOW": "flujo",
+					"MILLILITERS_HOURS": "ml/h",
+					"DROPS": "hp. Gotas",
+					"VOLUMEN_DAY": "vol/Día",
+					"START_TIME": "Inicio de administración",
+					"ADD_PHARMACO": "Agregar fármaco",
+					"PHARMACO": "fármaco",
+					"DOSE": "dosis"
+				}
 			}
 		}
 	}

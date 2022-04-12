@@ -3,8 +3,7 @@ import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { OtherIndicationDto } from "@api-rest/api-model";
-import { DietDto } from "@api-rest/api-model";
+import { DietDto, OtherIndicationDto, ParenteralPlanDto } from "@api-rest/api-model";
 import { DateTimeDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +13,7 @@ import { IndicationsFacadeService } from "@historia-clinica/modules/ambulatoria/
 import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { OtherIndicationComponent } from '../../dialogs/other-indication/other-indication.component';
 import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
+import { ParenteralPlanComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/parenteral-plan/parenteral-plan.component";
 
 const DIALOG_SIZE = '45%';
 
@@ -50,7 +50,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		private readonly internmentIndicationService: InternmentIndicationService,
 
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
-	) { }
+	) {	}
 
 	ngOnInit(): void {
 		this.viewDay = {
@@ -157,6 +157,28 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 
 
+	openParenteralPlanDialog() {
+		const dialogRef = this.dialog.open(ParenteralPlanComponent, {
+			data: {
+				entryDate: this.entryDate,
+				actualDate: this.actualDate,
+				patientId: this.patientId,
+				professionalId: this.professionalId
+			},
+			autoFocus: false,
+			disableClose: true,
+		});
+		dialogRef.afterClosed().subscribe((parenteralPlan: ParenteralPlanDto) => {
+			if (parenteralPlan) {
+				this.indicationsFacadeService.addParenteralPlan(parenteralPlan).subscribe(
+					success => {
+						this.snackBarService.showSuccess('indicacion.internment-card.dialogs.parenteral-plan.messages.SUCCESS');
+					},
+					error => error?.text ? this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.parenteral-plan.messages.ERROR')
+				);
+			}
+		});
+	}
 }
 
 interface ViewDate {
