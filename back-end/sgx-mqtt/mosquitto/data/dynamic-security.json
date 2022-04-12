@@ -1,7 +1,7 @@
 {
 	"defaultACLAccess":	{
-		"publishClientSend":	true,
-		"publishClientReceive":	true,
+		"publishClientSend":	false,
+		"publishClientReceive":	false,
 		"subscribe":	true,
 		"unsubscribe":	true
 	},
