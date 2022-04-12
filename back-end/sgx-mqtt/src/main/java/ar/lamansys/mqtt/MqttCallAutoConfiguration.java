@@ -4,7 +4,6 @@ import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.UUID;
 
-@Slf4j
 @Configuration
 @ComponentScan(basePackages = "ar.lamansys.mqtt")
 @EnableJpaRepositories(basePackages = {"ar.lamansys.mqtt"})
@@ -23,8 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @PropertySource(value = "classpath:sgx-mqtt.properties", ignoreResourceNotFound = true)
 public class MqttCallAutoConfiguration {
 
-    @Value("${mqtt.publisher_id}")
-    private String mqttPublisherId;
+    private String mqttPublisherId = UUID.randomUUID().toString();
 
     @Value("${mqtt.server_address}")
     private String mqttServerAddress;
@@ -32,22 +29,29 @@ public class MqttCallAutoConfiguration {
     @Value("${mqtt.client_connection}")
     private boolean mqttClientConnection;
 
+	@Value("${mqtt.client_username}")
+	private String mqttClientUsername;
+
+	@Value("${mqtt.client_password}")
+	private String mqttClientPassword;
+
     @Bean
     public IMqttClient connect() {
         MqttClient client = null;
         try {
-            MemoryPersistence persistence = new MemoryPersistence();
-            client = new MqttClient(mqttServerAddress, mqttPublisherId, persistence);
+            client = new MqttClient(mqttServerAddress, mqttPublisherId);
             MqttConnectOptions options = new MqttConnectOptions();
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
             options.setConnectionTimeout(1000);
             options.setAutomaticReconnect(true);
+            options.setUserName(mqttClientUsername);
+            options.setPassword(mqttClientPassword.toCharArray());
             if(mqttClientConnection) {
                 client.connect(options);
             }
         } catch (MqttException e) {
-            log.error(e.getMessage(), e);
+            e.printStackTrace();
         }
         return client;
     }
