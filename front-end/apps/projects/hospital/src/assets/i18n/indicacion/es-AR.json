@@ -28,6 +28,7 @@
 				},
 				"indication-extra-description": {
 					"DOSE": "Dosis:",
+					"VOL/BOLSA": "Vol/Bolsa:",
 					"VIA": "Vía:",
 					"INTERVAL": "Intervalo:",
 					"ONCE": "Única vez:",

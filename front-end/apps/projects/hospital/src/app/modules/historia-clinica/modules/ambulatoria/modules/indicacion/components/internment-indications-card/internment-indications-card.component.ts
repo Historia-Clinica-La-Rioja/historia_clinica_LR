@@ -37,6 +37,8 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	diets: DietDto[] = [];
 	otherIndications: OtherIndicationDto[] = [];
 	othersIndicatiosType: OtherIndicationTypeDto[];
+	parenteralPlan: ParenteralPlanDto[] = [];
+
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
 	@Input() patientId: number;
@@ -125,6 +127,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	filterIndications() {
 		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate) === true));
 		this.indicationsFacadeService.otherIndications$.subscribe(d => this.otherIndications = d.filter((otherIndications: OtherIndicationDto) => isSameDay(dateDtoToDate(otherIndications.indicationDate), this.actualDate)));
+		this.indicationsFacadeService.parenteralPlans$.subscribe(p => this.parenteralPlan = p.filter((plan: ParenteralPlanDto) => isSameDay(dateDtoToDate(plan.indicationDate), this.actualDate) === true));
 	}
 	openIndicationDialog() {
 		const dialogRef = this.dialog.open(OtherIndicationComponent, {
@@ -173,6 +176,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 				this.indicationsFacadeService.addParenteralPlan(parenteralPlan).subscribe(
 					success => {
 						this.snackBarService.showSuccess('indicacion.internment-card.dialogs.parenteral-plan.messages.SUCCESS');
+						this.indicationsFacadeService.updateIndication({ parenteralPlan: true });
 					},
 					error => error?.text ? this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.parenteral-plan.messages.ERROR')
 				);
