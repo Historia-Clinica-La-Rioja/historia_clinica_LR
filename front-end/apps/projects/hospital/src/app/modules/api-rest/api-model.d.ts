@@ -908,6 +908,7 @@ export interface ExternalCoverageDto {
 export interface ExternalPatientCoverageDto {
     active: boolean;
     affiliateNumber: string;
+    condition?: number;
     medicalCoverage: ExternalCoverageDto;
     vigencyDate?: Date;
 }

@@ -10,7 +10,7 @@ import { PatientBasicData } from '@presentation/components/patient-card/patient-
 import { MapperService } from '@presentation/services/mapper.service';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { UIPageDto } from '@extensions/extensions-model';
-
+import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from '../../dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -47,6 +47,7 @@ import { SummaryCoverageInformation } from '../../components/medical-coverage-su
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 
 const RESUMEN_INDEX = 0;
+const VOLUNTARY_ID = 1;
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -454,6 +455,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		if (this.summaryCoverageInfo || this.appointmentConfirmedCoverageInfo)
 			return true;
 		return false;
+	}
+	
+	getMedicalCoveragePlanText(patientMedicalCoverage: ExternalPatientCoverageDto): string {
+		const condition = (patientMedicalCoverage.condition) ? (patientMedicalCoverage.condition==VOLUNTARY_ID) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA : null;
+		return [patientMedicalCoverage.medicalCoverage?.plan, condition].filter(Boolean).join(' | ');
 	}
 }
 

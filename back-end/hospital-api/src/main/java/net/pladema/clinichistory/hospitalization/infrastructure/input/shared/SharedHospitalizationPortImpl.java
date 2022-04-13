@@ -59,6 +59,7 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	private ExternalPatientCoverageDto mapToExternalPatientCoverageDto(PatientMedicalCoverageBo bo) {
 		MedicalCoverageBo medicalCoverage = bo.getMedicalCoverage();
 		String type = (bo.getMedicalCoverage().getClass().getSimpleName().equals("PrivateHealthInsuranceBo"))?"PREPAGA":"OBRASOCIAL";
-		return new ExternalPatientCoverageDto(new ExternalCoverageDto(medicalCoverage.getId(), medicalCoverage.getCuit(), bo.getPrivateHealthInsuranceDetails().getPlanName(), medicalCoverage.getName(), type), bo.getAffiliateNumber(), bo.getActive(), bo.getVigencyDate());
+		Short condition = (bo.getCondition()!=null) ? bo.getCondition().getId() : null;
+		return new ExternalPatientCoverageDto(new ExternalCoverageDto(medicalCoverage.getId(), medicalCoverage.getCuit(), bo.getPrivateHealthInsuranceDetails().getPlanName(), medicalCoverage.getName(), type), bo.getAffiliateNumber(), bo.getActive(), bo.getVigencyDate(), condition);
 	}
 }

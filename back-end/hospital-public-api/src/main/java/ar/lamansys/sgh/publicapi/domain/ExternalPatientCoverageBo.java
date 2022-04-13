@@ -22,5 +22,7 @@ public class ExternalPatientCoverageBo {
     @Nullable
     private LocalDate vigencyDate;
 
+	private Short condition;
+
 
 }

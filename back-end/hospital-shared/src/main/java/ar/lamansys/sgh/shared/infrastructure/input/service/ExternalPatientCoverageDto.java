@@ -23,4 +23,7 @@ public class ExternalPatientCoverageDto {
 
     @Nullable
     private LocalDate vigencyDate;
+
+	@Nullable
+	private Short condition;
 }

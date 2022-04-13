@@ -69,7 +69,8 @@ public class ExternalPatientController {
                                 mc.getMedicalCoverage().getType().toString()),
                         mc.getAffiliateNumber(),
                         mc.getActive(),
-                        mc.getVigencyDate())));
+                        mc.getVigencyDate(),
+						mc.getCondition())));
         return result;
     }
 }
