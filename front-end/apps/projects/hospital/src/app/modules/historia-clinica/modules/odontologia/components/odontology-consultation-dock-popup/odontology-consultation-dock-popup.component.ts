@@ -100,7 +100,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.form = this.formBuilder.group({
-			evolution: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			evolution: [null, null],
 			clinicalSpecialty: [null, [Validators.required]],
 			permanentTeethPresent: [null, [Validators.maxLength(2), Validators.pattern('^[0-9]+$')]],
 			temporaryTeethPresent: [null, [Validators.maxLength(2), Validators.pattern('^[0-9]+$')]],

@@ -166,7 +166,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.setProblem();
 
 		this.formEvolucion = this.formBuilder.group({
-			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			evolucion: [null, null],
 			clinicalSpecialty: [],
 			clinicalProblem: []
 		});

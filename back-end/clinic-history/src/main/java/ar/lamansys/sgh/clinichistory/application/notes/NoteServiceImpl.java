@@ -28,17 +28,10 @@ public class NoteServiceImpl implements NoteService {
         LOG.debug("Input parameters -> note {}", note);
         if (note == null)
             return null;
-        assertNoteConstraints(note);
         Note result = new Note(note);
         result = noteRepository.save(result);
         LOG.debug(OUTPUT, result);
         return result.getId();
-    }
-
-    private void assertNoteConstraints(String note) {
-        Integer maxNoteLength = 1024;
-        StringValidator stringValidator = new StringValidator();
-        stringValidator.validateMaxLength(note, maxNoteLength);
     }
 
     @Override
