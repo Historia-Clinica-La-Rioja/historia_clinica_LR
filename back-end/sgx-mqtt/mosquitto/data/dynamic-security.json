@@ -41,7 +41,13 @@
 			"username":	"tareas",
 			"textname":	"",
 			"textdescription":	"",
-			"roles":	[],
+			"roles":	[{
+					"rolename":	"R_AltaMedicaInternacion"
+				}, {
+					"rolename":	"R_NuevaConsultaOdontologica"
+				}, {
+					"rolename":	"R_SolicitudEstudio"
+				}],
 			"password":	"wLG5+jSubntJHSD8a7gTFv7H0ah/Ovdidm3bJw9mJQOpIKGkNV4KhnLMUl8G52U9AWJsGZf+ntwkh58S/JDM5A==",
 			"salt":	"k3Z/QT1YYRb6ADGz",
 			"iterations":	101
@@ -54,6 +60,36 @@
 			"acls":	[{
 					"acltype":	"publishClientSend",
 					"topic":	"HSI/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_AltaMedicaInternacion",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/hospitalApi/ALTA_MEDICA",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_NuevaConsultaOdontologica",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/odontology/NUEVA_CONSULTA",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_SolicitudEstudio",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/hospitalApi/SOLICITUD_ESTUDIO",
 					"priority":	0,
 					"allow":	true
 				}]
