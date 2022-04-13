@@ -2,5 +2,6 @@ package net.pladema.events;
 
 public enum EHospitalApiTopicDto {
 	ALTA_MEDICA,
-	SOLICITUD_ESTUDIO
+	SOLICITUD_ESTUDIO,
+	PACIENTE_LLAMADO
 }

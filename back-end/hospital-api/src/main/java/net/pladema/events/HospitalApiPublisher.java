@@ -1,5 +1,6 @@
 package net.pladema.events;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.events.NotifyPatientBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.events.PublisherFactory;
 import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
 
@@ -17,4 +18,9 @@ public class HospitalApiPublisher {
 	public void publish(Integer patientId, EHospitalApiTopicDto eHospitalApiTopicDto) {
 		simplePublishService.publish(patientId, eHospitalApiTopicDto.toString());
 	}
+
+	public void publishLlamador(NotifyPatientBo notifyPatientBo) {
+		simplePublishService.llamadorPublish(EHospitalApiTopicDto.PACIENTE_LLAMADO.toString(), notifyPatientBo);
+	}
+
 }

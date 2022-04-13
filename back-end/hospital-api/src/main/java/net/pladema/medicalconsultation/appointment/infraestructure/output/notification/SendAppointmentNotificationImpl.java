@@ -2,18 +2,19 @@ package net.pladema.medicalconsultation.appointment.infraestructure.output.notif
 
 import ar.lamansys.mqtt.infraestructure.input.rest.dto.MqttMetadataDto;
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
+import lombok.AllArgsConstructor;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.medicalconsultation.appointment.service.domain.notifypatient.NotifyPatientBo;
 import net.pladema.medicalconsultation.appointment.service.domain.notifypatient.SendAppointmentNotification;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class SendAppointmentNotificationImpl implements SendAppointmentNotification {
 
     private final MqttCallExternalService mqttCallExternalService;
 
-    public SendAppointmentNotificationImpl(MqttCallExternalService mqttCallExternalService) {
-        this.mqttCallExternalService = mqttCallExternalService;
-    }
+	private final HospitalApiPublisher hospitalApiPublisher;
 
     @Override
     public void run(NotifyPatientBo notifyPatientBo) {

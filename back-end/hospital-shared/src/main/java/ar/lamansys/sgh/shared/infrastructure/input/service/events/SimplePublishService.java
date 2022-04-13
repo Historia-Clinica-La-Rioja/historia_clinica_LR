@@ -21,6 +21,21 @@ public class SimplePublishService {
 		mqttCallExternalService.publish(mqttMetadataDto);
 	}
 
+	public void llamadorPublish(String topic, NotifyPatientBo notifyPatientBo) {
+		String fullTopic = "HSI/" + namePrefix + "/" + topic + "/" +notifyPatientBo.getTopic();
+		notifyPatientBo.setTopic(fullTopic);
+		mqttCallExternalService.publish(mapTo(notifyPatientBo));
+	}
+
+	private MqttMetadataDto mapTo(NotifyPatientBo notifyPatientBo) {
+		return new MqttMetadataDto(notifyPatientBo.getTopic(), getMessage(notifyPatientBo), false, 2, "add");
+	}
+
+	protected String getMessage(NotifyPatientBo notifyPatientBo) {
+		return String.format("\"data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}", notifyPatientBo.getAppointmentId(), notifyPatientBo.getPatientName(), notifyPatientBo.getSectorId(), notifyPatientBo.getDoctorName(), notifyPatientBo.getDoctorsOfficeName());
+	}
+
+
 	private String getSimplePayload(Integer patientId, String topic) {
 		return String.format("\"description\":\"{\\\"patientId\\\":%d,\\\"topic\\\":\\\"%s\\\"}\"", patientId, topic);
 	}
