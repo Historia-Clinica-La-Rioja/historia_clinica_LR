@@ -58,6 +58,17 @@ export class OtherIndicationComponent implements OnInit {
 			}
 		});
 
+		this.form.controls.interval.valueChanges.subscribe((frequencyOption) => {
+			if (frequencyOption === this.otherFrequency.value) {
+				this.form.controls.frequencyHour.setValidators([Validators.required]);
+				this.form.controls.frequencyHour.updateValueAndValidity();
+			} else {
+				this.form.controls.frequencyHour.setValue(null);
+				this.form.controls.frequencyHour.removeValidators([Validators.required]);
+				this.form.controls.frequencyHour.updateValueAndValidity();
+			}
+		});
+
 		this.form.controls.frequencyOption.valueChanges.subscribe((frequencyOption) => {
 
 			this.removeFormValidators();
@@ -115,6 +126,9 @@ export class OtherIndicationComponent implements OnInit {
 
 	submit(): void {
 		if (this.form.valid) {
+			if (this.form.controls.frequencyHour?.value)
+				this.form.controls.interval.setValue(this.form.controls.frequencyHour.value);
+
 			const otherIndicatio = this.toIndicationDto(this.form.value);
 			const otherIndicatioDate = dateDtoToDate(otherIndicatio.indicationDate);
 			if (!isSameDay(otherIndicatioDate, this.data.actualDate)) {

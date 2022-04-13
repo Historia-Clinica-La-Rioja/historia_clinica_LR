@@ -80,8 +80,9 @@
 
 						<mat-select id="interval" formControlName="interval">
 							<mat-option *ngFor="let interval of intervals" [value]="interval">
-								<ng-container *ngIf="interval==otherFrequency; else other">
-									{{interval | translate}}
+								<ng-container *ngIf="interval==otherFrequency.value; else other">
+									<span> {{'indicacion.internment-card.dialogs.other-indication.OTHER-FREQUENCY' |
+										translate}}</span>
 								</ng-container>
 
 								<ng-template #other>
@@ -101,7 +102,7 @@
 						</button>
 					</mat-form-field>
 
-					<ng-container *ngIf="form.controls.interval.value==otherFrequency">
+					<ng-container *ngIf="form.controls.interval.value==otherFrequency.value">
 
 						<span fxFlex="30%" fxLayoutAlign="center center"> {{'indicacion.internment-card.dialogs.other-indication.EVERY' |
 							translate}} </span>
