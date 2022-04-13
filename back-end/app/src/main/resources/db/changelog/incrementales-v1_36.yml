@@ -80,3 +80,37 @@ databaseChangeLog:
                     columnName: via
                     tableName: pharmaco
                     validate: true
+
+    - changeSet:
+        id: delete-other_indication_type-concepts
+        comment: Borrado de tipos de indicacion
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                DELETE FROM other_indication_type WHERE id='4';
+                DELETE FROM other_indication_type WHERE id='5';
+                DELETE FROM other_indication_type WHERE id='6';
+                DELETE FROM other_indication_type WHERE id='7';
+                DELETE FROM other_indication_type WHERE id='8';
+                DELETE FROM other_indication_type WHERE id='9';
+                DELETE FROM other_indication_type WHERE id='10';
+
+    - changeSet:
+        id: add-mising-other_indication_type-concepts
+        comment: Agrega tipos de indicacion
+        author: mvenere
+        context: "!schema-only"
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO other_indication_type(id,description) VALUES ('4','Peso') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('5','Alimentación enteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('6','Alimentación parenteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('7','Oxigenoterapia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('8','Control de glucemia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('9','Nebulizaciones') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('10','Resumen') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('11','Otro') ON CONFLICT DO NOTHING;
