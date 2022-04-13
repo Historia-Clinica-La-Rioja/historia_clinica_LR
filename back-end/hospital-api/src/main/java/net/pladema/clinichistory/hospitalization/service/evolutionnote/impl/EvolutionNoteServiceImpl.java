@@ -42,8 +42,8 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
-            
-            result.setNotes(loadNotes(document));
+			result.setProcedures(documentService.getProcedureStateFromDocument(document.getId()));
+			result.setNotes(loadNotes(document));
             return result;
         }).orElse(new EvolutionNoteBo());
         LOG.debug(OUTPUT, r);

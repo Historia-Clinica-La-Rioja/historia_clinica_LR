@@ -232,7 +232,16 @@ public class  DocumentServiceImpl implements DocumentService {
         return result;
     }
 
-    @Override
+	@Override
+	public List<ProcedureBo> getProcedureStateFromDocument(Long documentId) {
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		List<ProcedureVo> resultQuery = documentProcedureRepository.getProcedureStateFromDocument(documentId);
+		List<ProcedureBo> result = resultQuery.stream().map(ProcedureBo::new).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
     public List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId) {
         return documentRepository.getUpdatablesDocuments(internmentEpisodeId);
     }

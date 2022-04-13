@@ -45,7 +45,9 @@ public interface DocumentService {
 
     RiskFactorBo getRiskFactorStateFromDocument(Long documentId);
 
-    List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId);
+	List<ProcedureBo> getProcedureStateFromDocument(Long documentId);
+
+	List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId);
 
     DocumentMedicamentionStatement getDocumentFromMedication(Integer mid);
 
