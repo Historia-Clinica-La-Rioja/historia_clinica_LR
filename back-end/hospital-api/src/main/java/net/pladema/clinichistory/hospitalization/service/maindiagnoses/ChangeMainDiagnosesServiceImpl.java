@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
+
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -30,12 +33,16 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
 
     private final FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
+	private final DateTimeProvider dateTimeProvider;
+
     public ChangeMainDiagnosesServiceImpl(DocumentFactory documentFactory,
                                           InternmentEpisodeService internmentEpisodeService,
-                                          FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState) {
+                                          FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState,
+										  DateTimeProvider dateTimeProvider) {
         this.documentFactory = documentFactory;
         this.internmentEpisodeService = internmentEpisodeService;
         this.fetchHospitalizationHealthConditionState = fetchHospitalizationHealthConditionState;
+		this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
@@ -46,6 +53,9 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
         var internmentEpisode = internmentEpisodeService.
                 getInternmentEpisode(mainDiagnosisBo.getEncounterId(), mainDiagnosisBo.getInstitutionId());
         mainDiagnosisBo.setPatientId(internmentEpisode.getPatientId());
+
+		LocalDateTime now = dateTimeProvider.nowDateTime();
+		mainDiagnosisBo.setPerformedDate(now);
 
         assertDoesNotHaveEpicrisis(internmentEpisode);
         mainDiagnosisBo.validateSelf();
