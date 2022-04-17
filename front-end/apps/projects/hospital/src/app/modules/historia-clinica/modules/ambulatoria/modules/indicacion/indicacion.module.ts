@@ -17,7 +17,6 @@ import { OtherIndicationComponent } from './dialogs/other-indication/other-indic
 import { ParenteralPlanComponent } from './dialogs/parenteral-plan/parenteral-plan.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
-import { FrequencyComponent } from './components/frequency/frequency.component';
 
 @NgModule({
 	declarations: [
@@ -34,7 +33,6 @@ import { FrequencyComponent } from './components/frequency/frequency.component';
 		OtherIndicationComponent,
   		ParenteralPlanComponent,
    		PharmacoComponent,
-		FrequencyComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,

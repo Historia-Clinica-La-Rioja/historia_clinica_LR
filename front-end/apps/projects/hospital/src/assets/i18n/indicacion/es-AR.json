@@ -97,6 +97,43 @@
 					"ADD_PHARMACO": "Agregar fármaco",
 					"PHARMACO": "fármaco",
 					"DOSE": "dosis"
+				},
+				"pharmaco":{
+					"TITLE": "Agregar fármaco",
+					"PHARMACO": "Fármaco",
+					"DOSAGE": "Dosis",
+					"VIA": "Via",
+					"SOLVENT": "Diluyente",
+					"MILLILITERS": "ml",
+					"add-snomed-concept":{
+						"TITLE": "Agregar medicación",
+						"SEARCH": "Fármaco"
+					},
+					"foodRelation":{
+						"TITLE": "Relación con las comidas",
+						"NEGATIVE": "No",
+						"FAR": "Lejos",
+						"FAST": "Ayuno"
+					},
+					"othersDetails":{
+						"TITLE": "Otros detalles",
+						"ASSOCIATED_DIAGNOSIS": "Diagnóstico asociado",
+						"POSITIVE": "Si"
+					},
+					"patientProvided":{
+						"TITLE": "Medicación aportada por el paciente",
+						"NEGATIVE": "No",
+						"POSITIVE": "Si"
+					},
+					"frequencyOption": {
+						"TITLE": "Administración",
+						"EVERY":"Cada",
+						"OTHER-FREQUENCY": "Otra frecuencia",
+						"UNSPECIFIED": "Sin especificar",
+						"INTERVALS": "Intervalo",
+						"ONCE": "Unica vez",
+						"AFTER-EVENT":" Ante un evento"
+					}
 				}
 			}
 		}
