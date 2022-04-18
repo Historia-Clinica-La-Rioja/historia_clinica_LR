@@ -25,18 +25,27 @@ public class PatientMedicalCoverageBo {
 
     private MedicalCoverageBo medicalCoverage;
 
-    private PrivateHealthInsuranceDetailsBo privateHealthInsuranceDetails;
-
 	private EPatientMedicalCoverageCondition condition;
 
-    public PatientMedicalCoverageBo(PatientMedicalCoverageVo patientMedicalCoverageVo) {
+	private LocalDate startDate;
+
+    private LocalDate endDate;
+
+	private Integer planId;
+
+	private String planName;
+
+
+	public PatientMedicalCoverageBo(PatientMedicalCoverageVo patientMedicalCoverageVo) {
         this.id = patientMedicalCoverageVo.getId();
         this.vigencyDate = patientMedicalCoverageVo.getVigencyDate();
         this.active = patientMedicalCoverageVo.getActive();
         this.affiliateNumber = patientMedicalCoverageVo.getAffiliateNumber();
         this.medicalCoverage = patientMedicalCoverageVo.getMedicalCoverage().newInstance();
-        this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsBo(patientMedicalCoverageVo.getPrivateHealthInsuranceDetails());
-    	if(patientMedicalCoverageVo.getConditionId()!=null)
+		if(patientMedicalCoverageVo.getConditionId()!=null)
 			this.condition = EPatientMedicalCoverageCondition.map(patientMedicalCoverageVo.getConditionId());
-	}
+        this.startDate = patientMedicalCoverageVo.getStartDate();
+		this.endDate = patientMedicalCoverageVo.getEndDate();
+		this.planId = patientMedicalCoverageVo.getPlanId();
+    }
 }

@@ -49,6 +49,15 @@ public class PatientMedicalCoverageAssn implements Serializable {
 	@Column(name = "condition_id")
 	private Short conditionId;
 
+	@Column(name = "start_date")
+	private LocalDate startDate;
+
+	@Column(name = "end_date")
+	private LocalDate endDate;
+
+	@Column(name = "plan_id")
+	private Integer planId;
+
     public PatientMedicalCoverageAssn(PatientMedicalCoverageBo coverageBo, Integer patientId){
         if (coverageBo.getId() != null)
             this.id = coverageBo.getId();
@@ -57,10 +66,12 @@ public class PatientMedicalCoverageAssn implements Serializable {
         this.vigencyDate = coverageBo.getVigencyDate();
         this.active = coverageBo.getActive();
         this.affiliateNumber = coverageBo.getAffiliateNumber();
-        if (coverageBo.getPrivateHealthInsuranceDetails() != null)
-            this.privateHealthInsuranceDetailsId = coverageBo.getPrivateHealthInsuranceDetails().getId();
 		if(coverageBo.getCondition()!=null)
 			this.conditionId = coverageBo.getCondition().getId();
-	}
+        this.startDate = coverageBo.getStartDate();
+		this.endDate = coverageBo.getEndDate();
+		this.planId = coverageBo.getPlanId();
+
+    }
 
 }

@@ -1911,9 +1911,12 @@ export interface PatientMedicalCoverageDto {
     active: boolean;
     affiliateNumber?: string;
     condition: EPatientMedicalCoverageCondition;
+    endDate?: string;
     id?: number;
     medicalCoverage: CoverageDtoUnion;
-    privateHealthInsuranceDetails?: PrivateHealthInsuranceDetailsDto;
+    planId?: number;
+    planName?: string;
+    startDate?: string;
     vigencyDate?: string;
 }
 

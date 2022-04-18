@@ -23,7 +23,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMed
 import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import net.pladema.patient.service.domain.PrivateHealthInsuranceDetailsBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -292,9 +291,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	public Optional<PatientMedicalCoverageBo> getMedicalCoverage(Integer internmentEpisodeId) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
 		Optional<PatientMedicalCoverageBo> result = internmentEpisodeRepository.getInternmentEpisodeMedicalCoverage(internmentEpisodeId).map(PatientMedicalCoverageBo::new).map(bo -> {
-			PrivateHealthInsuranceDetailsBo phid = bo.getPrivateHealthInsuranceDetails();
-			if (phid != null && phid.getPlanId() != null)
-				bo.getPrivateHealthInsuranceDetails().setPlanName(privateHealthInsurancePlanRepository.findById(phid.getPlanId()).get().getPlan());
+			if (bo.getPlanId() != null)
+				bo.setPlanName(privateHealthInsurancePlanRepository.findById(bo.getPlanId()).get().getPlan());
 			return bo;
 		});
 		LOG.debug(LOGGING_OUTPUT, result);

@@ -155,16 +155,16 @@ export class MedicalCoverageComponent implements OnInit {
 		return [healthInsurance.acronym, healthInsurance.name].filter(Boolean).join(' - ');
 	}
 
-	getPrivateHealthInsurancePlanText(patientMedicalCoverage: PatientMedicalCoverage): string {
-		return [patientMedicalCoverage.privateHealthInsuranceDetails?.planName, patientMedicalCoverage?.condition].filter(Boolean).join(' | ');
+	getPrivateHealthInsuranceText(patientMedicalCoverage: PatientMedicalCoverage): string {
+		return [patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.planName, patientMedicalCoverage?.condition].filter(Boolean).join(' / ');
 	}
 
 	getDatesText(patientMedicalCoverage: PatientMedicalCoverage): string {
-		const initText = patientMedicalCoverage.privateHealthInsuranceDetails?.startDate ? 'desde ' +
-			momentFormat(patientMedicalCoverage.privateHealthInsuranceDetails.startDate, DateFormat.VIEW_DATE) : '';
+		const initText = patientMedicalCoverage.startDate ? 'desde ' +
+			momentFormat(patientMedicalCoverage.startDate, DateFormat.VIEW_DATE) : '';
 
-		const endText = patientMedicalCoverage.privateHealthInsuranceDetails?.endDate ? ' hasta ' +
-			momentFormat(patientMedicalCoverage.privateHealthInsuranceDetails.endDate, DateFormat.VIEW_DATE) : '';
+		const endText = patientMedicalCoverage.endDate ? ' hasta ' +
+			momentFormat(patientMedicalCoverage.endDate, DateFormat.VIEW_DATE) : '';
 
 		return initText + endText;
 	}
@@ -217,22 +217,17 @@ export class MedicalCoverageComponent implements OnInit {
 	private getPrivateHealthInsuranceToAdd(): PatientMedicalCoverage {
 		const medicalCoverage = new PrivateHealthInsurance(this.privateHealthInsuranceToAdd.id,
 			this.privateHealthInsuranceToAdd.name, 'PrivateHealthInsuranceDto',this.prepagaForm.value.cuit);
-		let privateHealthInsuranceDetails;
-		if (this.prepagaForm.value.startDate || this.prepagaForm.value.endDate || this.prepagaForm.value.plan) {
-			privateHealthInsuranceDetails = {
-				startDate: this.prepagaForm.value.startDate,
-				endDate: this.prepagaForm.value.endDate,
-				planId: this.prepagaForm.value.plan,
-				planName: this.plans.filter(data => data.id==this.prepagaForm.value.plan).map(privateHealthInsurancePlan => (privateHealthInsurancePlan.plan))[0]
-			};
-		}
 		const toAdd: PatientMedicalCoverage = {
 			medicalCoverage,
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
 			validDate: newMoment(),
-			privateHealthInsuranceDetails,
-			active: true,
-			condition: (this.prepagaForm.value.condition == VOLUNTARIA) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA
+			condition: (this.prepagaForm.value.condition == VOLUNTARIA) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA,
+			startDate: this.prepagaForm.value.startDate,
+			endDate: this.prepagaForm.value.endDate,
+			planId: this.prepagaForm.value.plan,
+			planName: this.plans.filter(data => data.id==this.prepagaForm.value.plan).map(privateHealthInsurancePlan => (privateHealthInsurancePlan.plan))[0]
+			,
+			active: true
 		};
 		return toAdd;
 	}
@@ -290,13 +285,10 @@ export interface PatientMedicalCoverage {
 	affiliateNumber: string;
 	validDate: Moment;
 	medicalCoverage: HealthInsurance | PrivateHealthInsurance;
-	privateHealthInsuranceDetails?: {
-		id?: number,
-		startDate?: Moment;
-		endDate?: Moment;
-		planId?: number;
-		planName?: string;
-	};
+	startDate?: Moment;
+	endDate?: Moment;
+	planId?: number;
+	planName?: string;
 	active: boolean;
 	condition?: EPatientMedicalCoverageCondition;
 }

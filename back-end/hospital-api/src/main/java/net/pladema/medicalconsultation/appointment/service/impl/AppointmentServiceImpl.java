@@ -20,8 +20,6 @@ import net.pladema.patient.controller.service.PatientExternalMedicalCoverageServ
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import net.pladema.patient.service.domain.PrivateHealthInsuranceDetailsBo;
-
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
@@ -207,8 +205,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 		var coverageDto = dto.getMedicalCoverage();
 		var medicalCoverageBo = new PatientCoverageInsuranceDetailsBo(coverageDto.getId(),
 				coverageDto.getName(), coverageDto.getCuit(), coverageDto.obtainCoverageType());
-		var phidDto = dto.getPrivateHealthInsuranceDetails();
-		var phidBo = new PrivateHealthInsuranceDetailsBo();
 		var vigencyDate = dto.getVigencyDate();
 
 		var result = new PatientMedicalCoverageBo(dto.getId(),
@@ -216,12 +212,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 				dto.getActive(),
 				dto.getAffiliateNumber(),
 				medicalCoverageBo,
-				phidBo,
-				dto.getCondition());
+				dto.getCondition(),
+				LocalDate.parse(dto.getStartDate()),
+				LocalDate.parse(dto.getEndDate()),
+				dto.getPlanId(),
+				dto.getPlanName());
 
-		if (phidDto != null && phidDto.getPlanId() != null) {
-			var planIdOpt = privateHealthInsurancePlanRepository.findById(phidDto.getPlanId());
-			planIdOpt.ifPresent(privateHealthInsurancePlan -> result.getPrivateHealthInsuranceDetails().setPlanName(privateHealthInsurancePlan.getPlan()));
+		if (dto.getPlanId() != null) {
+			var planIdOpt = privateHealthInsurancePlanRepository.findById(dto.getPlanId());
+			planIdOpt.ifPresent(privateHealthInsurancePlan -> result.setPlanName(privateHealthInsurancePlan.getPlan()));
 		}
 
 		log.trace(OUTPUT, result);
