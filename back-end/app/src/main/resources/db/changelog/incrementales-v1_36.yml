@@ -82,16 +82,6 @@ databaseChangeLog:
               validate: true
 
     - changeSet:
-          id: addNotNullConstraint-via-pharmaco
-          author: bchacon
-          changes:
-              - addNotNullConstraint:
-                    columnDataType: smallint
-                    columnName: via
-                    tableName: pharmaco
-                    validate: true
-
-    - changeSet:
         id: delete-other_indication_type-concepts
         comment: Borrado de tipos de indicacion
         author: mvenere
@@ -125,6 +115,7 @@ databaseChangeLog:
                 INSERT INTO other_indication_type(id,description) VALUES ('10','Resumen') ON CONFLICT DO NOTHING;
                 INSERT INTO other_indication_type(id,description) VALUES ('11','Otro') ON CONFLICT DO NOTHING;
 
+    - changeSet:
         id: frequency-createTable
         author: fsimaro
         comment: Create table Frequency
