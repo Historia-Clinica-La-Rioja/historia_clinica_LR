@@ -55,10 +55,10 @@ export function showFrequency(dosage: NewDosageDto): ExtraInfo[] {
 	if (dosage?.frequency)
 		return [{
 			title: 'indicacion.internment-card.sections.indication-extra-description.START_TIME',
-			content: dosage?.startDateTime?.time.hours + "hs."
+			content: "a las " + dosage?.startDateTime?.time.hours + "hs."
 		}, {
 			title:  'indicacion.internment-card.sections.indication-extra-description.INTERVAL',
-			content: dosage?.frequency + "hs."
+			content: "cada " + dosage?.frequency + "hs."
 		}]
 	if (dosage?.event)
 		return [{
@@ -68,7 +68,7 @@ export function showFrequency(dosage: NewDosageDto): ExtraInfo[] {
 	if (dosage?.startDateTime?.time.hours)
 		return [{
 			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
-			content: dosage?.startDateTime.time.hours + "hs."
+			content: "a las " + dosage?.startDateTime.time.hours + "hs."
 		}]
 }
 
