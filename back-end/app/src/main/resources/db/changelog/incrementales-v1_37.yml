@@ -829,3 +829,15 @@ databaseChangeLog:
                 UPDATE service_request_category SET description = 'Diagnóstico por imágenes' WHERE id = '363679005';
                 UPDATE service_request_category SET description = 'Laboratorio' WHERE id = '108252007';
                 UPDATE service_request_category SET description = 'Procedimientos quirúrgicos' WHERE id = '387713003';
+   
+    - changeSet:  
+        id: add-column-modification_reason-document
+        comment: Add modification_reason column in document table
+        author: bchacon
+        changes:
+          - addColumn:
+              columns:
+                - column:              
+                    name: modification_reason
+                    type: text
+              tableName: document
