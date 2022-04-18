@@ -39,6 +39,7 @@ export class ParenteralPlanComponent implements OnInit {
 	vias: MasterDataInterface<number>[] = [];
 	hasError = hasError;
 	getError = getError;
+	readonly isNumberOrDot = isNumberOrDot;
 
 	HOURS_LIST = HOURS_LIST;
 

@@ -23,7 +23,7 @@
 			<div fxLayoutGap="20px">
 				<mat-form-field appearance="outline">
 					<mat-label>{{'indicacion.internment-card.dialogs.parenteral-plan.VOLUMEN' | translate | titlecase}}</mat-label>
-					<input matInput type="number" formControlName="volumen" name="volumen">
+					<input matInput type="number" formControlName="volumen" name="volumen" (keypress)="isNumberOrDot($event.key)">
 					<mat-error *ngIf="parenteralPlanForm.hasError('required', 'volumen')" [translate]="'forms.REQUIRED'"></mat-error>
 				</mat-form-field>
 				<span>{{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS' | translate}}.</span>
@@ -115,7 +115,7 @@
 								</div>
 								<mat-form-field appearance="outline">
 									<mat-label> {{'indicacion.internment-card.dialogs.parenteral-plan.DOSE' | translate | titlecase}}</mat-label>
-									<input matInput type="number" formControlName="dose" name="dose">
+									<input matInput type="number" formControlName="dose" name="dose" (keypress)="isNumberOrDot($event.key)">
 									<mat-error *ngIf="hasError(searchSnomedConcept.pharmacos.at(i), 'required', 'dose')" [translate]="'forms.REQUIRED'"></mat-error>
 								</mat-form-field>
 								<span> {{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS' | translate }}.</span>
