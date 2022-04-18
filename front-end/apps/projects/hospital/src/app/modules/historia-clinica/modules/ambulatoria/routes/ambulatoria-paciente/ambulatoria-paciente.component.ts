@@ -448,6 +448,10 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			summaryInfo.plan = patientCoverage.medicalCoverage.plan;
 		}
 
+		if (patientCoverage.condition) {
+			summaryInfo.condition = (patientCoverage.condition = VOLUNTARY_ID) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA;
+		}
+
 		return summaryInfo;
 	}
 
@@ -455,11 +459,6 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		if (this.summaryCoverageInfo || this.appointmentConfirmedCoverageInfo)
 			return true;
 		return false;
-	}
-	
-	getMedicalCoveragePlanText(patientMedicalCoverage: ExternalPatientCoverageDto): string {
-		const condition = (patientMedicalCoverage.condition) ? (patientMedicalCoverage.condition==VOLUNTARY_ID) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA : null;
-		return [patientMedicalCoverage.medicalCoverage?.plan, condition].filter(Boolean).join(' | ');
 	}
 }
 

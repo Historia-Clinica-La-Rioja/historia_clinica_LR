@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
 
 @Component({
   selector: 'app-medical-coverage-summary-view',
@@ -15,10 +16,15 @@ export class MedicalCoverageSummaryViewComponent {
       return false;
     return (Object.keys(this.coverageInfo).length >= 1);
   }
+
+	getMedicalCoveragePlanText(): string {
+		return [this.coverageInfo.plan, this.coverageInfo.condition].filter(Boolean).join(' | ');
+	}
 }
 
 export interface SummaryCoverageInformation {
   name?: string;
   affiliateNumber?: string;
   plan?: string;
+  condition?: EPatientMedicalCoverageCondition;
 }

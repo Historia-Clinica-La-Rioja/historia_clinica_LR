@@ -7,7 +7,7 @@
             <span class="color-primary bold line-height"> {{ title | translate }} </span>
             <div fxLayout="column" *ngIf="thereIsCoverageInfo() else noCoverage">
                 <span class="bold"> {{ coverageInfo?.name }} </span>
-                <span> {{ coverageInfo?.plan }} </span>
+                <span class="lowercase capitalize-first-letter"> {{ getMedicalCoveragePlanText() }} </span>
                 <span>
                     {{ 'ambulatoria.medical-coverage-summary-view.AFFILIATE_NUMBER' | translate }}
                     <ng-container *ngIf="coverageInfo?.affiliateNumber else noInfo">

@@ -378,6 +378,9 @@ export class AppointmentComponent implements OnInit {
 			if (this.coverageData?.privateHealthInsuranceDetails?.planName) {
 				summaryInfo.plan = this.coverageData?.privateHealthInsuranceDetails?.planName;
 			}
+			if(this.coverageData.condition) {
+				summaryInfo.condition = this.coverageData.condition;
+			}
 		}
 		this.summaryCoverageData = summaryInfo;
 	}

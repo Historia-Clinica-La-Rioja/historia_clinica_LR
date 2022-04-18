@@ -216,7 +216,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 				dto.getActive(),
 				dto.getAffiliateNumber(),
 				medicalCoverageBo,
-				phidBo);
+				phidBo,
+				dto.getCondition());
 
 		if (phidDto != null && phidDto.getPlanId() != null) {
 			var planIdOpt = privateHealthInsurancePlanRepository.findById(phidDto.getPlanId());

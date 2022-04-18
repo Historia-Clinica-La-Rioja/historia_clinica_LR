@@ -18,7 +18,7 @@ public class ExternalPatientCoverageMapper {
 			if (planName != null) medicalCoverage.setPlan(planName);
 			medicalCoverage.setName(medicalCoverageDetails.getName());
 			medicalCoverage.setType(type);
-			return new ExternalPatientCoverageDto(medicalCoverage, bo.getAffiliateNumber(), bo.getActive(), bo.getVigencyDate());
+			return new ExternalPatientCoverageDto(medicalCoverage, bo.getAffiliateNumber(), bo.getActive(), bo.getVigencyDate(), bo.getCondition().getId());
 		}
 		return new ExternalPatientCoverageDto();
 	}
