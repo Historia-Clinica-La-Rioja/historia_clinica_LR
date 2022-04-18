@@ -25,7 +25,7 @@ public class ProfessionalDto {
 
 	private String nameSelfDetermination;
 
-    public String getCompleteName(){
-        return String.format("%s %s", firstName, lastName);
+    public String getCompleteName(String name){
+		return String.format("%s %s", name, lastName);
     }
 }
