@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DietDto } from "@api-rest/api-model";
 import { EIndicationStatus, EIndicationType } from "@api-rest/api-model";
-import { getMonth, getYear, isSameDay } from "date-fns";
+import { getMonth, getYear, isSameDay, isToday } from "date-fns";
 import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { openConfirmDialog } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 
@@ -35,7 +35,7 @@ export class DietComponent implements OnInit {
 		if (this.form.valid) {
 			const diet = this.toDietDto();
 			const dietIndicationDate = dateDtoToDate(diet.indicationDate);
-			if (!isSameDay(dietIndicationDate, this.data.actualDate)) {
+			if (!isToday(dietIndicationDate) && isSameDay(dietIndicationDate, this.data.actualDate)) {
 				openConfirmDialog(this.dialog, dietIndicationDate).subscribe(confirm => {
 						if (confirm === true) {
 							this.dialogRef.close(diet);

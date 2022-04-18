@@ -5,7 +5,7 @@ import { OtherIndicationDto } from '@api-rest/api-model';
 import { EIndicationStatus, EIndicationType } from '@api-rest/api-model';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
-import { getMonth, getYear, isSameDay } from 'date-fns';
+import { getMonth, getYear, isSameDay, isToday } from 'date-fns';
 import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_INDICATION_ID } from '../../constants/internment-indications';
 
 @Component({
@@ -131,7 +131,7 @@ export class OtherIndicationComponent implements OnInit {
 
 			const otherIndicatio = this.toIndicationDto(this.form.value);
 			const otherIndicatioDate = dateDtoToDate(otherIndicatio.indicationDate);
-			if (!isSameDay(otherIndicatioDate, this.data.actualDate)) {
+			if (!isToday(otherIndicatioDate) && isSameDay(otherIndicatioDate, this.data.actualDate)) {
 				openConfirmDialog(this.dialog, otherIndicatioDate).subscribe(confirm => {
 					if (confirm === true) {
 						this.dialogRef.close(otherIndicatio);
