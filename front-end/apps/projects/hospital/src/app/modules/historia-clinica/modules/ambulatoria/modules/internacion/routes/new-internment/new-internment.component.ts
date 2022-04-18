@@ -245,9 +245,9 @@ export class NewInternmentComponent implements OnInit {
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {
 		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name, condition]
+		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
 			.filter(Boolean).join(MIDDLE_DASH_SYMBOL);
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber].filter(Boolean).join(SLASH_SYMBOL);
+		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber,condition].filter(Boolean).join(SLASH_SYMBOL);
 	}
 
 	private setMedicalCoverages(): void {

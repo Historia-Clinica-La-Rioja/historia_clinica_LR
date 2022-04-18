@@ -56,6 +56,7 @@ export class AppointmentComponent implements OnInit {
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageNumber: any;
+	coverageCondition: string;
 	coverageData: PatientMedicalCoverage;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
@@ -218,6 +219,7 @@ export class AppointmentComponent implements OnInit {
 				} else {
 					this.coverageData = null;
 					this.coverageNumber = null;
+					this.coverageCondition = null;
 					this.updateSummaryCoverageData();
 					this.updateCoverageData(null);
 				}
@@ -279,6 +281,7 @@ export class AppointmentComponent implements OnInit {
 
 	private setCoverageText(coverageData) {
 		this.coverageNumber = coverageData.affiliateNumber;
+		this.coverageCondition = coverageData.condition;
 		const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
 		if (isHealthInsurance) {
 			let healthInsurance: HealthInsurance;
