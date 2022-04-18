@@ -9,3 +9,65 @@ databaseChangeLog:
               columnName: notes
               newDataType: text
               tableName: external_clinical_history
+    
+    - changeSet:    
+        id: add-private_health_insurance_details-columns-patient_medical_coverage
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: patient_medical_coverage
+              columns:
+                - column:
+                    name: start_date
+                    type: date
+          - addColumn:
+              tableName: patient_medical_coverage
+              columns:
+                - column:
+                    name: end_date
+                    type: date
+          - addColumn:
+              tableName: patient_medical_coverage
+              columns:
+                - column:
+                    name: plan_id
+                    type: int
+                - addForeignKeyConstraint:
+                    baseColumnNames: plan_id
+                    baseTableName: patient_medical_coverage
+                    constraintName: FK_patient_medical_coverage_plan_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: private_health_insurance_plan
+                    validate: true
+
+    - changeSet:
+        id: patient_medical_coverage-update-start_date-data
+        comment: Actualizar datos start_date en patient_medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_medical_coverage pmc SET start_date = phid.start_date FROM private_health_insurance_details phid WHERE pmc.private_health_insurance_details_id  = phid.id;
+
+    - changeSet:
+        id: patient_medical_coverage-update-end_date-data
+        comment: Actualizar datos end_date en patient_medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_medical_coverage pmc SET end_date = phid.end_date FROM private_health_insurance_details phid WHERE pmc.private_health_insurance_details_id  = phid.id;
+
+    - changeSet:
+        id: patient_medical_coverage-update-plan-data
+        comment: Actualizar datos plan en patient_medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_medical_coverage pmc SET plan_id = phid.private_health_insurance_plan_id FROM private_health_insurance_details phid WHERE pmc.private_health_insurance_details_id  = phid.id;
