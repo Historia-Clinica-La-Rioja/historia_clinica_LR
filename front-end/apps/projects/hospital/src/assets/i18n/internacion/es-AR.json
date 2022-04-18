@@ -69,7 +69,8 @@
 				"ADD_OTHER_DIAGNOSIS": "+ Agregar otro diagnóstico",
 				"CHANGE_MAIN_DIAGNOSIS": "Cambiar diagnóstico principal",
 				"messages": {
-					"ERROR": "Ha ingresado un diagnóstico duplicado"
+					"ERROR": "Ha ingresado un diagnóstico duplicado",
+					"SNOMED_DIALOG_ERROR": "Por favor busque un diagnóstico para continuar"
 				},
 				"table": {
 					"TITLE": "Diagnósticos seleccionados",

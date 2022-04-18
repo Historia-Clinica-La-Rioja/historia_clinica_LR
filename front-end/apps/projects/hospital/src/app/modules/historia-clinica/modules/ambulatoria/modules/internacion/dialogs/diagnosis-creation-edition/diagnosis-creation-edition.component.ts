@@ -12,6 +12,8 @@ import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/
 })
 export class DiagnosisCreationEditionComponent implements OnInit {
 
+	snomedError = false;
+
 	form: FormGroup;
 	type: string;
 	selection = false;
@@ -37,6 +39,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 	}
 
 	saveDiagnosis() {
+		this.snomedError = false;
 		if (this.form.valid) {
 			if (this.diagnosis.presumptive != this.form.value.validation) {
 				this.diagnosis.presumptive = this.form.value.validation;
@@ -44,6 +47,8 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 			}
 			this.dialogRef.close(this.diagnosis);
 		}
+		else
+			this.snomedError = true;
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
@@ -73,7 +78,8 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 
 	resetForm(): void {
 		delete this.diagnosis;
-		this.form.reset();
+		this.snomedError = false;
+		this.form.reset( { validation: false });
 	}
 
 }

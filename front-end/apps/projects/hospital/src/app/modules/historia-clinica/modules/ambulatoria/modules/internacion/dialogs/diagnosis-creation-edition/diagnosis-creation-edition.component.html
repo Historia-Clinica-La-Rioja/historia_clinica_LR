@@ -17,7 +17,10 @@
 			</button>
 		</mat-form-field>
 	</ng-template>
-
+	<div *ngIf="snomedError && !form.valid">
+		<mat-error class="error_message" [translate]="'internaciones.anamnesis.diagnosticos.messages.SNOMED_DIALOG_ERROR'"></mat-error>
+		<br>
+	</div>
 	<mat-form-field appearance="fill">
 		<mat-label [translate]="'internaciones.anamnesis.diagnosticos.VERIFICATION'"></mat-label>
 		<mat-select formControlName="validation" [(value)]="selection">
