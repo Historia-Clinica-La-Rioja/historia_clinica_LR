@@ -13,6 +13,7 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 import { AgendaSearchService } from '../../services/agenda-search.service';
+import {PatientNameService} from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-home',
@@ -42,7 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 		private readonly contextService: ContextService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly agendaSearchService: AgendaSearchService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly patientNameService: PatientNameService,
 
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
@@ -124,7 +126,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	getFullName(profesional: ProfessionalDto): string {
-		return `${profesional.lastName}, ${profesional.firstName}`;
+		return `${profesional.lastName}, ${this.patientNameService.getPatientName(profesional.firstName, profesional.nameSelfDetermination)}`;
 	}
 
 	getFullNameLicence(profesional: ProfessionalDto): string {

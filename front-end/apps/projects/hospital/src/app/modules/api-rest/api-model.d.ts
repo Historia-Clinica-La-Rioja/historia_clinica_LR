@@ -2139,7 +2139,6 @@ export interface ProcedureReduced {
 }
 
 export interface ProfessionalDto {
-    completeName: string;
     firstName: string;
     id: number;
     identificationNumber: string;
