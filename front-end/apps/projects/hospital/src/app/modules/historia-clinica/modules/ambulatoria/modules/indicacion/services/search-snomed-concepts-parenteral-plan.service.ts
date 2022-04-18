@@ -41,7 +41,7 @@ export class SearchSnomedConceptsParenteralPlanService {
 		this.salineForm.reset();
 		this.showPharmacoTitle = false;
 		this.showToSearchSnomedConcept = false;
-		this.pharmacoForm.reset();
+		this.pharmacos.clear();
 	}
 
 	setSalineSnomedConcept(selectedConcept: SnomedDto): void {
