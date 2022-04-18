@@ -29,6 +29,16 @@
 			"salt":	"sXtwby6m3YhQDBWM",
 			"iterations":	101
 		}, {
+			"username":	"llamador",
+			"textname":	"",
+			"textdescription":	"",
+			"roles":	[{
+					"rolename":	"R_LlamadoTurno"
+				}],
+			"password":	"ZfWM16TP+nD7sdPfjkSv3Ew5XiB56fTof3A/+9YakPV1tWw5JDaFaMWTtjWfN+zD0i9rB/C5bzwWU86RLQqu/w==",
+			"salt":	"BKW8PdirYUq2puGA",
+			"iterations":	101
+		}, {
 			"username":	"streamsheets",
 			"textname":	"Streamsheets User",
 			"roles":	[{
@@ -70,6 +80,16 @@
 			"acls":	[{
 					"acltype":	"publishClientReceive",
 					"topic":	"HSI/hospitalApi/ALTA_MEDICA",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_LlamadoTurno",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/hospitalApi/PACIENTE_LLAMADO/#",
 					"priority":	0,
 					"allow":	true
 				}]
