@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -76,6 +77,7 @@ public class DocumentSearchQuery {
         return new QueryPart("document.sourceId = :internmentEpisodeId \n" +
                 "and document.sourceTypeId = " + SourceType.HOSPITALIZATION +" \n"+
 				"and document.typeId != " + DocumentType.INDICATION +" \n"+
+				"and not document.statusId = '" + DocumentStatus.ERROR +"' \n"+
 				"and not exists (select 1 \n" +
 				"					from HealthCondition hc2 \n" +
 				"					where hc.id = hc2.id \n" +

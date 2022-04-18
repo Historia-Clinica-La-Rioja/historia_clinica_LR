@@ -62,6 +62,9 @@ public class Document extends SGXAuditableEntity<Long> {
 	@Column(name = "source_type_id", nullable = false)
 	private Short sourceTypeId;
 
+	@Column(name = "modification_reason")
+	private String modificationReason;
+
 	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId) {
 		this.sourceId = sourceId;
 		this.statusId = statusId;

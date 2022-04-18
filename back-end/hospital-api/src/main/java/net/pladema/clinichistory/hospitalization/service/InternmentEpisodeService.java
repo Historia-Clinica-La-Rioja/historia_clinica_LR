@@ -51,5 +51,9 @@ public interface InternmentEpisodeService {
 	Integer updateInternmentEpisodeBed(Integer internmentEpisode, Integer newBedId);
 
 	Optional<PatientMedicalCoverageBo> getMedicalCoverage(Integer internmentEpisode);
+
+	void deleteAnamnesisDocumentId(Integer internmentEpisodeId);
+
+	void deleteEpicrisisDocumentId(Integer internmentEpisodeId);
 	
 }

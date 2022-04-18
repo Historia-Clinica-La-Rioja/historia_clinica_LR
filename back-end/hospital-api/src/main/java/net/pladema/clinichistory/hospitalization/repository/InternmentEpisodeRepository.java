@@ -195,4 +195,25 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 			"AND ie.id = :internmentEpisodeId")
 	Optional<PatientMedicalCoverageVo> getInternmentEpisodeMedicalCoverage(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE InternmentEpisode AS ie " +
+			"SET ie.epicrisisDocId = null, " +
+			"ie.updateable.updatedOn = :today, " +
+			"ie.updateable.updatedBy = :currentUser " +
+			"WHERE ie.id = :internmentEpisodeId")
+	void deleteEpicrisisDocumentId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+								   @Param("currentUser") Integer currentUser,
+								   @Param("today") LocalDateTime today);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE InternmentEpisode AS ie " +
+			"SET ie.anamnesisDocId = null, " +
+			"ie.updateable.updatedOn = :today, " +
+			"ie.updateable.updatedBy = :currentUser " +
+			"WHERE ie.id = :internmentEpisodeId")
+	void deleteAnamnesisDocumentId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+								   @Param("currentUser") Integer currentUser,
+								   @Param("today") LocalDateTime today);
 }

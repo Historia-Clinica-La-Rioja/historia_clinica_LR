@@ -66,5 +66,11 @@ public interface DocumentService {
     void deleteObservationsRiskFactorsHistory(Long documentId);
 
     void deleteObservationsLabHistory(Long documentId);
+
+    void deleteProceduresHistory(Long documentId);
+
+    void deleteById(Long documentId, String documentStatus);
+
+    void updateDocumentModificationReason(Long documentId, String reason);
 }
 

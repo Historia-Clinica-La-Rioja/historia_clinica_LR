@@ -307,4 +307,18 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		return result;
 	}
 
+	@Override
+	public void deleteAnamnesisDocumentId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer currentUser = UserInfo.getCurrentAuditor();
+		internmentEpisodeRepository.deleteAnamnesisDocumentId(internmentEpisodeId, currentUser, LocalDateTime.now());
+	}
+
+	@Override
+	public void deleteEpicrisisDocumentId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer currentUser = UserInfo.getCurrentAuditor();
+		internmentEpisodeRepository.deleteEpicrisisDocumentId(internmentEpisodeId, currentUser, LocalDateTime.now());
+	}
+
 }
