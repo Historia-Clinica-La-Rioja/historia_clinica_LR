@@ -13,7 +13,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 
@@ -50,7 +50,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final InstitutionExternalService institutionExternalService;
 
-	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
 								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
@@ -58,14 +58,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  DateTimeProvider dateTimeProvider,
 								  PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
 								  InstitutionExternalService institutionExternalService,
-								  PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
+								  MedicalCoveragePlanRepository medicalCoveragePlanRepository) {
 		this.appointmentRepository = appointmentRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
 		this.sharedStaffPort = sharedStaffPort;
 		this.dateTimeProvider = dateTimeProvider;
 		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
 		this.institutionExternalService = institutionExternalService;
-		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
+		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
 	}
 
 	@Override
@@ -219,8 +219,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 				dto.getPlanName());
 
 		if (dto.getPlanId() != null) {
-			var planIdOpt = privateHealthInsurancePlanRepository.findById(dto.getPlanId());
-			planIdOpt.ifPresent(privateHealthInsurancePlan -> result.setPlanName(privateHealthInsurancePlan.getPlan()));
+			var planIdOpt = medicalCoveragePlanRepository.findById(dto.getPlanId());
+			planIdOpt.ifPresent(medicalCoveragePlan -> result.setPlanName(medicalCoveragePlan.getPlan()));
 		}
 
 		log.trace(OUTPUT, result);

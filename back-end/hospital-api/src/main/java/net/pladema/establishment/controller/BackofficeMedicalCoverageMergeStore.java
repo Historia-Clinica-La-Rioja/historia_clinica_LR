@@ -3,7 +3,7 @@ package net.pladema.establishment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.controller.dto.BackofficeCoverageDto;
 import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.repository.MedicalCoverageRepository;
@@ -33,7 +33,7 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
 
     private final PrivateHealthInsuranceRepository privateHealthInsuranceRepository;
 
-    private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+    private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
     private final PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
 
@@ -108,7 +108,7 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
 		if(!privateHealthInsuranceRepository.existsById(id))
             healthInsuranceRepository.deleteById(id);
         else {
-			privateHealthInsurancePlanRepository.findByPrivateHealthInsuranceId(id).forEach(plan -> {
+			medicalCoveragePlanRepository.findByMedicalCoverageId(id).forEach(plan -> {
 				patientMedicalCoverageRepository.findByPlanId(plan.getId()).forEach(pmc -> {
 					pmc.setPlanId(null);
 					patientMedicalCoverageRepository.save(pmc);
@@ -118,7 +118,7 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
 							phid.setPlanId(null);
 							privateHealthInsuranceDetailsRepository.save(phid);
 						});
-				privateHealthInsurancePlanRepository.deleteById(plan.getId());
+				medicalCoveragePlanRepository.deleteById(plan.getId());
 			});
 			privateHealthInsuranceRepository.deleteById(id);
 		}

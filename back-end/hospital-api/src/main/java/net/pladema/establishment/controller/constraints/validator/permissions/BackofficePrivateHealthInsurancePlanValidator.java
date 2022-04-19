@@ -1,7 +1,7 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
-import net.pladema.establishment.repository.entity.PrivateHealthInsurancePlan;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.establishment.repository.entity.MedicalCoveragePlan;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class BackofficePrivateHealthInsurancePlanValidator implements BackofficePermissionValidator<PrivateHealthInsurancePlan, Integer> {
+public class BackofficePrivateHealthInsurancePlanValidator implements BackofficePermissionValidator<MedicalCoveragePlan, Integer> {
 
-    private final PrivateHealthInsurancePlanRepository repository;
+    private final MedicalCoveragePlanRepository repository;
 
-    public BackofficePrivateHealthInsurancePlanValidator(PrivateHealthInsurancePlanRepository repository) {
+    public BackofficePrivateHealthInsurancePlanValidator(MedicalCoveragePlanRepository repository) {
         this.repository = repository;
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-    public void assertGetList(PrivateHealthInsurancePlan entity) {
+    public void assertGetList(MedicalCoveragePlan entity) {
     }
 
     @Override
@@ -37,15 +37,15 @@ public class BackofficePrivateHealthInsurancePlanValidator implements Backoffice
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-    public void assertCreate(PrivateHealthInsurancePlan entity) {
-        PrivateHealthInsurancePlan privateHealthInsurancePlan = this.repository.findByIdAndPlan(entity.getPrivateHealthInsuranceId(), entity.getPlan().toLowerCase());
-        if (privateHealthInsurancePlan != null)
+    public void assertCreate(MedicalCoveragePlan entity) {
+        MedicalCoveragePlan medicalCoveragePlan = this.repository.findByIdAndPlan(entity.getMedicalCoverageId(), entity.getPlan().toLowerCase());
+        if (medicalCoveragePlan != null)
             throw new BackofficeValidationException("medical-coverage.plan-exists");
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-    public void assertUpdate(Integer id, PrivateHealthInsurancePlan entity) {
+    public void assertUpdate(Integer id, MedicalCoveragePlan entity) {
     }
 
     @Override
@@ -54,7 +54,7 @@ public class BackofficePrivateHealthInsurancePlanValidator implements Backoffice
     }
 
     @Override
-    public ItemsAllowed<Integer> itemsAllowedToList(PrivateHealthInsurancePlan entity) {
+    public ItemsAllowed<Integer> itemsAllowedToList(MedicalCoveragePlan entity) {
         return new ItemsAllowed<>();
     }
 

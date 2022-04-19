@@ -5,8 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
 	CoverageDtoUnion,
 	HealthInsuranceDto,
-	MedicalCoverageDto,
-	PrivateHealthInsuranceDto, PrivateHealthInsurancePlanDto
+	MedicalCoverageDto, MedicalCoveragePlanDto,
+	PrivateHealthInsuranceDto
 } from '@api-rest/api-model';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { RenaperService } from '@api-rest/services/renaper.service';
@@ -30,8 +30,8 @@ export class MedicalCoverageComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	healthInsuranceFilteredMasterData: MedicalCoverageDto[];
 	privateHealthInsuranceFilteredMasterData: PrivateHealthInsuranceDto[];
-	plans: PrivateHealthInsurancePlanDto[];
-	selectedPlan : PrivateHealthInsurancePlanDto;
+	plans: MedicalCoveragePlanDto[];
+	selectedPlan : MedicalCoveragePlanDto;
 
 	loading = true;
 
@@ -225,7 +225,7 @@ export class MedicalCoverageComponent implements OnInit {
 			startDate: this.prepagaForm.value.startDate,
 			endDate: this.prepagaForm.value.endDate,
 			planId: this.prepagaForm.value.plan,
-			planName: this.plans.filter(data => data.id==this.prepagaForm.value.plan).map(privateHealthInsurancePlan => (privateHealthInsurancePlan.plan))[0]
+			planName: this.plans.filter(data => data.id==this.prepagaForm.value.plan).map(medicalCoveragePlan => (medicalCoveragePlan.plan))[0]
 			,
 			active: true
 		};

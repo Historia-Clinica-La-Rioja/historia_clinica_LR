@@ -15,7 +15,7 @@ import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepo
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +42,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     private PatientDischargeRepository patientDischargeRepository;
 
 	@Autowired
-	private PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
 	@Mock
 	private DateTimeProvider dateTimeProvider;
@@ -62,8 +62,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
                 internmentEpisodeRepository,
                 dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
-                documentService,
-				privateHealthInsurancePlanRepository
+                documentService, medicalCoveragePlanRepository
         );
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,

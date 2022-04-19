@@ -1424,6 +1424,12 @@ export interface MedicalCoverageDto {
     service: string;
 }
 
+export interface MedicalCoveragePlanDto {
+    id: number;
+    medicalCoverageId: number;
+    plan: string;
+}
+
 export interface MedicalCoverageTypeDto extends Serializable {
     id: number;
     value: string;
@@ -2046,12 +2052,6 @@ export interface PrivateHealthInsuranceDetailsDto {
 
 export interface PrivateHealthInsuranceDto extends CoverageDto {
     type: "PrivateHealthInsuranceDto";
-}
-
-export interface PrivateHealthInsurancePlanDto {
-    id: number;
-    plan: string;
-    privateHealthInsuranceId: number;
 }
 
 export interface ProbableDischargeDateDto {

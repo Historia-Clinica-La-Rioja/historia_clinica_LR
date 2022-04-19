@@ -1,4 +1,4 @@
-package net.pladema.patient.controller.dto;
+package net.pladema.patient.service.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,11 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrivateHealthInsurancePlanDto {
+public class MedicalCoveragePlanBo {
 
     private Integer id;
 
-    private Integer privateHealthInsuranceId;
+    private Integer medicalCoverageId;
 
     private String plan;
 

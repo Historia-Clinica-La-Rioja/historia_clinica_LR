@@ -15,13 +15,13 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "private_health_insurance_plan")
+@Table(name = "medical_coverage_plan")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrivateHealthInsurancePlan implements Serializable {
+public class MedicalCoveragePlan implements Serializable {
 
     private static final long serialVersionUID = -1832876231321092835L;
 
@@ -30,8 +30,8 @@ public class PrivateHealthInsurancePlan implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "private_health_insurance_id", nullable = false)
-    private Integer privateHealthInsuranceId;
+    @Column(name = "medical_coverage_id", nullable = false)
+    private Integer medicalCoverageId;
 
     @Column(name = "plan", nullable = false, length = 10)
     private String plan;

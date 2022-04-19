@@ -21,6 +21,7 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateI
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeExceptionEnum;
 import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 
@@ -57,17 +58,17 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private final PatientDischargeRepository patientDischargeRepository;
 
-	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
     private final DocumentService documentService;
 
-    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
+    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, MedicalCoveragePlanRepository medicalCoveragePlanRepository) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
         this.patientDischargeRepository = patientDischargeRepository;
         this.documentService = documentService;
-		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
+		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
 	}
 
     @Override
@@ -292,7 +293,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
 		Optional<PatientMedicalCoverageBo> result = internmentEpisodeRepository.getInternmentEpisodeMedicalCoverage(internmentEpisodeId).map(PatientMedicalCoverageBo::new).map(bo -> {
 			if (bo.getPlanId() != null)
-				bo.setPlanName(privateHealthInsurancePlanRepository.findById(bo.getPlanId()).get().getPlan());
+				bo.setPlanName(medicalCoveragePlanRepository.findById(bo.getPlanId()).get().getPlan());
 			return bo;
 		});
 		LOG.debug(LOGGING_OUTPUT, result);

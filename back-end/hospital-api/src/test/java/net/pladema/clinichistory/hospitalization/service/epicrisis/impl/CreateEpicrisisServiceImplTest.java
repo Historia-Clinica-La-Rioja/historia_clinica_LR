@@ -27,7 +27,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -61,7 +61,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     private DocumentRepository documentRepository;
 
 	@Autowired
-	private PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
 	@Mock
 	private DateTimeProvider dateTimeProvider;
@@ -79,7 +79,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
                 dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService,
-				privateHealthInsurancePlanRepository
+                medicalCoveragePlanRepository
         );
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
