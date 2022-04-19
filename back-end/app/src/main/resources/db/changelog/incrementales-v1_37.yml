@@ -71,3 +71,33 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE patient_medical_coverage pmc SET plan_id = phid.private_health_insurance_plan_id FROM private_health_insurance_details phid WHERE pmc.private_health_insurance_details_id  = phid.id;
+
+    - changeSet:
+        id: renameTable-private_health_insurance_plan
+        author: mvenere
+        changes:
+          - renameTable:
+              newTableName: medical_coverage_plan
+              oldTableName: private_health_insurance_plan
+
+    - changeSet:
+        id: renameColumn-medical_coverage_plan-private_health_insurance_id
+        author: mvenere
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: medical_coverage_plan
+              constraintName: FK_private_health_insurance_id
+          - renameColumn:
+              columnDataType: int
+              newColumnName: medical_coverage_id
+              oldColumnName: private_health_insurance_id
+              tableName: medical_coverage_plan
+          - addForeignKeyConstraint:
+              baseColumnNames: medical_coverage_id
+              baseTableName: medical_coverage_plan
+              constraintName: FK_medical_coverage_plan_medical_coverage_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medical_coverage
+              validate: true
