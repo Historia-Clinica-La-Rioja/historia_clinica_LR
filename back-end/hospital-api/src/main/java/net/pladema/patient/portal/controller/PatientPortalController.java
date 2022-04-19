@@ -128,6 +128,16 @@ public class PatientPortalController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@GetMapping("/last-2-anthropometric-data")
+	public ResponseEntity<List<HCEAnthropometricDataDto>> getLast2AnthropometricData() throws MethodNotSupportedException {
+		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
+			throw new MethodNotSupportedException("Funcionalidad no soportada");
+		Integer patientId = patientPortalService.getPatientId();
+		List<HCEAnthropometricDataDto> result = hceClinicalObservationExternalService.getLast2AnthropometricDataGeneralState(patientId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
 	@GetMapping("/riskFactors")
 	public ResponseEntity<HCELast2RiskFactorsDto> getRiskFactors() throws MethodNotSupportedException {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
