@@ -24,6 +24,7 @@ import { EditProfessionsComponent } from './dialogs/edit-professions/edit-profes
 import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
 import { CardRolesComponent } from './component/card-roles/card-roles.component';
 import { AssignedAppointmentComponent } from './component/assigned-appointment/assigned-appointment.component';
+import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
 
 @NgModule({
 	declarations: [
@@ -50,15 +51,16 @@ import { AssignedAppointmentComponent } from './component/assigned-appointment/a
 		ScanPatientComponent,
 		AssignedAppointmentComponent,
 	],
-	imports: [
-		FormsModule,
-		ReactiveFormsModule,
-		// routing
-		PacientesRoutingModule,
-		// deps
-		LazyMaterialModule,
-		PresentationModule,
-	]
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        // routing
+        PacientesRoutingModule,
+        // deps
+        LazyMaterialModule,
+        PresentationModule,
+        InternacionesModule,
+    ]
 })
 export class PacientesModule {
 }

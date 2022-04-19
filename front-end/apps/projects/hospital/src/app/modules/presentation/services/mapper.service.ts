@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { InternmentEpisodeSummary } from '../components/internment-episode-summary/internment-episode-summary.component';
+import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
 import {
 	BasicPatientDto,
 	CompletePatientDto,

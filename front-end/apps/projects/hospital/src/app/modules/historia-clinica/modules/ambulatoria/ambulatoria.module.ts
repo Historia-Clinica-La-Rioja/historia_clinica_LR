@@ -51,6 +51,7 @@ import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summa
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { IndicacionModule } from "@historia-clinica/modules/ambulatoria/modules/indicacion/indicacion.module";
 import { MedicalCoverageSummaryViewComponent } from './components/medical-coverage-summary-view/medical-coverage-summary-view.component';
+import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
 
 @NgModule({
 	declarations: [
@@ -92,20 +93,21 @@ import { MedicalCoverageSummaryViewComponent } from './components/medical-covera
 		InternmentSummaryComponent,
 		MedicalCoverageSummaryViewComponent,
 	],
-	imports: [
-		CommonModule,
-		FormsModule,
-		OverlayModule,
-		PortalModule,
-		PresentationModule,
-		ExtensionsModule,
-		HistoriaClinicaModule,
-		AmbulatoriaRoutingModule,
-		PacientesModule,
-		OdontologiaModule,
-		ClipboardModule,
-		IndicacionModule
-	]
+    imports: [
+        CommonModule,
+        FormsModule,
+        OverlayModule,
+        PortalModule,
+        PresentationModule,
+        ExtensionsModule,
+        HistoriaClinicaModule,
+        AmbulatoriaRoutingModule,
+        PacientesModule,
+        OdontologiaModule,
+        ClipboardModule,
+        IndicacionModule,
+        InternacionesModule
+    ]
 })
 export class AmbulatoriaModule {
 }

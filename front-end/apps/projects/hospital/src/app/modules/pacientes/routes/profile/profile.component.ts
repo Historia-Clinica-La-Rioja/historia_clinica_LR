@@ -10,7 +10,7 @@ import {
 	UserDataDto,
 	UserRoleDto,
 	RoleDto,
-    InternmentSummaryDto,
+	InternmentSummaryDto,
 	PatientDischargeDto,
 	EpicrisisSummaryDto,
 	InstitutionDto,
@@ -47,12 +47,12 @@ import { EditRolesComponent } from '@pacientes/dialogs/edit-roles/edit-roles.com
 import { RolesService } from '@api-rest/services/roles.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { INTERNACION } from "@historia-clinica/constants/summaries";
-import { InternmentEpisodeSummary } from "@presentation/components/internment-episode-summary/internment-episode-summary.component";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { EstadosEpisodio, Triages } from "@historia-clinica/modules/guardia/constants/masterdata";
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { AppRoutes } from "../../../../app-routing.module";
+import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 
-import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 
@@ -43,6 +42,7 @@ import {
 import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
 import { PatientAllergiesService } from "@historia-clinica/modules/ambulatoria/services/patient-allergies.service";
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
+import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 @Component({
 	selector: 'app-internacion-paciente',

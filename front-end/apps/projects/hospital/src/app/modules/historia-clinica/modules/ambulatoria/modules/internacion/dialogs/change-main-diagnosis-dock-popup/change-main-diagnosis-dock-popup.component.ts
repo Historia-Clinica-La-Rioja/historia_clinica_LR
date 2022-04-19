@@ -9,7 +9,6 @@ import { MainDiagnosesService } from '@api-rest/services/main-diagnoses.service'
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { MapperService } from '@presentation/services/mapper.service';
@@ -22,6 +21,7 @@ import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 @Component({
 	selector: 'app-change-main-diagnosis-dock-popup',

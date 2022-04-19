@@ -16,6 +16,7 @@ import { AntecedentesFamiliaresComponent } from './components/antecedentes-famil
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
+import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
@@ -42,6 +43,7 @@ import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/se
 		AntecedentesPersonalesComponent,
 		DiagnosticosComponent,
 		InternacionesTableComponent,
+		InternmentEpisodeSummaryComponent,
 		MedicacionComponent,
 		VacunasComponent,
 		// dialogs
@@ -51,9 +53,12 @@ import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/se
 		EpicrisisDockPopupComponent,
 		EvolutionNoteDockPopupComponent,
 		MedicalDischargeComponent,
-  		ElementoDiagnosticoComponent,
-    	DiagnosisCreationEditionComponent,
+		ElementoDiagnosticoComponent,
+		DiagnosisCreationEditionComponent,
 		SelectMainDiagnosisComponent,
+	],
+	exports: [
+		InternmentEpisodeSummaryComponent
 	],
 	imports: [
 		CommonModule,
