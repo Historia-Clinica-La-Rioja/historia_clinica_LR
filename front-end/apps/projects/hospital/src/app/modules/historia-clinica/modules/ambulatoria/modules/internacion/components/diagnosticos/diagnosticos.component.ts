@@ -47,8 +47,10 @@ export class DiagnosticosComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(diagnosis => {
 			if (diagnosis) {
 				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt!=this._mainDiagnosis?.snomed.pt)
-					if (isMainDiagnosis)
+					if (isMainDiagnosis){
+						diagnosis.presumptive = false;
 						this.mainDiagnosis = diagnosis;
+					}
 					else {
 						this.diagnosticos.push(diagnosis);
 						this.diagnosisChange.emit(this.diagnosticos);
