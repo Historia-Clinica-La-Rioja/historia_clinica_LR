@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Subject } from "rxjs";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
+import { AllergyConditionDto, DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, HealthHistoryConditionDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
 import { DocumentSearchService } from "@api-rest/services/document-search.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { momentParseDateTime } from "@core/utils/moment.utils";
@@ -60,7 +60,7 @@ export class InternmentSummaryFacadeService {
 		private readonly hceGeneralStateService: HceGeneralStateService
 	) { }
 
-	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean) {
+	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean): void {
 		if (!bloodType) {
 			this.bloodTypeDataSubject.next();
 		}
@@ -79,7 +79,7 @@ export class InternmentSummaryFacadeService {
 		});
 	}
 
-	setFieldsToUpdate(fieldsToUpdate: InternmentFields) {
+	setFieldsToUpdate(fieldsToUpdate: InternmentFields): void {
 		if (fieldsToUpdate.allergies) {
 			this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(a => this.allergiesSubject.next(a));
 		}
@@ -130,25 +130,21 @@ export class InternmentSummaryFacadeService {
 		}
 	}
 
-	setSerchFilter(searchFilter: DocumentSearchFilterDto) {
+	setSerchFilter(searchFilter: DocumentSearchFilterDto): void {
 		this.searchFilter = searchFilter;
 		this.loadHistoric();
 	}
 
-	loadEvolutionNotes() {
+	loadEvolutionNotes(): void {
 		this.loadHistoric();
 	}
 
-	initializeEvolutionNoteFilterResult(internmentEpisodeId: number) {
+	initializeEvolutionNoteFilterResult(internmentEpisodeId: number): void {
 		this.internmentEpisodeId = internmentEpisodeId;
 		this.setSerchFilter(null);
 	}
 
-	private loadHistoric(): void {
-		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter).subscribe(historicalData => this.clinicalEvaluationSubject.next(historicalData));
-	}
-
-	updateInternmentEpisode() {
+	updateInternmentEpisode(): void {
 		this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).subscribe(
 			(internmentEpisode: InternmentSummaryDto) => {
 				this.anamnesisSubject.next(internmentEpisode.documents?.anamnesis);
@@ -162,7 +158,7 @@ export class InternmentSummaryFacadeService {
 			});
 	}
 
-	unifyAllergies(patientId: number) {
+	unifyAllergies(patientId: number): void {
 		forkJoin([this.internmentStateService.getAllergies(this.internmentEpisodeId), this.hceGeneralStateService.getAllergies(patientId)])
 			.subscribe(([allergiesI, allergiesHCE]) => {
 				allergiesHCE.forEach(e => allergiesI.push(this.mapToAllergyConditionDto(e)));
@@ -170,7 +166,7 @@ export class InternmentSummaryFacadeService {
 			});
 	}
 
-	unifyFamilyHistories(patientId: number) {
+	unifyFamilyHistories(patientId: number): void {
 		forkJoin([this.internmentStateService.getFamilyHistories(this.internmentEpisodeId), this.hceGeneralStateService.getFamilyHistories(patientId)])
 			.subscribe(([familyHistoriesI, familyHistoriesHCE]) => {
 				familyHistoriesHCE.forEach(e => familyHistoriesI.push(this.mapToHealthHistoryConditionDto(e)));
@@ -178,7 +174,7 @@ export class InternmentSummaryFacadeService {
 			});
 	}
 
-	mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto) {
+	private mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto): HealthHistoryConditionDto {
 		return {
 			date: familyHistory.startDate,
 			note: null,
@@ -188,7 +184,7 @@ export class InternmentSummaryFacadeService {
 		}
 	}
 
-	mapToAllergyConditionDto(allergie: HCEAllergyDto) {
+	private mapToAllergyConditionDto(allergie: HCEAllergyDto): AllergyConditionDto {
 		return {
 			categoryId: allergie.categoryId,
 			criticalityId: allergie.criticalityId,
@@ -197,6 +193,10 @@ export class InternmentSummaryFacadeService {
 			snomed: allergie.snomed,
 			statusId: allergie.statusId
 		}
+	}
+
+	private loadHistoric(): void {
+		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter).subscribe(historicalData => this.clinicalEvaluationSubject.next(historicalData));
 	}
 }
 

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
-import { AnthropometricDataDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
 import { Observable } from 'rxjs';
@@ -19,9 +18,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 	@Input() editable = false;
 	@Input() hideBloodType = false;
 
-	antropometricosSummary = ANTROPOMETRICOS;
-
 	details: DetailBox[] = [];
+	readonly antropometricosSummary = ANTROPOMETRICOS;
 
 	private LABELS = {
 		bloodType: 'Grupo sanguíneo',
@@ -43,7 +41,46 @@ export class AntropometricosSummaryComponent implements OnInit {
 		this.updateAnthropometricData();
 	}
 
-	private updateAnthropometricData() {
+	openDialog(): void {
+		const dialogRef = this.dialog.open(AddAnthropometricComponent, {
+			disableClose: true,
+			width: '25%',
+			data: {
+				internmentEpisodeId: this.internmentEpisodeId
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate) {
+				this.updateAnthropometricData();
+				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight, bloodType: fieldsToUpdate.bloodType });
+			}
+		}
+		);
+	}
+
+	getIdentificator(name: DetailBox): string {
+		return name.description.split(' (')[0]
+			.split(" ").join('-').toLowerCase();
+	}
+
+	private truncateIfNecessary(floatValue: string): string {
+		if (!floatValue)
+			return undefined;
+
+		const lastPartValue = floatValue.substring(floatValue.length - 3);
+		if (lastPartValue === '.00') {
+			return floatValue.substring(0, floatValue.length - 3);
+		}
+
+		if (lastPartValue[2] === '0') {
+			return floatValue.substring(0, floatValue.length - 1);
+		}
+
+		return floatValue;
+	}
+
+	private updateAnthropometricData(): void {
 		this.anthropometricData$.subscribe(
 			anthropometricData => {
 				if (anthropometricData) {
@@ -65,45 +102,6 @@ export class AntropometricosSummaryComponent implements OnInit {
 				}
 			}
 		);
-	}
-
-	openDialog() {
-		const dialogRef = this.dialog.open(AddAnthropometricComponent, {
-			disableClose: true,
-			width: '25%',
-			data: {
-				internmentEpisodeId: this.internmentEpisodeId
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
-			if (fieldsToUpdate) {
-				this.updateAnthropometricData();
-				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight, bloodType: fieldsToUpdate.bloodType });
-			}
-		}
-		);
-	}
-
-	private truncateIfNecessary(floatValue: string): string {
-		if (!floatValue)
-			return undefined;
-
-		const lastPartValue = floatValue.substring(floatValue.length - 3);
-		if (lastPartValue === '.00') {
-			return floatValue.substring(0, floatValue.length - 3);
-		}
-
-		if (lastPartValue[2] === '0') {
-			return floatValue.substring(0, floatValue.length - 1);
-		}
-
-		return floatValue;
-	}
-
-	public getIdentificator(name: DetailBox): string {
-		return name.description.split(' (')[0]
-			.split(" ").join('-').toLowerCase();
 	}
 
 }
