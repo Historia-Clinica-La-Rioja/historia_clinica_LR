@@ -46,16 +46,15 @@ export class DiagnosticosComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(diagnosis => {
 			if (diagnosis) {
-				if (isMainDiagnosis)
-					this.mainDiagnosis = diagnosis;
-				else {
-					if (this.diagnosticos.filter(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt).length === 0){
+				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt!=this._mainDiagnosis?.snomed.pt)
+					if (isMainDiagnosis)
+						this.mainDiagnosis = diagnosis;
+					else {
 						this.diagnosticos.push(diagnosis);
 						this.diagnosisChange.emit(this.diagnosticos);
 					}
-					else
-						this.snackBarService.showError('internaciones.anamnesis.diagnosticos.messages.ERROR');
-				}
+				else
+					this.snackBarService.showError('internaciones.anamnesis.diagnosticos.messages.ERROR');
 			}
 		});
 	}
