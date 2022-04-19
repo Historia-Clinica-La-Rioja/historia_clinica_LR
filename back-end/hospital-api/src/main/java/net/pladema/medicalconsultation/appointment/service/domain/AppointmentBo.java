@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.service.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,81 +17,96 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
 public class AppointmentBo {
 
-    private Integer id;
+	private Integer id;
 
-    private Integer diaryId;
+	private Integer diaryId;
 
-    private Integer patientId;
+	private Integer patientId;
 
-    private LocalDate date;
+	private LocalDate date;
 
-    private LocalTime hour;
+	private LocalTime hour;
 
-    private Short appointmentStateId;
+	private Short appointmentStateId;
 
-    private boolean overturn;
+	private boolean overturn;
 
-    private Integer openingHoursId;
+	private Integer openingHoursId;
 
-    private Integer patientMedicalCoverageId;
+	private Integer patientMedicalCoverageId;
 
-    private Short medicalAttentionTypeId;
-    
-    private String stateChangeReason;
+	private Short medicalAttentionTypeId;
 
-    private String phonePrefix;
+	private String stateChangeReason;
 
-    private String phoneNumber;
+	private String phonePrefix;
 
-    public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
-        return AppointmentBo.builder()
-                .id(appointmentDiaryVo.getId())
-                .diaryId(appointmentDiaryVo.getDiaryId())
-                .patientId(appointmentDiaryVo.getPatientId())
-                .date(appointmentDiaryVo.getDate())
-                .hour(appointmentDiaryVo.getHour())
-                .appointmentStateId(appointmentDiaryVo.getAppointmentStateId())
-                .overturn(appointmentDiaryVo.isOverturn())
-                .patientMedicalCoverageId(appointmentDiaryVo.getPatientMedicalCoverageId())
-                .medicalAttentionTypeId(appointmentDiaryVo.getMedicalAttentionTypeId())
-                .phonePrefix(appointmentDiaryVo.getPhonePrefix())
-                .phoneNumber(appointmentDiaryVo.getPhoneNumber())
-                .build();
+	private String phoneNumber;
+
+	private Integer snomedId;
+
+	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
+		return AppointmentBo.builder()
+				.id(appointmentDiaryVo.getId())
+				.diaryId(appointmentDiaryVo.getDiaryId())
+				.patientId(appointmentDiaryVo.getPatientId())
+				.date(appointmentDiaryVo.getDate())
+				.hour(appointmentDiaryVo.getHour())
+				.appointmentStateId(appointmentDiaryVo.getAppointmentStateId())
+				.overturn(appointmentDiaryVo.isOverturn())
+				.patientMedicalCoverageId(appointmentDiaryVo.getPatientMedicalCoverageId())
+				.medicalAttentionTypeId(appointmentDiaryVo.getMedicalAttentionTypeId())
+				.phonePrefix(appointmentDiaryVo.getPhonePrefix())
+				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
+				.build();
+	}
+
+	public static AppointmentBo fromAppointmentVo(AppointmentVo appointmentVo) {
+		return AppointmentBo.builder()
+				.id(appointmentVo.getId())
+				.patientId(appointmentVo.getPatientId())
+				.date(appointmentVo.getDate())
+				.hour(appointmentVo.getHour())
+				.appointmentStateId(appointmentVo.getAppointmentStateId())
+				.overturn(appointmentVo.isOverturn())
+				.patientMedicalCoverageId(appointmentVo.getPatientMedicalCoverageId())
+				.medicalAttentionTypeId(appointmentVo.getMedicalAttentionTypeId())
+				.stateChangeReason(appointmentVo.getStateChangeReason())
+				.diaryId(appointmentVo.getDiaryId())
+				.build();
+	}
+
+	public static AppointmentBo newFromAppointment(Appointment appointment) {
+		return AppointmentBo.builder()
+				.id(appointment.getId())
+				.patientId(appointment.getPatientId())
+				.date(appointment.getDateTypeId())
+				.hour(appointment.getHour())
+				.appointmentStateId(appointment.getAppointmentStateId())
+				.overturn(appointment.getIsOverturn())
+				.patientMedicalCoverageId(appointment.getPatientMedicalCoverageId())
+				.phonePrefix(appointment.getPhonePrefix())
+				.phoneNumber(appointment.getPhoneNumber())
+				.snomedId(appointment.getSnomedId())
+				.build();
     }
-    
-    public static AppointmentBo fromAppointmentVo(AppointmentVo appointmentVo) {
-        return AppointmentBo.builder()
-                .id(appointmentVo.getId())
-                .patientId(appointmentVo.getPatientId())
-                .date(appointmentVo.getDate())
-                .hour(appointmentVo.getHour())
-                .appointmentStateId(appointmentVo.getAppointmentStateId())
-                .overturn(appointmentVo.isOverturn())
-                .patientMedicalCoverageId(appointmentVo.getPatientMedicalCoverageId())
-                .medicalAttentionTypeId(appointmentVo.getMedicalAttentionTypeId())
-                .stateChangeReason(appointmentVo.getStateChangeReason())
-                .diaryId(appointmentVo.getDiaryId())
-                .build();
-    }
 
-    public static AppointmentBo newFromAppointment(Appointment appointment) {
-        return AppointmentBo.builder()
-                .id(appointment.getId())
-                .patientId(appointment.getPatientId())
-                .date(appointment.getDateTypeId())
-                .hour(appointment.getHour())
-                .appointmentStateId(appointment.getAppointmentStateId())
-                .overturn(appointment.getIsOverturn())
-                .patientMedicalCoverageId(appointment.getPatientMedicalCoverageId())
-                .phonePrefix(appointment.getPhonePrefix())
-                .phoneNumber(appointment.getPhoneNumber())
-                .build();
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AppointmentBo)) return false;
+		AppointmentBo that = (AppointmentBo) o;
+		return getId().equals(that.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
+	}
 }

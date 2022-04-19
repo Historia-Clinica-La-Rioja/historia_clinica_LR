@@ -50,8 +50,8 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         OpeningHours ohProgrammed = save(new OpeningHours(dayWeekId, LocalTime.of(10, 0), LocalTime.of(12, 0)));
         OpeningHours ohSpontaneous = save(new OpeningHours(dayWeekId, LocalTime.of(15, 0), LocalTime.of(18, 0)));
 
-        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10));
-        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0));
+        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10, false));
+        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0, false));
 
         save(new AppointmentState((short) AppointmentState.ASSIGNED, "Asignado"));
         save(new AppointmentState((short) AppointmentState.CONFIRMED, "Confirmado"));
@@ -114,8 +114,8 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         OpeningHours ohProgrammed = save(new OpeningHours(dayWeekId, LocalTime.of(10, 0), LocalTime.of(12, 0)));
         OpeningHours ohSpontaneous = save(new OpeningHours(dayWeekId, LocalTime.of(15, 0), LocalTime.of(18, 0)));
 
-        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10));
-        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0));
+        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10, false));
+        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0, false));
 
         save(new AppointmentState((short) AppointmentState.ASSIGNED, "Asignado"));
         save(new AppointmentState((short) AppointmentState.CONFIRMED, "Confirmado"));

@@ -35,6 +35,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.HistoricApp
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 
 @Slf4j
 @Service
@@ -81,7 +82,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.debug("Input parameters -> diaryIds {}", diaryIds);
 		Collection<AppointmentBo> result = new ArrayList<>();
 		if (!diaryIds.isEmpty())
-			result = appointmentRepository.getAppointmentsByDiaries(diaryIds).stream().map(AppointmentBo::fromAppointmentDiaryVo)
+			result = appointmentRepository.getAppointmentsByDiaries(diaryIds).stream()
+					.map(AppointmentBo::fromAppointmentDiaryVo)
+					.distinct()
 					.collect(Collectors.toList());
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
@@ -93,32 +96,34 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId) {
 		log.debug("Input parameters -> diaryId {}", diaryId);
 		Collection<AppointmentBo> result = appointmentRepository.getFutureActiveAppointmentsByDiary(diaryId).stream()
-				.map(AppointmentBo::fromAppointmentDiaryVo).collect(Collectors.toList());
+				.map(AppointmentBo::fromAppointmentDiaryVo)
+				.distinct()
+				.collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
-    public boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour) {
-        log.debug("Input parameters -> diaryId {}, openingHoursId {}, date {}, hour {}", diaryId, openingHoursId, date, hour);
-        boolean result = appointmentRepository.existAppointment(diaryId, openingHoursId, date, hour);
-        log.debug(OUTPUT, result);
-        return result;
-    }
+	public boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour) {
+		log.debug("Input parameters -> diaryId {}, openingHoursId {}, date {}, hour {}", diaryId, openingHoursId, date, hour);
+		boolean result = appointmentRepository.existAppointment(diaryId, openingHoursId, date, hour);
+		log.debug(OUTPUT, result);
+		return result;
+	}
 
-    @Override
-    public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
-        log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
-        appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
-        historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
-        log.debug(OUTPUT, Boolean.TRUE);
-        return Boolean.TRUE;
-    }
+	@Override
+	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
+		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
+		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
+		historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
+		log.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
+	}
 
 	@Override
 	public Optional<AppointmentBo> getAppointment(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		Optional<AppointmentBo>	result = appointmentRepository.getAppointment(appointmentId).map(AppointmentBo::fromAppointmentVo);
+		Optional<AppointmentBo>	result = appointmentRepository.getAppointment(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -160,7 +165,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	@Override
 	public Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId,
-											LocalDate currentDate) {
+									  LocalDate currentDate) {
 		List<Integer> medicalCoverages = appointmentRepository.getMedicalCoverage(patientId, currentDate,
 				AppointmentState.CONFIRMED, healthcareProfessionalId);
 		Integer patientMedicalCoverageId = medicalCoverages.stream().findAny().orElse(null);
@@ -267,4 +272,22 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return result;
 	}
 
+	@Override
+	public AppointmentBo updateAppointment(UpdateAppointmentBo updateAppointmentBo) {
+		var appointment = appointmentRepository.findById(updateAppointmentBo.getAppointmentId());
+		if(appointment.isPresent()){
+			appointment.get().setAppointmentStateId(updateAppointmentBo.getAppointmentStateId());
+			appointment.get().setPatientId(updateAppointmentBo.getPatientId());
+			appointment.get().setPatientMedicalCoverageId(updateAppointmentBo.getPatientMedicalCoverageId());
+			appointment.get().setIsOverturn(updateAppointmentBo.isOverturn());
+			appointment.get().setPhoneNumber(updateAppointmentBo.getPhoneNumber());
+			return AppointmentBo.newFromAppointment(appointmentRepository.save(appointment.get()));
+		}
+		return new AppointmentBo();
+	}
+
+	@Override
+	public void delete(AppointmentBo appointmentBo) {
+		appointmentRepository.deleteById(appointmentBo.getId());
+	}
 }

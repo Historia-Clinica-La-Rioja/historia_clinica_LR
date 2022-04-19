@@ -274,6 +274,13 @@ export interface BMPersonDto extends APersonDto {
     id: number;
 }
 
+export interface BackofficeClinicalSpecialtyMandatoryMedicalPracticeDto {
+    clinicalSpecialtyId: number;
+    id: number;
+    mandatoryMedicalPracticeId: number;
+    practiceRecommendations: string;
+}
+
 export interface BackofficeCoverageDto extends Serializable {
     acronym?: string;
     cuit: string;
@@ -284,6 +291,14 @@ export interface BackofficeCoverageDto extends Serializable {
     type: number;
 }
 
+export interface BackofficeHealthInsurancePracticeDto {
+    clinicalSpecialtyId: number;
+    coverageInformation: string;
+    id: number;
+    mandatoryMedicalPracticeId: number;
+    medicalCoverageId: number;
+}
+
 export interface BackofficeHealthcareProfessionalCompleteDto {
     clinicalSpecialtyId: number;
     deleted: boolean;
@@ -291,6 +306,21 @@ export interface BackofficeHealthcareProfessionalCompleteDto {
     licenseNumber: string;
     personId: number;
     professionalSpecialtyId: number;
+}
+
+export interface BackofficeMandatoryMedicalPracticeDto {
+    description: string;
+    id: number;
+    mmpCode: string;
+    snomedId: number;
+}
+
+export interface BackofficeMandatoryProfessionalPracticeFreeDaysDto {
+    clinicalSpecialtyId: number;
+    days: number[];
+    healthcareProfessionalId: number;
+    id: number;
+    mandatoryMedicalPracticeId: number;
 }
 
 export interface BackofficeUserDto {
@@ -368,6 +398,32 @@ export interface BedSummaryDto {
     bed: BedDto;
     probableDischargeDate?: string;
     sector: SectorSummaryDto;
+}
+
+export interface BlockDto {
+    dateDto: DateDto;
+    end: TimeDto;
+    init: TimeDto;
+}
+
+export interface BookingAppointmentDto {
+    coverageId: number;
+    day: string;
+    diaryId: number;
+    hour: string;
+    openingHoursId: number;
+    phoneNumber: string;
+    snomedId: number;
+    specialtyId: number;
+}
+
+export interface BookingPersonDto {
+    birthDate: string;
+    email: string;
+    firstName: string;
+    genderId: number;
+    idNumber: string;
+    lastName: string;
 }
 
 export interface BreathingDto extends Serializable {
@@ -630,6 +686,7 @@ export interface DiaryListDto {
 }
 
 export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> {
+    externalAppointmentsAllowed: boolean;
     medicalAttentionTypeId: number;
     openingHours: OpeningHoursDto;
     overturnCount?: number;
@@ -1177,6 +1234,12 @@ export interface HealthcareProfessionalDto {
     licenseNumber: string;
     person: PersonBasicDataResponseDto;
     personId: number;
+}
+
+export interface HealthcareProfessionalHealthInsuranceDto extends Serializable {
+    healthcareProfessionalId: number;
+    id: number;
+    medicalCoverageId: number;
 }
 
 export interface HealthcareProfessionalSpecialtyDto {
@@ -2479,6 +2542,15 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     appearance?: AppearanceDto;
     breathing?: BreathingDto;
     circulation?: CirculationDto;
+}
+
+export interface UpdateAppointmentDto {
+    appointmentId: number;
+    appointmentStateId: number;
+    overturn: boolean;
+    patientId: number;
+    patientMedicalCoverageId?: number;
+    phoneNumber?: string;
 }
 
 export interface UpdateConceptsResultDto {

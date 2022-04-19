@@ -18,10 +18,13 @@ public class DiaryOpeningHoursVo {
 
     private final Short overturnCount;
 
-    public DiaryOpeningHoursVo(Integer diaryId, OpeningHours op, Short medicalAttentionTypeId, Short overturnCount){
+    private final Boolean externalAppointmentsAllowed;
+
+    public DiaryOpeningHoursVo(Integer diaryId, OpeningHours op, Short medicalAttentionTypeId, Short overturnCount, Boolean externalAppointmentsAllowed){
         this.diaryId = diaryId;
         this.openingHours = op;
         this.medicalAttentionTypeId = medicalAttentionTypeId;
         this.overturnCount = overturnCount;
+        this.externalAppointmentsAllowed = externalAppointmentsAllowed;
     }
 }

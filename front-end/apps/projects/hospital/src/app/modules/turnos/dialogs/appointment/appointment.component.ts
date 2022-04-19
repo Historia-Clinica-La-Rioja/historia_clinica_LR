@@ -243,7 +243,8 @@ export class AppointmentComponent implements OnInit {
 		return (this.estadoSelected === APPOINTMENT_STATES_ID.ASSIGNED &&
 			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED) ||
 			(this.estadoSelected === APPOINTMENT_STATES_ID.CONFIRMED &&
-				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED);
+				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) ||
+				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
 	}
 
 	isAbsent(): boolean {

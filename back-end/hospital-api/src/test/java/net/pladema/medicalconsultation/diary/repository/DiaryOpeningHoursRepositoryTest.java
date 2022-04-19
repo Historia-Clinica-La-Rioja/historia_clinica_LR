@@ -44,13 +44,13 @@ class DiaryOpeningHoursRepositoryTest extends UnitRepository {
 		String to = "12:00";
 
 		OpeningHours oh1 = save(new OpeningHours((short)1, LocalTime.parse(from, timeFormatter), LocalTime.parse(to, timeFormatter)));
-		save(new DiaryOpeningHours(diary1.getId(), oh1.getId(), MedicalAttentionType.PROGRAMMED, (short) 1 ));
+		save(new DiaryOpeningHours(diary1.getId(), oh1.getId(), MedicalAttentionType.PROGRAMMED, (short) 1, false ));
 
 
 		from = "14:00";
 		to = "18:00";
 		OpeningHours oh2 = save(new OpeningHours((short)1, LocalTime.parse(from, timeFormatter), LocalTime.parse(to, timeFormatter)));
-		save(new DiaryOpeningHours(diary1.getId(), oh2.getId(), MedicalAttentionType.SPONTANEOUS, (short) 4 ));
+		save(new DiaryOpeningHours(diary1.getId(), oh2.getId(), MedicalAttentionType.SPONTANEOUS, (short) 4 , false));
 
 		// Agenda 2
 		startDate = "2020-06-04";
@@ -61,12 +61,12 @@ class DiaryOpeningHoursRepositoryTest extends UnitRepository {
 		from = "09:15";
 		to = "12:00";
 		OpeningHours oh3 = save(new OpeningHours((short)1, LocalTime.parse(from, timeFormatter), LocalTime.parse(to, timeFormatter)));
-		save(new DiaryOpeningHours(diary2.getId(), oh3.getId(), MedicalAttentionType.PROGRAMMED, (short) 1 ));
+		save(new DiaryOpeningHours(diary2.getId(), oh3.getId(), MedicalAttentionType.PROGRAMMED, (short) 1, false ));
 
 		from = "14:00";
 		to = "18:00";
 		OpeningHours oh4 = save(new OpeningHours((short)1, LocalTime.parse(from, timeFormatter), LocalTime.parse(to, timeFormatter)));
-		save(new DiaryOpeningHours(diary2.getId(), oh4.getId(), MedicalAttentionType.SPONTANEOUS, (short) 4 ));
+		save(new DiaryOpeningHours(diary2.getId(), oh4.getId(), MedicalAttentionType.SPONTANEOUS, (short) 4, false));
 
 		// Agenda 1
 		List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHours(Arrays.asList(diary1.getId()));

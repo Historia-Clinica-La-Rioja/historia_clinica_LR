@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AppointmentListDto, CreateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentListDto, BasicPersonalDataDto, CreateAppointmentDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import { momentParseTime, DateFormat, momentParseDate, buildFullDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { map, first } from 'rxjs/operators';
@@ -18,12 +18,14 @@ const enum COLORES {
 	PROGRAMADA = '#7FC681',
 	ESPONTANEA = '#2687C5',
 	SOBRETURNO = '#E3A063',
-	RESERVA_ALTA = '#F2994A',
-	RESERVA_VALIDACION = '#EB5757'
+	RESERVA_ALTA = '#FFFFFF',
+	RESERVA_VALIDACION = '#EB5757',
+	FUERA_DE_AGENDA = '#FF0000'
 }
 const TEMPORARY_PATIENT = 3;
 const GREY_TEXT = 'calendar-event-grey-text';
 const WHITE_TEXT = 'calendar-event-white-text';
+const BLUE_TEXT = 'calendar-event-blue-text';
 
 const APPOINTMENT_COLORS_STATES: AppointmentColorsStates[] = [
 	{
@@ -74,20 +76,27 @@ export class AppointmentsFacadeService {
 		this.appointmenstEmitter.next(undefined);
 	}
 
-	private loadAppointments(): void {
+	public loadAppointments(): void {
+
 		this.appointmentService.getList([this.agendaId])
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
 						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
 						const to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						const viewName = [appointment.patient.person.lastName, this.patientNameService.getPatientName(appointment.patient.person.firstName, appointment.patient.person.nameSelfDetermination)].
-						filter(val => val).join(', ');
+						const viewName = this.getViewName(appointment.patient?.person);
 						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName);
 						return calendarEvent;
 					});
 				this.appointmenstEmitter.next(appointmentsCalendarEvents);
 			});
+	}
+
+	loadingAppointments = setInterval(() => this.loadAppointments(), 20000);
+
+	private getViewName(person: BasicPersonalDataDto): string {
+		return person ? [person.lastName, this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)].
+			filter(val => val).join(', ') : null;
 	}
 
 	getAppointments(): Observable<CalendarEvent[]> {
@@ -111,6 +120,10 @@ export class AppointmentsFacadeService {
 					return false;
 				})
 			);
+	}
+
+	update(events) {
+		this.appointmenstEmitter.next(events);
 	}
 
 	addAppointment(newAppointment: CreateAppointmentDto): Observable<boolean> {
@@ -142,6 +155,22 @@ export class AppointmentsFacadeService {
 			);
 	}
 
+	updateAppointment(appointment: UpdateAppointmentDto) {
+		return this.appointmentService.updateAppointment(appointment)
+			.pipe(
+				map(() => {
+						this.appointments$.subscribe(
+							(events: CalendarEvent[]) => {
+								const updatedEvent: CalendarEvent = events.find(event => event.meta.appointmentId === appointment.appointmentId);
+								updatedEvent.meta.appointmentStateId = appointment.appointmentStateId
+								this.loadAppointments();
+							}
+						).unsubscribe();
+						return true;
+				})
+			);
+	}
+
 	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string): Observable<boolean> {
 		return this.appointmentService.changeState(appointmentId, newStateId, motivo)
 			.pipe(
@@ -151,6 +180,7 @@ export class AppointmentsFacadeService {
 							(events: CalendarEvent[]) => {
 								const updatedEvent: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
 								updatedEvent.meta.appointmentStateId = newStateId;
+								this.loadAppointments();
 							}
 						).unsubscribe();
 						return true;
@@ -162,33 +192,32 @@ export class AppointmentsFacadeService {
 }
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string): CalendarEvent {
-	const fullName = [appointment.patient.person.lastName, appointment.patient.person.firstName].
+	const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
 		filter(val => val).join(', ');
 
-	const fullNameWithNameSelfDetermination = appointment.patient.person.nameSelfDetermination ?
+	const fullNameWithNameSelfDetermination = appointment.patient?.person.nameSelfDetermination ?
 		[appointment.patient.person.lastName, appointment.patient.person.nameSelfDetermination].filter(val => val).join(', ') : null;
 
-	const title = appointment.patient.typeId === TEMPORARY_PATIENT ?
-		`${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName} (Temporario)` : `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
+	const title = getTitle();
 
 	return {
 		start: buildFullDate(from, date).toDate(),
 		end: buildFullDate(to, date).toDate(),
 		title,
 		color: {
-			primary: getColor(appointment.appointmentStateId),
-			secondary: getColor(appointment.appointmentStateId)
+			primary: getColor(appointment),
+			secondary: getColor(appointment)
 		},
 		cssClass: getSpanColor(appointment.appointmentStateId),
 		meta: {
 			patient: {
-				id: appointment.patient.id,
+				id: appointment.patient?.id,
 				fullName,
-				identificationNumber: appointment.patient.person.identificationNumber,
-				typeId: appointment.patient.typeId,
+				identificationNumber: appointment.patient?.person.identificationNumber,
+				typeId: appointment.patient?.typeId,
 				fullNameWithNameSelfDetermination: fullNameWithNameSelfDetermination,
-				identificationTypeId: appointment.patient.person.identificationTypeId,
-				genderId: appointment.patient.person.genderId,
+				identificationTypeId: appointment.patient?.person.identificationTypeId,
+				genderId: appointment.patient?.person.genderId,
 			},
 			overturn: appointment.overturn,
 			appointmentId: appointment.id,
@@ -201,14 +230,65 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 			affiliateNumber: appointment.medicalCoverageAffiliateNumber,
 		}
 	};
+
+	function getTitle(): string {
+
+		if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+			return 'Horario bloqueado'
+		}
+		if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
+			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} Temporal`;
+		}
+		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
+	}
 }
 
-export function getColor(appointmentStateId: number): COLORES {
-	return APPOINTMENT_COLORS_STATES.find(appointmentColor => appointmentColor.id === appointmentStateId).color;
+export function getColor(appointment: AppointmentListDto): COLORES {
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+		return COLORES.BLOCKED
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY) {
+		return COLORES.FUERA_DE_AGENDA;
+	}
+
+	if (!appointment?.patient.id) {
+		return COLORES.RESERVA_ALTA;
+	}
+
+	if (appointment.overturn) {
+		return COLORES.SOBRETURNO;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
+		return COLORES.RESERVA_VALIDACION;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) {
+		return COLORES.CONFIRMED;
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT) {
+		return COLORES.ABSENT;
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
+		return COLORES.SERVED;
+	}
+
+	return COLORES.ASSIGNED;
 }
 
 export function getSpanColor(appointmentStateId: number): string {
-	return ((appointmentStateId === APPOINTMENT_STATES_ID.ABSENT) || (appointmentStateId === APPOINTMENT_STATES_ID.SERVED)) ? GREY_TEXT : WHITE_TEXT;
+	if (appointmentStateId === APPOINTMENT_STATES_ID.ABSENT || appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
+		return GREY_TEXT;
+	}
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
+		return BLUE_TEXT;
+	}
+
+	return WHITE_TEXT;
 }
 
 interface AppointmentColorsStates {
