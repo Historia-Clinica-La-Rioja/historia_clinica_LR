@@ -20,7 +20,8 @@ public interface ParenteralPlanRepository extends JpaRepository<ParenteralPlan, 
 			+ "JOIN DocumentIndication di ON di.pk.indicationId = i.id "
 			+ "JOIN Document doc ON di.pk.documentId = doc.id "
 			+ "WHERE doc.sourceId = :internmentEpisodeId "
-			+ "AND doc.typeId = :documentTypeId")
+			+ "AND doc.typeId = :documentTypeId "
+			+ "ORDER BY i.creationable.createdOn DESC")
 	List<ParenteralPlan> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
 												   @Param("documentTypeId") Short documentTypeId);
 

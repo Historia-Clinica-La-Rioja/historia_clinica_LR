@@ -20,7 +20,8 @@ public interface DietRepository extends JpaRepository<Diet, Integer> {
 			+ "JOIN DocumentIndication di ON di.pk.indicationId = i.id "
 			+ "JOIN Document doc ON di.pk.documentId = doc.id "
 			+ "WHERE doc.sourceId = :internmentEpisodeId "
-			+ "AND doc.typeId = 12")
+			+ "AND doc.typeId = 12 "
+			+ "ORDER BY i.creationable.createdOn DESC")
 	List<Diet> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
 }
