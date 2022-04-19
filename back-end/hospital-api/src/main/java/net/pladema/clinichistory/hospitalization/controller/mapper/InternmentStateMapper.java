@@ -1,17 +1,37 @@
 package net.pladema.clinichistory.hospitalization.controller.mapper;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.*;
-import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
-import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
+import java.util.List;
 
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.util.List;
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.Last2RiskFactorsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AllergyConditionDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHistoryConditionDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Last2RiskFactorsDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AllergyConditionMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.ImmunizationMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.MedicationMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
+import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
 
 @Mapper(uses = {HealthConditionMapper.class, RiskFactorMapper.class, AnthropometricDataMapper.class,
         MedicationMapper.class, ImmunizationMapper.class, AllergyConditionMapper.class})
@@ -52,7 +72,11 @@ public interface InternmentStateMapper {
     @Named("toAnthropometricDataDto")
     AnthropometricDataDto toAnthropometricDataDto(AnthropometricDataBo anthropometricData);
 
-    @Named("toHealthConditionDto")
+	@Named("toListAnthropometricDataDto")
+	@IterableMapping(qualifiedByName = "toAnthropometricDataDto")
+	List<AnthropometricDataDto> toListAnthropometricDataDto(List<AnthropometricDataBo> anthropometricData);
+
+	@Named("toHealthConditionDto")
     HealthConditionDto toHealthConditionDto(HealthConditionBo mainDiagnosis);
 
     @Named("toLast2RiskFactorDto")
