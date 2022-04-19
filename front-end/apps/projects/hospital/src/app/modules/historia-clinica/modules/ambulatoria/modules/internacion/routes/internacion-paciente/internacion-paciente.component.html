@@ -22,8 +22,8 @@
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-antropometricos-summary [internmentEpisodeId]="internmentEpisodeId"
-							[anthropometricData$]="internmentSummaryFacadeService.heightAndWeightData$"
-							[editable]="!epicrisisDoc?.confirmed" [hideBloodType]="true">
+							[anthropometricDataList$]="internmentSummaryFacadeService.heightAndWeightDataList$"
+							[editable]="!epicrisisDoc?.confirmed">
 						</app-antropometricos-summary>
 					</ng-container>
 					<ng-container

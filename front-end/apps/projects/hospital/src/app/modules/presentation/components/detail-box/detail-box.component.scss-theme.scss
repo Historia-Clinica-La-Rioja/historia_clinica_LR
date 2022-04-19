@@ -2,10 +2,12 @@
 
 @mixin app-detail-box($theme) {
     $palette: map-get($theme, primary);
+
     app-detail-box {
         mat-card.mat-card {
             border: 1px solid mat-color($palette, default);
             background-color: $primary-bg;
+
             span.value {
                 color: mat-color($palette, default);
             }

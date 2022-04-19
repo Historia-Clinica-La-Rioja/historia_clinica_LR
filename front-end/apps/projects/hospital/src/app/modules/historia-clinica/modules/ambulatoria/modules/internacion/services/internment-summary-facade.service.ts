@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Subject } from "rxjs";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { AllergyConditionDto, DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, HealthHistoryConditionDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
+import { AllergyConditionDto, AnthropometricDataDto, DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, HealthHistoryConditionDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
 import { DocumentSearchService } from "@api-rest/services/document-search.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { momentParseDateTime } from "@core/utils/moment.utils";
@@ -20,7 +20,7 @@ export class InternmentSummaryFacadeService {
 	private personalHistorySubject: Subject<any> = new BehaviorSubject<any>([]);
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private heightAndWeightDataSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private heightAndWeightDataListSubject: Subject<AnthropometricDataDto[]> = new BehaviorSubject<AnthropometricDataDto[]>([]);
 	private bloodTypeDataSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private immunizationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private mainDiagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
@@ -39,7 +39,7 @@ export class InternmentSummaryFacadeService {
 	readonly personalHistory$ = this.personalHistorySubject.asObservable();
 	readonly medications$ = this.medicationsSubject.asObservable();
 	readonly riskFactors$ = this.riskFactorsSubject.asObservable();
-	readonly heightAndWeightData$ = this.heightAndWeightDataSubject.asObservable();
+	readonly heightAndWeightDataList$ = this.heightAndWeightDataListSubject.asObservable();
 
 	readonly bloodTypeData$ = this.bloodTypeDataSubject.asObservable();
 	readonly immunizations$ = this.immunizationsSubject.asObservable();
@@ -100,16 +100,15 @@ export class InternmentSummaryFacadeService {
 
 		}
 
-		if (fieldsToUpdate.heightAndWeight) {
-			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(a => {
-				const heightAndWeight = { height: a?.height, weight: a?.weight }
-				this.heightAndWeightDataSubject.next(heightAndWeight);
-			});
-		}
+		if (fieldsToUpdate.heightAndWeight || fieldsToUpdate.bloodType) {
+			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(aD => {
+				if (fieldsToUpdate.heightAndWeight) {
+					this.heightAndWeightDataListSubject.next([aD]);
+				}
 
-		if (fieldsToUpdate.bloodType) {
-			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(a => {
-				this.bloodTypeDataSubject.next(a?.bloodType);
+				if (fieldsToUpdate.bloodType) {
+					this.bloodTypeDataSubject.next(aD?.bloodType);
+				}
 			});
 		}
 

@@ -33,7 +33,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 	personalHistory$: Observable<HCEPersonalHistoryDto[]>;
 	medications$: Observable<HCEMedicationDto[]>;
 	riskFactors$: Observable<HCELast2RiskFactorsDto>;
-	anthropometricData$: Observable<HCEAnthropometricDataDto>;
+	anthropometricDataList$: Observable<HCEAnthropometricDataDto[]>;
 	loadExternal = false;
 	healthConditionsTable: TableModel<ConditionDto>;
 	allergiesTable: TableModel<AllergyIntoleranceDto>;
@@ -68,7 +68,7 @@ export class ResumenComponent implements OnInit, OnChanges {
 		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
 		this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
 		this.riskFactors$ = this.ambulatoriaSummaryFacadeService.riskFactors$;
-		this.anthropometricData$ = this.ambulatoriaSummaryFacadeService.anthropometricData$;
+		this.anthropometricDataList$ = this.ambulatoriaSummaryFacadeService.anthropometricDataList$;
 	}
 
 	loadExternalTables(fromInit: boolean): void {

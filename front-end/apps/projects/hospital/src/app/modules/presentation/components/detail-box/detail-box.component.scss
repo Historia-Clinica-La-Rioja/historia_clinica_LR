@@ -1,25 +1,23 @@
-.flex-column {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
-}
 mat-card.mat-card {
-	width: 100px;
-	height: 75px;
-	margin: 5px;
-	padding: 5px 10px 15px;
+	width: 144px;
+	height: 120px;
 	text-align: center;
-	div {
-		flex-grow: 0.5;
-		display: flex;
-		span {
-			align-self: flex-end;
-		}
-	}
-	span.value {
-		margin-top: 5px;
-		font-weight: bold;
-		font-size: 28px;
-	}
+	padding: 8px;
+}
+
+.value {
+	font-weight: bold;
+	font-size: 28px;
+}
+
+#previous-value {
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: 500;
+}
+
+#previous-icon {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
 }

@@ -3,8 +3,9 @@ import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
-import { Observable } from 'rxjs';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { AnthropometricDataDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-antropometricos-summary',
@@ -14,15 +15,13 @@ import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambula
 export class AntropometricosSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
-	@Input() anthropometricData$: Observable<any>;
+	@Input() anthropometricDataList$: Observable<HCEAnthropometricDataDto[]> | Observable<AnthropometricDataDto[]>;
 	@Input() editable = false;
-	@Input() hideBloodType = false;
 
 	details: DetailBox[] = [];
 	readonly antropometricosSummary = ANTROPOMETRICOS;
 
-	private LABELS = {
-		bloodType: 'Grupo sanguíneo',
+	private readonly LABELS = {
 		height: 'Talla (cm)',
 		weight: 'Peso (kg)',
 		bmi: 'IMC',
@@ -35,10 +34,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		if (this.hideBloodType) {
-			delete this.LABELS.bloodType;
-		}
-		this.updateAnthropometricData();
+		this.anthropometricDataList$.subscribe(list => this.updateAnthropometricData(list));
 	}
 
 	openDialog(): void {
@@ -52,7 +48,6 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
-				this.updateAnthropometricData();
 				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight, bloodType: fieldsToUpdate.bloodType });
 			}
 		}
@@ -80,28 +75,50 @@ export class AntropometricosSummaryComponent implements OnInit {
 		return floatValue;
 	}
 
-	private updateAnthropometricData(): void {
-		this.anthropometricData$.subscribe(
-			anthropometricData => {
-				if (anthropometricData) {
-					if (anthropometricData.bmi?.value) {
-						anthropometricData.bmi.value = this.truncateIfNecessary(anthropometricData.bmi?.value);
-					}
-					this.details = [];
-					Object.keys(this.LABELS).forEach(
-						key => {
-							if (anthropometricData[key]?.value)
-								this.details.push(
-									{
-										description: this.LABELS[key],
-										value: anthropometricData[key].value
-									}
-								);
-						}
-					);
+	private updateAnthropometricData(list: HCEAnthropometricDataDto[] | AnthropometricDataDto[]): void {
+		if (list?.length > 0) {
+			let details: DetailBox[] = [];
+
+			for (let i = 0; i < 2 && i < list.length; i++) {
+				if (list[i]?.bmi?.value) {
+					list[i].bmi.value = this.truncateIfNecessary(list[i].bmi.value);
 				}
 			}
-		);
+
+			Object.keys(this.LABELS).forEach(
+				key => {
+					const lastAnthropometricData = list[0];
+					if (lastAnthropometricData && lastAnthropometricData[key]?.value) {
+						let detail: DetailBox = {
+							description: this.LABELS[key],
+							registeredValues: [
+								{
+									date: lastAnthropometricData[key]?.effectiveTime,
+									value: lastAnthropometricData[key].value,
+								}
+							],
+						}
+
+						if (list.length > 1) {
+							const previousAnthropometricData = list[1];
+							if (previousAnthropometricData && previousAnthropometricData[key]?.value) {
+								detail.registeredValues.push(
+									{
+										date: previousAnthropometricData[key]?.effectiveTime,
+										value: previousAnthropometricData[key].value,
+									}
+								);
+
+							}
+						}
+
+						details.push(detail);
+					}
+				}
+			);
+
+			this.details = details;
+		}
 	}
 
 }
