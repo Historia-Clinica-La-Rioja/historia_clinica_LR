@@ -23,6 +23,7 @@ import { EpisodeStateService } from '../../services/episode-state.service';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { ContextService } from '@core/services/context.service';
+import {PatientNameService} from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-episode-details',
@@ -63,6 +64,7 @@ export class EpisodeDetailsComponent implements OnInit {
 		private readonly episodeStateService: EpisodeStateService,
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly contextService: ContextService,
+		private readonly patientNameService: PatientNameService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId;
 	}
@@ -229,6 +231,11 @@ export class EpisodeDetailsComponent implements OnInit {
 	goToEditEpisode(): void {
 		this.router.navigate([`${this.router.url}/edit`]);
 	}
+
+	getFullName(triage: TriageReduced): string {
+		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)}, ${triage.createdBy.lastName}`;
+	}
+
 }
 
 export interface TriageReduced {
@@ -236,7 +243,8 @@ export interface TriageReduced {
 	category: TriageCategory;
 	createdBy: {
 		firstName: string,
-		lastName: string
+		lastName: string,
+		nameSelfDetermination: string
 	};
 	doctorsOfficeDescription: string;
 }

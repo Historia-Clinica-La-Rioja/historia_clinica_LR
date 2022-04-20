@@ -886,6 +886,7 @@ export interface EmergencyCareUserDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface EpicrisisDto extends Serializable {
@@ -2572,6 +2573,7 @@ export interface UserDto extends AbstractUserDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
     personDto: UserPersonDto;
     personId: number;
 }
@@ -2587,6 +2589,7 @@ export interface UserPersonDto extends Serializable {
     firstName: string;
     id?: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface UserRoleDto {
