@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SnomedService {
@@ -42,6 +45,35 @@ public class SnomedService {
         if(snomed.getId() == null)
             throw new IllegalArgumentException("snomed.invalid");
         return snomed.getId();
+    }
+
+    public List<Integer> createSnomedTerms(List<SnomedBo> snomedTerms){
+        LOG.debug("Input parameter -> snomedTerms size = {}", snomedTerms.size());
+        LOG.trace("Input parameter -> snomedTerms {}", snomedTerms);
+        List<Snomed> toSave = snomedTerms.stream()
+                .map(this::mapToEntity)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        List<Integer> result = snomedRepository.saveAll(toSave)
+                .stream()
+                .map(Snomed::getId)
+                .collect(Collectors.toList());
+        LOG.debug("Output size -> {}", result.size());
+        LOG.trace("Output -> {}", result);
+        return result;
+    }
+
+    private Snomed mapToEntity(SnomedBo snomedBo) {
+        LOG.debug("Input parameter -> snomedBo {}", snomedBo);
+        if(StringHelper.isNullOrWhiteSpace(snomedBo.getSctid()) || StringHelper.isNullOrWhiteSpace(snomedBo.getPt())) {
+            return null;
+        }
+        String parentId = snomedBo.getParentId() == null ? snomedBo.getSctid() : snomedBo.getParentId();
+        String parentFsn = snomedBo.getParentFsn() == null ? snomedBo.getPt() : snomedBo.getParentFsn();
+
+        Snomed result = new Snomed(snomedBo.getSctid(), snomedBo.getPt(), parentId, parentFsn);
+        LOG.debug("Output -> {}", result);
+        return result;
     }
 
     public SnomedBo getSnomed(Integer id){

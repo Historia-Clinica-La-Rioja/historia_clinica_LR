@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

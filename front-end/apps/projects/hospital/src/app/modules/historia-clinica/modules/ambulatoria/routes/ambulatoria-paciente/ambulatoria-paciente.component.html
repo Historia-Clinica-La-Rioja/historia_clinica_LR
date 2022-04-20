@@ -5,16 +5,20 @@
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<app-patient-card *ngIf="personPhoto" [patient]="patient" [personalAdditionalInformation]="personInformation"
-						  [personPhoto]="personPhoto" [showAdditionalInformation]="true"
-						  [internmentEpisodeProcess]="internmentEpisodeProcess"
-						  [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
+			[personPhoto]="personPhoto" [showAdditionalInformation]="true"
+			[internmentEpisodeProcess]="internmentEpisodeProcess"
+			[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 			<div info-content fxLayout="row" fxLayout.xs="column">
 				<div fxLayout="row">
-					<mat-divider *ngIf="bloodType" class="header-divider" [vertical]="true"></mat-divider>
-					<div *ngIf="bloodType?.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3px" >
-							<span class="center-align">{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}</span>
-							<span class="center-align">{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}</span>
-							<h1 class="color-primary bold" id="blood-type">{{ bloodType }}</h1>
+					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
+					<div class="sided_spaced_content" *ngIf="bloodType?.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3px">
+						<span class="group-and-factor-properties">{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}</span>
+						<span class="group-and-factor-properties">{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}</span>
+						<h1 class="color-primary bold top_padded_content" id="blood-type">{{ bloodType }}</h1>
+					</div>
+					<div *ngIf="!bloodType" fxLayout="column" fxLayoutAlign="center center">
+						<span class="color-disabled no-blood-data">{{ 'ambulatoria.paciente.card.WITHOUT_BLOOD_DATA' | translate }}</span>
+						<h1 class="color-disabled bold top_padded_content">-</h1>
 					</div>
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
 					<div id="allergy-container" fxLayout="row" fxLayoutAlign="center center">
@@ -51,18 +55,18 @@
 					</div>
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
 				</div>
-					<div *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress" id="coverage-container">
-						<div fxLayout="row">
-							<div fxLayout="column">
-								<mat-icon class="color-primary" fontSet="material-icons-outlined">health_and_safety</mat-icon>
+				<div *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress" id="coverage-container" fxLayoutAlign="none center">
+					<div fxLayout="row">
+						<div fxLayout="column">
+							<mat-icon class="color-primary" fontSet="material-icons-outlined">health_and_safety</mat-icon>
+						</div>
+						<div fxLayout="column">
+							<div fxLayout="row" id="coverage-title">
+								<span class="color-primary coverage-bold-text">{{ 'ambulatoria.paciente.card.internment.COVERAGE_TITLE' | translate }}</span>
 							</div>
-							<div fxLayout="column">
-								<div fxLayout="row" id="coverage-title">
-									<span class="color-primary bold">{{ 'ambulatoria.paciente.card.internment.COVERAGE_TITLE' | translate }}</span>
-								</div>
-								<ng-container *ngIf="internmentEpisodeCoverageInfo">
+							<ng-container *ngIf="internmentEpisodeCoverageInfo">
 									<div fxLayout="row">
-										<span class="bold"> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}</span>
+										<span class="coverage-bold-text top_padded_content"> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.name }}</span>
 									</div>
 									<div fxLayout="row">
 										<span> {{ internmentEpisodeCoverageInfo?.medicalCoverage?.plan }}</span>
@@ -83,9 +87,9 @@
 										<span>{{ 'ambulatoria.paciente.card.internment.WITHOUT_COVERAGE' | translate }}</span>
 									</div>
 								</ng-container>
-							</div>
 						</div>
 					</div>
+				</div>
 			</div>
 			<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
 				<ng-container *ngIf="currentUserIsAllowedToDoAConsultation else hasOdontologyRole">
@@ -205,9 +209,12 @@
 					</mat-tab>
 					<mat-tab id="tab_indications">
 						<ng-template mat-tab-label>
-							<span>{{ 'ambulatoria.paciente.indications.TAB_LABEL' | translate | uppercase }}</span>
+							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
+							<div *ngIf="hasInternmentEpisodeInThisInstitution">
+								<app-internment-indications-card [patientId]="patientId" [epicrisisConfirmed]="epicrisisDoc?.confirmed" [internmentEpisodeId]="internmentEpisodeProcess.id"></app-internment-indications-card>
+							</div>
 							<app-card-medicaciones [patientId]="patientId" [medicamentStatus]="medicamentStatus$ | async" ></app-card-medicaciones>
 						</ng-template>
 					</mat-tab>

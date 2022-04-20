@@ -67,7 +67,10 @@ export class RiskFactorsFormService {
 			heartRate: this.getEffectiveObservation(form.value.heartRate),
 			respiratoryRate: this.getEffectiveObservation(form.value.respiratoryRate),
 			systolicBloodPressure: this.getEffectiveObservation(form.value.systolicBloodPressure),
-			temperature: this.getEffectiveObservation(form.value.temperature)
+			temperature: this.getEffectiveObservation(form.value.temperature),
+			bloodGlucose: this.getEffectiveObservation(form.value.bloodGlucose),
+			glycosylatedHemoglobin: this.getEffectiveObservation(form.value.glycosylatedHemoglobin),
+			cardiovascularRisk: this.getEffectiveObservation(form.value.cardiovascularRisk)
 		};
 
 		function isNull(formGroupValues: any): boolean {
@@ -84,6 +87,9 @@ export interface RiskFactorsValue {
 	respiratoryRate?: EffectiveObservation;
 	systolicBloodPressure?: EffectiveObservation;
 	temperature?: EffectiveObservation;
+	bloodGlucose?:EffectiveObservation;
+	glycosylatedHemoglobin?: EffectiveObservation;
+	cardiovascularRisk?: EffectiveObservation;
 }
 
 export interface EffectiveObservation {

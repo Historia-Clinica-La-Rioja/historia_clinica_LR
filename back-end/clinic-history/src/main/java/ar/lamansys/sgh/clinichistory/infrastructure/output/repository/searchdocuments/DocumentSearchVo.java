@@ -32,15 +32,19 @@ public class DocumentSearchVo {
 
     private String mainDiagnosis;
 
+    private String documentType;
+
 
     public DocumentSearchVo(Long id, DocumentObservationsVo notes, LocalDateTime createdOn,
-                            String firstName, String lastName, List<String> diagnosis, String mainDiagnosis){
+                            String firstName, String lastName, List<String> diagnosis, String mainDiagnosis,
+							String documentType){
         this.id = id;
         this.notes = notes;
         this.createdOn = createdOn.toLocalDate();
         this.creator = new PersonNameVo(firstName, lastName);
         this.diagnosis = diagnosis;
         this.mainDiagnosis = mainDiagnosis;
+        this.documentType = documentType;
 
     }
 }

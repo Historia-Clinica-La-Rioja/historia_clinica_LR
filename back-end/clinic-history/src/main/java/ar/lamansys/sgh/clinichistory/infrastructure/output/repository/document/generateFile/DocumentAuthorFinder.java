@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,11 +34,18 @@ public class DocumentAuthorFinder {
                 "JOIN person p ON (hp.person_id = p.id) " +
                 "WHERE d.id = :documentId" +
                 "";
-        Query query = entityManager.createNativeQuery(sqlString);
 
-        query.setParameter("documentId", documentId);
+		List<Object[]> rows = new ArrayList<>();
+		Integer searchTries = 0;
+        Query query;
 
-        List<Object[]> rows = query.getResultList();
+		while (rows.isEmpty() && (searchTries < 10)){
+			query = entityManager.createNativeQuery(sqlString);
+			query.setParameter("documentId", documentId);
+			rows = query.getResultList();
+			searchTries++;
+		}
+
         if (rows.isEmpty())
             return null;
         Object[] row = rows.get(0);

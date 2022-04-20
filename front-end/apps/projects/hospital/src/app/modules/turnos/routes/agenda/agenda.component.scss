@@ -1,4 +1,5 @@
 @import "../../../../../assets/styles/mixins";
+@import "../../turnos-mixins";
 
 $green-month-cell: #009b68;
 $blue-month-cell: #2687c5;
@@ -123,4 +124,8 @@ div.spinner {
 		opacity: 1;
 		color: #8c8c8c;
 	}
+}
+
+.fixed-header {
+    @include fixed-header;
 }

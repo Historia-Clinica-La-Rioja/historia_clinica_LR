@@ -16,6 +16,7 @@ import org.hibernate.annotations.ColumnDefault;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 @Setter
 @ToString
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class Appointment extends SGXAuditableEntity<Integer> {
 
@@ -59,21 +61,29 @@ public class Appointment extends SGXAuditableEntity<Integer> {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
-	@Column(name = "phone_prefix", length = 10)
-	private String phonePrefix;
+    @Column(name = "phone_prefix", length = 10)
+    private String phonePrefix;
 
     public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
-        Appointment result = new Appointment();
-        result.setDateTypeId(appointmentBo.getDate());
-        result.setHour(appointmentBo.getHour());
-        result.setIsOverturn(appointmentBo.isOverturn());
-        result.setPatientId(appointmentBo.getPatientId());
-        result.setAppointmentStateId(AppointmentState.ASSIGNED);
-        result.setPatientMedicalCoverageId(appointmentBo.getPatientMedicalCoverageId());
-		result.setPhonePrefix(appointmentBo.getPhonePrefix());
-        result.setPhoneNumber(appointmentBo.getPhoneNumber());
-        return result;
-        
+        return Appointment.builder()
+                .dateTypeId(appointmentBo.getDate())
+                .hour(appointmentBo.getHour())
+                .isOverturn(appointmentBo.isOverturn())
+                .patientId(appointmentBo.getPatientId())
+                .appointmentStateId(fromStateId(appointmentBo.getAppointmentStateId()))
+                .patientMedicalCoverageId(appointmentBo.getPatientMedicalCoverageId())
+                .phonePrefix(appointmentBo.getPhonePrefix())
+                .phoneNumber(appointmentBo.getPhoneNumber())
+                .build();
+    }
+
+    private static Short fromStateId(Short appointmentStateId) {
+        if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BOOKED))
+            return AppointmentState.BOOKED;
+        else if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BLOCKED))
+            return AppointmentState.BLOCKED;
+        else
+            return AppointmentState.ASSIGNED;
     }
 
     public boolean isAssigned(){

@@ -224,14 +224,14 @@ Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
 | scheduledjobs.updateethnicities.dayofmonth  |  | 15 | Opcional  | Configura el dia del mes del cron usado para la actualización de las etnias.      | v1.15.0 |
 | scheduledjobs.updateethnicities.month  |   | * | Opcional | Configura el mes del cron usado para la actualización de las etnias.              | v1.15.0 |
 | scheduledjobs.updateethnicities.dayofweek  |  | * | Opcional  | Configura el dia de la semana del cron usado para la actualización de las etnias. | v1.15.0 |
-| scheduledjobs.updatesnomedgroup.enabled  |   | false  | Opcional  | Des/habilitar la actualización de grupos de conceptos Snomed | v1.32.0 |
-| scheduledjobs.updatesnomedgroup.eclkeys  |   | -  | Opcional  | Claves de los grupos de conceptos Snomed, separadas por comas (ej. _BLOOD_TYPE,FAMILY_RECORD_) | v1.32.0 |
-| scheduledjobs.updatesnomedgroup.seconds  |   | - | Opcional  |  Configura los segundos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedgroup.minutes  |   | - | Opcional  |  Configura los minutos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedgroup.hours  |   | - | Opcional  |  Configura las horas del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedgroup.dayofmonth  |  | - | Opcional  | Configura el día del mes del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedgroup.month  |   | - | Opcional | Configura el mes del cron usado para la actualización de grupos de conceptos Snomed.  | v1.32.0 |
-| scheduledjobs.updatesnomedgroup.dayofweek  |  | - | Opcional  |  Configura el día de la semana del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedcache.enabled  |   | false  | Opcional  | Des/habilitar la actualización de grupos de conceptos Snomed | v1.32.0 |
+| scheduledjobs.updatesnomedcache.eclkeys  |   | -  | Opcional  | Claves de los grupos de conceptos Snomed, separadas por comas (ej. _BLOOD_TYPE,FAMILY_RECORD_) | v1.32.0 |
+| scheduledjobs.updatesnomedcache.seconds  |   | - | Opcional  |  Configura los segundos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedcache.minutes  |   | - | Opcional  |  Configura los minutos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedcache.hours  |   | - | Opcional  |  Configura las horas del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedcache.dayofmonth  |  | - | Opcional  | Configura el día del mes del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updatesnomedcache.month  |   | - | Opcional | Configura el mes del cron usado para la actualización de grupos de conceptos Snomed.  | v1.32.0 |
+| scheduledjobs.updatesnomedcache.dayofweek  |  | - | Opcional  |  Configura el día de la semana del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
 
 
 ## Monitoring

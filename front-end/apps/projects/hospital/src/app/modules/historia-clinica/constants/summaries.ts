@@ -69,7 +69,7 @@ export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
 	},
 	{
 		field: EDocumentSearch.DOCTOR,
-		label: 'internaciones.documents-summary.search-fields.DOCTOR',
+		label: 'internaciones.documents-summary.search-fields.PROFESSIONAL',
 	},
 	{
 		field: EDocumentSearch.CREATED_ON,
@@ -116,3 +116,8 @@ export const ESTUDIOS: SummaryHeader = {
 	title: 'ambulatoria.paciente.ordenes_prescripciones.ESTUDIOS',
 	matIcon: 'medical_services'
 };
+
+export const INTERNMENT_INDICATIONS: SummaryHeader = {
+	title: 'indicacion.internment-card.TITLE',
+	matIcon: 'event_available',
+}

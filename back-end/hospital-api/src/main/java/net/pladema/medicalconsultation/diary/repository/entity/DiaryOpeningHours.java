@@ -30,11 +30,11 @@ public class DiaryOpeningHours implements Serializable {
     private Short overturnCount;
 
     public DiaryOpeningHours(
-			Integer diaryId,
-			Integer openingHoursId,
+            Integer diaryId,
+            Integer openingHoursId,
             Short medicalAttentionTypeId,
             Short overturnCount
-	) {
+    ) {
         this.pk = new DiaryOpeningHoursPK(diaryId, openingHoursId);
         this.medicalAttentionTypeId = medicalAttentionTypeId;
         this.overturnCount = overturnCount;

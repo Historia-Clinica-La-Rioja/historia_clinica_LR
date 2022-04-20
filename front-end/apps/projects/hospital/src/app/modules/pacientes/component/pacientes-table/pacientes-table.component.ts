@@ -35,7 +35,7 @@ export class PacientesTableComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
-		this.featureFlagService.isActive(AppFeature.HABILITAR_NOMBRE_AUTOPERCIBIDO).subscribe(isEnabled => this.nameSelfDeterminationEnabled = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled => this.nameSelfDeterminationEnabled = isEnabled);
 	}
 
 	ngOnInit(): void {

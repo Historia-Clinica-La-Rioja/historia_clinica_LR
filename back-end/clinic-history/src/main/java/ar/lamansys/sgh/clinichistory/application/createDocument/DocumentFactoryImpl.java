@@ -9,6 +9,10 @@ import ar.lamansys.sgh.clinichistory.domain.ips.services.*;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private final LoadDentalActions loadDentalActions;
 
+	private final FeatureFlagsService featureFlagsService;
+
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -52,7 +58,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                LoadProcedures loadProcedures,
                                LoadMedications loadMedications,
                                LoadDiagnosticReports loadDiagnosticReports,
-                               LoadDentalActions loadDentalActions) {
+                               LoadDentalActions loadDentalActions,
+							   FeatureFlagsService featureFlagsService) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -64,6 +71,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         this.loadMedications = loadMedications;
         this.loadDiagnosticReports = loadDiagnosticReports;
         this.loadDentalActions = loadDentalActions;
+		this.featureFlagsService = featureFlagsService;
     }
 
     @Override
@@ -114,7 +122,10 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private void generateDocument(IDocumentBo documentBo) {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(documentBo);
-        createDocumentFile.execute(event);
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF))
+        	createDocumentFile.execute(event);
+		else
+			createDocumentFile.executeSync(event);
     }
 
 }

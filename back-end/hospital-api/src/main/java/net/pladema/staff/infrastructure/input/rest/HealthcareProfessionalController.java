@@ -1,7 +1,9 @@
 package net.pladema.staff.infrastructure.input.rest;
 
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.staff.application.createprofessional.CreateHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
+import net.pladema.staff.application.gethealthcareprofessionalbyuserid.GetHealthcareProfessionalByUserId;
 import net.pladema.staff.application.updatehealthcareprofessional.UpdateHealthcareProfessional;
 import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
@@ -42,16 +44,20 @@ public class HealthcareProfessionalController {
 
 	private final UpdateHealthcareProfessional updateHealthcareProfessional;
 
+	private final GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId;
+
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
 											HealthcareProfessionalMapper healthcareProfessionalMapper,
 											GetHealthcareProfessional getHealthcareProfessional,
 											CreateHealthcareProfessional createHealthcareProfessional,
-											UpdateHealthcareProfessional updateHealthcareProfessional) {
+											UpdateHealthcareProfessional updateHealthcareProfessional,
+											GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.getHealthcareProfessional = getHealthcareProfessional;
 		this.createHealthcareProfessional = createHealthcareProfessional;
 		this.updateHealthcareProfessional = updateHealthcareProfessional;
+		this.getHealthcareProfessionalByUserId = getHealthcareProfessionalByUserId;
 	}
 
 	@GetMapping
@@ -70,6 +76,14 @@ public class HealthcareProfessionalController {
 											   @PathVariable(name = "personId") Integer personId) {
 		LOG.debug("Input parameters -> {}", personId);
 		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(getHealthcareProfessional.execute(personId));
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/by-user-logged")
+	public ResponseEntity<Integer> getProfessionalIdByUser() {
+		LOG.debug("No input parameters");
+		Integer result = getHealthcareProfessionalByUserId.execute(UserInfo.getCurrentAuditor());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

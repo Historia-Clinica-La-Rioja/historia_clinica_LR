@@ -88,6 +88,15 @@ public class MapClinicalObservationVo {
         getLastNClinicalObservationByCode(ERiskFactor.MEAN_PRESSURE.getSctidCode(),i).ifPresent(v ->
             riskFactorBo.setMeanPressure(new ClinicalObservationBo(v))
         );
+		getLastNClinicalObservationByCode(ERiskFactor.BLOOD_GLUCOSE.getSctidCode(),i).ifPresent(v ->
+				riskFactorBo.setBloodGlucose(new ClinicalObservationBo(v))
+		);
+		getLastNClinicalObservationByCode(ERiskFactor.GLYCOSYLATED_HEMOGLOBIN.getSctidCode(),i).ifPresent(v ->
+				riskFactorBo.setGlycosylatedHemoglobin(new ClinicalObservationBo(v))
+		);
+		getLastNClinicalObservationByCode(ERiskFactor.CARDIOVASCULAR_RISK.getSctidCode(),i).ifPresent(v ->
+				riskFactorBo.setCardiovascularRisk(new ClinicalObservationBo(v))
+		);
         LOG.debug(OUTPUT, riskFactorBo);
         if (riskFactorBo.hasValues())
             return Optional.of(riskFactorBo);

@@ -56,6 +56,8 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 
     private LocalDateTime performedDate;
 
+    private Boolean wasMadeByProfessionalNursing;
+
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)
@@ -65,7 +67,9 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 
     @Override
     public short getDocumentType() {
-        return DocumentType.EVALUATION_NOTE;
+    	if (this.wasMadeByProfessionalNursing)
+    		return DocumentType.NURSING_EVOLUTION_NOTE;
+    	return DocumentType.EVALUATION_NOTE;
     }
 
     @Override

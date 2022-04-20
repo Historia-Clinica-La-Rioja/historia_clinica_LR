@@ -26,6 +26,10 @@ public interface PersonExtendedRepository extends JpaRepository<PersonExtended, 
             "WHERE pe.id IN :personIds ")
     List<PersonPhotoVo> getPhotoFilePath(@Param("personIds") List<Integer> personIds);
 
-
+	@Transactional(readOnly = true)
+	@Query("SELECT pe.otherGenderSelfDetermination " +
+			"FROM PersonExtended as pe " +
+			"WHERE pe.id = :personId ")
+	Optional<String> getOtherSelfPerceivedGender(@Param("personId") Integer personId);
 
 }

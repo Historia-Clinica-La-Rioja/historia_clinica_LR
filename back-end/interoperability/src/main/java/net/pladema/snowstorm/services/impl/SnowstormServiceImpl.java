@@ -129,6 +129,7 @@ public class SnowstormServiceImpl implements SnowstormService {
         StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getConceptsUrl());
 
         urlWithParams.append("?termActive=" + snowstormWSConfig.getTermActive());
+		urlWithParams.append("&limit=" + snowstormWSConfig.getConceptsLimit());
 
         if (searchAfter != null) {
             urlWithParams.append("&searchAfter=" + searchAfter);

@@ -1,0 +1,752 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_35
+    - changeSet:
+        id: indication-createTable
+        author: mvenere
+        comment: Create table indication
+        changes:
+          - createTable:
+              tableName: indication
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_indication
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    name: status_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: indication_date
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: patient_id
+              baseTableName: indication
+              constraintName: FK_indication_patient_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: patient
+              validate: true
+
+    - changeSet:
+        id: document_indication-createTable
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_indication
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: indication_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, indication_id
+              constraintName: PK_document_indication
+              tableName: document_indication
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_indication
+              constraintName: FK_document_indication_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: indication_id
+              baseTableName: document_indication
+              constraintName: FK_document_indication_indication_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: indication
+              validate: true
+
+    - changeSet:
+        id: diet-createTable
+        comment: Create table diet
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: diet
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diet
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text
+
+    - changeSet:
+        id: add-column-event-dosage
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: dosage
+              columns:
+                - column:
+                    name: event
+                    type: varchar(100)
+
+    - changeSet:
+        id: other_indication_type-createTable
+        comment: Create table other_indication_type
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: other_indication_type
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_other_indication_type
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: other_indication-createTable
+        comment: Create table other_indication
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: other_indication
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_other_indication
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: other_indication_type_id
+                    type: smallint
+                - column:
+                    name: description
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: dosage_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: other_indication_type_id
+              baseTableName: other_indication
+              constraintName: FK_other_indication_type_id
+              referencedColumnNames: id
+              referencedTableName: other_indication_type
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: dosage_id
+              baseTableName: other_indication
+              constraintName: FK_other_indication_dosage_id
+              referencedColumnNames: id
+              referencedTableName: dosage
+              validate: true
+
+    - changeSet:
+        id: pharmaco-createTable
+        comment: Create table pharmaco
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: pharmaco
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_pharmaco
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: health_condition_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: dosage_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: food_relation_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_provided
+                    type: boolean
+                - column:
+                    name: via
+                    type: varchar(100)
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: pharmaco
+              constraintName: FK_pharmaco_snomed_id
+              referencedColumnNames: id
+              referencedTableName: snomed
+          - addForeignKeyConstraint:
+              baseColumnNames: health_condition_id
+              baseTableName: pharmaco
+              constraintName: FK_pharmaco_health_condition_id
+              referencedColumnNames: id
+              referencedTableName: health_condition
+          - addForeignKeyConstraint:
+              baseColumnNames: dosage_id
+              baseTableName: pharmaco
+              constraintName: FK_pharmaco_dosage_id
+              referencedColumnNames: id
+              referencedTableName: dosage
+              validate: true
+
+    - changeSet:
+        id: parenteral_plan-createTable
+        comment: Create table parenteral_plan
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: parenteral_plan
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parenteral_plan
+                      references: indication(id)
+                      foreignKeyName: FK_indication
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: dosage_id
+                    type: int
+                - column:
+                    name: frequency
+                    type: text
+                - column:
+                    name: via
+                    type: varchar(100)
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: parenteral_plan
+              constraintName: FK_parenteral_plan_snomed_id
+              referencedColumnNames: id
+              referencedTableName: snomed
+          - addForeignKeyConstraint:
+              baseColumnNames: dosage_id
+              baseTableName: parenteral_plan
+              constraintName: FK_parenteral_plan_dosage_id
+              referencedColumnNames: id
+              referencedTableName: dosage
+              validate: true
+
+    - changeSet:
+        id: other_pharmaco-createTable
+        comment: Create table other_pharmaco
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: other_pharmaco
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_other_pharmaco
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: indication_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: dosage_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: other_pharmaco
+              constraintName: FK_other_pharmaco_snomed_id
+              referencedColumnNames: id
+              referencedTableName: snomed
+          - addForeignKeyConstraint:
+              baseColumnNames: indication_id
+              baseTableName: other_pharmaco
+              constraintName: FK_other_pharmaco_indication_id
+              referencedColumnNames: id
+              referencedTableName: indication
+          - addForeignKeyConstraint:
+              baseColumnNames: dosage_id
+              baseTableName: other_pharmaco
+              constraintName: FK_other_pharmaco_dosage_id
+              referencedColumnNames: id
+              referencedTableName: dosage
+              validate: true
+
+    - changeSet:
+        id: add-new-document-type
+        comment: Agregar nuevo tipo de documento
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type (id, description) VALUES(12, 'Indicación');
+
+
+    - changeSet:
+        id: createIndexFirstName-person
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_person_first-name" ON person (UPPER(first_name));
+                        
+    - changeSet:
+        id: createIndexLastName-person
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_person_last-name" ON person (UPPER(last_name));
+                          
+    - changeSet:
+        id: createIndexIdentificationNumber-person
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_person_identification-number" ON person (identification_number);
+
+    - changeSet:
+        id: snomed_cache_log-createTable
+        author: tmedina
+        changes:
+          - createTable:
+              tableName: snomed_cache_log
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_snomed_cache_log
+                    name: id
+                    type: int
+                - column:
+                    name: message
+                    type: varchar(1024)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                
+    - changeSet:
+        id: indication-update-indication_date
+        author: mvenere
+        comment: Actualizar type de la columna indication_date
+        context: "!schema-only"
+        changes:
+          - modifyDataType:
+              columnName: indication_date
+              newDataType: date
+              tableName: indication
+
+    - changeSet:
+        id: indication-addColumn-professional_id
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: professional_id
+                    type: int
+                    constraints:
+                      nullable: false
+              tableName: indication
+          - addForeignKeyConstraint:
+              baseColumnNames: professional_id
+              baseTableName: indication
+              constraintName: FK_indication_professional_id
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+              validate: true
+        
+    - changeSet:       
+        id: document_type-update-description
+        author: bchacon
+        comment: Actualizar descripcion de tipo de documento
+        context: "!schema-only"
+        changes:
+          - update:  
+              columns:  
+                - column:  
+                    name: description  
+                    value: 'Nota de evolución'  
+              tableName: document_type  
+              where: id=2
+              
+              
+    - changeSet:
+        id: document_type-evolution_nursing_note-data
+        comment: Actualizar datos document_type
+        context: "!schema-only"
+        author: bchacon
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (13, 'Nota de evolución de enfermería');
+                
+    - changeSet:
+        id: document_file-update-file_name-length
+        author: bchacon
+        comment: Actualizar length de la columna file_name
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(50)
+              tableName: document_file
+
+    - changeSet:
+        id: snomed_related_group-addColumn-id
+        author: tmedina
+        dbms: postgresql
+        changes:
+          - addColumn:
+              tableName: snomed_related_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: snomed_related_group-addColumn-id
+        author: tmedina
+        dbms: mssql
+        changes:
+          - addColumn:
+              tableName: snomed_related_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+
+    - changeSet:
+        id: snomed_related_group-addColumn-id
+        author: tmedina
+        dbms: db2
+        changes:
+          - addColumn:
+              tableName: snomed_related_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    defaultValue: '-1'
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: dropDefaultValue-snomed_related_group-id
+        author: tmedina
+        dbms: db2
+        changes:
+          - dropDefaultValue:
+              columnName: id
+              tableName: snomed_related_group
+
+    - changeSet:
+        id: snomed_related_group-addAutoIncrement-id
+        author: tmedina
+        dbms: "!mssql"
+        changes:
+          - addAutoIncrement:
+              columnDataType: int
+              columnName: id
+              generationType: ALWAYS
+              incrementBy: 1
+              startWith: 1
+              tableName: snomed_related_group
+
+    - changeSet:
+        id: snomed_related_group-update-autoincremental-value-id
+        author: tmedina
+        dbms: "!mssql"
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE snomed_related_group
+                SET id = default;
+
+    - changeSet:
+        id: snomed_related_group-dropPrimaryKey
+        author: tmedina
+        dbms: "!db2"
+        changes:
+          - dropPrimaryKey:
+              constraintName: PK_snomed_related_group
+              dropIndex: true
+              tableName: snomed_related_group
+
+    - changeSet:
+        id: snomed_related_group-addPrimaryKey
+        author: tmedina
+        changes:
+          - addPrimaryKey:
+              columnNames: id
+              constraintName: PK_snomed_related_group
+              tableName: snomed_related_group
+              validate: true
+
+    - changeSet:
+        id: snomed_related_group-addUniqueConstraint-snomed_id-group_id
+        author: tmedina
+        changes:
+          - addUniqueConstraint:
+              columnNames: snomed_id, group_id
+              constraintName: UQ_snomed_id_group_id
+              tableName: snomed_related_group
+
+    - changeSet:
+        id: add-institution_id-column-snomed_group
+        comment: Add column institution_id to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: institution_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+
+    - changeSet:
+        id: add-user_id-column-snomed_group
+        comment: Add column user_id to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: user_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+
+    - changeSet:
+        id: add-group_id-column-snomed_group
+        comment: Add column group_id to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: group_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: group_id
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_group_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed_group
+              validate: true
+
+    - changeSet:
+        id: add-template-column-snomed_group
+        comment: Add column template to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: template
+                    type: boolean
+                    defaultValue: false
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: v_snomed_group_concept-createView
+        comment: Create v_snomed_group_concept view
+        author: tmedina
+        changes:
+          - createView:
+              viewName: v_snomed_group_concept
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT srg.id as id, s.id AS concept_id, sg.id AS group_id, s.sctid AS concept_sctid, s.pt AS concept_pt,
+                    srg.orden AS orden, srg.last_update as last_update, srg.id as snomed_related_group_id
+                FROM snomed_group sg
+                JOIN snomed_related_group srg ON (sg.id = srg.group_id)
+                JOIN snomed s ON (srg.snomed_id = s.id);
+
+    - changeSet:
+        id: add-template-column-snomed_group
+        comment: Add column template to snomed_group table
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: template
+                    type: boolean
+                    defaultValue: false
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: v_snomed_group_concept-createView
+        comment: Create v_snomed_group_concept view
+        author: tmedina
+        changes:
+          - createView:
+              viewName: v_snomed_group_concept
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT srg.id as id, s.id AS concept_id, sg.id AS group_id, s.sctid AS concept_sctid, s.pt AS concept_pt,
+                    srg.orden AS orden, srg.last_update as last_update, srg.id as snomed_related_group_id
+                FROM snomed_group sg
+                JOIN snomed_related_group srg ON (sg.id = srg.group_id)
+                JOIN snomed s ON (srg.snomed_id = s.id);
+
+    - changeSet:
+        id: snomed_group-modifyDataType-custom_id
+        author: tmedina
+        comment: Modify data type column custom_id in snomed_group table
+        changes:
+          - modifyDataType:
+              columnName: custom_id
+              newDataType: varchar(50)
+              tableName: snomed_group

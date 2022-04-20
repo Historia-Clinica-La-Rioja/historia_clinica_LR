@@ -38,6 +38,8 @@ export class AgendaSetupComponent implements OnInit {
 
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
 	readonly TODAY: Date = new Date();
+	readonly PIXEL_SIZE_HEIGHT = 30;
+	readonly TURN_STARTING_HOUR = 6;
 
 	appointmentDurations = APPOINTMENT_DURATIONS;
 	appointmentManagement = false;
@@ -80,7 +82,7 @@ export class AgendaSetupComponent implements OnInit {
 	) {
 		this.route.paramMap.subscribe(params => this.professionalId = params.get("idProfessional"));
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY);
+		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
 	}
 
 	ngOnInit(): void {
@@ -285,6 +287,13 @@ export class AgendaSetupComponent implements OnInit {
 
 			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours()
 		};
+	}
+
+	scrollToDefaultStartingHour(): void{
+		this.agendaHorarioService.setAppointmentDuration(this.form.getRawValue().appointmentDuration);
+
+		const scrollbar = document.getElementsByClassName('cal-time-events')[0];
+		scrollbar?.scrollTo(0, this.PIXEL_SIZE_HEIGHT * this.TURN_STARTING_HOUR * this.hourSegments);
 	}
 
 }

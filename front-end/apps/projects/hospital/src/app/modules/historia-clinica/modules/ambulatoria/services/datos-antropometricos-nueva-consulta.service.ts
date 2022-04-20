@@ -1,3 +1,4 @@
+import { PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from './../../../../core/utils/pattern.utils';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClinicalObservationDto, HCEAnthropometricDataDto, MasterDataInterface } from '@api-rest/api-model';
@@ -38,7 +39,7 @@ export class DatosAntropometricosNuevaConsultaService {
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
-			headCircumference: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.headCircumference), Validators.max(DATOS_ANTROPOMETRICOS.MAX.headCircumference), Validators.pattern(PATTERN_INTEGER_NUMBER)]],
+			headCircumference: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.headCircumference), Validators.max(DATOS_ANTROPOMETRICOS.MAX.headCircumference), Validators.pattern(PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS)]],
 			height: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.height), Validators.max(DATOS_ANTROPOMETRICOS.MAX.height), Validators.pattern(PATTERN_INTEGER_NUMBER)]],
 			weight: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.weight), Validators.max(DATOS_ANTROPOMETRICOS.MAX.weight), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]]
 		});

@@ -29,7 +29,8 @@
 				"EDIT": "Editar atención"
 			},
 			"messages": {
-				"SUCCESS": "La agenda se guardó exitosamente"
+				"SUCCESS": "La agenda se guardó exitosamente",
+				"TURN_ERROR": "Error: Superposición de rango horario en consultorio"
 			}
 		},
 		"delete-agenda": {

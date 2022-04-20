@@ -83,7 +83,7 @@
                                 [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.HEAD_CIRCUNFERENCE'">
                             </mat-label>
                             <input id="head-circumference" formControlName="headCircumference" placeholder="Ej: 47"
-                                type="number" matInput (keypress)="isNumberOrDot($event.key)">
+                                type="number" matInput (keypress)="isNumberOrDot($event.key)" step=".01">
                         </mat-form-field>
                         <ng-container *ngIf="showPreloadData">
                             <mat-icon class="field-icon" color="primary">error_outline</mat-icon>

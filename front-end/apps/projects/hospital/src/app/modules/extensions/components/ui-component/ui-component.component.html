@@ -1,13 +1,13 @@
 <ng-container [ngSwitch]="uiComponent.type">
-	<div *ngSwitchCase="'columns'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.columns">
 		<app-ui-component-list [list]="uiComponent.args.content" class="columns"></app-ui-component-list>
 	</div>
-	<div *ngSwitchCase="'typography'" >
+	<div *ngSwitchCase="TYPE_DEFINITIONS.typography" >
 		<span [ngClass]="'mat-' + uiComponent.args.className">
 			{{uiComponent.args.value}}
 		</span>
 	</div>
-	<div *ngSwitchCase="'link'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.link">
 		<a mat-raised-button color="primary" [href]="uiComponent.args.value" target="_blank">
 			<ng-container *ngIf="uiComponent.args.label">
 				<span *ngIf="uiComponent.args.label.key" [translate]="uiComponent.args.label.key"></span>
@@ -15,42 +15,42 @@
 			</ng-container>
 		</a>
 	</div>
-	<div *ngSwitchCase="'cubejs-dashboard'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.cubejs_dashboard">
 		<app-cubejs-dashboard
 			[content]="uiComponent.args.content"
 		>
 		</app-cubejs-dashboard>
 	</div>
-	<div *ngSwitchCase="'cubejs-chart'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.cubejs_chart">
 		<app-cubejs-chart
 			[query]="uiComponent.args.query"
 			[dateFormat]="uiComponent.args.dateFormat"
 		>
 		</app-cubejs-chart>
 	</div>
-	<div *ngSwitchCase="'tabs'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.tabs">
 		<app-tabs [tabs]="uiComponent.args.tabs"></app-tabs>
 	</div>
-	<div *ngSwitchCase="'html'" [innerHTML]="valueAsHtml"></div>
+	<div *ngSwitchCase="TYPE_DEFINITIONS.html" [innerHTML]="valueAsHtml"></div>
 
-	<div *ngSwitchCase="'code'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.code">
 		<code>{{uiComponent.args.value | json}}</code>
 	</div>
 
-	<div *ngSwitchCase="'card'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.card">
 		<app-card
 			[title]="uiComponent.args.title"
 			[content]="uiComponent.args.content"
 		></app-card>
 	</div>
 
-	<div *ngSwitchCase="'json'">
+	<div *ngSwitchCase="TYPE_DEFINITIONS.json">
 		<app-json
 			[content]="uiComponent.args.content"
 		></app-json>
 	</div>
 
-	<mat-divider *ngSwitchCase="'divider'" inset></mat-divider>
+	<mat-divider *ngSwitchCase="TYPE_DEFINITIONS.divider" inset></mat-divider>
 
 	<div *ngSwitchDefault>
 		<span class="mat-title">

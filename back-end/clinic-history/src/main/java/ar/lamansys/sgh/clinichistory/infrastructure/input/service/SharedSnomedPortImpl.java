@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
 
-import ar.lamansys.sgh.clinichistory.application.saveSnomedConcept.SaveSnomedConcept;
+import ar.lamansys.sgh.clinichistory.application.saveSnomedConcepts.SaveSnomedConcepts;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
@@ -17,17 +17,22 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SharedSnomedPortImpl implements SharedSnomedPort {
 
-    private final SaveSnomedConcept saveSnomedConcept;
+    private final SaveSnomedConcepts saveSnomedConcept;
 
     @Override
     public List<Integer> addSnomedConcepts(List<SharedSnomedDto> concepts) {
-        log.debug("Input parameter -> concepts {}", concepts);
-        List<Integer> result = concepts.stream()
-                .map(this::mapToSnomedBo)
-                .map(saveSnomedConcept::run)
-                .collect(Collectors.toList());
-        log.debug("Output -> {}", result);
+        log.debug("Input parameter -> concepts size {}", concepts.size());
+        log.trace("Input parameter -> concepts {}", concepts);
+        List<Integer> result = saveSnomedConcept.run(mapToSnomedBoList(concepts));
+        log.debug("Output size -> {}", result.size());
+        log.trace("Output -> {}", result);
         return result;
+    }
+
+    private List<SnomedBo> mapToSnomedBoList(List<SharedSnomedDto> concepts) {
+        return concepts.stream()
+                .map(this::mapToSnomedBo)
+                .collect(Collectors.toList());
     }
 
     private SnomedBo mapToSnomedBo(SharedSnomedDto snomedDto) {

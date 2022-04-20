@@ -41,6 +41,8 @@ public class BasicDataPersonDto implements Serializable {
     
     private GenderDto gender;
 
+	private String selfPerceivedGender;
+
     private Short age;
 
     private LocalDate birthDate;

@@ -32,10 +32,30 @@ public class SnomedGroup {
 	@Column(name = "ecl", length = 255, nullable = false)
 	private String ecl;
 
-	@Column(name = "custom_id", nullable = false)
-	private Integer customId;
+	@Column(name = "custom_id", length = 50, nullable = false)
+	private String customId;
 
 	@Column(name = "last_update", nullable = false)
 	private LocalDate lastUpdate;
+
+	@Column(name = "institution_id")
+	private Integer institutionId;
+
+	@Column(name = "user_id")
+	private Integer userId;
+
+	@Column(name = "groupId")
+	private Integer groupId;
+
+	@Column(name = "template", nullable = false)
+	private Boolean template = false;
+
+	public SnomedGroup(Integer id, String description, String ecl, String customId, LocalDate lastUpdate) {
+		this.id = id;
+		this.description = description;
+		this.ecl = ecl;
+		this.customId = customId;
+		this.lastUpdate = lastUpdate;
+	}
 
 }

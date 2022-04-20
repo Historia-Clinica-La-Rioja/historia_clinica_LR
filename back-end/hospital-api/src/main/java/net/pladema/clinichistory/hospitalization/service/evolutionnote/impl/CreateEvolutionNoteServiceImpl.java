@@ -60,9 +60,13 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         assertDoesNotHaveEpicrisis(internmentEpisode);
         assertEvolutionNoteValid(evolutionNote);
         assertEffectiveRiskFactorTimeValid(evolutionNote, internmentEpisode.getEntryDate());
-        assertDiagnosisValid(evolutionNote, internmentEpisode);
         assertAnthropometricData(evolutionNote);
 
+		HealthConditionBo mainDiagnosis = fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(internmentEpisode.getId());
+		if (mainDiagnosis != null)
+			assertDiagnosisValid(evolutionNote, internmentEpisode, mainDiagnosis);
+
+		evolutionNote = verifyEvolutionNoteDiagnosis(evolutionNote, mainDiagnosis);
 
         evolutionNote.setId(documentFactory.run(evolutionNote, true));
 
@@ -99,11 +103,8 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         }
     }
 
-    private void assertDiagnosisValid(EvolutionNoteBo evolutionNote, InternmentEpisode internmentEpisode) {
+    private void assertDiagnosisValid(EvolutionNoteBo evolutionNote, InternmentEpisode internmentEpisode, HealthConditionBo mainDiagnosis) {
         if (evolutionNote.getDiagnosis() == null || evolutionNote.getDiagnosis().isEmpty())
-            return;
-        HealthConditionBo mainDiagnosis = fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(internmentEpisode.getId());
-        if (mainDiagnosis == null)
             return;
         if (evolutionNote.getDiagnosis().stream()
                 .map(DiagnosisBo::getSnomed)
@@ -115,6 +116,12 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     private void assertEffectiveRiskFactorTimeValid(EvolutionNoteBo evolutionNote, LocalDateTime entryDate) {
         var validator = new EffectiveRiskFactorTimeValidator();
         validator.isValid(evolutionNote, entryDate);
+    }
+
+    private EvolutionNoteBo verifyEvolutionNoteDiagnosis(EvolutionNoteBo evolutionNote, HealthConditionBo mainDiagnosis) {
+    	if (evolutionNote.getDiagnosis().isEmpty() && mainDiagnosis != null)
+			evolutionNote.setMainDiagnosis(new DiagnosisBo(mainDiagnosis.getSnomed()));
+		return evolutionNote;
     }
 
 }

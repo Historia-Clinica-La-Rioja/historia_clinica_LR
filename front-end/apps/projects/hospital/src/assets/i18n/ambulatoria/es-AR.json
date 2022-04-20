@@ -17,24 +17,35 @@
         "historia-clinica-externa": {
             "TITLE": "Ver historia clínica externa"
         },
+		"dialogs": {
+			"diet":{
+				"TITLE": "agregar dieta",
+				"DESCRIPTION": "Descripción",
+				"messages": {
+                    "ERROR": "Error al guardar una nueva dieta",
+                    "SUCCESS": "La dieta se guardó exitosamente"
+                }
+			}
+		},
         "paciente": {
             "TITLE": "Historia Clínica",
             "card": {
                 "buttons": {
                     "SHOW_PATIENT": "ver paciente",
                     "actions": {
-                        "ACTIONS":"+ acciones",
+                        "ACTIONS": "+ acciones",
                         "EVOLUTION_NOTE": "Agregar nota de evolución",
                         "ANAMNESIS": "Agregar evaluación de ingreso",
                         "EPICRISIS": "Epicrisis",
                         "MEDICAL_DISCHARGE": "Alta médica",
                         "NUEVA_CONSULTA": "Nueva consulta",
                         "AMBULATORY": "Ambulatoria",
-                        "NURSING": "Enfermería"                        
+                        "NURSING": "Enfermería"
                     }
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
                 "SANGUINEOUS": "sanguíneo",
+				"WITHOUT_BLOOD_DATA": "Sin grupo y factor sanguíneo registrado",
                 "internment": {
                     "COVERAGE_TITLE": "Cobertura del episodio",
                     "AFFILIATE_NUMBER": "Afiliado N°:",
@@ -43,7 +54,7 @@
                 },
                 "INTERNMENT_EPISODE_ACTIVE": "En internación",
                 "EMERGENCY_CARE_EPISODE_ACTIVE": "En guardia",
-				"NO_CRITICAL_ALLERGIES": "Sin alergias críticas registradas",
+                "NO_CRITICAL_ALLERGIES": "Sin alergias críticas registradas",
                 "MORE_CRITICAL_ALLERGIES": "+ {{allergies}} alergias críticas"
             },
             "new-nursing-consultation": {
@@ -90,7 +101,7 @@
                     "PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
                     "MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
                     "HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
-                    "HEAD_CIRCUNFERENCE_NOT_INTEGER": "Perímetro cefálico debe ser un valor entero",
+                    "HEAD_CIRCUNFERENCE_NOT_VALID": "Perímetro cefálico debe tener como máximo 2 decimales",
                     "BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
                     "GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
                     "CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",
@@ -156,18 +167,6 @@
                     "TITLE": "Procedimiento",
                     "TIPO": "Tipo de procedimiento",
                     "PROCEDIMIENTO": "Procedimiento"
-                },
-                "factores-de-riesgo": {
-                    "TITLE": "Factores de Riesgo",
-                    "HEART_RATE": "Frecuencia cardíaca (/min)",
-                    "RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
-                    "TEMPERATURE": "Temperatura corporal",
-                    "BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno (%)",
-                    "SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica (mm)",
-                    "DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)",
-                    "BLOOD_GLUCOSE": "Glucemia (mg/dl)",
-                    "GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada (%)",
-                    "CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
                 },
                 "antecedentes-familiares": {
                     "buttons": {
@@ -382,7 +381,7 @@
             "ordenes_prescripciones": {
                 "TAB_LABEL": "Órdenes y prescripciones",
                 "TITLE": "Órdenes y prescripciones",
-                "MEDICACION": "Medicación",
+                "MEDICACION": "Medicación  ambulatoria",
                 "RECOMENDACIONES": "Recomendaciones generales",
                 "ESTUDIOS": "Estudios",
                 "SIN_RECETA": "Sin receta",
@@ -482,17 +481,13 @@
                 "TAB_LABEL": "Resumen",
                 "TITLE": "Resumen de historia clínica"
             },
-			"studies": {
+            "studies": {
                 "TAB_LABEL": "Estudios",
                 "TITLE": "Estudios"
             },
-			"indications": {
-                "TAB_LABEL": "Indicaciones",
-                "TITLE": "Indicaciones"
-            },
             "internacion": {
-				"TAB_LABEL": "Internación"
-			},
+                "TAB_LABEL": "Internación"
+            },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
                 "TITLE": "Historial de vacunación",
@@ -542,15 +537,18 @@
                     }
                 }
             },
-			"allergies": {
-				"TITLE": "Alergias críticas"
-			}
+            "allergies": {
+                "TITLE": "Alergias críticas"
+            }
         },
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
             "ANSWER_CONTENT": "¿Desea continuar de todos modos?",
             "CONFIRM_BUTTON": "Si, descartar y continuar",
             "CANCEL_BUTTON": "No, regresar y completar"
-        }
+        },
+		"dialog-title":{
+			"DIET": "Dieta"
+		}
     }
 }

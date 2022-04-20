@@ -42,6 +42,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 			date: [null],
 			field: [null],
 			mainDiagnosisOnly: [false],
+			documentsWithoutDiagnosis: [false],
 		}, {
 			validators: this.filterFieldIsRequiredWhenInputIsSet()
 		});
@@ -100,8 +101,19 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	}
 
 	updateDocuments() {
+		this.form.patchValue({documentsWithoutDiagnosis: false})
+		this.activeDocument = null;
 		this.documentsToShow = this.documentHistoric.documents.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
+		});
+		this.changeDetectorRef.detectChanges();
+	}
+
+	showDocumentsWithoutDiagnosis() {
+		this.form.patchValue({mainDiagnosisOnly: false})
+		this.activeDocument = null;
+		this.documentsToShow = this.documentHistoric.documents.filter(document => {
+			return this.form.value.documentsWithoutDiagnosis ? !document.diagnosis.length && !document.mainDiagnosis.length : true;
 		});
 		this.changeDetectorRef.detectChanges();
 	}

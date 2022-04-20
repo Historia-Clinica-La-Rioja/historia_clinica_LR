@@ -102,7 +102,6 @@ export class AppointmentComponent implements OnInit {
 			phonePrefix: null,
 			phoneNumber: null
 		});
-
 		this.setMedicalCoverages();
 		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.params.appointmentData.phonePrefix);
@@ -117,7 +116,7 @@ export class AppointmentComponent implements OnInit {
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
-				if (this.appointment.patientMedicalCoverageId) {
+				if (this.appointment.patientMedicalCoverageId && this.params.appointmentData.patient?.id) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
 						.subscribe(coverageData => {
 							if (coverageData) {
@@ -159,14 +158,16 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private setMedicalCoverages(): void {
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.params.appointmentData.patient.id))
-			.pipe(
-				map(
-					patientMedicalCoveragesDto =>
-						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+		if(this.params.appointmentData.patient?.id) {
+			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.params.appointmentData.patient.id))
+				.pipe(
+					map(
+						patientMedicalCoveragesDto =>
+							patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+					)
 				)
-			)
-			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+				.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+		}
 	}
 
 	changeState(newStateId: APPOINTMENT_STATES_ID): void {

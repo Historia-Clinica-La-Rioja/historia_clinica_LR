@@ -1,3 +1,4 @@
+import { PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from './../../../../../core/utils/pattern.utils';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnomedService } from '../../../../services/snomed.service';
@@ -8,7 +9,7 @@ import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/med
 import { Problema } from '../../../../services/problemas.service';
 import { ProcedimientosService } from '../../../../services/procedimientos.service';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
-import { FactoresDeRiesgoNuevaConsultaService } from '../../services/factores-de-riesgo-nueva-consulta.service';
+import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 import {
 	AntecedenteFamiliar,
 	AntecedentesFamiliaresNuevaConsultaService
@@ -61,7 +62,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
-	factoresDeRiesgoNuevaConsultaService: FactoresDeRiesgoNuevaConsultaService;
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	readOnlyProblema = false;
@@ -105,7 +106,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.datePipe);
-		this.factoresDeRiesgoNuevaConsultaService = new FactoresDeRiesgoNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
@@ -143,7 +144,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		this.datosAntropometricosNuevaConsultaService.setPreviousAnthropometricData();
 
-		this.factoresDeRiesgoNuevaConsultaService.setPreviousRiskFactorsData();
+		this.factoresDeRiesgoFormService.setPreviousRiskFactorsData();
 
 		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
 			this.errores[0] = motivoError;
@@ -160,31 +161,31 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
 			this.errores[11] = headCircumferenceError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.heartRateError$.subscribe(frecuenciaCardiacaError => {
+		this.factoresDeRiesgoFormService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.respiratoryRateError$.subscribe(frecuenciaRespiratoriaError => {
+		this.factoresDeRiesgoFormService.respiratoryRateError$.subscribe(frecuenciaRespiratoriaError => {
 			this.errores[5] = frecuenciaRespiratoriaError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.temperatureError$.subscribe(temperaturaCorporalError => {
+		this.factoresDeRiesgoFormService.temperatureError$.subscribe(temperaturaCorporalError => {
 			this.errores[6] = temperaturaCorporalError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.bloodOxygenSaturationError$.subscribe(saturacionOxigenoError => {
+		this.factoresDeRiesgoFormService.bloodOxygenSaturationError$.subscribe(saturacionOxigenoError => {
 			this.errores[7] = saturacionOxigenoError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
+		this.factoresDeRiesgoFormService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
 			this.errores[8] = presionSistolicaError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
+		this.factoresDeRiesgoFormService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
 			this.errores[9] = presionDiastolicaError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
+		this.factoresDeRiesgoFormService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
 			this.errores[12] = bloodGlucoseError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
+		this.factoresDeRiesgoFormService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
 			this.errores[13] = glycosylatedHemoglobinError;
 		});
-		this.factoresDeRiesgoNuevaConsultaService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
+		this.factoresDeRiesgoFormService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
 			this.errores[14] = cardiovascularRiskError;
 		});
 
@@ -203,12 +204,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 
 	previousDataIsConfirmed(): Observable<boolean> {
-		if ((this.factoresDeRiesgoNuevaConsultaService.getShowPreloadedRiskFactorsData()) ||
+		if ((this.factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()) ||
 			(this.datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData())) {
 			const dialogRef = this.dialog.open(PreviousDataComponent,
 				{
 					data: {
-						factoresDeRiesgoNuevaConsultaService: this.factoresDeRiesgoNuevaConsultaService,
+						factoresDeRiesgoFormService: this.factoresDeRiesgoFormService,
 						datosAntropometricosNuevaConsultaService: this.datosAntropometricosNuevaConsultaService
 					},
 					disableClose: true,
@@ -381,8 +382,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 
 		value = consulta.anthropometricData?.headCircumference?.value;
-		if (value && !PATTERN_INTEGER_NUMBER.test(value)) {
-			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_NOT_INTEGER');
+		if (value && !PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS.test(value)) {
+			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_NOT_VALID');
 		}
 		else if ((parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.headCircumference) || (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.headCircumference)) {
 			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
@@ -390,50 +391,50 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		value = consulta.riskFactors.heartRate?.value;
 		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.heartRate) {
-			this.factoresDeRiesgoNuevaConsultaService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
+			this.factoresDeRiesgoFormService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
 		}
 
 		value = consulta.riskFactors.respiratoryRate?.value;
 		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.respiratoryRate) {
-			this.factoresDeRiesgoNuevaConsultaService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
+			this.factoresDeRiesgoFormService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
 		}
 
 		value = consulta.riskFactors.temperature?.value;
 		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.temperature) {
-			this.factoresDeRiesgoNuevaConsultaService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
+			this.factoresDeRiesgoFormService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
 		}
 
 		value = consulta.riskFactors.bloodOxygenSaturation?.value;
 		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation) {
-			this.factoresDeRiesgoNuevaConsultaService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
+			this.factoresDeRiesgoFormService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
 		}
 
 		value = consulta.riskFactors.diastolicBloodPressure?.value;
 		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.diastolicBloodPressure) {
-			this.factoresDeRiesgoNuevaConsultaService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
+			this.factoresDeRiesgoFormService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
 		}
 
 		value = consulta.riskFactors?.systolicBloodPressure?.value;
 		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.systolicBloodPressure) {
-			this.factoresDeRiesgoNuevaConsultaService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
+			this.factoresDeRiesgoFormService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
 		}
 
 		value = consulta.riskFactors?.bloodGlucose?.value;
 		if ((parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.bloodGlucose) || (parseInt(value, 10) > FACTORES_DE_RIESGO.MAX.bloodGlucose)) {
-			this.factoresDeRiesgoNuevaConsultaService.setBloodGlucoseError('ambulatoria.paciente.nueva-consulta.errors.BLOOD_GLUCOSE_RANGE');
+			this.factoresDeRiesgoFormService.setBloodGlucoseError('ambulatoria.paciente.nueva-consulta.errors.BLOOD_GLUCOSE_RANGE');
 		}
 
 		value = consulta.riskFactors?.glycosylatedHemoglobin?.value;
 		if ((parseFloat(value) < FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin) || (parseFloat(value) > FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin)) {
-			this.factoresDeRiesgoNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
+			this.factoresDeRiesgoFormService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
 		}
 		else if (value && !hasMaxTwoDecimalDigits(value)) {
-			this.factoresDeRiesgoNuevaConsultaService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
+			this.factoresDeRiesgoFormService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
 		}
 
 		value = consulta.riskFactors?.cardiovascularRisk?.value;
 		if ((parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.cardiovascularRisk) || (parseInt(value, 10) > FACTORES_DE_RIESGO.MAX.cardiovascularRisk)) {
-			this.factoresDeRiesgoNuevaConsultaService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
+			this.factoresDeRiesgoFormService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
 		}
 
 		this.errores[10] =
@@ -494,7 +495,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			),
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
-			riskFactors: this.factoresDeRiesgoNuevaConsultaService.getFactoresDeRiesgo(),
+			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.defaultSpecialty?.id,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 		};

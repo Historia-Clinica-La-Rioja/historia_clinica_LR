@@ -44,12 +44,6 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
-			{
-				path: 'odontologia',
-				loadChildren: () => import('odontology').then(m => m.OdontologyModule),
-				canActivate: [FeatureFlagGuard],
-				data: { featureFlag: AppFeature.HABILITAR_ODONTOLOGY }
-			},
 			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent },
 		],
 		canActivate: [RoleGuard],

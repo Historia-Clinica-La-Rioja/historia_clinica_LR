@@ -1,0 +1,120 @@
+<app-content width="full">
+	<app-summary-card id="internment-indications"	[header]="internmentIndication"
+				  [editable]="false"
+				  [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
+				  [menu]="!epicrisisConfirmed" [matMenu]="menu">
+		<mat-menu #menu="matMenu">
+		<button mat-menu-item (click)="openDietDialog()">
+		  <span>{{'ambulatoria.dialog-title.DIET' | translate }}</span>
+		</button>
+		</mat-menu>
+		<div class="content" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
+			<button mat-icon-button (click)="viewAnotherDay(-1)" [disabled]="this.currentViewIsEntryDate">
+				<mat-icon [ngClass]="{ 'disabled': this.currentViewIsEntryDate, 'color-primary': !this.currentViewIsEntryDate}">chevron_left</mat-icon>
+			</button>
+			<div *ngIf="isToday || isYesterday || isTomorrow">
+				<ng-container *ngIf="isToday; else yesterday">
+					<span class="actual-date" [translate]="'indicacion.internment-card.TODAY'"></span>
+				</ng-container>
+			</div>
+			<div *ngIf="viewDay$ | async as viewDay" fxLayout="row" fxLayoutGap="4px" fxLayoutAlign="left center" class="actual-date">
+				<span>{{ viewDay.nameDay }}</span>
+				<span>{{ viewDay.numberDay }}</span>
+				<span>{{ viewDay.month }}</span>
+			</div>
+			<button mat-icon-button (click)="viewAnotherDay(1)">
+				<mat-icon class="color-primary">chevron_right</mat-icon>
+			</button>
+		</div>
+		<div class="content" fxLayout="column" fxLayoutGap="20px">
+			<div id="diet">
+				<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center"  class="section">
+					<mat-icon class="color-primary">local_dining</mat-icon>
+					<span class="color-primary title">{{ 'indicacion.internment-card.sections.DIET' | translate | uppercase }}</span>
+					<mat-divider></mat-divider>
+				</div>
+				<div *ngIf="dietsInCurrentView$ | async as diets">
+					<div *ngIf="diets.length; else noDiet" fxLayout="column" fxLayoutGap="20px">
+						<div *ngFor="let diet of diets">
+							<div *ngIf="diet.id else noDiet" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column">
+								<div *ngIf="diet.status == 'INDICATED' else suspended" fxFlex="10%" fxLayoutGap="20px">
+									<ng-container *ngTemplateOutlet="indicated"></ng-container>
+								</div>
+								<span fxLayout="column" fxFlex="30%" fxLayoutGap="20px">{{ diet.description }}</span>
+								<div fxLayout="row" fxLayout.xs="row" fxLayoutAlign.xs="space-between center" fxLayoutGap="30px" fxFlex="60%" class="professional-elapsed-time">
+									<span fxLayout="column" fxFlex="60%">{{ diet.createdBy }}</span>
+									<span fxLayout="column" fxFlex="40%">{{showTimeElapsed(diet.createdOn)}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="parenteral_plans">
+				<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center"  class="section">
+					<mat-icon class="color-primary" svgIcon="parenteral_plans"></mat-icon>
+					<span class="color-primary title parenteral-plans">{{ 'indicacion.internment-card.sections.PARENTERAL_PLAN'| translate | uppercase }}</span>
+					<mat-divider></mat-divider>
+				</div>
+				<div fxLayout="column" *ngTemplateOutlet="noParenteralPlan"></div>
+			</div>
+
+			<div id="pharmacos">
+				<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center"  class="section">
+					<mat-icon class="color-primary" svgIcon="pharmaco"></mat-icon>
+					<span class="color-primary title">{{'indicacion.internment-card.sections.PHARMACO'| translate | uppercase }}</span>
+					<mat-divider></mat-divider>
+				</div>
+				<div fxLayout="row" *ngTemplateOutlet="noPharmaco"></div>
+			</div>
+
+			<div id="other_indications">
+				<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center"  class="section">
+					<mat-icon class="color-primary">assignment_late</mat-icon>
+					<span class="color-primary title other-indications">{{'indicacion.internment-card.sections.OTHER_INDICATION'| translate | uppercase }}</span>
+					<mat-divider></mat-divider>
+				</div>
+				<div fxLayout="column" *ngTemplateOutlet="noOtherIndicaction"></div>
+			</div>
+		</div>
+	</app-summary-card>
+</app-content>
+
+<ng-template #yesterday>
+	<ng-container *ngIf="isYesterday else tomorrow">
+		<span class="actual-date" [translate]="'indicacion.internment-card.YESTERDAY'"></span>
+	</ng-container>
+</ng-template>
+<ng-template #tomorrow>
+	<span class="actual-date" [translate]="'indicacion.internment-card.TOMORROW'"></span>
+</ng-template>
+<ng-template #noDiet>
+	<div class="no-data mat-typography">
+		<span [translate]="'indicacion.internment-card.sections.no-data.DIET'"></span>
+	</div>
+</ng-template>
+<ng-template #noParenteralPlan>
+	<div class="no-data mat-typography">
+		<span [translate]="'indicacion.internment-card.sections.no-data.PARENTERAL_PLAN'"></span>
+	</div>
+</ng-template>
+<ng-template #noPharmaco>
+	<div class="no-data mat-typography">
+		<span [translate]="'indicacion.internment-card.sections.no-data.PHARMACO'"></span>
+	</div>
+</ng-template>
+<ng-template #noOtherIndicaction>
+	<div class="no-data mat-typography">
+		<span [translate]="'indicacion.internment-card.sections.no-data.OTHER_INDICATION'"></span>
+	</div>
+</ng-template>
+<ng-template #indicated>
+	<strong class="label indicated uppercase"
+			[translate]="'indicacion.internment-card.sections.label.INDICATED'"></strong>
+</ng-template>
+<ng-template #suspended>
+	<strong class="label suspended uppercase"
+			[translate]="'indicacion.internment-card.sections.label.SUSPENDED'"></strong>
+</ng-template>
+

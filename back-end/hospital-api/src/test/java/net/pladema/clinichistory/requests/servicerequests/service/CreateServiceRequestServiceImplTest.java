@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import net.pladema.events.HospitalApiPublisher;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;

@@ -14,11 +14,7 @@ import {
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { forkJoin } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from '@core/services/context.service';
-import { newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { MIN_DATE } from "@core/utils/date.utils";
@@ -28,6 +24,7 @@ import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { ViewChild } from "@angular/core";
 import { ElementRef } from "@angular/core";
+import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -55,6 +52,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	medications: MedicationDto[] = [];
 	apiErrors: string[] = [];
 	procedimientosService: ProcedimientosService;
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 	minDate = MIN_DATE;
 	@ViewChild('errorsView') errorsView: ElementRef;
@@ -65,13 +63,11 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly anamnesisService: AnamnesisService,
-		private readonly route: ActivatedRoute,
-		private readonly router: Router,
-		private readonly contextService: ContextService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 	}
 
 	ngOnInit(): void {
@@ -81,32 +77,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 				height: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^[0-9]+$')]],
 				weight: [null, [Validators.min(0), Validators.max(1000), Validators.pattern('^\\d*\\.?\\d+$')]]
 			}),
-			riskFactors: this.formBuilder.group({
-				heartRate: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				respiratoryRate: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				temperature: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				bloodOxygenSaturation: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				systolicBloodPressure: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-				diastolicBloodPressure: this.formBuilder.group({
-					value: [null, Validators.min(0)],
-					effectiveTime: [newMoment()],
-				}),
-			}),
+			riskFactors: this.factoresDeRiesgoFormService.getForm(),
 			observations: this.formBuilder.group({
 				currentIllnessNote: [null],
 				physicalExamNote: [null],
@@ -234,7 +205,10 @@ export class AnamnesisDockPopupComponent implements OnInit {
 				heartRate: getEffectiveValue(formValues.riskFactors.heartRate),
 				respiratoryRate: getEffectiveValue(formValues.riskFactors.respiratoryRate),
 				systolicBloodPressure: getEffectiveValue(formValues.riskFactors.systolicBloodPressure),
-				temperature: getEffectiveValue(formValues.riskFactors.temperature)
+				temperature: getEffectiveValue(formValues.riskFactors.temperature),
+				bloodGlucose: getEffectiveValue(formValues.riskFactors.bloodGlucose),
+				glycosylatedHemoglobin: getEffectiveValue(formValues.riskFactors.glycosylatedHemoglobin),
+				cardiovascularRisk: getEffectiveValue(formValues.riskFactors.cardiovascularRisk)
 			},
 			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos()
 		};
@@ -251,10 +225,6 @@ export class AnamnesisDockPopupComponent implements OnInit {
 			return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 		}
 
-	}
-
-	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
-		((this.form.controls.riskFactors as FormGroup).controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
 	private apiErrorsProcess(responseErrors): void {

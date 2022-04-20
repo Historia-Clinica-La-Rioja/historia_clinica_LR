@@ -1,0 +1,7 @@
+@import "components/internment-indications-card/internment-indications-card-theme.scss";
+@import "components/item-prescripciones/item-prescripciones.component.scss-theme";
+
+@mixin indicacion-mixins($theme) {
+	@include app-internment-indications-card($theme);
+	@include app-item-prescripciones($theme);
+}

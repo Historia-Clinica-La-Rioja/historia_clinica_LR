@@ -2,12 +2,14 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import {
+	AbstractMasterdataDto,
 	ExternalPatientCoverageDto,
 	InternmentEpisodeProcessDto,
 	PersonPhotoDto
 } from '@api-rest/api-model';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientNameService } from '@core/services/patient-name.service';
+import {PatientGenderService} from "@core/services/patient-gender.service";
 
 const NO_DOCUMENT_TYPE = 'No posee';
 @Component({
@@ -30,7 +32,7 @@ export class PatientCardComponent {
 	@Input() internmentEpisodeProcess: InternmentEpisodeProcessDto;
 	@Input() emergencyCareEpisodeInProgress: boolean;
 
-	constructor(private readonly imageDecoderService: ImageDecoderService, private readonly patientNameService: PatientNameService) { }
+	constructor(private readonly imageDecoderService: ImageDecoderService, private readonly patientNameService: PatientNameService, private readonly patientGenderService: PatientGenderService) { }
 
 	public showID(): string {
 		if (this.patient?.id === undefined) {
@@ -66,7 +68,8 @@ export class PatientCardComponent {
 	}
 
 	public viewGenderAge() {
-		const gender = (this.patient?.gender) ? (this.patient.gender + ' · ') : '';
+		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender) + ' · ';
+		gender = gender ? gender : '';
 		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : '';
 		return gender + age;
 	}
@@ -89,4 +92,5 @@ export class PatientBasicData {
 	gender?: string;
 	age?: number;
 	nameSelfDetermination?: string;
+	selfPerceivedGender?: string;
 }

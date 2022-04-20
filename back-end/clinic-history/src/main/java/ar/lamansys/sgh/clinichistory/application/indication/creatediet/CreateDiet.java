@@ -1,0 +1,23 @@
+package ar.lamansys.sgh.clinichistory.application.indication.creatediet;
+
+import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgh.clinichistory.application.ports.DietStorage;
+import ar.lamansys.sgh.clinichistory.domain.ips.DietBo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class CreateDiet {
+
+	private final DietStorage storage;
+
+	public Integer run(DietBo dietBo) {
+		log.debug("Input parameter -> dietBo {}", dietBo);
+		Integer result = storage.createDiet(dietBo);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+}

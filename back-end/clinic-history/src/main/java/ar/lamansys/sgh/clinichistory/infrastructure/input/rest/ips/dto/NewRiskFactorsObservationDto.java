@@ -1,14 +1,14 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewEffectiveClinicalObservationDto;
+import java.io.Serializable;
+
+import javax.annotation.Nullable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.annotation.Nullable;
-import java.io.Serializable;
 
 @Getter
 @ToString
@@ -34,5 +34,14 @@ public class NewRiskFactorsObservationDto implements Serializable {
 
     @Nullable
     private NewEffectiveClinicalObservationDto bloodOxygenSaturation;
+
+	@Nullable
+	private NewEffectiveClinicalObservationDto bloodGlucose;
+
+	@Nullable
+	private NewEffectiveClinicalObservationDto glycosylatedHemoglobin;
+
+	@Nullable
+	private NewEffectiveClinicalObservationDto cardiovascularRisk;
 
 }

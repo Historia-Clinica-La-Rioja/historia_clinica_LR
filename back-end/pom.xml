@@ -23,17 +23,17 @@
 		<module>sgx-backoffice</module>
 		<module>interoperability</module>
 		<module>extensions</module>
-        <module>odontology</module>
+		<module>odontology</module>
 		<module>clinic-history</module>
 		<module>hospital-api</module>
-        <module>app</module>
+		<module>app</module>
 		<module>sgx-auth</module>
 		<module>hospital-shared</module>
 		<module>immunization</module>
-        <module>hospital-public-api</module>
-        <module>nursing</module>
-        <module>reference-counter-ref</module>
-    </modules>
+		<module>hospital-public-api</module>
+		<module>nursing</module>
+		<module>reference-counter-ref</module>
+	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
