@@ -58,6 +58,9 @@
 					<span>{{'indicacion.internment-card.dialogs.parenteral-plan.HOURS' | translate}}</span>
 					<mat-form-field appearance="outline">
 						<input matInput type="number" formControlName="minutes" name="minutes" placeholder="00" (keypress)="isNumberOrDot($event.key)">
+						<mat-error *ngIf="hasError(parenteralPlanForm.get('frequency').get('duration'), 'max', 'minutes')" [translate]="'forms.MAX_ERROR'"
+								   [translateParams]="{max: getError(parenteralPlanForm.get('frequency').get('duration'), 'max', 'minutes').max}">
+						</mat-error>
 						</mat-form-field>
 					<span>{{'indicacion.internment-card.dialogs.parenteral-plan.MINUTES' | translate}}</span>
 				</div>

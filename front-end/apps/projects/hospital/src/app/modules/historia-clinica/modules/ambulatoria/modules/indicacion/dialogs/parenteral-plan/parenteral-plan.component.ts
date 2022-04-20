@@ -65,7 +65,7 @@ export class ParenteralPlanComponent implements OnInit {
 			frequency: this.formBuilder.group({
 				duration: this.formBuilder.group({
 					hours: [null, [Validators.min(0), Validators.max(23)]],
-					minutes: [null],
+					minutes: [null, [Validators.max(59)]],
 				}),
 				flow: this.formBuilder.group({
 					velocity: [null, [Validators.required]],
