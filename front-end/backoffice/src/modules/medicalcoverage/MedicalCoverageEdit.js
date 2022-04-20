@@ -76,7 +76,6 @@ const MedicalCoverageEdit = props => (
                 </FormDataConsumer>
 
                 {/*Plan medical coverage*/}
-                <Fragment>
                     <SectionTitle label="resources.medicalcoverages.fields.plans"/>
                     <CreateRelatedButton
                         reference="medicalcoverageplans"
@@ -91,7 +90,6 @@ const MedicalCoverageEdit = props => (
                             <DeleteButton redirect="/medicalcoverages"/>
                         </Datagrid>
                     </ReferenceManyField>
-                </Fragment>
                 <div className="height-30" />
                 <MedicalCoverageMergeComponent  />
 

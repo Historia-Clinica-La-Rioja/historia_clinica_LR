@@ -20,7 +20,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateI
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeExceptionEnum;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
