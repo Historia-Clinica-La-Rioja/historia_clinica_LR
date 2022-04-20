@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import {
     Datagrid,
     DeleteButton,
@@ -17,7 +17,6 @@ import {
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
 
-const PREPAGA = 1;
 const OBRA_SOCIAL = 2;
 
 const MedicalCoverageShowActions = ({data}) => {
@@ -29,31 +28,6 @@ const MedicalCoverageShowActions = ({data}) => {
             </TopToolbar>
         )
 };
-
-const PrivateHealthInsurancePlanComponent = (props) => {
-    const record = useRecordContext(props);
-    return record && record.type === PREPAGA
-        ?
-        <Fragment>
-            <SectionTitle label="resources.medicalcoverages.fields.plans"/>
-            <CreateRelatedButton
-                reference="privatehealthinsuranceplans"
-                refFieldName="privateHealthInsuranceId"
-                label="resources.privatehealthinsuranceplans.addRelated"
-                {...props}/>
-            <ReferenceManyField
-                addLabel={false}
-                reference="privatehealthinsuranceplans"
-                target="privateHealthInsuranceId"
-                {...props}>
-                <Datagrid>
-                    <TextField source="plan"/>
-                    <DeleteButton redirect="/medicalcoverages"/>
-                </Datagrid>
-            </ReferenceManyField>
-        </Fragment>
-        : null;
-}
 
 const MedicalCoverageAcronymField = (props) => {
     const record = useRecordContext(props);
@@ -86,7 +60,20 @@ const MedicalCoverageShow = props => (
             <MedicalCoverageRnosField/>
             <MedicalCoverageAcronymField/>
             <BooleanField source="enabled" />
-            <PrivateHealthInsurancePlanComponent/>
+            <SectionTitle label="resources.medicalcoverages.fields.plans"/>
+            <CreateRelatedButton
+                reference="medicalcoverageplans"
+                refFieldName="medicalCoverageId"
+                label="resources.medicalcoverageplans.addRelated"/>
+            <ReferenceManyField
+                addLabel={false}
+                reference="medicalcoverageplans"
+                target="medicalCoverageId">
+                <Datagrid>
+                    <TextField source="plan"/>
+                    <DeleteButton redirect="/medicalcoverages"/>
+                </Datagrid>
+            </ReferenceManyField>
         </SimpleShowLayout>
     </Show>
 );

@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BackofficePrivateHealthInsurancePlanStore implements BackofficeStore<MedicalCoveragePlan, Integer> {
+public class BackofficeMedicalCoveragePlanStore implements BackofficeStore<MedicalCoveragePlan, Integer> {
 
     private final MedicalCoveragePlanRepository repository;
 
-    public BackofficePrivateHealthInsurancePlanStore(MedicalCoveragePlanRepository repository) {
+    public BackofficeMedicalCoveragePlanStore(MedicalCoveragePlanRepository repository) {
         this.repository = repository;
     }
 

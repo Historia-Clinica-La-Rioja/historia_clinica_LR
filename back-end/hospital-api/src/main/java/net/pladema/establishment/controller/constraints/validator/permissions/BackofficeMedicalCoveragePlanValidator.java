@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class BackofficePrivateHealthInsurancePlanValidator implements BackofficePermissionValidator<MedicalCoveragePlan, Integer> {
+public class BackofficeMedicalCoveragePlanValidator implements BackofficePermissionValidator<MedicalCoveragePlan, Integer> {
 
     private final MedicalCoveragePlanRepository repository;
 
-    public BackofficePrivateHealthInsurancePlanValidator(MedicalCoveragePlanRepository repository) {
+    public BackofficeMedicalCoveragePlanValidator(MedicalCoveragePlanRepository repository) {
         this.repository = repository;
     }
 
