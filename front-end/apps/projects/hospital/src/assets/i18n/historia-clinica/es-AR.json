@@ -47,6 +47,10 @@
 			"QUESTION": "¿Desea incluirlos en la consulta?",
 			"ADD": "SI, INCLUIRLOS",
 			"DISCARD": "NO, DESCARTARLOS"
+		},
+		"template-concept-search": {
+			"TEMPLATE_OPTION_GROUP": "Plantillas",
+			"CONCEPT_OPTION_GROUP": "Conceptos"
 		}
 	}
 }

@@ -28,6 +28,7 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
 import { IncludePreviousDataQuestionComponent } from './components/include-previous-data-question/include-previous-data-question.component';
+import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
 
 @NgModule({
 	declarations: [
@@ -44,6 +45,8 @@ import { IncludePreviousDataQuestionComponent } from './components/include-previ
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
 		IncludePreviousDataQuestionComponent,
+		ConceptTypeaheadSearchComponent,
+		TemplateConceptTypeaheadSearchComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -54,7 +57,6 @@ import { IncludePreviousDataQuestionComponent } from './components/include-previ
 		RemoveDiagnosisComponent,
 		ProbableDischargeDialogComponent,
 		BedAssignmentComponent,
-		ConceptTypeaheadSearchComponent,
 	],
 	imports: [
 		CommonModule,
@@ -77,9 +79,10 @@ import { IncludePreviousDataQuestionComponent } from './components/include-previ
 		InternacionAntecedentesPersonalesSummaryComponent,
 		FactoresDeRiesgoFormComponent,
 		IncludePreviousDataQuestionComponent,
+		ConceptTypeaheadSearchComponent,
+		TemplateConceptTypeaheadSearchComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
-		ConceptTypeaheadSearchComponent,
 	]
 })
 export class HistoriaClinicaModule {
