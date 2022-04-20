@@ -526,8 +526,19 @@
             },
             "allergies": {
                 "TITLE": "Alergias críticas"
-            }
-        },
+            },
+			"internment-order" : {
+				"create-order-dialog" : {
+					"TITLE": "Nueva orden",
+					"CATEGORY": "Categoría del estudio",
+					"STUDY": "Nombre del estudio",
+					"HEALTH_PROBLEM": "Diagnóstico asociado",
+					"NOTES": "Observaciones",
+					"NEXT_BUTTON": "Agregar",
+					"TEMPLATE_DETAIL": "Incluye: {{concepts}}."
+				}
+			}
+		},
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
             "ANSWER_CONTENT": "¿Desea continuar de todos modos?",
