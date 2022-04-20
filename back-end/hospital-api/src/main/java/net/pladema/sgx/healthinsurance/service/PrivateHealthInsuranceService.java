@@ -9,7 +9,7 @@ public interface PrivateHealthInsuranceService {
 
     Collection<PrivateHealthInsuranceBo> getAll();
 
-    Collection<MedicalCoveragePlanBo> getAllPlansById(Integer id);
+    Collection<MedicalCoveragePlanBo> getAllPlansByMedicalCoverageId(Integer id);
 
     MedicalCoveragePlanBo getPlanById(Integer id);
 }

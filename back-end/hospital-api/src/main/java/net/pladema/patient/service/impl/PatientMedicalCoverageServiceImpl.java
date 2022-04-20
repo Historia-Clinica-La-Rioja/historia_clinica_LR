@@ -57,13 +57,14 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 	@Override
 	public Optional<PatientMedicalCoverageBo> getCoverage(Integer patientMedicalCoverageId) {
 		LOG.debug(INPUT_DATA, patientMedicalCoverageId);
-		Optional<PatientMedicalCoverageVo> queryResult = patientMedicalCoverageRepository.getPatientCoverage(patientMedicalCoverageId);
-		AtomicReference<Optional<PatientMedicalCoverageBo>> result = new AtomicReference<>(Optional.empty());
-		queryResult.ifPresent(r -> {
-			result.set(Optional.of(new PatientMedicalCoverageBo(r)));
-		});
+		Optional<PatientMedicalCoverageBo> result = patientMedicalCoverageRepository.getPatientCoverage(patientMedicalCoverageId)
+				.map(PatientMedicalCoverageBo::new).map(bo -> {
+					if (bo.getPlanId() != null)
+						bo.setPlanName(medicalCoveragePlanRepository.findById(bo.getPlanId()).get().getPlan());
+					return bo;
+				});
 		LOG.debug(OUTPUT, result);
-		return result.get();
+		return result;
 	}
 
 	@Override

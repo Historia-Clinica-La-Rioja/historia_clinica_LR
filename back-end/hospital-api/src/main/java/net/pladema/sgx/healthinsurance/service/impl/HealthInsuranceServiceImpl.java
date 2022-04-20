@@ -1,13 +1,19 @@
 package net.pladema.sgx.healthinsurance.service.impl;
 
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.establishment.repository.entity.MedicalCoveragePlan;
 import net.pladema.patient.repository.domain.HealthInsuranceVo;
 import net.pladema.patient.repository.entity.MedicalCoverage;
+import net.pladema.patient.service.domain.MedicalCoveragePlanBo;
 import net.pladema.person.repository.HealthInsuranceRepository;
 import net.pladema.patient.repository.MedicalCoverageRepository;
 import net.pladema.person.repository.entity.HealthInsurance;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
+import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceEnumException;
+import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -34,10 +40,15 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 
     private final MedicalCoverageRepository medicalCoverageRepository;
 
-    public HealthInsuranceServiceImpl(HealthInsuranceRepository healthInsuranceRepository, MedicalCoverageRepository medicalCoverageRepository){
+	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
+
+	public HealthInsuranceServiceImpl(HealthInsuranceRepository healthInsuranceRepository,
+									  MedicalCoverageRepository medicalCoverageRepository,
+									  MedicalCoveragePlanRepository medicalCoveragePlanRepository){
         super();
         this.healthInsuranceRepository = healthInsuranceRepository;
         this.medicalCoverageRepository = medicalCoverageRepository;
+		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
     }
 
     @Override
@@ -69,4 +80,23 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
         PersonMedicalCoverageBo result = new PersonMedicalCoverageBo(healthInsuranceOptional);
         return result;
     }
+
+	@Override
+	public Collection<MedicalCoveragePlanBo> getAllPlansByMedicalCoverageId(Integer id) {
+		Collection<MedicalCoveragePlan> plansData = medicalCoveragePlanRepository.findByMedicalCoverageId(id);
+		Collection<MedicalCoveragePlanBo> result = plansData.stream()
+				.map(plan -> new MedicalCoveragePlanBo(plan.getId(), plan.getMedicalCoverageId(), plan.getPlan()))
+				.collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public MedicalCoveragePlanBo getPlanById(Integer id) {
+		MedicalCoveragePlanBo result = medicalCoveragePlanRepository.findById(id)
+				.map(plan -> new MedicalCoveragePlanBo(plan.getId(),plan.getMedicalCoverageId(),plan.getPlan()))
+				.orElseThrow(()->new PrivateHealthInsuranceServiceException(PrivateHealthInsuranceServiceEnumException.PRIVATE_HEALTH_INSURANCE_PLAN_NOT_EXISTS, String.format("El plan con id %s no existe",id)));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 }

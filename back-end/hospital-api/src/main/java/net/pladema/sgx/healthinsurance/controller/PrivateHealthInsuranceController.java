@@ -49,7 +49,7 @@ public class PrivateHealthInsuranceController {
     public ResponseEntity<Collection<MedicalCoveragePlanDto>> getAllPlansById(
             @PathVariable("privateHealthInsuranceId") Integer privateHealthInsuranceId){
         LOG.debug("Input parameters -> privateHealthInsuranceId {}", privateHealthInsuranceId);
-        Collection<MedicalCoveragePlanBo> data = privateHealthInsuranceService.getAllPlansById(privateHealthInsuranceId);
+        Collection<MedicalCoveragePlanBo> data = privateHealthInsuranceService.getAllPlansByMedicalCoverageId(privateHealthInsuranceId);
         Collection<MedicalCoveragePlanDto> result = privateHealthInsuranceMapper.toMedicalCoveragePlanDtoList(data);
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);

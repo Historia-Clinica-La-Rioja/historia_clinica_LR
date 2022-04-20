@@ -1,6 +1,8 @@
 package net.pladema.sgx.healthinsurance.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.patient.controller.dto.MedicalCoveragePlanDto;
+import net.pladema.patient.service.domain.MedicalCoveragePlanBo;
 import net.pladema.renaper.controller.dto.MedicalCoverageDto;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import net.pladema.sgx.healthinsurance.controller.mapper.HealthInsuranceMapper;
@@ -52,5 +54,26 @@ public class HealthInsuranceController {
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@GetMapping("/{healthInsuranceId}/plans")
+	public ResponseEntity<Collection<MedicalCoveragePlanDto>> getAllPlansById(
+			@PathVariable("healthInsuranceId") Integer healthInsuranceId){
+		LOG.debug("Input parameters -> healthInsuranceId {}", healthInsuranceId);
+		Collection<MedicalCoveragePlanBo> data = healthInsuranceService.getAllPlansByMedicalCoverageId(healthInsuranceId);
+		Collection<MedicalCoveragePlanDto> result = healthInsuranceMapper.toMedicalCoveragePlanDtoList(data);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/{healthInsuranceId}/health-insurance-plan/{healthInsurancePlanId}")
+	public ResponseEntity<MedicalCoveragePlanDto> getPlanById(
+			@PathVariable("healthInsuranceId") Integer healthInsuranceId,
+			@PathVariable("healthInsurancePlanId") Integer healthInsurancePlanId){
+		LOG.debug("Input parameters -> healthInsuranceId {}, healthInsurancePlanId {}",healthInsuranceId, healthInsurancePlanId);
+		MedicalCoveragePlanBo data = healthInsuranceService.getPlanById(healthInsurancePlanId);
+		MedicalCoveragePlanDto result = healthInsuranceMapper.toMedicalCoveragePlanDto(data);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
 }

@@ -46,7 +46,7 @@ public class PrivateHealthInsuranceServiceImpl implements PrivateHealthInsurance
     }
 
     @Override
-    public Collection<MedicalCoveragePlanBo> getAllPlansById(Integer id) {
+    public Collection<MedicalCoveragePlanBo> getAllPlansByMedicalCoverageId(Integer id) {
         Collection<MedicalCoveragePlan> plansData = medicalCoveragePlanRepository.findByMedicalCoverageId(id);
         Collection<MedicalCoveragePlanBo> result = plansData.stream()
                 .map(plan -> new MedicalCoveragePlanBo(plan.getId(), plan.getMedicalCoverageId(), plan.getPlan()))
