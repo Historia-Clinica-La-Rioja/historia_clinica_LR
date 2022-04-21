@@ -78,11 +78,15 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo(pa.id, pe.identificationTypeId, " +
-            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id ) " +
+            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id, b.bedNumber, r.roomNumber, s.description, CASE when pd.physicalDischargeDate is not null then true else false end) " +
             " FROM InternmentEpisode as ie " +
+			" LEFT JOIN PatientDischarge as pd ON (ie.id = pd.internmentEpisodeId) " +
             " JOIN Patient as pa ON (ie.patientId = pa.id) " +
             " JOIN Person as pe ON (pa.personId = pe.id) " +
             " JOIN PersonExtended petd ON (pe.id = petd.id)"+
+			" JOIN Bed b ON (ie.bedId = b.id)" +
+			" JOIN Room r ON (b.roomId = r.id)" +
+			" JOIN Sector s ON (r.sectorId = s.id)" +
             " WHERE ie.institutionId = :institutionId "+
             " AND ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
     List<BasicListedPatientBo> findAllPatientsListedData(@Param("institutionId") Integer institutionId);
@@ -97,22 +101,22 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo(" +
             "ie.id as internmentEpisodeId, " +
-            "pt.id as patientId, ps.firstName, ps.lastName, petd.nameSelfDetermination, " +
+            "pt.id as patientId, ps.firstName, ps.lastName, petd.nameSelfDetermination, ps.identificationTypeId, ps.identificationNumber, ps.birthDate, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
-            "s.id as sectorId, s.description) " +
+            "s.id as sectorId, s.description, " +
+			"CASE when pd.physicalDischargeDate is not null then true else false end) " +
             "FROM InternmentEpisode ie " +
-            "JOIN Patient pt ON (ie.patientId = pt.id) " +
+			"LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId) " +
+			"JOIN Patient pt ON (ie.patientId = pt.id) " +
             "JOIN Person ps ON (pt.personId = ps.id) " +
             "JOIN PersonExtended petd ON (pt.personId = petd.id) " +
             "JOIN Bed b ON (ie.bedId = b.id) " +
             "JOIN Room r ON (b.roomId = r.id) " +
             "JOIN Sector s ON (r.sectorId = s.id) " +
             "WHERE ie.institutionId = :institutionId " +
-            "AND NOT EXISTS (select pd.id " +
-            "                FROM PatientDischarge pd" +
-            "                WHERE pd.internmentEpisodeId = ie.id) " +
-            " ORDER BY ps.firstName ASC, ps.lastName ASC")
+			"AND pd.medicalDischargeDate is NULL AND pd.administrativeDischargeDate is NULL " +
+            "ORDER BY ps.firstName ASC, ps.lastName ASC")
     List<InternmentEpisodeBo> getAllInternmentPatient(@Param("institutionId") Integer institutionId);
 
     @Transactional(readOnly = true)

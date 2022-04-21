@@ -31,4 +31,12 @@ public class InternmentPatientDto {
 
     private String nameSelfDetermination;
 
+	private String bedNumber;
+
+	private String roomNumber;
+
+	private String sectorDescription;
+
+	private boolean hasPhysicalDischarge;
+
 }

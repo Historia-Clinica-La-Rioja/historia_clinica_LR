@@ -7,6 +7,7 @@ import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -24,12 +25,15 @@ public class InternmentEpisodeBo implements Serializable {
 
     private HospitalizationSpecialtyBo specialty;
 
+	private boolean hasPhysicalDischarge;
+
     public InternmentEpisodeBo(Integer internmentEpisodeId, Integer patientId, String firstName, String lastName,
-                               String nameSelfDetermination,Integer bedId, String bedNumber, Integer roomId,
-                               String roomNumber , Integer sectorId, String sector){
+							   String nameSelfDetermination, Short identificationTypeId, String identificationNumber, LocalDate birthDate, Integer bedId, String bedNumber, Integer roomId,
+							   String roomNumber , Integer sectorId, String sector, boolean hasPhysicalDischarge){
         this.id = internmentEpisodeId;
-        this.patient = new PatientBo(patientId, firstName, lastName, nameSelfDetermination);
+        this.patient = new PatientBo(patientId, firstName, lastName, nameSelfDetermination, identificationTypeId, identificationNumber, birthDate);
         this.bed = new BedBo(bedId, bedNumber, new RoomBo(
                 roomId, roomNumber, new SectorBo(sectorId, sector)));
+		this.hasPhysicalDischarge = hasPhysicalDischarge;
     }
 }
