@@ -149,9 +149,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					consultationType: REFERENCE_CONSULTATION_TYPE.AMBULATORY
 				}
 				this.referenceNotificationService = new ReferenceNotificationService(this.refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
-				this.ambulatoriaSummaryFacadeService.anthropometricDataList$.subscribe(
-					(list: HCEAnthropometricDataDto[]) => this.bloodType = list?.length > 0 ? list[0]?.bloodType?.value : undefined
-				);
+				this.ambulatoriaSummaryFacadeService.bloodType$.subscribe(blood => this.bloodType = blood);
 
 				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(
 					(internmentEpisodeProcess: InternmentEpisodeProcessDto) => {
