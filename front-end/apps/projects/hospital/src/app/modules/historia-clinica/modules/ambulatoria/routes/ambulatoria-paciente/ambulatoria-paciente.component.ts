@@ -173,8 +173,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 							this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
 							this.internmentSummaryFacadeService.bloodTypeData$.subscribe(
 								bloodType => {
-									if (bloodType?.value)
-										this.bloodType = bloodType.value
+									if (bloodType)
+										this.bloodType = bloodType
 								});
 						}
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;

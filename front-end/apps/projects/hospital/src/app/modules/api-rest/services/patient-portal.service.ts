@@ -5,6 +5,7 @@ import {
 	BasicPatientDto,
 	CompletePatientDto,
 	HCEAllergyDto,
+	HCEAnthropometricDataDto,
 	HCELast2RiskFactorsDto,
 	HCEMedicationDto,
 	HCEPersonalHistoryDto,
@@ -73,5 +74,10 @@ export class PatientPortalService {
 	getActivePatientMedicalCoverages(): Observable<PatientMedicalCoverageDto[]> {
 		const url = `${this.URL_BASE}coverages`;
 		return this.http.get<PatientMedicalCoverageDto[]>(url);
+	}
+
+	getLast2AnthropometricData(): Observable<HCEAnthropometricDataDto[]> {
+		const url = `${this.URL_BASE}last-2-anthropometric-data`;
+		return this.http.get<HCEAnthropometricDataDto[]>(url);
 	}
 }

@@ -21,7 +21,7 @@ export class InternmentSummaryFacadeService {
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private heightAndWeightDataListSubject: Subject<AnthropometricDataDto[]> = new BehaviorSubject<AnthropometricDataDto[]>([]);
-	private bloodTypeDataSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private bloodTypeDataSubject: Subject<string> = new BehaviorSubject<string>(null);
 	private immunizationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private mainDiagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private diagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
@@ -98,6 +98,18 @@ export class InternmentSummaryFacadeService {
 		if (fieldsToUpdate.riskFactors) {
 			this.internmentStateService.getRiskFactors(this.internmentEpisodeId).subscribe(v => this.riskFactorsSubject.next(v));
 
+		}
+
+		if (fieldsToUpdate.heightAndWeight || fieldsToUpdate.bloodType) {
+			this.internmentStateService.getLast2AnthropometricData(this.internmentEpisodeId).subscribe(aD => {
+				if (fieldsToUpdate.heightAndWeight) {
+					this.heightAndWeightDataListSubject.next(aD);
+				}
+
+				if (fieldsToUpdate.bloodType) {
+					this.bloodTypeDataSubject.next(aD[0]?.bloodType?.value);
+				}
+			});
 		}
 
 		if (fieldsToUpdate.immunizations) {
