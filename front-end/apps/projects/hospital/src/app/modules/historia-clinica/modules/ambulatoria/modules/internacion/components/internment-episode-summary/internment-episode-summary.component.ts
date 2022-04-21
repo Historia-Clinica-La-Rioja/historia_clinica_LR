@@ -1,7 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { ContextService } from "@core/services/context.service";
-import {FeatureFlagService} from "@core/services/feature-flag.service";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { MatDialog } from "@angular/material/dialog";
+import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
+import { PermissionsService } from "@core/services/permissions.service";
+import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { anyMatch } from "@core/utils/array.utils";
+import { ERole } from "@api-rest/api-model";
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -14,20 +21,35 @@ const ROUTE_ADMINISTRATIVE_DISCHARGE_PREFIX = '/alta';
 	templateUrl: './internment-episode-summary.component.html',
 	styleUrls: ['./internment-episode-summary.component.scss']
 })
-export class InternmentEpisodeSummaryComponent {
+export class InternmentEpisodeSummaryComponent implements OnInit{
+
+	currentUserIsAllowToDoAPhysicalDischarge = false;
 
 	@Input() internmentEpisode: InternmentEpisodeSummary;
 	@Input() canLoadProbableDischargeDate: boolean;
-	@Input() patientId : number;
+	@Input() patientId: number;
 	@Input() showDischarge: boolean;
-	@Input() hasEpicrisis: boolean;
+	@Input() patientDocuments: InternmentDocuments;
+	@Input() patientHasPhysicalDischarge = false;
+
 	private readonly routePrefix;
 	private readonly ff: FeatureFlagService;
 
 	constructor(private router: Router,
-				private contextService: ContextService,
-				) {
+		private contextService: ContextService,
+		private readonly snackBarService: SnackBarService,
+		private readonly dialog: MatDialog,
+		private readonly permissionsService: PermissionsService,
+		private readonly internmentService: InternmentEpisodeService
+	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	}
+
+	ngOnInit() {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.currentUserIsAllowToDoAPhysicalDischarge = (anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_DE_CAMAS]) &&
+				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO])));
+		});
 	}
 
 	goToPaseCama(): void {
@@ -36,6 +58,31 @@ export class InternmentEpisodeSummaryComponent {
 
 	goToAdministrativeDischarge(): void {
 		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this.internmentEpisode.id + ROUTE_PATIENT_SUFIX + this.patientId + ROUTE_ADMINISTRATIVE_DISCHARGE_PREFIX]);
+	}
+
+	physicalDischarge() {
+		const messageHTML = `<strong>¿Desea confirmar el Alta Física?</strong>`;
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				content: `Si realiza el Alta Física la cama quedará Libre y el episodio continuará abierto hasta que se completen los documentos necesarios. ${messageHTML}`,
+				okButtonLabel: `buttons.CONFIRM`,
+				cancelButtonLabel: `buttons.CANCEL`,
+				showMatIconError: true,
+			},
+			width: "40%",
+			autoFocus: false,
+			disableClose: true,
+		});
+		dialogRef.afterClosed().subscribe(confirm => {
+			if (confirm) {
+				this.internmentService.physicalDischargeInternmentEpisode(this.internmentEpisode.id).subscribe(
+					success => {
+						this.snackBarService.showSuccess('internaciones.discharge.messages.PHYSICAL_DISCHARGE_SUCCESS');
+					},
+					error => this.snackBarService.showError('internaciones.discharge.messages.PHYSICAL_DISCHARGE_ERROR')
+				);
+			}
+		})
 	}
 }
 
@@ -57,4 +104,9 @@ export interface InternmentEpisodeSummary {
 		phoneNumber: string;
 	};
 	probableDischargeDate: string;
+}
+
+export interface InternmentDocuments {
+	hasAnamnesis?: boolean;
+	hasEpicrisis?: boolean;
 }

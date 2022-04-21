@@ -435,11 +435,14 @@
 			"REQUIRED": "El campo es requerido",
 			"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
 			"TIME": "Hora",
+			"PHYSICAL_DISCHARGE": "alta física",
 			"messages": {
 				"ERROR": "No se pudo dar el alta administrativa del paciente",
 				"SUCCESS": "El alta administrativa se guardó exitosamente",
 				"MEDICAL_DISCHARGE_ERROR": "No se pudo dar el alta médica del paciente",
-				"MEDICAL_DISCHARGE_SUCCESS": "El alta médica se guardó exitosamente"
+				"MEDICAL_DISCHARGE_SUCCESS": "El alta médica se guardó exitosamente",
+				"PHYSICAL_DISCHARGE_ERROR": "No se pudo dar el alta física del paciente",
+				"PHYSICAL_DISCHARGE_SUCCESS": "El alta física se guardó exitosamente"
 			}
 		},
 		"bed-relocation": {

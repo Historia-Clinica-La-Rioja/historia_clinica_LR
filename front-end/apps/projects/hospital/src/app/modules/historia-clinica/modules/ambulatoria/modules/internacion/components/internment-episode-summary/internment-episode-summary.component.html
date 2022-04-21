@@ -9,12 +9,19 @@
 			<span class="mat-body-2">{{ internmentEpisode?.sectorDescription}}</span>
 		</div>
 	</mat-list-item>
-	<div *ngIf="!hasEpicrisis">
-		<button *appHasRole="['ADMINISTRATIVO']" id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary"
-				(click)="goToPaseCama()">
-						<span class="uppercase"
-							  [translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
-		</button>
+	<div fxLayout="row">
+		<div *ngIf="patientDocuments.hasAnamnesis && !physicalDischargeDate && currentUserIsAllowToDoAPhysicalDischarge">
+			<button mat-flat-button color="primary" (click)="physicalDischarge()">
+				<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
+			</button>
+		</div>
+		<div *ngIf="!patientDocuments.hasEpicrisis">
+			<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" *appHasRole="['ADMINISTRATIVO']"
+					(click)="goToPaseCama()">
+							<span class="uppercase"
+								  [translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
+			</button>
+		</div>
 	</div>
 	<mat-divider inset></mat-divider>
 
@@ -42,12 +49,12 @@
 		</div>
 		<div mat-line>
 			<span 	[translate]="'internaciones.internacion-paciente.card.ADMISSION'"
-					[translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
+					 [translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
 			</span>
 		</div>
 		<div mat-line *ngIf="canLoadProbableDischargeDate">
 			<span 	[translate]="'internaciones.internacion-paciente.card.PROBABLE_DISCHARGE'"
-					[translateParams]="{ datetime: internmentEpisode?.probableDischargeDate }">
+					 [translateParams]="{ datetime: internmentEpisode?.probableDischargeDate }">
 			</span>
 		</div>
 	</mat-list-item>

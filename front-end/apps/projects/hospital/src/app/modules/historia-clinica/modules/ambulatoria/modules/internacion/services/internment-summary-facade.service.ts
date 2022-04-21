@@ -32,6 +32,7 @@ export class InternmentSummaryFacadeService {
 	private evolutionNoteSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private hasMedicalDischargeSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private lastProbableDischargeDateSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private hasPhysicalDischargeSubject = new BehaviorSubject<any>("");
 
 	searchFilter: DocumentSearchFilterDto;
 	readonly allergies$ = this.allergiesSubject.asObservable();
@@ -51,6 +52,7 @@ export class InternmentSummaryFacadeService {
 	readonly evolutionNote$ = this.evolutionNoteSubject.asObservable();
 	readonly hasMedicalDischarge$ = this.hasMedicalDischargeSubject.asObservable();
 	readonly lastProbableDischargeDate$ = this.lastProbableDischargeDateSubject.asObservable();
+	readonly hasPhysicalDischarge$ = this.hasPhysicalDischargeSubject.asObservable();
 
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
@@ -154,6 +156,7 @@ export class InternmentSummaryFacadeService {
 		this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
 			.subscribe((patientDischarge: PatientDischargeDto) => {
 				this.hasMedicalDischargeSubject.next(patientDischarge.dischargeTypeId !== 0);
+				this.hasPhysicalDischargeSubject.next(patientDischarge.physicalDischargeDate)
 			});
 	}
 

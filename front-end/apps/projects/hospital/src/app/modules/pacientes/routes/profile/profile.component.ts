@@ -52,7 +52,7 @@ import { InternmentEpisodeService } from "@api-rest/services/internment-episode.
 import { EstadosEpisodio, Triages } from "@historia-clinica/modules/guardia/constants/masterdata";
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { AppRoutes } from "../../../../app-routing.module";
-import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
+import { InternmentDocuments, InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -80,7 +80,7 @@ export class ProfileComponent implements OnInit {
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
 	showDischarge = false;
-	epicrisisDoc: EpicrisisSummaryDto;
+	internmentDocuments: InternmentDocuments;
 	canLoadProbableDischargeDate: boolean;
 	allProfessions: ProfessionDto[] = [];
 	allSpecialties: ClinicalSpecialtyDto[] = [];
@@ -215,7 +215,10 @@ export class ProfileComponent implements OnInit {
 										this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
 											.subscribe((internmentEpisode: InternmentSummaryDto) => {
 												this.internmentEpisodeSummary = this.mapperService.toInternmentEpisodeSummary(internmentEpisode)
-												this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
+												this.internmentDocuments = {
+													hasAnamnesis: !!internmentEpisode.documents?.anamnesis,
+													hasEpicrisis: !!internmentEpisode.documents?.epicrisis,
+												}
 											});
 										this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
 											.subscribe((patientDischarge: PatientDischargeDto) => {

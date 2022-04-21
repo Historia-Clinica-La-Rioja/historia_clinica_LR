@@ -19,7 +19,7 @@
                                 <mat-spinner color="primary"></mat-spinner>
                             </div>
                             <section class="beds" id="bed-mapping" *ngIf="existBedManagementList && bedsAmount">
-                                <app-bed-mapping (selectedBed)="onSelectBed($event)"></app-bed-mapping>
+                                <app-bed-mapping [updateData]="updateMappingBed" (selectedBed)="onSelectBed($event)"></app-bed-mapping>
                             </section>
                             <section class="beds" *ngIf="existBedManagementList && !bedsAmount" fxLayout="column" fxLayoutAlign="space-around center">
                                 <h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
@@ -27,7 +27,7 @@
                         </div>
                     </mat-card-content>
                 </mat-card>
-                <app-bed-detail [bedId]="selectedBed"></app-bed-detail>
+                <app-bed-detail [bedId]="selectedBed" (realeseBed)="updateMapping($event)"></app-bed-detail>
             </div>
 
         </div>

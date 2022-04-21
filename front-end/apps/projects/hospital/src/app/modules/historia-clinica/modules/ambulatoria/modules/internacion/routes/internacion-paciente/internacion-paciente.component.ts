@@ -55,7 +55,7 @@ export class InternacionPacienteComponent implements OnInit {
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	showDischarge: boolean;
 	editDiagnosisSummary$: boolean;
-	hasMedicalDischarge: boolean;
+	patientDischarge: PatientDischarge = { medicalDischarge: null, physicalDischarge: null };
 	canLoadProbableDischargeDate: boolean;
 	showPatientCard = false;
 	patientId: number;
@@ -108,7 +108,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisode => {
 			this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => {
-				this.hasMedicalDischarge = h
+				this.patientDischarge.medicalDischarge = h;
 				// La alta administrativa está disponible cuando existe el alta medica
 				// o el flag de alta sin epicrisis está activa
 				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
@@ -117,6 +117,7 @@ export class InternacionPacienteComponent implements OnInit {
 			})
 		});
 		this.internmentSummaryFacadeService.lastProbableDischargeDate$.subscribe(l => this.lastProbableDischargeDate = l);
+		this.internmentSummaryFacadeService.hasPhysicalDischarge$.subscribe(p => this.patientDischarge.physicalDischarge = p);
 
 		this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 			map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
@@ -255,4 +256,9 @@ export class InternacionPacienteComponent implements OnInit {
 			}
 		});
 	}
+}
+
+export interface PatientDischarge {
+	medicalDischarge?: Date;
+	physicalDischarge?: Date;
 }
