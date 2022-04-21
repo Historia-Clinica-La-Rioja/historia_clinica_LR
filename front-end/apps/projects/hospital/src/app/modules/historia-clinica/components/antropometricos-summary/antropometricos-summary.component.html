@@ -4,7 +4,7 @@
 	(openInNew)="openDialog()">
 	<mat-card-content *ngIf="details.length > 0 else noInfo" fxLayout="row wrap" fxLayoutAlign="center"
 		fxLayoutGap="10px grid">
-		<app-detail-box *ngFor="let detail of details" [id]="getIdentificator(detail)" [detail]="detail">
+		<app-detail-box *ngFor="let detail of details" [id]="detail.id" [detail]="detail">
 		</app-detail-box>
 	</mat-card-content>
 	<ng-template #noInfo>

@@ -18,7 +18,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 	@Input() anthropometricDataList$: Observable<HCEAnthropometricDataDto[]> | Observable<AnthropometricDataDto[]>;
 	@Input() editable = false;
 
-	details: DetailBox[] = [];
+	details: DetailBoxExtended[] = [];
 	readonly antropometricosSummary = ANTROPOMETRICOS;
 
 	private readonly LABELS = {
@@ -54,8 +54,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 		);
 	}
 
-	getIdentificator(name: DetailBox): string {
-		return name.description.split(' (')[0]
+	private getIdentificator(description: string): string {
+		return description.split(' (')[0]
 			.split(" ").join('-').toLowerCase();
 	}
 
@@ -77,7 +77,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	private updateAnthropometricData(list: HCEAnthropometricDataDto[] | AnthropometricDataDto[]): void {
 		if (list?.length > 0) {
-			let details: DetailBox[] = [];
+			let details: DetailBoxExtended[] = [];
 
 			for (let i = 0; i < 2 && i < list.length; i++) {
 				if (list[i]?.bmi?.value) {
@@ -89,8 +89,9 @@ export class AntropometricosSummaryComponent implements OnInit {
 				key => {
 					const lastAnthropometricData = list[0];
 					if (lastAnthropometricData && lastAnthropometricData[key]?.value) {
-						let detail: DetailBox = {
+						let detail: DetailBoxExtended = {
 							description: this.LABELS[key],
+							id: this.getIdentificator(this.LABELS[key]),
 							registeredValues: [
 								{
 									date: lastAnthropometricData[key]?.effectiveTime,
@@ -121,4 +122,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 		}
 	}
 
+}
+
+interface DetailBoxExtended extends DetailBox {
+	id: string;
 }
