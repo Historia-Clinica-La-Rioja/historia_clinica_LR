@@ -100,18 +100,6 @@ export class InternmentSummaryFacadeService {
 
 		}
 
-		if (fieldsToUpdate.heightAndWeight || fieldsToUpdate.bloodType) {
-			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(aD => {
-				if (fieldsToUpdate.heightAndWeight) {
-					this.heightAndWeightDataListSubject.next([aD]);
-				}
-
-				if (fieldsToUpdate.bloodType) {
-					this.bloodTypeDataSubject.next(aD?.bloodType);
-				}
-			});
-		}
-
 		if (fieldsToUpdate.immunizations) {
 			this.internmentStateService.getImmunizations(this.internmentEpisodeId).subscribe(i => this.immunizationsSubject.next(i));
 		}

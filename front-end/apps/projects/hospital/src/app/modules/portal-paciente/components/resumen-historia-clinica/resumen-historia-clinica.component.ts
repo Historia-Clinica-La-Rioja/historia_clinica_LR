@@ -35,9 +35,6 @@ export class ResumenHistoriaClinicaComponent implements OnInit {
 		this.allergies$ = this.patientPortalService.getAllergies();
 		this.riskFactors$ = this.patientPortalService.getRiskFactors();
 
-		this.patientPortalService.getAnthropometricData().subscribe(
-			aD => this.anthropometricDataListSubject.next([aD])
-		);
 	}
 
 }
