@@ -696,3 +696,35 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: medical_coverage
               validate: true
+
+    - changeSet:
+        id: medical_coverage-addColumn-type
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: type
+                    type: smallint
+              tableName: medical_coverage
+
+    - changeSet:
+        id: medical_coverage-update-private_health_insurance-type
+        comment: Actualizar dato type en medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE medical_coverage mc SET type = 1 FROM private_health_insurance phi WHERE mc.id = phi.id;
+                UPDATE medical_coverage SET type = 2 WHERE type is null;
+
+    - changeSet:
+        id: addNotNullConstraint-medical_coverage-type
+        author: mvenere
+        changes:
+          - addNotNullConstraint:
+              columnDataType: smallint
+              columnName: type
+              tableName: medical_coverage
+              validate: true
