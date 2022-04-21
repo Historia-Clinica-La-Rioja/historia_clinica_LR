@@ -16,10 +16,6 @@ export class MedicalCoverageSummaryViewComponent {
       return false;
     return (Object.keys(this.coverageInfo).length >= 1);
   }
-
-	getMedicalCoveragePlanText(): string {
-		return [this.coverageInfo.plan, this.coverageInfo.condition].filter(Boolean).join(' | ');
-	}
 }
 
 export interface SummaryCoverageInformation {

@@ -7,7 +7,10 @@
             <span class="color-primary bold line-height"> {{ title | translate }} </span>
             <div fxLayout="column" *ngIf="thereIsCoverageInfo() else noCoverage">
                 <span class="bold"> {{ coverageInfo?.name }} </span>
-                <span class="lowercase capitalize-first-letter"> {{ getMedicalCoveragePlanText() }} </span>
+                <span *ngIf="coverageInfo?.plan && coverageInfo?.condition else showPlanOrCondition"
+                    class="lowercase capitalize-first-letter">
+                    {{ coverageInfo.plan }} | {{ coverageInfo.condition }}
+                </span>
                 <span>
                     {{ 'ambulatoria.medical-coverage-summary-view.AFFILIATE_NUMBER' | translate }}
                     <ng-container *ngIf="coverageInfo?.affiliateNumber else noInfo">
@@ -20,11 +23,21 @@
                     </ng-template>
                 </span>
             </div>
-            <ng-template #noCoverage>
-                <span class="color-grey">
-                    {{ 'ambulatoria.medical-coverage-summary-view.WITHOUT_COVERAGE' | translate }}
-                </span>
-            </ng-template>
         </div>
     </div>
 </div>
+
+<ng-template #showPlanOrCondition>
+    <span *ngIf="coverageInfo?.plan" class="lowercase capitalize-first-letter">
+        {{ coverageInfo.plan }}
+    </span>
+    <span *ngIf="coverageInfo?.condition" class="lowercase capitalize-first-letter">
+        {{ coverageInfo.condition }}
+    </span>
+</ng-template>
+
+<ng-template #noCoverage>
+    <span class="color-grey">
+        {{ 'ambulatoria.medical-coverage-summary-view.WITHOUT_COVERAGE' | translate }}
+    </span>
+</ng-template>
