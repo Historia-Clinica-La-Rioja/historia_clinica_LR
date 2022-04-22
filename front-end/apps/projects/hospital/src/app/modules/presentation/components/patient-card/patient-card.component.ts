@@ -70,10 +70,10 @@ export class PatientCardComponent {
 	}
 
 	public viewGenderAge(): string {
-		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender) + ' · ';
-		gender = gender ? gender : '';
-		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : '';
-		return gender + age;
+		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender);
+		gender = gender ? gender : 'Sin género';
+		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : 'Sin edad';
+		return gender + ' · ' + age;
 	}
 
 	public viewPatientName(): string {
