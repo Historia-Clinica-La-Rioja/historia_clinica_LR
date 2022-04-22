@@ -38,6 +38,7 @@ import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import {PatientNameService} from "@core/services/patient-name.service";
@@ -121,7 +122,7 @@ export class NewInternmentComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [newMoment(), [Validators.required]],
+				date: [moment(), [Validators.required]],
 				time: [this.datePipe.transform(this.today, DatePipeFormat.SHORT_TIME), [Validators.required, futureTimeValidation,
 				Validators.pattern(TIME_PATTERN)]]
 			}),

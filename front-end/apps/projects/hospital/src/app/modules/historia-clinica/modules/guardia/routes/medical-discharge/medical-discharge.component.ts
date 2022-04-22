@@ -20,6 +20,7 @@ import { ProblemasService } from '../../../../services/problemas.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
 import { MIN_DATE } from "@core/utils/date.utils";
+import * as moment from 'moment';
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -64,7 +65,7 @@ export class MedicalDischargeComponent implements OnInit {
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [newMoment(), Validators.required],
+				date: [moment(), Validators.required],
 				time: [momentFormat(newMoment(), DateFormat.HOUR_MINUTE)]
 			}),
 			autopsy: [null],
