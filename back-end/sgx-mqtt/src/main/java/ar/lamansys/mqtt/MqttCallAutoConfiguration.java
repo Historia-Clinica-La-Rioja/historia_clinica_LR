@@ -37,6 +37,7 @@ public class MqttCallAutoConfiguration {
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
             options.setConnectionTimeout(1000);
+			options.setAutomaticReconnect(true);
             if(mqttClientConnection) {
                 client.connect(options);
             }
