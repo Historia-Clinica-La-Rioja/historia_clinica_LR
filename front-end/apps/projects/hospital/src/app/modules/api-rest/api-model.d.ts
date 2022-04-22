@@ -2740,6 +2740,7 @@ export const enum EPatientMedicalCoverageCondition {
     OBLIGATORIA = "OBLIGATORIA",
 }
 
+
 export const enum ERole {
     ROOT = "ROOT",
     ADMINISTRADOR = "ADMINISTRADOR",

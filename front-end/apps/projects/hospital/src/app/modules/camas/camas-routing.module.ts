@@ -12,7 +12,7 @@ const routes: Routes = [
 		path: '',
 		component: HomeComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ENFERMERO] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ENFERMERO, ERole.ADMINISTRADOR_DE_CAMAS] }
 	}
 ];
 
