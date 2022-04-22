@@ -7,6 +7,7 @@ import { InternmentStateService } from "@api-rest/services/internment-state.serv
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
+import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 
 @Component({
   selector: 'app-create-order',
@@ -20,10 +21,13 @@ export class CreateInternmentOrderComponent implements OnInit {
 	hasError = hasError;
 
 	form: FormGroup;
+	firstStepCompleted = false;
 
 	studyCategoryOptions = [];
 	healthProblemOptions = [];
 	selectedStudy: TemplateOrConceptOption = null;
+
+	orderStudiesService: OrderStudiesService;
 
   	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number },
@@ -31,7 +35,9 @@ export class CreateInternmentOrderComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly internmentStateService: InternmentStateService,
-	) {}
+	) {
+  		this.orderStudiesService = new OrderStudiesService();
+	}
 
   	ngOnInit(): void {
 		this.form = this.formBuilder.group({
@@ -83,6 +89,44 @@ export class CreateInternmentOrderComponent implements OnInit {
   		return this.selectedStudy.data.concepts.map(c => c.pt.term).join(', ');
 	}
 
-	next() {}
+	goToConfirmationStep() {
+  		this.firstStepCompleted = true;
+  		this.loadSelectedConceptsIntoOrderStudiesService();
+	}
+
+	private loadSelectedConceptsIntoOrderStudiesService() {
+		let conceptsToLoad: Study[];
+		if (this.selectedStudyIsTemplate()) {
+			conceptsToLoad = this.selectedStudy.data.concepts.map(concept => ({
+				snomed: {
+					sctid: concept.conceptId,
+					pt: concept.pt.term
+				}
+			}));
+		}
+		else {
+			conceptsToLoad = [
+				{
+					snomed: {
+						sctid: this.selectedStudy.data.sctid,
+						pt: this.selectedStudy.data.pt.term
+					} 
+				}
+			];
+		}
+		this.orderStudiesService.addAll(conceptsToLoad);
+	}
+
+	getSelectedCategoryDisplayName() {
+		return this.studyCategoryOptions.filter((c) => c.id === this.form.controls.studyCategory.value).pop()?.description;
+	}
+
+	getSelectedHealthProblemDisplayName() {
+		return this.form.controls.healthProblem.value.description;
+	}
+
+	getNotesDisplayText() {
+		return this.form.controls.notes.value;
+	}
 
 }

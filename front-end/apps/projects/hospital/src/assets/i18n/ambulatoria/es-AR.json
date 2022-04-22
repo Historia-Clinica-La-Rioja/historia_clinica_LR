@@ -535,7 +535,8 @@
 					"HEALTH_PROBLEM": "Diagnóstico asociado",
 					"NOTES": "Observaciones",
 					"NEXT_BUTTON": "Agregar",
-					"TEMPLATE_DETAIL": "Incluye: {{concepts}}."
+					"TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
+                    "CONFIRM_ORDER": "Finalizar orden"
 				}
 			}
 		},
