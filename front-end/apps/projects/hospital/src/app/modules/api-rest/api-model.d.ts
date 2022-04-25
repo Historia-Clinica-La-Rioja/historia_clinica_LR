@@ -2298,6 +2298,7 @@ export interface ResponsibleDoctorDto extends Serializable {
     id: number;
     lastName: string;
     licence: string;
+    nameSelfDetermination: string;
 }
 
 export interface RiskFactorDto extends Serializable {
