@@ -60,4 +60,6 @@ public interface InternmentEpisodeService {
 
 	void deleteEpicrisisDocumentId(Integer internmentEpisodeId);
 	
+	PatientDischargeBo savePatientPhysicalDischarge(Integer internmentEpisodeId);
+
 }

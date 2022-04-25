@@ -7,6 +7,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
+import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
@@ -234,6 +235,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		patientDischarge.setInternmentEpisodeId(patientDischargeBo.getInternmentEpisodeId());
 		patientDischarge.setDischargeTypeId(patientDischargeBo.getDischargeTypeId());
 		patientDischarge.setAdministrativeDischargeDate(patientDischargeBo.getAdministrativeDischargeDate());
+		patientDischarge.setMedicalDischargeDate(patientDischargeBo.getMedicalDischargeDate());
+		patientDischarge.setPhysicalDischargeDate(patientDischargeBo.getPhysicalDischargeDate());
 		patientDischarge = patientDischargeRepository.save(patientDischarge);
 		LOG.debug(LOGGING_OUTPUT, patientDischarge);
 		return patientDischarge;
@@ -247,7 +250,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		internmentEpisode.setStatusId(statusId);
 		internmentEpisodeRepository.save(internmentEpisode);
 	}
-	
+
 	@Override
 	public List<InternmentEpisode> findByBedId(Integer bedId) {
 		LOG.debug("Input parameters -> bedId {} ", bedId);
@@ -265,7 +268,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		LOG.debug(LOGGING_OUTPUT, internmentEpisode);
 		return internmentEpisode;
 	}
-	
+
 	@Override
 	public boolean existsActiveForBedId(Integer bedId) {
 		LOG.debug("Input parameters -> bedId {} ", bedId);
@@ -341,6 +344,24 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
 		Integer currentUser = UserInfo.getCurrentAuditor();
 		internmentEpisodeRepository.deleteEpicrisisDocumentId(internmentEpisodeId, currentUser, LocalDateTime.now());
+	}
+
+	@Override
+	public PatientDischargeBo savePatientPhysicalDischarge(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS, internmentEpisodeId);
+		return patientDischargeRepository.findById(internmentEpisodeId).map(patientDischarge -> {
+				patientDischarge.setPhysicalDischargeDate(LocalDateTime.now());
+				PatientDischarge entityResult = patientDischargeRepository.save(patientDischarge);
+				PatientDischargeBo result = new PatientDischargeBo(entityResult);
+				LOG.debug(LOGGING_OUTPUT, result);
+				return result;
+			}).orElseGet(() -> {
+				PatientDischargeBo patientDischargeBo = new PatientDischargeBo(internmentEpisodeId, null, null, DischargeType.OTRO, LocalDateTime.now() );
+				PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
+				PatientDischargeBo result = new PatientDischargeBo(entityResult);
+				LOG.debug(LOGGING_OUTPUT, result);
+				return result;
+			});
 	}
 
 }

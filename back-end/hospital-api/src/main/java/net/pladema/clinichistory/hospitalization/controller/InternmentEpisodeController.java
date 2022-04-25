@@ -6,6 +6,7 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
@@ -144,7 +145,7 @@ public class InternmentEpisodeController {
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
-    
+
 	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	@PostMapping("/{internmentEpisodeId}/administrativedischarge")
@@ -156,11 +157,29 @@ public class InternmentEpisodeController {
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
+		if (patientDischarge.getPhysicalDischargeDate()==null)
+			patientDischarge.setPhysicalDischargeDate(patientDischarge.getAdministrativeDischargeDate());
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.saveAdministrativeDischarge(patientDischarge);
 		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		internmentEpisodeService.updateInternmentEpisodeStatus(internmentEpisodeId,
 				Short.valueOf(InternmentEpisodeStatus.INACTIVE));
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@Transactional
+	@PostMapping("/{internmentEpisodeId}/physicaldischarge")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_DE_CAMAS')")
+	public ResponseEntity<PatientDischargeDto> physicalDischargeInternmentEpisode(
+			@PathVariable(name="institutionId") Integer institutionId,
+			@InternmentPhysicalDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {} ", internmentEpisodeId);
+		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
+		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientPhysicalDischarge(internmentEpisodeId);
+		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
