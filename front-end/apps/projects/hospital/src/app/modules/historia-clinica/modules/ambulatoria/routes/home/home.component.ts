@@ -14,6 +14,7 @@ import { PERSON } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 
 @Component({
 	selector: 'app-home',
@@ -69,7 +70,7 @@ export class HomeComponent implements OnInit {
 			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^\S*$/)]],
 			genderId: [],
 			identificationNumber: [null, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(/^\S*$/)]],
-			identificationTypeId: [],
+			identificationTypeId: [IDENTIFICATION_TYPE_IDS.DNI],
 			birthDate: []
 		});
 	}

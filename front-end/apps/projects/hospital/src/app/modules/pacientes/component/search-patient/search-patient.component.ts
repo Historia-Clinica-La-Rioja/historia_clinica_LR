@@ -5,6 +5,7 @@ import { BasicPatientDto, GenderDto, IdentificationTypeDto, PersonPhotoDto } fro
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import {getError, hasError, VALIDATIONS } from '@core/utils/form.utils';
+import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -45,7 +46,7 @@ export class SearchPatientComponent implements OnInit {
 		this.identificationTypes$ = this.personMasterDataService.getIdentificationTypes();
 
 		this.formSearch = this.formBuilder.group({
-			identificationType: [null, Validators.required],
+			identificationType: [IDENTIFICATION_TYPE_IDS.DNI, Validators.required],
 			identificationNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			gender: [null, Validators.required],
 		});
