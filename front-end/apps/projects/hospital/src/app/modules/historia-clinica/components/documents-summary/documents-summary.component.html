@@ -100,7 +100,7 @@
 								</span>
 							</div>
 							<div fxLayout="column" fxLayoutGap="10px">
-								<span mat-line>{{documentSearch.document.creator.firstName}} {{documentSearch.document.creator.lastName}}</span>
+								<span mat-line>{{getFullName(documentSearch.document.creator.firstName, documentSearch.document.creator.nameSelfDetermination)}} {{documentSearch.document.creator.lastName}}</span>
 								<span mat-line>{{documentSearch.createdOn}}</span>
 							</div>
 							<mat-divider></mat-divider>

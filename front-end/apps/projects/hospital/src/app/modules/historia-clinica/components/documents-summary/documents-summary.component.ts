@@ -13,6 +13,7 @@ import { hasError } from '@core/utils/form.utils';
 import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
+import {PatientNameService} from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-documents-summary',
@@ -38,7 +39,8 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		private formBuilder: FormBuilder,
 		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private changeDetectorRef: ChangeDetectorRef,
-		private readonly documentActions: DocumentActionsService
+		private readonly documentActions: DocumentActionsService,
+		private readonly patientNameService: PatientNameService,
 	) {
 		this.form = this.formBuilder.group({
 			text: [''],
@@ -164,6 +166,11 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 			}
 		);
 	}
+
+	getFullName(firstName: string, nameSelfDetermination: string): string {
+		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
+	}
+
 }
 
 export interface SearchField {
