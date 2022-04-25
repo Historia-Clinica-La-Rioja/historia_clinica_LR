@@ -31,6 +31,7 @@ public class PatientDischargeServiceImpl implements PatientDischargeService {
             patientBo.setDischargeTypeId(patient.getDischargeTypeId());
             patientBo.setAdministrativeDischargeDate(patient.getAdministrativeDischargeDate());
             patientBo.setMedicalDischargeDate(patient.getMedicalDischargeDate());
+			patientBo.setPhysicalDischargeDate(patient.getPhysicalDischargeDate());
         });
         Optional<PatientDischargeBo> result = Optional.of(patientBo);
         LOG.debug(LOGGING_OUTPUT, result);

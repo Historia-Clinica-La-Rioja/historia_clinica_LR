@@ -1959,6 +1959,7 @@ export interface PatientDischargeDto {
     administrativeDischargeDate: Date;
     dischargeTypeId: number;
     medicalDischargeDate: Date;
+    physicalDischargeDate: Date;
 }
 
 export interface PatientDto {

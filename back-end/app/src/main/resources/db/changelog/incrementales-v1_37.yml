@@ -829,7 +829,7 @@ databaseChangeLog:
                 UPDATE service_request_category SET description = 'Diagnóstico por imágenes' WHERE id = '363679005';
                 UPDATE service_request_category SET description = 'Laboratorio' WHERE id = '108252007';
                 UPDATE service_request_category SET description = 'Procedimientos quirúrgicos' WHERE id = '387713003';
-   
+
     - changeSet:  
         id: add-column-modification_reason-document
         comment: Add modification_reason column in document table
@@ -841,3 +841,15 @@ databaseChangeLog:
                     name: modification_reason
                     type: text
               tableName: document
+
+    - changeSet:
+        id: patient_discharge-addColumn-physical_discharge_date
+        comment: Add column physical_discharge_date to patient_discharge
+        author: fsimaro
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: physical_discharge_date
+                    type: timestamp
+              tableName: patient_discharge
