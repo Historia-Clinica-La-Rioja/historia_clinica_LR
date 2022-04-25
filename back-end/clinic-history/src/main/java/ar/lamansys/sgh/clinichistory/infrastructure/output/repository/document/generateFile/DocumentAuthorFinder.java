@@ -27,11 +27,12 @@ public class DocumentAuthorFinder {
         logger.debug("Get author from document -> documentId={}", documentId);
 
         String sqlString = "" +
-                "SELECT hp.id, p.firstName, p.lastName, hp.licenseNumber " +
+                "SELECT hp.id, p.firstName, p.lastName, hp.licenseNumber, pe.nameSelfDetermination" +
                 "FROM Document AS d " +
                 "JOIN UserPerson AS up ON (d.creationable.createdBy = up.pk.userId) " +
                 "JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
                 "JOIN Person p ON (hp.personId = p.id) " +
+				"JOIN PersonExtended pe ON (p.id = pe.id) " +
                 "WHERE d.id = :documentId" +
                 "";
 
@@ -49,7 +50,7 @@ public class DocumentAuthorFinder {
         if (rows.isEmpty())
             return null;
         Object[] row = rows.get(0);
-        AuthorBo result =  new AuthorBo((Integer) row[0], (String) row[1], (String) row[2], (String) row[3]);
+        AuthorBo result =  new AuthorBo((Integer) row[0], (String) row[1], (String) row[2], (String) row[3], (String) row[4]);
         logger.trace("execute result query -> {}", result);
         return result;
     }

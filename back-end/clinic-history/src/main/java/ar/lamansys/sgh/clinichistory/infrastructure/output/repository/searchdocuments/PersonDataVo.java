@@ -16,4 +16,6 @@ public class PersonDataVo {
     private String firstName;
 
     private String lastName;
+
+	private String nameSelfDetermination;
 }

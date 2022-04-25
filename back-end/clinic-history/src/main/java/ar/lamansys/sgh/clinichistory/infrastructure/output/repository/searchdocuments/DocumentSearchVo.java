@@ -36,11 +36,11 @@ public class DocumentSearchVo {
 
     public DocumentSearchVo(Long id, DocumentObservationsVo notes, LocalDateTime createdOn, Integer creatorUserId,
                             String firstName, String lastName, List<String> diagnosis, String mainDiagnosis,
-							String documentType){
+							String documentType, String nameSelfDetermination){
         this.id = id;
         this.notes = notes;
         this.createdOn = createdOn;
-        this.creator = new PersonDataVo(creatorUserId, firstName, lastName);
+        this.creator = new PersonDataVo(creatorUserId, firstName, lastName, nameSelfDetermination);
         this.diagnosis = diagnosis;
         this.mainDiagnosis = mainDiagnosis;
         this.documentType = documentType;

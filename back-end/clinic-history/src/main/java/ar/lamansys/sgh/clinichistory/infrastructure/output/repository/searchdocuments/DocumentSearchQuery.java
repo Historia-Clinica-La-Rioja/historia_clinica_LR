@@ -49,7 +49,8 @@ public class DocumentSearchQuery {
                 "evolutionnote.description as evolutionNote,\n" +
                 "clinicalnote.description as clinicalNote, \n" +
                 "illnessnote.description as illnessNote, \n" +
-                "indicationnote.description as indicationNote \n");
+                "indicationnote.description as indicationNote, \n" +
+				"personextended.nameSelfDetermination \n");
     }
 
     public QueryPart from() {
@@ -58,6 +59,7 @@ public class DocumentSearchQuery {
         //Creator
                 "join UserPerson as userperson on (document.creationable.createdBy = userperson.pk.userId) \n" +
                 "join Person as creator on (userperson.pk.personId = creator.id) \n" +
+				"left join PersonExtended as personextended on (creator.id = personextended.id) \n" +
         //Notes
                 "left join Note othernote on (document.otherNoteId = othernote.id) \n" +
                 "left join Note physicalnote on (document.physicalExamNoteId = physicalnote.id) \n" +
@@ -115,7 +117,9 @@ public class DocumentSearchQuery {
                     (String)tuple[4],
                     mapDiagnosis(v),
                     mapMainDiagnosis(v),
-					(String)tuple[9]));
+					(String)tuple[9],
+					(String)tuple[17]));
+
         });
         return result;
     }
