@@ -57,4 +57,9 @@ export class InternmentEpisodeService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/probabledischargedate`;
 		return this.http.put<DateTimeDto>(url, probableDischargeDateDto);
 	}
+
+	physicalDischargeInternmentEpisode(internmentEpisodeId: number): Observable<PatientDischargeDto> {
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/physicaldischarge`;
+		return this.http.post<PatientDischargeDto>(url, {});
+	}
 }
