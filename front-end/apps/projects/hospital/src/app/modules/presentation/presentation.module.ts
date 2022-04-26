@@ -35,6 +35,7 @@ import { TableComponent } from './components/table/table.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 import { ListElementItemComponent } from './components/list-element-item/list-element-item.component';
+import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -97,7 +98,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-  		ListElementItemComponent
+  		ListElementItemComponent,
+    	CategoryHeaderDividerComponent
 	],
 	imports: [
 		CommonModule,
