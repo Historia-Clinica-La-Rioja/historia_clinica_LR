@@ -1,0 +1,24 @@
+<div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column">
+	<div>
+		<div [class]="content.status.cssClass" class="label">
+			<strong>{{content.status.description | translate | uppercase}}</strong>
+		</div>
+	</div>
+
+	<div fxLayout="column" fxFlex="50%" fxLayoutGap="10px">
+		<span class="content">{{content.description}}</span>
+		<div fxLayout="row" fxLayoutGap="20px">
+			<div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
+				<span class="extra-info-title">{{extraInfo.title | translate}}</span>
+				<span>{{extraInfo.content}}</span>
+			</div>
+
+		</div>
+	</div>
+
+	<div fxLayout="row" fxFlex="30%" fxLayoutGap="30px" class="professional-elapsed-time color-grey">
+		<span>{{ content.createdBy }}</span>
+		<span>{{ content.timeElapsed }}</span>
+	</div>
+</div>
+
