@@ -1,4 +1,4 @@
-CREATE PROCEDURE quilmes.migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
+CREATE PROCEDURE migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
     language plpgsql
 as
 $$
@@ -8,6 +8,7 @@ DECLARE
     temprow2 RECORD;
     temprow3 RECORD;
     exists_patient BOOLEAN;
+    exists_rnos BOOLEAN;
 BEGIN
     IF (offset_value < 1000) THEN
         RAISE EXCEPTION 'No se puede elegir un offset menor a 1000';
@@ -34,14 +35,29 @@ BEGIN
     FROM '|| from_schema || '.person AS p';
     EXECUTE(query);
 
+    --------------------------------------------------------------------------------------------------------------------
+    -- Etnias
+    FOR temprow IN EXECUTE 'SELECT (-'|| offset_value ||'-e.id) AS id, sctid, pt, active
+        FROM '|| from_schema ||'.ethnicity AS e
+        WHERE NOT EXISTS (SELECT eth.id FROM '|| to_schema ||'.ethnicity AS eth
+                          WHERE eth.sctid = e.sctid AND UPPER(eth.pt) = UPPER(e.pt)) '
+    LOOP
+
+        EXECUTE format('INSERT INTO %I.ethnicity (id, sctid, pt, active)' ||
+                       'VALUES ($1, $2, $3, $4)', to_schema)
+            USING temprow.id, temprow.sctid, temprow.pt, temprow.active;
+    END LOOP;
+
     query := 'INSERT INTO ' || to_schema || '.person_extended (person_id, cuil, mothers_last_name, address_id, phone_number, email, religion,
                                          name_self_determination, gender_self_determination, photo_file_path, ethnicity_id,
                                          education_level_id, occupation_id, other_gender_self_determination, phone_prefix)
     SELECT (-'|| offset_value ||'-pe.person_id), pe.cuil, pe.mothers_last_name, (-'|| offset_value ||'-pe.address_id),
            pe.phone_number, pe.email, pe.religion, pe.name_self_determination, pe.gender_self_determination,
-           pe.photo_file_path, pe.ethnicity_id, pe.education_level_id, pe.occupation_id,
+           pe.photo_file_path, e.id, pe.education_level_id, pe.occupation_id,
            pe.other_gender_self_determination, pe.phone_prefix
-    FROM '|| from_schema || '.person_extended AS pe';
+    FROM '|| from_schema || '.person_extended AS pe
+    INNER JOIN '|| from_schema || '.ethnicity AS et ON (pe.ethnicity_id = et.id)
+    INNER JOIN '|| to_schema || '.ethnicity AS e ON (et.sctid = e.sctid AND UPPER(et.pt) = UPPER(e.pt))';
     EXECUTE(query);
 
 
@@ -139,7 +155,6 @@ BEGIN
     WHERE u.created_by != -1;';
     EXECUTE format(query);
 
-
     query := 'INSERT INTO ' || to_schema || '.user_password (id, created_on, deleted_on, deleted, updated_on, hash_algorithm, password, salt,
                                        created_by, updated_by, deleted_by)
     SELECT (-'|| offset_value ||'-up.id), up.created_on, up.deleted_on, up.deleted, up.updated_on, up.hash_algorithm, up.password,
@@ -191,11 +206,25 @@ BEGIN
     FROM '|| from_schema || '.sector AS s';
     EXECUTE(query);
 
+    -------------------------------------------------------------------------------------------------------------------
+    -- Etnias
+    FOR temprow IN EXECUTE 'SELECT (-'|| offset_value ||'-e.id) AS id, sctid_code, name, clinical_specialty_type_id
+        FROM '|| from_schema ||'.clinical_specialty AS e
+        WHERE NOT EXISTS (SELECT eth.id FROM '|| to_schema ||'.clinical_specialty AS eth
+                          WHERE UPPER(eth.name) = UPPER(e.name) AND eth.sctid_code = e.sctid_code AND eth.clinical_specialty_type_id = e.clinical_specialty_type_id) '
+    LOOP
+
+        EXECUTE format('INSERT INTO %I.clinical_specialty (id, name, sctid_code, clinical_specialty_type_id)' ||
+                       'VALUES ($1, $2, $3, $4)', to_schema)
+            USING temprow.id, temprow.name, temprow.sctid_code, temprow.clinical_specialty_type_id;
+    END LOOP;
     --------------------------------------------------------------------------------------------------------------------
     -- Clinical specialty Sector
     query := 'INSERT INTO ' || to_schema || '.clinical_specialty_sector (id, description, clinical_specialty_id, sector_id)
-    SELECT (-'|| offset_value ||'-css.id), css.description, css.clinical_specialty_id, (-'|| offset_value ||'-css.sector_id)
-    FROM '|| from_schema || '.clinical_specialty_sector AS css';
+    SELECT (-'|| offset_value ||'-css.id), css.description, e.id, (-'|| offset_value ||'-css.sector_id)
+    FROM '|| from_schema || '.clinical_specialty_sector AS css
+    INNER JOIN '|| from_schema || '.clinical_specialty AS et ON (css.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)';
     EXECUTE(query);
 
     --------------------------------------------------------------------------------------------------------------------
@@ -224,15 +253,22 @@ BEGIN
     FROM '|| from_schema || '.healthcare_professional AS hp';
     EXECUTE(query);
 
+   /* FOR temprow IN EXECUTE 'SELECT *
+        FROM '|| to_schema ||'.clinical_specialty AS e WHERE sctid_code = ''408470005'' and NAME = ''Obstetricia'''
+   LOOP
+        RAISE NOTICE '%s', temprow;
+    END LOOP;*/
     --------------------------------------------------------------------------------------------------------------------
     -- Profesionales especialidades
     query := 'INSERT INTO ' || to_schema || '.healthcare_professional_specialty (id, healthcare_professional_id, professional_specialty_id,
                                                            clinical_specialty_id, deleted, deleted_by, deleted_on,
                                                            created_on, updated_on, created_by, updated_by)
     SELECT (-'|| offset_value ||'-hps.id), (-'|| offset_value ||'-hps.healthcare_professional_id), professional_specialty_id,
-           hps.clinical_specialty_id, hps.deleted, (-'|| offset_value ||'-hps.deleted_by), hps.deleted_on,
+           e.id, hps.deleted, (-'|| offset_value ||'-hps.deleted_by), hps.deleted_on,
            hps.created_on, hps.updated_on, (-'|| offset_value ||'-hps.created_by), (-'|| offset_value ||'-hps.updated_by)
-    FROM '|| from_schema || '.healthcare_professional_specialty AS hps';
+    FROM '|| from_schema || '.healthcare_professional_specialty AS hps
+    INNER JOIN '|| from_schema || '.clinical_specialty AS et ON (hps.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)';
     EXECUTE(query);
 
     --------------------------------------------------------------------------------------------------------------------
@@ -289,11 +325,24 @@ BEGIN
         WHERE UPPER(name) NOT IN (SELECT UPPER(name) FROM '|| to_schema ||'.medical_coverage AS mcc
                                   JOIN '|| to_schema ||'.health_insurance AS hii ON mcc.id = hii.id) '
     LOOP
+
         EXECUTE format('INSERT INTO %I.medical_coverage (id, name, created_by, created_on, updated_by, updated_on, deleted, deleted_by, deleted_on, cuit)' ||
                        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', to_schema)
             USING temprow.id, temprow.name, temprow.created_by, temprow.created_on, temprow.updated_by, temprow.updated_on,
                 temprow.deleted, temprow.deleted_by, temprow.deleted_on, temprow.cuit;
 
+        IF temprow.rnos IS NOT NULL
+        THEN
+            query := 'SELECT COUNT(hi.id) > 0
+                      FROM '|| to_schema ||'.health_insurance AS hi
+                      WHERE hi.rnos = '|| temprow.rnos ||';';
+
+            --RAISE NOTICE '%', query;
+            EXECUTE (query) INTO exists_rnos;
+            IF (exists_rnos)
+                THEN temprow.rnos = - offset_value - temprow.rnos;
+            END IF;
+        END IF;
         EXECUTE format('INSERT INTO %I.health_insurance (id, rnos, acronym)' ||
                        'VALUES ($1, $2, $3)',to_schema) USING temprow.id, temprow.rnos, temprow.acronym;
     END LOOP;
@@ -320,8 +369,6 @@ BEGIN
             USING offset_value, temprow.id, temprow.patient_id, temprow.medical_coverage_id, temprow.active, temprow.vigency_date,
             temprow.affiliate_number, temprow.private_health_insurance_details_id;
     END LOOP;
-
-   -- RAISE EXCEPTION 'LLEGO';
 
     FOR temprow IN EXECUTE 'SELECT pmc.id AS id, (-'|| offset_value ||'-patient_id) AS patient_id,
            pmc.medical_coverage_id AS medical_coverage_id, active, vigency_date,
@@ -385,11 +432,13 @@ BEGIN
                                             anamnesis_doc_id, epicrisis_doc_id, entry_date, created_by, updated_by,
                                             created_on, updated_on, institution_id, probable_discharge_date, deleted,
                                             deleted_by, deleted_on, patient_medical_coverage_id)
-    SELECT (-'|| offset_value ||'-id), (-'|| offset_value ||'-patient_id), (-'|| offset_value ||'-bed_id), clinical_specialty_id, status_id,
-           (-'|| offset_value ||'-note_id), (-'|| offset_value ||'-anamnesis_doc_id), (-'|| offset_value ||'-epicrisis_doc_id), entry_date,
-           (-'|| offset_value ||'-created_by), (-'|| offset_value ||'-updated_by), created_on, updated_on, (-'|| offset_value ||'-institution_id),
-           probable_discharge_date, deleted, (-'|| offset_value ||'-deleted_by), deleted_on, (-'|| offset_value ||'-patient_medical_coverage_id)
-    FROM  '|| from_schema ||'.internment_episode';
+    SELECT (-'|| offset_value ||'-ie.id), (-'|| offset_value ||'-ie.patient_id), (-'|| offset_value ||'-ie.bed_id), e.id, ie.status_id,
+           (-'|| offset_value ||'-ie.note_id), (-'|| offset_value ||'-ie.anamnesis_doc_id), (-'|| offset_value ||'-ie.epicrisis_doc_id), ie.entry_date,
+           (-'|| offset_value ||'-ie.created_by), (-'|| offset_value ||'-ie.updated_by), ie.created_on, ie.updated_on, (-'|| offset_value ||'-ie.institution_id),
+           ie.probable_discharge_date, ie.deleted, (-'|| offset_value ||'-ie.deleted_by), ie.deleted_on, (-'|| offset_value ||'-ie.patient_medical_coverage_id)
+    FROM  '|| from_schema ||'.internment_episode AS ie
+    LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (ie.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)';
     -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
@@ -416,12 +465,37 @@ BEGIN
     query := 'INSERT INTO ' || to_schema || '.outpatient_consultation (id, patient_id, clinical_specialty_id, institution_id, start_date,
                                                  document_id, doctor_id, billable, created_by, created_on, updated_by,
                                                  updated_on, deleted, deleted_by, deleted_on, patient_medical_coverage_id)
-    SELECT (-'|| offset_value ||'-id), (-'|| offset_value ||'-patient_id), clinical_specialty_id, (-'|| offset_value ||'-institution_id), start_date,
-           (-'|| offset_value ||'-document_id), (-'|| offset_value ||'-doctor_id), billable, (-'|| offset_value ||'-created_by), created_on,
-           (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on, (-'|| offset_value ||'-patient_medical_coverage_id)
-    FROM  '|| from_schema ||'.outpatient_consultation';
+    SELECT (-'|| offset_value ||'-oc.id), (-'|| offset_value ||'-oc.patient_id), e.id AS clinical_specialty_id, (-'|| offset_value ||'-oc.institution_id), oc.start_date,
+           (-'|| offset_value ||'-oc.document_id), (-'|| offset_value ||'-oc.doctor_id), oc.billable, (-'|| offset_value ||'-oc.created_by), oc.created_on,
+           (-'|| offset_value ||'-oc.updated_by), oc.updated_on, oc.deleted, (-'|| offset_value ||'-oc.deleted_by), oc.deleted_on, (-'|| offset_value ||'-oc.patient_medical_coverage_id)
+    FROM  '|| from_schema ||'.outpatient_consultation AS oc
+    INNER JOIN '|| from_schema || '.clinical_specialty AS et ON (oc.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)
+    UNION ALL
+    SELECT (-'|| offset_value ||'-oc.id), (-'|| offset_value ||'-oc.patient_id), oc.clinical_specialty_id AS clinical_specialty_id, (-'|| offset_value ||'-oc.institution_id), oc.start_date,
+           (-'|| offset_value ||'-oc.document_id), (-'|| offset_value ||'-oc.doctor_id), oc.billable, (-'|| offset_value ||'-oc.created_by), oc.created_on,
+           (-'|| offset_value ||'-oc.updated_by), oc.updated_on, oc.deleted, (-'|| offset_value ||'-oc.deleted_by), oc.deleted_on, (-'|| offset_value ||'-oc.patient_medical_coverage_id)
+    FROM  '|| from_schema ||'.outpatient_consultation AS oc
+    WHERE oc.clinical_specialty_id IS NULL';
     -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
+
+    FOR temprow IN EXECUTE 'SELECT s.id, s.description
+        FROM '|| from_schema ||'.reasons AS s'
+    LOOP
+         query := 'SELECT COUNT(id) > 0
+                  FROM '|| to_schema ||'.reasons
+                  WHERE id = '''|| temprow.id ||''';';
+        --RAISE NOTICE '%', query;
+        EXECUTE (query) INTO exists_rnos;
+
+        IF (exists_rnos = false)
+        THEN
+            EXECUTE format('INSERT INTO %I.reasons (id, description)' ||
+                       'VALUES ($1, $2)', to_schema)
+                USING temprow.id, temprow.description;
+        END IF;
+    END LOOP;
 
     query := 'INSERT INTO ' || to_schema || '.outpatient_consultation_reasons (reason_id, outpatient_consultation_id)
     SELECT reason_id, (-'|| offset_value ||'-outpatient_consultation_id)
@@ -433,11 +507,20 @@ BEGIN
     query := 'INSERT INTO ' || to_schema || '.vaccine_consultation (id, patient_id, clinical_specialty_id, institution_id, performed_date,
                                               doctor_id, billable, created_by, created_on, updated_by, updated_on, deleted,
                                               deleted_by, deleted_on, patient_medical_coverage_id)
-    SELECT (-'|| offset_value ||'-id), (-'|| offset_value ||'-patient_id), clinical_specialty_id, (-'|| offset_value ||'-institution_id), performed_date,
-           (-'|| offset_value ||'-doctor_id), billable, (-'|| offset_value ||'-created_by), created_on,
-           (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on,
-           (-'|| offset_value ||'-patient_medical_coverage_id)
-    FROM  '|| from_schema ||'.vaccine_consultation';
+    SELECT (-'|| offset_value ||'-vc.id), (-'|| offset_value ||'-vc.patient_id), e.id AS clinical_specialty_id, (-'|| offset_value ||'-vc.institution_id), vc.performed_date,
+           (-'|| offset_value ||'-vc.doctor_id), vc.billable, (-'|| offset_value ||'-vc.created_by), vc.created_on,
+           (-'|| offset_value ||'-vc.updated_by), vc.updated_on, vc.deleted, (-'|| offset_value ||'-vc.deleted_by), vc.deleted_on,
+           (-'|| offset_value ||'-vc.patient_medical_coverage_id)
+    FROM  '|| from_schema ||'.vaccine_consultation AS vc
+    LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (vc.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)
+    UNION ALL
+    SELECT (-'|| offset_value ||'-vc.id), (-'|| offset_value ||'-vc.patient_id), vc.clinical_specialty_id AS clinical_specialty_id, (-'|| offset_value ||'-vc.institution_id), vc.performed_date,
+           (-'|| offset_value ||'-vc.doctor_id), vc.billable, (-'|| offset_value ||'-vc.created_by), vc.created_on,
+           (-'|| offset_value ||'-vc.updated_by), vc.updated_on, vc.deleted, (-'|| offset_value ||'-vc.deleted_by), vc.deleted_on,
+           (-'|| offset_value ||'-vc.patient_medical_coverage_id)
+    FROM  '|| from_schema ||'.vaccine_consultation AS vc
+    WHERE vc.clinical_specialty_id IS NULL';
     -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
@@ -446,12 +529,22 @@ BEGIN
     query := 'INSERT INTO ' || to_schema || '.nursing_consultation (id, patient_id, clinical_specialty_id, institution_id, performed_date,
                                               doctor_id, billable, created_by, created_on, updated_by, updated_on, deleted,
                                               deleted_by, deleted_on, patient_medical_coverage_id)
-    SELECT (-'|| offset_value ||'-id), (-'|| offset_value ||'-patient_id), clinical_specialty_id, (-'|| offset_value ||'-institution_id), performed_date,
-           (-'|| offset_value ||'-doctor_id), billable, (-'|| offset_value ||'-created_by), created_on,
-           (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on,
-           (-'|| offset_value ||'-patient_medical_coverage_id)
-    FROM  '|| from_schema ||'.nursing_consultation';
+    SELECT (-'|| offset_value ||'-nc.id), (-'|| offset_value ||'-nc.patient_id), e.id AS clinical_specialty_id, (-'|| offset_value ||'-nc.institution_id), nc.performed_date,
+           (-'|| offset_value ||'-nc.doctor_id), nc.billable, (-'|| offset_value ||'-nc.created_by), nc.created_on,
+           (-'|| offset_value ||'-nc.updated_by), nc.updated_on, nc.deleted, (-'|| offset_value ||'-nc.deleted_by), nc.deleted_on,
+           (-'|| offset_value ||'-nc.patient_medical_coverage_id)
+    FROM  '|| from_schema ||'.nursing_consultation AS nc
+    LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (nc.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)
+    UNION ALL
+    SELECT (-'|| offset_value ||'-nc.id), (-'|| offset_value ||'-nc.patient_id), nc.clinical_specialty_id AS clinical_specialty_id, (-'|| offset_value ||'-nc.institution_id), nc.performed_date,
+           (-'|| offset_value ||'-nc.doctor_id), nc.billable, (-'|| offset_value ||'-nc.created_by), nc.created_on,
+           (-'|| offset_value ||'-nc.updated_by), nc.updated_on, nc.deleted, (-'|| offset_value ||'-nc.deleted_by), nc.deleted_on,
+           (-'|| offset_value ||'-nc.patient_medical_coverage_id)
+    FROM  '|| from_schema ||'.nursing_consultation AS nc
+    WHERE nc.clinical_specialty_id IS NULL';
     -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
+   -- RAISE NOTICE '%', query;
     EXECUTE(query);
 
     --------------------------------------------------------------------------------------------------------------------
@@ -480,15 +573,15 @@ BEGIN
     -- || 'WHERE patient_id (-'|| offset_value ||'-patient_id) NOT IN (SELECT id FROM temp_duplicate_patient_ids) '
     EXECUTE(query);
 
-    FOR temprow IN EXECUTE 'SELECT s.pt, s.sctid, s.parent_fsn, s.parent_id
-        FROM '|| from_schema ||'.snomed AS s'
-    LOOP
-        IF (NOT EXISTS (SELECT 1 FROM snomed WHERE sctid = temprow.sctid  AND pt = temprow.pt)) THEN
 
-            EXECUTE format('INSERT INTO %I.snomed (sctid, pt, parent_id, parent_fsn)' ||
-                       'VALUES ($1, $2, $3, $4)', to_schema)
-                USING temprow.sctid, temprow.pt, temprow.parent_id, temprow.parent_fsn;
-        END IF;
+    FOR temprow IN EXECUTE 'SELECT s.pt, s.sctid, s.parent_fsn, s.parent_id
+                    FROM '|| from_schema ||'.snomed AS s
+                    WHERE s.id not in ( SELECT s2.id FROM '|| to_schema ||'.snomed AS s1
+                    JOIN '|| from_schema ||'.snomed AS s2 ON (s.sctid = s1.sctid AND s.pt = s1.pt))'
+    LOOP
+        EXECUTE format('INSERT INTO %I.snomed (sctid, pt, parent_id, parent_fsn)' ||
+                   'VALUES ($1, $2, $3, $4)', to_schema)
+            USING temprow.sctid, temprow.pt, temprow.parent_id, temprow.parent_fsn;
     END LOOP;
 
     query := 'INSERT INTO ' || to_schema || '.health_condition (id, patient_id, sctid_code, status_id, verification_status_id, start_date,
@@ -707,4 +800,5 @@ BEGIN
 END;
 $$;
 
-CALL quilmes.migrate(1000, 'quilmes', 'public', 'QUILMES');
+
+CALL migrate(1000, 'migrate', 'public', 'QUILMES');
