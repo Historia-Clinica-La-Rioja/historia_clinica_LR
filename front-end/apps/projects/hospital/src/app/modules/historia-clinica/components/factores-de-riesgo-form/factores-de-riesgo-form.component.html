@@ -1,25 +1,10 @@
-<div class="margin-bottom">
+<div>
     <h2 class="mat-h2" [translate]="'historia-clinica.factores-de-riesgo-form.TITLE'"></h2>
-    <div *ngIf="showPreloadData" class="dialog">
-        <mat-icon online class="icon" color="primary">error_outline</mat-icon>
-        <div class="info-text">
-            <span class="text" [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DESCRIPTION'"
-                [translateParams]="{date: factoresDeRiesgoFormService.getDate()}"> </span>
-            <span class="question"
-                [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.QUESTION'"></span>
-            <span fxLayout="row">
-                <button class="button" id=include_risk_factors mat-button color="primary"
-                    (click)=factoresDeRiesgoFormService.savePreloadedRiskFactorsData()>
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.ADD'"></span>
-                </button>
-                <button class="button" id=discard_risk_factors mat-button color="warn"
-                    (click)=factoresDeRiesgoFormService.discardPreloadedRiskFactorsData()>
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.risk_factors_dialog.DISCARD'"></span>
-                </button>
-            </span>
-        </div>
-    </div>
-    <app-document-section class="margin-bottom">
+    <app-include-previous-data-question *ngIf="showPreloadData"
+        [dataName]="'historia-clinica.factores-de-riesgo-form.NAME' | translate"
+        [date]="factoresDeRiesgoFormService.getDate()" (response)="savePreloadData($event)" id="risk_factors_question">
+    </app-include-previous-data-question>
+    <app-document-section>
         <ng-container concept-form>
             <form fxLayout="column" fxLayoutGap="15px" [formGroup]="factoresDeRiesgoFormService.getForm()">
                 <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">

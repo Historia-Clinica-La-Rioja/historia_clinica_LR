@@ -27,6 +27,7 @@ import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/ef
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
+import { IncludePreviousDataQuestionComponent } from './components/include-previous-data-question/include-previous-data-question.component';
 
 @NgModule({
 	declarations: [
@@ -42,6 +43,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
+		IncludePreviousDataQuestionComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -74,6 +76,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		FactoresDeRiesgoFormComponent,
+		IncludePreviousDataQuestionComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptTypeaheadSearchComponent,

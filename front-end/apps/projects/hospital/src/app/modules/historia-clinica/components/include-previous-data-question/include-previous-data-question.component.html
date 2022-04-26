@@ -1,0 +1,20 @@
+<div fxLayout="row" fxLayoutGap="16px" class="background-primary">
+    <mat-icon color="primary">error_outline</mat-icon>
+    <div fxLayout="column" fxLayoutGap="2px">
+        <span>
+            {{ 'historia-clinica.include-previous-data-question.DESCRIPTION'
+            | translate: { dataName: dataName, date: date } }}
+        </span>
+        <span class="bold">
+            {{ 'historia-clinica.include-previous-data-question.QUESTION' | translate }}
+        </span>
+        <div fxLayout="row" class="buttons">
+            <button mat-button color="primary" (click)="response.emit(true)" id="add_button">
+                {{ 'historia-clinica.include-previous-data-question.ADD' | translate }}
+            </button>
+            <button mat-button color="warn" (click)="response.emit(false)" id="discard_button">
+                {{ 'historia-clinica.include-previous-data-question.DISCARD' | translate }}
+            </button>
+        </div>
+    </div>
+</div>

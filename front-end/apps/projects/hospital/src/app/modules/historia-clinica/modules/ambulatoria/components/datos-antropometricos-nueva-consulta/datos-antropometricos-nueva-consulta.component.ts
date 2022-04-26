@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
 
@@ -7,15 +7,19 @@ import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-a
   templateUrl: './datos-antropometricos-nueva-consulta.component.html',
   styleUrls: ['./datos-antropometricos-nueva-consulta.component.scss']
 })
-export class DatosAntropometricosNuevaConsultaComponent implements OnInit {
+export class DatosAntropometricosNuevaConsultaComponent {
 
   @Input() datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
   @Input() showPreloadData: boolean = false;
   readonly isNumberOrDot = isNumberOrDot;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  savePreloadData(save: boolean): void {
+    if (save) {
+      this.datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData()
+    }
+    else {
+      this.datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData();
+    }
   }
 
 }
