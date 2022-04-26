@@ -39,7 +39,7 @@ public class PrivateHealthInsuranceServiceImpl implements PrivateHealthInsurance
     public Collection<PrivateHealthInsuranceBo> getAll() {
         Collection<PrivateHealthInsuranceVo> medicalCoveragedata = privateHealthInsuranceRepository.getAllWithNames(Sort.by(Sort.Direction.ASC, "name"));
         Collection<PrivateHealthInsuranceBo> result = medicalCoveragedata.stream()
-                .map(mc -> new PrivateHealthInsuranceBo(mc.getId(), mc.getName(), mc.getCuit()))
+                .map(mc -> new PrivateHealthInsuranceBo(mc.getId(), mc.getName(), mc.getCuit(), mc.getType()))
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;

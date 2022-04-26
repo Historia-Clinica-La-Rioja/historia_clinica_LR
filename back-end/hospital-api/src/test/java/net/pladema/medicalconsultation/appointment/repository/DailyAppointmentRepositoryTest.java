@@ -10,6 +10,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
+import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.person.repository.entity.HealthInsurance;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,9 +60,9 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988", EMedicalCoverageType.OBRASOCIAL.getId());
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE", coverage.getType());
         merge(hi);
 
         // programmed appointments
@@ -123,9 +124,9 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988", EMedicalCoverageType.OBRASOCIAL.getId());
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE", coverage.getType());
         merge(hi);
 
         // programmed appointments

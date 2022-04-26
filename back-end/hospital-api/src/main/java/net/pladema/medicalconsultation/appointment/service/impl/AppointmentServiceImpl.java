@@ -18,6 +18,7 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 
@@ -219,7 +220,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 		var coverageDto = dto.getMedicalCoverage();
 		var medicalCoverageBo = new PatientCoverageInsuranceDetailsBo(coverageDto.getId(),
-				coverageDto.getName(), coverageDto.getCuit(), coverageDto.obtainCoverageType());
+				coverageDto.getName(), coverageDto.getCuit(), coverageDto.getType());
 		var vigencyDate = dto.getVigencyDate();
 
 		var result = new PatientMedicalCoverageBo(dto.getId(),

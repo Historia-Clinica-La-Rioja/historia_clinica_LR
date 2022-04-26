@@ -2,6 +2,7 @@ package net.pladema.sgx.healthinsurance.service.impl;
 
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.establishment.repository.entity.MedicalCoveragePlan;
+import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.repository.domain.HealthInsuranceVo;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.patient.service.domain.MedicalCoveragePlanBo;
@@ -67,9 +68,9 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 		newHealthInsurances.stream().filter(hi -> !healthInsuranceRepository.existsByRnos(calculateRnos(hi)))
 				.forEach(hi -> {
 				    MedicalCoverage saved = medicalCoverageRepository
-                            .save(new MedicalCoverage(hi.getName(),hi.getCuit()));
+                            .save(new MedicalCoverage(hi.getName(),hi.getCuit(), EMedicalCoverageType.OBRASOCIAL.getId()));
 					healthInsuranceRepository
-							.save(new HealthInsurance(saved.getId(), saved.getName(), saved.getCuit(), calculateRnos(hi), hi.getAcronym()));
+							.save(new HealthInsurance(saved.getId(), saved.getName(), saved.getCuit(), calculateRnos(hi), hi.getAcronym(), EMedicalCoverageType.OBRASOCIAL.getId()));
 					LOG.debug("HealthInsurance Added-> newHealthInsurance {}", hi);
 				});
 	}

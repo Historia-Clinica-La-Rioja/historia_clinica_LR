@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DateFormat, momentFormat, momentParse, momentParseDate, newMoment } from '@core/utils/moment.utils';
-import { HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
-import { CoverageDtoUnion, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import {
+	EMedicalCoverageType,
+	HealthInsurance,
+	PatientMedicalCoverage,
+	PrivateHealthInsurance
+} from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+import { HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -46,8 +51,8 @@ export class MapperService {
 		};
 
 		// TODO ver la posibilidad de quitar ese if
-		function toMedicalCoverage(dto: CoverageDtoUnion): HealthInsurance | PrivateHealthInsurance {
-			return dto.type === 'HealthInsuranceDto' ? new HealthInsurance((dto.rnos) ? dto.rnos.toString() : null, dto.acronym, dto.id, dto.name, dto.type)
+		function toMedicalCoverage(dto: HealthInsuranceDto | PrivateHealthInsuranceDto ): HealthInsurance | PrivateHealthInsurance {
+			return dto.type === EMedicalCoverageType.OBRASOCIAL ? new HealthInsurance(("rnos" in dto && dto.rnos) ? dto.rnos.toString() : null, ("acronym" in dto && dto.acronym) ? dto.acronym.toString() : null, dto.id, dto.name, dto.type)
 				: new PrivateHealthInsurance(dto.id, dto.name, dto.type,dto.cuit);
 		}
 

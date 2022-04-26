@@ -557,7 +557,7 @@ export interface CoverageDto extends Serializable {
     cuit: string;
     id: number;
     name: string;
-    type: "HealthInsuranceDto" | "PrivateHealthInsuranceDto";
+    type: number;
 }
 
 export interface CreateAppointmentDto {
@@ -1219,7 +1219,6 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
 export interface HealthInsuranceDto extends CoverageDto {
     acronym: string;
     rnos: number;
-    type: "HealthInsuranceDto";
 }
 
 export interface HealthcareProfessionalCompleteDto {
@@ -1982,7 +1981,7 @@ export interface PatientMedicalCoverageDto {
     condition: EPatientMedicalCoverageCondition;
     endDate?: string;
     id?: number;
-    medicalCoverage: CoverageDtoUnion;
+    medicalCoverage: CoverageDto;
     planId?: number;
     planName?: string;
     startDate?: string;
@@ -2114,7 +2113,6 @@ export interface PrivateHealthInsuranceDetailsDto {
 }
 
 export interface PrivateHealthInsuranceDto extends CoverageDto {
-    type: "PrivateHealthInsuranceDto";
 }
 
 export interface ProbableDischargeDateDto {
@@ -2640,8 +2638,6 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
-export type CoverageDtoUnion = HealthInsuranceDto | PrivateHealthInsuranceDto;
-
 export const enum AppFeature {
     HABILITAR_ALTA_SIN_EPICRISIS = "HABILITAR_ALTA_SIN_EPICRISIS",
     MAIN_DIAGNOSIS_REQUIRED = "MAIN_DIAGNOSIS_REQUIRED",
@@ -2692,8 +2688,9 @@ export const enum EIndicationType {
 }
 
 export const enum EMedicalCoverageTypeDto {
-    OBRASOCIAL = "OBRASOCIAL",
     PREPAGA = "PREPAGA",
+    OBRASOCIAL = "OBRASOCIAL",
+    ART = "ART",
 }
 
 export const enum EOdontologyTopicDto {

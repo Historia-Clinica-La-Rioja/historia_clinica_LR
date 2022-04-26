@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators } f
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
-	CoverageDtoUnion,
 	HealthInsuranceDto,
 	MedicalCoverageDto, MedicalCoveragePlanDto,
 	PrivateHealthInsuranceDto
@@ -213,16 +212,16 @@ export class MedicalCoverageComponent implements OnInit {
 	}
 
 	getPatientHealthInsurances(): PatientMedicalCoverage[] {
-		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'HealthInsuranceDto' && s.active);
+		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === EMedicalCoverageType.OBRASOCIAL && s.active);
 	}
 
 	getPatientPrivateHealthInsurances(): PatientMedicalCoverage[] {
-		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === 'PrivateHealthInsuranceDto' && s.active);
+		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === EMedicalCoverageType.PREPAGA && s.active);
 	}
 
 	private getPrivateHealthInsuranceToAdd(): PatientMedicalCoverage {
 		const medicalCoverage = new PrivateHealthInsurance(this.privateHealthInsuranceToAdd.id,
-			this.privateHealthInsuranceToAdd.name, 'PrivateHealthInsuranceDto',this.prepagaForm.value.cuit);
+			this.privateHealthInsuranceToAdd.name, EMedicalCoverageType.PREPAGA,this.prepagaForm.value.cuit);
 		const toAdd: PatientMedicalCoverage = {
 			medicalCoverage,
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
@@ -255,14 +254,14 @@ export class MedicalCoverageComponent implements OnInit {
 		const healthInsuranceId = this.healthInsuranceFilteredMasterData
 			.filter((s: MedicalCoverageDto) => s.rnos === renaperResponse.rnos)
 			.map(s => s.id)[0];
-		return new HealthInsurance(renaperResponse.rnos, renaperResponse.acronym, healthInsuranceId, renaperResponse.name, 'HealthInsuranceDto');
+		return new HealthInsurance(renaperResponse.rnos, renaperResponse.acronym, healthInsuranceId, renaperResponse.name, EMedicalCoverageType.OBRASOCIAL);
 	}
 
 	private fromPrivateHealthInsuranceMasterDataToPrivateHealthInsurance(privateHealthInsurance: PrivateHealthInsuranceDto): PrivateHealthInsurance {
 		const privateHealthInsuranceId = this.privateHealthInsuranceFilteredMasterData
 			.filter((s: PrivateHealthInsuranceDto) => s.id === privateHealthInsurance.id)
 			.map(s => s.id)[0];
-		return new PrivateHealthInsurance(privateHealthInsuranceId, privateHealthInsurance.name, 'HealthInsuranceDto',privateHealthInsurance.cuit);
+		return new PrivateHealthInsurance(privateHealthInsuranceId, privateHealthInsurance.name, EMedicalCoverageType.OBRASOCIAL,privateHealthInsurance.cuit);
 	}
 
 	private fromRenaperToPatientMedicalCoverage(healthInsurance: MedicalCoverageDto): PatientMedicalCoverage {
@@ -270,7 +269,7 @@ export class MedicalCoverageComponent implements OnInit {
 			.filter((s: MedicalCoverageDto) => s.rnos === healthInsurance.rnos)
 			.map(s => s.id)[0];
 		const medicalCoverage = new HealthInsurance(healthInsurance.rnos, healthInsurance.acronym,
-			healthInsuranceId, healthInsurance.name, 'HealthInsuranceDto');
+			healthInsuranceId, healthInsurance.name, EMedicalCoverageType.OBRASOCIAL);
 
 		if(medicalCoverage.id === undefined) {
 			this.healthInsuranceService.get(parseInt(healthInsurance.rnos))
@@ -303,7 +302,7 @@ export interface PatientMedicalCoverage {
 export abstract class MedicalCoverage {
 	id?: number;
 	name: string;
-	type: 'HealthInsuranceDto' | 'PrivateHealthInsuranceDto';
+	type: number;
 	cuit: string;
 	constructor(id, name, type, cuit) {
 		this.id = id;
@@ -311,8 +310,6 @@ export abstract class MedicalCoverage {
 		this.type = type;
 		this.cuit = cuit;
 	}
-
-	abstract toMedicalCoverageDto(): CoverageDtoUnion;
 }
 
 export class HealthInsurance extends MedicalCoverage {
@@ -332,7 +329,7 @@ export class HealthInsurance extends MedicalCoverage {
 			name: this.name,
 			cuit: this.cuit,
 			rnos: Number(this.rnos),
-			type: 'HealthInsuranceDto',
+			type: EMedicalCoverageType.OBRASOCIAL,
 		};
 	}
 }
@@ -347,10 +344,14 @@ export class PrivateHealthInsurance extends MedicalCoverage {
 			id: this.id,
 			name: this.name,
 			cuit: this.cuit,
-			type: 'PrivateHealthInsuranceDto',
+			type: EMedicalCoverageType.PREPAGA
 		};
 	}
 }
+
+export enum EMedicalCoverageType {
+	PREPAGA = 1, OBRASOCIAL,
+	}
 
 export function determineIfIsHealthInsurance(toBeDetermined: HealthInsurance | PrivateHealthInsurance): toBeDetermined is HealthInsurance {
 	if ((toBeDetermined as HealthInsurance).type) {

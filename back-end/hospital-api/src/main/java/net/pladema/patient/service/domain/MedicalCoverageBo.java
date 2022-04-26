@@ -19,7 +19,7 @@ public abstract class MedicalCoverageBo implements Serializable {
 
     private String cuit;
 
-	public abstract String obtainCoverageType();
+	private Short type;
 
     public abstract CoverageDto newInstance();
 

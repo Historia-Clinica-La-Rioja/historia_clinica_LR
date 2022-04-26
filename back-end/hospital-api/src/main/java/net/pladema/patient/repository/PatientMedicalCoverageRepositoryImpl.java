@@ -26,7 +26,7 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientMedicalCoverageVo> getActivePatientCoverages(Integer patientId) {
-		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id as mcid, mc.name, mc.cuit, hi.rnos, hi.acronym, pmc.conditionId, pmc.startDate, pmc.endDate, pmc.planId , hi.id " +
+		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id as mcid, mc.name, mc.cuit, mc.type, hi.rnos, hi.acronym, pmc.conditionId, pmc.startDate, pmc.endDate, pmc.planId " +
 				"FROM PatientMedicalCoverageAssn pmc " +
 				"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
 				"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
@@ -48,12 +48,12 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 								(Integer) h[4],
 								(String) h[5],
 								(String) h[6],
-								(Integer) h[7],
-								(String) h[8],
-								(Short)h[9],
-								(LocalDate) h[10],
+								(Short) h[7],
+								(Integer) h[8],
+								(String) h[9],
+								(Short)h[10],
 								(LocalDate) h[11],
-								(Integer) h[12],
+								(LocalDate) h[12],
 								(Integer) h[13]))
 		);
 		return result;
@@ -63,7 +63,7 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientMedicalCoverageVo> getActivePatientHealthInsurances(Integer patientId) {
-		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliate_number, pmc.vigency_date, pmc.active, mc.id, mc.name, mc.cuit, hi.rnos, hi.acronym, pmc.conditionId, pmc.planId " +
+		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliate_number, pmc.vigency_date, pmc.active, mc.id, mc.name, mc.cuit, mc.type, hi.rnos, hi.acronym, pmc.conditionId, pmc.planId " +
 				"FROM {h-schema}patient_medical_coverage pmc " +
 				"JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
 				"JOIN {h-schema}health_insurance hi ON (mc.id = hi.id) " +
@@ -84,10 +84,11 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 								(Integer) h[4],
 								(String) h[5],
 								(String) h[6],
-								(Integer) h[7],
-								(String) h[8],
-								(Short) h[9],
-								(Integer) h[10]))
+								(Short) h[7],
+								(Integer) h[8],
+								(String) h[9],
+								(Short) h[10],
+								(Integer) h[11]))
 		);
 		return result;
 	}
@@ -95,7 +96,7 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 	@Override
 	@Transactional(readOnly = true)
 	public List<PatientMedicalCoverageVo> getActivePatientPrivateHealthInsurances(Integer patientId) {
-		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliate_number, pmc.vigency_date, pmc.active, mc.id as mcid, mc.name, mc.cuit, pmc.conditionId, pmc.start_date, pmc.end_date, pmc.plan_id " +
+		String sqlString = "SELECT pmc.id as pmcid, pmc.affiliate_number, pmc.vigency_date, pmc.active, mc.id as mcid, mc.name, mc.cuit, mc.type, pmc.conditionId, pmc.start_date, pmc.end_date, pmc.plan_id " +
 				"FROM {h-schema}patient_medical_coverage pmc " +
 				"JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
 				"JOIN {h-schema}private_health_insurance phi ON (mc.id = phi.id) " +
@@ -117,9 +118,10 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 								(String) h[5],
 								(String) h[6],
 								(Short) h[7],
-								(LocalDate) h[8],
+								(Short) h[8],
 								(LocalDate) h[9],
-								(Integer) h[10]))
+								(LocalDate) h[10],
+								(Integer) h[11]))
 
 		);
 		return result;
