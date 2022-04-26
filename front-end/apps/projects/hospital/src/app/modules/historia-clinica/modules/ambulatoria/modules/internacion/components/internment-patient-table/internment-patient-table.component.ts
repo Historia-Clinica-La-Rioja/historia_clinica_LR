@@ -61,17 +61,17 @@ export class InternmentPatientTableComponent {
 				{
 					columnDef: 'sectorName',
 					header: 'Sector',
-					text: (row) => row.bedInfo.sector
+					text: (row) => row.hasPhysicalDischarge ?  '-' : row.bedInfo.sector
 				},
 				{
 					columnDef: 'roomNumber',
 					header: 'Nro. Habitación',
-					text: (row) => row.bedInfo.roomNumber
+					text: (row) =>  row.hasPhysicalDischarge ?  '-' : row.bedInfo.roomNumber
 				},
 				{
 					columnDef: 'bedNumber',
 					header: 'Nro. Cama',
-					text: (row) => row.bedInfo.bedNumber
+					text: (row) =>  row.hasPhysicalDischarge ?  '-' : row.bedInfo.bedNumber
 				},
 				{
 					columnDef: 'action',
@@ -113,6 +113,7 @@ export interface InternmentPatientTableData {
 		roomNumber: string;
 		bedNumber: string;
 	}
+	hasPhysicalDischarge: boolean;
 }
 
 export enum Redirect {

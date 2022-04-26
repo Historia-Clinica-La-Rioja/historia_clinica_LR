@@ -4,6 +4,7 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	gap: 8px;
 }
 
 span {
@@ -20,3 +21,18 @@ button {
 	margin-left: 22px;
 }
 
+mat-icon.green {
+	color: #27AE60;
+}
+
+span.green {
+	color: #27AE60;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+.date {
+	font-size: 12px;
+	font-weight: 400;
+	color: #A8A8A8;
+}

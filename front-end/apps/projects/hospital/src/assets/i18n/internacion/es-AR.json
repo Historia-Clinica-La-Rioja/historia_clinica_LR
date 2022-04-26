@@ -436,6 +436,7 @@
 			"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
 			"TIME": "Hora",
 			"PHYSICAL_DISCHARGE": "alta física",
+			"HAS_PHYSICAL_DISCHARGE": "Alta física realizada",
 			"messages": {
 				"ERROR": "No se pudo dar el alta administrativa del paciente",
 				"SUCCESS": "El alta administrativa se guardó exitosamente",

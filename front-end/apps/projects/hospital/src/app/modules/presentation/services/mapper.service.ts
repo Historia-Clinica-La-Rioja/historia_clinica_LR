@@ -121,7 +121,8 @@ export class MapperService {
 					sector: patient.sectorDescription,
 					roomNumber: patient.roomNumber,
 					bedNumber: patient.bedNumber
-				}
+				},
+				hasPhysicalDischarge: patient.hasPhysicalDischarge
 			}
 		}
 
@@ -139,7 +140,8 @@ export class MapperService {
 					sector: info.bed.room.sector.description,
 					roomNumber: info.bed.room.roomNumber,
 					bedNumber: info.bed.bedNumber
-				}
+				},
+				hasPhysicalDischarge: info.hasPhysicalDischarge
 			}
 		}
 	}

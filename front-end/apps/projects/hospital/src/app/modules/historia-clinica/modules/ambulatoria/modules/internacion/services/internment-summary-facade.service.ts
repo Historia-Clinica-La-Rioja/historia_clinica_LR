@@ -62,23 +62,30 @@ export class InternmentSummaryFacadeService {
 		private readonly hceGeneralStateService: HceGeneralStateService
 	) { }
 
-	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean): void {
+	initDischargeObservable() {
+		this.hasPhysicalDischargeSubject.next("");
+	}
+
+	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean, updateData: boolean): void {
 		if (!bloodType) {
 			this.bloodTypeDataSubject.next();
 		}
 		this.internmentEpisodeId = internmentEpisodeId;
+		this.initDischargeObservable();
 		this.updateInternmentEpisode();
-		this.setFieldsToUpdate({
-			allergies: true,
-			familyHistories: true,
-			personalHistories: true,
-			riskFactors: true,
-			medications: true,
-			heightAndWeight: true,
-			bloodType: bloodType,
-			immunizations: true,
-			evolutionClinical: true,
-		});
+		if (updateData) {
+			this.setFieldsToUpdate({
+				allergies: true,
+				familyHistories: true,
+				personalHistories: true,
+				riskFactors: true,
+				medications: true,
+				heightAndWeight: true,
+				bloodType: bloodType,
+				immunizations: true,
+				evolutionClinical: true,
+			});
+		}
 	}
 
 	setFieldsToUpdate(fieldsToUpdate: InternmentFields): void {

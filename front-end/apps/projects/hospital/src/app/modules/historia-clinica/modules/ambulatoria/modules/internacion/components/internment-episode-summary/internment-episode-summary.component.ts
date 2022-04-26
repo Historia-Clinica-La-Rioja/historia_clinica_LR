@@ -21,26 +21,26 @@ const ROUTE_ADMINISTRATIVE_DISCHARGE_PREFIX = '/alta';
 	templateUrl: './internment-episode-summary.component.html',
 	styleUrls: ['./internment-episode-summary.component.scss']
 })
-export class InternmentEpisodeSummaryComponent implements OnInit{
+export class InternmentEpisodeSummaryComponent implements OnInit {
 
 	currentUserIsAllowToDoAPhysicalDischarge = false;
-
+	physicalDischargeDate: string;
 	@Input() internmentEpisode: InternmentEpisodeSummary;
 	@Input() canLoadProbableDischargeDate: boolean;
 	@Input() patientId: number;
 	@Input() showDischarge: boolean;
 	@Input() patientDocuments: InternmentDocuments;
-	@Input() patientHasPhysicalDischarge = false;
 
 	private readonly routePrefix;
 	private readonly ff: FeatureFlagService;
 
-	constructor(private router: Router,
+	constructor(
+		private router: Router,
 		private contextService: ContextService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private readonly permissionsService: PermissionsService,
-		private readonly internmentService: InternmentEpisodeService
+		private readonly internmentService: InternmentEpisodeService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -50,6 +50,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit{
 			this.currentUserIsAllowToDoAPhysicalDischarge = (anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_DE_CAMAS]) &&
 				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO])));
 		});
+		this.loadPhysicalDischarge();
 	}
 
 	goToPaseCama(): void {
@@ -78,9 +79,24 @@ export class InternmentEpisodeSummaryComponent implements OnInit{
 				this.internmentService.physicalDischargeInternmentEpisode(this.internmentEpisode.id).subscribe(
 					success => {
 						this.snackBarService.showSuccess('internaciones.discharge.messages.PHYSICAL_DISCHARGE_SUCCESS');
+						this.loadPhysicalDischarge();
 					},
 					error => this.snackBarService.showError('internaciones.discharge.messages.PHYSICAL_DISCHARGE_ERROR')
 				);
+			}
+		})
+	}
+
+	loadPhysicalDischarge() {
+		this.internmentService.getPatientDischarge(this.internmentEpisode.id).subscribe(patientDischarge => {
+			if (patientDischarge.physicalDischargeDate) {
+				const date = new Date(patientDischarge.physicalDischargeDate);
+				let minutes: number | string = date.getMinutes();
+				if (minutes < 10) {
+					minutes = minutes.toString();
+					minutes = `0${minutes}`;
+				}
+				this.physicalDischargeDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${minutes}hs`;
 			}
 		})
 	}

@@ -163,7 +163,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 							}
 							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
-							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id, false);
+							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id, false, true);
 							if (this.internmentEpisodeProcess.inProgress) {
 								this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 								this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
