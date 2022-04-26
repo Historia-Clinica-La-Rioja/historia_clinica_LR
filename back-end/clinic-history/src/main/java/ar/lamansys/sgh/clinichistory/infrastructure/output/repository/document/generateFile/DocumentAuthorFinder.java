@@ -27,7 +27,7 @@ public class DocumentAuthorFinder {
         logger.debug("Get author from document -> documentId={}", documentId);
 
         String sqlString = "" +
-                "SELECT hp.id, p.firstName, p.lastName, hp.licenseNumber, pe.nameSelfDetermination" +
+                "SELECT hp.id, p.firstName, p.lastName, hp.licenseNumber, pe.nameSelfDetermination " +
                 "FROM Document AS d " +
                 "JOIN UserPerson AS up ON (d.creationable.createdBy = up.pk.userId) " +
                 "JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
