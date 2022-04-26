@@ -797,6 +797,54 @@ BEGIN
            created_on, (-'|| offset_value ||'-updated_by), updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on
     FROM '|| from_schema ||'.historic_appointment_state;';
     EXECUTE(query);
+	
+	query := 'INSERT INTO ' || to_schema || '.reference_note (id, description)
+    SELECT (-'|| offset_value ||'-id), description
+    FROM '|| from_schema ||'.reference_note;';
+    EXECUTE(query);
+
+    query := 'INSERT INTO ' || to_schema || '.care_line (id, description, consultation, "procedure", created_by, created_on, updated_by,
+                              updated_on, deleted, deleted_by, deleted_on)
+    SELECT (-'|| offset_value ||'-id), description, consultation, "procedure",
+           (-'|| offset_value ||'-created_by, created_on, (-'|| offset_value ||'-updated_by),
+           updated_on, deleted, (-'|| offset_value ||'-deleted_by), deleted_on
+    FROM '|| from_schema ||'.care_line;';
+    EXECUTE(query);
+
+    query := 'INSERT INTO ' || to_schema || '.care_line_clinical_specialty (id, care_line_id, clinical_specialty_id, created_by, created_on,
+                        updated_by, updated_on, deleted, deleted_by, deleted_on)
+    SELECT (-'|| offset_value ||'-clcs.id), (-'|| offset_value ||'-clcs.care_line_id), e.id AS clinical_specialty_id,
+           (-'|| offset_value ||'-clcs.created_by), clcs.created_on, (-'|| offset_value ||'-clcs.updated_by),
+           clcs.updated_on, clcs.deleted, (-'|| offset_value ||'-clcs.deleted_by), clcs.deleted_on
+    FROM '|| from_schema ||'.care_line_clinical_specialty AS clcs
+	LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (clcs.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)';
+    
+    EXECUTE(query);
+
+    query := 'INSERT INTO ' || to_schema || '.reference (id, encounter_id, source_type_id, consultation, "procedure", care_line_id,
+                              clinical_specialty_id, reference_note_id)
+    SELECT (-'|| offset_value ||'-r.id), (-'|| offset_value ||'-r.encounter_id), r.source_type_id,
+           r.consultation, r.procedure, (-'|| offset_value ||'-r.care_line_id), e.id AS clinical_specialty_id, 
+           (-'|| offset_value ||'-r.reference_note_id)
+    FROM '|| from_schema ||'.reference AS r
+	LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (r.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)';
+    
+    EXECUTE(query);
+
+    query := 'INSERT INTO ' || to_schema || '.counter_reference (id, patient_id, reference_id, clinical_specialty_id, institution_id,
+                                      performed_date, doctor_id, patient_medical_coverage_id, billable, created_by,
+                                      created_on, updated_by, updated_on, deleted, deleted_by, deleted_on)
+    SELECT (-'|| offset_value ||'-cr.id), (-'|| offset_value ||'-cr.patient_id), (-'|| offset_value ||'-cr.reference_id), e.id AS clinical_specialty_id,
+           (-'|| offset_value ||'-cr.institution_id), cr.performed_date, (-'|| offset_value ||'-cr.doctor_id), (-'|| offset_value ||'-cr.patient_medical_coverage_id)
+           cr.billable, (-'|| offset_value ||'-cr.created_by), cr.created_on, (-'|| offset_value ||'-cr.updated_by),
+           cr.updated_on, cr.deleted, (-'|| offset_value ||'-cr.deleted_by), cr.deleted_on
+    FROM '|| from_schema ||'.counter_reference AS cr 
+	LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (cr.clinical_specialty_id = et.id)
+    INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)';
+    
+    EXECUTE(query);
 END;
 $$;
 
