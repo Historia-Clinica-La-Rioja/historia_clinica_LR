@@ -69,6 +69,9 @@ export interface APersonDto {
     street: string;
 }
 
+export interface ARTCoverageDto extends CoverageDto {
+}
+
 export interface AbstractMasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 }
 
