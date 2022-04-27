@@ -66,7 +66,6 @@ export class CardEstudiosComponent implements OnInit {
 			study: [null],
 		});
 
-		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
 		this.getStudy();
 
 		this.requestMasterDataService.categories().subscribe(categories => {
@@ -197,7 +196,6 @@ export class CardEstudiosComponent implements OnInit {
 
 	clear(): void {
 		this.formFilter.reset();
-		this.formFilter.controls.statusId.setValue(STUDY_STATUS.REGISTERED.id);
 		if (this.hideFilterPanel === false) {
 			this.getStudy();
 		}
