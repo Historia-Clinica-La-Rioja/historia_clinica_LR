@@ -1,0 +1,76 @@
+<div class="private-health-insurance-dialog">
+	<div fxLayout="row" fxLayoutAlign="space-between start" class="private-health-insurance-dialog-header">
+		<h1 class="private-health-insurance-dialog-title" mat-dialog-title [translate]="'medical-coverage.NEW_PRIVATE_HEALTH_INSURANCE'"></h1>
+		<button class="close-private-health-insurance-dialog" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<div>
+		<form [formGroup]="prepagaForm" class="form" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="addPrivateHealthInsurance()">
+			<div fxLayout="column" id="search-private-health-insurance">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'medical-coverage.PRIVATE_HEALTH_INSURANCE'"></mat-label>
+					<input type="text" placeholder="{{ 'medical-coverage.PRIVATE_SEARCH_HEALTH_INSURANCE' | translate }}" aria-label="Number"
+						   formControlName="name" matInput [matAutocomplete]="autoPrivate">
+					<mat-autocomplete autoActiveFirstOption #autoPrivate="matAutocomplete">
+						<mat-option *ngFor="let privateHealthInsurance of privateHealthInsuranceFilteredMasterData"
+									(onSelectionChange)="selectPrivateHealthInsurance($event, privateHealthInsurance)"
+									[value]="privateHealthInsurance.name">
+							<span class="mat-body">{{privateHealthInsurance.name}}</span>
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error translate="forms.REQUIRED"></mat-error>
+				</mat-form-field>
+			</div>
+			<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">
+				<mat-form-field appearance="outline" id="private-health-insurance-plan">
+					<mat-label [translate]="'medical-coverage.PLAN_LABEL'"></mat-label>
+					<mat-select
+						formControlName="plan">
+						<mat-option
+							id="plan"
+							name="plan"
+							*ngFor="let privateHealthInsurancePlan of plans" [value]="privateHealthInsurancePlan.id">
+							{{privateHealthInsurancePlan.plan}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<mat-form-field appearance="outline"  id="private-health-insurance-affiliate-number">
+					<mat-label [translate]="'medical-coverage.AFFILIATE_NUMBER_LABEL'"></mat-label>
+					<input name="prepagaAffiliateNumber"
+						   formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}"
+						   matInput>
+				</mat-form-field>
+			</div>
+			<div fxLayout="row" fxLayoutGap="10px" id="private-health-insurance-condition" class="private-health-insurance-condition">
+				<mat-radio-group name="condition" formControlName="condition" fxLayoutGap="20px">
+					<mat-radio-button *ngFor="let condition of conditions" [value]="condition">
+						<span>{{condition.toLocaleLowerCase() | titlecase}}</span>
+					</mat-radio-button>
+				</mat-radio-group>
+			</div>
+			<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px" class="private-health-insurance-dates">
+				<mat-form-field appearance="outline">
+					<mat-label>Fecha de inicio</mat-label>
+					<input formControlName="startDate" id="start-date" matInput [matDatepicker]="picker2"
+						   [min]="minDate">
+					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+					<mat-datepicker #picker2></mat-datepicker>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<mat-label>Fecha de fin</mat-label>
+					<input formControlName="endDate" id="end-date" matInput [matDatepicker]="picker3"
+						   [min]="prepagaForm.value?.startDate">
+					<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+					<mat-datepicker #picker3></mat-datepicker>
+					<mat-error translate="forms.INVALID_DATE"></mat-error>
+				</mat-form-field>
+			</div>
+			<div fxLayoutAlign="end center" id="add-private-health-insurance">
+				<button mat-flat-button type="submit" color="primary" class="uppercase margin">
+					<span [translate]="'medical-coverage.buttons.ADD_PRIVATE_HEALTH_INSURANCE'"></span>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

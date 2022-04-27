@@ -75,87 +75,11 @@
 				</mat-card>
 			</ng-template>
 		</div>
-
-		<div>
-			<strong translate="medical-coverage.NEW_PRIVATE_HEALTH_INSURANCES"></strong>
-			<form [formGroup]="prepagaForm" class="form" fxLayout="column" fxLayoutGap="5px" #formDirectivePrepagaForm='ngForm'
-				  (ngSubmit)="addPrivateHealthInsurance(formDirectivePrepagaForm)">
-				<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="5px">
-					<mat-form-field appearance="outline">
-						<input type="text" placeholder="{{ 'Buscar prepaga' | translate }}" aria-label="Number"
-							   formControlName="name" matInput [matAutocomplete]="autoPrivate">
-						<mat-autocomplete autoActiveFirstOption #autoPrivate="matAutocomplete">
-							<mat-option *ngFor="let privateHealthInsurance of privateHealthInsuranceFilteredMasterData"
-										(onSelectionChange)="selectPrivateHealthInsurance($event, privateHealthInsurance)"
-										[value]="privateHealthInsurance.name">
-								<span class="mat-body">{{privateHealthInsurance.name}}</span>
-							</mat-option>
-						</mat-autocomplete>
-						<mat-error translate="forms.REQUIRED"></mat-error>
-					</mat-form-field>
-					<mat-form-field appearance="outline">
-						<mat-label [translate]="'medical-coverage.PLAN_LABEL'"></mat-label>
-						<mat-select
-							formControlName="plan">
-							<mat-option
-								id="plan"
-								name="plan"
-								*ngFor="let privateHealthInsurancePlan of phiPlans" [value]="privateHealthInsurancePlan.id">
-								{{privateHealthInsurancePlan.plan}}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</div>
-				<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">
-					<mat-form-field appearance="outline">
-						<mat-label [translate]="'medical-coverage.CUIT_LABEL'"></mat-label>
-						<input id="prepagaCuit" name="prepagaCuit"
-							   formControlName="cuit" placeholder="{{'CUIT' | translate}}" matInput>
-					</mat-form-field>
-					<mat-form-field appearance="outline">
-						<mat-label [translate]="'medical-coverage.AFFILIATE_NUMBER_LABEL'"></mat-label>
-						<input id="prepagaAffiliateNumber" name="prepagaAffiliateNumber"
-							   formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}"
-							   matInput>
-					</mat-form-field>
-				</div>
-				<div fxLayout="row" fxLayoutGap="10px">
-					<div fxLayout="row" fxLayoutGap="6px" fxLayoutAlign="start center">
-						<mat-radio-group name="private-healh-insurance-condition" id="private-healh-insurance-condition"
-										 formControlName="condition" fxLayoutGap="20px">
-							<mat-radio-button *ngFor="let condition of conditions"
-											  [value]="condition">
-								<span>{{condition.toLocaleLowerCase() | titlecase}}</span>
-							</mat-radio-button>
-						</mat-radio-group>
-					</div>
-				</div>
-
-				<div fxLayout="row"  fxLayout.lt-sm="column" fxLayoutGap="10px">
-
-					<mat-form-field appearance="outline">
-						<mat-label>Fecha de inicio</mat-label>
-						<input formControlName="startDate" id="start-date" matInput [matDatepicker]="picker2"
-							   [min]="minDate">
-						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-						<mat-datepicker #picker2></mat-datepicker>
-					</mat-form-field>
-					<mat-form-field appearance="outline">
-						<mat-label>Fecha de fin</mat-label>
-						<input formControlName="endDate" id="end-date" matInput [matDatepicker]="picker3"
-							   [min]="prepagaForm.value?.startDate">
-						<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-						<mat-datepicker #picker3></mat-datepicker>
-						<mat-error translate="forms.INVALID_DATE"></mat-error>
-					</mat-form-field>
-				</div>
-				<div fxLayout="column">
-					<button mat-stroked-button color="primary" class="uppercase margin" id="add-medical-coverage"
-							type="submit" name="add-medical-coverage"
-							translate="medical-coverage.ADD_PRIVATE_HEALTH_INSURANCES"></button>
-				</div>
-
-			</form>
+		<div fxLayout="row" fxLayoutAlign="start center">
+			<button mat-button id="add-private-health-insurance" type="button" color="primary" class="text-button"
+					onclick="this.blur()" (click)="openAddPrivateHealthInsurance()" >
+				<span [translate]="'medical-coverage.buttons.NEW_PRIVATE_HEALTH_INSURANCE'"></span>
+			</button>
 		</div>
 	</mat-card>
 

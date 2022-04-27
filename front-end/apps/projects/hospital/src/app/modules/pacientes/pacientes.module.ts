@@ -27,6 +27,7 @@ import { AssignedAppointmentComponent } from './component/assigned-appointment/a
 import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
 import { MedicalCoverageComponent } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { HealthInsuranceComponent } from './dialogs/health-insurance/health-insurance.component';
+import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insurance/private-health-insurance.component';
 
 @NgModule({
 	declarations: [
@@ -53,7 +54,8 @@ import { HealthInsuranceComponent } from './dialogs/health-insurance/health-insu
 		ScanPatientComponent,
 		AssignedAppointmentComponent,
 		MedicalCoverageComponent,
-	  	HealthInsuranceComponent
+	  	HealthInsuranceComponent,
+		PrivateHealthInsuranceComponent
 	],
     imports: [
         FormsModule,

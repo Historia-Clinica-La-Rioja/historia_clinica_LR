@@ -1,11 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import {
 	ARTCoverageDto, CoverageDto,
 	HealthInsuranceDto,
-	MedicalCoverageDto, MedicalCoveragePlanDto,
+	MedicalCoverageDto,
 	PrivateHealthInsuranceDto
 } from '@api-rest/api-model';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
@@ -13,10 +11,12 @@ import { RenaperService } from '@api-rest/services/renaper.service';
 import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { PrivateHealthInsuranceService } from "@api-rest/services/private-health-insurance.service";
 import { EPatientMedicalCoverageCondition } from '@api-rest/api-model';
 import { ArtCoverageService } from "@api-rest/services/art-coverage.service";
 import { HealthInsuranceComponent } from "@pacientes/dialogs/health-insurance/health-insurance.component";
+import { PrivateHealthInsuranceComponent } from "@pacientes/dialogs/private-health-insurance/private-health-insurance.component";
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { MatOptionSelectionChange } from '@angular/material/core';
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -27,28 +27,20 @@ const DNI_TYPE_ID = 1;
 
 export class MedicalCoverageComponent implements OnInit {
 
-	prepagaForm: FormGroup;
-	artCoverageForm: FormGroup;
 	patientMedicalCoverages: PatientMedicalCoverage[];
-	privateHealthInsuranceFilteredMasterData: PrivateHealthInsuranceDto[];
-	artCoverageFilteredMasterData: ARTCoverageDto[];
-	phiPlans: MedicalCoveragePlanDto[];
-	phiSelectedPlan : MedicalCoveragePlanDto;
-	conditions = [EPatientMedicalCoverageCondition.VOLUNTARIA, EPatientMedicalCoverageCondition.OBLIGATORIA];
 	loading = true;
-
-	private privateHealthInsuranceToAdd : PrivateHealthInsurance;
+	minDate = MIN_DATE;
+	artCoverageForm: FormGroup;
+	artCoverageFilteredMasterData: ARTCoverageDto[];
+	
+	private artCoverageMasterData: ARTCoverageDto[];
 	private artCoverageToAdd: MedicalCoverage;
 	private healthInsuranceMasterData: MedicalCoverageDto[];
-	private privateHealthInsuranceMasterData: PrivateHealthInsuranceDto[];
-	private artCoverageMasterData: ARTCoverageDto[];
-	minDate = MIN_DATE;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private renaperService: RenaperService,
 		public readonly healthInsuranceService: HealthInsuranceService,
-		public readonly privateHealthInsuranceService: PrivateHealthInsuranceService,
 		public readonly artCoverageService: ArtCoverageService,
 		public dialogRef: MatDialogRef<MedicalCoverageComponent>,
 		@Inject(MAT_DIALOG_DATA) public personInfo: {
@@ -91,30 +83,18 @@ export class MedicalCoverageComponent implements OnInit {
 			}
 		}
 		);
-		this.privateHealthInsuranceService.getAll().subscribe((values: PrivateHealthInsuranceDto[]) => {
-			this.privateHealthInsuranceFilteredMasterData = values;
-			this.privateHealthInsuranceMasterData = values;
-		});
+
 		this.artCoverageService.getAll().subscribe((values: ARTCoverageDto[]) => {
 			this.artCoverageFilteredMasterData = values;
 			this.artCoverageMasterData = values;
 		});
 
-		this.prepagaForm = this.formBuilder.group({
-			name: [null, Validators.required],
-			cuit: [],
-			affiliateNumber: [],
-			plan: [],
-			startDate: [],
-			endDate: [],
-			condition: EPatientMedicalCoverageCondition.VOLUNTARIA
-		});
+	
 		this.artCoverageForm = this.formBuilder.group({
 			coverage: [null, Validators.required],
 			cuit: []
 		});
 		this.artCoverageForm.controls.cuit.disable();
-		this.prepagaForm.controls.cuit.disable();
 
 		this.artCoverageForm.controls.coverage.valueChanges.subscribe((newValue: string) => {
 			if (newValue) {
@@ -125,15 +105,6 @@ export class MedicalCoverageComponent implements OnInit {
 				this.artCoverageFilteredMasterData = this.artCoverageMasterData;
 			}
 		});
-		this.prepagaForm.controls.name.valueChanges.subscribe((newValue: string) => {
-			if (newValue) {
-				this.privateHealthInsuranceFilteredMasterData =
-					this.privateHealthInsuranceMasterData
-						.filter(data => data.name.toLowerCase().includes(newValue.toLowerCase()));
-			} else {
-				this.privateHealthInsuranceFilteredMasterData = this.privateHealthInsuranceMasterData;
-			}
-		});
 
 	}
 
@@ -141,19 +112,6 @@ export class MedicalCoverageComponent implements OnInit {
 		if (event.isUserInput){
 			this.artCoverageToAdd = this.fromARTCoverageMasterDataToMedicalCoverage(coverage);
 			this.artCoverageForm.controls.cuit.setValue(this.artCoverageToAdd.cuit);
-		}
-	}
-
-	selectPrivateHealthInsurance(event: MatOptionSelectionChange, privateHealthInsurance: PrivateHealthInsuranceDto): void {
-		if (event.isUserInput) {
-			this.phiSelectedPlan = null;
-			this.privateHealthInsuranceToAdd = this.fromPrivateHealthInsuranceMasterDataToPrivateHealthInsurance(privateHealthInsurance);
-			this.privateHealthInsuranceService.getAllPlansById(privateHealthInsurance.id)
-				.subscribe(plans =>{
-					this.phiPlans = plans;
-			});
-			this.prepagaForm.setControl('cuit', new FormControl(this.privateHealthInsuranceToAdd.cuit));
-			this.prepagaForm.controls.cuit.disable();
 		}
 	}
 
@@ -175,17 +133,6 @@ export class MedicalCoverageComponent implements OnInit {
 		return initText + endText;
 	}
 	// -----------------------------------------------------------------------------------------------------------------------------
-
-	addPrivateHealthInsurance(formDirective: FormGroupDirective): void {
-		if (this.privateHealthInsuranceToAdd && this.prepagaForm.valid) {
-			const toAdd = this.getPrivateHealthInsuranceToAdd();
-			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
-			formDirective.resetForm();
-			this.prepagaForm.reset();
-			this.prepagaForm.controls.condition.setValue(EPatientMedicalCoverageCondition.VOLUNTARIA);
-			this.privateHealthInsuranceToAdd = null;
-		}
-	}
 
 	addARTCoverage(formDirective: FormGroupDirective): void {
 		if (this.artCoverageToAdd && this.artCoverageForm.valid) {
@@ -223,37 +170,12 @@ export class MedicalCoverageComponent implements OnInit {
 		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === EMedicalCoverageType.ART && s.active);
 	}
 
-	private getPrivateHealthInsuranceToAdd(): PatientMedicalCoverage {
-		const medicalCoverage = new PrivateHealthInsurance(this.privateHealthInsuranceToAdd.id,
-			this.privateHealthInsuranceToAdd.name, EMedicalCoverageType.PREPAGA,this.prepagaForm.value.cuit);
-		const toAdd: PatientMedicalCoverage = {
-			medicalCoverage,
-			affiliateNumber: this.prepagaForm.value.affiliateNumber,
-			validDate: newMoment(),
-			condition: this.prepagaForm.value.condition,
-			startDate: this.prepagaForm.value.startDate,
-			endDate: this.prepagaForm.value.endDate,
-			planId: this.prepagaForm.value.plan,
-			planName: this.phiPlans.filter(data => data.id==this.prepagaForm.value.plan).map(medicalCoveragePlan => (medicalCoveragePlan.plan))[0]
-			,
-			active: true
-		};
-		return toAdd;
-	}
-
 	private getARTCoverageToAdd(): PatientMedicalCoverage {
 		const toAdd: PatientMedicalCoverage = {
 			medicalCoverage: this.artCoverageToAdd,
 			active: true
 		};
 		return toAdd;
-	}
-
-	private fromPrivateHealthInsuranceMasterDataToPrivateHealthInsurance(privateHealthInsurance: PrivateHealthInsuranceDto): PrivateHealthInsurance {
-		const privateHealthInsuranceId = this.privateHealthInsuranceFilteredMasterData
-			.filter((s: PrivateHealthInsuranceDto) => s.id === privateHealthInsurance.id)
-			.map(s => s.id)[0];
-		return new PrivateHealthInsurance(privateHealthInsuranceId, privateHealthInsurance.name, EMedicalCoverageType.OBRASOCIAL,privateHealthInsurance.cuit);
 	}
 
 	private fromARTCoverageMasterDataToMedicalCoverage(coverage: CoverageDto): MedicalCoverage {
@@ -296,6 +218,18 @@ export class MedicalCoverageComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(healthInsurance => {
 			if (healthInsurance) {
 				this.patientMedicalCoverages = this.patientMedicalCoverages.concat(healthInsurance);
+			}
+		});
+	}
+
+	openAddPrivateHealthInsurance() {
+		const dialogRef = this.dialog.open(PrivateHealthInsuranceComponent, {
+			autoFocus: true,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe( (privateHealthInsurance:PatientMedicalCoverage) => {
+			if (privateHealthInsurance) {
+				this.patientMedicalCoverages = this.patientMedicalCoverages.concat(privateHealthInsurance);
 			}
 		});
 	}

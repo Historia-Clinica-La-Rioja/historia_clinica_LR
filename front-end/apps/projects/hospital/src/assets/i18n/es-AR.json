@@ -71,18 +71,20 @@
 	},
 	"medical-coverage": {
 		"HEALTH_INSURANCE": "Obra social",
+		"PRIVATE_HEALTH_INSURANCE": "Prepaga",
 		"ACTIVES_HEALTH_INSURANCES": "Obras sociales activas",
 		"ACTIVES_PRIVATE_HEALTH_INSURANCES": "Prepagas activas",
 		"ACTIVES_ART_COVERAGES": "ART activas",
-		"ADD_HEALTH_INSURANCES": "Agregar obra social",
 		"ADD_PRIVATE_HEALTH_INSURANCES": "Agregar prepaga",
 		"NEW_HEALTH_INSURANCE": "Agregar nueva Obra social",
+		"NEW_PRIVATE_HEALTH_INSURANCE": "Agregar nueva Prepaga",
 		"ADD_ART_COVERAGE": "Agregar ART",
 		"NEW_ART_COVERAGES": "Agregar nueva ART",
-		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga",
 		"buttons": {
 			"NEW_HEALTH_INSURANCE": "+ Agregar nueva Obra social",
-			"ADD_HEALTH_INSURANCE": "Agregar obra social"
+			"NEW_PRIVATE_HEALTH_INSURANCE": "+ Agregar nueva Prepaga",
+			"ADD_HEALTH_INSURANCE": "Agregar obra social",
+			"ADD_PRIVATE_HEALTH_INSURANCE": "Agregar prepaga"
 		},
 		"CUIT_LABEL": "CUIT",
 		"PLAN_LABEL": "Plan",
@@ -91,6 +93,7 @@
 		"MANDATORY": "Obligatoria",
 		"CUIT_VIEW" : "CUIT: {{cuit}}",
 		"SEARCH_HEALTH_INSURANCE": "Buscar obra social",
+		"SEARCH_PRIVATE_HEALTH_INSURANCE": "Buscar prepaga",
 		"SEARCH_ART": "Buscar ART",
 		"ART": "ART"
 	},
