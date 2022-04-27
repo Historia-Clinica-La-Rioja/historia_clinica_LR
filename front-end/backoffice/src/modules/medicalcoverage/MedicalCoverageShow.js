@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
     Datagrid,
     DeleteButton,
@@ -18,6 +18,7 @@ import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
 
 const OBRA_SOCIAL = 2;
+const ART = 3;
 
 const MedicalCoverageShowActions = ({data}) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -49,6 +50,31 @@ const MedicalCoverageRnosField = (props) => {
         : null;
 }
 
+const MedicalCoveragePlans = (props) => {
+    const record = useRecordContext(props);
+    return record && record.type !== ART
+        ?
+        <Fragment>
+            <SectionTitle label="resources.medicalcoverages.fields.plans"/>
+            <CreateRelatedButton
+                reference="medicalcoverageplans"
+                refFieldName="medicalCoverageId"
+                label="resources.medicalcoverageplans.addRelated"
+                {...props}/>
+            <ReferenceManyField
+                addLabel={false}
+                reference="medicalcoverageplans"
+                target="medicalCoverageId"
+                {...props}>
+                <Datagrid>
+                    <TextField source="plan"/>
+                    <DeleteButton redirect="/medicalcoverages"/>
+                </Datagrid>
+            </ReferenceManyField>
+        </Fragment>
+        : null;
+}
+
 const MedicalCoverageShow = props => (
     <Show actions={<MedicalCoverageShowActions/>} {...props}>
         <SimpleShowLayout>
@@ -60,20 +86,7 @@ const MedicalCoverageShow = props => (
             <MedicalCoverageRnosField/>
             <MedicalCoverageAcronymField/>
             <BooleanField source="enabled" />
-            <SectionTitle label="resources.medicalcoverages.fields.plans"/>
-            <CreateRelatedButton
-                reference="medicalcoverageplans"
-                refFieldName="medicalCoverageId"
-                label="resources.medicalcoverageplans.addRelated"/>
-            <ReferenceManyField
-                addLabel={false}
-                reference="medicalcoverageplans"
-                target="medicalCoverageId">
-                <Datagrid>
-                    <TextField source="plan"/>
-                    <DeleteButton redirect="/medicalcoverages"/>
-                </Datagrid>
-            </ReferenceManyField>
+            <MedicalCoveragePlans/>
         </SimpleShowLayout>
     </Show>
 );
