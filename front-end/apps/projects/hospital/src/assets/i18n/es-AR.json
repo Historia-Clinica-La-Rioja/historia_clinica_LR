@@ -71,15 +71,20 @@
 	"medical-coverage": {
 		"ACTIVES_HEALTH_INSURANCES": "Obras sociales activas",
 		"ACTIVES_PRIVATE_HEALTH_INSURANCES": "Prepagas activas",
+		"ACTIVES_ART_COVERAGES": "ART activas",
 		"ADD_HEALTH_INSURANCES": "Agregar obra social",
 		"ADD_PRIVATE_HEALTH_INSURANCES": "Agregar prepaga",
+		"ADD_ART_COVERAGE": "Agregar ART",
 		"NEW_HEALTH_INSURANCES": "Agregar nueva obra social",
+		"NEW_ART_COVERAGES": "Agregar nueva ART",
 		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga",
 		"CUIT_LABEL": "CUIT",
 		"PLAN_LABEL": "Plan",
 		"AFFILIATE_NUMBER_LABEL": "Nro de afiliado",
 		"VOLUNTARY": "Voluntaria",
-		"MANDATORY": "Obligatoria"
+		"MANDATORY": "Obligatoria",
+		"CUIT_VIEW" : "CUIT: {{cuit}}",
+		"SEARCH_ART": "Buscar ART"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"

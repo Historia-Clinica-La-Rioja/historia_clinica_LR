@@ -27,7 +27,7 @@ export class MapperService {
 			endDate: s.endDate ? momentFormat(s.endDate, DateFormat.API_DATE) : null,
 			planId: s.planId,
 			planName: s.planName,
-			vigencyDate: momentFormat(s.validDate, DateFormat.API_DATE),
+			vigencyDate: s.validDate ? momentFormat(s.validDate, DateFormat.API_DATE) : null,
 			id: s.id,
 			active: s.active,
 			condition: s.condition

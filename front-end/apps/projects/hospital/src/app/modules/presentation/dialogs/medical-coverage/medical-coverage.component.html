@@ -205,6 +205,61 @@
 		</div>
 	</mat-card>
 
+	<mat-card fxLayout="column" fxLayoutGap="10px">
+		<strong translate="medical-coverage.ACTIVES_ART_COVERAGES"></strong>
+		<div fxLayout="column">
+			<div class="spinner" *ngIf="loading else viewPatientARTCoverages" fxLayout="column" fxLayoutGap="25px">
+				<mat-spinner color="primary"></mat-spinner>
+				<span class="color-primary">Consultando cobertura</span>
+			</div>
+			<ng-template #viewPatientARTCoverages>
+				<mat-card *ngFor="let patientMedicalCoverage of getPatientARTCoverages()" class="coverages">
+					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
+						<div fxLayout="column" fxLayoutAlign="space-between">
+							<span
+								class="medical-coverage-name">{{patientMedicalCoverage.medicalCoverage.name}}</span>
+							<span translate="medical-coverage.CUIT_VIEW" [translateParams]="{cuit: patientMedicalCoverage.medicalCoverage.cuit}" ></span>
+						</div>
+						<button mat-icon-button color="warn" (click)="patientMedicalCoverage.active = false">
+							<mat-icon>delete_outline</mat-icon>
+						</button>
+					</mat-card-content>
+				</mat-card>
+			</ng-template>
+		</div>
+
+		<div>
+			<strong translate="medical-coverage.NEW_ART_COVERAGES"></strong>
+			<form [formGroup]="artCoverageForm" fxLayoutGap="5px" class="form" #formDirectiveARTCoverageForm="ngForm"
+				  (ngSubmit)="addARTCoverage(formDirectiveARTCoverageForm)">
+				<div fxLayout="column" fxLayoutGap="10px">
+					<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column">
+						<mat-form-field appearance="outline">
+							<input type="text" placeholder="{{ 'medical-coverage.SEARCH_ART' | translate }}" aria-label="Number"
+								   formControlName="coverage" matInput [matAutocomplete]="autoART">
+							<mat-autocomplete autoActiveFirstOption #autoART="matAutocomplete">
+								<mat-option *ngFor="let artCoverage of artCoverageFilteredMasterData"
+											(onSelectionChange)="selectARTCoverage($event, artCoverage)"
+											[value]="artCoverage.name">
+									<span class="mat-body">{{artCoverage.name}}</span>
+								</mat-option>
+							</mat-autocomplete>
+							<mat-error translate="forms.REQUIRED"></mat-error>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'medical-coverage.CUIT_LABEL'"></mat-label>
+							<input id="artCuit" name="artCuit"
+								   formControlName="cuit" placeholder="{{'medical-coverage.CUIT_LABEL' | translate}}" matInput>
+						</mat-form-field>
+					</div>
+					<button mat-stroked-button color="primary" class="uppercase margin" id="add-art-coverage"
+							type="submit" name="add-art-coverage"
+							translate="medical-coverage.ADD_ART_COVERAGE"></button>
+				</div>
+			</form>
+		</div>
+	</mat-card>
+
 
 </div>
 <div mat-dialog-actions align="end">
