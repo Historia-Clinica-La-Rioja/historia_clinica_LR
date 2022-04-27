@@ -25,6 +25,7 @@ import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
 import { CardRolesComponent } from './component/card-roles/card-roles.component';
 import { AssignedAppointmentComponent } from './component/assigned-appointment/assigned-appointment.component';
 import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
+import { MedicalCoverageComponent } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 
 @NgModule({
 	declarations: [
@@ -50,6 +51,7 @@ import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modul
 		CardProfessionsComponent,
 		ScanPatientComponent,
 		AssignedAppointmentComponent,
+		MedicalCoverageComponent
 	],
     imports: [
         FormsModule,

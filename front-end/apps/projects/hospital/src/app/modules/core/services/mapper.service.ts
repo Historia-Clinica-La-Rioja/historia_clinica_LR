@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DateFormat, momentFormat, momentParse, momentParseDate, newMoment } from '@core/utils/moment.utils';
-import {
-	EMedicalCoverageType,
-	HealthInsurance,
-	PatientMedicalCoverage,
-	PrivateHealthInsurance
-} from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+import { EMedicalCoverageType, HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
 
 @Injectable({

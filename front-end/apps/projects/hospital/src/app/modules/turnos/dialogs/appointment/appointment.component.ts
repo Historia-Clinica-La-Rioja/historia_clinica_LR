@@ -17,7 +17,7 @@ import {
 	MedicalCoverageComponent,
 	PatientMedicalCoverage,
 	PrivateHealthInsurance
-} from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+} from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';

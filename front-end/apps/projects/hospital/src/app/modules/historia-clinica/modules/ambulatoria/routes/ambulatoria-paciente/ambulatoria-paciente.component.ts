@@ -45,7 +45,7 @@ import { PatientAllergiesService } from '../../services/patient-allergies.servic
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SummaryCoverageInformation } from '../../components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { EMedicalCoverageType } from "@presentation/dialogs/medical-coverage/medical-coverage.component";
+import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;

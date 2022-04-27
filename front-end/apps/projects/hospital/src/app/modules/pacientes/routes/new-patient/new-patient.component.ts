@@ -22,7 +22,7 @@ import { AddressMasterDataService } from '@api-rest/services/address-master-data
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';

@@ -33,7 +33,7 @@ import { MapperService as CoreMapperService } from '@core/services/mapper.servic
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { newMoment } from '@core/utils/moment.utils';

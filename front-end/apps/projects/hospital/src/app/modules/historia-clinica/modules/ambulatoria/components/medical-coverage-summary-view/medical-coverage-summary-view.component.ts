@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
-import { EMedicalCoverageType } from "@presentation/dialogs/medical-coverage/medical-coverage.component";
+import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 
 @Component({
   selector: 'app-medical-coverage-summary-view',

@@ -38,7 +38,6 @@ import { UserBadgeComponent } from './components/user-badge/user-badge.component
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
-import { MedicalCoverageComponent } from './dialogs/medical-coverage/medical-coverage.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
@@ -88,7 +87,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DatePickerComponent,
 		DocumentSectionComponent,
 		DiscardWarningComponent,
-		MedicalCoverageComponent,
 		// directives
 		CtrlTemplateDirective,
 		// pipes
@@ -141,8 +139,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		// dialogs
-		MedicalCoverageComponent,
 		// directives
 		CtrlTemplateDirective,
 		// pipes

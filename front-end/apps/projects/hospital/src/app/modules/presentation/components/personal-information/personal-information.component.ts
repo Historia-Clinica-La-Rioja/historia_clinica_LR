@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AddressDto, HealthInsuranceDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
-import { EMedicalCoverageType } from "@presentation/dialogs/medical-coverage/medical-coverage.component";
+import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 @Component({
 	selector: 'app-personal-information',
 	templateUrl: './personal-information.component.html',

@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { MapperService } from '@core/services/mapper.service';
 
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model';
