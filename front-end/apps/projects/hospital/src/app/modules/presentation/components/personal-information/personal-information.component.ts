@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { AddressDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { AddressDto, HealthInsuranceDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
-
+import { EMedicalCoverageType } from "@presentation/dialogs/medical-coverage/medical-coverage.component";
 @Component({
 	selector: 'app-personal-information',
 	templateUrl: './personal-information.component.html',
@@ -15,6 +15,8 @@ export class PersonalInformationComponent implements OnChanges {
 	@Input() patientMedicalCoverage: PatientMedicalCoverageDto[];
 	@Input() showButtonGoToMedicalHistory: boolean;
 	@Output() goToMedicalHistory = new EventEmitter<boolean>();
+	typeART = EMedicalCoverageType.ART;
+	typeObraSocial = EMedicalCoverageType.OBRASOCIAL;
 	public addressPresent = false;
 	public address: Address;
 	private readonly routePrefix;
@@ -34,6 +36,11 @@ export class PersonalInformationComponent implements OnChanges {
 				this.address = this.mapToAddress(this.personalInformation.address);
 			}
 		}
+	}
+
+	getAcronym(pmc : PatientMedicalCoverageDto){
+		const mc = <HealthInsuranceDto> pmc.medicalCoverage;
+		return (mc.acronym)? mc.acronym : mc.name;
 	}
 
 	formatPhonePrefixAndNumber() : string{

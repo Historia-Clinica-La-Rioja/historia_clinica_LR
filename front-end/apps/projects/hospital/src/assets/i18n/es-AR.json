@@ -84,7 +84,8 @@
 		"VOLUNTARY": "Voluntaria",
 		"MANDATORY": "Obligatoria",
 		"CUIT_VIEW" : "CUIT: {{cuit}}",
-		"SEARCH_ART": "Buscar ART"
+		"SEARCH_ART": "Buscar ART",
+		"ART": "ART"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"

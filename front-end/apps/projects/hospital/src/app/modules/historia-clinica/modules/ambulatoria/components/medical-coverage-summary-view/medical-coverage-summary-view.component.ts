@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
+import { EMedicalCoverageType } from "@presentation/dialogs/medical-coverage/medical-coverage.component";
 
 @Component({
   selector: 'app-medical-coverage-summary-view',
@@ -10,6 +11,7 @@ export class MedicalCoverageSummaryViewComponent {
 
   @Input() coverageInfo: SummaryCoverageInformation;
   @Input() title = "ambulatoria.medical-coverage-summary-view.TITLE";
+  typeART = 3;
 
   thereIsCoverageInfo(): boolean {
     if (!this.coverageInfo)
@@ -23,4 +25,6 @@ export interface SummaryCoverageInformation {
   affiliateNumber?: string;
   plan?: string;
   condition?: EPatientMedicalCoverageCondition;
+  type?: EMedicalCoverageType;
+  cuit?: string;
 }

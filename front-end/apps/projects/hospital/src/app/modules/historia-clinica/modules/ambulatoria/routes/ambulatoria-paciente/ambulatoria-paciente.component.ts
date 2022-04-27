@@ -2,7 +2,7 @@ import { Component, ComponentFactoryResolver, OnInit, ViewContainerRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { AppFeature, ERole } from '@api-rest/api-model';
+import {AppFeature, EMedicalCoverageTypeDto, ERole} from '@api-rest/api-model';
 import { EvaluationNoteSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, HCEAnthropometricDataDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
@@ -45,6 +45,7 @@ import { PatientAllergiesService } from '../../services/patient-allergies.servic
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SummaryCoverageInformation } from '../../components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { EMedicalCoverageType } from "@presentation/dialogs/medical-coverage/medical-coverage.component";
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -445,7 +446,22 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			summaryInfo.condition = (patientCoverage.condition === VOLUNTARY_ID) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA;
 		}
 
+		if (patientCoverage.medicalCoverage.type) {
+			summaryInfo.type = this.getMedicalCoverageType(patientCoverage.medicalCoverage.type);
+		}
+
+		if (patientCoverage.medicalCoverage.cuit) {
+			summaryInfo.cuit = patientCoverage.medicalCoverage.cuit;
+		}
 		return summaryInfo;
+	}
+
+	getMedicalCoverageType(type : EMedicalCoverageTypeDto){
+		switch (type){
+			case EMedicalCoverageTypeDto.OBRASOCIAL: return EMedicalCoverageType.OBRASOCIAL;
+			case EMedicalCoverageTypeDto.PREPAGA: return EMedicalCoverageType.PREPAGA;
+			case EMedicalCoverageTypeDto.ART: return EMedicalCoverageType.ART;
+		}
 	}
 
 	thereIsAppointmentCovarageInformation(): boolean {
