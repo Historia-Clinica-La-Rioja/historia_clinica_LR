@@ -8,6 +8,8 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 
+import net.pladema.patient.controller.dto.EMedicalCoverageType;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalCoverageDto;
@@ -58,8 +60,7 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 
 	private ExternalPatientCoverageDto mapToExternalPatientCoverageDto(PatientMedicalCoverageBo bo) {
 		MedicalCoverageBo medicalCoverage = bo.getMedicalCoverage();
-		String type = (bo.getMedicalCoverage().getClass().getSimpleName().equals("PrivateHealthInsuranceBo"))?"PREPAGA":"OBRASOCIAL";
 		Short condition = (bo.getCondition()!=null) ? bo.getCondition().getId() : null;
-		return new ExternalPatientCoverageDto(new ExternalCoverageDto(medicalCoverage.getId(), medicalCoverage.getCuit(), bo.getPlanName(), medicalCoverage.getName(), type), bo.getAffiliateNumber(), bo.getActive(), bo.getVigencyDate(), condition);
+		return new ExternalPatientCoverageDto(new ExternalCoverageDto(medicalCoverage.getId(), medicalCoverage.getCuit(), bo.getPlanName(), medicalCoverage.getName(), medicalCoverage.getType()), bo.getAffiliateNumber(), bo.getActive(), bo.getVigencyDate(), condition);
 	}
 }

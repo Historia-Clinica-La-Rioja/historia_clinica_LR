@@ -42,9 +42,13 @@ public class PatientMedicalCoverageVo {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.planId = planId;
-		this.medicalCoverage = (type == EMedicalCoverageType.OBRASOCIAL.getId())
-		?new HealthInsuranceVo(medicalCoverageId, name,cuit, rnos, acronym, type)
-        : new PrivateHealthInsuranceVo(medicalCoverageId, name, cuit, type);
+		switch (EMedicalCoverageType.map(type)){
+			case PREPAGA: this.medicalCoverage =  new PrivateHealthInsuranceVo(medicalCoverageId, name, cuit, type);
+				break;
+			case OBRASOCIAL: this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name,cuit, rnos, acronym, type);
+				break;
+			case ART: this.medicalCoverage = new ARTCoverageVo(medicalCoverageId, name,cuit, type);
+		}
         this.conditionId = conditionId;
     }
 
