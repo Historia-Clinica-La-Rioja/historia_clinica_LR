@@ -92,4 +92,9 @@ export class InternacionMasterDataService {
 		const url = `${environment.apiBase}/internments/masterdata/other-indication-type`;
 		return this.http.get<OtherIndicationTypeDto[]>(url);
 	}
+
+	getUnits(): Observable<any[]> {
+		const url = `${environment.apiBase}/internments/masterdata/units`;
+		return this.http.get<any[]>(url);
+	}
 }

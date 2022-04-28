@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
 import { Observable } from "rxjs";
 import { environment } from "@environments/environment";
-import { DietDto, OtherIndicationDto, ParenteralPlanDto } from "@api-rest/api-model";
+import { DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
 
 @Injectable({
 	providedIn: 'root'
@@ -47,6 +47,11 @@ export class InternmentIndicationService {
 	addParenteralPlan(indication: ParenteralPlanDto, internmentEpisodeId: number): Observable<number> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/parenteral-plan`;
 		return this.http.post<number>(url, indication);
+	}
+
+	addPharamaco(pharmaco: PharmacoDto, internmentEpisodeId: number): Observable<number> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/pharmaco`;
+		return this.http.post<number>(url, pharmaco);
 	}
 }
 

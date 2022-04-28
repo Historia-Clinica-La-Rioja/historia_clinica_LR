@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from "rxjs";
-import { DietDto, OtherIndicationDto, ParenteralPlanDto } from "@api-rest/api-model";
+import { DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
 import { InternmentIndicationService } from "@api-rest/services/internment-indication.service";
 
 @Injectable({
@@ -33,7 +33,11 @@ export class IndicationsFacadeService {
 	addParenteralPlan(parenteralPlan: ParenteralPlanDto): Observable<any> {
 		return this.internmentIndicationService.addParenteralPlan(parenteralPlan, this.internmentEpisodeId);
 	}
-	
+
+	addPharmaco(pharmaco: PharmacoDto): Observable<any> {
+		return this.internmentIndicationService.addPharamaco(pharmaco, this.internmentEpisodeId);
+	}
+
 	updateIndication(updateIndication: UpdateIndication) {
 		if (updateIndication.diets) {
 			this.internmentIndicationService.getInternmentEpisodeDiets(this.internmentEpisodeId).subscribe(d => this.dietsSubject.next(d));
