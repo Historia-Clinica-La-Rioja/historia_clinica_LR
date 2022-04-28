@@ -1,3 +1,5 @@
+-- Script valido para la versión 1.35 de la base de datos.
+
 CREATE PROCEDURE migrate(offset_value integer, from_schema VARCHAR(50), to_schema VARCHAR(50), prefix_username VARCHAR(50))
     language plpgsql
 as
@@ -56,8 +58,8 @@ BEGIN
            pe.photo_file_path, e.id, pe.education_level_id, pe.occupation_id,
            pe.other_gender_self_determination, pe.phone_prefix
     FROM '|| from_schema || '.person_extended AS pe
-    INNER JOIN '|| from_schema || '.ethnicity AS et ON (pe.ethnicity_id = et.id)
-    INNER JOIN '|| to_schema || '.ethnicity AS e ON (et.sctid = e.sctid AND UPPER(et.pt) = UPPER(e.pt))';
+    LEFT JOIN '|| from_schema || '.ethnicity AS et ON (pe.ethnicity_id = et.id)
+    LEFT JOIN '|| to_schema || '.ethnicity AS e ON (et.sctid = e.sctid AND UPPER(et.pt) = UPPER(e.pt))';
     EXECUTE(query);
 
 
@@ -512,7 +514,7 @@ BEGIN
            (-'|| offset_value ||'-vc.updated_by), vc.updated_on, vc.deleted, (-'|| offset_value ||'-vc.deleted_by), vc.deleted_on,
            (-'|| offset_value ||'-vc.patient_medical_coverage_id)
     FROM  '|| from_schema ||'.vaccine_consultation AS vc
-    LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (vc.clinical_specialty_id = et.id)
+    INNER JOIN '|| from_schema || '.clinical_specialty AS et ON (vc.clinical_specialty_id = et.id)
     INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)
     UNION ALL
     SELECT (-'|| offset_value ||'-vc.id), (-'|| offset_value ||'-vc.patient_id), vc.clinical_specialty_id AS clinical_specialty_id, (-'|| offset_value ||'-vc.institution_id), vc.performed_date,
@@ -534,7 +536,7 @@ BEGIN
            (-'|| offset_value ||'-nc.updated_by), nc.updated_on, nc.deleted, (-'|| offset_value ||'-nc.deleted_by), nc.deleted_on,
            (-'|| offset_value ||'-nc.patient_medical_coverage_id)
     FROM  '|| from_schema ||'.nursing_consultation AS nc
-    LEFT JOIN '|| from_schema || '.clinical_specialty AS et ON (nc.clinical_specialty_id = et.id)
+    INNER JOIN '|| from_schema || '.clinical_specialty AS et ON (nc.clinical_specialty_id = et.id)
     INNER JOIN '|| to_schema || '.clinical_specialty AS e ON (et.sctid_code = e.sctid_code AND UPPER(et.name) = UPPER(e.name) AND et.clinical_specialty_type_id = e.clinical_specialty_type_id)
     UNION ALL
     SELECT (-'|| offset_value ||'-nc.id), (-'|| offset_value ||'-nc.patient_id), nc.clinical_specialty_id AS clinical_specialty_id, (-'|| offset_value ||'-nc.institution_id), nc.performed_date,
