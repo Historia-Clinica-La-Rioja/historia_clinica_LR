@@ -7,7 +7,7 @@
 	</ng-template>
 
 	<div *appHasRole="['ADMINISTRATIVO']">
-		<button *ngIf="!internmentEpisode?.inProgress" mat-raised-button color="primary" (click)="goNewInternment()">
+		<button *ngIf="showButtonInitiateInternment" mat-raised-button color="primary" (click)="goNewInternment()">
 			<span class="uppercase"> {{ 'pacientes.profile.INITIATE_INTERNMENT' | translate }} </span>
 		</button>
 	</div>
