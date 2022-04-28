@@ -136,7 +136,7 @@
 			</button>
 		</form>
 		<mat-divider></mat-divider>
-		<app-datepicker [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate" [dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
+		<app-datepicker fxLayout="50%" [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate" [dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
 	</mat-dialog-content>
 	<div actions id="buttons" fxLayoutAlign="end end">
 		<button mat-raised-button color="primary" id="confirm_button" (click)="save()">
