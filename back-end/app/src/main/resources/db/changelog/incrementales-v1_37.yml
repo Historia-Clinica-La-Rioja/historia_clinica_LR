@@ -1,3 +1,11 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_37 
+    - logicalFilePath: incrementales-v1_37
 
+    - changeSet:
+        id: update-external_clinical_history-notes-type
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: notes
+              newDataType: text
+              tableName: external_clinical_history
