@@ -4,6 +4,9 @@
 		[canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
 		[menu]="!epicrisisConfirmed" [matMenu]="menu">
 		<mat-menu #menu="matMenu">
+			<button mat-menu-item (click)="openPharmacoDialog()">
+				<span>{{'indicacion.internment-card.menu-items.PHARMACO' | translate }}</span>
+			</button>
 			<button mat-menu-item (click)="openDietDialog()">
 				<span>{{'indicacion.internment-card.menu-items.DIET' | translate }}</span>
 			</button>

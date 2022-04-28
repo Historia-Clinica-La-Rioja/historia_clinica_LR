@@ -37,6 +37,7 @@
 				}
 			},
 			"menu-items": {
+				"PHARMACO": "Fármaco",
 				"DIET": "Dieta",
 				"PARENTERAL_PLAN": "Plan parenteral"
 			},
@@ -133,6 +134,10 @@
 						"INTERVALS": "Intervalo",
 						"ONCE": "Unica vez",
 						"AFTER-EVENT":" Ante un evento"
+					},
+					"messages": {
+						"ERROR": "Error al guardar un nuevo fármaco",
+						"SUCCESS": "El fármaco se guardó exitosamente"
 					}
 				}
 			}

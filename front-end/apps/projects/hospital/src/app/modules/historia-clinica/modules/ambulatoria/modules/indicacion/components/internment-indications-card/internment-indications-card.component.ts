@@ -3,7 +3,7 @@ import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { DietDto, OtherIndicationDto, ParenteralPlanDto } from "@api-rest/api-model";
+import { DiagnosesGeneralStateDto, DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
 import { DateTimeDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +14,8 @@ import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { OtherIndicationComponent } from '../../dialogs/other-indication/other-indication.component';
 import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { ParenteralPlanComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/parenteral-plan/parenteral-plan.component";
+import { PharmacoComponent } from '../../dialogs/pharmaco/pharmaco.component';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
 
 const DIALOG_SIZE = '45%';
 
@@ -35,6 +37,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	dateTime: DateTimeDto;
 	professionalId: number;
 	diets: DietDto[] = [];
+	diagnostics: DiagnosesGeneralStateDto[] = [];
 	otherIndications: OtherIndicationDto[] = [];
 	othersIndicatiosType: OtherIndicationTypeDto[];
 	parenteralPlan: ParenteralPlanDto[] = [];
@@ -48,11 +51,10 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly indicationsFacadeService: IndicationsFacadeService,
 		private readonly internmentEpisode: InternmentEpisodeService,
-
 		private readonly internmentIndicationService: InternmentIndicationService,
-
+		private readonly internmentStateService: InternmentStateService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
-	) {	}
+	) {}
 
 	ngOnInit(): void {
 		this.viewDay = {
@@ -72,6 +74,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
 		this.filterIndications();
 		this.internmentIndicationService.getOtherIndicationTypes().subscribe((othersIndicationsType: OtherIndicationTypeDto[]) => this.othersIndicatiosType = othersIndicationsType);
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => this.diagnostics = diagnostics);
 	}
 
 	viewAnotherDay(daysToMove: number) {
@@ -129,6 +132,34 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		this.indicationsFacadeService.otherIndications$.subscribe(d => this.otherIndications = d.filter((otherIndications: OtherIndicationDto) => isSameDay(dateDtoToDate(otherIndications.indicationDate), this.actualDate)));
 		this.indicationsFacadeService.parenteralPlans$.subscribe(p => this.parenteralPlan = p.filter((plan: ParenteralPlanDto) => isSameDay(dateDtoToDate(plan.indicationDate), this.actualDate) === true));
 	}
+
+	openPharmacoDialog() {
+		const dialogRef = this.dialog.open(PharmacoComponent, {
+			data: {
+				entryDate: this.entryDate,
+				actualDate: this.actualDate,
+				patientId: this.patientId,
+				professionalId: this.professionalId,
+				diagnostics: this.diagnostics
+			},
+			autoFocus: true,
+			disableClose: false
+		});
+
+		dialogRef.afterClosed().subscribe((pharmaco: PharmacoDto) => {
+
+			if (pharmaco) {
+				this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
+					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
+				},
+					error => {
+						error?.text ?
+							this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
+					});
+			}
+		});
+	}
+
 	openIndicationDialog() {
 		const dialogRef = this.dialog.open(OtherIndicationComponent, {
 			disableClose: false,
