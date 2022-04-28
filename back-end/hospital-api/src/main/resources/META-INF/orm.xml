@@ -266,6 +266,56 @@
         </query>
     </named-native-query>
 
+	<named-native-query name="Reports.OdontologyConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
+		<query>
+			select p.description as province, dep.description as department, i.sisa_code as sisaCode, i."name" as institution,
+			per.last_name as patientSurname, per.first_name as patientFirstName, it.description as identificationType, per.identification_number as identificationNumber,
+			to_char(per.birth_date,'DD/MM/YYYY') as birthDate, g.description as gender,
+			a2.street ||' '|| a2."number" ||', '|| c2.description as address, pe.phone_number as phoneNumber, pe.email,
+			mc."name" as coverageName, pmc.affiliate_number as affiliateNumber, to_char(oc.created_on,'DD/MM/YYYY') as startDate, oc.clinical_specialty_id as clinicalSpecialtyId,
+			cs."name" as clinicalSpecialty, oc.doctor_id as professionalId, per2.last_name  ||' '|| per2.first_name as professionalName, ore.description as reasons, s.pt as problems,
+			null as weight, null as height, null as systolicBloodPressure, null as diastolicBloodPressure
+			from odontology_consultation oc
+			/*obtiene datos de institucion*/
+			left join institution i on(oc.institution_id = i.id)
+			join address a on(i.address_id = a.id)
+			left join city c on(a.city_id = c.id)
+			join department dep on(c.department_id = dep.id)
+			join province p on(dep.province_id = p.id)
+			left join clinical_specialty cs on(oc.clinical_specialty_id = cs.id)
+			/*obtiene datos del paciente*/
+			join patient pat on(oc.patient_id = pat.id)
+			left join person per on(pat.person_id = per.id)
+			left join identification_type it on(per.identification_type_id = it.id)
+			left join gender g on(per.gender_id = g.id)
+			join person_extended pe on(per.id = pe.person_id)
+			left join address a2 on(pe.address_id = a2.id)
+			left join city c2 on(a2.city_id  = c2.id)
+			/*obtiene detalles de obra social*/
+			join patient_medical_coverage pmc on(pat.id = pmc.patient_id)
+			join medical_coverage mc on(pmc.medical_coverage_id = mc.id)
+			/*obtiene datos del doctor*/
+			left join healthcare_professional hp on(oc.doctor_id = hp.id)
+			join person per2 on(hp.person_id = per2.id)
+			/*obtiene motivo*/
+			join odontology_consultation_reason ocr on(oc.id = ocr.odontology_consultation_id)
+			join odontology_reason ore on(ocr.reason_id = ore.id)
+			/*obtiene problema*/
+			join "document" d on (oc.id = d.source_id)
+			join document_odontology_diagnostic dod on(d.id = dod.document_id)
+			join odontology_diagnostic od on(dod.odontology_diagnostic_id = od.id)
+			join snomed s on(s.id = od.snomed_id)
+			where oc.institution_id = :institutionId
+			and oc.created_on between :startDate and :endDate
+			/*agrupa para evitar repetidos*/
+			group by p.description, dep.description, i.sisa_code, i."name",
+			per.last_name, per.first_name, it.description, per.identification_number,
+			to_char(per.birth_date,'DD/MM/YYYY'), g.description,
+			a2.street ||' '|| a2."number" ||', '|| c2.description, pe.phone_number, pe.email,
+			mc."name", pmc.affiliate_number, to_char(oc.created_on,'DD/MM/YYYY'), oc.clinical_specialty_id,
+			cs."name", oc.doctor_id, per2.last_name  ||' '|| per2.first_name, ore.description, s.pt
+		</query>
+	</named-native-query>
 
     <!-- ========================================== -->
     <!-- ============== Appointment =============== -->

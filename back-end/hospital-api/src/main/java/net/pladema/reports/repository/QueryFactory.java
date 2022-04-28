@@ -1,15 +1,17 @@
 package net.pladema.reports.repository;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 
 @Repository
 public class QueryFactory {
@@ -25,12 +27,12 @@ public class QueryFactory {
     public List<ConsultationDetail> query(Integer institutionId, LocalDate startDate, LocalDate endDate,
                                           Integer clinicalSpecialtyId, Integer doctorId) {
 
-        Query query = entityManager.createNamedQuery("Reports.ConsultationDetail");
-        query.setParameter("institutionId", institutionId);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
-        query.setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC));
-        List<ConsultationDetail> data = query.getResultList();
+        Query outpatientQuery = entityManager.createNamedQuery("Reports.ConsultationDetail");
+        outpatientQuery.setParameter("institutionId", institutionId);
+        outpatientQuery.setParameter("startDate", startDate);
+        outpatientQuery.setParameter("endDate", endDate);
+        outpatientQuery.setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC));
+        List<ConsultationDetail> data = outpatientQuery.getResultList();
 
         //Optional filter: by specialty or professional if specified
         return data.stream()
