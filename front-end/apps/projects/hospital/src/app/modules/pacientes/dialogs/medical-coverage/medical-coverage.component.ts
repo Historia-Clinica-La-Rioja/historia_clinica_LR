@@ -120,7 +120,7 @@ export class MedicalCoverageComponent implements OnInit {
 	}
 
 	getMedicalCoveragePlanText(patientMedicalCoverage: PatientMedicalCoverage): string {
-		return [patientMedicalCoverage.planName, patientMedicalCoverage?.condition].filter(Boolean).join(' | ');
+		return [patientMedicalCoverage?.planName?.toLowerCase(), patientMedicalCoverage?.condition?.toLowerCase()].filter(Boolean).join(' | ');
 	}
 
 	getDatesText(patientMedicalCoverage: PatientMedicalCoverage): string {
@@ -207,17 +207,18 @@ export class MedicalCoverageComponent implements OnInit {
 		};
 	}
 
-	openAddHealthInsurance() {
+	openAddHealthInsurance(healthInsurance?: PatientMedicalCoverage) {
 		const dialogRef = this.dialog.open(HealthInsuranceComponent, {
 			autoFocus: true,
 			disableClose: true,
 			data: {
-				healthInsuranceMasterData: this.healthInsuranceMasterData
+				healthInsuranceMasterData: this.healthInsuranceMasterData,
+				healthInsuranceToUpdate: healthInsurance
 			}
 		});
-		dialogRef.afterClosed().subscribe(healthInsurance => {
+		dialogRef.afterClosed().subscribe( (healthInsurance:PatientMedicalCoverage) => {
 			if (healthInsurance) {
-				this.patientMedicalCoverages = this.patientMedicalCoverages.concat(healthInsurance);
+				this.addMedicalCoverage(healthInsurance);
 			}
 		});
 	}
@@ -232,6 +233,15 @@ export class MedicalCoverageComponent implements OnInit {
 				this.patientMedicalCoverages = this.patientMedicalCoverages.concat(privateHealthInsurance);
 			}
 		});
+	}
+
+	private addMedicalCoverage(medicalCoverage: PatientMedicalCoverage) {
+		if (medicalCoverage.id) {
+			const index = this.patientMedicalCoverages.findIndex(patientMedicalCoverage => patientMedicalCoverage.id == medicalCoverage.id);
+			this.patientMedicalCoverages.splice(index, 1, medicalCoverage);
+		} else {
+			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(medicalCoverage);
+		}
 	}
 
 }

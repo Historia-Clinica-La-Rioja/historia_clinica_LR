@@ -1,6 +1,9 @@
 <div id="health-insurance-dialog" class="health-insurance-dialog">
 	<div fxLayout="row" fxLayoutAlign="space-between center" class="health-insurance-dialog-header">
-		<h1 class="health-insurance-dialog-title" mat-dialog-title [translate]="'medical-coverage.NEW_HEALTH_INSURANCE'"></h1>
+		<h1 class="health-insurance-dialog-title" mat-dialog-title *ngIf="isHealthInsuranceToAdd else titletHealthInsuraceToUpdate" [translate]="'medical-coverage.NEW_HEALTH_INSURANCE'"></h1>
+		<ng-template #titletHealthInsuraceToUpdate>
+			<h1 class="health-insurance-dialog-title" mat-dialog-title [translate]="'medical-coverage.UPDATE_HEALTH_INSURANCE'"></h1>
+		</ng-template>
 		<button class="close-health-insurance-dialog" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -52,11 +55,18 @@
 					</mat-radio-button>
 				</mat-radio-group>
 			</div>
-			<div fxLayoutAlign="end center" id="add-health-insurance">
+			<div fxLayoutAlign="end center" id="add-health-insurance" *ngIf="isHealthInsuranceToAdd else confirmUpdateHealthInsurance">
 				<button mat-flat-button class="uppercase" type="submit" color="primary">
 					<span [translate]="'medical-coverage.buttons.ADD_HEALTH_INSURANCE'"></span>
 				</button>
 			</div>
+			<ng-template #confirmUpdateHealthInsurance>
+				<div fxLayoutAlign="end center" id="update-health-insurance">
+					<button mat-flat-button class="uppercase" type="submit" color="primary">
+						<span [translate]="'buttons.CONFIRM'"></span>
+					</button>
+				</div>
+			</ng-template>
 		</form>
 	</div>
 </div>

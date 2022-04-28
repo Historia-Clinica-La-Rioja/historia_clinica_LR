@@ -14,13 +14,16 @@
 						<div fxLayout="column" fxLayoutAlign="space-between">
 							<span
 								class="medical-coverage-name">{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}</span>
-							<span class="lowercase capitalize-first-letter">{{getMedicalCoveragePlanText(patientMedicalCoverage)}}</span>
-							<app-editable-field [fieldName]="'Nro de afiliado'"
-												[value]="patientMedicalCoverage.affiliateNumber"
-												(newValueEmitted)="patientMedicalCoverage.affiliateNumber = $event">
-							</app-editable-field>
+							<span class="capitalize">{{getMedicalCoveragePlanText(patientMedicalCoverage)}}</span>
+							<span *ngIf="patientMedicalCoverage.affiliateNumber">
+								{{ 'medical-coverage.AFFILIATE_NUMBER_LABEL' | translate }}:
+								{{patientMedicalCoverage.affiliateNumber}}
+							</span>
 						</div>
 						<div>Vig. {{patientMedicalCoverage.validDate | date: 'dd/MM/yyyy'}}</div>
+						<button mat-icon-button color="primary" (click)="openAddHealthInsurance(patientMedicalCoverage)">
+							<mat-icon>edit</mat-icon>
+						</button>
 						<button mat-icon-button color="warn" (click)="patientMedicalCoverage.active = false">
 							<mat-icon>delete_outline</mat-icon>
 						</button>
@@ -67,6 +70,9 @@
 									{{getDatesText(patientPrivateHealthInsurance)}}
 								</div>
 							</div>
+							<button mat-icon-button color="primary" (click)="openAddPrivateHealthInsurance(patientPrivateHealthInsurance)">
+								<mat-icon>edit</mat-icon>
+							</button>
 							<button mat-icon-button color="warn" (click)="patientPrivateHealthInsurance.active = false">
 								<mat-icon>delete_outline</mat-icon>
 							</button>
