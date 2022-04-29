@@ -162,7 +162,7 @@ export class InternmentSummaryFacadeService {
 			});
 		this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
 			.subscribe((patientDischarge: PatientDischargeDto) => {
-				this.hasMedicalDischargeSubject.next(patientDischarge.dischargeTypeId !== 0);
+				this.hasMedicalDischargeSubject.next(patientDischarge.medicalDischargeDate);
 				this.hasPhysicalDischargeSubject.next(patientDischarge.physicalDischargeDate)
 			});
 	}

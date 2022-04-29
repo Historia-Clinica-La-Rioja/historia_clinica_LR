@@ -89,7 +89,6 @@ export class ProfileComponent implements OnInit {
 	institutionName: string;
 	license: string = '';
 	hasPhysicalDischarge = false;
-	showButtonInitiateInternment = true;
 	private institution: number[] = [];
 	private rolesAdmin = false;
 	public patientBasicData: PatientBasicData;
@@ -225,10 +224,9 @@ export class ProfileComponent implements OnInit {
 										this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
 											.subscribe((patientDischarge: PatientDischargeDto) => {
 												this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
-													this.showDischarge = isOn || (patientDischarge.dischargeTypeId !== 0);
+													this.showDischarge = !!(isOn || (patientDischarge.medicalDischargeDate));
 												});
 												this.hasPhysicalDischarge = !!patientDischarge.physicalDischargeDate;
-												this.showButtonInitiateInternment = !internmentEpisodeProcessDto.inProgress || (!internmentEpisodeProcessDto.id && this.hasPhysicalDischarge && internmentEpisodeProcessDto.inProgress);
 											});
 									}
 								}
