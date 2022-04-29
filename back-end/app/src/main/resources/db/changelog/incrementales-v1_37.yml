@@ -738,3 +738,36 @@ databaseChangeLog:
               columnName: type
               tableName: medical_coverage
               validate: true
+
+    - changeSet:
+        id: add-source-columns-service_request
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: source_type_id
+                    type: smallint
+                - column:
+                    name: source_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: source_type_id
+              baseTableName: service_request
+              constraintName: FK_service_request_source_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: source_type
+              validate: true
+
+    - changeSet:
+        id: set-default-value-service_request-source_type_id
+        author: tmedina
+        comment: The source type 'outpatient' is set to all existing service requests
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE service_request SET source_type_id = 1;
