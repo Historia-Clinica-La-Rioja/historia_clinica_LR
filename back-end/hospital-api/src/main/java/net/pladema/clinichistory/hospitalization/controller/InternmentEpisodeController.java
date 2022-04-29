@@ -130,6 +130,7 @@ public class InternmentEpisodeController {
 	@Transactional
 	@PostMapping("/{internmentEpisodeId}/medicaldischarge")
 	public ResponseEntity<PatientDischargeDto> medicalDischargeInternmentEpisode(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, PatientDischargeDto {} ", internmentEpisodeId, patientDischargeDto);
@@ -146,6 +147,7 @@ public class InternmentEpisodeController {
 	@Transactional
 	@PostMapping("/{internmentEpisodeId}/administrativedischarge")
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, PatientDischargeDto {} ", internmentEpisodeId, patientDischargeDto);
