@@ -58,9 +58,9 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
     }
 
     private void assertNoDuplicatedStudies(ServiceRequestBo serviceRequestBo) {
-        Map<Pair<Integer, String>, List<DiagnosticReportBo>> result = serviceRequestBo.getDiagnosticReports()
+        Map<Pair<Integer, Pair<String, String>>, List<DiagnosticReportBo>> result = serviceRequestBo.getDiagnosticReports()
                 .stream()
-                .collect(Collectors.groupingBy(p -> Pair.of(p.getHealthConditionId(), p.getSnomed().getSctid())));
+                .collect(Collectors.groupingBy(p -> Pair.of(p.getHealthConditionId(), Pair.of(p.getSnomed().getSctid(), p.getSnomed().getPt()))));
         result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La orden no puede contener más de un estudio con el mismo problema y el mismo concepto snomed"));
     }
 
@@ -72,6 +72,8 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
                 serviceRequestBo.getMedicalCoverageId(),
                 serviceRequestBo.getCategoryId()
         );
+		newServiceRequest.setSourceTypeId(serviceRequestBo.getAssociatedSourceTypeId());
+		newServiceRequest.setSourceId(serviceRequestBo.getAssociatedSourceId());
         return this.serviceRequestRepository.save(newServiceRequest);
     }
 }

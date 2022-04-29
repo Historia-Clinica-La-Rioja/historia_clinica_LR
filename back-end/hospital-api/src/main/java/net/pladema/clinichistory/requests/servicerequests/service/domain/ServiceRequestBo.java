@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ServiceRequestBo implements IDocumentBo {
 
     private Long id;
@@ -41,7 +43,11 @@ public class ServiceRequestBo implements IDocumentBo {
 
     private LocalDate requestDate = LocalDate.now();
 
-    @Override
+	private Short associatedSourceTypeId = SourceType.OUTPATIENT;
+
+	private Integer associatedSourceId;
+
+	@Override
     public Integer getPatientId() {
         if (patientInfo != null)
             return patientInfo.getId();
