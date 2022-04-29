@@ -1,6 +1,9 @@
 <div class="private-health-insurance-dialog">
 	<div fxLayout="row" fxLayoutAlign="space-between start" class="private-health-insurance-dialog-header">
-		<h1 class="private-health-insurance-dialog-title" mat-dialog-title [translate]="'medical-coverage.NEW_PRIVATE_HEALTH_INSURANCE'"></h1>
+		<h1 class="private-health-insurance-dialog-title" mat-dialog-title *ngIf="isPrivateHealthInsuranceToAdd else titletPrivateHealthInsuraceToUpdate" [translate]="'medical-coverage.NEW_PRIVATE_HEALTH_INSURANCE'"></h1>
+		<ng-template #titletPrivateHealthInsuraceToUpdate>
+			<h1 class="private-health-insurance-dialog-title" mat-dialog-title [translate]="'medical-coverage.UPDATE_PRIVATE_HEALTH_INSURANCE'"></h1>
+		</ng-template>
 		<button class="close-private-health-insurance-dialog" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -36,9 +39,9 @@
 					</mat-select>
 				</mat-form-field>
 				<mat-form-field appearance="outline"  id="private-health-insurance-affiliate-number">
-					<mat-label [translate]="'medical-coverage.AFFILIATE_NUMBER_LABEL'"></mat-label>
+					<mat-label [translate]="'medical-coverage.CREDENTIAL_NUMBER_LABEL'"></mat-label>
 					<input name="prepagaAffiliateNumber"
-						   formControlName="affiliateNumber" placeholder="{{'Nro de afiliado' | translate}}"
+						   formControlName="affiliateNumber" placeholder="{{'medical-coverage.CREDENTIAL_NUMBER_LABEL' | translate}}"
 						   matInput>
 				</mat-form-field>
 			</div>
@@ -66,11 +69,18 @@
 					<mat-error translate="forms.INVALID_DATE"></mat-error>
 				</mat-form-field>
 			</div>
-			<div fxLayoutAlign="end center" id="add-private-health-insurance">
+			<div fxLayoutAlign="end center" id="add-private-health-insurance" *ngIf="isPrivateHealthInsuranceToAdd else confirmUpdatePrivateHealthInsurance">
 				<button mat-flat-button type="submit" color="primary" class="uppercase margin">
 					<span [translate]="'medical-coverage.buttons.ADD_PRIVATE_HEALTH_INSURANCE'"></span>
 				</button>
 			</div>
+			<ng-template #confirmUpdatePrivateHealthInsurance>
+				<div fxLayoutAlign="end center" id="update-private-health-insurance">
+					<button mat-flat-button class="uppercase" type="submit" color="primary">
+						<span [translate]="'buttons.CONFIRM'"></span>
+					</button>
+				</div>
+			</ng-template>
 		</form>
 	</div>
 </div>

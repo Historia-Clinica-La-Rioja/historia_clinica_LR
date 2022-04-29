@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
 import { MedicalCoveragePlanDto } from "@api-rest/api-model";
 import { PrivateHealthInsuranceDto } from "@api-rest/api-model";
@@ -28,6 +28,7 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	plans: MedicalCoveragePlanDto[];
 	conditions = [EPatientMedicalCoverageCondition.VOLUNTARIA, EPatientMedicalCoverageCondition.OBLIGATORIA];
+	isPrivateHealthInsuranceToAdd: boolean;
 
 	privateHealthInsuranceFilteredMasterData: PrivateHealthInsuranceDto[];
 	private privateHealthInsuranceMasterData: PrivateHealthInsuranceDto[];
@@ -35,10 +36,13 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 
 	constructor(private formBuilder: FormBuilder,
 				private readonly privateHealthInsuranceService: PrivateHealthInsuranceService,
-				public dialogRef: MatDialogRef<PrivateHealthInsuranceComponent>) {
+				public dialogRef: MatDialogRef<PrivateHealthInsuranceComponent>,
+				@Inject(MAT_DIALOG_DATA) public data: { privateHealthInsuranceToupdate: PatientMedicalCoverage},) {
 	}
 
 	ngOnInit(): void {
+		this.isPrivateHealthInsuranceToAdd = this.data.privateHealthInsuranceToupdate ? false : true;
+
 		this.privateHealthInsuranceService.getAll().subscribe((values: PrivateHealthInsuranceDto[]) => {
 			this.privateHealthInsuranceFilteredMasterData = values;
 			this.privateHealthInsuranceMasterData = values;
@@ -53,6 +57,10 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 			condition: EPatientMedicalCoverageCondition.VOLUNTARIA
 		});
 
+		if (!this.isPrivateHealthInsuranceToAdd) {
+			this.uploadPrivateHealthInsuranceForm();
+		}
+
 		this.prepagaForm.controls.name.valueChanges.subscribe((newValue: string) => {
 			if (newValue) {
 				this.privateHealthInsuranceFilteredMasterData = this.privateHealthInsuranceMasterData
@@ -63,6 +71,21 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 		});
 	}
 
+	private uploadPrivateHealthInsuranceForm() {
+		this.privateHealthInsuranceToAdd = this.data.privateHealthInsuranceToupdate.medicalCoverage as PrivateHealthInsurance;
+		this.prepagaForm.setControl('name', new FormControl(this.data.privateHealthInsuranceToupdate.medicalCoverage.name));
+		this.prepagaForm.setControl('affiliateNumber', new FormControl(this.data.privateHealthInsuranceToupdate.affiliateNumber));
+		this.prepagaForm.setControl('condition', new FormControl(this.data.privateHealthInsuranceToupdate.condition ? this.data.privateHealthInsuranceToupdate.condition : EPatientMedicalCoverageCondition.VOLUNTARIA));
+		this.prepagaForm.setControl('startDate', new FormControl(this.data.privateHealthInsuranceToupdate.startDate));
+		this.prepagaForm.setControl('endDate', new FormControl(this.data.privateHealthInsuranceToupdate.endDate));
+		this.privateHealthInsuranceService.getAllPlansById(this.data.privateHealthInsuranceToupdate.medicalCoverage.id)
+			.subscribe(plans =>{
+				this.plans = plans;
+				this.prepagaForm.setControl('plan', new FormControl(this.data.privateHealthInsuranceToupdate.planId));
+			});
+		this.prepagaForm.controls.name.disable();
+	}
+
 	selectPrivateHealthInsurance(event: MatOptionSelectionChange, privateHealthInsurance: PrivateHealthInsuranceDto): void {
 		if (event.isUserInput) {
 			this.selectedPlan = null;
@@ -71,8 +94,6 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 				.subscribe(plans =>{
 					this.plans = plans;
 				});
-			this.prepagaForm.setControl('cuit', new FormControl(this.privateHealthInsuranceToAdd.cuit));
-			this.prepagaForm.controls.cuit.disable();
 		}
 	}
 
@@ -86,6 +107,10 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 	addPrivateHealthInsurance(): void {
 		if (this.privateHealthInsuranceToAdd && this.prepagaForm.valid) {
 			const privateHealthInsurance = this.getPrivateHealthInsuranceToAdd();
+			if (!this.isPrivateHealthInsuranceToAdd) {
+				privateHealthInsurance.id = this.data.privateHealthInsuranceToupdate.id;
+				privateHealthInsurance.validDate = this.data.privateHealthInsuranceToupdate.validDate;
+			}
 			this.dialogRef.close(privateHealthInsurance);
 		}
 	}
@@ -101,8 +126,7 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 			startDate: this.prepagaForm.value.startDate,
 			endDate: this.prepagaForm.value.endDate,
 			planId: this.prepagaForm.value.plan,
-			planName: this.plans.filter(data => data.id == this.prepagaForm.value.plan).map(medicalCoveragePlan => (medicalCoveragePlan.plan))[0]
-			,
+			planName: this.plans.filter(data => data.id == this.prepagaForm.value.plan).map(medicalCoveragePlan => (medicalCoveragePlan.plan))[0],
 			active: true
 		};
 		return toAdd;

@@ -81,6 +81,7 @@
 		"UPDATE_HEALTH_INSURANCE": "Editar Obra Social",
 		"ADD_ART_COVERAGE": "Agregar ART",
 		"NEW_ART_COVERAGES": "Agregar nueva ART",
+		"UPDATE_PRIVATE_HEALTH_INSURANCE": "Editar Prepaga",
 		"buttons": {
 			"NEW_HEALTH_INSURANCE": "+ Agregar nueva Obra social",
 			"NEW_PRIVATE_HEALTH_INSURANCE": "+ Agregar nueva Prepaga",
@@ -90,6 +91,7 @@
 		"CUIT_LABEL": "CUIT",
 		"PLAN_LABEL": "Plan",
 		"AFFILIATE_NUMBER_LABEL": "N° de afiliado",
+		"CREDENTIAL_NUMBER_LABEL": "N° de credencial",
 		"VOLUNTARY": "Voluntaria",
 		"MANDATORY": "Obligatoria",
 		"CUIT_VIEW" : "CUIT: {{cuit}}",

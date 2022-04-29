@@ -57,11 +57,11 @@
 							<span
 								class="medical-coverage-name">{{patientPrivateHealthInsurance.medicalCoverage.name}}</span>
 							<span
-								class="lowercase capitalize-first-letter">{{getMedicalCoveragePlanText(patientPrivateHealthInsurance)}}</span>
-							<app-editable-field [fieldName]="'Nro de credencial'"
-												[value]="patientPrivateHealthInsurance.affiliateNumber"
-												(newValueEmitted)="patientPrivateHealthInsurance.affiliateNumber = $event">
-							</app-editable-field>
+								class="capitalize">{{getMedicalCoveragePlanText(patientPrivateHealthInsurance)}}</span>
+							<span *ngIf="patientPrivateHealthInsurance.affiliateNumber">
+								{{ 'medical-coverage.CREDENTIAL_NUMBER_LABEL' | translate }}:
+								{{patientPrivateHealthInsurance.affiliateNumber}}
+							</span>
 						</div>
 						<div fxLayout="row">
 							<div fxLayout="column" fxLayoutAlign="space-between center">

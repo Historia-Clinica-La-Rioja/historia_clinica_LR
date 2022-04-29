@@ -223,14 +223,15 @@ export class MedicalCoverageComponent implements OnInit {
 		});
 	}
 
-	openAddPrivateHealthInsurance() {
+	openAddPrivateHealthInsurance(privateHealthInsurance?: PatientMedicalCoverage) {
 		const dialogRef = this.dialog.open(PrivateHealthInsuranceComponent, {
 			autoFocus: true,
-			disableClose: true
+			disableClose: true,
+			data: { privateHealthInsuranceToupdate: privateHealthInsurance }
 		});
 		dialogRef.afterClosed().subscribe( (privateHealthInsurance:PatientMedicalCoverage) => {
 			if (privateHealthInsurance) {
-				this.patientMedicalCoverages = this.patientMedicalCoverages.concat(privateHealthInsurance);
+				this.addMedicalCoverage(privateHealthInsurance);
 			}
 		});
 	}
