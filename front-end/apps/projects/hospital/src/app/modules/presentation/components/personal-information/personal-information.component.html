@@ -69,7 +69,7 @@
 					<span>
 						{{ patientMC.medicalCoverage?.name}}
 					</span>
-					<span class="lowercase capitalize-first-letter">
+					<span class="capitalize">
 						{{getMedicalCoveragePlanText(patientMC)}}
 					</span>
 					<span *ngIf="patientMC.medicalCoverage.type!=typeART" fxLayout="row" fxLayoutGap="10px">

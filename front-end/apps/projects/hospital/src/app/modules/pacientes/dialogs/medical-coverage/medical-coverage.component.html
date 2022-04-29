@@ -11,7 +11,7 @@
 			<ng-template #viewPatientHealthInsurances>
 				<mat-card *ngFor="let patientMedicalCoverage of getPatientHealthInsurances()" class="coverages">
 					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
-						<div fxLayout="column" fxLayoutAlign="space-between">
+						<div fxLayout="column" fxLayoutAlign="space-between" class="coverage-summary-info">
 							<span
 								class="medical-coverage-name">{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}</span>
 							<span class="capitalize">{{getMedicalCoveragePlanText(patientMedicalCoverage)}}</span>
@@ -21,12 +21,14 @@
 							</span>
 						</div>
 						<div>Vig. {{patientMedicalCoverage.validDate | date: 'dd/MM/yyyy'}}</div>
-						<button mat-icon-button color="primary" (click)="openAddHealthInsurance(patientMedicalCoverage)">
-							<mat-icon>edit</mat-icon>
-						</button>
-						<button mat-icon-button color="warn" (click)="patientMedicalCoverage.active = false">
-							<mat-icon>delete_outline</mat-icon>
-						</button>
+						<div>
+							<button mat-icon-button color="primary" (click)="openAddHealthInsurance(patientMedicalCoverage)">
+								<mat-icon>edit</mat-icon>
+							</button>
+							<button mat-icon-button color="warn" (click)="patientMedicalCoverage.active = false">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
 					</mat-card-content>
 				</mat-card>
 			</ng-template>

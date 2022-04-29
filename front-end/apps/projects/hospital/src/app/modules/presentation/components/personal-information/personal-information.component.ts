@@ -62,7 +62,7 @@ export class PersonalInformationComponent implements OnChanges {
 	}
 
 	getMedicalCoveragePlanText(patientMedicalCoverage: PatientMedicalCoverageDto): string {
-		return [patientMedicalCoverage.planName, patientMedicalCoverage?.condition].filter(Boolean).join(' | ');
+		return [patientMedicalCoverage?.planName?.toLowerCase(), patientMedicalCoverage?.condition?.toLowerCase()].filter(Boolean).join(' | ');
 	}
 
 }
