@@ -38,10 +38,10 @@ public class BackofficeMedicalCoveragePlanValidator implements BackofficePermiss
     @Override
     @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
     public void assertCreate(MedicalCoveragePlan entity) {
-        MedicalCoveragePlan medicalCoveragePlan = this.repository.findByIdAndPlan(entity.getMedicalCoverageId(), entity.getPlan().toLowerCase());
-        if (medicalCoveragePlan != null)
-            throw new BackofficeValidationException("medical-coverage.plan-exists");
-    }
+		this.repository.findByIdAndPlan(entity.getMedicalCoverageId(), entity.getPlan().toLowerCase()).ifPresent(p -> {
+			if (!p.isDeleted()) throw new BackofficeValidationException("medical-coverage.plan-exists");
+		});
+	}
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")

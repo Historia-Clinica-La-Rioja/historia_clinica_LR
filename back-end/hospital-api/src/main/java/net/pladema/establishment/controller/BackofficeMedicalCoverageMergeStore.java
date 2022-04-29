@@ -100,29 +100,22 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
     }
 
     public BackofficeCoverageDto merge(Integer id, Integer baseMedicalCoverageId){
-		patientMedicalCoverageRepository.getByMedicalCoverageId(id)
-				.forEach(pmc -> {
-					pmc.setMedicalCoverageId(baseMedicalCoverageId);
-					patientMedicalCoverageRepository.save(pmc);
-				});
-		if(!privateHealthInsuranceRepository.existsById(id))
-            healthInsuranceRepository.deleteById(id);
-        else {
-			medicalCoveragePlanRepository.findByMedicalCoverageId(id).forEach(plan -> {
-				patientMedicalCoverageRepository.findByPlanId(plan.getId()).forEach(pmc -> {
-					pmc.setPlanId(null);
-					patientMedicalCoverageRepository.save(pmc);
-				});
-				privateHealthInsuranceDetailsRepository.findAllByPlanId(plan.getId())
-						.forEach(phid -> {
-							phid.setPlanId(null);
-							privateHealthInsuranceDetailsRepository.save(phid);
-						});
-				medicalCoveragePlanRepository.deleteById(plan.getId());
+		patientMedicalCoverageRepository.getByMedicalCoverageId(id).forEach(pmc -> {
+			pmc.setMedicalCoverageId(baseMedicalCoverageId);
+			patientMedicalCoverageRepository.save(pmc);
+		});
+		medicalCoveragePlanRepository.findAllByMedicalCoverageId(id).forEach(plan -> {
+			patientMedicalCoverageRepository.findByPlanId(plan.getId()).forEach(pmc -> {
+				pmc.setPlanId(null);
+				patientMedicalCoverageRepository.save(pmc);
 			});
-			privateHealthInsuranceRepository.deleteById(id);
-		}
-        medicalCoverageRepository.deleteMergedCoverage(id);
+			privateHealthInsuranceDetailsRepository.findAllByPlanId(plan.getId()).forEach(phid -> {
+				phid.setPlanId(null);
+				privateHealthInsuranceDetailsRepository.save(phid);
+			});
+            medicalCoveragePlanRepository.deleteMergedCoveragePlan(plan.getId());
+		});
+		medicalCoverageRepository.deleteMergedCoverage(id);
         return findById(baseMedicalCoverageId).get();
     }
 

@@ -1,5 +1,7 @@
 package net.pladema.establishment.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +24,8 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicalCoveragePlan implements Serializable {
+@EntityListeners(SGXAuditListener.class)
+public class MedicalCoveragePlan extends SGXAuditableEntity<Integer> implements Serializable {
 
     private static final long serialVersionUID = -1832876231321092835L;
 

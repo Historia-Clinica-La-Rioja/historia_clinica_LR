@@ -23,7 +23,7 @@ public class BackofficeMedicalCoveragePlanStore implements BackofficeStore<Medic
 
     @Override
     public Page<MedicalCoveragePlan> findAll(MedicalCoveragePlan entity, Pageable pageable) {
-        List<MedicalCoveragePlan> result = this.repository.findByMedicalCoverageId(entity.getMedicalCoverageId());
+        List<MedicalCoveragePlan> result = this.repository.findAllActiveByMedicalCoverageId(entity.getMedicalCoverageId());
         return new PageImpl<>(result, pageable, result.size());
     }
 
@@ -45,19 +45,14 @@ public class BackofficeMedicalCoveragePlanStore implements BackofficeStore<Medic
 
     @Override
     public MedicalCoveragePlan save(MedicalCoveragePlan entity) {
-        if (entity.getId() != null) {
-            return update(entity);
-        }
-        return create(entity);
+		Optional<MedicalCoveragePlan> plan = this.repository.findByIdAndPlan(entity.getMedicalCoverageId(),entity.getPlan());
+		if(plan.isPresent()&&plan.get().isDeleted()){
+			entity = plan.get();
+			entity.setDeleted(false);
+		}
+		return this.repository.save(entity);
     }
 
-    public MedicalCoveragePlan update(MedicalCoveragePlan entity) {
-        return this.repository.save(entity);
-    }
-
-    public MedicalCoveragePlan create(MedicalCoveragePlan entity) {
-        return this.repository.save(entity);
-    }
 
     @Override
     public void deleteById(Integer id) {
