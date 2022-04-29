@@ -704,6 +704,7 @@ export interface DoctorInfoDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface DoctorsOfficeDto {

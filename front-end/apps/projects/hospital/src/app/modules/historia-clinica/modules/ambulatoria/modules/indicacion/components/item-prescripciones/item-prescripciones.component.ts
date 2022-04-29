@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DoctorInfoDto } from '@api-rest/api-model';
 import { MEDICATION_STATUS, STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
+import {PatientNameService} from "@core/services/patient-name.service";
 
 @Component({
   selector: 'app-item-prescripciones',
@@ -13,7 +14,11 @@ export class ItemPrescripcionesComponent {
 
 	@Input() prescriptionItemData: PrescriptionItemData;
 
-	constructor() { }
+	constructor(private readonly patientNameService: PatientNameService) { }
+
+	getFullName(firstName: string, nameSelfDetermination: string): string {
+		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
+	}
 
 }
 
