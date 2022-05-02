@@ -22,6 +22,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.ParenteralPlan;
 import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +46,7 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 	private final FrequencyRepository frequencyRepository;
 	private final OtherPharmacoRepository otherPharmacoRepository;
 	private final SharedHospitalUserPort sharedHospitalUserPort;
+	private final FeatureFlagsService featureFlagsService;
 
 	@Override
 	public Integer createParenteralPlan(ParenteralPlanBo bo) {
@@ -69,7 +72,10 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 				.map(entity -> {
 					ParenteralPlanBo ppBo = mapToBo(entity);
 					HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(ppBo.getCreatedBy());
-					ppBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+					if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
+						ppBo.setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+					else
+						ppBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
 					return ppBo;})
 				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
