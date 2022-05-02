@@ -1,6 +1,8 @@
 package net.pladema.reports.repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,14 @@ public class QueryFactory {
         outpatientQuery.setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC));
         List<ConsultationDetail> data = outpatientQuery.getResultList();
 
+		Query odontologyQuery = entityManager.createNamedQuery("Reports.OdontologyConsultationDetail");
+		odontologyQuery.setParameter("institutionId", institutionId);
+		odontologyQuery.setParameter("startDate", startDate);
+		odontologyQuery.setParameter("endDate", endDate);
+
+		data.addAll(odontologyQuery.getResultList());
+		data.sort(Comparator.comparing(ConsultationDetail::getPatientSurname));
+
         //Optional filter: by specialty or professional if specified
         return data.stream()
                 .filter(doctorId != null ? oc -> oc.getProfessionalId().equals(doctorId) : c -> true)
@@ -44,10 +54,17 @@ public class QueryFactory {
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     public List<ConsultationSummary> fetchConsultationSummaryData(Integer institutionId, LocalDate startDate, LocalDate endDate){
-        return entityManager.createNamedQuery("Reports.ConsultationSummary")
-                .setParameter("institutionId", institutionId)
-                .setParameter("from", startDate)
-                .setParameter("to", endDate)
-                .getResultList();
+		List<ConsultationSummary> result = new ArrayList<>();
+		result.addAll(entityManager.createNamedQuery("Reports.ConsultationSummary")
+				.setParameter("institutionId", institutionId)
+				.setParameter("from", startDate)
+				.setParameter("to", endDate)
+				.getResultList());
+		result.addAll(entityManager.createNamedQuery("Reports.OdontologyConsultationSummary")
+				.setParameter("institutionId", institutionId)
+				.setParameter("from", startDate)
+				.setParameter("to", endDate)
+				.getResultList());
+		return result;
     }
 }
