@@ -37,7 +37,8 @@
 		"SKIP": "Omitir",
 		"RESET": "Restablecer",
 		"SELECT": "Seleccionar",
-		"APPLY": "Aplicar"
+		"APPLY": "Aplicar",
+		"ACCEPT": "Aceptar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

@@ -20,7 +20,9 @@ import {
 	CreateInternmentOrderComponent,
 	NewInternmentOrder
 } from "@historia-clinica/modules/ambulatoria/dialogs/create-internment-order/create-internment-order.component";
-import {InternmentPatientService} from "@api-rest/services/internment-patient.service";
+import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
+import { DiagnosisRequiredComponent } from "@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/diagnosis-required.component";
+import { InternmentStateService } from "@api-rest/services/internment-state.service";
 
 @Component({
   selector: 'app-card-estudios',
@@ -63,6 +65,7 @@ export class CardEstudiosComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
 		private readonly internmentPatientService: InternmentPatientService,
+		private readonly internmentStateService: InternmentStateService,
 	) { }
 
 	ngOnInit(): void {
@@ -102,6 +105,17 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	openNewInternmentOrderDialog() {
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeInProgressId).subscribe(diagnoses => {
+			if (diagnoses.length) {
+				this.openCreateInternmentOrderDialog();
+			}
+			else {
+				this.dialog.open(DiagnosisRequiredComponent, { width: '35%' });
+			}
+		})
+	}
+
+	openCreateInternmentOrderDialog() {
 		const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 			{
 				width: '28%',

@@ -532,6 +532,9 @@
                 "TITLE": "Alergias críticas"
             },
 			"internment-order" : {
+				"diagnosis-required-dialog" : {
+					"MESSAGE" : "El episodio de internación debe tener un diagnóstico asociado"
+				},
 				"create-order-dialog" : {
 					"TITLE": "Nueva orden",
 					"CATEGORY": "Categoría del estudio",
