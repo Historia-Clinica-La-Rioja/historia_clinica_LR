@@ -49,8 +49,10 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		Integer dosageId = dosageRepository.save(mapToDosage(pharmacoBo.getDosage(), quantity)).getId();
 		pharmacoBo.getDosage().setId(dosageId);
 		Integer pharmacoId = pharmacoRepository.save(mapToEntity(pharmacoBo)).getId();
-		Integer solventId = saveSolvent(pharmacoBo.getSolvent(), pharmacoId);
-		log.debug("pharmacoId {}, solventId {} -> ", pharmacoId, solventId);
+		if (pharmacoBo.getSolvent() != null) {
+			Integer solventId = saveSolvent(pharmacoBo.getSolvent(), pharmacoId);
+			log.debug("pharmacoId {}, solventId {} -> ", pharmacoId, solventId);
+		}
 		log.debug("Output -> {}", pharmacoId);
 		return pharmacoId;
 	}

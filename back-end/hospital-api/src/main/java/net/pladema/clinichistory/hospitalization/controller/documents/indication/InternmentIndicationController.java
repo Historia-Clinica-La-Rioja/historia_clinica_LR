@@ -168,7 +168,8 @@ public class InternmentIndicationController {
 		InternmentPharmacoBo result = new InternmentPharmacoBo();
 		result.setSnomed(dto.getSnomed() != null? new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()) : null);
 		result.setDosage(toDosageBo(dto.getDosage(),dto.getIndicationDate()));
-		result.setSolvent(toOtherPharmacoBo(dto.getSolvent(), dto.getIndicationDate()));
+		if (dto.getSolvent() != null)
+			result.setSolvent(toOtherPharmacoBo(dto.getSolvent(), dto.getIndicationDate()));
 		result.setHealthConditionId(dto.getHealthConditionId());
 		result.setFoodRelationId(dto.getFoodRelationId());
 		result.setPatientProvided(dto.getPatientProvided());
