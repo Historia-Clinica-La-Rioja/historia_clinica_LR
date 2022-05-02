@@ -1,5 +1,11 @@
 {
     "ambulatoria": {
+        "medical-coverage-summary-view": {
+            "TITLE": "Cobertura",
+            "AFFILIATE_NUMBER": "Afiliado N°:",
+            "WITHOUT_COVERAGE": "Sin cobertura",
+            "NO_INFO": "Sin información"
+        },
         "bus-interoperabilidad": {
             "TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
             "PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",
@@ -17,16 +23,6 @@
         "historia-clinica-externa": {
             "TITLE": "Ver historia clínica externa"
         },
-		"dialogs": {
-			"diet":{
-				"TITLE": "agregar dieta",
-				"DESCRIPTION": "Descripción",
-				"messages": {
-                    "ERROR": "Error al guardar una nueva dieta",
-                    "SUCCESS": "La dieta se guardó exitosamente"
-                }
-			}
-		},
         "paciente": {
             "TITLE": "Historia Clínica",
             "card": {
@@ -45,13 +41,9 @@
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
                 "SANGUINEOUS": "sanguíneo",
-				"WITHOUT_BLOOD_DATA": "Sin grupo y factor sanguíneo registrado",
-                "internment": {
-                    "COVERAGE_TITLE": "Cobertura del episodio",
-                    "AFFILIATE_NUMBER": "Afiliado N°:",
-                    "WITHOUT_COVERAGE": "Sin cobertura",
-                    "NO_INFO": "Sin información"
-                },
+                "WITHOUT_BLOOD_DATA": "Sin grupo y factor sanguíneo registrado",
+                "INTERNMENT_COVERAGE_TITLE": "Cobertura del episodio",
+                "APPOINTMENT_COVERAGE_TITLE": "Cobertura del turno",
                 "INTERNMENT_EPISODE_ACTIVE": "En internación",
                 "EMERGENCY_CARE_EPISODE_ACTIVE": "En guardia",
                 "NO_CRITICAL_ALLERGIES": "Sin alergias críticas registradas",
@@ -110,6 +102,7 @@
                 "motivo": {
                     "TITLE": "Motivo de consulta",
                     "MOTIVO": "motivo",
+                    "SEARCH_PLACEHOLDER": "Buscar motivo",
                     "ADD": "Agregar motivo",
                     "table": {
                         "TITLE": "Motivos registrados",
@@ -122,6 +115,7 @@
                     "CONCEPT_LABEL": "Medicación habitual",
                     "DESCRIPCION": "Descripción",
                     "NOMBRE_MEDICACION": "Nombre de medicación",
+					"SEARCH_PLACEHOLDER": "Buscar medicación",
                     "OBSERVACIONES": "Observaciones",
                     "SUSPENDIDO": "Suspendido",
                     "TABLE_TITLE": "Medicaciones registradas",
@@ -141,6 +135,7 @@
                         "SAVE": "Guardar cambios"
                     },
                     "CONCEPT_LABEL": "Problema",
+                    "SEARCH_PLACEHOLDER": "Buscar problema",
                     "SEVERIDAD": "Severidad",
                     "CRONICO": "Crónico",
                     "errors": {
@@ -166,7 +161,8 @@
                     "TABLE_TITLE": "Procedimientos registrados",
                     "TITLE": "Procedimiento",
                     "TIPO": "Tipo de procedimiento",
-                    "PROCEDIMIENTO": "Procedimiento"
+					"PROCEDIMIENTO": "Procedimiento",
+					"SEARCH_PLACEHOLDER": "Buscar procedimiento"
                 },
                 "antecedentes-familiares": {
                     "buttons": {
@@ -181,6 +177,7 @@
                     },
                     "TITLE": "Antecedentes familiares",
                     "ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
+					"SEARCH_PLACEHOLDER": "Buscar antecedentes familiares",
                     "FECHA": "Fecha de registro"
                 },
                 "antecedentes-personales": {
@@ -217,9 +214,10 @@
                 "alergias": {
                     "TITLE": "Alergias",
                     "ADD": "Agregar alergia",
-                    "ALLERGY": "Alergia",
+					"ALLERGY": "Alergia",
                     "CRITICALITY": "Criticidad",
-                    "form": {
+					"SEARCH_PLACEHOLDER": "Buscar alergia",
+					"form": {
                         "REGISTRY_DATE": "Fecha registro"
                     },
                     "table": {
@@ -548,6 +546,7 @@
             "CANCEL_BUTTON": "No, regresar y completar"
         },
 		"dialog-title":{
+			"OTHER-INDICATION": "Otra indicación",
 			"DIET": "Dieta"
 		}
     }

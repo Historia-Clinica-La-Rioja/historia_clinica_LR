@@ -23,7 +23,12 @@ public class HealthInsuranceDto extends CoverageDto {
         this.acronym = acronym;
     }
 
-    @Override
+	@Override
+	public String obtainCoverageType() {
+		return "OBRASOCIAL";
+	}
+
+	@Override
     public MedicalCoverageBo newInstance() {
         return new HealthInsuranceBo(getId(), getName(), getCuit(), getRnos(), getAcronym());
     }

@@ -28,6 +28,7 @@ export class ProblemasService {
 	private errorSource = new Subject<string>();
 	private _error$: Observable<string>;
 	private severityTypes: any[];
+	private readonly ECL = SnomedECL.DIAGNOSIS;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -135,7 +136,7 @@ export class ProblemasService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.DIAGNOSIS
+				eclFilter: this.ECL
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
@@ -214,5 +215,9 @@ export class ProblemasService {
 			return true;
 		}
 		return false;
+	}
+
+	getECL(): SnomedECL {
+		return this.ECL;
 	}
 }

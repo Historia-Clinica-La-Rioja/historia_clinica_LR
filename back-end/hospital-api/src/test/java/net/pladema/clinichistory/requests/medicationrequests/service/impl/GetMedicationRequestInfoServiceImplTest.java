@@ -24,7 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -71,7 +72,7 @@ class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
 
 
         Integer dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
-                LocalDate.of(2020,12,16), LocalDate.of(2020,12,23), null, null)).getId();
+                LocalDateTime.of(2020,12,16,0,0,0), LocalDateTime.of(2020,12,23,0,0,0), null, null, null)).getId();
 
         Integer mIbuprofenoId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe1_doc_id, mIbuprofenoId));

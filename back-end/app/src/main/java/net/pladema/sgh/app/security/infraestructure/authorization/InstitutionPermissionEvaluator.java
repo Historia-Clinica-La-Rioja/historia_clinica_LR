@@ -1,7 +1,7 @@
 package net.pladema.sgh.app.security.infraestructure.authorization;
 
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.dto.RoleAssignment;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implementa hasPermission que se puede acceder desde las anotaciones

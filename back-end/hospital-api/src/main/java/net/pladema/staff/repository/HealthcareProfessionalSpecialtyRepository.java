@@ -11,19 +11,20 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableEntityJPARepository<HealthcareProfessionalSpecialty, Integer> {
 
-    @Transactional(readOnly = true)
-    @Query( "SELECT (CASE WHEN COUNT(hps.id)> 0 THEN TRUE ELSE FALSE END) " +
-            "FROM HealthcareProfessionalSpecialty AS hps " +
-            "WHERE hps.healthcareProfessionalId = :healthcareProfessionalId " +
-            "AND hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
-            "AND hps.professionalSpecialtyId = :professionalSpecialtyId ")
-    boolean existsValues(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
-                         @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId,
-                         @Param("professionalSpecialtyId")  Integer professionalSpecialtyId);
+	@Transactional(readOnly = true)
+	@Query( value = "SELECT (CASE WHEN COUNT(hps.id)> 0 THEN TRUE ELSE FALSE END) " +
+			"FROM {h-schema}healthcare_professional_specialty hps " +
+			"WHERE hps.healthcare_professional_id = :healthcareProfessionalId " +
+			"AND hps.clinical_specialty_id = :clinicalSpecialtyId " +
+			"AND hps.professional_specialty_id = :professionalSpecialtyId ", nativeQuery = true)
+	boolean existsValues(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
+						 @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId,
+						 @Param("professionalSpecialtyId")  Integer professionalSpecialtyId);
 
     @Transactional(readOnly = true)
     @Query( "SELECT (CASE WHEN COUNT(hps.id) = 1 THEN TRUE ELSE FALSE END) " +
@@ -63,4 +64,16 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
             "SET deleted = false " +
             "WHERE id = :healthcareProfessionalSpecialtyId",  nativeQuery=true)
     void setDeletedFalse(@Param("healthcareProfessionalSpecialtyId") Integer healthcareProfessionalSpecialtyId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT * " +
+			"FROM {h-schema} healthcare_professional_specialty hps " +
+			"WHERE hps.healthcare_professional_id = :healthcareProfessionalId " +
+			"AND hps.clinical_specialty_id = :clinicalSpecialtyId " +
+			"AND hps.professional_specialty_id = :professionalSpecialtyId ", nativeQuery = true)
+	Optional<HealthcareProfessionalSpecialty> findByUniqueKey(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
+															  @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId,
+															  @Param("professionalSpecialtyId")  Integer professionalSpecialtyId);
+
+
 }

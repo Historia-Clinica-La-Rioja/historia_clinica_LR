@@ -3,7 +3,7 @@
 		<form id="nota-evolucion-form" (keydown.enter)="false" [formGroup]="form">
 			<div id="diagnosticos"
 				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-				<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
+				<app-diagnosticos [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos" [type]="'EVOLUTION'"></app-diagnosticos>
 			</div>
 			<div id="procedimientos"
 				*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">

@@ -26,8 +26,8 @@ public class VaccineRuleStorageImpl implements VaccineRuleStorage {
                 sctid, conditionApplicationId, schemeId, dose, doseOrder);
         String sqlString = "" +
                 "SELECT vr.sisa_code " +
-                "FROM vaccine_nomivac_rule vr " +
-                "JOIN nomivac_snomed_map nsm ON (nsm.sisa_code = vr.sisa_code) " +
+                "FROM {h-schema}vaccine_nomivac_rule vr " +
+                "JOIN {h-schema}nomivac_snomed_map nsm ON (nsm.sisa_code = vr.sisa_code) " +
                 "WHERE nsm.sctid = :sctid " +
                 "AND vr.condition_application_id = :conditionApplicationId " +
                 "AND vr.scheme_id = :schemeId " +

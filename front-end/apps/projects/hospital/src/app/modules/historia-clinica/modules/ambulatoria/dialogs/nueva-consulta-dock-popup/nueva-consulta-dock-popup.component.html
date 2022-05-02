@@ -28,10 +28,21 @@
 				sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 
 				<ng-container concept-form>
-					<app-concepts-search *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
-						[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
-						(search)="motivoNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+					<ng-container *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else motivoTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
+							(search)="motivoNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #motivoTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="motivoNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.motivo.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="motivoNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
 
 					<ng-template #mainMotivoConsulta>
 						<form [formGroup]="motivoNuevaConsultaService.getForm()"
@@ -68,16 +79,27 @@
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.problemas.TITLE"
 				sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 				<div concept-form *ngIf="!this.readOnlyProblema else problemaForm">
-					<app-concepts-search
-						*ngIf="!ambulatoryConsultationProblemsService.getSnomedConcept() else problemaForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
-						(search)="ambulatoryConsultationProblemsService.openSearchDialog($event)">
-					</app-concepts-search>
+					<ng-container *ngIf="!ambulatoryConsultationProblemsService.getSnomedConcept() else problemaForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else problemTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
+							(search)="ambulatoryConsultationProblemsService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #problemTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="ambulatoryConsultationProblemsService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.problemas.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="ambulatoryConsultationProblemsService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 				</div>
 
 				<ng-template #problemaForm>
 					<form [formGroup]="ambulatoryConsultationProblemsService.getForm()"
-						(ngSubmit)="this.readOnlyProblema ? this.editProblema(): ambulatoryConsultationProblemsService.addToList(ffIsOn)">
+						(ngSubmit)="this.readOnlyProblema ? this.editProblema(): ambulatoryConsultationProblemsService.addToList(reportFFIsOn)">
 
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'">
@@ -178,11 +200,23 @@
 		<div id="antecedentes-familiares">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE">
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
-						(search)="antecedentesFamiliaresNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else antecedentesFamiliaresTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
+							(search)="antecedentesFamiliaresNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #antecedentesFamiliaresTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="antecedentesFamiliaresNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="antecedentesFamiliaresNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 					<ng-template #antecedentesPersonalesForm>
 						<form [formGroup]="antecedentesFamiliaresNuevaConsultaService.getForm()"
 							(ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
@@ -233,11 +267,23 @@
 		<div id="medications">
 			<app-new-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE'">
 				<div concept-form>
-					<app-concepts-search
-						*ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm"
-						label="ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL"
-						(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else medicationTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL'"
+							(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #medicationTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="medicacionesNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.medicaciones.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="medicacionesNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 				</div>
 				<ng-template #medicationForm>
 					<form [formGroup]="medicacionesNuevaConsultaService.getForm()"
@@ -293,11 +339,22 @@
 		<div id="procedimientos">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.procedimientos.TITLE">
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
-						(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else procedimientoTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
+							(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #procedimientoTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="procedimientoNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.procedimientos.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="procedimientoNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
 
 					<ng-template #procedimientoForm>
 						<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
@@ -351,10 +408,23 @@
 		<div id="alergias">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.alergias.TITLE">
 				<ng-container concept-form>
-					<app-concepts-search *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm"
-						[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
-						(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else alergiaTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
+							(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #alergiaTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="alergiasNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.alergias.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="alergiasNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 					<ng-template #alergiasForm>
 						<form [formGroup]="alergiasNuevaConsultaService.getForm()"
 							(ngSubmit)="alergiasNuevaConsultaService.addToList()">

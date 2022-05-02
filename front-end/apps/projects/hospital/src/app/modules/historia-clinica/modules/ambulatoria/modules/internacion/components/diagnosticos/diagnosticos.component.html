@@ -1,56 +1,39 @@
-<h2 class="mat-h2" [translate]="'internaciones.anamnesis.diagnosticos.TITLE'"></h2>
-<mat-card>
-	<mat-card-content>
-		<app-concepts-search *ngIf="!snomedConcept else diagnosisForm"
-			[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
-		 	(search)="openSearchDialog($event)">
-		</app-concepts-search>
-		<ng-template #diagnosisForm>
-			<form [formGroup]="form" (ngSubmit)="addToList()">
-				<mat-form-field appearance="outline">
-					<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
-					</mat-label>
-					<input matInput type="text" formControlName="snomed" name="snomed" readonly matTooltip="{{ snomedConcept.pt }}">
-					<button id="clear" mat-button matSuffix color="warn" mat-icon-button
-						(click)="resetForm()">
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
-				<div class="margin-bottom">
-					<mat-checkbox formControlName="presumptive">
-						<span [translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
-					</mat-checkbox>
-				</div>
-				<div align="end">
-					<button class="uppercase" mat-raised-button color="primary" type="submit">
-						<span [translate]="'internaciones.anamnesis.diagnosticos.ADD'"></span>
-					</button>
-				</div>
-			</form>
-		</ng-template>
-	</mat-card-content>
-</mat-card>
-
-<section>
-	<h3 class="mat-body-2" [translate]="'internaciones.anamnesis.diagnosticos.table.TITLE'"></h3>
-	<table mat-table [dataSource]="diagnosis" class="secondary">
-
-		<ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
-			<th *matHeaderCellDef>{{ column.header | translate }}</th>
-			<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
-		</ng-container>
-
-		<ng-container matColumnDef="remove">
-			<th mat-header-cell *matHeaderCellDef></th>
-			<td mat-cell class="actions" *matCellDef="let element; index as i">
-				<button mat-icon-button color="warn" (click)="remove(i)">
-					<mat-icon>delete_outline</mat-icon>
-				</button>
-			</td>
-		</ng-container>
-
-		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-	</table>
-	<app-no-data class="secondary" *ngIf="diagnosis.length === 0"></app-no-data>
-</section>
+<div>
+	<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
+	<span *ngIf="type === 'ANAMNESIS' else evolutionNoteSubtitle" [translate]="'internaciones.anamnesis.diagnosticos.ANAMNESIS_SUBTITLE'"></span>
+	<ng-template #evolutionNoteSubtitle>
+		<span [translate]="'internaciones.anamnesis.diagnosticos.EVOLUTION_NOTE_SUBTITLE'"></span>
+	</ng-template>
+	<br><br>
+	<mat-card>
+		<mat-card-subtitle class="main-diagnosis">
+			<div class="label main-diagnosis-label uppercase">
+				<span [translate]="'internaciones.anamnesis.diagnosticos.TITLE_PRINCIPAL'"></span>
+			</div>
+		</mat-card-subtitle>
+		<app-elemento-diagnostico *ngIf="_mainDiagnosis" [diagnosis]="_mainDiagnosis" [isMain]="true"></app-elemento-diagnostico>
+		<div *appHasRole="['ESPECIALISTA_MEDICO']">
+			<button *ngIf="!_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="type=='EVOLUTION'" (click)="openCreationDialog(true)">
+				{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
+			</button>
+			<button *ngIf="_mainDiagnosis" class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length" (click)="openModifyMainDiagnosisDialog()">
+				{{ 'internaciones.anamnesis.diagnosticos.CHANGE_MAIN_DIAGNOSIS' | translate }}
+			</button>
+		</div>
+		<br>
+		<mat-card-subtitle class="other-diagnoses">
+			<div class="label other-diagnoses-label uppercase">
+				<span [translate]="'internaciones.anamnesis.diagnosticos.TITLE'"></span>
+			</div>
+		</mat-card-subtitle>
+		<div *ngFor="let diagnosis of diagnosticos">
+			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false"></app-elemento-diagnostico>
+			<hr *ngIf="diagnosticos.length - 1 != diagnosticos.indexOf(diagnosis)">
+		</div>
+		<br>
+		<button class="diagnoses-action-button" mat-button color="primary" (click)="openCreationDialog(false)">
+			{{ 'internaciones.anamnesis.diagnosticos.ADD_OTHER_DIAGNOSIS' | translate }}
+		</button>
+	</mat-card>
+	<br><br>
+</div>

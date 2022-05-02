@@ -42,11 +42,15 @@ export class ServiceRequestService {
 		const completeUrl = commonUrl + '/complete';
 		const filesFormdata = new FormData();
 		Array.from(files).forEach(file => filesFormdata.append('files', file));
-		return this.http.post<number[]>(uploadFileUrl, filesFormdata).pipe(
-			switchMap(fileIds => {
-				completeRequestDto.fileIds = fileIds;
-				return this.http.put<void>(completeUrl, completeRequestDto);
-			}));
+		if(filesFormdata.get("files")){
+			return this.http.post<number[]>(uploadFileUrl, filesFormdata).pipe(
+				switchMap(fileIds => {
+					completeRequestDto.fileIds = fileIds;
+					return this.http.put<void>(completeUrl, completeRequestDto);
+				}));
+		}
+		else
+			return this.http.put<void>(completeUrl, completeRequestDto);
 	}
 
 	delete(patientId: number, serviceRequestId: number): Observable<string> {

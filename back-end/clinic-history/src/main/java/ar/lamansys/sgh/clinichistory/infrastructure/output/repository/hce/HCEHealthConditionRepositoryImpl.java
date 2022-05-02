@@ -43,9 +43,9 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, severity, start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by snomed_id order by hc.updated_on desc) as rw  " +
-                "   FROM document d " +
-                "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
-                "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
+                "   FROM {h-schema}document d " +
+                "   JOIN {h-schema}document_health_condition dhc on d.id = dhc.document_id " +
+                "   JOIN {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
                 "   WHERE d.status_id = :docStatusId " +
                 "   AND d.type_id in (:documentTypes) "+
                 "   AND hc.patient_id = :patientId " +
@@ -54,7 +54,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
                 "severity, start_date, inactivation_date, patient_id " +
                 "FROM t " +
-                "JOIN snomed s ON snomed_id = s.id " +
+                "JOIN {h-schema}snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
                 "AND NOT verification_status_id = :verificationId  " +
                 "ORDER BY t.updated_on DESC";
@@ -94,9 +94,9 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, severity, start_date, hc.note_id, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by snomed_id order by hc.updated_on desc) as rw  " +
-                "   FROM document d " +
-                "   JOIN document_health_condition dhc on d.id = dhc.document_id " +
-                "   JOIN health_condition hc on dhc.health_condition_id = hc.id " +
+                "   FROM {h-schema}document d " +
+                "   JOIN {h-schema}document_health_condition dhc on d.id = dhc.document_id " +
+                "   JOIN {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
                 "   WHERE d.status_id = :docStatusId " +
                 "   AND d.type_id NOT IN :invalidDocumentTypes "+
                 "   AND hc.patient_id = :patientId " +
@@ -106,7 +106,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
                 "severity, start_date, patient_id " +
                 "FROM t " +
-                "JOIN snomed s ON snomed_id = s.id " +
+                "JOIN {h-schema}snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
                 "AND NOT verification_status_id = :verificationId  " +
                 "AND status_id = :hcStatusId " +
@@ -148,11 +148,11 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
         String sqlString = "WITH t AS (" +
                 "   SELECT hc.id, snomed_id, hc.status_id, d.source_id, hc.main, verification_status_id, ie.entry_date, pd.administrative_discharge_date, hc.updated_on, hc.patient_id, " +
                 "   row_number() over (partition by snomed_id, source_id order by hc.updated_on desc) as rw  " +
-                "   FROM document d " +
-                "   JOIN document_health_condition dhc ON d.id = dhc.document_id " +
-                "   JOIN health_condition hc ON dhc.health_condition_id = hc.id " +
-                "   JOIN internment_episode ie ON ie.id = d.source_id " +
-                "   LEFT JOIN patient_discharge pd ON pd.internment_episode_id = ie.id " +
+                "   FROM {h-schema}document d " +
+                "   JOIN {h-schema}document_health_condition dhc ON d.id = dhc.document_id " +
+                "   JOIN {h-schema}health_condition hc ON dhc.health_condition_id = hc.id " +
+                "   JOIN {h-schema}internment_episode ie ON ie.id = d.source_id " +
+                "   LEFT JOIN {h-schema}patient_discharge pd ON pd.internment_episode_id = ie.id " +
                 "   WHERE d.status_id = :docStatusId " +
                 "   AND d.source_type_id = :sourceType " +
                 "   AND d.type_id = :documentType "+
@@ -162,7 +162,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, source_id," +
                 "entry_date, administrative_discharge_date, patient_id " +
                 "FROM t " +
-                "JOIN snomed s ON snomed_id = s.id " +
+                "JOIN {h-schema}snomed s ON snomed_id = s.id " +
                 "WHERE rw = 1 " +
                 "AND NOT verification_status_id = :verificationId  " +
                 "ORDER BY t.updated_on DESC";

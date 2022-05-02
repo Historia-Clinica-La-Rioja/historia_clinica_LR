@@ -66,6 +66,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 	) {
+		this.mainDiagnosis = data.mainDiagnosis;
+		this.diagnosticos = data.diagnosticos;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 	}
@@ -192,8 +194,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 				height: getValue(formValues.anthropometricData.height),
 				weight: getValue(formValues.anthropometricData.weight),
 			},
-			mainDiagnosis: this.mainDiagnosis,
-			diagnosis: this.diagnosticos,
+			mainDiagnosis: this.mainDiagnosis?.isAdded ? this.mainDiagnosis : null,
+			diagnosis: this.diagnosticos.filter(diagnosis => diagnosis.isAdded),
 			familyHistories: this.familyHistories,
 			immunizations: this.immunizations,
 			medications: this.medications,

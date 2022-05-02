@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.EqualsAndHashCode;
 import net.pladema.permissions.service.dto.RoleAssignment;
 
+@EqualsAndHashCode
 public class RoleAssignmentAuthority implements GrantedAuthority {
-	@EqualsAndHashCode.Include
+
 	@Getter
 	private final RoleAssignment roleAssignment;
 

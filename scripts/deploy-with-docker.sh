@@ -41,6 +41,7 @@ echo Crea environment con hash: $(
         --restart=unless-stopped \
         --name ${ENV_NAME} \
         -v /sgh/${ENV_NAME}:/sgh  \
+        --log-opt max-size=10m \
         ${DOCKER_IMAGE} #docker image to run
 )
 docker cp /tmp/${ENV_NAME}.properties ${ENV_NAME}:/app/env.properties 

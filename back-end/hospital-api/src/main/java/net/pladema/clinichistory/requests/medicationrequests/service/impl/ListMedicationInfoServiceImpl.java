@@ -74,8 +74,8 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
             d.setFrequency((Integer) row[13]);
             d.setPeriodUnit(row[14] != null ? EUnitsOfTimeBo.map((String) row[14]) : null);
             d.setChronic((Boolean) row[15]);
-            d.setStartDate(row[16] != null ? ((Date) row[16]).toLocalDate() : null);
-            d.setEndDate(row[17] != null ? ((Date) row[17]).toLocalDate() : null);
+            d.setStartDate(row[16] != null ? ((Timestamp) row[16]).toLocalDateTime() : null);
+            d.setEndDate(row[17] != null ? ((Timestamp) row[17]).toLocalDateTime() : null);
             d.setSuspendedStartDate(row[18] != null ? ((Date) row[18]).toLocalDate() : null);
             d.setSuspendedEndDate(row[19] != null ? ((Date) row[19]).toLocalDate() : null);
 

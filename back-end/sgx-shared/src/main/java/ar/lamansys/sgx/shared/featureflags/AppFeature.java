@@ -86,6 +86,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si esta habilitada la opción para generar asincronicamente documentos pdf ")
 	HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF,
+
+	@Label("Indica si esta habilitada la búsqueda de conceptos en la base de datos local")
+	HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS,
     ;
 
     public boolean isActive() {

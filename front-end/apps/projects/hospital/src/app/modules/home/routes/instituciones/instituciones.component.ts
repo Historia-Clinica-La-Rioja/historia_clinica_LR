@@ -30,7 +30,7 @@ export class InstitucionesComponent {
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
 			const institutionIds = allRoles
-				.filter((ra) => ra.institutionId >= 0)
+				//.filter((ra) => ra.institutionId >= 0)
 				.map(r => r.institutionId);
 			this.webappInstitutionsAccess = this.hasAccessToWebappInstitutions(allRoles);
 			this.backofficeAccess = this.hasAccessToBackoffice(allRoles);

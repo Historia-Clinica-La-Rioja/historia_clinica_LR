@@ -24,7 +24,8 @@
 			"PROCEDIMIENTO": "Procedimiento"
 		},
 		"snowstorm": {
-			"SERVICE_NOT_AVAILABLE": "El servicio externo no está disponible en este momento, por favor intente más tarde.",
+			"SERVICE_NOT_AVAILABLE": "Hubo un problema al obtener los conceptos. Por favor, intente más tarde o contacte con el administrador.",
+			"ERROR_MESSAGE_DESCRIPTION": "Mensaje",
 			"CONCEPTS_COULD_NOT_BE_OBTAINED": "Los conceptos de SNOMED no pudieron ser obtenidos."
 		},
 		"factores-de-riesgo-form": {

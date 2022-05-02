@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class SharedSnomedDto implements Serializable {
 
     private static final long serialVersionUID = -198432836028268437L;
-
+    
     private String sctid;
 
     private String pt;

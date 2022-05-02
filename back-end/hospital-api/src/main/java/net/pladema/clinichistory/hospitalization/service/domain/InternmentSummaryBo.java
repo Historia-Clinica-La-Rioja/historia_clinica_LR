@@ -34,10 +34,6 @@ public class InternmentSummaryBo {
     
     private String sectorSpecialty;
 
-    private Integer clinicalSpecialtyId;
-
-    private String specialty;
-
     private LocalDateTime entryDate;
 
     private LocalDateTime dischargeDate;
@@ -57,8 +53,6 @@ public class InternmentSummaryBo {
         this.roomNumber = internmentSummaryVo.getRoomNumber();
         this.sectorDescription = internmentSummaryVo.getSectorDescription();
         this.sectorSpecialty = internmentSummaryVo.getSectorSpecialty();
-        this.clinicalSpecialtyId = internmentSummaryVo.getClinicalSpecialtyId();
-        this.specialty = internmentSummaryVo.getSpecialty();
         this.entryDate = internmentSummaryVo.getEntryDate();
         if (internmentSummaryVo.getDoctor() != null)
             this.doctor = new ResponsibleDoctorBo(internmentSummaryVo.getDoctor());

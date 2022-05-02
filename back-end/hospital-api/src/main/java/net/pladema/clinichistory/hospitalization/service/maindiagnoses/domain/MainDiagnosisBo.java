@@ -15,6 +15,8 @@ import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -31,6 +33,8 @@ public class MainDiagnosisBo extends SelfValidating<MainDiagnosisBo> implements 
     private Integer encounterId;
 
     private Integer institutionId;
+
+	private LocalDateTime performedDate;
 
     @NotNull
     private DocumentObservationsBo notes;

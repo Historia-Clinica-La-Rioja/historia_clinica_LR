@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Mapper
@@ -42,9 +43,9 @@ public class ListMedicationInfoMapper {
         return result;
     }
 
-    private int calculateTotalDays(LocalDate dosageStartDate, LocalDate medicationStartDate){
+    private int calculateTotalDays(LocalDateTime dosageStartDate, LocalDate medicationStartDate){
         if (dosageStartDate != null)
-            return (int) ChronoUnit.DAYS.between(dosageStartDate, LocalDate.now());
+            return (int) ChronoUnit.DAYS.between(dosageStartDate.toLocalDate(), LocalDate.now());
         return (int) ChronoUnit.DAYS.between(medicationStartDate, LocalDate.now());
     }
 

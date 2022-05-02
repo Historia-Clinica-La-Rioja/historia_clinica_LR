@@ -17,6 +17,9 @@
 			<mat-spinner diameter="70" color="primary" *ngIf="searching && !snowstormServiceNotAvailable"></mat-spinner>
 		</div>
 		<div *ngIf="snowstormServiceNotAvailable">
+			<div style="padding-bottom: 1em">
+				<span style="font-weight: bold; padding-bottom: 2em" [translate]="'historia-clinica.snowstorm.ERROR_MESSAGE_DESCRIPTION'"></span>: {{snowstormServiceErrorMessage}}
+			</div>
 			<span [translate]="'historia-clinica.snowstorm.SERVICE_NOT_AVAILABLE'"> </span>
 		</div>
 		<app-table *ngIf="!searching && !snomedConcept" [model]="conceptsResultsTable"

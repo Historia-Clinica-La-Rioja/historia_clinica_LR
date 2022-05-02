@@ -10,7 +10,7 @@ import net.pladema.permissions.service.dto.RoleAssignment;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 /**
  * Esta clase adapta un RoleAssignment para que cumpla con la
  * interfaz GrantedAuthority. El contexto de seguridad guarda una

@@ -39,7 +39,6 @@ export class MapperService {
 			bedNumber: internmentSummary.bed.bedNumber,
 			roomNumber: internmentSummary.bed.room.roomNumber,
 			sectorDescription: internmentSummary.bed.room.sector.description,
-			episodeSpecialtyName: internmentSummary.specialty.name,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor: null,
 			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE),

@@ -1,0 +1,196 @@
+<mat-dialog-content class="dialog">
+
+	<div fxLayout="row" fxLayoutAlign="end end">
+		<button matSuffix mat-icon-button [mat-dialog-close]>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<div mat-dialog-title fxLayout="row">
+		<div class="title" class="capitalize-first-letter" [translate]="'indicacion.internment-card.dialogs.other-indication.TITLE'"></div>
+	</div>
+
+	<form [formGroup]="form" (ngSubmit)="submit()" fxLayout="column">
+
+		<mat-form-field appearance="outline">
+
+			<mat-label [translate]="'indicacion.internment-card.dialogs.other-indication.SELECTION-TYPE-INDICATION'"></mat-label>
+
+			<mat-select id="indication-type" formControlName="indicationType">
+				<mat-option *ngFor="let type of othersIndicatiosType" [value]="type.id">
+					{{type.description | translate}}
+				</mat-option>
+			</mat-select>
+
+			<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+			<button id="clear-indication-type" type="button" mat-button matSuffix
+				*ngIf="form.value.indicationType" color="warn" mat-icon-button
+				(click)="clearFilterField(form.controls.indicationType); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
+
+		</mat-form-field>
+
+		<ng-container *ngIf="form.value.indicationType==OtherIndication">
+			<mat-form-field appearance="outline">
+				<input matInput type="text" id="indication-input" formControlName="indication"
+					placeholder="{{'indicacion.internment-card.dialogs.other-indication.INDICATION' | translate}}">
+				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+			</mat-form-field>
+		</ng-container>
+
+		<mat-form-field [floatLabel]="'never'" appearance="outline">
+			<textarea matInput type="text" id="note-input" formControlName="note"
+				placeholder="{{'indicacion.internment-card.dialogs.other-indication.NOTE' | translate}}"></textarea>
+			<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+		</mat-form-field>
+
+		<div mat-dialog-title>
+			<div class="title" class="capitalize-first-letter" [translate]="'indicacion.internment-card.dialogs.other-indication.FREQUENCY'">
+				{{'indicacion.internment-card.dialogs.other-indication.FREQUENCY' | translate | titlecase}}
+			</div>
+		</div>
+
+		<div fxLayout="column" fxLayoutGap="15px">
+			<mat-radio-group formControlName="frequencyOption" fxLayoutGap="10px" aria-label="Select an frequencyOption" fxLayout="column"
+				class="radio-group">
+
+				<mat-radio-button [value]="DEFAULT_RADIO_OPTION">
+					{{'indicacion.internment-card.dialogs.other-indication.frequencyOption.UNSPECIFIED' | translate}}</mat-radio-button>
+				<mat-radio-button value=1>{{'indicacion.internment-card.dialogs.other-indication.frequencyOption.INTERVALS' | translate}}
+				</mat-radio-button>
+				<mat-radio-button value=2>{{'indicacion.internment-card.dialogs.other-indication.frequencyOption.ONCE' | translate}}
+				</mat-radio-button>
+				<mat-radio-button value=3>{{'indicacion.internment-card.dialogs.other-indication.frequencyOption.AFTER-EVENT' | translate}}
+				</mat-radio-button>
+
+			</mat-radio-group>
+		</div>
+
+		<div class="container" [ngSwitch]="form.controls.frequencyOption.value">
+
+			<div *ngSwitchCase="'1'" fxLayout="column" fxLayoutGap="15px">
+
+				<div fxLayout="row" appearance="outline">
+
+					<mat-form-field fxFlex="40%" appearance="outline">
+
+						<mat-label [translate]="'indicacion.internment-card.dialogs.other-indication.INTERVAL'"></mat-label>
+
+						<mat-select id="interval" formControlName="interval">
+							<mat-option *ngFor="let interval of intervals" [value]="interval">
+								<ng-container *ngIf="interval==otherFrequency.value; else other">
+									<span> {{'indicacion.internment-card.dialogs.other-indication.OTHER-FREQUENCY' |
+										translate}}</span>
+								</ng-container>
+
+								<ng-template #other>
+									<span> {{'indicacion.internment-card.dialogs.other-indication.EVERY' |
+										translate}} </span>
+									{{interval | translate}} hs.
+								</ng-template>
+							</mat-option>
+						</mat-select>
+
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+						<button id="clear-interval" type="button" mat-button matSuffix
+							*ngIf="form.controls.interval.value" color="warn" mat-icon-button
+							(click)="clearFilterField(form.controls.interval); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+
+					<ng-container *ngIf="form.controls.interval.value==otherFrequency.value">
+
+						<span fxFlex="30%" fxLayoutAlign="center center"> {{'indicacion.internment-card.dialogs.other-indication.EVERY' |
+							translate}} </span>
+
+						<mat-form-field fxFlex="30%" appearance="outline">
+
+							<mat-select id="frequencyHour" formControlName="frequencyHour">
+
+								<mat-option *ngFor="let hour of hoursList" [value]="hour">
+									{{hour | translate}}hs.
+								</mat-option>
+							</mat-select>
+
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+							<button id="clear-frequency-hour" type="button" mat-button matSuffix
+								*ngIf="form.controls.frequencyHour.value" color="warn" mat-icon-button
+								(click)="clearFilterField(form.controls.frequencyHour); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+
+						</mat-form-field>
+
+					</ng-container>
+
+				</div>
+
+				<div fxLayout="row">
+					<mat-form-field fxFlex="40%" appearance="outline">
+
+						<mat-label [translate]="'indicacion.internment-card.dialogs.other-indication.START-TIME'"></mat-label>
+						<mat-select id="start-time" formControlName="startTime">
+							<mat-option *ngFor="let time of hoursList" [value]="time">
+								{{time | translate}} hs
+							</mat-option>
+						</mat-select>
+
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+						<button id="clear-start-time" type="button" mat-button matSuffix
+							*ngIf="form.controls.startTime.value" color="warn" mat-icon-button
+							(click)="clearFilterField(form.controls.startTime); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+
+					</mat-form-field>
+				</div>
+
+			</div>
+
+			<div *ngSwitchCase="'2'" fxLayout="row" fxLayoutGap="15px">
+
+				<mat-form-field fxFlex="40%" appearance="outline">
+
+					<mat-label [translate]="'indicacion.internment-card.dialogs.other-indication.START-TIME'"></mat-label>
+					<mat-select id="start-time" formControlName="startTime">
+						<mat-option *ngFor="let time of hoursList" [value]="time">
+							{{time | translate}} hs
+						</mat-option>
+					</mat-select>
+
+					<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+					<button id="clear-start-time" type="button" mat-button matSuffix
+						*ngIf="form.controls.startTime.value" color="warn" mat-icon-button
+						(click)="clearFilterField(form.controls.startTime); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</div>
+
+			<div *ngSwitchCase="'3'" fxLayoutGap="15px">
+				<mat-form-field appearance="outline">
+					<textarea matInput id="event-input" type="text" formControlName="event"
+						placeholder="{{'indicacion.internment-card.dialogs.other-indication.DETAIL-EVENT' | translate }}">
+							</textarea>
+					<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+				</mat-form-field>
+			</div>
+
+		</div>
+		<app-datepicker [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate"
+		[dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
+		<div actions id="button-confirm" fxLayoutAlign="end end">
+			<button mat-raised-button color="primary" id="confirm_button">
+				<span [translate]="'buttons.CONFIRM'"></span>
+			</button>
+		</div>
+	</form>
+</mat-dialog-content>

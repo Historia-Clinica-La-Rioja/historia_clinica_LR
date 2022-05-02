@@ -34,23 +34,23 @@ public class HCEToothRecordStorageImpl implements HCEToothRecordStorage {
         Query query = entityManager.createNativeQuery(
                 "     (SELECT snomed_diagnostic.sctid as snomed_diagnostic_sctid , snomed_diagnostic.pt , " +
                         "           snomed_surface.sctid as snomed_surface_sctid , od.performed_date , od.updated_on " +
-                        "FROM tooth t  " +
-                        "JOIN body_part bp ON (t.sctid = bp.sctid) " +
-                        "JOIN snomed snomed_tooth ON (bp.sctid = snomed_tooth.sctid AND bp.pt = snomed_tooth.pt) " +
-                        "JOIN odontology_diagnostic od ON (snomed_tooth.id = od.tooth_id) " +
-                        "JOIN snomed snomed_diagnostic ON (od.snomed_id = snomed_diagnostic.id) " +
-                        "LEFT JOIN snomed snomed_surface ON (od.surface_id = snomed_surface.id) " +
+                        "FROM {h-schema}tooth t  " +
+                        "JOIN {h-schema}body_part bp ON (t.sctid = bp.sctid) " +
+                        "JOIN {h-schema}snomed snomed_tooth ON (bp.sctid = snomed_tooth.sctid AND bp.pt = snomed_tooth.pt) " +
+                        "JOIN {h-schema}odontology_diagnostic od ON (snomed_tooth.id = od.tooth_id) " +
+                        "JOIN {h-schema}snomed snomed_diagnostic ON (od.snomed_id = snomed_diagnostic.id) " +
+                        "LEFT JOIN {h-schema}snomed snomed_surface ON (od.surface_id = snomed_surface.id) " +
                         "WHERE t.sctid = :toothSctid " +
                         "   AND od.patient_id = :patientId ) " +
                         "UNION " +
                         "(SELECT snomed_procedure.sctid as snomed_procedure_sctid , snomed_procedure.pt , " +
                         "           snomed_surface.sctid as snomed_surface_sctid , op.performed_date , op.updated_on " +
-                        "FROM tooth t  " +
-                        "JOIN body_part bp ON (t.sctid = bp.sctid) " +
-                        "JOIN snomed snomed_tooth ON (bp.sctid = snomed_tooth.sctid AND bp.pt = snomed_tooth.pt) " +
-                        "JOIN odontology_procedure op ON (snomed_tooth.id = op.tooth_id) " +
-                        "JOIN snomed snomed_procedure ON (op.snomed_id = snomed_procedure.id) " +
-                        "LEFT JOIN snomed snomed_surface ON (op.surface_id = snomed_surface.id) " +
+                        "FROM {h-schema}tooth t  " +
+                        "JOIN {h-schema}body_part bp ON (t.sctid = bp.sctid) " +
+                        "JOIN {h-schema}snomed snomed_tooth ON (bp.sctid = snomed_tooth.sctid AND bp.pt = snomed_tooth.pt) " +
+                        "JOIN {h-schema}odontology_procedure op ON (snomed_tooth.id = op.tooth_id) " +
+                        "JOIN {h-schema}snomed snomed_procedure ON (op.snomed_id = snomed_procedure.id) " +
+                        "LEFT JOIN {h-schema}snomed snomed_surface ON (op.surface_id = snomed_surface.id) " +
                         "WHERE t.sctid = :toothSctid " +
                         "   AND op.patient_id = :patientId ) " +
                         "ORDER BY updated_on DESC " );

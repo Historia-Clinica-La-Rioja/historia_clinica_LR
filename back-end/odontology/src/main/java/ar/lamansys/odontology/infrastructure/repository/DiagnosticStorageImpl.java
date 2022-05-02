@@ -32,7 +32,7 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
         String sqlString =
                 "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface, " +
                 "       ad.permanent_c, ad.permanent_p, ad.permanent_o, ad.temporary_c, ad.temporary_e, ad.temporary_o " +
-                "FROM applicable_diagnostic ad " +
+                "FROM {h-schema}applicable_diagnostic ad " +
                 "ORDER BY ad.pt ASC";
 
         Query query = entityManager.createNativeQuery(sqlString);
@@ -54,7 +54,7 @@ public class DiagnosticStorageImpl implements DiagnosticStorage {
         String sqlString =
                 "SELECT ad.sctid, ad.pt, ad.applicable_to_tooth, ad.applicable_to_surface, " +
                 "       ad.permanent_c, ad.permanent_p, ad.permanent_o, ad.temporary_c, ad.temporary_e, ad.temporary_o " +
-                "FROM applicable_diagnostic ad " +
+                "FROM {h-schema}applicable_diagnostic ad " +
                 "WHERE ad.sctid = :sctid ";
 
         Query query = entityManager.createNativeQuery(sqlString)

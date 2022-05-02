@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,17 +19,17 @@ public class HCEMedicationVo extends HCEClinicalTermVo {
 
     private Boolean chronic = false;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private LocalDate suspendedStartDate;
 
     private LocalDate suspendedEndDate;
 
     public HCEMedicationVo(Integer id, Snomed snomed, String statusId, Integer dosageId,
-                           Boolean chronic, LocalDate startDate,
-                           LocalDate endDate, LocalDate suspendedStartDate, LocalDate suspendedEndDate) {
+                           Boolean chronic, LocalDateTime startDate,
+						   LocalDateTime endDate, LocalDate suspendedStartDate, LocalDate suspendedEndDate) {
         super(id, snomed, statusId);
         this.dosageId = dosageId;
         this.chronic = chronic;

@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Seleccione diagnóstico principal</h2>
+<form [formGroup]="form">
+	<mat-radio-group formControlName="diagnoses" fxLayout="column" fxLayoutAlign="space-between start"
+		fxLayoutGap="10px">
+		<mat-radio-button class="diagnosis" color="primary" [value]="currentMainDiagnosis" [checked]="true">{{
+			currentMainDiagnosis.snomed.pt }}</mat-radio-button>
+		<mat-radio-button class="diagnosis" color="primary" *ngFor="let otherDiagnosis of otherDiagnoses"
+			[value]="otherDiagnosis">{{ otherDiagnosis.snomed.pt }}</mat-radio-button>
+	</mat-radio-group>
+</form>
+<mat-dialog-actions align="end">
+	<button mat-raised-button color="primary" (click)="saveNewMainDiagnosis()">CONFIRMAR</button>
+</mat-dialog-actions>

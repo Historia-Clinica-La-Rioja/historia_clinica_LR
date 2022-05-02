@@ -24,6 +24,7 @@ import { map } from 'rxjs/operators';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -55,7 +56,7 @@ export class NewAppointmentComponent implements OnInit {
 	VALIDATIONS = VALIDATIONS;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean
+			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
@@ -90,7 +91,10 @@ export class NewAppointmentComponent implements OnInit {
 		});
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
-			identificationTypes => { this.identifyTypeArray = identificationTypes; });
+			identificationTypes => {
+				this.identifyTypeArray = identificationTypes;
+				this.formSearch.controls.identifType.setValue(IDENTIFICATION_TYPE_IDS.DNI);
+			});
 
 		this.personMasterDataService.getGenders().subscribe(
 			genders => { this.genderOptions = genders; });
@@ -109,9 +113,12 @@ export class NewAppointmentComponent implements OnInit {
 				updateControlValidator(this.formSearch, 'gender', [Validators.required]);
 			});
 		this.appointmentInfoForm.markAllAsTouched();
+
+		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 	}
 
 	search(): void {
+		this.clearQueryParams();
 		this.isFormSubmitted = true;
 		if (this.isFormSearchValid()) {
 			const formSearchValue = this.formSearch.value;
@@ -140,10 +147,10 @@ export class NewAppointmentComponent implements OnInit {
 		}
 	}
 
-	updatePhoneValidators(){
-		if (this.appointmentInfoForm.controls.phoneNumber.value||this.appointmentInfoForm.controls.phonePrefix.value) {
-			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required,Validators.maxLength(20)]);
-			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required,Validators.maxLength(10)]);
+	updatePhoneValidators() {
+		if (this.appointmentInfoForm.controls.phoneNumber.value || this.appointmentInfoForm.controls.phonePrefix.value) {
+			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
+			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
 		} else {
 			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', []);
 			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', []);
@@ -157,9 +164,9 @@ export class NewAppointmentComponent implements OnInit {
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
-				if(reducedPatientDto.personalDataDto.phoneNumber){
-					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required,Validators.maxLength(20)]);
-					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required,Validators.maxLength(10)]);
+				if (reducedPatientDto.personalDataDto.phoneNumber) {
+					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
+					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
 				}
 				this.setMedicalCoverages();
 			}, _ => {
@@ -188,9 +195,10 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {
+		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
 		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
 			.filter(Boolean).join(' - ');
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber].filter(Boolean).join(' / ');
+		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber, condition].filter(Boolean).join(' / ');
 	}
 
 	submit(): void {
@@ -260,7 +268,7 @@ export class NewAppointmentComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(
 			values => {
-				this.appointmentInfoForm.patchValue({patientMedicalCoverage: null});
+				this.appointmentInfoForm.patchValue({ patientMedicalCoverage: null });
 				if (values) {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
@@ -286,5 +294,9 @@ export class NewAppointmentComponent implements OnInit {
 				)
 			)
 			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+	}
+
+	private clearQueryParams() {
+		this.router.navigate([]);
 	}
 }

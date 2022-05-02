@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.NewDosageDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;

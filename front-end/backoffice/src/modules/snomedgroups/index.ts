@@ -8,6 +8,9 @@ const snomedgroups = {
     show: SnomedGroupShow,
     create: SnomedGroupCreate,
     edit: SnomedGroupEdit,
+    options: {
+        submenu: 'masterData'
+    }
 };
 
 export default snomedgroups;

@@ -18,7 +18,9 @@ import {
 	AnamnesisSummaryDto,
 	EpicrisisSummaryDto,
 	PersonPhotoDto,
-	InternmentEpisodeProcessDto
+	InternmentEpisodeProcessDto,
+	DiagnosisDto,
+	HealthConditionDto
 } from '@api-rest/api-model';
 
 import { AppFeature } from '@api-rest/api-model';
@@ -70,6 +72,8 @@ export class InternacionPacienteComponent implements OnInit {
 	private routePrefix;
 	@Input() internmentEpisodeInfo: InternmentEpisodeProcessDto;
 	internmentEpisodeId: number;
+	mainDiagnosis: HealthConditionDto;
+	diagnosticos: DiagnosisDto[];
 
 	constructor(
 		private patientService: PatientService,
@@ -164,6 +168,8 @@ export class InternacionPacienteComponent implements OnInit {
 				},
 				autoFocus: false,
 				disableClose: true,
+				mainDiagnosis: this.mainDiagnosis,
+				diagnosticos: this.diagnosticos
 			});
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
@@ -183,6 +189,8 @@ export class InternacionPacienteComponent implements OnInit {
 				internmentEpisodeId: this.internmentEpisodeId,
 				autoFocus: false,
 				disableClose: true,
+				mainDiagnosis: this.mainDiagnosis,
+				diagnosticos: this.diagnosticos
 			});
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;

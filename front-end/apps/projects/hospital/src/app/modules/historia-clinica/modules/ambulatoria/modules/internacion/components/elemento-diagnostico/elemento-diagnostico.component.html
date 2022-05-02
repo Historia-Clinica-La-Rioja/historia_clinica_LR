@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+	<div class="diagnosis-text" fxLayout="row" fxLayoutGap="10px">
+		<mat-checkbox id="{{ diagnosis.snomed.pt }}" [checked]="diagnosis.isAdded" [disabled]="isMain" (change)="diagnosis.isAdded = $event.checked"></mat-checkbox>
+		<strong class="capitalize">{{ diagnosis.snomed.pt }}</strong>
+	</div>
+	<span [translate]="'internaciones.anamnesis.diagnosticos.ACTIVE'"></span>
+	<span *ngIf="diagnosis.presumptive else confirmedDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
+	<ng-template #confirmedDiagnosis>
+		<span [translate]="'internaciones.anamnesis.diagnosticos.CONFIRMED'"></span>
+	</ng-template>
+	<button mat-icon-button color="primary" (click)="openDiagnosisEditionDialog()" [disabled]="isMain">
+        <mat-icon>edit</mat-icon>
+      </button>
+</div>

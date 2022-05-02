@@ -21,6 +21,7 @@ export class MedicacionesNuevaConsultaService {
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: Medicacion[];
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+	private readonly ECL = SnomedECL.MEDICINE;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -117,7 +118,7 @@ export class MedicacionesNuevaConsultaService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.MEDICINE
+				eclFilter: this.ECL
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
@@ -146,5 +147,9 @@ export class MedicacionesNuevaConsultaService {
 
 	getState(suspendido :boolean ): string{
 		return suspendido?'Suspendido':'Activo'
+	}
+
+	getECL(): SnomedECL {
+		return this.ECL;
 	}
 }

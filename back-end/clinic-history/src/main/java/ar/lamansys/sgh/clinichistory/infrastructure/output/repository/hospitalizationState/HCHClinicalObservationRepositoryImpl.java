@@ -39,10 +39,10 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "            ovs.status_id, " +
                 "            ovs.value, " +
                 "            ovs.effective_time " +
-                "    FROM document d " +
-                "    JOIN document_vital_sign dvs ON (d.id = dvs.document_id) " +
-                "    JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
-                "    JOIN snomed s ON (ovs.snomed_id = s.id) " +
+                "    FROM {h-schema}document d " +
+                "    JOIN {h-schema}document_vital_sign dvs ON (d.id = dvs.document_id) " +
+                "    JOIN {h-schema}observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
+                "    JOIN {h-schema}snomed s ON (ovs.snomed_id = s.id) " +
                 "    WHERE source_id = :internmentEpisodeId " +
                 "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "          AND d.status_id = :statusId " +
@@ -52,10 +52,10 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "            ovs.status_id, " +
                 "            ovs.value, " +
                 "            ovs.effective_time " +
-                "    FROM document d " +
-                "    JOIN document_lab dl ON (d.id = dl.document_id) " +
-                "    JOIN observation_lab ovs ON (dl.observation_lab_id = ovs.id) " +
-                "    JOIN snomed s ON (ovs.snomed_id = s.id) " +
+                "    FROM {h-schema}document d " +
+                "    JOIN {h-schema}document_lab dl ON (d.id = dl.document_id) " +
+                "    JOIN {h-schema}observation_lab ovs ON (dl.observation_lab_id = ovs.id) " +
+                "    JOIN {h-schema}snomed s ON (ovs.snomed_id = s.id) " +
                 "    WHERE source_id = :internmentEpisodeId " +
                 "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "          AND d.status_id = :statusId " +

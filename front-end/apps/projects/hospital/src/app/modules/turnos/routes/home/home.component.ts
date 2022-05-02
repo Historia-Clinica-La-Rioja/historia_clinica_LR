@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	idProfesional: number;
 	idEspecialidad: number;
-
+	patientId: number;
 	agendaFiltersSubscription: Subscription;
 
 	constructor(
@@ -49,6 +49,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+
+		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
+
 		this.healthCareProfessionalService.getAll().subscribe(doctors => {
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 
@@ -107,7 +110,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.idProfesional = result?.id;
 		this.agendaSearchService.search(this.idProfesional);
 		if (!result) {
-			this.router.navigateByUrl(this.routePrefix);
+			if (this.patientId) {
+				this.router.navigate([`${this.routePrefix}`], { queryParams: { idPaciente: this.patientId } });
+			} else {
+				this.router.navigate([`${this.routePrefix}`]);
+			}
+
 		}
 	}
 

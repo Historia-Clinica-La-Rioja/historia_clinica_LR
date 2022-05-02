@@ -53,13 +53,13 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     public Optional<FormVOutpatientVo> getConsultationFormVInfo(Long documentId) {
         String query = "WITH t AS (" +
                 "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id " +
-                "       FROM document AS d " +
-                "       JOIN outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)" +
+                "       FROM {h-schema}document AS d " +
+                "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)" +
                 "       WHERE d.id = :documentId " +
                 "       UNION ALL " +
                 "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id " +
-                "       FROM document AS d " +
-                "       JOIN vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
+                "       FROM {h-schema}document AS d " +
+                "       JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
                 "       WHERE d.id = :documentId " +
                 "       )" +
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
@@ -67,20 +67,20 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "              t.start_date, prob.descriptions as problems, "+
                 "              ad.street, ad.number, ci.description as city, i.sisa_code, prob.cie10Codes as cie10Codes"+
                 "       FROM t "+
-                "           JOIN Institution AS i ON (t.institution_id = i.id) " +
-                "           JOIN Patient AS pa ON (t.patient_id = pa.id) " +
-                "           LEFT JOIN Person AS pe ON (pe.id = pa.person_id) " +
-                "           LEFT JOIN Person_extended AS pex ON (pe.id = pex.person_id) " +
-                "           LEFT JOIN Address AS ad ON (pex.address_id = ad.id) " +
-                "           LEFT JOIN City AS ci ON (ad.city_id = ci.id) " +
-                "           LEFT JOIN Identification_type AS it ON (it.id = pe.identification_type_id) " +
-                "           LEFT JOIN Gender AS g ON (pe.gender_id = g.id) " +
+                "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
+                "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+                "           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
+                "           LEFT JOIN {h-schema}Person_extended AS pex ON (pe.id = pex.person_id) " +
+                "           LEFT JOIN {h-schema}Address AS ad ON (pex.address_id = ad.id) " +
+                "           LEFT JOIN {h-schema}City AS ci ON (ad.city_id = ci.id) " +
+                "           LEFT JOIN {h-schema}Identification_type AS it ON (it.id = pe.identification_type_id) " +
+                "           LEFT JOIN {h-schema}Gender AS g ON (pe.gender_id = g.id) " +
                 "           LEFT JOIN ( " +
                 "               SELECT dhc.document_id, STRING_AGG(sno.pt, '| ') as descriptions, " +
                 "                      STRING_AGG((CASE WHEN hc.cie10_codes IS NULL THEN '-' ELSE hc.cie10_codes END), '| ') as cie10Codes " +
-                "               FROM document_health_condition dhc " +
-                "               JOIN health_condition hc ON (dhc.health_condition_id = hc.id) " +
-                "               JOIN snomed sno ON (hc.snomed_id = sno.id) " +
+                "               FROM {h-schema}document_health_condition dhc " +
+                "               JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
+                "               JOIN {h-schema}snomed sno ON (hc.snomed_id = sno.id) " +
                 "               WHERE hc.problem_id IN (:problemTypes)  " +
                 "               GROUP BY dhc.document_id " +
                 "            ) prob ON (t.doc_id = prob.document_id)";

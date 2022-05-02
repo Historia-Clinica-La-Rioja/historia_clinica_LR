@@ -31,9 +31,10 @@ public class BedDataRepositoryImpl implements BedDataRepository {
         LOG.debug("Input parameters -> filter {}", filter);
 
         String sqlString2 = "SELECT bc.id, bc.description, COUNT(CASE WHEN b.free THEN 1 END) as libres, COUNT(CASE WHEN NOT b.free THEN 1 END) as ocupadas" +
-                " FROM bed b JOIN bed_category bc ON bc.id = b.bed_category_id " +
+                " FROM {h-schema}bed b " +
+				"JOIN {h-schema}bed_category bc ON bc.id = b.bed_category_id " +
                 (filter.getSectorDescription() != null ? "JOIN room r ON b.room_id = r.id " +
-                " JOIN sector s ON r.sector_id = s.id " : "") +
+                " JOIN {h-schema}sector s ON r.sector_id = s.id " : "") +
                 (filter.getSectorDescription() != null ?
                 " WHERE UPPER(s.description) LIKE :sectorDescription " : "")  +
                 " GROUP BY bc.id, bc.description ORDER BY bc.id";

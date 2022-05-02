@@ -21,7 +21,8 @@ public class DeletedHealthcareProfessionalSpecialtyRepositoryImpl {
             Integer clinicalSpecialtyId,
             Integer professionalSpecialtyId) {
         String sqlString = "SELECT hps.id, hps.healthcare_professional_id," +
-                "hps.professional_specialty_id, hps.clinical_specialty_id, hps.deleted FROM healthcare_professional_specialty  hps " +
+                "hps.professional_specialty_id, hps.clinical_specialty_id, hps.deleted " +
+				"FROM {h-schema}healthcare_professional_specialty  hps " +
                 " WHERE hps.healthcare_professional_id = :healthcareProfessionalId " +
                 " AND hps.clinical_specialty_id = :clinicalSpecialtyId " +
                 " AND hps.professional_specialty_id = :professionalSpecialtyId ";

@@ -49,6 +49,10 @@ section {
 	text-transform: uppercase;
 }
 
+.lowercase {
+	text-transform: lowercase;
+}
+
 @media (max-width: $mobile-popups) {
 	div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 		width: 100% !important;

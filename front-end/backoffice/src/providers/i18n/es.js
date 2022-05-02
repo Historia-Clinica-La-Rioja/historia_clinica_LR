@@ -2,6 +2,16 @@ import spanishMessages from '@blackbox-vision/ra-language-spanish';
 
 const messages = {
     ...spanishMessages,
+    app: {
+        menu: {
+            staff: 'Planta',
+            facilities: 'Instalaciones',
+            debug: 'Inspeccionar',
+            masterData: 'Datos maestros',
+            more: 'Mas',
+
+        },
+    },
     bo: {
         login: {
             redirect: {

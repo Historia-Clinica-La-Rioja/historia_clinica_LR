@@ -130,6 +130,8 @@ public class HealthConditionService {
         healthCondition.setProblemId(ProblemType.DIAGNOSIS);
         if (info.isPresumptive())
             healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
+		else
+			healthCondition.setVerificationStatusId(ConditionVerificationStatus.CONFIRMED);
         updateStatusAndVerification(healthCondition, info);
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;

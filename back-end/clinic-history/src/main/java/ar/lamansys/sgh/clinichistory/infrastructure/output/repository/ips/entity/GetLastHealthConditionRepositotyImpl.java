@@ -28,8 +28,8 @@ public class GetLastHealthConditionRepositotyImpl implements GetLastHealthCondit
         String sqlString = "WITH temporal AS ( " +
                 "SELECT hc2.id AS originalHc, hc.id AS updatedHc, hc.status_id AS statusId, " +
                 "row_number() OVER (PARTITION by hc.snomed_id ORDER BY hc.updated_on desc) AS rw " +
-                "FROM health_condition as hc " +
-                "JOIN health_condition hc2 ON (hc.snomed_id=hc2.snomed_id)" +
+                "FROM {h-schema}health_condition as hc " +
+                "JOIN {h-schema}health_condition hc2 ON (hc.snomed_id=hc2.snomed_id)" +
                 "WHERE hc.patient_id = :patientId " +
                 "AND hc2.id IN :hcIds" +
                 ") " +

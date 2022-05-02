@@ -12,6 +12,7 @@ import { hasError } from '@core/utils/form.utils';
 export class ConceptsSearchComponent implements OnInit {
 
 	@Input() label = '';
+	@Input() hideIcon = false;
 	@Output() search = new EventEmitter<string>();
 
 	readonly MIN_LENGTH = 3;

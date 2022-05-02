@@ -76,7 +76,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	severityTypes: any[];
 	criticalityTypes: any[];
 	minDate = MIN_DATE;
-	public ffIsOn: boolean;
+	public reportFFIsOn: boolean;
+	searchConceptsLocallyFFIsOn = false;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
 	@ViewChild('errorsView') errorsView: ElementRef;
 
@@ -138,7 +139,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 
 		this.formEvolucion = this.formBuilder.group({
-			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			evolucion: [null, null],
 			clinicalSpecialty: [null, [Validators.required]],
 		});
 
@@ -199,7 +200,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => this.ffIsOn = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => this.reportFFIsOn = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
 	}
 
 

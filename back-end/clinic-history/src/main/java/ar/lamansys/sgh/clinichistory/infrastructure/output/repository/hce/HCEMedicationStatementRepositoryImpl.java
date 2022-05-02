@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +32,9 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 "SELECT DISTINCT " +
                 "ms.id, ms.snomed_id, ms.status_id, ms.updated_on, ms.dosage_id, " +
                 "row_number() OVER (PARTITION by ms.snomed_id ORDER BY ms.updated_on desc) AS rw " +
-                "FROM document d " +
-                "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
-                "JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
+                "FROM {h-schema}document d " +
+                "JOIN {h-schema}document_medicamention_statement dms ON d.id = dms.document_id " +
+                "JOIN {h-schema}medication_statement ms ON dms.medication_statement_id = ms.id " +
                 "WHERE ms.patient_id = :patientId  " +
                 "AND d.type_id IN (:documentTypes) "+
                 "AND d.status_id = :documentStatusId " +
@@ -41,8 +42,8 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 "SELECT t.id AS id, s.sctid AS sctid, s.pt, status_id,  " +
                 "d.id AS d_id, d.chronic, d.start_date, d.end_date, d.suspended_start_date, d.suspended_end_date " +
                 "FROM temporal t " +
-                "JOIN snomed s ON t.snomed_id = s.id " +
-                "LEFT JOIN dosage d ON (t.dosage_id = d.id) " +
+                "JOIN {h-schema}snomed s ON t.snomed_id = s.id " +
+                "LEFT JOIN {h-schema}dosage d ON (t.dosage_id = d.id) " +
                 "WHERE rw = 1 AND status_id IN (:medicationStatusId) " +
                 "ORDER BY t.updated_on";
 
@@ -60,8 +61,8 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                         (String)m[3],
                         (Integer)m[4],
                         (Boolean)m[5],
-                        m[6] != null ? ((Date) m[6]).toLocalDate() : null,
-                        m[7] != null ? ((Date) m[7]).toLocalDate() : null,
+                        m[6] != null ? ((Timestamp) m[6]).toLocalDateTime() : null,
+                        m[7] != null ? ((Timestamp) m[7]).toLocalDateTime() : null,
                         m[8] != null ? ((Date) m[8]).toLocalDate() : null,
                         m[9] != null ? ((Date) m[9]).toLocalDate() : null
                 ))

@@ -20,6 +20,7 @@ export class AlergiasNuevaConsultaService {
 	private data: Alergia[] = [];
 	private snomedConcept: SnomedDto;
 	private criticalityTypes: any[];
+	private readonly ECL = SnomedECL.ALLERGY;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -140,11 +141,15 @@ export class AlergiasNuevaConsultaService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.ALLERGY
+				eclFilter: this.ECL
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
 		}
+	}
+
+	getECL(): SnomedECL {
+		return this.ECL;
 	}
 
 }

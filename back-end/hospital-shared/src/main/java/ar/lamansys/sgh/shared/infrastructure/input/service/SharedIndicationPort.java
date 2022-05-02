@@ -8,5 +8,17 @@ public interface SharedIndicationPort {
 
 	Integer addDiet(DietDto dietDto);
 
+	Integer addOtherIndication(OtherIndicationDto otherIndicationDto);
+
+	Integer addPharmaco(PharmacoDto pharmacoDto);
+
+	Integer addParenteralPlan(ParenteralPlanDto parenteralPlanDto);
+
+	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
+
+	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId);
+
+	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
+
 	void saveDocument(Long id, Integer indicationId);
 }

@@ -41,11 +41,11 @@ public class VaccineStorageImpl implements VaccineStorage {
                 "       vs.minimum_threshold_days AS scheme_minimum_threshold_days, vs.maximum_threshold_days AS scheme_maximum_threshold_days, " +
                 "       vr.minimum_threshold_days AS rule_minimum_threshold_days, vr.maximum_threshold_days AS rule_maximum_threshold_days, " +
                 "       vr.time_between_doses_days " +
-                "FROM vaccine_nomivac_rule vr " +
-                "JOIN vaccine v ON (v.sisa_code = vr.sisa_code) " +
-                "JOIN vaccine_condition_application vca ON (vca.id = vr.condition_application_id) " +
-                "JOIN vaccine_scheme vs ON (vs.id = vr.scheme_id) " +
-                "JOIN nomivac_snomed_map nsm ON (nsm.sisa_code = v.sisa_code) " +
+                "FROM {h-schema}vaccine_nomivac_rule vr " +
+                "JOIN {h-schema}vaccine v ON (v.sisa_code = vr.sisa_code) " +
+                "JOIN {h-schema}vaccine_condition_application vca ON (vca.id = vr.condition_application_id) " +
+                "JOIN {h-schema}vaccine_scheme vs ON (vs.id = vr.scheme_id) " +
+                "JOIN {h-schema}nomivac_snomed_map nsm ON (nsm.sisa_code = v.sisa_code) " +
                 "WHERE nsm.sctid = :sctid ";
 
         List<Object[]> rows = entityManager.createNativeQuery(sqlString)
