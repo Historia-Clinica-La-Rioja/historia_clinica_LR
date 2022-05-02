@@ -128,6 +128,7 @@ public class InternmentEpisodeController {
     }
 
 	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
 	@PostMapping("/{internmentEpisodeId}/medicaldischarge")
 	public ResponseEntity<PatientDischargeDto> medicalDischargeInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,
@@ -145,6 +146,7 @@ public class InternmentEpisodeController {
 	}
     
 	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	@PostMapping("/{internmentEpisodeId}/administrativedischarge")
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,
