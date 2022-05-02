@@ -152,6 +152,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			if (pharmaco) {
 				this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
 					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
+					this.indicationsFacadeService.updateIndication({ pharmaco: true });
 				},
 					error => {
 						error?.text ?

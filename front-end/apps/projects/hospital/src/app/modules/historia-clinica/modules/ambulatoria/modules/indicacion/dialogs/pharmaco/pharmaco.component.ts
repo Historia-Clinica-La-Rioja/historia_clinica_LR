@@ -47,8 +47,7 @@ export class PharmacoComponent implements OnInit {
 	SOLVENT_UNIT = "ml";
 	EVENT = "e";
 	HOURS = "h";
-
-
+	DOSAGE = "d";
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, diagnostics: DiagnosesGeneralStateDto[] },
 		private readonly dialogRef: MatDialogRef<PharmacoComponent>,
@@ -197,18 +196,18 @@ export class PharmacoComponent implements OnInit {
 		}
 	}
 
-	private toDosageDto(quantity: QuantityDto): NewDosageDto {
+	private toDosageDto(quantity: QuantityDto, periodUnit: string): NewDosageDto {
 		return {
-			frequency: this.form.controls.frequencyOption.value,
+			frequency: this.form.controls.interval.value,
 			diary: true,
 			chronic: true,
 			duration: 0,
-			periodUnit: (this.form.controls?.event) ? this.EVENT : this.HOURS,
+			periodUnit: (this.form.controls?.event.value) ? this.EVENT : this.HOURS,
 			event: this.form.controls?.event.value,
 			startDateTime: (this.form.controls?.startTime) ? {
 				date: dateToDateDto(this.indicationDate),
 				time: {
-					hours: this.form.controls.startTime.value,
+					hours: (this.form.controls?.startTime?.value) ? this.form.controls.startTime.value : 0,
 					minutes: 0
 				}
 			} : null,
@@ -233,13 +232,13 @@ export class PharmacoComponent implements OnInit {
 			dosage: this.toDosageDto({
 				unit: this.form.controls.unit.value,
 				value: this.form.controls.dosage.value
-			}),
+			}, (this.form.controls?.event.value) ? this.EVENT : this.HOURS),
 			solvent: (this.form.controls.hasSolvent.value && this.searchSnomedConcept?.solventSnomedConcept) ? {
 				snomed: this.toSharedSnomedDto(this.searchSnomedConcept?.solventSnomedConcept),
 				dosage: this.toDosageDto({
 					unit: this.SOLVENT_UNIT,
 					value: this.form.controls.dosageSolvent.value
-				})
+				}, this.DOSAGE)
 			} : null,
 			healthConditionId: this.form.value.diagnoses,
 			foodRelationId: this.form.controls.foodRelation.value,
@@ -255,6 +254,8 @@ export class PharmacoComponent implements OnInit {
 
 	save() {
 		if (this.isValidForm()) {
+			if (this.form.controls.frequencyHour?.value)
+				this.form.controls.interval.setValue(this.form.controls.frequencyHour.value);
 			const pharmacoDto = this.toPharmacoDto();
 			const pharmacoDate = dateDtoToDate(pharmacoDto.indicationDate);
 			if (!isToday(pharmacoDate) && isSameDay(pharmacoDate, this.data.actualDate)) {
