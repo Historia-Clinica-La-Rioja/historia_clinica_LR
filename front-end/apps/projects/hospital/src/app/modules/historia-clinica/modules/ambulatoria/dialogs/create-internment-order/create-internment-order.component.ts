@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
+import { ApiErrorDto, PrescriptionDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
@@ -8,6 +9,8 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
+import { InternmentOrderService } from "@api-rest/services/internment-order.service";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 @Component({
   selector: 'app-create-order',
@@ -30,11 +33,13 @@ export class CreateInternmentOrderComponent implements OnInit {
 	orderStudiesService: OrderStudiesService;
 
   	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number },
+		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number, patientId: number },
   		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly internmentStateService: InternmentStateService,
+		private readonly internmentOrderService: InternmentOrderService,
+		private readonly snackBarService: SnackBarService,
 	) {
   		this.orderStudiesService = new OrderStudiesService();
 	}
@@ -108,9 +113,9 @@ export class CreateInternmentOrderComponent implements OnInit {
 			conceptsToLoad = [
 				{
 					snomed: {
-						sctid: this.selectedStudy.data.sctid,
+						sctid: this.selectedStudy.data.conceptId,
 						pt: this.selectedStudy.data.pt.term
-					} 
+					}
 				}
 			];
 		}
@@ -129,4 +134,38 @@ export class CreateInternmentOrderComponent implements OnInit {
 		return this.form.controls.notes.value;
 	}
 
+	confirmOrder() {
+		const newInternmentOrder: PrescriptionDto = {
+			medicalCoverageId: null,
+			hasRecipe: true,
+			items: this.orderStudiesService.getStudies().map(study => {
+				return {
+					healthConditionId: this.form.controls.healthProblem.value.id,
+					observations: this.form.controls.notes.value,
+					snomed: study.snomed,
+					categoryId: this.form.controls.studyCategory.value,
+				};
+			})
+		};
+		this.saveInternmentOrder(newInternmentOrder);
+	}
+
+	private saveInternmentOrder(newInternmentOrder: PrescriptionDto) {
+		this.internmentOrderService.create(this.data.patientId, newInternmentOrder).subscribe(prescriptionRequestResponse => {
+				this.closeModal({ prescriptionDto: newInternmentOrder, prescriptionRequestResponse: prescriptionRequestResponse });
+			},
+			(err: ApiErrorDto) => {
+				this.snackBarService.showError(err.errors[0]);
+			});
+	}
+
+	private closeModal(newInternmentOrder: NewInternmentOrder): void {
+		this.dialogRef.close(newInternmentOrder);
+	}
+
+}
+
+export class NewInternmentOrder {
+	prescriptionDto: PrescriptionDto;
+	prescriptionRequestResponse: number | number[];
 }

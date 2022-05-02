@@ -94,14 +94,14 @@
 		<div class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
 
 		<div class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
-	
+
 		<div class="detail-text"> {{ getNotesDisplayText() }} </div>
 
 	</div>
 
 	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" style="padding-bottom: 30px">
 
-		<button mat-flat-button color="primary">
+		<button mat-flat-button color="primary" (click)="confirmOrder()">
 			<span class="uppercase"> {{'ambulatoria.paciente.internment-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
 		</button>
 
