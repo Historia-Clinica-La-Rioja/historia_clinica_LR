@@ -16,6 +16,11 @@ import { VerResultadosEstudioComponent } from '../../dialogs/ordenes-prescripcio
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
 import { PrescriptionItemData } from '../../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
 import { CompletarEstudioComponent } from '../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
+import {
+	CreateInternmentOrderComponent,
+	NewInternmentOrder
+} from "@historia-clinica/modules/ambulatoria/dialogs/create-internment-order/create-internment-order.component";
+import {InternmentPatientService} from "@api-rest/services/internment-patient.service";
 
 @Component({
   selector: 'app-card-estudios',
@@ -29,6 +34,7 @@ export class CardEstudiosComponent implements OnInit {
 	public diagnosticReportsInfo: DiagnosticReportInfoDto[];
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
+	private internmentEpisodeInProgressId;
 
 	@Input() patientId: number;
 
@@ -56,6 +62,7 @@ export class CardEstudiosComponent implements OnInit {
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
+		private readonly internmentPatientService: InternmentPatientService,
 	) { }
 
 	ngOnInit(): void {
@@ -72,6 +79,9 @@ export class CardEstudiosComponent implements OnInit {
 			this.categories = categories;
 		});
 
+		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisodeInProgress => {
+			this.internmentEpisodeInProgressId = internmentEpisodeInProgress.id;
+		})
 	}
 
 	private getStudy(): void {
@@ -84,6 +94,37 @@ export class CardEstudiosComponent implements OnInit {
 													this.formFilter.controls.categoryId.value )
 			.subscribe((response: DiagnosticReportInfoDto[]) => {
 						this.diagnosticReportsInfo = response;
+		});
+	}
+
+	patientHasInternmentEpisodeInProgress(): boolean {
+		return this.internmentEpisodeInProgressId;
+	}
+
+	openNewInternmentOrderDialog() {
+		const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
+			{
+				width: '28%',
+				data: { internmentEpisodeId: this.internmentEpisodeInProgressId, patientId: this.patientId },
+			})
+
+		newOrderComponent.afterClosed().subscribe((newInternmentOrder: NewInternmentOrder) => {
+			if (newInternmentOrder) {
+				this.dialog.open(ConfirmarPrescripcionComponent,
+					{
+						disableClose: true,
+						data: {
+							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+							downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+							prescriptionType: PrescriptionTypes.STUDY,
+							patientId: this.patientId,
+							prescriptionRequest: newInternmentOrder.prescriptionRequestResponse,
+						},
+						width: '35%',
+					});
+				this.getStudy();
+			}
 		});
 	}
 

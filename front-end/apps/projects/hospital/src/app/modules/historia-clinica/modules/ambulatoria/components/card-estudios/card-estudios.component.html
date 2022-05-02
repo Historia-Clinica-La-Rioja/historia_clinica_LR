@@ -5,9 +5,21 @@
     <app-no-data></app-no-data>
 </ng-template>
 <app-summary-card id="estudios" [header]="estudios"
-                                [editable]="true"
                                 [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-								(openInNew)="openDialogNewStudy()">
+								[matMenu]="newPrescriptionMenu"
+								[menu]="true">
+
+	<mat-menu #newPrescriptionMenu="matMenu">
+		<ng-container>
+			<button mat-menu-item (click)="openDialogNewStudy()">
+				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_OUTPATIENT_PRESCRIPTION'  | translate }}
+			</button>
+
+			<button *ngIf="this.patientHasInternmentEpisodeInProgress()" mat-menu-item (click)="openNewInternmentOrderDialog()">
+				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_INTERNMENT_PRESCRIPTION'  | translate }}
+			</button>
+		</ng-container>
+	</mat-menu>
 
 	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
 		<button mat-button class="filter-button" color="primary" (click)="hideFilters(); clear()">

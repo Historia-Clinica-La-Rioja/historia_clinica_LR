@@ -376,6 +376,10 @@
                 "UN_DIA": "Hace 1 día",
                 "APLICACION_DIARIA": "Una aplicación por día",
                 "USO_CRONICO": "Uso crónico",
+				"new_prescription_menu": {
+					"NEW_OUTPATIENT_PRESCRIPTION": "Nueva orden de Ambulatorio",
+					"NEW_INTERNMENT_PRESCRIPTION": "Nueva orden de Internación"
+				},
                 "add_prescription_item_dialog": {
                     "MEDICATION": "Medicación",
                     "MEDICATION_TITLE": "Agregar medicación",
