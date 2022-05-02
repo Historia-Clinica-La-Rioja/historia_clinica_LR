@@ -8,5 +8,5 @@ public interface HCEAllergyService {
 
     List<HCEAllergyBo> getAllergies(Integer patientId);
 
-	List<HCEAllergyBo> getActiveInternmentEpisodeAllergies(Integer patientId);
+	List<HCEAllergyBo> getActiveInternmentEpisodeAllergies(Integer institutionId, Integer patientId);
 }

@@ -17,13 +17,13 @@ public class GetCriticalAllergies {
 
 	private final HCEAllergyService hceAllergyService;
 
-	public List<HCEAllergyBo> run(Integer patientId) {
+	public List<HCEAllergyBo> run(Integer institutionId, Integer patientId) {
 		log.debug("Input parameters -> patientId {}", patientId);
 		List<HCEAllergyBo> result = hceAllergyService.getAllergies(patientId)
 				.stream()
 				.filter(a -> a.getCriticalityId() != null && a.getCriticalityId() == 2)
 				.collect(Collectors.toList());
-		result.addAll(hceAllergyService.getActiveInternmentEpisodeAllergies(patientId));
+		result.addAll(hceAllergyService.getActiveInternmentEpisodeAllergies(institutionId, patientId));
 		log.debug("Output -> {}", result);
 		return result;
 	}

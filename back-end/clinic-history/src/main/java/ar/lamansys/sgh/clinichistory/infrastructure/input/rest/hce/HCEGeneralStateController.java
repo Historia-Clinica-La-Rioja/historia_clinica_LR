@@ -254,7 +254,7 @@ public class HCEGeneralStateController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug(LOGGING_INPUT, institutionId, patientId);
-		List<HCEAllergyDto> result = hceGeneralStateMapper.toListHCEAllergyDto(getCriticalAllergies.run(patientId));
+		List<HCEAllergyDto> result = hceGeneralStateMapper.toListHCEAllergyDto(getCriticalAllergies.run(institutionId, patientId));
 		LOG.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

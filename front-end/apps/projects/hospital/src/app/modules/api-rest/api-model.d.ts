@@ -1402,6 +1402,7 @@ export interface InternmentEpisodeDto {
 export interface InternmentEpisodeProcessDto {
     id?: number;
     inProgress: boolean;
+    patientHospitalized: boolean;
 }
 
 export interface InternmentGeneralStateDto extends Serializable {

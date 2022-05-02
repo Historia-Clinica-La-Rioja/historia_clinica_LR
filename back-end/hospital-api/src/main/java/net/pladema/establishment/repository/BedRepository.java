@@ -93,7 +93,8 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			+ " LEFT JOIN Person per ON pat.personId = per.id "
 			+ " LEFT JOIN IdentificationType it ON per.identificationTypeId = it.id "
 			+ " WHERE b.id =:bedId AND "
-			+ " ( b.free = true OR (b.free = false AND ie.statusId = "+ ACTIVE + ") )")
+			+ " ( b.free = true OR (b.free = false AND ie.statusId = "+ ACTIVE + ") "
+			+ " AND NOT EXISTS (SELECT pd.id FROM PatientDischarge pd where pd.internmentEpisodeId = ie.id AND pd.physicalDischargeDate IS NOT NULL) )")
 	Stream<BedInfoVo> getBedInfo(@Param("bedId") Integer bedId);
 	
 }

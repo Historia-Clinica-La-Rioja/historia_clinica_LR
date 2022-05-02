@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InternmentPatientServiceImpl implements InternmentPatientService {
@@ -46,21 +47,38 @@ public class InternmentPatientServiceImpl implements InternmentPatientService {
     @Override
     public InternmentEpisodeProcessBo internmentEpisodeInProcess(Integer institutionId, Integer patientId) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
-        InternmentEpisodeProcessBo result = new InternmentEpisodeProcessBo(null, false);
-        Optional<InternmentEpisodeProcessVo> resultQuery = internmentEpisodeRepository.internmentEpisodeInProcess(patientId);
-        resultQuery.ifPresent(rq -> {
-            result.setInProgress(true);
-            if (rq.getInstitutionId().equals(institutionId))
-                result.setId(rq.getId());
-        });
+        InternmentEpisodeProcessBo result = new InternmentEpisodeProcessBo(null, false, false);
+        List<InternmentEpisodeProcessVo> resultQuery = internmentEpisodeRepository.internmentEpisodeInProcess(patientId);
+		if(!resultQuery.isEmpty()) {
+			result.setInProgress(true);
+			result.setPatientHospitalized(internmentEpisodeRepository.isPatientHospitalized(patientId));
+			resultQuery.forEach(rq -> {
+				if (rq.getInstitutionId().equals(institutionId))
+					result.setId(rq.getId());
+			});
+		}
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 
 	@Override
-	public Optional<Integer> getInternmentEpisodeInProcessAnyInstitution(Integer patientId) {
+	public Optional<Integer> getInternmentEpisodeIdInProcess(Integer institutionId, Integer patientId) {
 		LOG.debug("Input parameters -> patientId {}", patientId);
-		Optional<Integer> result = internmentEpisodeRepository.internmentEpisodeInProcess(patientId).map(ie -> ie.getId());
+		Optional<Integer> result = Optional.empty();
+		InternmentEpisodeProcessVo internmentEpisode = new InternmentEpisodeProcessVo(null, institutionId);
+		List<InternmentEpisodeProcessVo> resultQuery = internmentEpisodeRepository.internmentEpisodeInProcess(patientId);
+		if(!resultQuery.isEmpty()) {
+			resultQuery.forEach(rq -> {
+				if (rq.getInstitutionId().equals(institutionId)) {
+					internmentEpisode.setId(rq.getId());
+				}
+			});
+			if (internmentEpisode.getId() != null) {
+				result = Optional.of(internmentEpisode.getId());
+			} else {
+				result = Optional.of(resultQuery.stream().findFirst().get().getId());
+			}
+		}
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}

@@ -50,9 +50,9 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	}
 
 	@Override
-	public Optional<Integer> getInternmenEpisodeId(Integer patientId){
+	public Optional<Integer> getInternmentEpisodeId(Integer institutionId, Integer patientId){
 		log.debug("Input parameters -> patientId {}", patientId);
-		Optional<Integer> result = internmentPatientService.getInternmentEpisodeInProcessAnyInstitution(patientId);
+		Optional<Integer> result = internmentPatientService.getInternmentEpisodeIdInProcess(institutionId, patientId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

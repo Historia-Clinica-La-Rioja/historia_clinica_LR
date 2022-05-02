@@ -208,14 +208,21 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	@Override
 	public PatientDischargeBo saveMedicalDischarge(PatientDischargeBo patientDischargeBo){
 		LOG.debug(INPUT_PARAMETERS, patientDischargeBo);
-		if (patientDischargeRepository.existsById(patientDischargeBo.getInternmentEpisodeId())){
-			throw new SaveMedicalDischargeException(
-					SaveMedicalDischargeExceptionEnum.MEDICAL_DISCHARGE_ALREADY_EXISTS, String.format("Ya existe un alta medica correspondiente a la internacion %s", patientDischargeBo.getInternmentEpisodeId()));
-		}
-		PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
-		PatientDischargeBo result = new PatientDischargeBo(entityResult);
-		LOG.debug(LOGGING_OUTPUT, result);
-		return result;
+		return patientDischargeRepository.findById(patientDischargeBo.getInternmentEpisodeId()).map(pd -> {
+			if (pd.getMedicalDischargeDate() != null)
+				throw new SaveMedicalDischargeException(SaveMedicalDischargeExceptionEnum.MEDICAL_DISCHARGE_ALREADY_EXISTS, String.format("Ya existe un alta medica correspondiente a la internacion %s", patientDischargeBo.getInternmentEpisodeId()));
+			pd.setMedicalDischargeDate(patientDischargeBo.getMedicalDischargeDate());
+			pd.setDischargeTypeId(patientDischargeBo.getDischargeTypeId());
+			PatientDischargeBo result = new PatientDischargeBo(patientDischargeRepository.save(pd));
+			LOG.debug(LOGGING_OUTPUT, result);
+			return result;
+		}).orElseGet(()->
+		{
+			PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
+			PatientDischargeBo result = new PatientDischargeBo(entityResult);
+			LOG.debug(LOGGING_OUTPUT, result);
+			return result;
+		});
 	}
 
 	@Override

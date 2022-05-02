@@ -17,4 +17,6 @@ public class InternmentEpisodeProcessDto {
 
     private boolean inProgress = false;
 
+ 	private boolean patientHospitalized = false;
+
 }

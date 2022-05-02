@@ -125,8 +125,9 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query(" SELECT NEW net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo(ie.id, ie.institutionId) " +
             "FROM InternmentEpisode  ie " +
-            "WHERE  ie.patientId = :patientId and ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
-    Optional<InternmentEpisodeProcessVo> internmentEpisodeInProcess(@Param("patientId") Integer patientId);
+            "WHERE  ie.patientId = :patientId and ie.statusId <> " + InternmentEpisodeStatus.INACTIVE +
+            " ORDER BY ie.creationable.createdOn DESC")
+    List<InternmentEpisodeProcessVo> internmentEpisodeInProcess(@Param("patientId") Integer patientId);
 
     @Transactional(readOnly = true)
     @Query("SELECT ie.entryDate " +
@@ -232,4 +233,14 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 			"        )")
 	boolean haveEvolutionNoteAfterAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId,
 											@Param("anamnesisDocId") Long anamnesisDocId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(ie.id)> 0 then true else false end) "+
+			" FROM InternmentEpisode ie " +
+			" LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId)" +
+			" WHERE ie.patientId = :patientId " +
+			" AND ie.statusId = " +InternmentEpisodeStatus.ACTIVE+" " +
+			" AND pd.physicalDischargeDate is NULL and pd.medicalDischargeDate is NULL")
+	boolean isPatientHospitalized (@Param("patientId") Integer patientId);
+	
 }
