@@ -84,6 +84,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		CategoryHeaderDividerComponent,
+		ListElementItemComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -98,8 +100,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-  		ListElementItemComponent,
-    	CategoryHeaderDividerComponent
 	],
 	imports: [
 		CommonModule,
@@ -143,6 +143,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		CategoryHeaderDividerComponent,
+		ListElementItemComponent,
 		// directives
 		CtrlTemplateDirective,
 		// pipes

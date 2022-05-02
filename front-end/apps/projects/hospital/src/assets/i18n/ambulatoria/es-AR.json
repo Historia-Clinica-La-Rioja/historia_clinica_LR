@@ -474,7 +474,12 @@
             },
             "studies": {
                 "TAB_LABEL": "Estudios",
-                "TITLE": "Estudios"
+                "TITLE": "Estudios",
+				"INTERNMENT_MEDICAL_STUDY": "Estudio solicitado durante internación",
+				"study_state" : {
+					"PENDING": "Pendiente",
+					"COMPLETED": "Completo"
+				}
             },
             "internacion": {
                 "TAB_LABEL": "Internación"

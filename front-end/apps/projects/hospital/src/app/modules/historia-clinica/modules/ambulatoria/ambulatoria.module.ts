@@ -54,6 +54,7 @@ import { MedicalCoverageSummaryViewComponent } from './components/medical-covera
 import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
 import { CreateInternmentOrderComponent } from './dialogs/create-internment-order/create-internment-order.component';
 import { DiagnosisRequiredComponent } from './dialogs/diagnosis-required/diagnosis-required.component';
+import { StudyListElementComponent } from './components/study-list-element/study-list-element.component';
 
 @NgModule({
 	declarations: [
@@ -96,6 +97,7 @@ import { DiagnosisRequiredComponent } from './dialogs/diagnosis-required/diagnos
 		MedicalCoverageSummaryViewComponent,
   		CreateInternmentOrderComponent,
     	DiagnosisRequiredComponent,
+  		StudyListElementComponent,
 	],
     imports: [
         CommonModule,
