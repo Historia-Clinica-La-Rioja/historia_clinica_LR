@@ -13,10 +13,11 @@ export class IndicationsFacadeService {
 
 	private otherIndecationsSubject: Subject<any> = new BehaviorSubject<OtherIndicationDto[]>([]);
 	readonly diets$ = this.dietsSubject.asObservable();
-
 	readonly otherIndications$ = this.otherIndecationsSubject.asObservable();
 	private parenteralPlansSubject = new BehaviorSubject<ParenteralPlanDto[]>([]);
 	readonly parenteralPlans$ = this.parenteralPlansSubject.asObservable();
+	private pharmacoSubject = new BehaviorSubject<PharmacoDto[]>([]);
+	readonly pharmacos$ = this.pharmacoSubject.asObservable();
 
 	constructor(
 		private readonly internmentIndicationService: InternmentIndicationService
@@ -49,6 +50,9 @@ export class IndicationsFacadeService {
 		if (updateIndication.parenteralPlan) {
 			this.internmentIndicationService.getInternmentEpisodeParenteralPlan(this.internmentEpisodeId).subscribe(p => this.parenteralPlansSubject.next(p));
 		}
+		if (updateIndication.pharmaco) {
+			this.internmentIndicationService.getInternmentEpisodePharmaco(this.internmentEpisodeId).subscribe(p => this.pharmacoSubject.next(p));
+		}
 	}
 
 	setInternmentEpisodeId(id: number) {
@@ -56,7 +60,8 @@ export class IndicationsFacadeService {
 		this.updateIndication({
 			diets: true,
 			otherIndication: true,
-			parenteralPlan: true
+			parenteralPlan: true,
+			pharmaco: true
 		})
 	}
 }

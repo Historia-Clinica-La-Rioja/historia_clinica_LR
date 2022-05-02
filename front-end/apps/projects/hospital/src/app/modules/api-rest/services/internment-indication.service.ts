@@ -44,6 +44,11 @@ export class InternmentIndicationService {
 		return this.http.get<ParenteralPlanDto[]>(url);
 	}
 
+	getInternmentEpisodePharmaco(internmentEpisodeId: number): Observable<PharmacoDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/pharmacos`;
+		return this.http.get<PharmacoDto[]>(url);
+	}
+
 	addParenteralPlan(indication: ParenteralPlanDto, internmentEpisodeId: number): Observable<number> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/parenteral-plan`;
 		return this.http.post<number>(url, indication);

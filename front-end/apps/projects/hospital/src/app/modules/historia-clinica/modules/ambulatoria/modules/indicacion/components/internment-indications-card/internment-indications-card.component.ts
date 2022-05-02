@@ -41,7 +41,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	otherIndications: OtherIndicationDto[] = [];
 	othersIndicatiosType: OtherIndicationTypeDto[];
 	parenteralPlan: ParenteralPlanDto[] = [];
-
+	pharmacos: PharmacoDto[] = [];
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
 	@Input() patientId: number;
@@ -131,6 +131,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate) === true));
 		this.indicationsFacadeService.otherIndications$.subscribe(d => this.otherIndications = d.filter((otherIndications: OtherIndicationDto) => isSameDay(dateDtoToDate(otherIndications.indicationDate), this.actualDate)));
 		this.indicationsFacadeService.parenteralPlans$.subscribe(p => this.parenteralPlan = p.filter((plan: ParenteralPlanDto) => isSameDay(dateDtoToDate(plan.indicationDate), this.actualDate) === true));
+		this.indicationsFacadeService.pharmacos$.subscribe(p => this.pharmacos = p.filter((pharmaco: PharmacoDto) => isSameDay(dateDtoToDate(pharmaco.indicationDate), this.actualDate)));
 	}
 
 	openPharmacoDialog() {
