@@ -771,3 +771,12 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE service_request SET source_type_id = 1;
+
+    - changeSet:
+        id: modify-datatype-request_date-service_request
+        author: tmedina
+        changes:
+          - modifyDataType:
+              columnName: request_date
+              newDataType: datetime
+              tableName: service_request

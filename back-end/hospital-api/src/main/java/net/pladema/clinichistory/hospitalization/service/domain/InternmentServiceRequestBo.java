@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -30,7 +30,7 @@ public class InternmentServiceRequestBo {
 
 	private List<DiagnosticReportBo> diagnosticReports;
 
-	private LocalDate requestDate = LocalDate.now();
+	private LocalDateTime requestDate = LocalDateTime.now();
 
 	public Integer getPatientId() {
 		if (patientInfo != null)
