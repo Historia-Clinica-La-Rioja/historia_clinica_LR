@@ -1,12 +1,9 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
-import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentAssignedForPatientVo;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
-import net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo;
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,10 +11,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentAssignedForPatientVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo;
+import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 
 @Repository
 public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer> {
@@ -195,12 +195,10 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND up.pk.userId = :userId " +
 			"AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
 			"AND a.dateTypeId = :currentDate " +
-			"AND a.hour >= :currentTime " +
 			"ORDER BY a.dateTypeId, a.hour ASC ")
 	List<Integer> getConfirmedAppointmentsByPatient(@Param("patientId") Integer patientId,
 													@Param("institutionId") Integer institutionId,
 													@Param("userId") Integer userId,
-													@Param("currentDate") LocalDate currentDate,
-													@Param("currentTime") LocalTime currentTime);
+													@Param("currentDate") LocalDate currentDate);
 
 }
