@@ -1,0 +1,21 @@
+.title {
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.closed-panel {
+
+    color: rgba(0, 0, 0, 0.38);
+
+    mat-icon {
+        font-size: 22px;
+    }
+
+    span {
+        font-size: 18px;
+    }
+}

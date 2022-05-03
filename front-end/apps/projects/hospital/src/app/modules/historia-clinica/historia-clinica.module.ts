@@ -17,6 +17,7 @@ import { InternacionAntecedentesPersonalesSummaryComponent } from './components/
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
+import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -47,6 +48,7 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 		IncludePreviousDataQuestionComponent,
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
+		NewConsultationExpansionSectionComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -81,6 +83,7 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 		IncludePreviousDataQuestionComponent,
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
+		NewConsultationExpansionSectionComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 	]
