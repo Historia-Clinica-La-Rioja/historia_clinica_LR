@@ -33,4 +33,10 @@ export class EpicrisisService {
 		return this.downloadService.downloadPdf(url, fileName);
 	}
 
+	deleteEpicrisis(epicrisisId: number, internmentEpisodeId: number, reason: string): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/${epicrisisId}`;
+		return this.http.delete<boolean>(url, {
+			body: reason
+		});
+	}
 }
