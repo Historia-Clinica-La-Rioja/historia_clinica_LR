@@ -43,7 +43,7 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 ", drs.id AS statusId, drs.description AS status " +
                 ", h.id AS hid, h.s_id AS h_id, h.pt AS h_pt, n.description AS note " +
                 ", t.source_id AS sr_id, t.created_by AS user_id, s.sctid AS d_sctid, " +
-                "h.sctid AS h_sctid, t.effective_time " +
+                "h.sctid AS h_sctid, t.effective_time, t.sr_categoryId AS category_id " +
                 "FROM temporal t " +
                 "JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
                 "JOIN {h-schema}diagnostic_report_status drs ON (drs.id = t.status_id) " +

@@ -696,6 +696,7 @@ export interface DiagnosticReportDto extends ClinicalTermDto {
 }
 
 export interface DiagnosticReportInfoDto {
+    categoryId: string;
     doctor: DoctorInfoDto;
     healthCondition: HealthConditionInfoDto;
     id: number;

@@ -32,6 +32,7 @@ public class DiagnosticReportInfoMapper {
         result.setDoctor(DoctorInfoDto.from(professionalDto));
         result.setServiceRequestId(diagnosticReportBo.getEncounterId());
         result.setTotalDays(diagnosticReportBo.getEffectiveTime() != null ? DAYS.between(diagnosticReportBo.getEffectiveTime(), LocalDateTime.now()) : -1);
+		result.setCategoryId(diagnosticReportBo.getCategoryId());
         LOG.debug("Output: {}", result);
         return result;
     }

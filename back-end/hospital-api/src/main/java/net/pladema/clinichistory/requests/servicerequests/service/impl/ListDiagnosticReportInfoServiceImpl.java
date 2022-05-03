@@ -65,6 +65,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
 
         result.setUserId((Integer) row[10]);
         result.setEffectiveTime(row[13] != null ? ((Timestamp) row[13]).toLocalDateTime() : null);
+		result.setCategoryId((String) row[14]);
         LOG.trace(OUTPUT, result);
         return result;
     }

@@ -26,6 +26,7 @@ public class DiagnosticReportInfoDto {
     private DoctorInfoDto doctor;
     private Integer serviceRequestId;
     private long totalDays;
+	private String categoryId;
 
     public DiagnosticReportInfoDto( DiagnosticReportInfoDto diagnosticReportInfoDto) {
         this.snomed = diagnosticReportInfoDto.getSnomed();
@@ -36,5 +37,6 @@ public class DiagnosticReportInfoDto {
         this.doctor = diagnosticReportInfoDto.getDoctor();
         this.serviceRequestId = diagnosticReportInfoDto.getServiceRequestId();
         this.totalDays = diagnosticReportInfoDto.totalDays;
+		this.categoryId = diagnosticReportInfoDto.getCategoryId();
     }
 }
