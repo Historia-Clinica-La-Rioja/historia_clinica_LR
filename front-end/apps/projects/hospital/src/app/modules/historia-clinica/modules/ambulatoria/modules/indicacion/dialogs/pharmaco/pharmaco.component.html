@@ -73,11 +73,6 @@
 
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-							<button id="via" type="button" mat-button matSuffix *ngIf="form.value.via" color="warn"
-								mat-icon-button (click)="clearFilterField(form.controls.via); $event.stopPropagation()">
-								<mat-icon>close</mat-icon>
-							</button>
-
 						</mat-form-field>
 
 					</div>
@@ -189,11 +184,6 @@
 
 									<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-									<button id="clear-interval" type="button" mat-button matSuffix
-										*ngIf="form.controls.interval.value" color="warn" mat-icon-button
-										(click)="clearFilterField(form.controls.interval); $event.stopPropagation()">
-										<mat-icon>close</mat-icon>
-									</button>
 								</mat-form-field>
 
 								<ng-container *ngIf="form.controls.interval.value==otherFrequency.value">
@@ -243,12 +233,6 @@
 
 									<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-									<button id="clear-start-time" type="button" mat-button matSuffix
-										*ngIf="form.controls.startTime.value" color="warn" mat-icon-button
-										(click)="clearFilterField(form.controls.startTime); $event.stopPropagation()">
-										<mat-icon>close</mat-icon>
-									</button>
-
 								</mat-form-field>
 							</div>
 						</div>
@@ -266,11 +250,6 @@
 
 								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-								<button id="clear-start-time" type="button" mat-button matSuffix
-									*ngIf="form.controls.startTime.value" color="warn" mat-icon-button
-									(click)="clearFilterField(form.controls.startTime); $event.stopPropagation()">
-									<mat-icon>close</mat-icon>
-								</button>
 							</mat-form-field>
 						</div>
 
@@ -329,12 +308,6 @@
 						</mat-select>
 
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-
-						<button id="delete-diagnosis" type="button" mat-button matSuffix *ngIf="form.value.diagnoses"
-							color="warn" mat-icon-button
-							(click)="clearFilterField(form.controls.diagnoses); $event.stopPropagation()">
-							<mat-icon>close</mat-icon>
-						</button>
 
 					</mat-form-field>
 
