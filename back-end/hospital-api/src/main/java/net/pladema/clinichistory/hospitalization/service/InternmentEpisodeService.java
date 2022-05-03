@@ -28,6 +28,10 @@ public interface InternmentEpisodeService {
 
     boolean haveEpicrisis(Integer internmentEpisodeId);
 
+    boolean haveMedicalDischarge(Integer internmentEpisodeId);
+
+    boolean haveEvolutionNoteAfterAnamnesis(Integer internmentEpisodeId);
+
     LocalDateTime getEntryDate(Integer internmentEpisodeId);
 
     boolean canCreateEpicrisis(Integer internmentEpisodeId);

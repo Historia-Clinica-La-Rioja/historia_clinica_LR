@@ -28,4 +28,18 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 		log.debug("Input parameter documentId {}, reason {}", documentId, reason);
 		documentService.updateDocumentModificationReason(documentId, reason);
 	}
+	
+	@Override
+	public DocumentReduceInfoDto getDocument(Long documentId) {
+		log.debug("Input parameter documentId {}", documentId);
+		Document document = documentService.findById(documentId)
+				.orElseThrow(() -> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
+		DocumentReduceInfoDto result = new DocumentReduceInfoDto();
+		result.setSourceId(document.getSourceId());
+		result.setCreatedBy(document.getCreatedBy());
+		result.setCreatedOn(document.getCreatedOn());
+		result.setTypeId(document.getTypeId());
+		return result;
+	}
+
 }

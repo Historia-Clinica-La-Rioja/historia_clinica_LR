@@ -216,4 +216,20 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 	void deleteAnamnesisDocumentId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
 								   @Param("currentUser") Integer currentUser,
 								   @Param("today") LocalDateTime today);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(dc.id) > 0 then true else false end) " +
+			"FROM Document dc " +
+			"WHERE dc.id = :anamnesisDocId " +
+			"AND dc.statusId = '"+ DocumentStatus.FINAL + "' " +
+			"AND EXISTS (" +
+			"           SELECT d.id " +
+			"           FROM EvolutionNoteDocument evnd " +
+			"           JOIN Document d ON (d.id = evnd.pk.documentId) " +
+			"           WHERE evnd.pk.internmentEpisodeId = :internmentEpisodeId " +
+			"           AND d.statusId = '"+ DocumentStatus.FINAL + "' " +
+			"           AND d.creationable.createdOn > dc.creationable.createdOn " +
+			"        )")
+	boolean haveEvolutionNoteAfterAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+											@Param("anamnesisDocId") Long anamnesisDocId);
 }

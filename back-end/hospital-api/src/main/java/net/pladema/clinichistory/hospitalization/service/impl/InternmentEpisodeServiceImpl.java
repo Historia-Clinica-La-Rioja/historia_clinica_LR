@@ -126,6 +126,28 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
+	public boolean haveMedicalDischarge(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
+		boolean result = patientDischargeRepository.existsById(internmentEpisodeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean haveEvolutionNoteAfterAnamnesis(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
+		InternmentEpisode intermentEpisode = internmentEpisodeRepository.findById(internmentEpisodeId)
+				.orElseThrow(() -> new NotFoundException("internment-episode-not-exists",
+						String.format("No existe el episodio de internación con id %s", internmentEpisodeId)));
+		Long anamnesisDocId = intermentEpisode.getAnamnesisDocId();
+		if (anamnesisDocId == null)
+			return false;
+		boolean result = internmentEpisodeRepository.haveEvolutionNoteAfterAnamnesis(internmentEpisodeId, anamnesisDocId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public boolean haveEpicrisis(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
 		boolean result = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);

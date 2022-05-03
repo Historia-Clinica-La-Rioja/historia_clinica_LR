@@ -764,6 +764,13 @@ export interface DocumentObservationsDto extends Serializable {
     studiesSummaryNote?: string;
 }
 
+export interface DocumentReduceInfoDto extends Serializable {
+    createdBy: number;
+    createdOn: Date;
+    sourceId: number;
+    typeId: number;
+}
+
 export interface DocumentSearchDto extends Serializable {
     createdOn: Date;
     creator: ResponsibleDoctorDto;
