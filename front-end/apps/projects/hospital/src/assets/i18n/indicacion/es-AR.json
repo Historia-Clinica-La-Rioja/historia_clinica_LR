@@ -106,6 +106,8 @@
 					"VIA": "Via",
 					"SOLVENT": "Diluyente",
 					"MILLILITERS": "ml",
+					"START-TIME": "Hora de inicio",
+					"OBSERVATIONS": "Observaciones",
 					"add-snomed-concept":{
 						"TITLE": "Agregar medicación",
 						"SEARCH": "Fármaco"
@@ -133,6 +135,7 @@
 						"UNSPECIFIED": "Sin especificar",
 						"INTERVALS": "Intervalo",
 						"ONCE": "Unica vez",
+						"DETAIL-EVENT": "Detalle evento",
 						"AFTER-EVENT":" Ante un evento"
 					},
 					"messages": {

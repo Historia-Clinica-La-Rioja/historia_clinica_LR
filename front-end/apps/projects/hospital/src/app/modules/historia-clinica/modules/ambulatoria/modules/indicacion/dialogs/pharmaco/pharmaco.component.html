@@ -233,7 +233,7 @@
 								<mat-form-field fxFlex="40%" appearance="outline">
 
 									<mat-label
-										[translate]="'indicacion.internment-card.dialogs.other-indication.START-TIME'">
+										[translate]="'indicacion.internment-card.dialogs.pharmaco.START-TIME'">
 									</mat-label>
 									<mat-select id="start-time" formControlName="startTime">
 										<mat-option *ngFor="let time of hoursList" [value]="time">
@@ -256,7 +256,7 @@
 							<mat-form-field fxFlex="40%" appearance="outline">
 
 								<mat-label
-									[translate]="'indicacion.internment-card.dialogs.other-indication.START-TIME'">
+									[translate]="'indicacion.internment-card.dialogs.pharmaco.START-TIME'">
 								</mat-label>
 								<mat-select id="start-time" formControlName="startTime">
 									<mat-option *ngFor="let time of hoursList" [value]="time">
@@ -277,7 +277,7 @@
 						<div *ngSwitchCase="FREQUENCY_OPTION_EVENT" fxLayoutGap="15px">
 							<mat-form-field appearance="outline">
 								<textarea matInput id="event-input" type="text" formControlName="event"
-									placeholder="{{'indicacion.internment-card.dialogs.other-indication.DETAIL-EVENT' | translate }}">
+									placeholder="{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.DETAIL-EVENT' | translate }}">
 												</textarea>
 								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 							</mat-form-field>
@@ -367,7 +367,7 @@
 			<mat-form-field appearance="outline">
 
 				<textarea matInput type="text" id="note-input" formControlName="note"
-					placeholder="{{'indicacion.internment-card.dialogs.diet.DESCRIPTION' | translate }}">
+					placeholder="{{'indicacion.internment-card.dialogs.pharmaco.OBSERVATIONS' | translate }}">
 					</textarea>
 				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 

@@ -80,7 +80,7 @@ export class PharmacoComponent implements OnInit {
 
 			foodRelation: [this.NEGATIVE_OPTION],
 			patientProvided: [false],
-			note: [null, Validators.required],
+			note: [null],
 
 			frequencyOption: [this.FREQUENCY_OPTION_INTERVAL],
 			interval: [null, Validators.required],
