@@ -1,0 +1,9 @@
+<div fxLayout="column" fxLayoutGap="30px">
+	<app-category-header-divider [header]="studyHeader"></app-category-header-divider>
+
+	<div id="content" fxLayout="column" fxLayoutGap="20px">
+		<div *ngFor="let study of studies">
+			<app-study-list-element [content]="study"></app-study-list-element>
+		</div>
+	</div>
+</div>

@@ -55,6 +55,7 @@ import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modul
 import { CreateInternmentOrderComponent } from './dialogs/create-internment-order/create-internment-order.component';
 import { DiagnosisRequiredComponent } from './dialogs/diagnosis-required/diagnosis-required.component';
 import { StudyListElementComponent } from './components/study-list-element/study-list-element.component';
+import { StudyComponent } from './components/study/study.component';
 
 @NgModule({
 	declarations: [
@@ -98,6 +99,7 @@ import { StudyListElementComponent } from './components/study-list-element/study
   		CreateInternmentOrderComponent,
     	DiagnosisRequiredComponent,
   		StudyListElementComponent,
+    	StudyComponent,
 	],
     imports: [
         CommonModule,
