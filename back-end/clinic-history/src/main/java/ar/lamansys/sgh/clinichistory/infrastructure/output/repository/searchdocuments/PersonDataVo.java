@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonNameVo {
+public class PersonDataVo {
+
+	private Integer userId;
 
     private String firstName;
 

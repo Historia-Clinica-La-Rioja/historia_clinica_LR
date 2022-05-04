@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.DocumentObservationsVo;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +21,9 @@ public class DocumentSearchVo {
 
     private DocumentObservationsVo notes;
 
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 
-    private PersonNameVo creator;
+    private PersonDataVo creator;
 
     private List<String> diagnosis = new ArrayList<>();
 
@@ -35,13 +34,13 @@ public class DocumentSearchVo {
     private String documentType;
 
 
-    public DocumentSearchVo(Long id, DocumentObservationsVo notes, LocalDateTime createdOn,
+    public DocumentSearchVo(Long id, DocumentObservationsVo notes, LocalDateTime createdOn, Integer creatorUserId,
                             String firstName, String lastName, List<String> diagnosis, String mainDiagnosis,
 							String documentType){
         this.id = id;
         this.notes = notes;
-        this.createdOn = createdOn.toLocalDate();
-        this.creator = new PersonNameVo(firstName, lastName);
+        this.createdOn = createdOn;
+        this.creator = new PersonDataVo(creatorUserId, firstName, lastName);
         this.diagnosis = diagnosis;
         this.mainDiagnosis = mainDiagnosis;
         this.documentType = documentType;

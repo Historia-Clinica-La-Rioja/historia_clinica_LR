@@ -39,7 +39,7 @@ public class DocumentSearchBo {
         this.mainDiagnosis = source.getMainDiagnosis();
         this.diagnosis = source.getDiagnosis();
         this.procedures = source.getProcedures();
-        this.creator = new AuthorBo(source.getCreator().getFirstName(), source.getCreator().getLastName());
+        this.creator = new AuthorBo(source.getCreator().getUserId(), source.getCreator().getFirstName(), source.getCreator().getLastName());
         this.createdOn = source.getCreatedOn();
         this.documentType = source.getDocumentType();
     }

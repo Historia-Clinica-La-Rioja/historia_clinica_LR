@@ -17,7 +17,8 @@ public class AuthorBo {
 
     private String licence;
 
-    public AuthorBo(String firstName, String lastName){
+    public AuthorBo(Integer id, String firstName, String lastName){
+    	this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
     }
