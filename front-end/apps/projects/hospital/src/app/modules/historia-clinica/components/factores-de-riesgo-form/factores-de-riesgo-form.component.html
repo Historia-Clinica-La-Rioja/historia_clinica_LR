@@ -1,5 +1,5 @@
 <div>
-    <h2 class="mat-h2" [translate]="'historia-clinica.factores-de-riesgo-form.TITLE'"></h2>
+    <h2 *ngIf="showTitle" class="mat-h2" [translate]="'historia-clinica.factores-de-riesgo-form.TITLE'"></h2>
     <app-include-previous-data-question *ngIf="showPreloadData"
         [dataName]="'historia-clinica.factores-de-riesgo-form.NAME' | translate"
         [date]="factoresDeRiesgoFormService.getDate()" (response)="savePreloadData($event)" id="risk_factors_question">

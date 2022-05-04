@@ -401,9 +401,18 @@
 			</app-new-document-section>
 		</div>
 
-		<app-factores-de-riesgo-form [showPreloadData]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
-			[showRecomendation]="true" [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
-		</app-factores-de-riesgo-form>
+		<app-new-consultation-expansion-section icon="favorite_outlined"
+			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate"
+			[fixedExpanded]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
+			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()">
+
+			<app-factores-de-riesgo-form
+				[showPreloadData]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
+				[showRecomendation]="true" [factoresDeRiesgoFormService]="factoresDeRiesgoFormService"
+				[showTitle]="false">
+			</app-factores-de-riesgo-form>
+
+		</app-new-consultation-expansion-section>
 
 		<div id="alergias">
 			<app-new-document-section sectionTitle="ambulatoria.paciente.nueva-consulta.alergias.TITLE">

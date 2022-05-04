@@ -42,7 +42,7 @@ export class FactoresDeRiesgoFormService {
 	private cardiovascularRiskErrorSource = new Subject<string>();
 	private _cardiovascularRiskError$: Observable<string>;
 	private form: FormGroup;
-	private notShowPreloadedRiskFactorsData = true;
+	private notShowPreloadedRiskFactorsData = false;
 	private dateList: string[] = [];
 
 	constructor(
@@ -278,6 +278,7 @@ export class FactoresDeRiesgoFormService {
 				if (riskFactorsData.current === undefined)
 					this.notShowPreloadedRiskFactorsData = false;
 				else {
+					this.notShowPreloadedRiskFactorsData = true;
 					Object.keys(riskFactorsData.current).forEach((key: string) => {
 						if (riskFactorsData.current[key].value != undefined) {
 							this.form.patchValue({ [key]: { value: riskFactorsData.current[key].value } });
@@ -309,5 +310,11 @@ export class FactoresDeRiesgoFormService {
 
 	getDate(): string {
 		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+	}
+
+	hasAtLeastOneValueLoaded(): boolean {
+		return !Object.values(this.form.value).every(
+			(riskFactor: FormGroup) => (riskFactor.value === null || riskFactor.value === '')
+		);
 	}
 }
