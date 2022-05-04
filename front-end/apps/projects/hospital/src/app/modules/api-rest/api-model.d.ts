@@ -2373,6 +2373,11 @@ export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
 export interface Serializable {
 }
 
+export interface ServiceRequestCategoryDto {
+    description: string;
+    id: string;
+}
+
 export interface SharedSnomedDto extends Serializable {
     parentFsn: string;
     parentId: string;

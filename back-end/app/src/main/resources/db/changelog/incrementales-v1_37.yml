@@ -780,3 +780,52 @@ databaseChangeLog:
               columnName: request_date
               newDataType: datetime
               tableName: service_request
+
+    - changeSet:
+        id: insert-service_request_category-values
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO service_request_category(id, description) VALUES ('108257001', 'Anatomía patológica');
+                INSERT INTO service_request_category(id, description) VALUES ('305393003', 'Hemoterapia');
+                INSERT INTO service_request_category(id, description) VALUES ('71388002', 'Otros procedimientos y prácticas');
+
+    - changeSet:
+        id: add-orden-column-service_request_category
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: service_request_category
+              columns:
+                - column:
+                    name: orden
+                    type: smallint
+
+    - changeSet:
+        id: set-orden-values-service_request_category
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE service_request_category SET orden = 1 WHERE id = '363679005';
+                UPDATE service_request_category SET orden = 2 WHERE id = '108252007';
+                UPDATE service_request_category SET orden = 3 WHERE id = '108257001';
+                UPDATE service_request_category SET orden = 4 WHERE id = '305393003';
+                UPDATE service_request_category SET orden = 5 WHERE id = '387713003';
+                UPDATE service_request_category SET orden = 6 WHERE id = '71388002';
+                UPDATE service_request_category SET orden = 7 WHERE id = '409063005';
+                UPDATE service_request_category SET orden = 8 WHERE id = '409073007';
+
+    - changeSet:
+        id: set-description-values-service_request_category
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE service_request_category SET description = 'Diagnóstico por imágenes' WHERE id = '363679005';
+                UPDATE service_request_category SET description = 'Laboratorio' WHERE id = '108252007';
+                UPDATE service_request_category SET description = 'Procedimientos quirúrgicos' WHERE id = '387713003';
