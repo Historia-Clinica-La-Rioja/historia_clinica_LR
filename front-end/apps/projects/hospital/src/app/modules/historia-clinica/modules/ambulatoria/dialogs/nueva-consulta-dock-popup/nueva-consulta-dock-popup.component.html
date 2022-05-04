@@ -187,10 +187,18 @@
 
 		</div>
 
-		<app-datos-antropometricos-nueva-consulta
-			[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
-			[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService">
-		</app-datos-antropometricos-nueva-consulta>
+		<app-new-consultation-expansion-section
+			[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
+			[fixedExpanded]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
+			[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()">
+
+			<app-datos-antropometricos-nueva-consulta
+				[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
+				[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService"
+				[showTitle]="false">
+			</app-datos-antropometricos-nueva-consulta>
+
+		</app-new-consultation-expansion-section>
 
 
 		<div id="antecedentes-familiares">

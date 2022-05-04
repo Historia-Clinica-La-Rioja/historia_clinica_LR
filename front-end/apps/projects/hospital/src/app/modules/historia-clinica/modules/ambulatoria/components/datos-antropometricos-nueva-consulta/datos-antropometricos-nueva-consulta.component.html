@@ -1,5 +1,6 @@
 <div>
-    <h2 class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'"></h2>
+    <h2 *ngIf="showTitle" class="mat-h2"
+        [translate]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE'"></h2>
     <app-include-previous-data-question *ngIf="showPreloadData"
         [dataName]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.NAME' | translate"
         [date]="datosAntropometricosNuevaConsultaService.getDate()" (response)="savePreloadData($event)"
