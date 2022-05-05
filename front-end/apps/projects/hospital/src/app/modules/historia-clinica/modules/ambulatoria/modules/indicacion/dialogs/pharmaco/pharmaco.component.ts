@@ -41,6 +41,7 @@ export class PharmacoComponent implements OnInit {
 	DOSE_MIN = 0;
 	FAR_OPTION = 1;
 	FAST_OPTION = 2;
+	TIME_CORRECTION = 24;
 	FREQUENCY_OPTION_INTERVAL = 0;
 	FREQUENCY_OPTION_START_TIME = 1;
 	FREQUENCY_OPTION_EVENT = 2;
@@ -195,6 +196,9 @@ export class PharmacoComponent implements OnInit {
 			parentFsn: ""
 		}
 	}
+	private setHours(hours: number): number {
+		return hours === this.TIME_CORRECTION ? 0 : hours;
+	}
 
 	private toDosageDto(quantity: QuantityDto, periodUnit: string): NewDosageDto {
 		return {
@@ -202,12 +206,12 @@ export class PharmacoComponent implements OnInit {
 			diary: true,
 			chronic: true,
 			duration: 0,
-			periodUnit: (this.form.controls?.event.value) ? this.EVENT : this.HOURS,
+			periodUnit: periodUnit,
 			event: this.form.controls?.event.value,
 			startDateTime: (this.form.controls?.startTime) ? {
 				date: dateToDateDto(this.indicationDate),
 				time: {
-					hours: (this.form.controls?.startTime?.value) ? this.form.controls.startTime.value : 0,
+					hours: (this.form.controls?.startTime?.value) ? this.setHours(this.form.controls.startTime.value) : 0,
 					minutes: 0
 				}
 			} : null,
