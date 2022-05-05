@@ -22,6 +22,7 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
@@ -84,6 +85,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
+	@Mock
+	private EvolutionNoteValidator evolutionNoteValidator;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -98,7 +102,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
                 documentFactory,
                 internmentEpisodeService,
                 fetchHospitalizationHealthConditionState,
-                dateTimeProvider, fetchLoggedUserRolesExternalService);
+                dateTimeProvider, evolutionNoteValidator);
     }
 
     @Test

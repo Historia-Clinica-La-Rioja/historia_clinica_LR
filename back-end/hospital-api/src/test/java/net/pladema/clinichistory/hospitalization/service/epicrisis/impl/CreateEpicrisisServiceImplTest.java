@@ -25,7 +25,9 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
+import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
@@ -76,6 +78,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
+	@Mock
+	private InternmentEpisodeService internmentEpisodeService;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -88,7 +93,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                dateTimeProvider);
+                dateTimeProvider,
+				new EpicrisisValidator(internmentEpisodeService)
+				);
     }
 
     @Test
