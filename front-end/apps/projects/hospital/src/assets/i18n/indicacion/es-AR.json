@@ -109,7 +109,7 @@
 					"START-TIME": "Hora de inicio",
 					"OBSERVATIONS": "Observaciones",
 					"add-snomed-concept":{
-						"TITLE": "Agregar medicación",
+						"TITLE": "Agregar fármaco",
 						"SEARCH": "Fármaco"
 					},
 					"foodRelation":{
