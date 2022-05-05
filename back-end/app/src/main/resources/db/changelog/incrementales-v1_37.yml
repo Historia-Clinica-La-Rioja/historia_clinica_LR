@@ -843,4 +843,3 @@ databaseChangeLog:
                     name: physical_discharge_date
                     type: timestamp
               tableName: patient_discharge
-

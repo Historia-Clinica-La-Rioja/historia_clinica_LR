@@ -116,3 +116,23 @@ databaseChangeLog:
 
 
 
+    - changeSet:    
+        id: add-column-initial_document_id-document
+        comment: Add initial_document_id column in document table
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: initial_document_id
+                    type: bigint
+              tableName: document
+          - addForeignKeyConstraint:
+              baseColumnNames: id
+              baseTableName: document
+              constraintName: FK_initial_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
