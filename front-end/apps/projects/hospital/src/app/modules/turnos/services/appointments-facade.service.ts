@@ -237,7 +237,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 			return 'Horario bloqueado'
 		}
 		if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
-			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} Temporal`;
+			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName} (Temporal)`;
 		}
 		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
 	}
