@@ -4,6 +4,12 @@ import { differenceInHours } from "date-fns";
 import { AccountService } from "@api-rest/services/account.service";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { dateTimeDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
+import { MatDialog } from "@angular/material/dialog";
+import { EvolutionNoteService } from "@api-rest/services/evolution-note.service";
+import { EpicrisisService } from "@api-rest/services/epicrisis.service";
+import { DocumentDeletionReasonComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-deletion-reason/document-deletion-reason.component";
+import { AnamnesisService } from "@api-rest/services/anamnesis.service";
+import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 @Injectable({
 	providedIn: 'root'
@@ -17,6 +23,11 @@ export class DocumentActionsService {
 	constructor(
 		private readonly accountService: AccountService,
 		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly dialog: MatDialog,
+		private readonly anmanesisService: AnamnesisService,
+		private readonly epicrisisService: EpicrisisService,
+		private readonly evolutionNoteService: EvolutionNoteService,
+		private readonly snackBarService: SnackBarService,
 	) { }
 
 	setInformation() {
@@ -58,6 +69,52 @@ export class DocumentActionsService {
 			minutes = `0${minutes}`;
 		}
 		return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${minutes}hs`;
+	}
+
+	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number) {
+		const dialogRef = this.dialog.open(DocumentDeletionReasonComponent, {
+			data: {
+				title: 'internaciones.dialogs.actions-document.DELETE_TITLE',
+			},
+			width: "50vh",
+			autoFocus: false,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe(reason => {
+			if (reason) {
+				switch (document.documentType) {
+					case "Anamnesis":
+						this.anmanesisService.deleteAnamnesis(document.id, internmentEpisodeId, reason).subscribe(
+							success => {
+								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
+								this.updateInformation();
+							},
+							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
+						break;
+					case "Nota de evolución":
+						this.evolutionNoteService.deleteEvolutionDiagnosis(document.id, internmentEpisodeId, reason).subscribe(
+							success => {
+								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
+								this.updateInformation();
+							},
+							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
+						break;
+					case "Epicrisis":
+						this.epicrisisService.deleteEpicrisis(document.id, internmentEpisodeId, reason).subscribe(
+							success => {
+								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
+								this.updateInformation();
+							},
+							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
+						break;
+				}
+			}
+		})
+	}
+
+	private updateInformation() {
+		this.internmentSummaryFacadeService.setFieldsToUpdate({ evolutionClinical: true });
+		this.internmentSummaryFacadeService.updateInternmentEpisode();
 	}
 }
 

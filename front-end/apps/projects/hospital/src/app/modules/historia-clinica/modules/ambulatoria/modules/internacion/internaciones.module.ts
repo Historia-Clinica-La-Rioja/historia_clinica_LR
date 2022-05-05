@@ -29,6 +29,7 @@ import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-p
 import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
 import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
+import { DocumentDeletionReasonComponent } from './dialogs/document-deletion-reason/document-deletion-reason.component';
 
 @NgModule({
 	declarations: [
@@ -56,6 +57,7 @@ import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/se
 		ElementoDiagnosticoComponent,
 		DiagnosisCreationEditionComponent,
 		SelectMainDiagnosisComponent,
+		DocumentDeletionReasonComponent,
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent

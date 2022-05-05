@@ -6,12 +6,13 @@ import {
 	DocumentSearchFilterDto,
 	EDocumentSearch,
 	DocumentSearchDto,
-	DocumentHistoricDto,
+	DocumentHistoricDto
 } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { hasError } from '@core/utils/form.utils';
 import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 
 @Component({
 	selector: 'app-documents-summary',
@@ -24,18 +25,20 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	@Input() clinicalEvaluation: DocumentHistoricDto;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
-	public documentsToShow: DocumentSearchDto[];
+	public documentsToShow: DocumentSearch[] = [];
 	public readonly documentsSummary = DOCUMENTS;
 	public today: Moment = newMoment();
 	public form: FormGroup;
-	public activeDocument;
+	public activeDocument: DocumentSearch;
 	public documentHistoric: DocumentHistoricDto;
 	public searchTriggered = false;
 	public hasError = hasError;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private changeDetectorRef: ChangeDetectorRef,
+		private readonly documentActions: DocumentActionsService
 	) {
 		this.form = this.formBuilder.group({
 			text: [''],
@@ -46,13 +49,6 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		}, {
 			validators: this.filterFieldIsRequiredWhenInputIsSet()
 		});
-
-		this.documentHistoric = this.clinicalEvaluation;
-		if (this.documentHistoric?.documents.length) {
-			this.updateDocuments();
-		}
-		this.activeDocument = undefined;
-
 	}
 
 	ngOnChanges() {
@@ -64,10 +60,9 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	}
 
 	ngOnInit(): void {
-
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
-
 		this.setInputResetBehaviour();
+		this.documentActions.setInformation();
 	}
 
 	search(): void {
@@ -96,30 +91,42 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		return field === 'CREATED_ON';
 	}
 
-	setActive(document) {
-		this.activeDocument = document;
+	setActive(d: DocumentSearch) {
+		this.activeDocument = {
+			document: d.document,
+			canDoAction: this.documentActions.canDoActionInTheDocument(d.document),
+			createdOn: d.createdOn
+		};
 	}
 
 	updateDocuments() {
-		this.form.patchValue({documentsWithoutDiagnosis: false})
+		this.form.patchValue({ documentsWithoutDiagnosis: false })
 		this.activeDocument = null;
-		this.documentsToShow = this.documentHistoric.documents.filter(document => {
+		const documents = this.documentHistoric.documents.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
 		});
+		this.documentActions.setPatientDocuments(documents);
+		this.documentsToShow = documents.map(document => {
+			return { document, createdOn: this.documentActions.loadTime(document.createdOn)	}
+		})
 		this.changeDetectorRef.detectChanges();
 	}
 
 	showDocumentsWithoutDiagnosis() {
-		this.form.patchValue({mainDiagnosisOnly: false})
+		this.form.patchValue({ mainDiagnosisOnly: false })
 		this.activeDocument = null;
-		this.documentsToShow = this.documentHistoric.documents.filter(document => {
+		const documents = this.documentHistoric.documents.filter(document => {
 			return this.form.value.documentsWithoutDiagnosis ? !document.diagnosis.length && !document.mainDiagnosis.length : true;
+		});
+		this.documentActions.setPatientDocuments(documents);
+		this.documentsToShow = documents.map(document => {
+			return { document, createdOn: this.documentActions.loadTime(document.createdOn)	}
 		});
 		this.changeDetectorRef.detectChanges();
 	}
 
 	viewEvolutionNote(): boolean {
-		return (this.activeDocument?.notes || this.activeDocument?.procedures.length > 0);
+		return !!(this.activeDocument?.document.notes || this.activeDocument?.document.procedures.length > 0);
 	}
 
 	setFilterValueAndSearchIfEmptyForm(control: AbstractControl, value: string) {
@@ -137,6 +144,10 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 			field.setErrors(error ? { filterFieldIsRequiredWhenInputIsSet: true } : null);
 			return null;
 		};
+	}
+
+	delete(document: DocumentSearchDto) {
+		this.documentActions.deleteDocument(document, this.internmentEpisodeId);
 	}
 
 	private setInputResetBehaviour() {
@@ -158,5 +169,4 @@ export interface SearchField {
 	field: EDocumentSearch;
 	label: string;
 }
-
 
