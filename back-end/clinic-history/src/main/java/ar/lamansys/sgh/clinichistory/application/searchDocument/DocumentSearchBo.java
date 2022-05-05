@@ -6,7 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocu
 import lombok.*;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -28,7 +28,7 @@ public class DocumentSearchBo {
 
     private AuthorBo creator;
 
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 
     private String documentType;
 

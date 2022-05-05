@@ -772,7 +772,7 @@ export interface DocumentReduceInfoDto extends Serializable {
 }
 
 export interface DocumentSearchDto extends Serializable {
-    createdOn: Date;
+    createdOn: DateTimeDto;
     creator: ResponsibleDoctorDto;
     diagnosis: string[];
     documentType: string;
