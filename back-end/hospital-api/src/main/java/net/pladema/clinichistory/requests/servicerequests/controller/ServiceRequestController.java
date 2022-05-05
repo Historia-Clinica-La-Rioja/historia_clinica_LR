@@ -2,6 +2,8 @@ package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
@@ -72,8 +74,10 @@ public class ServiceRequestController {
     private final PdfService pdfService;
     private final GetServiceRequestInfoService getServiceRequestInfoService;
 	private final HospitalApiPublisher hospitalApiPublisher;
+	private final FeatureFlagsService featureFlagsService;
 
-    public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService, CreateServiceRequestService createServiceRequestService, CreateServiceRequestMapper createServiceRequestMapper, PatientExternalService patientExternalService, StudyMapper studyMapper, DiagnosticReportInfoMapper diagnosticReportInfoMapper, ListDiagnosticReportInfoService listDiagnosticReportInfoService, DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService, CompleteDiagnosticReportMapper completeDiagnosticReportMapper, UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService, UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService, HospitalApiPublisher hospitalApiPublisher) {
+
+	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService, CreateServiceRequestService createServiceRequestService, CreateServiceRequestMapper createServiceRequestMapper, PatientExternalService patientExternalService, StudyMapper studyMapper, DiagnosticReportInfoMapper diagnosticReportInfoMapper, ListDiagnosticReportInfoService listDiagnosticReportInfoService, DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService, CompleteDiagnosticReportMapper completeDiagnosticReportMapper, UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService, UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService, HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createServiceRequestService = createServiceRequestService;
         this.createServiceRequestMapper = createServiceRequestMapper;
@@ -93,6 +97,7 @@ public class ServiceRequestController {
         this.pdfService = pdfService;
         this.getServiceRequestInfoService = getServiceRequestInfoService;
 		this.hospitalApiPublisher = hospitalApiPublisher;
+		this.featureFlagsService = featureFlagsService;
 	}
 
     @PostMapping
@@ -289,7 +294,8 @@ public class ServiceRequestController {
         ctx.put("professional", professionalDto);
         ctx.put("patientCoverage", patientCoverageDto);
         var date = serviceRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        ctx.put("requestDate", date);
+		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+		ctx.put("requestDate", date);
         LOG.debug("Output -> {}", ctx);
 
         return ctx;

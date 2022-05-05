@@ -161,7 +161,12 @@
     <br/>
     <footer>
         <div class="footer-left">
-            <strong >Profesional: </strong><label th:text="${professional.getCompleteName()}"></label>
+            <div th:if="${nameSelfDeterminationFF and !professional.getNameSelfDetermination().isEmpty()}">
+                <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></label>
+            </div>
+            <div th:if="${!nameSelfDeterminationFF or professional.getNameSelfDetermination().isEmpty()}">
+                <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getFirstName())}"></label>
+            </div>
             <p><strong>Matrícula: </strong><label th:text="${professional.licenceNumber}"></label></p>
         </div>
         <div class="footer-right">

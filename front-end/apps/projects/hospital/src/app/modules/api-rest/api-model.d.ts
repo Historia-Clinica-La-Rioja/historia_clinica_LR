@@ -1267,6 +1267,7 @@ export interface HospitalUserPersonInfoDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
     personId: number;
 }
 
