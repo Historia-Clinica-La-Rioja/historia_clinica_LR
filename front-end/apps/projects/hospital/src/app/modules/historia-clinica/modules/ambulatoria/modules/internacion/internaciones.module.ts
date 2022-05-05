@@ -15,7 +15,7 @@ import { AlergiasComponent } from './components/alergias/alergias.component';
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
-import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
+import { InternmentPatientTableComponent } from './components/internment-patient-table/internment-patient-table.component';
 import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
@@ -43,7 +43,7 @@ import { DocumentDeletionReasonComponent } from './dialogs/document-deletion-rea
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
 		DiagnosticosComponent,
-		InternacionesTableComponent,
+		InternmentPatientTableComponent,
 		InternmentEpisodeSummaryComponent,
 		MedicacionComponent,
 		VacunasComponent,
@@ -59,9 +59,10 @@ import { DocumentDeletionReasonComponent } from './dialogs/document-deletion-rea
 		SelectMainDiagnosisComponent,
 		DocumentDeletionReasonComponent,
 	],
-	exports: [
-		InternmentEpisodeSummaryComponent
-	],
+    exports: [
+        InternmentEpisodeSummaryComponent,
+        InternmentPatientTableComponent
+    ],
 	imports: [
 		CommonModule,
 		FormsModule,

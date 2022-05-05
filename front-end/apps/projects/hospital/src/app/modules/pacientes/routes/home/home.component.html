@@ -14,7 +14,7 @@
 	<section *appHasRole="['ADMINISTRATIVO']">
 		<h2 class="page-title" [translate]="'pacientes.home.TITLE_SEARCH'"></h2>
 		<div fxLayout="row">
-			<app-pacientes-table fxFlex="100%"></app-pacientes-table>
+			<app-internment-patient-table fxFlex="100%" [redirect]="redirect"></app-internment-patient-table>
 		</div>
 	</section>
 </app-content>

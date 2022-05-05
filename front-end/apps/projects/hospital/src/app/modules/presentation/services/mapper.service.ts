@@ -7,7 +7,9 @@ import {
 	PatientType,
 	PersonalInformationDto,
 	BedSummaryDto,
-	InternmentPatientDto, HCEEvolutionSummaryDto,
+	InternmentPatientDto,
+	HCEEvolutionSummaryDto,
+	InternmentEpisodeDto,
 } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
@@ -15,7 +17,7 @@ import { PatientTypeData } from '@presentation/components/patient-type-logo/pati
 import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
 import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
-import { PatientTableData } from '../../pacientes/component/pacientes-table/pacientes-table.component';
+import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
 
 @Injectable({
 	providedIn: 'root'
@@ -26,7 +28,7 @@ export class MapperService {
 	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
 	toPersonalInformationData: (o1: CompletePatientDto, o2: PersonalInformationDto) => PersonalInformation = MapperService._toPersonalInformationData;
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
-	toPatientTableData: (patient: InternmentPatientDto) => PatientTableData = MapperService._toPatientTableData;
+	toInternmentPatientTableData: (patient: InternmentPatientDto | InternmentEpisodeDto) => InternmentPatientTableData = MapperService._toInternmentPatientTableData;
 	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
 	toHistoricalProblems: (hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
 
@@ -100,19 +102,46 @@ export class MapperService {
 		};
 	}
 
-	private static _toPatientTableData(patient: InternmentPatientDto): PatientTableData {
-		return {
-			birthDate: patient.birthDate,
-			firstName: patient.firstName,
-			genderId: patient.genderId,
-			identificationNumber: patient.identificationNumber,
-			identificationTypeId: patient.identificationTypeId,
-			internmentId: patient.internmentId,
-			lastName: patient.lastName,
-			patientId: patient.patientId,
-			fullName: `${patient.firstName} ${patient.lastName}`,
-			nameSelfDetermination: patient.nameSelfDetermination
-		};
+	private static _toInternmentPatientTableData(patient: InternmentPatientDto | InternmentEpisodeDto): InternmentPatientTableData {
+		if ("patientId" in patient)
+			return mapInternmentPatientToInternmentTable(patient);
+		return mapInternmentEpisodeToInternmentTable(<InternmentEpisodeDto>patient);
+
+		function mapInternmentPatientToInternmentTable(patient: InternmentPatientDto): InternmentPatientTableData {
+			return {
+				patientId: patient.patientId,
+				firstName: patient.firstName,
+				identificationNumber: patient.identificationNumber,
+				identificationTypeId: patient.identificationTypeId,
+				internmentId: patient.internmentId,
+				lastName: patient.lastName,
+				fullName: `${patient.firstName} ${patient.lastName}`,
+				nameSelfDetermination: patient.nameSelfDetermination,
+				bedInfo: {
+					sector: patient.sectorDescription,
+					roomNumber: patient.roomNumber,
+					bedNumber: patient.bedNumber
+				}
+			}
+		}
+
+		function mapInternmentEpisodeToInternmentTable(info: InternmentEpisodeDto): InternmentPatientTableData {
+			return {
+				patientId: info.patient.id,
+				firstName: info.patient.firstName,
+				identificationNumber: info.patient.identificationNumber,
+				identificationTypeId: info.patient.identificationTypeId,
+				internmentId: info.id,
+				lastName: info.patient.lastName,
+				fullName: `${info.patient.firstName} ${info.patient.lastName}`,
+				nameSelfDetermination: info.patient.nameSelfDetermination,
+				bedInfo: {
+					sector: info.bed.room.sector.description,
+					roomNumber: info.bed.room.roomNumber,
+					bedNumber: info.bed.bedNumber
+				}
+			}
+		}
 	}
 
 	private static _toBedManagement(bedSummary: BedSummaryDto[]): BedManagement[] {

@@ -12,7 +12,6 @@ import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SearchComponent } from './routes/search/search.component';
 // components
-import { PacientesTableComponent } from './component/pacientes-table/pacientes-table.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
@@ -40,7 +39,6 @@ import { ArtComponent } from './dialogs/art/art.component';
 		ProfileComponent,
 		SearchComponent,
 		// components
-		PacientesTableComponent,
 		SearchCreateComponent,
 		ViewPatientDetailComponent,
 		AssignedAppointmentsComponent,
