@@ -49,6 +49,7 @@ export class PharmacoComponent implements OnInit {
 	EVENT = "e";
 	HOURS = "h";
 	DOSAGE = "d";
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, diagnostics: DiagnosesGeneralStateDto[] },
 		private readonly dialogRef: MatDialogRef<PharmacoComponent>,
@@ -77,7 +78,7 @@ export class PharmacoComponent implements OnInit {
 			hasSolvent: [false],
 			dosageSolvent: [null],
 
-			diagnoses: [null, [Validators.required]],
+			diagnoses: [this.setDefaultMainDiagnosis()?.id, Validators.required],
 
 			foodRelation: [this.NEGATIVE_OPTION],
 			patientProvided: [false],
@@ -167,6 +168,10 @@ export class PharmacoComponent implements OnInit {
 			}
 		});
 
+	}
+
+	setDefaultMainDiagnosis(): DiagnosesGeneralStateDto {
+		return this.diagnostics.find(e => e.main === true);
 	}
 
 	setIndicationDate(d: Date) {
