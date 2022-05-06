@@ -53,8 +53,9 @@ export class EpisodeFilterService {
 	}
 
 	static filterByIdentificationNumber(episode: Episode, filters: EpisodeFilters): boolean {
+		const identificationNumberWithoutZeros = Number(filters.identificationNumber).toString();
 		return (filters.identificationNumber ?
-			this.filterString(episode.patient?.person?.identificationNumber, filters.identificationNumber) : true);
+			this.filterString(episode.patient?.person?.identificationNumber, identificationNumberWithoutZeros) : true);
 	}
 
 	static filterByFirstName(episode: Episode, filters: EpisodeFilters): boolean {

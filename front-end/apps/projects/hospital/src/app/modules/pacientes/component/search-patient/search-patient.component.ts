@@ -64,7 +64,7 @@ export class SearchPatientComponent implements OnInit {
 			const formSearchValue = this.formSearch.value;
 			const searchRequest = {
 				identificationTypeId: formSearchValue.identificationType,
-				identificationNumber: formSearchValue.identificationNumber,
+				identificationNumber: +formSearchValue.identificationNumber,
 				genderId: formSearchValue.gender,
 			};
 			this.patientService.getPatientMinimal(searchRequest).subscribe(

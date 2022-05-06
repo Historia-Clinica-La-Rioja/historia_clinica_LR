@@ -116,6 +116,7 @@ export class HomeComponent implements OnInit {
 			this.formSubmitted = true;
 			this.requiringValues = false;
 			this.requiringAtLeastOneMoreValue = false;
+			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber ? +this.personalInformationForm.value.identificationNumber : null;
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {

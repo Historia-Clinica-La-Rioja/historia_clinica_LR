@@ -843,3 +843,15 @@ databaseChangeLog:
                     name: physical_discharge_date
                     type: timestamp
               tableName: patient_discharge
+ 
+    - changeSet:
+        id: upate-identification_number-with-zeros
+        comment: Edita documentos existentes ingresados con ceros a la izquierda.
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE person
+                SET identification_number = TRIM('0' FROM identification_number)
+                WHERE identification_number LIKE '0%'
