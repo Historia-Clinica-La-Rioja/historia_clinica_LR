@@ -139,6 +139,9 @@
 						"AFTER-EVENT":" Ante un evento"
 					},
 					"messages": {
+						"TITLE": "Para realizar una indicación el episodio debe tener un diagnóstico asociado.",
+						"CONTENT": "Por favor, agregué primero un diagnóstico en la evolución del episodio y luego realice la indicación.",
+						"OK_BUTTON": "Aceptar",
 						"ERROR": "Error al guardar un nuevo fármaco",
 						"SUCCESS": "El fármaco se guardó exitosamente"
 					}

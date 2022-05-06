@@ -17,6 +17,7 @@ import { ParenteralPlanComponent } from "@historia-clinica/modules/ambulatoria/m
 import { PharmacoComponent } from '../../dialogs/pharmaco/pharmaco.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 
 const DIALOG_SIZE = '45%';
 
@@ -147,31 +148,44 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	}
 
 	openPharmacoDialog() {
-		const dialogRef = this.dialog.open(PharmacoComponent, {
-			data: {
-				entryDate: this.entryDate,
-				actualDate: this.actualDate,
-				patientId: this.patientId,
-				professionalId: this.professionalId,
-				diagnostics: this.diagnostics
-			},
-			autoFocus: true,
-			disableClose: false
-		});
-
-		dialogRef.afterClosed().subscribe((pharmaco: PharmacoDto) => {
-
-			if (pharmaco) {
-				this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
-					this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
-					this.indicationsFacadeService.updateIndication({ pharmaco: true });
+		if (this.diagnostics?.length > 0) {
+			const dialogRef = this.dialog.open(PharmacoComponent, {
+				data: {
+					entryDate: this.entryDate,
+					actualDate: this.actualDate,
+					patientId: this.patientId,
+					professionalId: this.professionalId,
+					diagnostics: this.diagnostics
 				},
-					error => {
-						error?.text ?
-							this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
-					});
+				autoFocus: true,
+				disableClose: false
+			});
+
+			dialogRef.afterClosed().subscribe((pharmaco: PharmacoDto) => {
+
+				if (pharmaco) {
+					this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
+						this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
+						this.indicationsFacadeService.updateIndication({ pharmaco: true });
+					},
+						error => {
+							error?.text ?
+								this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
+						});
+				}
+			});
+		} else {
+			this.dialog.open(ConfirmDialogComponent, { data: getConfirmDataDialog() });
+			function getConfirmDataDialog() {
+				const keyPrefix = 'indicacion.internment-card.dialogs.pharmaco.messages';
+				return {
+					showMatIconError: true,
+					title: `${keyPrefix}.TITLE`,
+					content: `${keyPrefix}.CONTENT`,
+					okButtonLabel: `${keyPrefix}.OK_BUTTON`,
+				};
 			}
-		});
+		}
 	}
 
 	openIndicationDialog() {
