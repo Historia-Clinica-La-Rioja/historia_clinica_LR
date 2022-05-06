@@ -299,7 +299,8 @@
 			"info": {
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			},
-			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar"
+			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
+			"CLINICAL_EVALUATION": "Evaluación clínica"
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
