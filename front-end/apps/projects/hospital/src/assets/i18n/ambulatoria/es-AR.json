@@ -479,6 +479,16 @@
 				"study_state" : {
 					"PENDING": "Pendiente",
 					"COMPLETED": "Completo"
+				},
+				"sections": {
+					"IMAGES": "Imágenes",
+					"LABORATORY": "Laboratorio",
+					"PATHOLOGIC_ANATOMY": "Anatomía patológica",
+					"HEMOTHERAPY": "Hemoterapia",
+					"SURGICAL_PROCEDURE": "Procedimientos quirúrgico",
+					"OTHER_PROCEDURES_AND_PRACTICES": "Otros procedimientos y prácticas",
+					"ADVICE": "Asesoramiento",
+					"EDUCATION": "Educación"
 				}
             },
             "internacion": {
