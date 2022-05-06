@@ -118,7 +118,7 @@ public class ReportPortImpl implements ReportPort {
         var result = new SnvsCitizenDto();
         result.setNombre(patient.getFirstName());
         result.setApellido(patient.getLastName());
-        result.setSexo(patient.getGenderId() == (short) 1 ? "F" : "M");
+        result.setSexo(buildGender(patient.getGenderId()));
         result.setMail(patient.getEmail());
         result.setNumeroDocumento(patient.getIdentificationNumber());
         result.setTipoDocumento(patient.getIdentificationTypeId()); // TODO hay que chequear si el mapeo funciona
@@ -129,6 +129,17 @@ public class ReportPortImpl implements ReportPort {
         result.setDomicilio(buildAddress(patient.getAddress()));
         return result;
     }
+
+    private String buildGender(Short genderId){
+		switch (genderId) {
+			case (short) 1:
+				return "F";
+			case (short) 2:
+				return "M";
+			default:
+				return "X";
+		}
+	}
 
     private SnvsAddressDto buildAddress(AddressDataBo address) {
         if (address == null)
