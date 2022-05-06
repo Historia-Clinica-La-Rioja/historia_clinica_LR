@@ -3,7 +3,7 @@ import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay } from "date-fns";
 import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { DiagnosesGeneralStateDto, DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
+import { DiagnosesGeneralStateDto, DietDto, MasterDataInterface, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
 import { DateTimeDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/s
 import { ParenteralPlanComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/parenteral-plan/parenteral-plan.component";
 import { PharmacoComponent } from '../../dialogs/pharmaco/pharmaco.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 const DIALOG_SIZE = '45%';
 
@@ -45,6 +46,8 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
 	@Input() patientId: number;
+	ACTIVE_STATE = "Activo";
+	clinicalStatus: MasterDataInterface<string>[];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -53,8 +56,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		private readonly internmentEpisode: InternmentEpisodeService,
 		private readonly internmentIndicationService: InternmentIndicationService,
 		private readonly internmentStateService: InternmentStateService,
+		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.viewDay = {
@@ -74,7 +78,15 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
 		this.filterIndications();
 		this.internmentIndicationService.getOtherIndicationTypes().subscribe((othersIndicationsType: OtherIndicationTypeDto[]) => this.othersIndicatiosType = othersIndicationsType);
-		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => this.diagnostics = diagnostics);
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
+			if (diagnostics)
+				this.internacionMasterdataService.getHealthClinical().subscribe(healthClinical => {
+
+					this.clinicalStatus = healthClinical?.filter(s => s.description === this.ACTIVE_STATE);
+					this.diagnostics = diagnostics?.filter(d => this.clinicalStatus.find(e => e?.id === d?.statusId));
+
+				});
+		});
 	}
 
 	viewAnotherDay(daysToMove: number) {
