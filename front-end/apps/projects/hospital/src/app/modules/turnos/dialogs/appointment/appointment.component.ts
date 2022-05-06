@@ -386,6 +386,12 @@ export class AppointmentComponent implements OnInit {
 			if(this.coverageData.condition) {
 				summaryInfo.condition = this.coverageData.condition;
 			}
+			if(this.coverageData.medicalCoverage.cuit) {
+				summaryInfo.cuit = this.coverageData.medicalCoverage.cuit;
+			}
+			if(this.coverageData.medicalCoverage.type) {
+				summaryInfo.type = this.coverageData.medicalCoverage.type;
+			}
 		}
 		this.summaryCoverageData = summaryInfo;
 	}
