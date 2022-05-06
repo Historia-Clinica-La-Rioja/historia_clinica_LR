@@ -37,7 +37,7 @@ public interface MedicalCoverageRepository extends SGXAuditableEntityJPAReposito
     Optional<MedicalCoverage> findByCUIT(@Param("cuit") String cuit);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT mc FROM MedicalCoverage mc WHERE mc.type = :type")
+	@Query(value = "SELECT mc FROM MedicalCoverage mc WHERE mc.type = :type AND mc.deleteable.deleted = false")
 	List<MedicalCoverage> findAllByType(Sort sort, @Param("type") Short type);
 
     @Transactional
