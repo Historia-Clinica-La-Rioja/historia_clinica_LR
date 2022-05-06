@@ -228,8 +228,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 				dto.getAffiliateNumber(),
 				medicalCoverageBo,
 				dto.getCondition(),
-				LocalDate.parse(dto.getStartDate()),
-				LocalDate.parse(dto.getEndDate()),
+				dto.getStartDate() != null ? LocalDate.parse(dto.getStartDate()) : null,
+				dto.getEndDate() != null ? LocalDate.parse(dto.getEndDate()) : null,
 				dto.getPlanId(),
 				dto.getPlanName());
 
