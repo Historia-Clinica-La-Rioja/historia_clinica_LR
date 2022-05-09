@@ -101,6 +101,14 @@ export class DocumentActionsService {
 							},
 							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 						break;
+					case "Nota de evolución de enfermería":
+						this.evolutionNoteService.deleteEvolutionDiagnosis(document.id, internmentEpisodeId, reason).subscribe(
+							success => {
+								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
+								this.updateInformation();
+							},
+							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
+						break;
 					case "Epicrisis":
 						this.epicrisisService.deleteEpicrisis(document.id, internmentEpisodeId, reason).subscribe(
 							success => {
