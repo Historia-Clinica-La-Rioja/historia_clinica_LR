@@ -54,8 +54,7 @@ import { MedicalCoverageSummaryViewComponent } from './components/medical-covera
 import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
 import { CreateInternmentOrderComponent } from './dialogs/create-internment-order/create-internment-order.component';
 import { DiagnosisRequiredComponent } from './dialogs/diagnosis-required/diagnosis-required.component';
-import { StudyListElementComponent } from './components/study-list-element/study-list-element.component';
-import { StudyComponent } from './components/study/study.component';
+import { EstudioModule } from './modules/estudio/estudio.module';
 
 @NgModule({
 	declarations: [
@@ -98,8 +97,6 @@ import { StudyComponent } from './components/study/study.component';
 		MedicalCoverageSummaryViewComponent,
   		CreateInternmentOrderComponent,
     	DiagnosisRequiredComponent,
-  		StudyListElementComponent,
-    	StudyComponent,
 	],
     imports: [
         CommonModule,
@@ -114,7 +111,8 @@ import { StudyComponent } from './components/study/study.component';
         OdontologiaModule,
         ClipboardModule,
         IndicacionModule,
-        InternacionesModule
+        InternacionesModule,
+		EstudioModule
     ]
 })
 export class AmbulatoriaModule {
