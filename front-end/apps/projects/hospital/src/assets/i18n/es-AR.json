@@ -78,15 +78,16 @@
 		"ADD_PRIVATE_HEALTH_INSURANCES": "Agregar prepaga",
 		"NEW_HEALTH_INSURANCE": "Agregar nueva Obra social",
 		"NEW_PRIVATE_HEALTH_INSURANCE": "Agregar nueva Prepaga",
+		"NEW_ART_COVERAGE": "Agregar nueva ART",
 		"UPDATE_HEALTH_INSURANCE": "Editar Obra Social",
-		"ADD_ART_COVERAGE": "Agregar ART",
-		"NEW_ART_COVERAGES": "Agregar nueva ART",
 		"UPDATE_PRIVATE_HEALTH_INSURANCE": "Editar Prepaga",
 		"buttons": {
 			"NEW_HEALTH_INSURANCE": "+ Agregar nueva Obra social",
 			"NEW_PRIVATE_HEALTH_INSURANCE": "+ Agregar nueva Prepaga",
+			"NEW_ART_COVERAGE": "+ Agregar nueva ART",
 			"ADD_HEALTH_INSURANCE": "Agregar obra social",
-			"ADD_PRIVATE_HEALTH_INSURANCE": "Agregar prepaga"
+			"ADD_PRIVATE_HEALTH_INSURANCE": "Agregar prepaga",
+			"ADD_ART_COVERAGE": "Agregar ART"
 		},
 		"CUIT_LABEL": "CUIT",
 		"PLAN_LABEL": "Plan",

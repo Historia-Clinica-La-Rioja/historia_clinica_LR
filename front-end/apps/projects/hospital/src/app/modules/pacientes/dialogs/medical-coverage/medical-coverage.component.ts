@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import {
-	ARTCoverageDto, CoverageDto,
+	CoverageDto,
 	HealthInsuranceDto,
 	MedicalCoverageDto,
 	PrivateHealthInsuranceDto
@@ -10,13 +10,10 @@ import { HealthInsuranceService } from '@api-rest/services/health-insurance.serv
 import { RenaperService } from '@api-rest/services/renaper.service';
 import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
-import { MIN_DATE } from "@core/utils/date.utils";
 import { EPatientMedicalCoverageCondition } from '@api-rest/api-model';
-import { ArtCoverageService } from "@api-rest/services/art-coverage.service";
 import { HealthInsuranceComponent } from "@pacientes/dialogs/health-insurance/health-insurance.component";
 import { PrivateHealthInsuranceComponent } from "@pacientes/dialogs/private-health-insurance/private-health-insurance.component";
-import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
+import { ArtComponent } from "@pacientes/dialogs/art/art.component";
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -29,19 +26,12 @@ export class MedicalCoverageComponent implements OnInit {
 
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	loading = true;
-	minDate = MIN_DATE;
-	artCoverageForm: FormGroup;
-	artCoverageFilteredMasterData: ARTCoverageDto[];
-	
-	private artCoverageMasterData: ARTCoverageDto[];
-	private artCoverageToAdd: MedicalCoverage;
+
 	private healthInsuranceMasterData: MedicalCoverageDto[];
 
 	constructor(
-		private formBuilder: FormBuilder,
 		private renaperService: RenaperService,
 		public readonly healthInsuranceService: HealthInsuranceService,
-		public readonly artCoverageService: ArtCoverageService,
 		public dialogRef: MatDialogRef<MedicalCoverageComponent>,
 		@Inject(MAT_DIALOG_DATA) public personInfo: {
 			genderId: number;
@@ -84,35 +74,6 @@ export class MedicalCoverageComponent implements OnInit {
 		}
 		);
 
-		this.artCoverageService.getAll().subscribe((values: ARTCoverageDto[]) => {
-			this.artCoverageFilteredMasterData = values;
-			this.artCoverageMasterData = values;
-		});
-
-	
-		this.artCoverageForm = this.formBuilder.group({
-			coverage: [null, Validators.required],
-			cuit: []
-		});
-		this.artCoverageForm.controls.cuit.disable();
-
-		this.artCoverageForm.controls.coverage.valueChanges.subscribe((newValue: string) => {
-			if (newValue) {
-				this.artCoverageFilteredMasterData =
-					this.artCoverageMasterData
-						.filter(data => data.name.toLowerCase().includes(newValue.toLowerCase()));
-			} else {
-				this.artCoverageFilteredMasterData = this.artCoverageMasterData;
-			}
-		});
-
-	}
-
-	selectARTCoverage(event: MatOptionSelectionChange, coverage: CoverageDto): void {
-		if (event.isUserInput){
-			this.artCoverageToAdd = this.fromARTCoverageMasterDataToMedicalCoverage(coverage);
-			this.artCoverageForm.controls.cuit.setValue(this.artCoverageToAdd.cuit);
-		}
 	}
 
 	getFullHealthInsuranceText(healthInsurance: MedicalCoverageDto): string {
@@ -133,16 +94,6 @@ export class MedicalCoverageComponent implements OnInit {
 		return initText + endText;
 	}
 	// -----------------------------------------------------------------------------------------------------------------------------
-
-	addARTCoverage(formDirective: FormGroupDirective): void {
-		if (this.artCoverageToAdd && this.artCoverageForm.valid) {
-			const toAdd = this.getARTCoverageToAdd();
-			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
-			formDirective.resetForm();
-			this.artCoverageForm.reset();
-			this.artCoverageToAdd = null;
-		}
-	}
 
 	save() {
 		this.dialogRef.close({
@@ -168,21 +119,6 @@ export class MedicalCoverageComponent implements OnInit {
 
 	getPatientARTCoverages(): PatientMedicalCoverage[] {
 		return this.patientMedicalCoverages.filter(s => s.medicalCoverage.type === EMedicalCoverageType.ART && s.active);
-	}
-
-	private getARTCoverageToAdd(): PatientMedicalCoverage {
-		const toAdd: PatientMedicalCoverage = {
-			medicalCoverage: this.artCoverageToAdd,
-			active: true
-		};
-		return toAdd;
-	}
-
-	private fromARTCoverageMasterDataToMedicalCoverage(coverage: CoverageDto): MedicalCoverage {
-		const coverageId = this.artCoverageFilteredMasterData
-			.filter((s: CoverageDto) => s.id === coverage.id)
-			.map(s => s.id)[0];
-		return new MedicalCoverage(coverageId, coverage.name, EMedicalCoverageType.ART, coverage.cuit);
 	}
 
 	private fromRenaperToPatientMedicalCoverage(healthInsurance: MedicalCoverageDto): PatientMedicalCoverage {
@@ -232,6 +168,18 @@ export class MedicalCoverageComponent implements OnInit {
 		dialogRef.afterClosed().subscribe( (privateHealthInsurance:PatientMedicalCoverage) => {
 			if (privateHealthInsurance) {
 				this.addMedicalCoverage(privateHealthInsurance);
+			}
+		});
+	}
+
+	openAddArt() {
+		const dialogRef = this.dialog.open(ArtComponent, {
+			autoFocus: true,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe((art:PatientMedicalCoverage) => {
+			if (art) {
+				this.addMedicalCoverage(art);
 			}
 		});
 	}

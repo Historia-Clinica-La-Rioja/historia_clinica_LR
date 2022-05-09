@@ -113,36 +113,11 @@
 				</mat-card>
 			</ng-template>
 		</div>
-
-		<div>
-			<strong translate="medical-coverage.NEW_ART_COVERAGES"></strong>
-			<form [formGroup]="artCoverageForm" fxLayoutGap="5px" class="form" #formDirectiveARTCoverageForm="ngForm"
-				  (ngSubmit)="addARTCoverage(formDirectiveARTCoverageForm)">
-				<div fxLayout="column" fxLayoutGap="10px">
-					<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column">
-						<mat-form-field appearance="outline">
-							<input type="text" placeholder="{{ 'medical-coverage.SEARCH_ART' | translate }}" aria-label="Number"
-								   formControlName="coverage" matInput [matAutocomplete]="autoART">
-							<mat-autocomplete autoActiveFirstOption #autoART="matAutocomplete">
-								<mat-option *ngFor="let artCoverage of artCoverageFilteredMasterData"
-											(onSelectionChange)="selectARTCoverage($event, artCoverage)"
-											[value]="artCoverage.name">
-									<span class="mat-body">{{artCoverage.name}}</span>
-								</mat-option>
-							</mat-autocomplete>
-							<mat-error translate="forms.REQUIRED"></mat-error>
-						</mat-form-field>
-						<mat-form-field appearance="outline">
-							<mat-label [translate]="'medical-coverage.CUIT_LABEL'"></mat-label>
-							<input id="artCuit" name="artCuit"
-								   formControlName="cuit" placeholder="{{'medical-coverage.CUIT_LABEL' | translate}}" matInput>
-						</mat-form-field>
-					</div>
-					<button mat-stroked-button color="primary" class="uppercase margin" id="add-art-coverage"
-							type="submit" name="add-art-coverage"
-							translate="medical-coverage.ADD_ART_COVERAGE"></button>
-				</div>
-			</form>
+		<div fxLayout="row" fxLayoutAlign="start center">
+			<button mat-button id="add-art" type="button" color="primary" class="text-button"
+					onclick="this.blur()" (click)="openAddArt()" >
+				<span [translate]="'medical-coverage.buttons.NEW_ART_COVERAGE'"></span>
+			</button>
 		</div>
 	</mat-card>
 

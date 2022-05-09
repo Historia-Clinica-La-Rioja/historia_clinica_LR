@@ -1,0 +1,37 @@
+<div id="art-coverage-dialog" class="art-coverage-dialog">
+	<div fxLayout="row" fxLayoutAlign="space-between center" class="art-coverage-dialog-header">
+		<h1 class="art-coverage-dialog-title" mat-dialog-title [translate]="'medical-coverage.NEW_ART_COVERAGE'"></h1>
+		<button class="close-art-coverage-dialog" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<div mat-dialog-content fxLayout="row" fxLayoutGap="10px">
+		<form [formGroup]="artCoverageForm" (ngSubmit)="addARTCoverage()">
+			<div fxLayout="row" fxLayoutGap="10px">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'medical-coverage.ART'"></mat-label>
+					<input type="text" placeholder="{{ 'medical-coverage.SEARCH_ART' | translate }}" aria-label="Number"
+						   formControlName="coverage" matInput [matAutocomplete]="autoART">
+					<mat-autocomplete autoActiveFirstOption #autoART="matAutocomplete">
+						<mat-option *ngFor="let artCoverage of artCoverageFilteredMasterData"
+									(onSelectionChange)="selectARTCoverage($event, artCoverage)"
+									[value]="artCoverage.name">
+							<span class="mat-body">{{artCoverage.name}}</span>
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error translate="forms.REQUIRED"></mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'medical-coverage.CUIT_LABEL'"></mat-label>
+					<input id="artCuit" name="artCuit"
+						   formControlName="cuit" placeholder="{{'medical-coverage.CUIT_LABEL' | translate}}" matInput>
+				</mat-form-field>
+			</div>
+			<div fxLayoutAlign="end center" id="add-art-coverage">
+				<button mat-flat-button class="uppercase" type="submit" color="primary">
+					<span [translate]="'medical-coverage.buttons.ADD_ART_COVERAGE'"></span>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
