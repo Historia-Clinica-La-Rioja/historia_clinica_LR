@@ -1,18 +1,21 @@
 package net.pladema.reports.service.impl;
 
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.reports.controller.dto.AnnexIIDto;
-import net.pladema.reports.repository.AnnexReportRepository;
-import net.pladema.reports.service.AnnexReportService;
-import net.pladema.reports.service.domain.AnnexIIBo;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.reports.controller.dto.AnnexIIDto;
+import net.pladema.reports.repository.AnnexReportRepository;
+import net.pladema.reports.repository.entity.AnnexIIOdontologyVo;
+import net.pladema.reports.service.AnnexReportService;
+import net.pladema.reports.service.domain.AnnexIIBo;
 
 @Service
 public class AnnexReportServiceImpl implements AnnexReportService {
@@ -33,20 +36,51 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         AnnexIIBo result = annexReportRepository.getAppointmentAnnexInfo(appointmentId).map(AnnexIIBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
-        LOG.debug("Output -> {}", result);
-        return result;
-    }
+		List<AnnexIIOdontologyVo> odontologyListData = annexReportRepository.getAppointmentOdontologyAnnexInfo(appointmentId);
+		return completeAnnexIIBo(result, odontologyListData);
+	}
 
     @Override
     public AnnexIIBo getConsultationData(Long documentId) {
         LOG.debug("Input parameter -> documentId {}", documentId);
-        AnnexIIBo result = annexReportRepository.getConsultationAnnexInfo(documentId).map(AnnexIIBo::new)
-                .orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
-        LOG.debug("Output -> {}", result);
-        return result;
-    }
+		AnnexIIBo result = null;
 
-    @Override
+		try{
+			result = annexReportRepository.getConsultationAnnexInfo(documentId).map(AnnexIIBo::new)
+					.orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
+		} catch (NotFoundException e) {/*nothing to do*/}
+
+		try {
+			result = annexReportRepository.getOdontologyConsultationAnnexGeneralInfo(documentId).map(AnnexIIBo::new)
+					.orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
+			List<AnnexIIOdontologyVo> odontologyListData = annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId);
+			result = completeAnnexIIBo(result, odontologyListData);
+		} catch (NotFoundException e) {/*nothing to do*/}
+
+		if(result == null)
+			throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
+		else
+			return result;
+	}
+
+	private AnnexIIBo completeAnnexIIBo(AnnexIIBo result, List<AnnexIIOdontologyVo> odontologyListData) {
+		if(!odontologyListData.isEmpty()){
+			result.setExistsConsultation(true);
+			result.setSpecialty(odontologyListData.get(0).getSpeciality());
+			for(AnnexIIOdontologyVo i : odontologyListData){
+				if(result.getProblems() == null)
+					result.setProblems(i.getDiagnostics());
+				else
+					result.setProblems(result.getProblems() + "| " + i.getDiagnostics());
+				if(result.getHasProcedures() == null || !result.getHasProcedures())
+					result.setHasProcedures(i.getHasProcedures());
+			}
+		}
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
     public Map<String, Object> createAppointmentContext(AnnexIIDto reportDataDto){
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = loadBasicContext(reportDataDto);
@@ -54,6 +88,10 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         ctx.put("attentionDate", reportDataDto.getAttentionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
+		ctx.put("existsConsultation", reportDataDto.getExistsConsultation());
+		ctx.put("hasProcedures", reportDataDto.getHasProcedures());
+		ctx.put("specialty", reportDataDto.getSpecialty());
+		ctx.put("problems", reportDataDto.getProblems());
         return ctx;
     }
 
