@@ -86,7 +86,6 @@ export class BedDetailComponent implements OnInit, OnChanges {
 					success => {
 						this.snackBarService.showSuccess('internaciones.discharge.messages.PHYSICAL_DISCHARGE_SUCCESS');
 						this.realeseBed.emit(true);
-						this.bedAssign = true;
 						delete this.bedInfo;
 						delete this.bedId;
 					},
