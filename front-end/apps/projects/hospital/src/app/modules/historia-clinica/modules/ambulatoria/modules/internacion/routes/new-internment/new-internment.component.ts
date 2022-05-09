@@ -40,6 +40,7 @@ import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { map } from 'rxjs/operators';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
+import {PatientNameService} from "@core/services/patient-name.service";
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -91,7 +92,8 @@ export class NewInternmentComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly datePipe: DatePipe,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly patientNameService: PatientNameService,) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
@@ -289,6 +291,10 @@ export class NewInternmentComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	getFullName(firstName: string, nameSelfDetermination: string): string {
+		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
 	}
 
 }

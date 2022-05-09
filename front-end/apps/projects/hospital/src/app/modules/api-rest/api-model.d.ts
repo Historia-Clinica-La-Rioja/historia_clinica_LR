@@ -1243,6 +1243,7 @@ export interface HealthcareProfessionalCompleteDto {
 export interface HealthcareProfessionalDto {
     id: number;
     licenseNumber: string;
+    nameSelfDetermination: string;
     person: PersonBasicDataResponseDto;
     personId: number;
 }
