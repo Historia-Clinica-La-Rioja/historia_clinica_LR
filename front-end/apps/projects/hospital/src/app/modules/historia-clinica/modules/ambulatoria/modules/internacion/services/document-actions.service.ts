@@ -38,7 +38,7 @@ export class DocumentActionsService {
 	setPatientDocuments(documents: DocumentSearchDto[]) {
 		this.patientDocument = {
 			hasAnamnesis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Anamnesis"),
-			hasEvolutionNote: !!documents.find((document: DocumentSearchDto) => document.documentType === "Nota de evolución"),
+			evolutionNotes: documents.filter((document: DocumentSearchDto) => document.documentType === "Nota de evolución"),
 			hasEpicrisis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Epicrisis")
 		}
 	}
@@ -49,9 +49,11 @@ export class DocumentActionsService {
 		const createdOn = dateTimeDtoToDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
 			return false;
-		if (document.documentType === "Anamnesis")
-			if (this.patientDocument?.hasEvolutionNote)
+		if (document.documentType === "Anamnesis") {
+			const hasENAfterAnmanesis = !!this.patientDocument.evolutionNotes.find(e => dateTimeDtoToDate(document.createdOn) < dateTimeDtoToDate(e.createdOn));
+			if (hasENAfterAnmanesis)
 				return false;
+		}
 		if (document.documentType === "Nota de evolución")
 			if (this.patientDocument?.hasEpicrisis)
 				return false;
@@ -126,6 +128,6 @@ export interface DocumentSearch {
 
 interface PatientDocument {
 	hasAnamnesis: boolean;
-	hasEvolutionNote: boolean;
+	evolutionNotes: DocumentSearchDto[];
 	hasEpicrisis: boolean;
 }

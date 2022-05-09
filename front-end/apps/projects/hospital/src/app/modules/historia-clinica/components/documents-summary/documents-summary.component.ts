@@ -148,6 +148,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	delete(document: DocumentSearchDto) {
 		this.documentActions.deleteDocument(document, this.internmentEpisodeId);
+		this.activeDocument = undefined;
 	}
 
 	private setInputResetBehaviour() {
