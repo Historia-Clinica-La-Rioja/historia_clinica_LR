@@ -85,8 +85,17 @@
 
 	<div *ngIf="selectedStudyIsTemplate()" class="uppercase template-name"> {{this.getStudyDisplayName()}}: </div>
 
-	<div *ngFor="let study of orderStudiesService.getStudies()" class="capitalize-first-letter" style="padding-bottom: 1em;">
-		{{ study.snomed.pt }}
+	<div *ngFor="let study of orderStudiesService.getStudies(); let i = index" [attr.data-index]="i">
+		<div fxLayout="row" style="padding: 0 15px">
+			<div fxFlex="90%" style="display:flex; align-items: center;">
+				<span class="capitalize-first-letter">
+					{{ study.snomed.pt }}
+				</span>
+			</div>
+			<button fxFlex="10%" mat-icon-button color="warn" [disabled]="!orderHasMultipleStudies()" (click)="removeStudy(i)">
+				<mat-icon>delete</mat-icon>
+			</button>
+		</div>
 	</div>
 
 	<div style="padding-top: 1em; padding-bottom: 1em;">

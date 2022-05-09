@@ -122,6 +122,14 @@ export class CreateInternmentOrderComponent implements OnInit {
 		this.orderStudiesService.addAll(conceptsToLoad);
 	}
 
+	removeStudy(i) {
+		this.orderStudiesService.remove(i);
+	}
+
+	orderHasMultipleStudies(): boolean {
+		return this.orderStudiesService.getStudies().length > 1;
+	}
+
 	getSelectedCategoryDisplayName() {
 		return this.studyCategoryOptions.filter((c) => c.id === this.form.controls.studyCategory.value).pop()?.description;
 	}
