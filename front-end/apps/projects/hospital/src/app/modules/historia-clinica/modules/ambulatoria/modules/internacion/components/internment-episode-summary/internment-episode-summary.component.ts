@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from "@angular/router";
+import { AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
 import { ContextService } from "@core/services/context.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
@@ -9,6 +10,7 @@ import { PermissionsService } from "@core/services/permissions.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { anyMatch } from "@core/utils/array.utils";
 import { ERole } from "@api-rest/api-model";
+import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -35,6 +37,10 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 
 	private readonly routePrefix;
 	private readonly ff: FeatureFlagService;
+	anamnesisDoc: AnamnesisSummaryDto;
+	epicrisisDoc: EpicrisisSummaryDto;
+	lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
+	hasMedicalDischarge: boolean;
 
 	constructor(
 		private router: Router,
@@ -42,17 +48,22 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private readonly permissionsService: PermissionsService,
-		private readonly internmentService: InternmentEpisodeService,
+		private readonly internmentService: InternmentEpisodeService,		
+		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
-
-	ngOnInit() {
+	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.currentUserIsAllowToDoAPhysicalDischarge = (anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_DE_CAMAS]) &&
 				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO])));
 		});
 		this.loadPhysicalDischarge();
+		this.internmentSummaryFacadeService.setInternmentEpisodeId(this.internmentEpisode.id);
+		this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
+		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
+		this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
+		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
 	}
 
 	goToPaseCama(): void {

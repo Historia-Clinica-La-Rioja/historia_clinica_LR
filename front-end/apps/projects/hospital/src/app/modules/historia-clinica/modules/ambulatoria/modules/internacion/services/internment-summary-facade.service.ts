@@ -65,14 +65,18 @@ export class InternmentSummaryFacadeService {
 	initDischargeObservable() {
 		this.hasPhysicalDischargeSubject.next("");
 	}
+		
+	setInternmentEpisodeId(internmentEpisodeId: number): void {
+		this.internmentEpisodeId = internmentEpisodeId;
+		this.initDischargeObservable();
+		this.updateInternmentEpisode();
+	}
 
 	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean, updateData: boolean): void {
 		if (!bloodType) {
 			this.bloodTypeDataSubject.next();
 		}
-		this.internmentEpisodeId = internmentEpisodeId;
-		this.initDischargeObservable();
-		this.updateInternmentEpisode();
+		this.setInternmentEpisodeId(internmentEpisodeId);
 		if (updateData) {
 			this.setFieldsToUpdate({
 				allergies: true,

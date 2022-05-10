@@ -44,6 +44,52 @@
 
 	<mat-divider inset></mat-divider>
 
+	<ng-container *ngIf="physicalDischargeDate">
+
+		<mat-list-item *ngIf="!lastEvolutionNoteDoc.confirmed" class="label-episodes uppercase">
+
+			<mat-icon fontSet="material-icons-outlined" color="warn" mat-list-icon>assignment</mat-icon>
+
+			<span class="document">
+				{{'internaciones.internacion-paciente.pending-document.PENDING_EVOLUTION' | translate}}
+			</span>
+
+		</mat-list-item>
+
+		<mat-list-item *ngIf="!epicrisisDoc?.confirmed" class="label-episodes uppercase">
+
+			<mat-icon fontSet="material-icons-outlined" color="warn" mat-list-icon>assignment_turned_in</mat-icon>
+
+			<span class="document">
+				{{'internaciones.internacion-paciente.pending-document.PENDING_EPICRISIS' | translate}}
+			</span>
+
+		</mat-list-item>
+
+		<mat-list-item *ngIf="!hasMedicalDischarge" class="label-episodes uppercase">
+
+			<mat-icon fontSet="material-icons-outlined" color="warn" mat-list-icon>assignment_return </mat-icon>
+
+			<span class="document">
+				{{'internaciones.internacion-paciente.pending-document.PENDING_MEDICAL_DISCHARGE' | translate}}
+			</span>
+
+		</mat-list-item>
+
+		<mat-list-item class="label-episodes uppercase">
+
+			<mat-icon fontSet="material-icons-outlined" color="warn"  mat-list-icon>keyboard_backspace</mat-icon>
+
+			<span class="document">
+				{{'internaciones.internacion-paciente.pending-document.PENDING_ADMINISTRATIVE_DISCHARGE' | translate}}
+			</span>
+
+		</mat-list-item>
+
+	</ng-container>
+
+	<mat-divider inset></mat-divider>
+
 	<mat-list-item id="days">
 		<div mat-line>
 			<span *ngIf="internmentEpisode?.totalInternmentDays === 1 else multipleDays" class="mat-body-2"
@@ -86,9 +132,9 @@
 	</div>
 	<ng-container *ngIf="showDischarge">
 		<button mat-flat-button id="administrative_discharge_button" color="primary" *appHasRole="['ADMINISTRATIVO']"
-				(click)="goToAdministrativeDischarge()">
-						<span class="uppercase"
-							  [translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
+			(click)="goToAdministrativeDischarge()">
+			<span class="uppercase"
+				[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
 		</button>
 	</ng-container>
 </mat-list>

@@ -358,6 +358,12 @@
 					"ERROR": "Error al guardar nueva fecha de alta probable"
 				}
 			},
+			"pending-document": {
+				"PENDING_EVOLUTION": "Evolución pendiente",
+				"PENDING_EPICRISIS": "Epicrisis pendiente",
+				"PENDING_MEDICAL_DISCHARGE": "Alta médica pendiente",
+				"PENDING_ADMINISTRATIVE_DISCHARGE": "Alta administrativa pendiente"
+			},
 			"main-diagnosis": {
 				"TITLE": "Diagnóstico principal",
 				"actions": {
