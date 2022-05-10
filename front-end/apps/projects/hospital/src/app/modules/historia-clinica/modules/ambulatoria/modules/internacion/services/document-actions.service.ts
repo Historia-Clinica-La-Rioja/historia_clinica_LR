@@ -7,9 +7,9 @@ import { dateTimeDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/dat
 import { MatDialog } from "@angular/material/dialog";
 import { EvolutionNoteService } from "@api-rest/services/evolution-note.service";
 import { EpicrisisService } from "@api-rest/services/epicrisis.service";
-import { DocumentDeletionReasonComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-deletion-reason/document-deletion-reason.component";
 import { AnamnesisService } from "@api-rest/services/anamnesis.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { DocumentActionReasonComponent } from '../dialogs/document-action-reason/document-action-reason.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -81,7 +81,7 @@ export class DocumentActionsService {
 	}
 
 	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number) {
-		const dialogRef = this.dialog.open(DocumentDeletionReasonComponent, {
+		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
 			data: {
 				title: 'internaciones.dialogs.actions-document.DELETE_TITLE',
 			},

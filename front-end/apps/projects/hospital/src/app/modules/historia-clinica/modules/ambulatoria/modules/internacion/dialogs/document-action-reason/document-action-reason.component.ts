@@ -3,16 +3,16 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-	selector: 'app-document-deletion-reason',
-	templateUrl: './document-deletion-reason.component.html',
-	styleUrls: ['./document-deletion-reason.component.scss']
+	selector: 'app-document-action-reason',
+	templateUrl: './document-action-reason.component.html',
+	styleUrls: ['./document-action-reason.component.scss']
 })
-export class DocumentDeletionReasonComponent implements OnInit {
+export class DocumentActionReasonComponent implements OnInit {
 
 	form: FormGroup
 	constructor(
 		private readonly formB: FormBuilder,
-		private dialogRef: MatDialogRef<DocumentDeletionReasonComponent>,
+		private dialogRef: MatDialogRef<DocumentActionReasonComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { title: string },
 	) { }
 
