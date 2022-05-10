@@ -185,12 +185,12 @@ export class MedicalCoverageComponent implements OnInit {
 	}
 
 	private addMedicalCoverage(medicalCoverage: PatientMedicalCoverage) {
-		if (medicalCoverage.id) {
-			const index = this.patientMedicalCoverages.findIndex(patientMedicalCoverage => patientMedicalCoverage.id == medicalCoverage.id);
+		const index =  this.patientMedicalCoverages.findIndex(patientMedicalCoverage => medicalCoverage.id ? patientMedicalCoverage.id == medicalCoverage.id :
+			patientMedicalCoverage.medicalCoverage.name === medicalCoverage.medicalCoverage.name && patientMedicalCoverage.validDate === medicalCoverage.validDate)
+		if (index != -1)
 			this.patientMedicalCoverages.splice(index, 1, medicalCoverage);
-		} else {
+		else
 			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(medicalCoverage);
-		}
 	}
 
 }
