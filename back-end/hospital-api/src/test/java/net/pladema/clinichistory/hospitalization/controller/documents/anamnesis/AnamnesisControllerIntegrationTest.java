@@ -11,6 +11,7 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.DeleteAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveRiskFactorTimeValidator;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
@@ -69,6 +70,8 @@ class AnamnesisControllerIntegrationTest extends IntegrationController {
 	@MockBean
 	private SGHNotNullValidator sghNotNullValidator;
 
+	@MockBean
+	private DeleteAnamnesisService deleteAnamnesisService;
 	@BeforeEach
 	void setup() {
 		buildMockMvc();
