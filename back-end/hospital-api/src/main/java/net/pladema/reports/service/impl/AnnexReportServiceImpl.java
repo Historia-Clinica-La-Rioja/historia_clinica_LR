@@ -3,8 +3,8 @@ package net.pladema.reports.service.impl;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,45 +36,40 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         AnnexIIBo result = annexReportRepository.getAppointmentAnnexInfo(appointmentId).map(AnnexIIBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
-		List<AnnexIIOdontologyVo> odontologyListData = annexReportRepository.getAppointmentOdontologyAnnexInfo(appointmentId);
-		return completeAnnexIIBo(result, odontologyListData);
+		return result;
 	}
 
     @Override
     public AnnexIIBo getConsultationData(Long documentId) {
         LOG.debug("Input parameter -> documentId {}", documentId);
-		AnnexIIBo result = null;
+		AnnexIIBo result;
 
-		try{
-			result = annexReportRepository.getConsultationAnnexInfo(documentId).map(AnnexIIBo::new)
-					.orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
-		} catch (NotFoundException e) {/*nothing to do*/}
-
-		try {
-			result = annexReportRepository.getOdontologyConsultationAnnexGeneralInfo(documentId).map(AnnexIIBo::new)
-					.orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
-			List<AnnexIIOdontologyVo> odontologyListData = annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId);
-			result = completeAnnexIIBo(result, odontologyListData);
-		} catch (NotFoundException e) {/*nothing to do*/}
-
-		if(result == null)
-			throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
-		else
+		var outpatientResultOpt = annexReportRepository.getConsultationAnnexInfo(documentId);
+		if(outpatientResultOpt.isPresent()) {
+			result = new AnnexIIBo(outpatientResultOpt.get());
+			LOG.debug("Output -> {}", result);
 			return result;
+		}
+
+		var odontologyResultOpt = annexReportRepository.getOdontologyConsultationAnnexGeneralInfo(documentId);
+		if(odontologyResultOpt.isPresent()) {
+			result = new AnnexIIBo(odontologyResultOpt.get());
+			Optional<AnnexIIOdontologyVo> odontologyData = annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId);
+			var completeResult = completeAnnexIIBo(result, odontologyData);
+			LOG.debug("Output -> {}", completeResult);
+			return completeResult;
+		}
+
+		throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
 	}
 
-	private AnnexIIBo completeAnnexIIBo(AnnexIIBo result, List<AnnexIIOdontologyVo> odontologyListData) {
-		if(!odontologyListData.isEmpty()){
+	private AnnexIIBo completeAnnexIIBo(AnnexIIBo result, Optional<AnnexIIOdontologyVo> odontologyDataOpt) {
+		if(odontologyDataOpt.isPresent()){
 			result.setExistsConsultation(true);
-			result.setSpecialty(odontologyListData.get(0).getSpeciality());
-			for(AnnexIIOdontologyVo i : odontologyListData){
-				if(result.getProblems() == null)
-					result.setProblems(i.getDiagnostics());
-				else
-					result.setProblems(result.getProblems() + "| " + i.getDiagnostics());
-				if(result.getHasProcedures() == null || !result.getHasProcedures())
-					result.setHasProcedures(i.getHasProcedures());
-			}
+			var odontologyData = odontologyDataOpt.get();
+			result.setSpecialty(odontologyData.getSpeciality());
+			result.setProblems(odontologyData.getDiagnostics());
+			result.setHasProcedures(odontologyData.getHasProcedures());
 		}
 		LOG.debug("Output -> {}", result);
 		return result;

@@ -36,58 +36,70 @@ public class FormReportServiceImpl implements FormReportService {
         LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
-		List<FormVOdontologyVo> odontologyListData = formReportRepository.getAppointmentOdontologyFormVInfo(appointmentId);
-		return completeFormVBo(result, odontologyListData);
-	}
-
-	@Override
-    public FormVBo getConsultationData(Long documentId) {
-        LOG.debug("Input parameter -> documentId {}", documentId);
-		FormVBo result = null;
-
-		try {
-			result = formReportRepository.getConsultationFormVInfo(documentId).map(FormVBo::new)
-					.orElseThrow(() -> new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
-		} catch (NotFoundException e) {/*nothing to do*/}
-
-		try{
-			result = formReportRepository.getOdontologyConsultationFormVGeneralInfo(documentId).map(FormVBo::new)
-					.orElseThrow(() ->new NotFoundException("bad-odontology-id", CONSULTATION_NOT_FOUND));
-			List<FormVOdontologyVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
-			result = completeFormVBo(result, odontologyListData);
-		} catch (NotFoundException e) {/*nothing to do*/}
-
-		if(result == null)
-			throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
-		else
-			return result;
-	}
-
-	private FormVBo completeFormVBo(FormVBo result, List<FormVOdontologyVo> odontologyListData) {
-		if(!odontologyListData.isEmpty()){
-			for(FormVOdontologyVo i : odontologyListData){
-				if(result.getProblems() == null)
-					result.setProblems(i.getDiagnostics());
-				else
-					result.setProblems(result.getProblems() + "| " + i.getDiagnostics());
-				if(i.getCie10Codes() == null)
-					i.setCie10Codes("-");
-				if(result.getCie10Codes() == null)
-					result.setCie10Codes(i.getCie10Codes());
-				else
-					result.setCie10Codes(result.getCie10Codes() + "| " + i.getCie10Codes());
-			}
-		}
-		LOG.debug("Output -> {}", result);
 		return result;
 	}
 
-    @Override
+	@Override
+	public FormVBo getConsultationData(Long documentId) {
+		LOG.debug("Input parameter -> documentId {}", documentId);
+		FormVBo result;
+
+		var outpatientResultOpt = formReportRepository.getConsultationFormVInfo(documentId);
+		if(outpatientResultOpt.isPresent()) {
+			result = new FormVBo(outpatientResultOpt.get());
+			LOG.debug("Output -> {}", result);
+			return result;
+		}
+
+		var odontologyResultOpt = formReportRepository.getOdontologyConsultationFormVGeneralInfo(documentId);
+		if(odontologyResultOpt.isPresent()) {
+			result = new FormVBo(odontologyResultOpt.get());
+			List<FormVOdontologyVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
+			odontologyListData.addAll(formReportRepository.getOdontologyConsultationFormVOtherDataInfo(documentId));
+			var completeResult = completeFormVBo(result, odontologyListData);
+			LOG.debug("Output -> {}", completeResult);
+			return completeResult;
+		}
+
+		throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
+	}
+
+	private FormVBo completeFormVBo(FormVBo result, List<FormVOdontologyVo> listData) {
+		if(!listData.isEmpty()){
+			for(FormVOdontologyVo reportData : listData){
+				result = this.setProblems(result, reportData.getDiagnostics());
+				result = this.setCie10Codes(result, reportData.getCie10Codes());
+			}
+		}
+		return result;
+	}
+
+	private FormVBo setProblems(FormVBo report, String problems){
+		if(report.getProblems() == null)
+			report.setProblems(problems);
+		else
+			report.setProblems(report.getProblems() + "| " + problems);
+		return report;
+	}
+
+	private FormVBo setCie10Codes(FormVBo report, String cie10Codes){
+		if(cie10Codes == null)
+			cie10Codes = "-";
+		if(report.getCie10Codes() == null)
+			report.setCie10Codes(cie10Codes);
+		else
+			report.setCie10Codes(report.getCie10Codes() + "| " + cie10Codes);
+		return report;
+	}
+
+	@Override
     public Map<String, Object> createAppointmentContext(FormVDto reportDataDto){
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = loadBasicContext(reportDataDto);
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
+		ctx.put("problems", reportDataDto.getProblems());
+		ctx.put("cie10Codes", reportDataDto.getCie10Codes());
         return ctx;
     }
 
