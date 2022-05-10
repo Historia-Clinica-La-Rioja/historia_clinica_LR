@@ -1,18 +1,21 @@
 package net.pladema.reports.service.impl;
 
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.reports.controller.dto.FormVDto;
-import net.pladema.reports.repository.FormReportRepository;
-import net.pladema.reports.service.FormReportService;
-import net.pladema.reports.service.domain.FormVBo;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.reports.controller.dto.FormVDto;
+import net.pladema.reports.repository.FormReportRepository;
+import net.pladema.reports.repository.entity.FormVOdontologyVo;
+import net.pladema.reports.service.FormReportService;
+import net.pladema.reports.service.domain.FormVBo;
 
 @Service
 public class FormReportServiceImpl implements FormReportService {
@@ -33,18 +36,51 @@ public class FormReportServiceImpl implements FormReportService {
         LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
-        LOG.debug("Output -> {}", result);
-        return result;
-    }
+		List<FormVOdontologyVo> odontologyListData = formReportRepository.getAppointmentOdontologyFormVInfo(appointmentId);
+		return completeFormVBo(result, odontologyListData);
+	}
 
-    @Override
+	@Override
     public FormVBo getConsultationData(Long documentId) {
         LOG.debug("Input parameter -> documentId {}", documentId);
-        FormVBo result = formReportRepository.getConsultationFormVInfo(documentId).map(FormVBo::new)
-                .orElseThrow(() ->new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
-        LOG.debug("Output -> {}", result);
-        return result;
-    }
+		FormVBo result = null;
+
+		try {
+			result = formReportRepository.getConsultationFormVInfo(documentId).map(FormVBo::new)
+					.orElseThrow(() -> new NotFoundException("bad-outpatient-id", CONSULTATION_NOT_FOUND));
+		} catch (NotFoundException e) {/*nothing to do*/}
+
+		try{
+			result = formReportRepository.getOdontologyConsultationFormVGeneralInfo(documentId).map(FormVBo::new)
+					.orElseThrow(() ->new NotFoundException("bad-odontology-id", CONSULTATION_NOT_FOUND));
+			List<FormVOdontologyVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
+			result = completeFormVBo(result, odontologyListData);
+		} catch (NotFoundException e) {/*nothing to do*/}
+
+		if(result == null)
+			throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
+		else
+			return result;
+	}
+
+	private FormVBo completeFormVBo(FormVBo result, List<FormVOdontologyVo> odontologyListData) {
+		if(!odontologyListData.isEmpty()){
+			for(FormVOdontologyVo i : odontologyListData){
+				if(result.getProblems() == null)
+					result.setProblems(i.getDiagnostics());
+				else
+					result.setProblems(result.getProblems() + "| " + i.getDiagnostics());
+				if(i.getCie10Codes() == null)
+					i.setCie10Codes("-");
+				if(result.getCie10Codes() == null)
+					result.setCie10Codes(i.getCie10Codes());
+				else
+					result.setCie10Codes(result.getCie10Codes() + "| " + i.getCie10Codes());
+			}
+		}
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 
     @Override
     public Map<String, Object> createAppointmentContext(FormVDto reportDataDto){
