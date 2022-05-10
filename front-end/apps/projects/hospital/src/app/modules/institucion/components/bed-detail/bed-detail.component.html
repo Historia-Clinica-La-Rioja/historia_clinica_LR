@@ -78,8 +78,8 @@
                 </div>
             </mat-list-item>
 			<mat-list-item>
-				<div mat-line  id="physical-discharge" *ngIf="!bedInfo.bed.free && patientHasAnamnesis">
-					<button mat-raised-button color="primary" (click)="physicalDischarge()" *appHasRole="['ADMINISTRADOR_DE_CAMAS']">
+				<div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis">
+					<button mat-raised-button color="primary" (click)="physicalDischarge()" *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="physical-discharge">
 						<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
 					</button>
 				</div>

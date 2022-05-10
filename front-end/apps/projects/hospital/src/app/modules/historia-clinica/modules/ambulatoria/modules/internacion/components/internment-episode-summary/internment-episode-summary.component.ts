@@ -70,7 +70,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 				cancelButtonLabel: `buttons.CANCEL`,
 				showMatIconError: true,
 			},
-			width: "40%",
+			width: "25%",
 			autoFocus: false,
 			disableClose: true,
 		});

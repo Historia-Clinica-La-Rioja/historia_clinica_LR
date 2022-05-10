@@ -7,7 +7,7 @@
 			<mat-icon color="primary" mat-list-icon [inline]="true">single_bed</mat-icon>
 			<span class="mat-body-2" *ngIf="!physicalDischargeDate else noInfo">{{internmentEpisode?.bedNumber}}</span>
 			<span class="mat-body-2" *ngIf="!physicalDischargeDate">{{internmentEpisode?.sectorDescription}}</span>
-			<div *ngIf="physicalDischargeDate" fxLayoutAlign="start center" fxLayout.xs="column" fxLayoutGap="10px">
+			<div *ngIf="physicalDischargeDate" fxLayoutAlign="start center" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutGap.xs="2px">
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
 					<mat-icon class="green">check_circle_outline</mat-icon>
 					<span class="green">{{'internaciones.discharge.HAS_PHYSICAL_DISCHARGE' | translate}}</span>
@@ -20,7 +20,7 @@
 	</mat-list-item>
 	<div fxLayout="row">
 		<div *ngIf="patientDocuments.hasAnamnesis && !physicalDischargeDate && currentUserIsAllowToDoAPhysicalDischarge">
-			<button mat-flat-button color="primary" (click)="physicalDischarge()">
+			<button mat-flat-button color="primary" id="physical-discharge" (click)="physicalDischarge()">
 				<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
 			</button>
 		</div>
