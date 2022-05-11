@@ -1,15 +1,5 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_37 
-    
-    - changeSet:
-        id: add-new-gender_indication_type-concepts
-        comment: Agrega género no binario
-        author: lbergottini
-        context: "!schema-only"
-        changes:
-          - sql:
-              sql: |-
-                INSERT INTO gender(id,description) VALUES ('3','X') ON CONFLICT DO NOTHING;
 
     - changeSet:
         id: update-external_clinical_history-notes-type

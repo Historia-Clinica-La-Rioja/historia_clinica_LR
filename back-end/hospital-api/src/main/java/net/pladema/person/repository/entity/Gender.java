@@ -24,8 +24,7 @@ public class Gender implements Serializable {
     private static final long serialVersionUID = 5871312991523529690L;
     public static final short FEMALE = 1;
     public static final short MALE = 2;
-	public static final short X = 3;
-    public static final List<Short> GENDERS = List.of(FEMALE, MALE, X);
+    public static final List<Short> GENDERS = List.of(FEMALE, MALE);
     
     @Id
     @Column(name = "id", nullable = false)
