@@ -98,7 +98,10 @@ export class AppointmentsFacadeService {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
 						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						const to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						let to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						if (from > to) {
+							to = momentParseTime(from).set({hour: 23, minute: 59}).format(DateFormat.HOUR_MINUTE);
+						}
 						const viewName = this.getViewName(appointment.patient?.person);
 						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 						return calendarEvent;

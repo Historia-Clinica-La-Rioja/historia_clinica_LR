@@ -96,8 +96,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.professionalId = Number(qp.idProfessional);
 			this.appointmentFacade.setProfessionalId(this.professionalId);
 		});
-		this.dayStartHour = 8;
-		this.dayEndHour = 21;
 		this.loading = true;
 		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
@@ -313,15 +311,15 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
-		//delete this.dayEndHour;
-		//delete this.dayStartHour;
+		delete this.dayEndHour;
+		delete this.dayStartHour;
 		this.agenda = agenda;
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
-		//this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
+		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
 
 	}
 

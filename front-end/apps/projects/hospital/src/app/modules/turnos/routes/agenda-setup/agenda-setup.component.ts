@@ -191,7 +191,7 @@ export class AgendaSetupComponent implements OnInit {
 
 	private setDoctorOfficeRangeTime() {
 		this.openingTime = getHours(this.form.getRawValue().doctorOffice.openingTime);
-		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime) - 1;
+		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime);
 		function getHours(time: string): number {
 			const hours = momentParseTime(time);
 			return Number(hours.hours());
