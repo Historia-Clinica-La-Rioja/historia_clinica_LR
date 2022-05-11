@@ -80,7 +80,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
         Document doc = new Document(documentBo.getEncounterId(),
                 documentBo.getDocumentStatusId(),
                 documentBo.getDocumentType(),
-                documentBo.getDocumentSource());
+                documentBo.getDocumentSource(),
+				documentBo.getInitialDocumentId());
         loadNotes(doc, Optional.ofNullable(documentBo.getNotes()));
         doc = documentService.save(doc);
         documentBo.setId(doc.getId());

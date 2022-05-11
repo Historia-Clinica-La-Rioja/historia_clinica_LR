@@ -136,6 +136,7 @@ export interface AnamnesisDto extends Serializable {
     immunizations: ImmunizationDto[];
     mainDiagnosis: HealthConditionDto;
     medications: MedicationDto[];
+    modificationReason?: string;
     notes?: DocumentObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
     procedures?: HospitalizationProcedureDto[];
@@ -1328,6 +1329,7 @@ export interface HospitalUserPersonInfoDto {
 }
 
 export interface HospitalizationProcedureDto {
+    id?: number;
     performedDate?: string;
     snomed: SnomedDto;
 }

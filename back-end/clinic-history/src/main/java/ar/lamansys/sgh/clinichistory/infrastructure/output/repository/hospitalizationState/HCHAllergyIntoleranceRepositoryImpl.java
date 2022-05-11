@@ -48,7 +48,7 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                 "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
                 "from temporal t " +
                 "join {h-schema}snomed s on t.snomed_id = s.id " +
-                "where rw = 1 and not status_id = :allergyIntoleranceStatus " +
+                "where rw = 1 and not verification_status_id = :allergyIntoleranceStatus " +
                 "order by t.updated_on desc ";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)

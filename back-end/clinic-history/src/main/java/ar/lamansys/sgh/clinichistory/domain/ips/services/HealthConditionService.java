@@ -80,8 +80,8 @@ public class HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, mainDiagnosis {}", patientInfo, documentId, mainDiagnosis);
         mainDiagnosis.ifPresent(md -> {
             HealthCondition healthCondition = buildMainDiagnoses(patientInfo, md);
-            healthCondition = save(healthCondition);
-
+            if(healthCondition.getId()==null)
+				healthCondition = save(healthCondition);
             md.setId(healthCondition.getId());
             md.setVerificationId(healthCondition.getVerificationStatusId());
             md.setStatusId(healthCondition.getStatusId());
@@ -109,7 +109,8 @@ public class HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, diagnosis {}", patientInfo, documentId, diagnosis);
         diagnosis.forEach(d -> {
             HealthCondition healthCondition = buildDiagnoses(patientInfo, d);
-            healthCondition = save(healthCondition);
+			if(healthCondition.getId() == null)
+            	healthCondition = save(healthCondition);
 
             d.setId(healthCondition.getId());
             d.setVerificationId(healthCondition.getVerificationStatusId());
@@ -155,7 +156,8 @@ public class HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, personalHistories {}", patientInfo, documentId, personalHistories);
         personalHistories.forEach(ph -> {
             HealthCondition healthCondition = buildPersonalHistory(patientInfo, ph);
-            healthCondition = save(healthCondition);
+			if(ph.getId()==null)
+	            healthCondition = save(healthCondition);
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
@@ -184,7 +186,8 @@ public class HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, familyHistories {}", patientInfo, documentId, familyHistories);
         familyHistories.forEach(ph -> {
             HealthCondition healthCondition = buildFamilyHistory(patientInfo, ph);
-            healthCondition = healthConditionRepository.save(healthCondition);
+			if(ph.getId()==null)
+	            healthCondition = healthConditionRepository.save(healthCondition);
 
             ph.setId(healthCondition.getId());
             ph.setVerificationId(healthCondition.getVerificationStatusId());
@@ -223,6 +226,7 @@ public class HealthConditionService {
         healthCondition.setStatusId(ConditionClinicalStatus.ACTIVE);
         healthCondition.setVerificationStatusId(info.getVerificationId());
         healthCondition.setStartDate(dateTimeProvider.nowDate());
+		healthCondition.setId(info.getId());
         LOG.debug(OUTPUT, healthCondition);
         return healthCondition;
     }

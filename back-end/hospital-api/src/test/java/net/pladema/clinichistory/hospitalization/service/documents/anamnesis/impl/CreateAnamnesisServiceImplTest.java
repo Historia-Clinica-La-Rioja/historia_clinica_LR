@@ -76,7 +76,6 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
-	@Mock
 	private AnamnesisValidator anamnesisValidator;
 
 	@BeforeEach
@@ -89,7 +88,8 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
                 medicalCoveragePlanRepository,
 				featureFlagsService);
 		createAnamnesisServiceImpl =
-				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider, anamnesisValidator);
+				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
+						new AnamnesisValidator(featureFlagsService));
 	}
 
 	@Test

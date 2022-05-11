@@ -107,4 +107,6 @@ public interface IDocumentBo {
 
     default LocalDateTime getPerformedDate() { return null; }
 
+	default Long getInitialDocumentId() { return null; }
+
 }

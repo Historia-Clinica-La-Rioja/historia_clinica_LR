@@ -59,21 +59,20 @@ public class LoadAllergies {
     public List<AllergyConditionBo> run(PatientInfoBo patientInfo, Long documentId, List<AllergyConditionBo> allergies) {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, allergies {}", patientInfo, documentId, allergies);
         allergies.forEach(allergy -> {
-            Integer snomedId = snomedService.getSnomedId(allergy.getSnomed())
-                    .orElseGet(() -> snomedService.createSnomedTerm(allergy.getSnomed()));
-            String cie10Codes = calculateCie10Facade.execute(allergy.getSnomed().getSctid(),
-                    new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
-            AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientInfo, allergy, snomedId, cie10Codes);
+			if(allergy.getId()==null) {
+				Integer snomedId = snomedService.getSnomedId(allergy.getSnomed()).orElseGet(() -> snomedService.createSnomedTerm(allergy.getSnomed()));
+				String cie10Codes = calculateCie10Facade.execute(allergy.getSnomed().getSctid(), new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
+				AllergyIntolerance allergyIntolerance = saveAllergyIntolerance(patientInfo, allergy, snomedId, cie10Codes);
 
-            allergy.setId(allergyIntolerance.getId());
-            allergy.setVerificationId(allergyIntolerance.getVerificationStatusId());
-            allergy.setVerification(getVerification(allergy.getVerificationId()));
-            allergy.setStatusId(allergyIntolerance.getStatusId());
-            allergy.setStatus(getStatus(allergy.getStatusId()));
-            allergy.setCategoryId(allergyIntolerance.getCategoryId());
-            allergy.setDate(allergyIntolerance.getStartDate());
-
-            documentService.createDocumentAllergyIntolerance(documentId, allergyIntolerance.getId());
+				allergy.setId(allergyIntolerance.getId());
+				allergy.setVerificationId(allergyIntolerance.getVerificationStatusId());
+				allergy.setVerification(getVerification(allergy.getVerificationId()));
+				allergy.setStatusId(allergyIntolerance.getStatusId());
+				allergy.setStatus(getStatus(allergy.getStatusId()));
+				allergy.setCategoryId(allergyIntolerance.getCategoryId());
+				allergy.setDate(allergyIntolerance.getStartDate());
+			}
+            documentService.createDocumentAllergyIntolerance(documentId, allergy.getId());
         });
         List<AllergyConditionBo> result = allergies;
         LOG.debug(OUTPUT, result);

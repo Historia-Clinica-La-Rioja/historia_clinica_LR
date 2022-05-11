@@ -12,6 +12,7 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.DeleteAnamnesisService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -48,13 +49,16 @@ public class AnamnesisController {
 
     private final DeleteAnamnesisService deleteAnamnesisService;
 
+	private final UpdateAnamnesisService updateAnamnesisService;
+
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
 							   CreateAnamnesisService createAnamnesisService,
 							   AnamnesisService anamnesisService,
 							   AnamnesisMapper anamnesisMapper,
 							   MessageSource messageSource,
 							   PatientExternalService patientExternalService,
-							   DeleteAnamnesisService deleteAnamnesisService) {
+							   DeleteAnamnesisService deleteAnamnesisService,
+							   UpdateAnamnesisService updateAnamnesisService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.anamnesisService = anamnesisService;
@@ -62,6 +66,7 @@ public class AnamnesisController {
         this.messageSource = messageSource;
         this.patientExternalService = patientExternalService;
         this.deleteAnamnesisService = deleteAnamnesisService;
+		this.updateAnamnesisService = updateAnamnesisService;
     }
 
     @PostMapping
@@ -118,6 +123,29 @@ public class AnamnesisController {
 		deleteAnamnesisService.execute(internmentEpisodeId, anamnesisId, reason);
 		LOG.debug(OUTPUT, Boolean.TRUE);
 		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+	@PutMapping("/{anamnesisId}")
+	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
+	public ResponseEntity<Long> updateAnamnesis(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "anamnesisId") Long anamnesisId,
+			@RequestBody AnamnesisDto anamnesisDto) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, anamnesisId {}, newAnanmnesis {}",
+				institutionId, internmentEpisodeId, anamnesisId, anamnesisDto);
+		AnamnesisBo newAnamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
+		internmentEpisodeService.getPatient(internmentEpisodeId)
+				.map(patientExternalService::getBasicDataFromPatient)
+				.map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+				.ifPresentOrElse(newAnamnesis::setPatientInfo, () -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+		newAnamnesis.setPatientId(newAnamnesis.getPatientInfo().getId());
+		newAnamnesis.setInstitutionId(institutionId);
+		newAnamnesis.setEncounterId(internmentEpisodeId);
+		Long result = updateAnamnesisService.execute(internmentEpisodeId, anamnesisId, newAnamnesis);
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
 	}
 
 }

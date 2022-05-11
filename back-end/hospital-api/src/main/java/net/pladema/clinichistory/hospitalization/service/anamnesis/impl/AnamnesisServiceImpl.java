@@ -22,6 +22,7 @@ public class AnamnesisServiceImpl implements AnamnesisService {
 
     private final NoteService noteService;
 
+
     public AnamnesisServiceImpl(DocumentService documentService, NoteService noteService) {
         this.documentService = documentService;
         this.noteService = noteService;
@@ -33,8 +34,8 @@ public class AnamnesisServiceImpl implements AnamnesisService {
         AnamnesisBo result = new AnamnesisBo();
         documentService.findById(documentId).ifPresent( document -> {
             result.setId(document.getId());
-
-            GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
+			result.setInitialDocumentId(document.getInitialDocumentId());
+			GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
             result.setFamilyHistories(generalHealthConditionBo.getFamilyHistories());
