@@ -19,6 +19,7 @@ export class DocumentActionsService {
 	patientDocument: PatientDocument;
 	userId: number;
 	hasMedicalDischarge = false;
+	hasPhysicalDischarge = false;
 
 	constructor(
 		private readonly accountService: AccountService,
@@ -33,12 +34,13 @@ export class DocumentActionsService {
 	setInformation() {
 		this.accountService.getInfo().subscribe((loggedUser: LoggedUserDto) => this.userId = loggedUser.id);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(m => this.hasMedicalDischarge = m);
+		this.internmentSummaryFacadeService.hasPhysicalDischarge$.subscribe(p => this.hasPhysicalDischarge = p);
 	}
 
 	setPatientDocuments(documents: DocumentSearchDto[]) {
 		this.patientDocument = {
 			hasAnamnesis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Anamnesis"),
-			evolutionNotes: documents.filter((document: DocumentSearchDto) => document.documentType === "Nota de evolución"),
+			evolutionNotes: documents.filter((document: DocumentSearchDto) => document.documentType === "Nota de evolución" || document.documentType === "Nota de evolución de enfermería"),
 			hasEpicrisis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Epicrisis")
 		}
 	}
@@ -49,12 +51,17 @@ export class DocumentActionsService {
 		const createdOn = dateTimeDtoToDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
 			return false;
+		if (this.hasMedicalDischarge)
+			return false;
 		if (document.documentType === "Anamnesis") {
+			if (this.hasPhysicalDischarge) {
+				return false;
+			}
 			const hasENAfterAnmanesis = !!this.patientDocument.evolutionNotes.find(e => dateTimeDtoToDate(document.createdOn) < dateTimeDtoToDate(e.createdOn));
-			if (hasENAfterAnmanesis)
+			if ((hasENAfterAnmanesis) || (this.patientDocument?.hasEpicrisis))
 				return false;
 		}
-		if (document.documentType === "Nota de evolución")
+		if ((document.documentType === "Nota de evolución") || (document.documentType === "Nota de evolución de enfermería"))
 			if (this.patientDocument?.hasEpicrisis)
 				return false;
 		if (document.documentType === "Epicrisis")
