@@ -1,14 +1,6 @@
-package ar.lamansys.online.infraestructure.input.rest.booking;
+package ar.lamansys.online.infraestructure.input.service;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookAppointment;
 import ar.lamansys.online.application.booking.CancelBooking;
@@ -19,53 +11,35 @@ import ar.lamansys.online.domain.booking.BookingPersonBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import lombok.extern.slf4j.Slf4j;
 
+
+@Service
 @Slf4j
-@RestController
-@RequestMapping("/booking")
-public class BookingController {
-
+public class BookingExternalService implements SharedBookingPort {
 	private final BookAppointment bookAppointment;
-
-	private final CheckIfMailExists checkIfMailExists;
-
 	private final CancelBooking cancelBooking;
 
-	private final ObjectMapper objectMapper;
-
-	public BookingController(
+	public BookingExternalService(
 			BookAppointment bookAppointment,
 			CheckIfMailExists checkIfMailExists,
 			CancelBooking cancelBooking
 	) {
 		this.bookAppointment = bookAppointment;
-		this.checkIfMailExists = checkIfMailExists;
 		this.cancelBooking = cancelBooking;
-		this.objectMapper = new ObjectMapper();
 	}
 
-	@PutMapping("/save/preappointment")
-	public ResponseEntity<String> bookPreappointment(@RequestBody BookingDto bookingDto) throws JsonProcessingException {
+	public String makeBooking(BookingDto bookingDto) {
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
 				mapToAppointment(bookingDto.getBookingAppointmentDto()),
 				mapToPerson(bookingDto.getBookingPersonDto())
 		);
-		var result = bookAppointment.run(bookingBo);
-		log.debug("Saving preappointment => {}", result);
-		return ResponseEntity.ok(objectMapper.writeValueAsString(result));
+		return bookAppointment.run(bookingBo);
 	}
 
-	@PostMapping("/exists/email")
-	public ResponseEntity<Boolean> existsEmail(@RequestBody String email) {
-		boolean exists = checkIfMailExists.run(email);
-		log.debug("Email {} exists : {}", email, exists);
-		return ResponseEntity.ok(exists);
-	}
-
-	@PutMapping("/cancel")
-	public void cancelBooking(@RequestBody String uuid) {
+	public void cancelBooking(String uuid) {
 		cancelBooking.run(uuid);
 		log.debug("cancel booking {}", uuid);
 	}

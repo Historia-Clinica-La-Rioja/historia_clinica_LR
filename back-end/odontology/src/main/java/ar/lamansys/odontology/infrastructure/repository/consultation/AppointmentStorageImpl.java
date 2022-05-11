@@ -1,13 +1,14 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
-import ar.lamansys.odontology.domain.consultation.AppointmentStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import java.time.LocalDate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import ar.lamansys.odontology.domain.consultation.AppointmentStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
 
 @Service
 public class AppointmentStorageImpl implements AppointmentStorage {

@@ -1,4 +1,4 @@
-package ar.lamansys.online.infraestructure.input.rest.booking.dto;
+package ar.lamansys.sgh.shared.infrastructure.input.service.booking;
 
 import lombok.*;
 
