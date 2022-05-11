@@ -32,6 +32,8 @@ public interface InternmentEpisodeService {
 
     boolean haveEvolutionNoteAfterAnamnesis(Integer internmentEpisodeId);
 
+    boolean havePhysicalDischarge(Integer internmentEpisodeId);
+
     LocalDateTime getEntryDate(Integer internmentEpisodeId);
 
     boolean canCreateEpicrisis(Integer internmentEpisodeId);

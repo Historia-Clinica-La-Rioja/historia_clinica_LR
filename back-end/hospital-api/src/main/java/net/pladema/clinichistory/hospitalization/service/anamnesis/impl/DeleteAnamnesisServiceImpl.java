@@ -39,6 +39,8 @@ public class DeleteAnamnesisServiceImpl implements DeleteAnamnesisService {
 		internmentDocumentModificationValidator.execute(intermentEpisodeId, anamnesisId, reason, EDocumentType.ANAMNESIS);
 		if (internmentEpisodeService.haveEvolutionNoteAfterAnamnesis(intermentEpisodeId))
 			throw new InternmentDocumentException(InternmentDocumentEnumException.HAVE_EVOLUTION_NOTE, "No es posible eliminar el documento evaluación de ingreso dado que existe una nota de evolución creada posteriormente");
+		if (internmentEpisodeService.havePhysicalDischarge(intermentEpisodeId))
+			throw new InternmentDocumentException(InternmentDocumentEnumException.HAVE_PHYSICAL_DISCHARGE, "No es posible eliminar el documento evaluación de ingreso dado que se ha realizado el alta física del paciente");
 	}
 
 }

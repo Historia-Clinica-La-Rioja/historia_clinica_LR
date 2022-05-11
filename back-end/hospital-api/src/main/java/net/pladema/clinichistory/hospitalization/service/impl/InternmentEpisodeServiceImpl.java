@@ -127,9 +127,25 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
+	public boolean havePhysicalDischarge(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
+		boolean result = patientDischargeRepository.findById(internmentEpisodeId).map(pd -> {
+			if (pd.getPhysicalDischargeDate() != null)
+				return true;
+			return false;
+		}).orElse(false);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public boolean haveMedicalDischarge(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
-		boolean result = patientDischargeRepository.existsById(internmentEpisodeId);
+		boolean result =  patientDischargeRepository.findById(internmentEpisodeId).map(pd -> {
+			if (pd.getMedicalDischargeDate() != null)
+				return true;
+			return false;
+		}).orElse(false);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
