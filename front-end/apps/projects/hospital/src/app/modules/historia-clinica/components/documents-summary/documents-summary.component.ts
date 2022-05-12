@@ -24,6 +24,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	@Input() internmentEpisodeId: number;
 	@Input() clinicalEvaluation: DocumentHistoricDto;
+	@Input() patientId: number;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentsToShow: DocumentSearch[] = [];
@@ -64,7 +65,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	ngOnInit(): void {
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 		this.setInputResetBehaviour();
-		this.documentActions.setInformation();
+		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);
 	}
 
 	search(): void {
@@ -97,7 +98,8 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		this.activeDocument = {
 			document: d.document,
 			canDoAction: {
-				delete: this.documentActions.canDeleteDocument(d.document)
+				delete: this.documentActions.canDeleteDocument(d.document),
+				edit: this.documentActions.canEditDocument(d.document)
 			},
 			createdOn: d.createdOn
 		};
@@ -152,6 +154,11 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	delete(document: DocumentSearchDto) {
 		this.documentActions.deleteDocument(document, this.internmentEpisodeId);
+		this.activeDocument = undefined;
+	}
+
+	edit(document: DocumentSearchDto) {
+		this.documentActions.editDocument(document);
 		this.activeDocument = undefined;
 	}
 

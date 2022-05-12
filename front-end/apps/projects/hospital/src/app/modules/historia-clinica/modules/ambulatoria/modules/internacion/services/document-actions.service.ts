@@ -5,6 +5,7 @@ import { AccountService } from "@api-rest/services/account.service";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { dateTimeDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { DeleteDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service";
+import { EditDocumentActionService } from './edit-document-action.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,13 +20,15 @@ export class DocumentActionsService {
 	constructor(
 		private readonly accountService: AccountService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly deleteDocumentAction: DeleteDocumentActionService
+		private readonly deleteDocumentAction: DeleteDocumentActionService,
+		private readonly editDocumentAction: EditDocumentActionService,
 	) { }
 
-	setInformation() {
+	setInformation(patientId: number, internmentEpisodeId: number) {
 		this.accountService.getInfo().subscribe((loggedUser: LoggedUserDto) => this.userId = loggedUser.id);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(m => this.hasMedicalDischarge = m);
 		this.internmentSummaryFacadeService.hasPhysicalDischarge$.subscribe(p => this.hasPhysicalDischarge = p);
+		this.editDocumentAction.setInformation(patientId, internmentEpisodeId);
 	}
 
 	setPatientDocuments(documents: DocumentSearchDto[]) {
@@ -36,13 +39,19 @@ export class DocumentActionsService {
 		}
 	}
 
-	canDeleteDocument(document: DocumentSearchDto): boolean {
+	canEditDocument(document: DocumentSearchDto): boolean {
 		if (document.creator.id !== this.userId)
 			return false;
 		const createdOn = dateTimeDtoToDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
 			return false;
 		if (this.hasMedicalDischarge)
+			return false;
+		return true;
+	}
+
+	canDeleteDocument(document: DocumentSearchDto): boolean {
+		if (!this.canEditDocument(document))
 			return false;
 		if (document.documentType === "Anamnesis") {
 			if (this.hasPhysicalDischarge) {
@@ -72,8 +81,11 @@ export class DocumentActionsService {
 	}
 
 	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number) {
-		this.deleteDocumentAction.delete(document, internmentEpisodeId)
+		this.deleteDocumentAction.delete(document, internmentEpisodeId);
+	}
 
+	editDocument(document: DocumentSearchDto) {
+		this.editDocumentAction.editDocument(document)
 	}
 
 }
@@ -86,6 +98,7 @@ export interface DocumentSearch {
 
 interface DocumentAction {
 	delete: boolean;
+	edit: boolean;
 }
 
 interface PatientDocument {

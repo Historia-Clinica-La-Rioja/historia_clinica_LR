@@ -171,8 +171,11 @@
 					</section>
 				</div>
 
-				<div *ngIf="activeDocument.canDoAction?.delete">
-					<button type="button" mat-button color="warn" (click)="delete(activeDocument.document)">
+				<div>
+					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
+						<mat-icon>edit</mat-icon>
+					</button>
+					<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
 						<mat-icon>delete</mat-icon>
 					</button>
 				</div>
@@ -180,8 +183,11 @@
 
 			<div *ngIf="(activeDocument && !viewEvolutionNote() )" class="no-notes content mat-body-strong" fxLayout="row" fxLayoutAlign="space-between center">
 				<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
-				<div *ngIf="activeDocument.canDoAction?.delete">
-					<button type="button" mat-button color="warn" (click)="delete(activeDocument.document)">
+				<div>
+					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
+						<mat-icon>edit</mat-icon>
+					</button>
+					<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
 						<mat-icon>delete</mat-icon>
 					</button>
 				</div>
