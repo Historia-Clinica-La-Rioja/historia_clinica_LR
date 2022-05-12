@@ -171,7 +171,7 @@
 					</section>
 				</div>
 
-				<div *ngIf="activeDocument.canDoAction">
+				<div *ngIf="activeDocument.canDoAction?.delete">
 					<button type="button" mat-button color="warn" (click)="delete(activeDocument.document)">
 						<mat-icon>delete</mat-icon>
 					</button>
@@ -180,7 +180,7 @@
 
 			<div *ngIf="(activeDocument && !viewEvolutionNote() )" class="no-notes content mat-body-strong" fxLayout="row" fxLayoutAlign="space-between center">
 				<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
-				<div *ngIf="activeDocument.canDoAction">
+				<div *ngIf="activeDocument.canDoAction?.delete">
 					<button type="button" mat-button color="warn" (click)="delete(activeDocument.document)">
 						<mat-icon>delete</mat-icon>
 					</button>

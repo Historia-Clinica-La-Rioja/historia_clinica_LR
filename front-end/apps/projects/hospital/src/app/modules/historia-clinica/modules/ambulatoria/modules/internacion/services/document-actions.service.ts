@@ -4,12 +4,7 @@ import { differenceInHours } from "date-fns";
 import { AccountService } from "@api-rest/services/account.service";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { dateTimeDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
-import { MatDialog } from "@angular/material/dialog";
-import { EvolutionNoteService } from "@api-rest/services/evolution-note.service";
-import { EpicrisisService } from "@api-rest/services/epicrisis.service";
-import { AnamnesisService } from "@api-rest/services/anamnesis.service";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { DocumentActionReasonComponent } from '../dialogs/document-action-reason/document-action-reason.component';
+import { DeleteDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service";
 
 @Injectable({
 	providedIn: 'root'
@@ -23,12 +18,8 @@ export class DocumentActionsService {
 
 	constructor(
 		private readonly accountService: AccountService,
-		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly dialog: MatDialog,
-		private readonly anmanesisService: AnamnesisService,
-		private readonly epicrisisService: EpicrisisService,
-		private readonly evolutionNoteService: EvolutionNoteService,
-		private readonly snackBarService: SnackBarService,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly deleteDocumentAction: DeleteDocumentActionService
 	) { }
 
 	setInformation() {
@@ -45,7 +36,7 @@ export class DocumentActionsService {
 		}
 	}
 
-	canDoActionInTheDocument(document: DocumentSearchDto): boolean {
+	canDeleteDocument(document: DocumentSearchDto): boolean {
 		if (document.creator.id !== this.userId)
 			return false;
 		const createdOn = dateTimeDtoToDate(document.createdOn);
@@ -81,64 +72,20 @@ export class DocumentActionsService {
 	}
 
 	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number) {
-		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
-			data: {
-				title: 'internaciones.dialogs.actions-document.DELETE_TITLE',
-			},
-			width: "50vh",
-			autoFocus: false,
-			disableClose: true
-		});
-		dialogRef.afterClosed().subscribe(reason => {
-			if (reason) {
-				switch (document.documentType) {
-					case "Anamnesis":
-						this.anmanesisService.deleteAnamnesis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-					case "Nota de evolución":
-						this.evolutionNoteService.deleteEvolutionDiagnosis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-					case "Nota de evolución de enfermería":
-						this.evolutionNoteService.deleteEvolutionDiagnosis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-					case "Epicrisis":
-						this.epicrisisService.deleteEpicrisis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-				}
-			}
-		})
+		this.deleteDocumentAction.delete(document, internmentEpisodeId)
+
 	}
 
-	private updateInformation() {
-		this.internmentSummaryFacadeService.setFieldsToUpdate({ evolutionClinical: true });
-		this.internmentSummaryFacadeService.updateInternmentEpisode();
-	}
 }
 
 export interface DocumentSearch {
 	document: DocumentSearchDto;
-	canDoAction?: boolean;
+	canDoAction?: DocumentAction;
 	createdOn: string;
+}
+
+interface DocumentAction {
+	delete: boolean;
 }
 
 interface PatientDocument {

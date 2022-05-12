@@ -13,7 +13,7 @@ import { hasError } from '@core/utils/form.utils';
 import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
-import {PatientNameService} from "@core/services/patient-name.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-documents-summary',
@@ -96,7 +96,9 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	setActive(d: DocumentSearch) {
 		this.activeDocument = {
 			document: d.document,
-			canDoAction: this.documentActions.canDoActionInTheDocument(d.document),
+			canDoAction: {
+				delete: this.documentActions.canDeleteDocument(d.document)
+			},
 			createdOn: d.createdOn
 		};
 	}
@@ -109,7 +111,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		});
 		this.documentActions.setPatientDocuments(documents);
 		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn)	}
+			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
 		})
 		this.changeDetectorRef.detectChanges();
 	}
@@ -122,7 +124,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		});
 		this.documentActions.setPatientDocuments(documents);
 		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn)	}
+			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
 		});
 		this.changeDetectorRef.detectChanges();
 	}
