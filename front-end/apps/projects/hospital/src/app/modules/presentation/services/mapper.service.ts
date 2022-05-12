@@ -192,7 +192,9 @@ export class MapperService {
 				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
+					professionalFirstName: currentOutpatientEvolutionSummary.professional.person.firstName,
+					professionalLastName: currentOutpatientEvolutionSummary.professional.person.lastName,
+					professionalNameSelfDetermination: currentOutpatientEvolutionSummary.professional.person.nameSelfDetermination,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
 					document: currentOutpatientEvolutionSummary.document,
@@ -207,7 +209,9 @@ export class MapperService {
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
+					professionalFirstName: currentOutpatientEvolutionSummary.professional.person.firstName,
+					professionalLastName: currentOutpatientEvolutionSummary.professional.person.lastName,
+					professionalNameSelfDetermination: currentOutpatientEvolutionSummary.professional.person.nameSelfDetermination,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
 					document: currentOutpatientEvolutionSummary.document,

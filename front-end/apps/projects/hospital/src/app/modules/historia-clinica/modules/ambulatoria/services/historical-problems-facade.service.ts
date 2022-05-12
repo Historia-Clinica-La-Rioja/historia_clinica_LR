@@ -173,7 +173,9 @@ export class HistoricalProblems {
 	consultationEvolutionNote: string;
 	consultationProfessionalId: number;
 	consultationProfessionalPersonId: number;
-	consultationProfessionalName: string;
+	professionalFirstName: string;
+	professionalLastName: string;
+	professionalNameSelfDetermination: string;
 	document:{
 		id: number;
 		filename: string;
