@@ -9,6 +9,7 @@ import { Content } from '@presentation/components/indication/indication.componen
 export class StudyListElementComponent implements OnInit {
 
 	@Input() content: Content;
+	@Input() wasCreatedDuringInternment: boolean;
 
 	constructor() { }
 

@@ -24,7 +24,8 @@ public class DiagnosticReportBo extends ClinicalTerm {
     private Integer encounterId;
     private Integer userId;
     private LocalDateTime effectiveTime;
-	private String categoryId;
+	private String category;
+	private String source;
 
     private List<FileBo> files;
 }

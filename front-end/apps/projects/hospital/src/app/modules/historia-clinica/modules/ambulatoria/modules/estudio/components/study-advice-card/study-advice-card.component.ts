@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DiagnosticReportInfoDto } from '@api-rest/api-model';
 import { ADVICE } from '../../constants/internment-studies';
 
@@ -12,7 +12,13 @@ export class StudyAdviceCardComponent {
 	ADVICE = ADVICE;
 	@Input() advices: DiagnosticReportInfoDto[];
 	@Input() patientId: number;
+	@Input() categoryId: string;
+	@Output() updateCurrentReportsEventEmitter = new EventEmitter<string>();
 
 	constructor() { }
+
+	notifyUpdateToParent() {
+		this.updateCurrentReportsEventEmitter.emit(this.categoryId);
+	}
 
 }

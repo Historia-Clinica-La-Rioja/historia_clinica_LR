@@ -481,11 +481,11 @@
 					"COMPLETED": "Completo"
 				},
 				"sections": {
-					"IMAGES": "Imágenes",
+					"IMAGES": "Diagnóstico por imágenes",
 					"LABORATORY": "Laboratorio",
 					"PATHOLOGIC_ANATOMY": "Anatomía patológica",
 					"HEMOTHERAPY": "Hemoterapia",
-					"SURGICAL_PROCEDURE": "Procedimientos quirúrgico",
+					"SURGICAL_PROCEDURE": "Procedimientos quirúrgicos",
 					"OTHER_PROCEDURES_AND_PRACTICES": "Otros procedimientos y prácticas",
 					"ADVICE": "Asesoramiento",
 					"EDUCATION": "Educación"

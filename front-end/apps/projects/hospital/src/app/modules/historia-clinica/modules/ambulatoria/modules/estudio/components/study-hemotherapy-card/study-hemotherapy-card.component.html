@@ -1,4 +1,4 @@
 <app-content width="full">
-	<app-study [studyHeader]="HEMOTHERAPY" [studies]="hemotherapies" [patientId]="patientId"></app-study>
+	<app-study (updateCurrentReportsEventEmitter)="notifyUpdateToParent()" [studyHeader]="HEMOTHERAPY" [studies]="hemotherapies" [patientId]="patientId"></app-study>
 </app-content>
 

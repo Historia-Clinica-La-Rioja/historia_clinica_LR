@@ -696,7 +696,8 @@ export interface DiagnosticReportDto extends ClinicalTermDto {
 }
 
 export interface DiagnosticReportInfoDto {
-    categoryId: string;
+    category: string;
+    creationDate: Date;
     doctor: DoctorInfoDto;
     healthCondition: HealthConditionInfoDto;
     id: number;
@@ -704,8 +705,8 @@ export interface DiagnosticReportInfoDto {
     observations?: string;
     serviceRequestId: number;
     snomed: SnomedDto;
+    source: string;
     statusId: string;
-    totalDays: number;
 }
 
 export interface DiagnosticReportInfoWithFilesDto extends DiagnosticReportInfoDto {

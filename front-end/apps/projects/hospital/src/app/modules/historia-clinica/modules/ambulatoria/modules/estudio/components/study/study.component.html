@@ -3,7 +3,8 @@
 
 	<div id="content" fxLayout="column" fxLayoutGap="20px">
 		<div fxLayout="row" *ngFor="let study of studies">
-			<app-study-list-element fxFlex="100" [content]="contentBuilder(study)"></app-study-list-element>
+			<app-study-list-element fxFlex="100" [content]="contentBuilder(study)"
+				[wasCreatedDuringInternment]="wasCreatedDuringSource(study.source)"></app-study-list-element>
 			<div actions *ngIf="study.statusId !== STUDY_STATUS.ERROR.id">
 				<button mat-icon-button [matMenuTriggerFor]="menu" >
 					<mat-icon>more_vert</mat-icon>
@@ -20,7 +21,7 @@
 						</button>
 					</ng-container>
 					<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-						<button mat-menu-item (click)="deleteStudy(study.id)" *ngIf="study.statusId === STUDY_STATUS.REGISTERED.id">
+						<button mat-menu-item (click)="deleteStudy(study)" *ngIf="study.statusId === STUDY_STATUS.REGISTERED.id">
 							<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
 						</button>
 					</ng-container>

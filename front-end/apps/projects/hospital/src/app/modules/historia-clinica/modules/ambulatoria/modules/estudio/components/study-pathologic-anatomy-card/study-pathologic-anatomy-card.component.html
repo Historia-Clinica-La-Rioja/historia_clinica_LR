@@ -1,3 +1,4 @@
 <app-content width="full">
-	<app-study [studyHeader]="PATHOLOGIC_ANATOMY" [studies]="pathologicAnatomies" [patientId]="patientId"></app-study>
+	<app-study (updateCurrentReportsEventEmitter)="notifyUpdateToParent()" [studyHeader]="PATHOLOGIC_ANATOMY" [studies]="pathologicAnatomies"
+	[patientId]="patientId"></app-study>
 </app-content>

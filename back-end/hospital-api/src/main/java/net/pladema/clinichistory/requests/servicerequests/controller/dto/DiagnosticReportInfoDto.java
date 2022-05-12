@@ -7,6 +7,8 @@ import net.pladema.clinichistory.requests.medicationrequests.controller.dto.Heal
 
 import javax.annotation.Nullable;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -25,8 +27,9 @@ public class DiagnosticReportInfoDto {
     private String statusId;
     private DoctorInfoDto doctor;
     private Integer serviceRequestId;
-    private long totalDays;
-	private String categoryId;
+    private LocalDateTime creationDate;
+	private String category;
+	private String source;
 
     public DiagnosticReportInfoDto( DiagnosticReportInfoDto diagnosticReportInfoDto) {
         this.snomed = diagnosticReportInfoDto.getSnomed();
@@ -36,7 +39,7 @@ public class DiagnosticReportInfoDto {
         this.statusId = diagnosticReportInfoDto.getStatusId();
         this.doctor = diagnosticReportInfoDto.getDoctor();
         this.serviceRequestId = diagnosticReportInfoDto.getServiceRequestId();
-        this.totalDays = diagnosticReportInfoDto.totalDays;
-		this.categoryId = diagnosticReportInfoDto.getCategoryId();
+        this.creationDate = diagnosticReportInfoDto.creationDate;
+		this.category = diagnosticReportInfoDto.getCategory();
     }
 }

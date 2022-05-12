@@ -22,7 +22,7 @@
 	</mat-menu>
 
 	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
-		<button mat-button class="filter-button" color="primary" (click)="hideFilters(); clear()">
+		<button mat-button class="filter-button" color="primary" (click)="hideFilters()">
 			<mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
 		</button>
 	</div>
@@ -94,44 +94,48 @@
 			</div>
 		</form>
 	</div>
+	<mat-divider></mat-divider>
+    <div *ngIf="theresReports() else noInfo" fxLayout="column">
 
-    <mat-list id="lista-estudios" *ngIf="diagnosticReportsInfo?.length > 0 else noInfo">
-        <div fxLayout="row" *ngFor="let diagnosticReport of diagnosticReportsInfo">
-            <app-item-prescripciones fxFlex="100%" mat-list-item class="item-padding" [prescriptionItemData]="prescriptionItemDataBuilder(diagnosticReport)">
-                <div actions *ngIf="diagnosticReport.statusId !== STUDY_STATUS.ERROR.id">
-                    <button mat-icon-button [matMenuTriggerFor]="menu" >
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-							<button mat-menu-item (click)="downloadOrder(diagnosticReport.serviceRequestId)">
-								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
-							</button>
-						</ng-container>
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-							<button mat-menu-item (click)="completeStudy(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
-								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
-							</button>
-						</ng-container>
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-							<button mat-menu-item (click)="deleteStudy(diagnosticReport.id)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.REGISTERED.id">
-								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
-							</button>
-						</ng-container>
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-							<button mat-menu-item (click)="showStudyResults(diagnosticReport)" *ngIf="diagnosticReport.statusId === STUDY_STATUS.FINAL.id">
-								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SHOW_RESULTS'"></span>
-							</button>
-						</ng-container>
-                    </mat-menu>
-                </div>
+		<app-study-images-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[0].id)" *ngIf="imageDiagnotics.length > 0"
+		fxFlex="100%" mat-list-item class="item-padding" [images]="imageDiagnotics" [patientId]="patientId">
+		</app-study-images-card>
 
-                <span prescription-number mat-line class="mat-body element-light-color">
-                    Orden #{{diagnosticReport.serviceRequestId}}
-                </span>
-            </app-item-prescripciones>
-            <mat-divider></mat-divider>
-        </div>
-    </mat-list>
+		<app-study-laboratory-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[1].id)" *ngIf="laboratoryDiagnotics.length > 0"
+		fxFlex="100%" mat-list-item class="item-padding" [laboratories]="laboratoryDiagnotics" [patientId]="patientId">
+		</app-study-laboratory-card>
+
+		<app-study-pathologic-anatomy-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[2].id)"
+		*ngIf="pathologicAnatomyDiagnotics.length > 0" fxFlex="100%" mat-list-item class="item-padding"
+		[pathologicAnatomies]="pathologicAnatomyDiagnotics" [patientId]="patientId">
+		</app-study-pathologic-anatomy-card>
+
+		<app-study-hemotherapy-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[3].id)"
+		*ngIf="hemotherapyDiagnotics.length > 0" fxFlex="100%" mat-list-item class="item-padding" [hemotherapies]="hemotherapyDiagnotics"
+		[patientId]="patientId">
+		</app-study-hemotherapy-card>
+
+        <app-study-surgical-procedure-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[4].id)"
+		*ngIf="surgicalProceduresDiagnotics.length > 0" fxFlex="100%" mat-list-item class="item-padding"
+		[surgicalProcedures]="surgicalProceduresDiagnotics" [patientId]="patientId">
+		</app-study-surgical-procedure-card>
+
+		<app-study-other-procedures-and-practices-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[5].id)"
+		*ngIf="otherProceduresAndPracticesDiagnotics.length > 0" fxFlex="100%" mat-list-item class="item-padding"
+		[otherProceduresAndPractices]="otherProceduresAndPracticesDiagnotics" [patientId]="patientId">
+		</app-study-other-procedures-and-practices-card>
+
+		<app-study-advice-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[6].id)" *ngIf="adviceDiagnotics.length > 0"
+		fxFlex="100%" mat-list-item class="item-padding" [advices]="adviceDiagnotics" [patientId]="patientId" [categoryId]="categories[6].id">
+		</app-study-advice-card>
+
+		<app-study-education-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[7].id)" *ngIf="educationDiagnotics.length > 0"
+		fxFlex="100%" mat-list-item class="item-padding" [educations]="educationDiagnotics" [patientId]="patientId">
+		</app-study-education-card>
+
+    </div>
+	<ng-template #noInfo>
+		<app-no-data></app-no-data>
+	</ng-template>
 </app-summary-card>
 </app-content>

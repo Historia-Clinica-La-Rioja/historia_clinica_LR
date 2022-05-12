@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
@@ -8,18 +8,21 @@ import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modu
 import { TranslateService } from '@ngx-translate/core';
 import { Content, Title } from '@presentation/components/indication/indication.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
 	selector: 'app-study',
 	templateUrl: './study.component.html',
 	styleUrls: ['./study.component.scss']
 })
-export class StudyComponent {
+export class StudyComponent implements OnInit {
 
 	@Input() studies: DiagnosticReportInfoDto[];
 	@Input() studyHeader: Title;
 	@Input() patientId: number;
+	@Output() updateCurrentReportsEventEmitter = new EventEmitter<void>();
 	STUDY_STATUS = STUDY_STATUS;
+	private sameOrderStudies: Map<Number, DiagnosticReportInfoDto[]>;
 
 	constructor(
 		private readonly prescripcionesService: PrescripcionesService,
@@ -28,8 +31,14 @@ export class StudyComponent {
 		private readonly dialog: MatDialog
 	) { }
 
+	ngOnInit(): void {
+		this.sameOrderStudies = new Map();
+		this.studies = this.classifyStudiesWithTheSameOrder(this.studies);
+	}
+
 	contentBuilder(diagnosticReport: DiagnosticReportInfoDto): Content {
 		const prescriptionStatus = this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId);
+		const updateDate = diagnosticReport.creationDate;
 		return {
 			status: {
 				description: prescriptionStatus,
@@ -37,19 +46,20 @@ export class StudyComponent {
 			},
 			description: diagnosticReport.snomed.pt,
 			extra_info: [{
-				title: 'Razón:',
+				title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
 				content: diagnosticReport.healthCondition.snomed.pt
 			}],
 			createdBy: diagnosticReport.doctor.firstName + " " + diagnosticReport.doctor.lastName,
-			timeElapsed: '06/05/98 - 12:00 hs.'
+			timeElapsed: updateDate.toLocaleDateString('es-AR') + ' - ' + updateDate.toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'})
 		}
 	}
 
 	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {
+		let reportOrder = diagnosticReport.serviceRequestId;
 		const newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
 			{
 				data: {
-					diagnosticReport,
+					diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
 					patientId: this.patientId,
 				},
 				width: '35%',
@@ -57,8 +67,10 @@ export class StudyComponent {
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
 				if (completed) {
-					if (completed.completed)
+					if (completed.completed) {
+						this.updateCurrentReportsEventEmitter.emit();
 						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
+					}
 					else
 						this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
 				}
@@ -80,16 +92,43 @@ export class StudyComponent {
 		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [serviceRequestId], PrescriptionTypes.STUDY);
 	}
 
-	deleteStudy(id: number) {
-		this.prescripcionesService.deleteStudy(this.patientId, id).subscribe(
+	deleteStudy(studyToDelete: DiagnosticReportInfoDto) {
+		let deleteQuery = this.sameOrderStudies.has(studyToDelete.serviceRequestId) ?
+			this.sameOrderStudies.get(studyToDelete.serviceRequestId).map(report => this.prescripcionesService.deleteStudy(this.patientId, report.id))
+			: this.prescripcionesService.deleteStudy(this.patientId, studyToDelete.id);
+		forkJoin(deleteQuery).subscribe(
 			() => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
-				this.studies.splice(this.studies.findIndex(study => study.id === id), 1);
+				this.updateCurrentReportsEventEmitter.emit();
 			},
 			_ => {
 				this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_ERROR');
 			}
 		);
+	}
+
+	wasCreatedDuringSource(source: String): boolean {
+		return this.translateService.instant('app.menu.INTERNACION') === source;
+	}
+
+	private classifyStudiesWithTheSameOrder(reports: DiagnosticReportInfoDto[]): DiagnosticReportInfoDto[] {
+		let orders = new Set(reports?.map(report => report.serviceRequestId));
+		orders.forEach(order => {
+			let currentOrderStudies = reports.filter(report => report.serviceRequestId === order);
+			if (currentOrderStudies.length > 1) {
+				this.sameOrderStudies.set(order, currentOrderStudies);
+				reports = reports.filter(report => report.serviceRequestId !== order);
+				this.formatStudiesWithTheSameOrder(reports, currentOrderStudies);
+			}
+		});
+		return reports;
+	}
+
+	private formatStudiesWithTheSameOrder(reports: DiagnosticReportInfoDto[], studiesToGroup: DiagnosticReportInfoDto[]): DiagnosticReportInfoDto[] {
+		let newStudy = studiesToGroup[0];
+		studiesToGroup.slice(1).forEach(studyToGroup => newStudy.snomed.pt = newStudy.snomed.pt.concat(' | ', studyToGroup.snomed.pt));
+		reports.push(newStudy);
+		return reports;
 	}
 
 }

@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from '@historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../constants/prescripciones-masterdata';
@@ -12,10 +11,7 @@ import {
 	NewPrescription,
 	NuevaPrescripcionComponent
 } from '../../modules/indicacion/dialogs/nueva-prescripcion/nueva-prescripcion.component';
-import { VerResultadosEstudioComponent } from '../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
-import { PrescriptionItemData } from '../../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
-import { CompletarEstudioComponent } from '../../dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import {
 	CreateInternmentOrderComponent,
 	NewInternmentOrder
@@ -23,17 +19,27 @@ import {
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { DiagnosisRequiredComponent } from "@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/diagnosis-required.component";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
+import { StudyCategories } from '../../modules/estudio/constants/internment-studies';
+import { TranslateService } from '@ngx-translate/core';
+import { pushIfNotExists } from '@core/utils/array.utils';
 
 @Component({
-  selector: 'app-card-estudios',
-  templateUrl: './card-estudios.component.html',
-  styleUrls: ['./card-estudios.component.scss']
+	selector: 'app-card-estudios',
+	templateUrl: './card-estudios.component.html',
+	styleUrls: ['./card-estudios.component.scss']
 })
 export class CardEstudiosComponent implements OnInit {
 
 	public readonly estudios = ESTUDIOS;
 	public readonly STUDY_STATUS = STUDY_STATUS;
-	public diagnosticReportsInfo: DiagnosticReportInfoDto[];
+	imageDiagnotics: DiagnosticReportInfoDto[] = [];
+	laboratoryDiagnotics: DiagnosticReportInfoDto[] = [];
+	pathologicAnatomyDiagnotics: DiagnosticReportInfoDto[] = [];
+	hemotherapyDiagnotics: DiagnosticReportInfoDto[] = [];
+	surgicalProceduresDiagnotics: DiagnosticReportInfoDto[] = [];
+	otherProceduresAndPracticesDiagnotics: DiagnosticReportInfoDto[] = [];
+	adviceDiagnotics: DiagnosticReportInfoDto[] = [];
+	educationDiagnotics: DiagnosticReportInfoDto[] = [];
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
 	private internmentEpisodeInProgressId;
@@ -62,10 +68,10 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private prescripcionesService: PrescripcionesService,
-		private snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
 		private readonly internmentPatientService: InternmentPatientService,
 		private readonly internmentStateService: InternmentStateService,
+		private readonly translateService: TranslateService
 	) { }
 
 	ngOnInit(): void {
@@ -88,16 +94,15 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	private getStudy(): void {
-		this.prescripcionesService.getPrescription( PrescriptionTypes.STUDY,
-													this.patientId,
-													this.formFilter.controls.statusId.value,
-													null,
-													this.formFilter.controls.healthCondition.value,
-													this.formFilter.controls.study.value,
-													this.formFilter.controls.categoryId.value )
+		const value = this.formFilter.value;
+		this.clearLoadedReports();
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId)
 			.subscribe((response: DiagnosticReportInfoDto[]) => {
-						this.diagnosticReportsInfo = response;
-		});
+				response.forEach(report => {
+					report.creationDate = new Date(report.creationDate);
+					this.classifyReport(report);
+				});
+			});
 	}
 
 	patientHasInternmentEpisodeInProgress(): boolean {
@@ -163,7 +168,7 @@ export class CardEstudiosComponent implements OnInit {
 			});
 
 		newStudyDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
-			if(newPrescription) {
+			if (newPrescription) {
 				this.dialog.open(ConfirmarPrescripcionComponent,
 					{
 						disableClose: true,
@@ -182,65 +187,6 @@ export class CardEstudiosComponent implements OnInit {
 		});
 	}
 
-	deleteStudy(id: number) {
-		this.prescripcionesService.deleteStudy(this.patientId, id).subscribe(
-			() => {
-				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
-				this.getStudy();
-			},
-			_ => {
-				this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_ERROR');
-			}
-		);
-	}
-
-	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto): PrescriptionItemData {
-		return {
-			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId),
-			prescriptionPt: diagnosticReport.snomed.pt,
-			problemPt: diagnosticReport.healthCondition.snomed.pt,
-			doctor: diagnosticReport.doctor,
-			totalDays: diagnosticReport.totalDays
-		};
-	}
-
-	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {
-		const newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
-			{
-				data: {
-					diagnosticReport,
-					patientId: this.patientId,
-				},
-				width: '35%',
-			});
-
-		newCompleteStudy.afterClosed().subscribe((completed: any) => {
-				if (completed) {
-					if (completed.completed) {
-						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
-						this.getStudy();
-					} else {
-						this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
-					}
-				}
-			});
-	}
-
-	showStudyResults(diagnosticReport: DiagnosticReportInfoDto) {
-		this.dialog.open(VerResultadosEstudioComponent,
-			{
-				data: {
-					diagnosticReport,
-					patientId: this.patientId,
-				},
-				width: '35%',
-			});
-	}
-
-	downloadOrder(serviceRequestId: number) {
-		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [serviceRequestId], PrescriptionTypes.STUDY);
-	}
-
 	hideFilters() {
 		this.hideFilterPanel = !this.hideFilterPanel;
 	}
@@ -249,14 +195,98 @@ export class CardEstudiosComponent implements OnInit {
 		this.getStudy();
 	}
 
-	clear(): void {
-		this.formFilter.reset();
-		if (this.hideFilterPanel === false) {
-			this.getStudy();
-		}
-	}
-
 	clearFilterField(control: AbstractControl): void {
 		control.reset();
 	}
+
+	private clearLoadedReports() {
+		this.imageDiagnotics = [];
+		this.laboratoryDiagnotics = [];
+		this.pathologicAnatomyDiagnotics = [];
+		this.hemotherapyDiagnotics = [];
+		this.surgicalProceduresDiagnotics = [];
+		this.otherProceduresAndPracticesDiagnotics = [];
+		this.adviceDiagnotics = [];
+		this.educationDiagnotics = [];
+	}
+
+	private classifyReport(report: DiagnosticReportInfoDto) {
+		switch (report.category) {
+			case this.translateService.instant(StudyCategories.IMAGE):
+				this.imageDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.imageDiagnotics, report, this.compareReports);
+				break;
+			case this.translateService.instant(StudyCategories.LABORATORY):
+				this.laboratoryDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.laboratoryDiagnotics, report, this.compareReports);
+				break;
+			case this.translateService.instant(StudyCategories.PATHOLOGIC_ANATOMY):
+				this.pathologicAnatomyDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.pathologicAnatomyDiagnotics, report, this.compareReports);
+				break;
+			case this.translateService.instant(StudyCategories.HEMOTHERAPY):
+				this.hemotherapyDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.hemotherapyDiagnotics, report, this.compareReports);
+				break;
+			case this.translateService.instant(StudyCategories.SURGICAL_PROCEDURE):
+				this.surgicalProceduresDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.surgicalProceduresDiagnotics, report, this.compareReports);
+				break;
+			case this.translateService.instant(StudyCategories.OTHER_PROCEDURES_OR_PRACTICE):
+				this.otherProceduresAndPracticesDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.otherProceduresAndPracticesDiagnotics, report, this.compareReports);
+				break;
+			case this.translateService.instant(StudyCategories.ADVICE):
+				this.adviceDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.adviceDiagnotics, report, this.compareReports);
+				break;
+			case this.translateService.instant(StudyCategories.EDUCATION):
+				this.educationDiagnotics = pushIfNotExists<DiagnosticReportInfoDto>(this.educationDiagnotics, report, this.compareReports);
+				break;
+		}
+	}
+
+	compareReports(firstReport: DiagnosticReportInfoDto, secondReport: DiagnosticReportInfoDto): boolean {
+		return firstReport.id === secondReport.id;
+	}
+
+	theresReports(): boolean {
+		return !((this.imageDiagnotics.length == 0) && (this.laboratoryDiagnotics.length == 0) && (this.pathologicAnatomyDiagnotics.length == 0) &&
+			(this.hemotherapyDiagnotics.length == 0) && (this.surgicalProceduresDiagnotics.length == 0) &&
+			(this.otherProceduresAndPracticesDiagnotics.length == 0) && (this.adviceDiagnotics.length == 0) && (this.educationDiagnotics.length == 0));
+	}
+
+	updateModifiedStudyList(updatedCategoryId: string) {
+		this.resetCategoryStudyList(updatedCategoryId);
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId)
+			.subscribe((response: DiagnosticReportInfoDto[]) => {
+				response.forEach(report => {
+					report.creationDate = new Date(report.creationDate);
+					this.classifyReport(report);
+				})
+			});
+	}
+
+	private resetCategoryStudyList(updatedCategoryId: string) {
+		switch (updatedCategoryId) {
+			case this.categories[0].id:
+				this.imageDiagnotics = [];
+				break;
+			case this.categories[1].id:
+				this.laboratoryDiagnotics = [];
+				break;
+			case this.categories[2].id:
+				this.pathologicAnatomyDiagnotics = [];
+				break;
+			case this.categories[3].id:
+				this.hemotherapyDiagnotics = [];
+				break;
+			case this.categories[4].id:
+				this.surgicalProceduresDiagnotics = [];
+				break;
+			case this.categories[5].id:
+				this.otherProceduresAndPracticesDiagnotics = [];
+				break;
+			case this.categories[6].id:
+				this.adviceDiagnotics = [];
+				break;
+			case this.categories[7].id:
+				this.educationDiagnotics = [];
+				break;
+		}
+	}
+
 }
