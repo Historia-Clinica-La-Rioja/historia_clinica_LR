@@ -543,6 +543,9 @@
 					"NOTES": "Observaciones",
 					"NEXT_BUTTON": "Agregar",
 					"TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
+					"ADD_STUDY": "+ Agregar otro estudio",
+					"ADD_STUDY_DIALOG_TITLE": "Agregar otro estudio",
+					"STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
                     "CONFIRM_ORDER": "Finalizar orden"
 				}
 			}

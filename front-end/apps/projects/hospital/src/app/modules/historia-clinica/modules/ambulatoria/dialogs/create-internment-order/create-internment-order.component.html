@@ -1,6 +1,6 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
 	<div class="mat-h2"> {{'ambulatoria.paciente.internment-order.create-order-dialog.TITLE' | translate}} </div>
-	<button mat-icon-button color="warn" (click)="dialogRef.close();">
+	<button mat-icon-button (click)="dialogRef.close();">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
@@ -88,14 +88,21 @@
 	<div *ngFor="let study of orderStudiesService.getStudies(); let i = index" [attr.data-index]="i">
 		<div fxLayout="row" style="padding: 0 15px">
 			<div fxFlex="90%" style="display:flex; align-items: center;">
-				<span class="capitalize-first-letter">
-					{{ study.snomed.pt }}
-				</span>
+			<span class="capitalize-first-letter">
+				{{ study.snomed.pt }}
+			</span>
 			</div>
 			<button fxFlex="10%" mat-icon-button color="warn" [disabled]="!orderHasMultipleStudies()" (click)="removeStudy(i)">
-				<mat-icon>delete</mat-icon>
+				<mat-icon>delete_outline</mat-icon>
 			</button>
 		</div>
+	</div>
+
+
+	<div>
+		<button class="color-primary bold" mat-button type="button" (click)="openAddAnotherStudyDialog()">
+			{{'ambulatoria.paciente.internment-order.create-order-dialog.ADD_STUDY' | translate}}
+		</button>
 	</div>
 
 	<div style="padding-top: 1em; padding-bottom: 1em;">
