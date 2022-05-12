@@ -1107,6 +1107,7 @@ export interface HCEBasicPersonDataDto extends Serializable {
     id: number;
     identificationNumber: string;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface HCEClinicalObservationDto extends Serializable {

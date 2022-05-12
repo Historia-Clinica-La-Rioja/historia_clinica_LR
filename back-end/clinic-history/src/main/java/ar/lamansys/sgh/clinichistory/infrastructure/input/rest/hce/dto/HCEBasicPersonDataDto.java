@@ -26,4 +26,6 @@ public class HCEBasicPersonDataDto implements Serializable{
 
     private String identificationNumber;
 
+	private String nameSelfDetermination;
+
 }
