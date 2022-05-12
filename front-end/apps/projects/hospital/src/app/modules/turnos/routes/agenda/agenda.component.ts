@@ -218,8 +218,6 @@ export class AgendaComponent implements OnInit, OnDestroy {
 						if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
 							if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
 								this.snackBarService.showError('turnos.overturns.messages.ERROR');
-							} else {
-								this.snackBarService.showError('turnos.booking.SLOT_NOT_AVAILABLE');
 							}
 						} else {
 							this.dialog.open(NewAppointmentComponent, {
