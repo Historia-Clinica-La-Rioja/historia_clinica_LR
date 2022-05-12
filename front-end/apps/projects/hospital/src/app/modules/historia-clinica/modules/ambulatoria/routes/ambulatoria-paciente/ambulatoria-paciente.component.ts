@@ -446,11 +446,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 			summaryInfo.condition = (patientCoverage.condition === VOLUNTARY_ID) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA;
 		}
 
-		if (patientCoverage.medicalCoverage.type) {
+		if (patientCoverage.medicalCoverage?.type) {
 			summaryInfo.type = this.getMedicalCoverageType(patientCoverage.medicalCoverage.type);
 		}
 
-		if (patientCoverage.medicalCoverage.cuit) {
+		if (patientCoverage.medicalCoverage?.cuit) {
 			summaryInfo.cuit = patientCoverage.medicalCoverage.cuit;
 		}
 		return summaryInfo;
