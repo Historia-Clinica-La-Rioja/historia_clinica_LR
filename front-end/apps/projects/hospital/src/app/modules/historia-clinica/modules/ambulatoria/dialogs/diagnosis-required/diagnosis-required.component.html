@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="end">
-	<button id="close-modal" mat-button color="warn" mat-icon-button aria-label="close" (click)="closeModal()">
+	<button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
@@ -8,7 +8,9 @@
 	<div class="icon">
 		<mat-icon [inline]="true" class="material-icons-outlined" color="primary">highlight_off</mat-icon>
 	</div>
-	<h1 class="mat-headline item-margin"> {{ 'ambulatoria.paciente.internment-order.diagnosis-required-dialog.MESSAGE' | translate }} </h1>
+	<h1 class="mat-headline item-margin" style="padding-top: 1em; text-align: center">
+		{{ 'ambulatoria.paciente.internment-order.diagnosis-required-dialog.MESSAGE' | translate }}
+	</h1>
 	<button class="item-margin" mat-flat-button color="primary" (click)="closeModal()">
 		<span class="uppercase"> {{ 'buttons.ACCEPT' | translate }} </span>
 	</button>

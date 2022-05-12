@@ -40,7 +40,7 @@
 				</button>
 			</mat-form-field>
 
-			<div *ngIf="selectedStudyIsTemplate()" style="padding-bottom: 1em">
+			<div id="template-included-concepts" *ngIf="selectedStudyIsTemplate()">
 				<mat-label class="detail-text"
 						   translate="ambulatoria.paciente.internment-order.create-order-dialog.TEMPLATE_DETAIL"
 						   [translateParams]="{concepts: getTemplateIncludedConceptsDisplayText()}">
@@ -72,7 +72,7 @@
 
 		<!-- CONFIRM BUTTON -->
 
-		<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" style="padding-bottom: 30px">
+		<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 			<button mat-flat-button color="primary" [disabled]="!this.form.valid" (click)="goToConfirmationStep()">
 				<span class="uppercase"> {{'ambulatoria.paciente.internment-order.create-order-dialog.NEXT_BUTTON' | translate}} </span>
 			</button>
@@ -85,14 +85,14 @@
 
 	<div *ngIf="selectedStudyIsTemplate()" class="uppercase template-name"> {{this.getStudyDisplayName()}}: </div>
 
-	<div *ngFor="let study of orderStudiesService.getStudies(); let i = index" [attr.data-index]="i">
-		<div fxLayout="row" style="padding: 0 15px">
-			<div fxFlex="90%" style="display:flex; align-items: center;">
+	<div *ngFor="let study of orderStudiesService.getStudies(); let i = index">
+		<div id="selected-study-row" fxLayout="row">
+			<div id="selected-study-name" fxFlex="90%">
 			<span class="capitalize-first-letter">
 				{{ study.snomed.pt }}
 			</span>
 			</div>
-			<button fxFlex="10%" mat-icon-button color="warn" [disabled]="!orderHasMultipleStudies()" (click)="removeStudy(i)">
+			<button fxFlex="10%" mat-icon-button color="warn" [disabled]="orderStudiesService.getStudies().length <= 1" (click)="removeStudy(i)">
 				<mat-icon>delete_outline</mat-icon>
 			</button>
 		</div>
@@ -105,17 +105,17 @@
 		</button>
 	</div>
 
-	<div style="padding-top: 1em; padding-bottom: 1em;">
+	<div id="order-detail">
 
-		<div class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
+		<div id="order-detail-category" class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
 
-		<div class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
+		<div id="order-detail-health-problem" class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
 
 		<div class="detail-text"> {{ getNotesDisplayText() }} </div>
 
 	</div>
 
-	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" style="padding-bottom: 30px">
+	<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 
 		<button mat-flat-button color="primary" (click)="confirmOrder()">
 			<span class="uppercase"> {{'ambulatoria.paciente.internment-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
