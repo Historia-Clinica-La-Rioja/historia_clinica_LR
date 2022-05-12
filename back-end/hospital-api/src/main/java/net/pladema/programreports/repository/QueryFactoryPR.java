@@ -33,4 +33,11 @@ public class QueryFactoryPR {
 		List<ConsultationDetailEpiII> data = query.getResultList();
 		return data;
 	}
+
+	public List<ConsultationDetailRecupero> queryIII(Integer institutionId){
+		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailRecupero");
+		query.setParameter("institutionId", institutionId);
+		List<ConsultationDetailRecupero> data = query.getResultList();
+		return data;
+	}
 }
