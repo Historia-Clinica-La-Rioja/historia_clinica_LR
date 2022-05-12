@@ -34,8 +34,17 @@ public class QueryFactoryPR {
 		return data;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<ConsultationDetailRecupero> queryIII(Integer institutionId){
 		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailRecupero");
+		query.setParameter("institutionId", institutionId);
+		List<ConsultationDetailRecupero> data = query.getResultList();
+		return data;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ConsultationDetailRecupero> queryIV(Integer institutionId){
+		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailSumar");
 		query.setParameter("institutionId", institutionId);
 		List<ConsultationDetailRecupero> data = query.getResultList();
 		return data;
