@@ -149,4 +149,40 @@ public class ProgramReportsController {
 		out.flush();
 		response.flushBuffer();
 	}
+
+	@GetMapping(value = "/{institutionId}/monthlySumar")
+	public @ResponseBody
+	void getMonthlySumarExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = false) String fromDate,
+			@RequestParam(value = "toDate", required = false) String toDate,
+			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
+			@RequestParam(value = "doctorId", required = false) Integer doctorId,
+			HttpServletResponse response
+	) throws Exception {
+		LOG.debug("Se creará el excel {}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId, fromDate, toDate);
+
+		String tittle = "Recupero - Sumar";
+		String [] headers = new String[]{"Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
+				"Nombre con el que se identifica", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Domicilio",
+				"Localidad", "Nivel de Instrucción", "Situación laboral", "Presión sistólica", "Presión diastólica", "Presión arterial media", "Temperatura",
+				"Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso", "Indice de masa corporal", "Motivos",
+				"Procedimientos", "Problemas", "Medicación", "Evolución"};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceRecupero.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.queryIV(institutionId));
+
+		String filename = tittle + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
 }

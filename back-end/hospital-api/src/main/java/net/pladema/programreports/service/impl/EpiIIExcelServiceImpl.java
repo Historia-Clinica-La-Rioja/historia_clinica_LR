@@ -7,7 +7,6 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.programreports.repository.ConsultationDetailEpiI;
 import net.pladema.programreports.repository.ConsultationDetailEpiII;
 import net.pladema.programreports.service.ExcelServiceEpiII;
 
