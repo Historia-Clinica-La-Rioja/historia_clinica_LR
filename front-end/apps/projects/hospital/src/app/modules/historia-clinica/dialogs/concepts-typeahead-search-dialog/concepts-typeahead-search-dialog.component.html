@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<div mat-dialog-title class="mat-h2"> {{data.title | translate}} </div>
+	<button mat-icon-button (click)="dialogRef.close();">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<app-concept-typeahead-search
+	[ecl]="data.ecl"
+	[placeholder]="data.placeholder"
+	(conceptSelected)="setConcept($event)">
+</app-concept-typeahead-search>
+
+
