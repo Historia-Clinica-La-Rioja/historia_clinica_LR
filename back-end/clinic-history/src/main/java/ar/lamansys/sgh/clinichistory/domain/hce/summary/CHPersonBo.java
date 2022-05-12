@@ -19,10 +19,13 @@ public class CHPersonBo {
 
     private String identificationNumber;
 
-    public CHPersonBo(Integer id, String firstName, String lastName, String identificationNumber) {
+	private String nameSelfDetermination;
+    
+    public CHPersonBo(Integer id, String firstName, String lastName, String identificationNumber, String nameSelfDetermination) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.identificationNumber = identificationNumber;
-    }
+		this.nameSelfDetermination = nameSelfDetermination;
+	}
 }
