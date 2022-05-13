@@ -90,8 +90,16 @@
 			<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
 				<ng-container *ngIf="currentUserIsAllowedToDoAConsultation else hasOdontologyRole">
 					<button id="acciones" mat-flat-button color="primary" mat-button [matMenuTriggerFor]="menu"
-						*ngIf="(hasInternmentEpisodeInThisInstitution && !hasMedicalDischarge && hasMedicalRole) || (hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed && !hasMedicalRole) || (hasNewConsultationEnabled$ | async)">
+						*ngIf="!((isNewConsultationButtonEnabled() && (hasMedicalRole || hasHealthProfessionalRole)) || (isNewConsultationButtonEnabled() && hasNurseRole))">
 						{{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
+					</button>
+					<button id="nueva_consulta_ambulatoria" mat-flat-button color="primary" mat-button (click)="referenceNotificationService.hasReferenceNotification()"
+						*ngIf="isNewConsultationButtonEnabled() && (hasMedicalRole || hasHealthProfessionalRole)">
+						{{ 'ambulatoria.paciente.card.buttons.actions.NUEVA_CONSULTA' | translate | uppercase }}
+					</button>
+					<button id="nueva_consulta_enfermeria" mat-flat-button color="primary" mat-button (click)="openNuevaConsultaEnfermeria()"
+						*ngIf="isNewConsultationButtonEnabled() && hasNurseRole">
+						{{ 'ambulatoria.paciente.card.buttons.actions.NUEVA_CONSULTA' | translate | uppercase }}
 					</button>
 				</ng-container>
 

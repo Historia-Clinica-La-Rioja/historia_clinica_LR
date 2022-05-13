@@ -91,6 +91,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	currentUserIsAllowedToDoAConsultation = false;
 	hasMedicalRole = false;
+	hasNurseRole = false;
+	hasHealthProfessionalRole = false;
 	internmentAction: InternmentActions;
 	appointmentConfirmedCoverageInfo: ExternalPatientCoverageDto;
 
@@ -334,12 +336,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	setActionsLayout(): void {
-		this.CurrentUserIsAllowedToMakeBothQueries = false
+		this.CurrentUserIsAllowedToMakeBothQueries = false;
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.CurrentUserIsAllowedToMakeBothQueries = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
 				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
 			this.currentUserIsAllowedToDoAConsultation = (anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO]));
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
+			this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
+			this.hasHealthProfessionalRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD]);
 		});
 	}
 
@@ -468,6 +472,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		if (this.summaryCoverageInfo || this.appointmentConfirmedCoverageInfo)
 			return true;
 		return false;
+	}
+
+	isNewConsultationButtonEnabled(): boolean{
+		return (this.hasNewConsultationEnabled$ && (!((this.hasInternmentEpisodeInThisInstitution && !this.hasMedicalDischarge && this.hasMedicalRole) || 
+		(this.hasInternmentEpisodeInThisInstitution && !this.epicrisisDoc?.confirmed && !this.hasMedicalRole))) && !this.CurrentUserIsAllowedToMakeBothQueries);
 	}
 }
 
