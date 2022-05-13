@@ -25,4 +25,5 @@ public interface SharedAppointmentPort {
 
 	Optional<String> getProfessionalName(Integer diaryId);
 
+    List<AppointmentListDto> fetchAppointments(String sisaCode, String specialtySctid, LocalDate startDate, LocalDate endDate);
 }
