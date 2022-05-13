@@ -12,6 +12,7 @@ import {
 import { MapperService } from './../../../../presentation/services/mapper.service';
 import { REFERENCE_STATES } from '../constants/reference-masterdata';
 import {HceGeneralStateService} from "@api-rest/services/hce-general-state.service";
+import {PatientNameService} from "@core/services/patient-name.service";
 
 @Injectable()
 export class HistoricalProblemsFacadeService {
@@ -30,6 +31,7 @@ export class HistoricalProblemsFacadeService {
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly mapperService: MapperService,
+		private readonly patientNameService: PatientNameService,
 	) {
 		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
 		this.historicalProblemsFilter$ = this.historicalProblemsFilterSubject.asObservable();
@@ -138,7 +140,7 @@ export class HistoricalProblemsFacadeService {
 				});
 			}
 
-			this.professionals = pushIfNotExists(this.professionals, { personId: hceEvolutionSummaryDto.professional.person.id, professionalId: hceEvolutionSummaryDto.professional.id, professionalDescription: `${hceEvolutionSummaryDto.professional.person.firstName} ${hceEvolutionSummaryDto.professional.person.lastName}` }, this.compareProfessional);
+			this.professionals = pushIfNotExists(this.professionals, { personId: hceEvolutionSummaryDto.professional.person.id, professionalId: hceEvolutionSummaryDto.professional.id, professionalDescription: `${this.patientNameService.getPatientName(hceEvolutionSummaryDto.professional.person.firstName,hceEvolutionSummaryDto.professional.person.nameSelfDetermination)} ${hceEvolutionSummaryDto.professional.person.lastName}` }, this.compareProfessional);
 
 		});
 	}
