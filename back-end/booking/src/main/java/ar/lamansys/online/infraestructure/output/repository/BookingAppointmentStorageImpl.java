@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookingAppointmentStorage;
 import ar.lamansys.online.domain.booking.BookingBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 

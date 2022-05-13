@@ -1,7 +1,7 @@
 package ar.lamansys.immunization.infrastructure.output.repository.appointments;
 
 import ar.lamansys.immunization.domain.appointment.AppointmentStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

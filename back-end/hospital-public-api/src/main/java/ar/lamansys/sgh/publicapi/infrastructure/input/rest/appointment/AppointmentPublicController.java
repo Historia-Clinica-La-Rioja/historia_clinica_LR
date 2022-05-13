@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment.dto.PublicAppointmentListDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;

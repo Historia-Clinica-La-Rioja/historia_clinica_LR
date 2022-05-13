@@ -1,7 +1,7 @@
 package ar.lamansys.nursing.infrastructure.output.repository;
 
 import ar.lamansys.nursing.application.port.NursingAppointmentStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

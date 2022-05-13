@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.shared.infrastructure.input.service;
+package ar.lamansys.sgh.shared.infrastructure.input.service.appointment;
 
 
 import java.time.LocalDate;

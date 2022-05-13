@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
