@@ -111,7 +111,7 @@ class AnamnesisControllerIntegrationTest extends IntegrationController {
 		Document mock = new Document();
 		mock.setId(DOCUMENT_ID);
 		mock.setTypeId(DocumentType.ANAMNESIS);
-		mock.setStatusId(DocumentStatus.DRAFT);
+		mock.setStatusId(DocumentStatus.FINAL);
 		return Optional.of(mock);
 	}
 

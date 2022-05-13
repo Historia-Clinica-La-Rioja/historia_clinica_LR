@@ -93,7 +93,7 @@ public class EpicrisisController {
 
     @GetMapping("/{epicrisisId}")
     @InternmentValid
-    @DocumentValid(isConfirmed = false, documentType = DocumentType.EPICRISIS)
+    @DocumentValid(isConfirmed = true, documentType = DocumentType.EPICRISIS)
     public ResponseEntity<ResponseEpicrisisDto> getDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

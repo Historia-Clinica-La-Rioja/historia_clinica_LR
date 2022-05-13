@@ -118,7 +118,7 @@ public class EvolutionNoteController {
 
     @GetMapping("/{evolutionNoteId}")
     @InternmentValid
-    @DocumentValid(isConfirmed = false, documentType = DocumentType.EVALUATION_NOTE)
+    @DocumentValid(isConfirmed = true, documentType = DocumentType.EVALUATION_NOTE)
     public ResponseEntity<ResponseEvolutionNoteDto> getDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -130,6 +130,21 @@ public class EvolutionNoteController {
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
+
+	@GetMapping("/nursing/{evolutionNoteId}")
+	@InternmentValid
+	@DocumentValid(isConfirmed = true, documentType = DocumentType.NURSING_EVOLUTION_NOTE)
+	public ResponseEntity<ResponseEvolutionNoteDto> getNursingDocument(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "evolutionNoteId") Long evolutionNoteId){
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}",
+				institutionId, internmentEpisodeId, evolutionNoteId);
+		EvolutionNoteBo evolutionNoteBo = evolutionNoteService.getDocument(evolutionNoteId);
+		ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNoteBo);
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
+	}
 
 
 	@DeleteMapping("/{evolutionNoteId}")

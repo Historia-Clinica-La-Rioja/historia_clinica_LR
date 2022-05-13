@@ -96,7 +96,7 @@ public class AnamnesisController {
 
     @GetMapping("/{anamnesisId}")
     @InternmentValid
-    @DocumentValid(isConfirmed = false, documentType = DocumentType.ANAMNESIS)
+    @DocumentValid(isConfirmed = true, documentType = DocumentType.ANAMNESIS)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<ResponseAnamnesisDto> getAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
