@@ -18,6 +18,10 @@ import java.util.stream.Stream;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.EditDiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,7 +125,7 @@ public class DiaryController {
     public ResponseEntity<Integer> updateDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
             @ValidDiary @PathVariable(name = "diaryId") Integer diaryId,
-            @RequestBody @Valid DiaryDto diaryDto) {
+            @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid DiaryDto diaryDto) {
         log.debug("Input parameters -> diaryADto {}", diaryDto);
         DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryDto);
         diaryToUpdate.setId(diaryId);
