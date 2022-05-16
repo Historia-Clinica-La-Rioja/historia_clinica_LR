@@ -1520,6 +1520,7 @@ export interface LoggedPersonDto {
     avatar?: string;
     firstName: string;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface LoggedUserDto {

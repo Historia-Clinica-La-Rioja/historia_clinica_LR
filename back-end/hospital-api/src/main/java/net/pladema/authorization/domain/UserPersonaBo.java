@@ -10,14 +10,16 @@ public class UserPersonaBo {
 	public final String firstName;
 	public final String lastName;
 	public final Supplier<String> avatar;
+	public final String nameSelfDetermination;
 
-	public UserPersonaBo(String email, Integer id, Integer personId, String firstName, String lastName, Supplier<String> avatar) {
+	public UserPersonaBo(String email, Integer id, Integer personId, String firstName, String lastName, Supplier<String> avatar, String nameSelfDetermination) {
 		this.email = email;
 		this.id = id;
 		this.personId = personId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.avatar = avatar;
+		this.nameSelfDetermination = nameSelfDetermination;
 	}
 
 }

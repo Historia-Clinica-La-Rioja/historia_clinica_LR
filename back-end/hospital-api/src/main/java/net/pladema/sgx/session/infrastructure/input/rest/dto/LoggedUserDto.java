@@ -14,6 +14,6 @@ public class LoggedUserDto {
 	public LoggedUserDto(UserPersonaBo info, String avatar) {
 		this.email = info.email;
 		this.id = info.id;
-		this.personDto = new LoggedPersonDto(info.firstName, info.lastName, avatar);
+		this.personDto = new LoggedPersonDto(info.firstName, info.lastName, avatar, info.nameSelfDetermination);
 	}
 }

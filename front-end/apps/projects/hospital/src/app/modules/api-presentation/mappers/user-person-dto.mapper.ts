@@ -1,10 +1,10 @@
 import { LoggedPersonDto } from '@api-rest/api-model';
 import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
 
-export const mapToFullName = (userPerson: LoggedPersonDto): string => [userPerson?.firstName, userPerson?.lastName].filter(item => !!item).join(' ');
+export const mapToFullName = (userPerson: LoggedPersonDto, nameSelfDeterminationFF: boolean): string => [nameSelfDeterminationFF && userPerson?.nameSelfDetermination ? ([userPerson?.nameSelfDetermination, userPerson?.lastName].filter(item => !!item).join(' ')) : ([userPerson?.firstName, userPerson?.lastName].filter(item => !!item).join(' '))].toString();
 
-export const mapToUserInfo = (email: string, userPerson: LoggedPersonDto): UserInfo => ({
+export const mapToUserInfo = (email: string, userPerson: LoggedPersonDto, nameSelfDeterminationFF: boolean): UserInfo => ({
 	userName: email,
-	fullName: mapToFullName(userPerson),
+	fullName: mapToFullName(userPerson, nameSelfDeterminationFF),
 	avatar: userPerson.avatar,
 });

@@ -7,6 +7,7 @@ import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AccountService } from '@api-rest/services/account.service';
 import { RoleAssignmentDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 
 import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.component';
 import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit {
 	userProfileLink = ['/', AppRoutes.Home, HomeRoutes.Profile];
 	menuItems$: Observable<MenuItem[]>;
 	userInfo: UserInfo;
+	nameSelfDeterminationFF: boolean;
 
 	private readonly NO_INSTITUTION = -1;
 
@@ -39,7 +41,10 @@ export class HomeComponent implements OnInit {
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
 		private loggedUserService: LoggedUserService,
-	) { }
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
+		this.nameSelfDeterminationFF = isOn});
+	}
 
 	ngOnInit(): void {
 		this.contextService.setInstitutionId(this.NO_INSTITUTION);
@@ -59,7 +64,7 @@ export class HomeComponent implements OnInit {
 
 		this.accountService.getInfo()
 			.subscribe(
-				userInfo => this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto)
+				userInfo => this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto, this.nameSelfDeterminationFF)
 			);
 	}
 
