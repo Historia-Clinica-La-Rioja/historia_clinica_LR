@@ -117,6 +117,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="professionalspecialties" {...professionalSpecialties(permissions)} />,
     // more
     <Resource name="identificationTypes" />,
+    <Resource name="patient" />,
     <Resource name="dependencies" />,
     <Resource name="personextended" />,
     <Resource name="genders" />,
