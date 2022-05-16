@@ -49,8 +49,8 @@ Este documento detalla las propiedades configurables del sistema.
 |spring.mail.properties.mail.smtp.auth | | true | Opcional |  |  v0.2.0 |
 |spring.mail.properties.mail.smtp.starttls.required | | true | Opcional |  |  v0.2.0 |
 |spring.mail.properties.mail.smtp.starttls.enable | |false | Opcional | Habilita el envío de mails |v0.2.0 |
-| app.mail.activate  | ACTIVATE_SENDING_EMAIL  | false  | Opcional  |   | v0.2.0  |
-| mail.from  | SMTP_EMAIL  | sgh@test.org  | Opcional  |   | v0.2.0  |
+| app.notification.mail.from  | SMTP_EMAIL  | hsi@pladema.net  | Opcional  |   | v0.38.0  |
+| app.notification.mail.fromFullname  |   | HSI  | Opcional  |   | v0.38.0  |
 
 
 ## Configuración util para debug y monitoring 

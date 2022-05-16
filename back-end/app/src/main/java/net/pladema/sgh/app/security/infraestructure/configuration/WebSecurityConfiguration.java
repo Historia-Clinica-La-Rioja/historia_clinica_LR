@@ -62,9 +62,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.authorizeRequests()
-				.antMatchers(HttpMethod.GET,  "/users/{id}/enable").permitAll()
-				.antMatchers(HttpMethod.POST, "/users/activationlink/resend").permitAll()
-				.antMatchers("/passwords/reset" ).permitAll()
 				.antMatchers("/actuator/health").permitAll()
 				.antMatchers("/actuator/env/**").hasAnyAuthority(
 						ERole.ROOT.getValue(),

@@ -1,17 +1,15 @@
 package ar.lamansys.sgx.auth.jwt.infrastructure.input.rest;
 
-import ar.lamansys.sgx.auth.AuthAutoConfiguration;
-import ar.lamansys.sgx.auth.IntegrationTest;
-import ar.lamansys.sgx.auth.jwt.application.login.Login;
-import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginEnumException;
-import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginException;
-import ar.lamansys.sgx.auth.jwt.application.refreshtoken.RefreshToken;
-import ar.lamansys.sgx.auth.jwt.application.refreshtoken.exceptions.BadRefreshTokenException;
-import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.emails.service.impl.EmailServiceImpl;
-import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
-import ar.lamansys.sgx.shared.recaptcha.service.impl.RecaptchaInvalid;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.function.Consumer;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,20 +23,22 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.function.Consumer;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import ar.lamansys.sgx.auth.AuthAutoConfiguration;
+import ar.lamansys.sgx.auth.IntegrationTest;
+import ar.lamansys.sgx.auth.jwt.application.login.Login;
+import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginEnumException;
+import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginException;
+import ar.lamansys.sgx.auth.jwt.application.refreshtoken.RefreshToken;
+import ar.lamansys.sgx.auth.jwt.application.refreshtoken.exceptions.BadRefreshTokenException;
+import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.recaptcha.service.ICaptchaService;
+import ar.lamansys.sgx.shared.recaptcha.service.impl.RecaptchaInvalid;
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = {AuthAutoConfiguration.class})
 @TestPropertySource("classpath:integration-test.properties")
-@Import({DateTimeProvider.class, EmailServiceImpl.class})
+@Import({DateTimeProvider.class})
 @Disabled
 class AuthenticationControllerIntegrationTest extends IntegrationTest {
 

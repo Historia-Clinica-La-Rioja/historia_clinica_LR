@@ -89,6 +89,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si esta habilitada la búsqueda de conceptos en la base de datos local")
 	HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS,
+
+	@Label("Indica si se debe avisar al paciente por mail al reservar un turno")
+	HABILITAR_MAIL_RESERVA_TURNO,
     ;
 
     public boolean isActive() {
