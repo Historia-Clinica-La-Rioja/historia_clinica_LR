@@ -21,7 +21,7 @@ public interface SharedAppointmentPort {
 
 	boolean existsEmail(String email);
 
-	void cancelBooking(String email);
+	void cancelBooking(String uuid);
 
 	Optional<String> getPatientName(String uuid);
 
