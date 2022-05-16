@@ -23,7 +23,7 @@ import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
-import ar.lamansys.odontology.domain.consultation.AppointmentStorage;
+import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +72,7 @@ class CreateOdontologyConsultationImplTest {
     private GetToothSurfacesService getToothSurfacesService;
 
     @Mock
-    private AppointmentStorage appointmentStorage;
+    private OdontologyAppointmentStorage odontologyAppointmentStorage;
 
     @Mock
     private GetToothService getToothService;
@@ -90,8 +90,7 @@ class CreateOdontologyConsultationImplTest {
                 odontologyDocumentStorage,
                 drawOdontogramService,
                 cpoCeoIndicesCalculator,
-                getToothSurfacesService,
-                appointmentStorage,
+                getToothSurfacesService, odontologyAppointmentStorage,
                 getToothService, publisher);
     }
 

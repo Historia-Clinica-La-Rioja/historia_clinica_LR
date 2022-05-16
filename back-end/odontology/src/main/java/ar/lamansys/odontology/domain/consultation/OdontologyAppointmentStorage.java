@@ -2,7 +2,7 @@ package ar.lamansys.odontology.domain.consultation;
 
 import java.time.LocalDate;
 
-public interface AppointmentStorage {
+public interface OdontologyAppointmentStorage {
 
     Integer getPatientMedicalCoverageId(Integer patientId, Integer doctorId);
 
