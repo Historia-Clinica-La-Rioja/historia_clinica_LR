@@ -65,6 +65,12 @@
 			<span 	[translate]="'internaciones.internacion-paciente.card.PROBABLE_DISCHARGE'"
 					 [translateParams]="{ datetime: internmentEpisode?.probableDischargeDate }">
 			</span>
+			<ng-container *ngIf="showChangeDate">
+				<button id="change_date_button" class="change_date_button" color="primary" *appHasRole="['ESPECIALISTA_MEDICO']" 
+					(click)="openInNew.emit()"
+					[translate]="'internaciones.internacion-paciente.card.DISCHARGE_DATE_CHANGE'">
+				</button>
+			</ng-container>			
 		</div>
 	</mat-list-item>
 

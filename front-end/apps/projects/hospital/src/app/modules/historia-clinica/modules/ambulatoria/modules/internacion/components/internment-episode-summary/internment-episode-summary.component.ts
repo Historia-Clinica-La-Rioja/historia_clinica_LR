@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from "@angular/router";
 import { ContextService } from "@core/services/context.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
@@ -29,7 +29,9 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	@Input() canLoadProbableDischargeDate: boolean;
 	@Input() patientId: number;
 	@Input() showDischarge: boolean;
+	@Input() showChangeDate: boolean;
 	@Input() patientDocuments: InternmentDocuments;
+	@Output() openInNew = new EventEmitter();
 
 	private readonly routePrefix;
 	private readonly ff: FeatureFlagService;

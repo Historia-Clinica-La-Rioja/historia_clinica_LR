@@ -44,15 +44,14 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
 					<ng-container
 						*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-						<app-summary-card id="internment_summary_card" [header]="internacionSummary"
-							[canEdit]="['ESPECIALISTA_MEDICO']"
-							[editable]="!patientDischarge.medicalDischarge && !patientDischarge.physicalDischarge && canLoadProbableDischargeDate"
-							(openInNew)="openDialog()">
+						<app-summary-card id="internment_summary_card" [header]="internacionSummary">
 							<mat-card-content>
 								<app-internment-episode-summary [internmentEpisode]="internmentEpisodeSummary"
 									[canLoadProbableDischargeDate]="canLoadProbableDischargeDate"
 									[patientId]="patientId" [patientDocuments]="{hasAnamnesis: !!anamnesisDoc?.confirmed, hasEpicrisis: !!epicrisisDoc?.confirmed}"
-									[showDischarge]="showDischarge">
+									[showDischarge]="showDischarge"
+									[showChangeDate]="!patientDischarge.medicalDischarge && !patientDischarge.physicalDischarge && canLoadProbableDischargeDate"
+									(openInNew)="openDialog()">
 								</app-internment-episode-summary>
 							</mat-card-content>
 						</app-summary-card>

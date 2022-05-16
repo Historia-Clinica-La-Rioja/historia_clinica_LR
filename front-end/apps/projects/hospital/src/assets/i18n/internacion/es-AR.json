@@ -345,6 +345,7 @@
 				"ONE_DAY": "1 día internado",
 				"ADMISSION": "Ingreso: {{datetime}}",
 				"PROBABLE_DISCHARGE": "Fecha probable de alta: {{datetime}}",
+				"DISCHARGE_DATE_CHANGE": "Cambiar",
 				"probable_discharge_dialog": {
 					"TITLE": "Actualizar fecha de alta probable",
 					"PLACEHOLDER": "Fecha de alta probable",
