@@ -31,6 +31,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.BookingAppo
 import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.appointment.service.booking.CreateBookingAppointmentService;
@@ -52,20 +53,21 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private static final String OUTPUT = "Output -> {}";
 
 	private final AppointmentService appointmentService;
-
+	private final AppointmentValidatorService appointmentValidatorService;
 	private final CreateAppointmentService createAppointmentService;
 	private final BookingPersonService bookingPersonService;
 	private final CreateBookingAppointmentService createBookingAppointmentService;
 	private final FetchAppointments fetchAppointments;
-
 	private final LocalDateMapper localDateMapper;
 
 	public AppointmentExternalServiceImpl(AppointmentService appointmentService,
+										  AppointmentValidatorService appointmentValidatorService,
 										  CreateAppointmentService createAppointmentService,
 										  BookingPersonService bookingPersonService,
 										  CreateBookingAppointmentService createBookingAppointmentService,
 										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper) {
 		this.appointmentService = appointmentService;
+		this.appointmentValidatorService = appointmentValidatorService;
 		this.createAppointmentService = createAppointmentService;
 		this.bookingPersonService = bookingPersonService;
 		this.createBookingAppointmentService = createBookingAppointmentService;
@@ -99,6 +101,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				.getMedicalCoverage(patientId, healthcareProfessionalId, currentDate);
 		log.debug(OUTPUT, medicalCoverage);
 		return medicalCoverage;
+	}
+
+	@Override
+	public void cancelAppointment(Integer institutionId, Integer appointmentId) {
+		log.debug("CancelAppointment -> institutionId {}, appointmentId {}", institutionId, appointmentId);
+		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, AppointmentState.CANCELLED, null);
+		appointmentService.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor(), null);
 	}
 
 	@Override
