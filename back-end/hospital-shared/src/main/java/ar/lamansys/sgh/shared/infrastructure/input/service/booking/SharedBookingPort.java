@@ -12,4 +12,12 @@ public interface SharedBookingPort {
 	List<BookingInstitutionDto> fetchAllBookingInstitutions();
 
 	List<BookingHealthInsuranceDto> fetchAllMedicalCoverages();
+	List<PracticeDto> fetchPracticesBySpecialtyAndHealthInsurance(Integer clinicalSpecialtyId,
+																  Integer medicalCoverageId, boolean all);
+
+	List<PracticeDto> fetchPracticesByProfessionalAndHealthInsurance(Integer healthcareProfessionalId,
+																	 Integer medicalCoverageId,
+																	 Integer clinicalSpecialtyId, boolean all);
+	List<BookingSpecialtyDto> fetchSpecialties();
+	List<BookingSpecialtyDto> fetchSpecialtiesByProfessional(Integer healthcareProfessionalId);
 }
